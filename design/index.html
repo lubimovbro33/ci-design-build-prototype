@@ -364,6 +364,42 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 .divider i::after{content:"";position:absolute;right:0;top:-2.5px;width:6px;height:6px;background:var(--line-strong)}
 .divider i::before{content:"";position:absolute;right:-1px;bottom:0;width:48px;height:1px;background:var(--line-strong);transform-origin:right bottom;transform:rotate(-45deg)}
 
+/* ---- Pinterest board language ---- */
+/* hero: full-width editorial headline, partial blur */
+.hero h1{display:grid;gap:.02em}
+.hero h1 .r{justify-self:end}
+.hero h1 .blurin{filter:blur(14px);opacity:.35}
+/* split wordmark: CU — RATED */
+.split{display:flex;align-items:center;gap:.25em;white-space:nowrap}
+.split i{font-style:normal;display:inline-block;height:.06em;min-height:2px;width:1.1em;background:currentColor;opacity:.8}
+/* inline photo inside giant type */
+.inph{display:inline-block;vertical-align:middle;width:1.4em;height:.72em;margin:0 .12em;background:var(--ph2);position:relative;top:-.06em;overflow:hidden}
+.inph::before{content:"";position:absolute;inset:0;background:url(assets/glassmorph.webp) center/cover;opacity:.5}
+/* floating gallery (All Work) */
+.float{position:relative;height:clamp(640px,120vh,1200px);margin-top:clamp(24px,4vw,64px)}
+.float .ttl{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;z-index:2;display:grid;gap:18px;justify-items:center;pointer-events:none}
+.float .ttl h2{font-size:clamp(2.4rem,7vw,7.4rem);line-height:.9;white-space:nowrap}
+.float .ttl .btn{pointer-events:auto}
+.float .ph{position:absolute;z-index:1}
+.float .ph .lbl{position:absolute;left:12px;bottom:10px;right:12px;z-index:2;display:grid;gap:2px}
+.float .ph .lbl .k{font-size:9px}
+.float .ph .lbl h3{font-size:clamp(.8rem,1.1vw,1rem);font-weight:700}
+.float .p1{left:0;top:2%;width:clamp(150px,17vw,260px);aspect-ratio:4/5}
+.float .p2{left:24%;top:0;width:clamp(110px,11vw,170px);aspect-ratio:1}
+.float .p3{right:18%;top:6%;width:clamp(160px,20vw,300px);aspect-ratio:3/2}
+.float .p4{right:0;top:26%;width:clamp(120px,13vw,200px);aspect-ratio:3/4}
+.float .p5{left:6%;top:46%;width:clamp(130px,14vw,220px);aspect-ratio:3/2}
+.float .p6{left:30%;bottom:4%;width:clamp(150px,18vw,280px);aspect-ratio:4/5}
+.float .p7{right:26%;bottom:10%;width:clamp(110px,12vw,180px);aspect-ratio:1}
+.float .p8{right:2%;bottom:0;width:clamp(150px,17vw,260px);aspect-ratio:3/2}
+/* stats row */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line)}
+.stats>div{padding:clamp(18px,2vw,28px) clamp(12px,1.6vw,24px) 0 0;display:grid;gap:10px;border-right:1px solid var(--line)}
+.stats>div:last-child{border-right:0}
+.stats .v{font-weight:700;font-size:clamp(2.4rem,5vw,5rem);line-height:.9;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.stats .v small{font-size:.45em;font-weight:400;vertical-align:top}
+@media(max-width:640px){.float{height:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px}.float .ph{position:relative;inset:auto!important;width:auto!important}.float .ttl{position:relative;left:auto;top:auto;transform:none;grid-column:1/-1;order:-1;margin-bottom:12px}.float .ttl h2{white-space:normal}.stats{grid-template-columns:1fr}.stats>div{border-right:0;border-bottom:1px solid var(--line);padding-bottom:18px}}
+
 /* ---- word cloud (Santalarch philosophy) ---- */
 .cloud{position:relative;height:clamp(300px,46vh,520px);overflow:visible}
 .cloud span{position:absolute;white-space:nowrap;text-transform:uppercase;line-height:1;will-change:transform;transition:color .5s}
@@ -480,7 +516,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     <div class="cols">
       <div class="intro">
         <p class="k eyebrow hr-a"><span class="rule"></span>CI Design + Build</p>
-        <h1 class="lines" id="h1"><span><span class="thin">Redefining</span></span><span><span>the Art</span></span><span><span class="outline">of Living</span></span></h1>
+        <h1 class="lines" id="h1"><span><span class="thin">Redefining</span></span><span><span>the Art</span></span><span><span class="outline blurin">of Living</span></span></h1>
       </div>
       <div class="side hr-b glass">
         <p class="lead">Building You a Better Life</p>
@@ -531,7 +567,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   <div class="wrap g12" style="position:relative">
     <div style="grid-column:1/6" class="stack stick">
       <p class="k eyebrow rv"><span class="rule"></span>About CI</p>
-      <h2 class="display l lines"><span><span class="thin">One Vision.</span></span><span><span class="thin">One Team.</span></span><span><span>One Turnkey Experience.</span></span></h2>
+      <h2 class="display l lines"><span><span class="thin">One Vision.</span></span><span><span class="thin">One <span class="inph" aria-hidden="true"></span>Team.</span></span><span><span>One Turnkey Experience.</span></span></h2>
       <div class="ph r45 grow rv" style="max-width:420px"><span class="in"></span><span class="cap"><span class="rule"></span>Studio photo</span></div>
     </div>
     <div style="grid-column:7/13" class="stack rv" style="gap:clamp(24px,3vw,40px)">
@@ -540,6 +576,11 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
         <p><strong>Your time is irreplaceable.</strong> Our clients save an average of 20% of project time.</p>
       </div>
       <p class="tracked">You stay involved where your vision matters most.<br><strong>We own everything in between.</strong></p>
+      <div class="stats">
+        <div><p class="v"><span class="count" data-to="20">0</span><small>%</small></p><p class="k muted">Project time saved on average</p></div>
+        <div><p class="v">One</p><p class="k muted">Team under one roof</p></div>
+        <div><p class="v"><span class="count" data-to="2009" data-from="1990">2009</span></p><p class="k muted">Building since</p></div>
+      </div>
       <div class="btns"><a class="btn" href="../#about">Discover CI Design + Build</a></div>
       <div class="ph r32 grow" data-view><span class="in"></span><span class="cap"><span class="rule"></span>Team photo</span></div>
     </div>
@@ -575,16 +616,16 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
 </section>
 <section class="sec light" style="padding-top:clamp(56px,7vw,110px)">
   <div class="wrap stack" style="gap:clamp(40px,6vw,96px)">
-    <div class="field">
-      <a class="ph r32 grow rv" href="../#project" style="grid-column:1/8" data-view><span class="in"></span><div class="lbl"><p class="k">[Location] · CI Turnkey</p><h3>[Project]</h3></div></a>
-      <a class="ph r45 grow rv ofs1" href="../#project" style="grid-column:9/13" data-view><span class="in"></span><div class="lbl"><p class="k">[Location] · CI Core</p><h3>[Project]</h3></div></a>
-      <a class="ph r45 grow rv ofs2" href="../#project" style="grid-column:1/5" data-view><span class="in"></span><div class="lbl"><p class="k">[Location] · CI Turnkey</p><h3>[Project]</h3></div></a>
-      <a class="ph r34 grow rv" href="../#project" style="grid-column:6/9" data-view><span class="in"></span><div class="lbl"><p class="k">[Location] · CI Turnkey</p><h3>[Project]</h3></div></a>
-      <a class="ph r45 grow rv ofs1" href="../#project" style="grid-column:9/13" data-view><span class="in"></span><div class="lbl"><p class="k">[Location] · CI Turnkey</p><h3>[Project]</h3></div></a>
-    </div>
-    <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:20px" class="rv">
-      <p class="display m thin">Selected <strong>Works</strong></p>
-      <a class="btn" href="../#portfolio">View the Portfolio <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 13L13 3M5 3h8v8"/></svg></a>
+    <div class="float" id="float">
+      <div class="ttl"><p class="k muted">Turnkey · Core · Curated</p><h2 class="thin">Selected <strong>Works</strong></h2><a class="btn" href="../#portfolio">View the Portfolio <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M3 13L13 3M5 3h8v8"/></svg></a></div>
+      <a class="ph p1 grow" href="../#project" data-view data-sp="-14"><span class="in"></span><div class="lbl"><p class="k">[Location]</p><h3>[Project]</h3></div></a>
+      <a class="ph p2 grow" href="../#project" data-view data-sp="10"><span class="in"></span></a>
+      <a class="ph p3 grow" href="../#project" data-view data-sp="-6"><span class="in"></span><div class="lbl"><p class="k">[Location]</p><h3>[Project]</h3></div></a>
+      <a class="ph p4 grow" href="../#project" data-view data-sp="16"><span class="in"></span></a>
+      <a class="ph p5 grow" href="../#project" data-view data-sp="-10"><span class="in"></span><div class="lbl"><p class="k">[Location]</p><h3>[Project]</h3></div></a>
+      <a class="ph p6 grow" href="../#project" data-view data-sp="8"><span class="in"></span><div class="lbl"><p class="k">[Location]</p><h3>[Project]</h3></div></a>
+      <a class="ph p7 grow" href="../#project" data-view data-sp="-18"><span class="in"></span></a>
+      <a class="ph p8 grow" href="../#project" data-view data-sp="12"><span class="in"></span><div class="lbl"><p class="k">[Location]</p><h3>[Project]</h3></div></a>
     </div>
   </div>
 </section>
@@ -629,7 +670,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       <div class="bg" aria-hidden="true"><span class="cap">Photo</span></div>
       <div class="card glass">
         <span class="pill">Flagship</span>
-        <h3><span class="thin">CI</span> Turnkey</h3>
+        <h3 class="split"><span class="thin">Turn</span><i></i><span>Key</span></h3>
         <p class="lead">The complete CI experience — architecture to move-in, one team under one roof.</p>
         <p class="body small"><strong>Everything covered. One team to hire. Concierge-level service from the first conversation to the night you move in.</strong></p>
         <div class="btns"><a class="btn solid" href="../#turnkey">Explore CI Turnkey</a></div>
@@ -638,7 +679,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     <article class="panel">
       <div class="bg" aria-hidden="true"><span class="cap">Photo</span></div>
       <div class="card glass">
-        <h3><span class="thin">CI</span> Core</h3>
+        <h3 class="split"><span class="thin">CI</span><i></i><span>Core</span></h3>
         <p class="lead">The foundation of the CI model.</p>
         <p class="body small">Architecture, interior design and construction, expertly coordinated.</p>
         <div class="btns"><a class="btn" href="../#core">Explore CI Core</a></div>
@@ -647,7 +688,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
     <article class="panel">
       <div class="bg" aria-hidden="true"><span class="cap">Photo</span></div>
       <div class="card glass">
-        <h3><span class="thin">CI</span> Curated</h3>
+        <h3 class="split"><span class="thin">Cu</span><i></i><span>Rated</span></h3>
         <p class="lead">The home, considered beyond construction.</p>
         <p class="body small">Design-build extended through furnishings, art and styling.</p>
         <div class="btns"><a class="btn" href="../#curated">Explore CI Curated</a></div>
@@ -657,7 +698,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       <div class="bg" aria-hidden="true"><span class="cap">Photo</span></div>
       <div class="card glass">
         <span class="pill">Integrated with any CI service</span>
-        <h3><span class="thin">CI</span> Wellness<br><span class="thin">+ In Home Longevity</span></h3>
+        <h3><span class="split"><span class="thin">Well</span><i></i><span>Ness</span></span><span class="thin" style="display:block;font-size:.5em;margin-top:.3em">+ In Home Longevity</span></h3>
         <p class="lead"><strong>Better living, designed in.</strong> Light, air, water, sleep and recovery.</p>
         <p class="body small">A doctor-backed approach to living younger, longer.</p>
         <div class="btns"><a class="btn" href="../#wellness">Explore CI Wellness</a><a class="btn" href="../#services">All services</a></div>
@@ -831,7 +872,8 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
       .from('.hero .hr-b',{opacity:0,y:24,duration:.9,ease:'power3.out'},.45)
       .from('.hero .blurname',{opacity:0,filter:'blur(30px)',duration:1.6,ease:'power2.out'},.1)
       .from('.hero .hr-c',{opacity:0,duration:.8},.9)
-      .to('#h1 .outline',{color:'#EBEBEB',duration:1.2,ease:'power2.inOut'},1.1);
+      .to('#h1 .blurin',{filter:'blur(0px)',opacity:1,duration:1.6,ease:'power2.out'},.6)
+      .to('#h1 .outline',{color:'#EBEBEB',duration:1.2,ease:'power2.inOut'},1.6);
   }
   function finish(){
     if(pl.dataset.done)return;pl.dataset.done='1';d.body.classList.remove('lock');
@@ -880,7 +922,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   /* words wrap */
   d.querySelectorAll('.words').forEach(function(w){w.querySelectorAll('p').forEach(function(p){var html='';p.childNodes.forEach(function(nd){var wrap=function(t){return t.split(/(\s+)/).map(function(x){return /\S/.test(x)?'<span>'+x+'</span>':x}).join('')};if(nd.nodeType===3){html+=wrap(nd.textContent)}else if(nd.nodeType===1){var tg=nd.tagName.toLowerCase();html+='<'+tg+'>'+wrap(nd.textContent)+'</'+tg+'>'}});p.innerHTML=html})});
 
-  if(!hasGsap||reduce){d.querySelectorAll('.outline').forEach(function(o){o.style.color='var(--ink)'});d.querySelectorAll('.eyebrow').forEach(function(e){e.classList.add('in')});d.querySelectorAll('.words span').forEach(function(s){s.style.opacity=1});d.querySelectorAll('.count').forEach(function(c){c.textContent=c.getAttribute('data-to')});d.querySelectorAll('.step').forEach(function(s){s.classList.add('on')});return}
+  if(!hasGsap||reduce){d.querySelectorAll('.outline').forEach(function(o){o.style.color='var(--ink)'});d.querySelectorAll('.blurin').forEach(function(o){o.style.filter='none';o.style.opacity=1});d.querySelectorAll('.eyebrow').forEach(function(e){e.classList.add('in')});d.querySelectorAll('.words span').forEach(function(s){s.style.opacity=1});d.querySelectorAll('.count').forEach(function(c){c.textContent=c.getAttribute('data-to')});d.querySelectorAll('.step').forEach(function(s){s.classList.add('on')});return}
 
   /* scroll animations */
   gsap.utils.toArray('.rv').forEach(function(el){gsap.from(el,{y:36,opacity:0,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:el,start:'top 90%'}})});
@@ -902,7 +944,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   }
   gsap.utils.toArray('.lines:not(#h1)').forEach(function(el){gsap.from(el.querySelectorAll(':scope > span > span'),{yPercent:110,duration:1.1,ease:'power4.out',stagger:.1,scrollTrigger:{trigger:el,start:'top 85%'}})});
   gsap.utils.toArray('.words').forEach(function(w){gsap.to(w.querySelectorAll('span'),{opacity:1,ease:'none',stagger:.02,scrollTrigger:{trigger:w,start:'top 80%',end:'bottom 55%',scrub:.6}})});
-  gsap.utils.toArray('.count').forEach(function(c){var to=+c.getAttribute('data-to'),o={v:0};gsap.to(o,{v:to,duration:1.8,ease:'power2.out',onUpdate:function(){c.textContent=Math.round(o.v)},scrollTrigger:{trigger:c,start:'top 85%'}})});
+  gsap.utils.toArray('.count').forEach(function(c){var to=+c.getAttribute('data-to'),o={v:+(c.getAttribute('data-from')||0)};gsap.to(o,{v:to,duration:1.8,ease:'power2.out',onUpdate:function(){c.textContent=Math.round(o.v)},scrollTrigger:{trigger:c,start:'top 85%'}})});
   gsap.utils.toArray('.band .tex, .client .tex.wave').forEach(function(t){gsap.fromTo(t,{yPercent:-8},{yPercent:8,ease:'none',scrollTrigger:{trigger:t.parentNode,start:'top bottom',end:'bottom top',scrub:true}})});
   gsap.to('.hero .wrap',{yPercent:-12,opacity:0,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
   gsap.to('.hero .blurname',{yPercent:30,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
@@ -919,6 +961,9 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   var steps=gsap.utils.toArray('.step');
   steps.forEach(function(s){ScrollTrigger.create({trigger:s,start:'top 62%',end:'bottom 62%',onEnter:function(){steps.forEach(function(x){x.classList.remove('on')});s.classList.add('on')},onEnterBack:function(){steps.forEach(function(x){x.classList.remove('on')});s.classList.add('on')}})});
   gsap.to('#vline',{height:'100%',ease:'none',scrollTrigger:{trigger:'#steps',start:'top 62%',end:'bottom 62%',scrub:true}});
+  gsap.utils.toArray('#float .ph').forEach(function(ph){var s=+ph.getAttribute('data-sp')||0;gsap.fromTo(ph,{yPercent:-s*2},{yPercent:s*2,ease:'none',scrollTrigger:{trigger:'#float',start:'top bottom',end:'bottom top',scrub:true}});gsap.from(ph,{opacity:0,scale:.92,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:ph,start:'top 95%'}})});
+  gsap.fromTo('#float .ttl h2',{letterSpacing:'.2em',opacity:0},{letterSpacing:'-.01em',opacity:1,ease:'none',scrollTrigger:{trigger:'#float',start:'top 80%',end:'center 55%',scrub:true}});
+  gsap.utils.toArray('.split i').forEach(function(i){gsap.from(i,{width:0,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:i,start:'top 95%',containerAnimation:undefined}})});
   addEventListener('load',function(){ScrollTrigger.refresh()});
 })();
 </script>
