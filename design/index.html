@@ -214,6 +214,92 @@ section{position:relative}
 .follow.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
 .follow .ph{position:absolute;inset:0}
 
+/* ===== 5. DIFFERENCE — the turnkey dial ===== */
+.diff{background:var(--indigo2)}
+.diff .glow{position:absolute;right:-60vh;top:50%;width:150vh;height:150vh;margin-top:-75vh;background:radial-gradient(circle,rgba(150,169,191,.20) 0%,rgba(150,169,191,.06) 40%,transparent 66%);pointer-events:none}
+.diff .tex{position:absolute;inset:0;background:url(assets/glassmorph.webp) center/cover;opacity:.12;mix-blend-mode:screen;pointer-events:none}
+.diff .left{position:absolute;left:var(--gx);top:0;bottom:0;width:min(42vw,600px);display:grid;align-content:space-between;padding:112px 0 44px;z-index:4}
+.diff .left h2{font-size:clamp(2rem,4.6vw,5.2rem);line-height:.9;text-transform:uppercase;letter-spacing:-.015em;font-weight:700}
+.diff .lead{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);max-width:30ch;line-height:1.7}
+.diff .desc{position:relative;height:6em}
+.diff .desc p{position:absolute;left:0;bottom:0;font-size:clamp(1.1rem,2vw,1.9rem);line-height:1.2;letter-spacing:.08em;text-transform:uppercase;max-width:22ch;opacity:0;filter:blur(10px);transform:translateY(24px);transition:opacity .6s,filter .6s,transform .7s var(--ease)}
+.diff .desc p.on{opacity:1;filter:none;transform:none}
+.diff .dial{position:absolute;top:50%;right:-75vh;width:150vh;height:150vh;margin-top:-75vh;z-index:2}
+.diff .rotor,.diff .counter{position:absolute;inset:0;will-change:transform}
+.diff svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.diff .tick{stroke:rgba(235,235,235,.28);stroke-width:2}
+.diff .tick.lg{stroke:rgba(235,235,235,.7);stroke-width:2.5}
+.diff .orb{fill:none;stroke:rgba(235,235,235,.22);stroke-width:2}
+.diff .txr{font-family:var(--f);font-size:24px;letter-spacing:7px;fill:rgba(235,235,235,.32);text-transform:uppercase}
+.diff .txr .bb{font-weight:700;fill:rgba(235,235,235,.7)}
+.diff .lab{position:absolute;left:50%;top:50%;width:min(34vw,500px);transform-origin:0 50%;margin-top:-1.1em;font-weight:700;text-transform:uppercase;font-size:clamp(1rem,2.3vw,2.5rem);line-height:.95;letter-spacing:-.005em;color:rgba(235,235,235,.13);transition:color .5s,-webkit-text-stroke-color .5s}
+.diff .lab.on{color:var(--bright)}
+.diff .lab span{display:block;font-weight:400;font-size:.4em;letter-spacing:.24em;margin-top:.8em}
+.diff .ptr{position:absolute;top:50%;right:calc(75vh - 26px);width:clamp(80px,9vw,150px);height:1px;background:var(--bright);z-index:5}
+.diff .ptr::before{content:"";position:absolute;left:0;top:-2px;width:5px;height:5px;background:var(--bright)}
+.diff .ptr::after{content:"";position:absolute;right:-1px;top:-6px;width:13px;height:13px;border-top:1px solid var(--bright);border-right:1px solid var(--bright);transform:rotate(45deg)}
+
+/* ===== 6. WAYS OF WORK — four panes of glass ===== */
+.ways{background:var(--black)}
+.ways .whd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;align-items:end;gap:30px;z-index:3}
+.ways .wt{font-size:clamp(1.3rem,2.8vw,3rem);line-height:.95;text-transform:uppercase;font-weight:700;max-width:24ch;text-align:right;letter-spacing:-.01em}
+.ways .cols{position:absolute;left:0;right:0;bottom:0;top:calc(104px + clamp(80px,9vw,128px));display:flex;border-top:1px solid var(--line)}
+.ways .col{position:relative;flex:1 1 0;min-width:0;overflow:hidden;border-left:1px solid var(--line);cursor:pointer;background:var(--ph)}
+.ways .col:first-child{border-left:0}
+.ways .col .cbg{position:absolute;inset:-6%;opacity:.28;transition:opacity .9s;background:radial-gradient(70% 60% at 70% 25%,rgba(150,169,191,.18),transparent 60%),linear-gradient(160deg,#34363b,#1b1c1f)}
+.ways .col .cbg::after{content:"";position:absolute;inset:0;background:url(assets/glass-board.webp) center/cover;opacity:.22;mix-blend-mode:screen}
+.ways .col.on .cbg{opacity:1}
+.ways .col.well{background:var(--indigo)}
+.ways .col.well .cbg{background:url(assets/glassmorph.webp) center/cover}
+.ways .col .pcap{position:absolute;right:16px;top:14px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(235,235,235,.4);opacity:0;transition:opacity .6s}
+.ways .col.on .pcap{opacity:1}
+.ways .col .vt{position:absolute;left:50%;bottom:30px;writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);font-size:clamp(1.3rem,2.4vw,2.6rem);text-transform:uppercase;white-space:nowrap;letter-spacing:-.005em;transition:opacity .5s,transform .8s var(--ease)}
+.ways .col.on .vt{opacity:0;transform:translateX(-50%) rotate(180deg) translateY(-40px)}
+.ways .col .cin{position:absolute;left:clamp(24px,3vw,56px);bottom:clamp(28px,5vh,56px);width:min(60vw,920px);display:grid;gap:22px;pointer-events:none}
+.ways .col.on .cin{pointer-events:auto}
+.ways .col .word{font-size:clamp(3rem,7.4vw,9rem);line-height:1;text-transform:uppercase;letter-spacing:-.035em;display:flex;align-items:center;gap:.1em;white-space:nowrap}
+.ways .col .word .m{display:block;overflow:hidden;padding:.02em 0 .04em}
+.ways .col:not(.on) .word{visibility:hidden}
+.ways .col .word .m>span{display:block}
+.ways .col .word i{display:inline-block;width:.8em;height:.05em;background:currentColor;transform-origin:left}
+.ways .col .d{font-size:clamp(.95rem,1.35vw,1.25rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.3;max-width:34ch}
+.ways .col .tg{justify-self:start;border:1px solid var(--line2);border-radius:999px;padding:7px 12px;font-size:9px;letter-spacing:.22em;text-transform:uppercase}
+.ways .col .cin>*:not(.word){opacity:0}
+
+/* ===== 7. APPROACH — fly through the questions ===== */
+.appr{background:var(--bright);color:var(--black2);--ink:var(--black2);--muted:rgba(20,20,20,.55);--line:rgba(20,20,20,.14);--line2:rgba(20,20,20,.4)}
+.appr .ahd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;align-items:start;gap:30px;z-index:3}
+.appr .ahd h2{font-size:clamp(1.1rem,1.8vw,1.7rem);letter-spacing:.12em;text-transform:uppercase;line-height:1.2;margin-top:14px}
+.appr .ahd .k{max-width:30ch;text-align:right}
+.appr .tun{position:absolute;inset:0;perspective:900px;perspective-origin:50% 50%;overflow:hidden;z-index:2}
+.appr .tq{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:0 var(--gxr) 0 var(--gx);font-size:clamp(2.2rem,7vw,8.4rem);line-height:.9;text-transform:uppercase;font-weight:700;letter-spacing:-.02em;color:var(--black2);opacity:0;pointer-events:none}
+.appr .te{position:absolute;left:50%;top:50%;white-space:nowrap;text-transform:uppercase;font-size:clamp(1.1rem,2.6vw,2.8rem);line-height:1;color:var(--granite);opacity:0;pointer-events:none}
+.appr .te.o{-webkit-text-stroke-color:var(--granite)}
+.appr .afin{position:absolute;left:var(--gx);right:var(--gxr);bottom:40px;display:flex;justify-content:space-between;align-items:end;gap:20px;z-index:3;opacity:0}
+.appr .afin p{font-size:clamp(1rem,1.6vw,1.45rem);letter-spacing:.12em;text-transform:uppercase;line-height:1.2;max-width:26ch}
+.appr .black{position:absolute;inset:0;background:var(--black2);opacity:0;z-index:4;pointer-events:none}
+
+/* ===== 8. PROCESS — the tangle becomes the line ===== */
+.proc{background:var(--black2)}
+.proc .phd{position:absolute;left:var(--gx);top:104px;z-index:4}
+.proc .pt1{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);text-align:center;z-index:3;font-size:clamp(2.6rem,9vw,11rem);line-height:.86;text-transform:uppercase;letter-spacing:-.025em;font-weight:700;mix-blend-mode:difference;color:#fff}
+.proc .pt2{position:absolute;left:var(--gx);top:150px;z-index:3;font-size:clamp(1.4rem,3vw,3.2rem);line-height:.92;text-transform:uppercase;letter-spacing:-.01em;font-weight:700;opacity:0;max-width:20ch}
+.proc .pst{position:absolute;inset:0;z-index:2}
+.proc .pst svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.proc .pst path{fill:none;stroke:var(--bright);stroke-width:1.4;stroke-linejoin:round}
+.proc .nd{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;background:var(--black2);border:1px solid var(--bright);opacity:0;z-index:3;transition:background .3s}
+.proc .nd.on{background:var(--bright)}
+.proc .tr{position:absolute;width:15px;height:15px;margin:-7.5px 0 0 -7.5px;background:var(--blue);z-index:4;opacity:0;box-shadow:0 0 30px rgba(150,169,191,.6)}
+.proc .sl{position:absolute;z-index:3;display:grid;gap:6px;width:13vw;opacity:0;transform:translateX(-4px)}
+.proc .sl h4{font-size:clamp(.8rem,1.1vw,1.05rem);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.proc .sl p{font-size:clamp(.6rem,.72vw,.72rem);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.45}
+.proc .sl.on h4{color:var(--blue)}
+.proc .big{position:absolute;left:var(--gx);top:calc(50% - clamp(4rem,12vw,14rem));z-index:3;height:clamp(3rem,10vw,12rem);overflow:hidden;opacity:0}
+.proc .big p{font-size:clamp(3rem,10vw,12rem);line-height:1;text-transform:uppercase;letter-spacing:-.03em;font-weight:400;white-space:nowrap}
+.proc .pend{position:absolute;left:var(--gx);top:150px;z-index:3;font-size:clamp(1.2rem,2.4vw,2.6rem);letter-spacing:.06em;text-transform:uppercase;line-height:1;opacity:0}
+.proc .pend b{display:block;font-size:clamp(2.4rem,5.4vw,6.6rem);letter-spacing:-.02em;line-height:.88;margin-top:.25em}
+.proc .pend .o{font-weight:700}
+
 /* ========== MOBILE ========== */
 @media (max-width:900px){
   .top{height:70px}.top nav,.top .cta{display:none}.top .logo img{height:36px}
@@ -227,6 +313,14 @@ section{position:relative}
   .about2 .stat,.about2 .q{grid-column:1/-1}
   .proj .w.l{right:52%}.proj .w.rr{left:52%}.proj .frame{clip-path:inset(36% 34% 36% 34%)}
   .list li a{grid-template-columns:1fr;gap:6px}
+  .diff .left{width:auto;right:var(--gxr);padding-top:96px}.diff .dial{width:120vh;height:120vh;right:-82vh;margin-top:-60vh;opacity:.85}.diff .lab{width:60vw;font-size:4.3vw}.diff .ptr{display:none}.diff .desc p{font-size:4.6vw}
+  .ways.full{height:auto}.ways .whd{position:relative;top:auto;padding:96px 0 30px;flex-direction:column;align-items:start}.ways .wt{text-align:left}
+  .ways .cols{position:relative;top:auto;flex-direction:column}
+  .ways .col{flex:none;height:78vh;border-left:0;border-top:1px solid var(--line)}
+  .ways .col .cbg{opacity:1}.ways .col .vt{display:none}.ways .col .cin{width:auto;right:20px}.ways .col .cin>*{opacity:1!important}.ways .col .pcap{opacity:1}
+  .ways .col .word{font-size:12.4vw;visibility:visible!important}
+  .appr .ahd{flex-direction:column;gap:10px}.appr .ahd .k{text-align:left}.appr .te{font-size:5vw}.appr .afin{flex-direction:column;align-items:start}
+  .proc .sl{display:none}.proc .pend b{font-size:6.2vw}
 }
 @media (prefers-reduced-motion:reduce){.hero .ui .sc i::after{animation:none}}
 </style>
@@ -350,6 +444,83 @@ section{position:relative}
     <li><a href="../#project" data-cur="View"><span class="nm">Above the Park</span><span class="lo">Lincoln Park</span><span class="sf">5,600 sq ft</span></a></li>
     <li><a href="../#project" data-cur="View"><span class="nm">Showpiece Home</span><span class="lo">Chicago, IL</span><span class="sf">CI Turnkey</span></a></li>
   </ul>
+</section>
+
+<!-- 5. THE CI DIFFERENCE -->
+<section class="diff full" id="diff">
+  <div class="glow" aria-hidden="true"></div><div class="tex" aria-hidden="true"></div>
+  <div class="left">
+    <div style="display:grid;gap:26px"><p class="cap k"><span class="l"></span>The CI Difference</p><h2><span class="r">What</span> Turnkey <span class="r">Should Really Mean</span></h2><p class="lead">The people designing your home work directly with the people building it.</p></div>
+    <div class="desc" id="desc">
+      <p class="on">One vision, from planning <b>through detailing.</b></p>
+      <p>Built by a team <b>already fluent in the design.</b></p>
+      <p>The residence, <b>completed beyond construction.</b></p>
+      <p>Designed around <b>comfort and quality of life.</b></p>
+      <p>Delivered as a home — <b>not a construction site.</b></p>
+      <p>Fewer gaps. <b>Better decisions.</b></p>
+    </div>
+  </div>
+  <div class="ptr" aria-hidden="true"></div>
+  <div class="dial" id="dial" aria-label="Architecture + Interior Design · Construction + Project Management · Furnishings + Art · Wellness + Technology · Move-In + Onboarding · One Team">
+    <div class="counter" id="counter"><svg viewBox="-1000 -1000 2000 2000" aria-hidden="true"><defs><path id="crp" d="M -892,0 a 892,892 0 1,1 1784,0 a 892,892 0 1,1 -1784,0"/></defs><text class="txr"><textPath href="#crp" textLength="5560" lengthAdjust="spacing"><tspan class="bb">Turnkey</tspan> / One team / One process / <tspan class="bb">Complete responsibility</tspan> / <tspan class="bb">Turnkey</tspan> / One vision / One roof / <tspan class="bb">One standard</tspan> /</textPath></text></svg></div>
+    <div class="rotor" id="rotor"><svg viewBox="-1000 -1000 2000 2000" aria-hidden="true"><circle class="orb" r="999"/><circle class="orb" r="872" style="opacity:.5"/><circle class="orb" r="620" style="opacity:.28"/><g id="dticks"></g></svg></div>
+  </div>
+</section>
+
+<!-- 6. CI WAYS OF WORK -->
+<section class="ways full" id="ways">
+  <div class="whd"><p class="cap k"><span class="l"></span>CI Ways of Work</p><h2 class="wt"><span class="r">Choose the level of</span> support <span class="r">that fits</span> your needs.</h2></div>
+  <div class="cols" id="cols">
+    <article class="col on">
+      <div class="cbg" aria-hidden="true"></div><span class="pcap">CI Turnkey photo</span>
+      <p class="vt"><span class="r">CI</span> <b>Turnkey</b></p>
+      <div class="cin"><span class="tg">Flagship</span><h3 class="word"><span class="m"><span class="r">Turn</span></span><i></i><span class="m"><span class="b">Key</span></span></h3><p class="d">The complete CI experience. <b>One team to hire</b> — from the first conversation to the night you move in.</p><a class="pill fill" href="../#turnkey" style="justify-self:start">Explore CI Turnkey</a></div>
+    </article>
+    <article class="col">
+      <div class="cbg" aria-hidden="true"></div><span class="pcap">CI Core photo</span>
+      <p class="vt"><span class="r">CI</span> <b>Core</b></p>
+      <div class="cin"><h3 class="word"><span class="m"><span class="r">CI</span></span><i></i><span class="m"><span class="b">Core</span></span></h3><p class="d">The foundation of the CI model. <b>Architecture, interiors and construction</b>, expertly coordinated.</p><a class="pill" href="../#core" style="justify-self:start">Explore CI Core</a></div>
+    </article>
+    <article class="col">
+      <div class="cbg" aria-hidden="true"></div><span class="pcap">CI Curated photo</span>
+      <p class="vt"><span class="r">CI</span> <b>Curated</b></p>
+      <div class="cin"><h3 class="word"><span class="m"><span class="r">Cu</span></span><i></i><span class="m"><span class="b">Rated</span></span></h3><p class="d">The home, <b>considered beyond construction.</b> Furnishings, art, styling.</p><a class="pill" href="../#curated" style="justify-self:start">Explore CI Curated</a></div>
+    </article>
+    <article class="col well">
+      <div class="cbg" aria-hidden="true"></div>
+      <p class="vt"><span class="r">CI</span> <b>Wellness</b></p>
+      <div class="cin"><span class="tg">Integrated with any CI service</span><h3 class="word"><span class="m"><span class="r">Well</span></span><i></i><span class="m"><span class="b">Ness</span></span></h3><p class="d"><b>Better living, designed in.</b> Light, air, water, sleep, recovery.</p><a class="pill" href="../#wellness" style="justify-self:start">Explore CI Wellness</a></div>
+    </article>
+  </div>
+</section>
+
+<!-- 7. CI APPROACH -->
+<section class="appr full" id="appr">
+  <div class="ahd"><div><p class="cap k"><span class="l"></span>CI Approach</p><h2>Designed around <b>how you live.</b></h2></div><p class="k mut">We begin with questions — not about style, but about life.</p></div>
+  <div class="tun" id="tun">
+    <p class="tq"><span><span class="r">How do you want to</span><br>use your home?</span></p>
+    <p class="tq"><span><span class="r">Where do</span><br>you retreat?</span></p>
+    <p class="tq"><span><span class="r">How do you</span><br>entertain?</span></p>
+    <p class="tq"><span><span class="r">What should</span><br>mornings feel like?</span></p>
+    <p class="tq" id="tqLast"><span><span class="r">What matters enough</span><br>to build ar<span id="zO">o</span>und?</span></p>
+    <span class="te b" data-x="-34" data-y="-26" data-d=".5">Air, Light, Water</span>
+    <span class="te r" data-x="30" data-y="28" data-d="1.4">Rest + Recovery</span>
+    <span class="te b o" data-x="-30" data-y="30" data-d="2.3">Energy + Vibrancy</span>
+    <span class="te r" data-x="28" data-y="-30" data-d="3.2">Nutrition, Cooking</span>
+    <span class="te b" data-x="-36" data-y="8" data-d="3.7">Social + Entertaining</span>
+  </div>
+  <div class="afin" id="afin"><p>Personalized is not a finish. <b>It is the CI process.</b></p><a class="pill" href="../#about">Discover Our Approach</a></div>
+  <div class="black" id="ablack" aria-hidden="true"></div>
+</section>
+
+<!-- 8. PROCESS -->
+<section class="proc full" id="proc">
+  <p class="phd cap k"><span class="l"></span>Process</p>
+  <h2 class="pt1" id="pt1"><span class="r">The project</span><br>is complex.</h2>
+  <h2 class="pt2" id="pt2"><span class="r">Your experience</span> doesn't have to be.</h2>
+  <div class="pst" id="pst"><svg id="psvg" aria-hidden="true"><path id="ppath"/></svg></div>
+  <div class="big" id="pbig" aria-hidden="true"><p id="pbigT">Discover</p></div>
+  <div class="pend" id="pend"><span class="r">One team. One process.</span><b><span class="o">Complete</span><br>responsibility.</b></div>
 </section>
 
 </main>
@@ -478,6 +649,114 @@ var fol=qs('#follow'),fx=0,fy=0,tfx=0,tfy=0;
 if(fine){addEventListener('mousemove',function(e){tfx=e.clientX;tfy=e.clientY});gsap.ticker.add(function(){fx+=(tfx-fx)*.12;fy+=(tfy-fy)*.12;fol.style.left=fx+'px';fol.style.top=fy+'px'});
   qa('#plist a').forEach(function(a){a.addEventListener('mouseenter',function(){fol.classList.add('on')});a.addEventListener('mouseleave',function(){fol.classList.remove('on')})})}
 gsap.from('#plist li',{y:60,opacity:0,stagger:.08,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#plist',start:'top 85%'}});
+
+/* ===== 5. DIFFERENCE: turnkey dial ===== */
+(function(){
+var items=[['Architecture','+ Interior Design'],['Construction','+ Project Management'],['Furnishings','+ Art'],['Wellness','+ Technology'],['Move-In','+ Onboarding'],['One Team','Concept to completion']];
+var dial=qs('#dial'),rotor=qs('#rotor'),counter=qs('#counter'),g=qs('#dticks'),STEP=30,labs=[],descs=qa('#desc p'),NS='http://www.w3.org/2000/svg';
+for(var t=0;t<180;t++){var l=d.createElementNS(NS,'line'),lg=t%5===0;l.setAttribute('x1',-999);l.setAttribute('x2',lg?-930:-962);l.setAttribute('y1',0);l.setAttribute('y2',0);l.setAttribute('class','tick'+(lg?' lg':''));l.setAttribute('transform','rotate('+(t*2)+')');g.appendChild(l)}
+items.forEach(function(it,k){var lb=d.createElement('div');lb.className='lab';lb.innerHTML=it[0]+'<span>'+it[1]+'</span>';rotor.appendChild(lb);labs.push(lb)});
+function place(){var r=dial.clientWidth/2;labs.forEach(function(lb,k){lb.style.transform='rotate('+(k*STEP)+'deg) translateX('+(-r*.8)+'px)'})}
+place();addEventListener('resize',place);
+var st={p:0},last=-1;
+function draw(){var f=st.p*(items.length-1),k=Math.round(f);rotor.style.transform='rotate('+(-f*STEP)+'deg)';counter.style.transform='rotate('+(f*STEP*.55)+'deg)';
+  if(k!==last){last=k;labs.forEach(function(l,i){l.classList.toggle('on',i===k)});descs.forEach(function(p,i){p.classList.toggle('on',i===k)})}}
+draw();
+gsap.to(st,{p:1,ease:'none',onUpdate:draw,scrollTrigger:{trigger:'#diff',start:'top top',end:'+=300%',pin:true,scrub:.9,snap:{snapTo:1/(items.length-1),duration:{min:.25,max:.6},delay:.06,ease:'power2.inOut'}}});
+gsap.from('#dial',{xPercent:30,rotate:60,opacity:0,duration:1.6,ease:'power3.out',scrollTrigger:{trigger:'#diff',start:'top 70%'}});
+gsap.from('#diff h2, #diff .lead',{y:50,opacity:0,stagger:.12,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#diff',start:'top 60%'}});
+gsap.from('.diff .ptr',{scaleX:0,transformOrigin:'right',duration:1,ease:'power3.out',delay:.4,scrollTrigger:{trigger:'#diff',start:'top 60%'}});
+})();
+
+/* ===== 6. WAYS: four panes of glass ===== */
+(function(){
+var cols=qa('#cols .col'),cur=-1;
+function act(k,instant){if(k===cur)return;var prev=cur;cur=k;
+  cols.forEach(function(c,i){c.classList.toggle('on',i===k);gsap.to(c,{flexGrow:i===k?9:1,duration:instant?0:1.1,ease:'power4.inOut'})});
+  var c=cols[k];
+  gsap.fromTo(qa('.word .m>span',c),{yPercent:110},{yPercent:0,duration:1,ease:'power4.out',stagger:.08,delay:instant?0:.35});
+  gsap.fromTo(qs('.word i',c),{scaleX:0},{scaleX:1,duration:.9,ease:'power3.inOut',delay:instant?0:.45});
+  gsap.fromTo(qa('.cin>*:not(.word)',c),{opacity:0,y:20},{opacity:1,y:0,duration:.8,stagger:.08,ease:'power3.out',delay:instant?0:.6});
+  if(prev>-1){var pc=cols[prev],pe=qa('.cin>*:not(.word)',pc);gsap.killTweensOf(pe);gsap.killTweensOf(qa('.word .m>span, .word i',pc));gsap.to(pe,{opacity:0,y:0,duration:.25,overwrite:true})}
+}
+var mm2=gsap.matchMedia();
+mm2.add('(min-width: 901px)',function(){
+  cols.forEach(function(c){c.style.flexGrow=1});act(0,true);
+  var trig=ScrollTrigger.create({trigger:'#ways',start:'top top',end:'+=320%',pin:true,onUpdate:function(s){act(Math.min(cols.length-1,Math.floor(s.progress*cols.length)))}});
+  cols.forEach(function(c,i){c.addEventListener('click',function(e){if(e.target.closest('a'))return;var y=trig.start+(i+.5)/cols.length*(trig.end-trig.start);if(smoother)smoother.scrollTo(y,true);else scrollTo({top:y,behavior:'smooth'})})});
+  return function(){cur=-1};
+});
+mm2.add('(max-width: 900px)',function(){cols.forEach(function(c){gsap.from(qa('.word .m>span',c),{yPercent:110,duration:1,stagger:.08,ease:'power4.out',scrollTrigger:{trigger:c,start:'top 55%'}});gsap.from(qs('.word i',c),{scaleX:0,duration:.9,ease:'power3.inOut',scrollTrigger:{trigger:c,start:'top 55%'}})})});
+gsap.from('#ways .wt',{y:50,opacity:0,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#ways',start:'top 70%'}});
+gsap.from('#cols .col',{yPercent:30,opacity:0,stagger:.08,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:'#ways',start:'top 60%'}});
+})();
+
+/* ===== 7. APPROACH: fly through the questions, into the O ===== */
+(function(){
+var sec=qs('#appr'),Q=qa('#tun .tq'),E=qa('#tun .te'),D=1700,cam={c:-900,z:0},last=Q[Q.length-1],zO=qs('#zO');
+var vw=function(){return innerWidth},vh=function(){return innerHeight};
+function setEls(){E.forEach(function(e){e._x=+e.getAttribute('data-x');e._y=+e.getAttribute('data-y');e._d=+e.getAttribute('data-d')*D})}
+setEls();
+function depthStyle(el,z,keep){var op,bl;if(z<=0){op=Math.max(0,Math.min(1,1+z/2600));bl=Math.min(12,-z/180)}else{op=keep?1:Math.max(0,1-z/520);bl=keep?0:Math.min(18,z/30)}el.style.opacity=op.toFixed(3);el.style.filter=bl>.2?'blur('+bl.toFixed(1)+'px)':'none';return op}
+function draw(){
+  Q.forEach(function(q,i){var z=cam.c-i*D;var isLast=i===Q.length-1;if(isLast&&z>0)z=0;q.style.transform='translate3d(0,0,'+z.toFixed(1)+'px)';depthStyle(q,z,isLast)});
+  E.forEach(function(e){var z=cam.c-e._d;e.style.transform='translate3d(calc(-50% + '+e._x+'vw),calc(-50% + '+e._y+'vh),'+z.toFixed(1)+'px)';depthStyle(e,z,false)});
+}
+var ox=0,oy=0;
+var cvs=d.createElement('canvas').getContext('2d');
+function origin(){last.style.transform='none';var r=zO.getBoundingClientRect(),s=sec.getBoundingClientRect(),cs=getComputedStyle(zO);cvs.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;var m=cvs.measureText('O'),inkL=-m.actualBoundingBoxLeft,inkW=m.actualBoundingBoxRight+m.actualBoundingBoxLeft,base=r.top+(m.fontBoundingBoxAscent||parseFloat(cs.fontSize)*.8)+(r.height-((m.fontBoundingBoxAscent||0)+(m.fontBoundingBoxDescent||0)))/2;ox=r.left-s.left+inkL+inkW*.075;oy=base-s.top-m.actualBoundingBoxAscent*.5;last.style.transformOrigin=ox+'px '+oy+'px';draw()}
+draw();
+var zoom={s:1};
+var tl=gsap.timeline({scrollTrigger:{trigger:'#appr',start:'top top',end:'+=420%',pin:true,scrub:1,onRefresh:origin}});
+tl.to(cam,{c:(Q.length-1)*D,duration:4,ease:'none',onUpdate:draw},0)
+  .to('#afin',{opacity:1,duration:.3},4.05)
+  .to({},{duration:.35},4.05)
+  .to('#afin, #appr .ahd',{opacity:0,duration:.2},4.45)
+  .to(zoom,{s:260,duration:1,ease:'power3.in',onUpdate:function(){last.style.transform='translate3d(0,0,0) scale('+zoom.s.toFixed(3)+')'}},4.5)
+  .to('#ablack',{opacity:1,duration:.12,ease:'none'},5.38);
+addEventListener('resize',function(){setTimeout(origin,250)});
+})();
+
+/* ===== 8. PROCESS: tangle → brand line ===== */
+(function(){
+var pst=qs('#pst'),svg=qs('#psvg'),path=qs('#ppath'),N=96,tang=[],flat=[],W=0,H=0,nodes=[],labels=[],trv,big=qs('#pbigT');
+var steps=[['Discover','Residence, lifestyle, vision'],['Define','Scope + the right service'],['Design','Architecture + interiors, together'],['Build','Intent already understood'],['Curate','Furnishings, art, final layers'],['Deliver','Move-in + onboarding']];
+var X0=.06,X1=.8,Y=.66;
+function geom(){W=pst.clientWidth;H=pst.clientHeight;svg.setAttribute('viewBox','0 0 '+W+' '+H);tang=[];flat=[];
+  var riseLen=Math.min(W*(1-X1-.05),H*(Y-.24));
+  for(var i=0;i<N;i++){var u=i/(N-1);
+    tang.push([W*.5+W*.42*Math.sin(u*9.4+.3)*Math.cos(u*3.1)+W*.06*Math.sin(u*31),H*.5+H*.34*Math.sin(u*12.7+1.1)*Math.cos(u*2.3)+H*.07*Math.cos(u*27)]);
+    if(u<.84){flat.push([W*X0+(u/.84)*W*(X1-X0),H*Y])}else{var v=(u-.84)/.16;flat.push([W*X1+v*riseLen,H*Y-v*riseLen])}}
+  nodes.forEach(function(n,k){var x=X0+(k/(steps.length-1))*(X1-X0)*.96;n.style.left=(x*100)+'%';n.style.top=(Y*100)+'%';labels[k].style.left=(x*100)+'%';labels[k].style.top=(Y*100+3)+'%'});
+  pst._rise=riseLen;
+}
+steps.forEach(function(s,k){var n=d.createElement('i');n.className='nd';pst.appendChild(n);nodes.push(n);var l=d.createElement('div');l.className='sl';l.innerHTML='<h4>'+s[0]+'</h4><p>'+s[1]+'</p>';pst.appendChild(l);labels.push(l)});
+trv=d.createElement('i');trv.className='tr';pst.appendChild(trv);
+function cat(p){var s='M'+p[0][0].toFixed(1)+','+p[0][1].toFixed(1);for(var i=0;i<p.length-1;i++){var a=p[i-1]||p[i],b=p[i],c=p[i+1],e=p[i+2]||c;s+='C'+(b[0]+(c[0]-a[0])/6).toFixed(1)+','+(b[1]+(c[1]-a[1])/6).toFixed(1)+' '+(c[0]-(e[0]-b[0])/6).toFixed(1)+','+(c[1]-(e[1]-b[1])/6).toFixed(1)+' '+c[0].toFixed(1)+','+c[1].toFixed(1)}return s}
+var pr={m:0,s:0,r:0},lastK=-1;
+function draw(){var e=pr.m,pts=[];for(var i=0;i<N;i++)pts.push([tang[i][0]+(flat[i][0]-tang[i][0])*e,tang[i][1]+(flat[i][1]-tang[i][1])*e]);path.setAttribute('d',cat(pts));
+  var ok=e>.985,a=pr.s*(steps.length-1),k=Math.round(a);
+  nodes.forEach(function(n,i){n.style.opacity=ok?1:0;n.classList.toggle('on',ok&&i<=a+.01)});
+  labels.forEach(function(l,i){l.style.opacity=ok?(i<=a+.01?1:.25):0;l.classList.toggle('on',ok&&i===k)});
+  if(ok){var x0=X0,x1=X0+(X1-X0)*.96,x=x0+(x1-x0)*pr.s,tx=x*W,ty=Y*H;if(pr.r>0){tx=X1*W+pr.r*pst._rise;ty=Y*H-pr.r*pst._rise}trv.style.opacity=1;trv.style.left=tx+'px';trv.style.top=ty+'px'}else{trv.style.opacity=0}
+  if(ok&&k!==lastK){lastK=k;gsap.fromTo(big,{yPercent:100},{yPercent:0,duration:.6,ease:'power3.out'});big.textContent=steps[k][0]}
+}
+geom();draw();
+addEventListener('resize',function(){geom();draw()});
+gsap.timeline({scrollTrigger:{trigger:'#proc',start:'top top',end:'+=340%',pin:true,scrub:.9}})
+  .from('#pt1',{scale:1.15,opacity:0,duration:.3},0)
+  .to(pr,{m:1,duration:1.2,ease:'power2.inOut',onUpdate:draw},.1)
+  .to('#pt1',{opacity:0,scale:.9,filter:'blur(12px)',duration:.35},.95)
+  .to('#pt2',{opacity:1,duration:.3},1.15)
+  .to('#pbig',{opacity:1,duration:.2},1.3)
+  .to(pr,{s:1,duration:1.6,ease:'none',onUpdate:draw},1.35)
+  .to(pr,{r:1,duration:.4,ease:'power2.in',onUpdate:draw},3)
+  .to('#pbig',{opacity:0,duration:.2},3)
+  .to('#pt2',{opacity:0,y:-30,filter:'blur(8px)',duration:.25},3)
+  .to('#pend',{opacity:1,y:0,duration:.3},3.25)
+  .to({},{duration:.25},3.55);
+gsap.set('#pend',{y:20});
+})();
 
 qa('.cap .l').forEach(function(l){gsap.from(l,{scaleX:0,transformOrigin:'left',duration:1.2,ease:'power3.out',scrollTrigger:{trigger:l,start:'top 95%'}})});
 
