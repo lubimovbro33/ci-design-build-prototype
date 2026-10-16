@@ -148,14 +148,14 @@ h1,h2,h3,h4,.display{font-weight:700;text-transform:uppercase;letter-spacing:-.0
 .hero .slides img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.6s ease;will-change:transform,opacity;transform:scale(1.08)}
 .hero .slides img.on{opacity:1;animation:kb 9s linear forwards}
 @keyframes kb{from{transform:scale(1.08) translate3d(0,0,0)}to{transform:scale(1.0) translate3d(0,-1%,0)}}
-.hero .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(29,29,29,.35) 0%,rgba(29,29,29,.15) 40%,rgba(29,29,29,.82) 100%)}
+.hero .veil{position:absolute;inset:0;z-index:1;background:linear-gradient(180deg,rgba(29,29,29,.38) 0%,rgba(29,29,29,.18) 38%,rgba(29,29,29,.86) 100%)}
 .hero .veil::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(29,29,29,.45),rgba(29,29,29,0) 60%)}
 .hero .wrap{position:relative;z-index:2;display:grid;gap:clamp(24px,4vw,56px);padding-bottom:clamp(28px,4vw,56px)}
 .hero h1{font-size:clamp(2.6rem,7.3vw,7.6rem);line-height:.88;letter-spacing:-.015em}
 .hero .cols{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));column-gap:clamp(12px,1.6vw,24px);row-gap:32px;align-items:end}
 .hero .cols>*{min-width:0}
 .hero .intro{grid-column:1/8;display:grid;gap:22px}
-.hero .side{grid-column:9/13;display:grid;gap:16px}
+.hero .side{grid-column:8/13;display:grid;gap:16px;padding:clamp(18px,2.2vw,30px)}
 .hero .side .body{max-width:40ch}
 .hero .foot{display:flex;align-items:center;justify-content:space-between;gap:16px;border-top:1px solid var(--line);padding-top:16px}
 .hero .dots{display:flex;gap:10px}
@@ -423,7 +423,7 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
         <p class="k eyebrow hr-a"><span class="rule"></span>CI Design + Build</p>
         <h1 class="lines" id="h1"><span><span>Redefining</span></span><span><span>the Art</span></span><span><span>of Living</span></span></h1>
       </div>
-      <div class="side hr-b">
+      <div class="side hr-b glass">
         <p class="lead">Building You a Better Life</p>
         <div class="body small">
           <p>A home for you to live your best life. It should reflect how you want to live. Support how you feel. Perform as beautifully as it appears.</p>
