@@ -835,8 +835,8 @@ footer .fine{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px;
   }
   function finish(){
     if(pl.dataset.done)return;pl.dataset.done='1';d.body.classList.remove('lock');
-    if(hasGsap&&!reduce){gsap.to(pl,{yPercent:-100,duration:.9,ease:'power4.inOut',onComplete:function(){pl.style.display='none'}});setTimeout(heroIntro,250)}
-    else{pl.style.display='none'}
+    pl.style.transition='transform .9s cubic-bezier(.77,0,.18,1)';pl.style.transform='translateY(-100%)';setTimeout(function(){pl.style.display='none'},1000);
+    if(hasGsap&&!reduce){setTimeout(heroIntro,250)}
   }
   d.body.classList.add('lock');
   if(reduce){finish()}else{
