@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>CI Design + Build — Redefining the Art of Living</title>
-<meta name="description" content="Turnkey solutions. Bespoke interiors. Building You a Better Life. Chicago + South Florida.">
+<title>CI Design + Build — Concierge-level Design + Build</title>
+<meta name="description" content="Concierge-level design + build. One team from the first conversation to the night we move you in. Building You a Better Life — Chicago + South Florida.">
 <link rel="preload" href="assets/TradeGothic-BoldExt.otf" as="font" type="font/otf" crossorigin>
 <link rel="preload" href="assets/TradeGothic-Ext.otf" as="font" type="font/otf" crossorigin>
 <style>
@@ -300,6 +300,184 @@ section{position:relative}
 .proc .pend b{display:block;font-size:clamp(2.4rem,5.4vw,6.6rem);letter-spacing:-.02em;line-height:.88;margin-top:.25em}
 .proc .pend .o{font-weight:700}
 
+/* ===== blueprint layer (CI space plan studies, traced) ===== */
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.bpx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero .bpx{color:rgba(235,235,235,.13);--fc:rgba(150,169,191,.16);--ww:1.1;--fw:.7}
+/* architectural dimension line */
+.dim{position:absolute;display:flex;align-items:center;gap:12px;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);white-space:nowrap;transform-origin:center}
+.dim i{flex:1;height:1px;background:currentColor;position:relative;opacity:.7}
+.dim i::before{content:"";position:absolute;top:-6px;width:1px;height:13px;background:currentColor;transform:rotate(45deg)}
+.dim i::after{content:"";position:absolute;top:-9px;width:1px;height:19px;background:currentColor;opacity:.55}
+.dim i:first-child::before,.dim i:first-child::after{left:0}
+.dim i:last-child::before,.dim i:last-child::after{right:0}
+.about .sq .dim.top{left:0;right:0;top:-34px}
+.about .sq .dim.side{left:calc(100% + 34px);top:50%;width:min(58vmin,620px);transform:translate(-50%,-50%) rotate(90deg)}
+.about .sq .dim{opacity:0}
+.hero .eyb{position:absolute;left:var(--gx);top:104px;z-index:5;color:rgba(235,235,235,.75)}
+.hero .ui .sub .s{max-width:44ch;font-size:10px;letter-spacing:.2em;text-transform:uppercase;line-height:1.7;color:var(--muted);margin-top:6px}
+.philo .endw{display:grid;gap:18px}
+.philo .endw .lead{max-width:44ch;color:rgba(235,235,235,.62);line-height:1.8}
+.about2 .q .lead{max-width:46ch;color:var(--muted);line-height:1.8}
+.list .lh .sm{max-width:40ch;margin-top:18px;color:var(--muted);line-height:1.8}
+
+/* ===== 9. THE CI CLIENT — a light over the drawings ===== */
+.cli{background:var(--black2)}
+.cli .chd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;align-items:start;gap:30px;z-index:6}
+.cli .chd .k2{max-width:32ch;text-align:right;color:var(--muted);line-height:1.8}
+.cli .lay{position:absolute;inset:0}
+.cli .lay .bpx{transform-origin:50% 50%}
+.cli .dimL .bpx{color:rgba(235,235,235,.06);--fc:rgba(235,235,235,.04)}
+.cli .litL .bpx{color:rgba(235,235,235,.78);--fc:rgba(150,169,191,.85);--ww:1.4;--fw:1}
+.cli .litL{--x:50%;--y:50%;--r:180px;background:radial-gradient(circle at var(--x) var(--y),rgba(150,169,191,.16),rgba(150,169,191,.03) 40%,transparent 70%);-webkit-mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),#000 52%,transparent 100%);mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),#000 52%,transparent 100%)}
+.cli .gtw{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);text-align:center;z-index:2}
+.cli .gt{font-weight:700;text-transform:uppercase;font-size:clamp(2.4rem,8.6vw,10.6rem);line-height:.86;letter-spacing:-.025em}
+.cli .gt .r{font-weight:400}
+.cli .dimL .gt{color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.17)}
+.cli .litL .gt{color:var(--bright)}
+.cli .sodo{position:absolute;left:var(--gx);right:var(--gxr);top:50%;z-index:4;text-align:center;font-size:clamp(2.4rem,8.6vw,10.6rem);line-height:.86;letter-spacing:-.025em;text-transform:uppercase;opacity:0}
+.cli .sodo b{color:transparent;-webkit-text-stroke:1.4px var(--bright)}
+.cli .cnote{position:absolute;left:var(--gx);bottom:84px;z-index:6;max-width:34ch;font-size:clamp(.9rem,1.2vw,1.1rem);letter-spacing:.1em;text-transform:uppercase;line-height:1.3;opacity:0}
+.cli .cnote .k{display:block;margin-bottom:12px;color:var(--muted)}
+.tblock{position:absolute;right:var(--gxr);bottom:40px;z-index:6;border:1px solid var(--line2);display:grid;grid-template-columns:auto auto;font-size:9px;letter-spacing:.22em;text-transform:uppercase;opacity:0}
+.tblock span{padding:9px 14px;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);color:var(--muted)}
+.tblock span:nth-child(2n){border-right:0;color:var(--ink)}
+.tblock span:nth-last-child(-n+2){border-bottom:0}
+
+/* ===== 10. INVEST IN YOURSELF — the reel ===== */
+.inv{background:linear-gradient(135deg,#96A9BF 0%,#5E7488 42%,#283E4B 100%)}
+.inv::before{content:"";position:absolute;inset:0;background:url(assets/glass-board.webp) center/cover;opacity:.16;mix-blend-mode:overlay;pointer-events:none}
+.inv::after{content:"";position:absolute;inset:0;background:url(assets/glassmorph.webp) center/cover;opacity:.18;mix-blend-mode:screen;pointer-events:none}
+.inv>*{position:relative;z-index:2}
+.inv .ihd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;gap:30px}
+.inv .ihd .k2{max-width:30ch;text-align:right;color:rgba(235,235,235,.75);line-height:1.8}
+.inv .stage{position:absolute;left:var(--gx);right:calc(var(--gxr) + 13vw);top:24vh}
+.inv .pre{font-size:clamp(1.3rem,3.2vw,3.6rem);text-transform:uppercase;letter-spacing:.04em;line-height:1;margin-bottom:.35em}
+.inv .win{position:relative;font-size:clamp(2.4rem,7vw,8.6rem);height:3.4em;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 0,#000 34%,rgba(0,0,0,.35) 70%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 34%,rgba(0,0,0,.35) 70%,transparent 100%)}
+.inv .win ul{list-style:none;margin:0;padding:0;will-change:transform}
+.inv .win li{height:1.08em;line-height:1.08em;font-weight:700;text-transform:uppercase;letter-spacing:-.025em;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.55);transition:color .45s,-webkit-text-stroke-color .45s}
+.inv .win li.on{color:var(--bright);-webkit-text-stroke-color:transparent}
+.inv .scale{position:absolute;right:calc(var(--gxr) + 2vw);top:24vh;bottom:22vh;width:1px;background:rgba(235,235,235,.35)}
+.inv .scale span{position:absolute;right:18px;text-align:right;transform:translateY(-50%);font-size:9px;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap;color:rgba(235,235,235,.7)}
+.inv .scale span::before{content:"";position:absolute;right:-18px;top:50%;width:11px;height:1px;background:rgba(235,235,235,.7)}
+.inv .scale .mk{position:absolute;left:-4px;top:0;width:9px;height:9px;margin-top:-4.5px;background:var(--bright);box-shadow:0 0 24px rgba(235,235,235,.8)}
+.inv .bot{position:absolute;left:var(--gx);right:var(--gxr);bottom:40px;padding-left:0;display:flex;justify-content:space-between;align-items:end;gap:30px;opacity:0}
+.inv .bot p{max-width:40ch;margin-bottom:46px;font-size:clamp(.95rem,1.35vw,1.25rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.3}
+
+/* ===== 11. CLIENT STORIES ===== */
+.voc{background:var(--black);padding:clamp(110px,12vw,180px) 0 clamp(100px,11vw,170px);overflow:hidden}
+.voc .vhd{position:relative;z-index:3;padding:0 var(--gxr) 0 var(--gx);display:flex;justify-content:space-between;align-items:end;gap:30px}
+.voc .vhd h2{font-size:clamp(1.6rem,3.4vw,3.6rem);line-height:.95;text-transform:uppercase;letter-spacing:-.01em;font-weight:700;max-width:17ch}
+.voc .vhd h2 .r{font-weight:400}
+.voc .vhd .k2{max-width:30ch;text-align:right;color:var(--muted);line-height:1.8}
+.voc .mqw{position:absolute;left:0;right:0;top:58%;z-index:1;pointer-events:none}
+.voc .mq{display:flex;white-space:nowrap;font-size:clamp(4.4rem,15vw,18rem);line-height:.8;text-transform:uppercase;letter-spacing:-.03em;transform:translateY(-50%);will-change:transform}
+.voc .mq span{padding-right:.35em}
+.voc .mq .b{color:rgba(235,235,235,.1)}
+.voc .mq .o{-webkit-text-stroke:1px rgba(235,235,235,.18)}
+.voc .films{position:relative;z-index:2;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;padding:0 var(--gxr) 0 var(--gx);margin-top:clamp(60px,8vw,120px);align-items:start}
+.voc .film{position:relative;display:grid;gap:16px}
+.voc .film.a{grid-column:2/8}
+.voc .film.b{grid-column:9/13;margin-top:clamp(120px,16vw,260px)}
+.voc .film .fr{position:relative;overflow:hidden}
+.voc .film.a .fr{aspect-ratio:16/10}.voc .film.b .fr{aspect-ratio:4/5}
+.voc .film .fr .ph{position:absolute;inset:-4%;transition:transform 1.2s var(--ease)}
+.voc .film:hover .fr .ph{transform:scale(1.04)}
+.voc .film .play{position:absolute;left:50%;top:50%;z-index:3;width:84px;height:84px;margin:-42px 0 0 -42px;border:1px solid rgba(235,235,235,.6);border-radius:50%;display:grid;place-items:center;transition:transform .6s var(--ease),background .4s}
+.voc .film .play::after{content:"";margin-left:5px;border-left:14px solid var(--bright);border-top:9px solid transparent;border-bottom:9px solid transparent}
+.voc .film:hover .play{transform:scale(1.15);background:rgba(235,235,235,.1)}
+.voc .film .m{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.voc .film .m h3{font-size:clamp(.95rem,1.3vw,1.2rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.25}
+
+/* ===== 12. FAQ — before you begin ===== */
+.faq{background:var(--bright);color:var(--black2);--ink:var(--black2);--muted:rgba(20,20,20,.55);--line:rgba(20,20,20,.16);--line2:rgba(20,20,20,.45);padding:clamp(110px,11vw,170px) var(--gxr) clamp(100px,10vw,160px) var(--gx);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:start}
+.faq .fl{grid-column:1/6;display:grid;gap:34px}
+.faq .fl h2{text-transform:uppercase;line-height:.84;letter-spacing:-.025em}
+.faq .fl h2 .w1,.faq .fl h2 .w3{display:block;font-weight:700;font-size:clamp(3rem,8.6vw,10rem)}
+.faq .fl h2 .w2{display:block;font-size:clamp(.9rem,1.6vw,1.5rem);letter-spacing:.3em;margin:.5em 0 .6em 3.6em}
+.faq .fl h2 .w3{color:transparent;-webkit-text-stroke:1.4px var(--black2)}
+.faq .fl .k2{max-width:30ch;color:var(--muted);line-height:1.8}
+.faq .fr{grid-column:7/13;border-bottom:1px solid var(--line)}
+.faq .qa{border-top:1px solid var(--line);position:relative}
+.faq .qa::before{content:"";position:absolute;left:0;top:-1px;height:1px;width:100%;background:var(--black2);transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease)}
+.faq .qa::after{content:"";position:absolute;left:0;top:-3px;width:5px;height:5px;background:var(--black2);opacity:0;transition:opacity .4s}
+.faq .qa.open::before{transform:scaleX(1)}.faq .qa.open::after{opacity:1}
+.faq .qq{appearance:none;background:none;border:0;color:inherit;font:inherit;width:100%;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:clamp(18px,2vw,28px) 0;cursor:pointer;text-align:left;font-size:clamp(1rem,1.45vw,1.35rem);letter-spacing:.06em;text-transform:uppercase;line-height:1.2;transition:padding .5s var(--ease)}
+.faq .qa.open .qq{font-weight:700}
+.faq .qq:hover{padding-left:12px}
+.faq .pm{position:relative;width:18px;height:18px;flex:none}
+.faq .pm::before,.faq .pm::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1px;background:currentColor;transition:transform .5s var(--ease)}
+.faq .pm::after{transform:rotate(90deg)}
+.faq .qa.open .pm::after{transform:rotate(0)}
+.faq .qa.open .pm::before{transform:rotate(180deg)}
+.faq .ans{height:0;overflow:hidden}
+.faq .ans p{padding:0 0 clamp(22px,2.4vw,32px);max-width:50ch;font-size:15px;line-height:1.7;color:rgba(20,20,20,.72)}
+
+/* ===== 13. FINAL — from drawing to life ===== */
+.fin{background:var(--black2)}
+.fin .fhd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;gap:30px;z-index:6}
+.fin .drw{position:absolute;left:50%;top:53%;width:min(64vw,104vh);aspect-ratio:412/352;transform:translate(-50%,-50%);z-index:2}
+.fin .drw svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.fin .drw .fw{fill:none;stroke:var(--bright);stroke-width:1.15}
+.fin .drw .ff{fill:none;stroke:var(--blue);stroke-width:.8}
+.fin .drw .dim{color:rgba(235,235,235,.6)}
+.fin .drw .dim.top{left:0;right:0;top:-38px}
+.fin .drw .dim.side{left:-38px;top:50%;width:85.4%;transform:translate(-50%,-50%) rotate(-90deg)}
+.fin .drw .tblock{right:0;bottom:-58px}
+.fin .real{position:absolute;inset:0;z-index:3;opacity:0;visibility:hidden}
+.fin .hl .ln{padding-bottom:0}
+.fin .real .ph{position:absolute;inset:0}
+.fin .real::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,20,20,.35),rgba(20,20,20,.15) 40%,rgba(20,20,20,.7));z-index:2}
+.fin .hl{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);z-index:4;text-align:center;font-size:clamp(2.6rem,9vw,11rem);line-height:.86;letter-spacing:-.025em;text-transform:uppercase}
+.fin .end{position:absolute;inset:0;z-index:5;display:grid;place-items:center;align-content:center;gap:clamp(26px,3.4vh,44px);text-align:center;padding:120px var(--gxr) 60px var(--gx);opacity:0}
+.fin .end h2{font-size:clamp(1.6rem,3.8vw,4.2rem);line-height:.95;text-transform:uppercase;letter-spacing:-.01em;font-weight:700;max-width:18ch}
+.fin .end h2 .r{font-weight:400}
+.fin .end .s{max-width:40ch;color:rgba(235,235,235,.75);line-height:1.8}
+.rcta{position:relative;width:clamp(150px,13vw,200px);aspect-ratio:1;display:grid;place-items:center}
+.rcta .core{position:absolute;inset:0;border-radius:50%;background:var(--bright);color:var(--black);display:grid;place-items:center;text-align:center;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;line-height:1.5;padding:0 14%;transition:background .5s,color .5s}
+.rcta:hover .core{background:var(--blue);color:var(--black2)}
+.rcta svg{position:absolute;inset:-26%;width:152%;height:152%;animation:spin 22s linear infinite;pointer-events:none}
+.rcta svg text{font-family:var(--f);font-size:8.6px;letter-spacing:3.4px;fill:rgba(235,235,235,.7);text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== FOOTER ===== */
+.foot{background:var(--indigo);overflow:hidden}
+.foot::before{content:"";position:absolute;inset:0;background:url(assets/glass-board.webp) center/cover;opacity:.08;mix-blend-mode:screen;pointer-events:none}
+.foot .bpx{color:rgba(235,235,235,.06);--fc:rgba(235,235,235,.05);height:auto;top:auto;bottom:0}
+.foot>*{position:relative;z-index:2}
+.foot .mq2w{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:clamp(14px,1.6vw,22px) 0}
+.foot .mq2{display:flex;white-space:nowrap;font-size:clamp(1.1rem,2.2vw,2.2rem);line-height:1;text-transform:uppercase;letter-spacing:.02em;will-change:transform}
+.foot .mq2 span{display:inline-flex;align-items:center;gap:.7em;padding-right:.7em}
+.foot .mq2 span::after{content:"";width:.22em;height:.22em;background:currentColor;opacity:.8}
+.foot .fgrid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:40px 24px;padding:clamp(70px,8vw,130px) var(--gxr) 0 var(--gx)}
+.foot .where{grid-column:1/7;text-transform:uppercase}
+.foot .where .sm{display:block;font-size:10px;letter-spacing:.3em;color:rgba(235,235,235,.7);margin:.2em 0 .9em}
+.foot .where .bg{display:block;font-weight:700;font-size:clamp(2.4rem,6.4vw,7.6rem);line-height:.86;letter-spacing:-.025em}
+.foot .where .bg.o{color:transparent;-webkit-text-stroke:1.2px var(--bright)}
+.foot .where .sm.mid{margin:.9em 0 .9em 4.2em}
+.foot .cols{grid-column:8/13;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 24px;align-content:start}
+.foot .cols h4{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(235,235,235,.6);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.foot .cols h4::before{content:"";width:5px;height:5px;background:currentColor}
+.foot .cols p,.foot .cols a{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;line-height:1.8}
+.foot .cols a{width:fit-content;background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .5s var(--ease)}
+.foot .cols a:hover{background-size:100% 1px}
+.foot .tm{font-variant-numeric:tabular-nums;color:var(--blue)}
+.foot .cta2{grid-column:8/13}
+.foot .wm{display:flex;justify-content:space-between;padding:0 var(--gxr) 0 var(--gx);margin-top:clamp(60px,8vw,120px);font-weight:700;font-size:21.6vw;line-height:.76;letter-spacing:-.04em;text-transform:uppercase;overflow:hidden;cursor:default}
+.foot .wm span{display:inline-block;will-change:transform;transition:color .35s,-webkit-text-stroke-color .35s}
+.foot .wm .ol{color:transparent;-webkit-text-stroke:1.5px var(--bright)}
+.foot .wm .ol.hot{color:var(--bright)}
+.foot .wm .fl.hot{color:transparent;-webkit-text-stroke:1.5px var(--bright)}
+.foot .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px 30px;padding:22px var(--gxr) 26px var(--gx);border-top:1px solid var(--line);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(235,235,235,.65)}
+.foot .bot nav{display:flex;gap:24px;flex-wrap:wrap}
+
+/* concierge chip */
+.conc{position:fixed;left:var(--gx);bottom:22px;z-index:55;display:inline-flex;align-items:center;gap:12px;padding:10px 16px 10px 14px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#fff;mix-blend-mode:difference;opacity:0;pointer-events:none;transition:opacity .5s}
+.conc.on{opacity:1;pointer-events:auto}
+.conc i{width:6px;height:6px;background:#fff;animation:blink 2.4s ease-in-out infinite}
+.conc em{font-style:normal;opacity:.7;font-variant-numeric:tabular-nums}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
 /* ========== MOBILE ========== */
 @media (max-width:900px){
   .top{height:70px}.top nav,.top .cta{display:none}.top .logo img{height:36px}
@@ -321,11 +499,21 @@ section{position:relative}
   .ways .col .word{font-size:12.4vw;visibility:visible!important}
   .appr .ahd{flex-direction:column;gap:10px}.appr .ahd .k{text-align:left}.appr .te{font-size:5vw}.appr .afin{flex-direction:column;align-items:start}
   .proc .sl{display:none}.proc .pend b{font-size:6.2vw}
+  .hero .eyb{top:88px}.hero .ui .sub .s{display:none}
+  .about .sq .dim.side{display:none}
+  .cli .chd{flex-direction:column;gap:10px;top:92px}.cli .chd .k2{text-align:left}.cli .gt,.cli .sodo{font-size:11vw}.cli .tblock{display:none}.cli .cnote{bottom:28px;right:var(--gxr)}
+  .inv .ihd{flex-direction:column;gap:10px;top:92px}.inv .ihd .k2{text-align:left}.inv .stage{right:var(--gxr);top:30vh}.inv .win{font-size:9.4vw}.inv .pre{font-size:5.4vw}.inv .scale{display:none}.inv .bot{flex-direction:column;align-items:start;bottom:74px}.inv .bot p{margin-bottom:0}
+  .voc .vhd{flex-direction:column;align-items:start}.voc .vhd .k2{text-align:left}.voc .film.a,.voc .film.b{grid-column:1/-1;margin-top:0}.voc .films{gap:46px}
+  .faq .fl,.faq .fr{grid-column:1/-1}.faq .fl{margin-bottom:30px}.faq .fl h2 .w2{margin-left:2em}
+  .fin .drw{width:88vw;top:50%}.fin .drw .dim.side{display:none}.fin .drw .tblock{display:none}.fin .hl{font-size:11vw}.fin .fhd{flex-direction:column;gap:8px;top:92px}
+  .foot .where,.foot .cols,.foot .cta2{grid-column:1/-1}.foot .cols{grid-template-columns:1fr;gap:28px}.foot .wm{font-size:21vw}
+  .conc{bottom:14px;padding:8px 12px}.conc .cl{display:none}
 }
 @media (prefers-reduced-motion:reduce){.hero .ui .sc i::after{animation:none}}
 </style>
 </head>
 <body class="lock">
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false"><defs><symbol id="pl0" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M8 3V349M20 3V44M239 3V44M245 3V33M317 3V33M389 3V58M410 3V349M7 4H411M321 9H384M280 10V33M263 26V33M244 32H318M19 43H240M20 48V64M128 48V71M284 48V71M380 48V58M19 50H381M50 55H129M284 55H362M379 55H390M7 61H22M60 102V252M380 127V221M389 127V140M379 130H390M20 137V173M388 139H411M7 140H22M368 144V204M391 145H411M392 145V202M217 167V222M7 171H22M391 201H411M400 210H411M400 210V225M379 218H402M20 276V299M7 278H21M164 278V310M237 278V310M233 281V307M400 282V349M380 286V298M379 289H402M50 295V322M353 297H381M355 297V322M19 298H52M77 320V336M173 320V336M237 320V336M333 320V336M49 321H79M170 321H240M327 321H356M373 334V345M7 335H78M172 335H238M333 335H374M372 344H402M7 348H411"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M10 3V62M44 3V19M215 3V19M392 3V36M292 9V31M295 9V17M306 9V31M244 10H281M253 13H273M253 13V28M273 13V28M44 19H216M292 23H307M253 27H273M292 30H307M23 48H381M50 48V59M128 71H285M60 100H264M265 101V253M309 121H317M109 128H161M109 128V180M161 128V180M315 128V137M325 128H333M67 129H83M216 133H228M68 134H82M303 136V145M329 136V146M62 137V149M87 137V149M296 137V146M71 138V147M368 144H381M68 152H82M68 156H82M187 161V236M256 162V226M66 164H83M401 165H411M401 165V184M187 167H257M227 167V232M68 169H82M62 172V184M87 172V184M71 173V183M109 180H161M401 184H411M68 187H83M164 187H176M164 187V204M176 187V204M67 191H83M342 193H357M342 193V241M356 193V241M99 197H164M99 197V236M128 197V236M176 197H188M217 197H228M303 200V209M329 200V209M296 201V209M164 203H176M368 204H381M207 218V226M236 220H248M236 220V236M248 220V236M99 224H108M189 224H197M99 226H213M227 226H236M248 226H256M99 236H223M236 236H248M342 241H357M60 254H264M174 276V286M163 277H239M162 280V308M164 281H174M168 281V307M228 281H237M239 281V307M178 290V299M229 297H240M174 303V312M164 307H174M229 307H237M163 312H238M118 321H132"/></symbol><symbol id="pl1" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M2 3V349M7 3V62M18 3V44M213 3V19M237 3V44M243 3V33M315 3V33M387 3V58M404 3V349M1 4H405M319 9H382M278 10V33M261 26V33M242 32H316M17 43H238M18 48V64M378 48V58M17 50H379M377 55H388M6 61H19M378 127V221M387 127V140M377 130H388M18 137V173M7 139V172M386 139H405M6 140H19M389 145H405M389 145V202M6 171H19M389 201H405M398 210H405M398 210V221M377 218H400M18 276V299M7 277V336M6 278H19M378 286V298M398 286V346M377 289H400M48 295V322M351 297H379M353 297V322M17 298H50M74 320V336M171 320V336M235 320V336M331 320V336M47 321H77M168 321H242M329 321H354M371 334V345M6 335H76M170 335H236M331 335H372M370 344H400M1 348H405"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M42 3V19M389 3V37M290 9V31M302 9V17M304 9V31M242 10H279M250 13V28M251 13H271M270 13V28M42 19H214M290 23H304M251 27H271M290 30H304M21 48H379M48 48V59M126 48V67M282 48V67M47 58H126M126 67H282M60 85H366M60 85V286M366 85V286M125 93H133M187 93H195M72 103H96M72 103V127M96 103V127M109 103V111M124 103H132M146 103V110M131 120H139M180 120H189M341 125H351M72 127H96M237 127H277M266 127V139M62 129V219M63 129H100M66 129V219M99 129V219M233 131V217M280 131V217M66 133H100M165 136H176M165 136V174M176 136V174M132 140H165M132 140V170M176 140H186M186 140V170M66 153H100M247 163V186M399 165V184M251 166V179M235 168V179M132 170H165M176 170H186M66 174H100M165 174H176M142 175H153M142 175V213M153 175V213M132 179H142M132 179V209M153 179H186M186 179V209M66 196H100M363 197V207M132 209H142M153 209H186M266 209V221M142 213H153M66 216H100M62 219H100M237 221H277M341 223H351M107 241H144M107 241V280M111 241V280M140 241V280M144 241V280M173 241H210M173 241V280M177 241V280M206 241V280M210 241V280M111 269H141M177 269H206M111 277H140M177 277H206M107 280H144M173 280H210M60 286H366"/></symbol><symbol id="pl2" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M2 3V349M11 3V64M23 3V45M47 3V21M217 3V21M240 3V45M246 3V35M318 3V35M323 3V11M383 3V11M389 3V59M404 3V349M1 4H405M306 10V32M322 10H384M281 12V35M264 27V35M246 33H319M22 44H241M23 49V69M380 49V59M26 50H381M22 56H53M350 56H390M11 62H24M380 127V221M389 127V141M380 130H390M356 134V215M23 137V174M11 139V172M11 140H24M388 140H405M95 143V163M392 145V202M391 146H405M11 171H24M391 201H405M400 210V221M380 218H402M23 275V298M11 277V335M11 278H24M380 285V298M401 285V345M379 288H402M52 295V321M356 296V321M22 297H55M353 297H381M79 319V335M175 319V335M239 319V335M334 319V335M172 320H241M52 321H82M332 321H357M373 333V344M11 334H80M174 334H240M333 334H374M372 343H402M1 348H405"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M392 3V38M293 10V32M246 12H282M254 15H274M254 15V29M274 15V29M46 20H217M293 24H307M254 29H274M293 32H307M52 53V63M52 62H83M321 62H351M82 68H112M291 68H321M112 74H292M91 96H312M331 114V274M72 118V222M110 124H238M110 124V170M124 124V170M167 124V224M238 124V222M250 134H286M250 134V158M286 134V158M356 134H381M124 138H167M83 141H107M83 141V165M107 141V165M85 153H105M250 158H286M91 162H99M83 165H107M401 165V184M110 170H295M193 170V215M281 170V215M295 170V215M300 172H324M300 172V196M323 172V196M312 174V194M119 181H155M119 181V229M155 181V229M302 184H311M313 184H322M300 196H324M193 201H281M356 214H381M193 215H295M119 229H155M219 231V239M188 242H217M72 254V270M120 254V274M152 254V276M114 255V275M147 255V274M120 256H147M77 257H87M128 290H138M91 292H312"/></symbol></defs></svg>
 
 <div class="pl" id="pl" aria-hidden="true"><div class="in"><div class="wm">/CI <b>DSGN</b></div><div class="bar"><i id="plBar"></i></div><div class="n" id="plN">000</div></div></div>
 <div class="grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
@@ -339,6 +527,7 @@ section{position:relative}
   <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu"><i></i>Menu</button>
 </header>
 <a class="sidecta" id="sidecta" href="../#contact">Begin Your Better Life ↗</a>
+<a class="conc" id="conc" href="../#contact" aria-label="Speak with the CI concierge"><i></i><span>CI Concierge</span><em class="cl">Chicago <span id="concT"></span></em></a>
 
 <div class="menu" id="menu" aria-hidden="true">
   <div class="bar"><a href="./" aria-label="CI Design + Build"><img src="assets/logo-white.png" alt="CI Design + Build"></a><button class="close" id="menuClose" type="button">Close ×</button></div>
@@ -375,11 +564,12 @@ section{position:relative}
 <section class="hero full" id="hero">
   <h1 class="sr">Redefining the Art of Living</h1>
   <div class="glass" id="glass" aria-hidden="true">
-    <div class="scene" id="scene"><div class="scene-bg"></div><div class="ht"><span class="r">Redefining</span><span class="b">The Art of</span><span class="b o">Living</span></div></div>
+    <div class="scene" id="scene"><div class="scene-bg"></div><svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMid slice"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg><div class="ht"><span class="r">Redefining</span><span class="b">The Art of</span><span class="b o">Living</span></div></div>
   </div>
+  <p class="eyb k">Concierge-level Design + Build</p>
   <p class="tag">Hero video</p>
   <div class="ui" id="heroUi">
-    <div class="sub"><p class="k mut">CI Design + Build</p><p class="t">Building You a <b>Better Life</b></p></div>
+    <div class="sub"><p class="t">Building You a <b>Better Life</b></p><p class="s">Architecture, interiors, construction, furnishings, art and wellness — one team, from the first conversation to the night we move you in.</p></div>
     <div class="sc"><i></i>Scroll</div>
     <a class="pill fill go" href="../#contact">Begin Your Better Life</a>
   </div>
@@ -391,7 +581,7 @@ section{position:relative}
     <div class="hd">
       <p class="cap k"><span class="l"></span>Our Philosophy</p>
       <h2><span class="ln"><span class="r">Building</span></span><span class="ln"><span class="r">You a</span></span><span class="ln"><span class="b">Better</span></span><span class="ln"><span class="b o" id="lifeWord">Life</span></span></h2>
-      <p class="end" id="philoEnd">Good design should change <b>the experience of living.</b></p>
+      <div class="endw" id="philoEnd"><p class="k lead">A home personalized to your life — how you will wake up, entertain, recharge and gather; how light will move through your mornings.</p><p class="end">We will design more than your home. <b>We will design how you live in it.</b></p></div>
     </div>
     <div class="ring" id="ring">
       <svg viewBox="-200 -200 400 400" aria-hidden="true"><g id="ticks"></g><g id="hand"><rect x="-2.5" y="-193" width="5" height="5" fill="#EBEBEB"/><line x1="0" y1="-188" x2="0" y2="-148" stroke="#EBEBEB" stroke-width="1"/></g></svg>
@@ -402,7 +592,7 @@ section{position:relative}
 
 <!-- ABOUT -->
 <section class="about full" id="about">
-  <div class="cap-top"><p class="p1">Traditional renovation <b>splits responsibility.</b></p><p class="p2">CI is built <b>differently.</b></p></div>
+  <div class="cap-top"><p class="p1">Every discipline <b>your home will need.</b></p><p class="p2">Under one roof. <b>From day one.</b></p></div>
   <div id="frags" aria-hidden="true">
     <span class="frag b" data-p="6,24" style="font-size:clamp(1.6rem,4.4vw,4.6rem)">Architect</span>
     <span class="frag r" data-p="56,18" style="font-size:clamp(1.2rem,3.2vw,3.4rem)">Interior Designer</span>
@@ -417,13 +607,14 @@ section{position:relative}
   </div>
   <div class="sq" id="sq">
     <i class="sd t1"></i><i class="sd t2"></i><i class="sd t3"></i><i class="sd t4"></i>
+    <div class="dim top" aria-hidden="true"><i></i><span>One roof</span><i></i></div><div class="dim side" aria-hidden="true"><i></i><span>Complete responsibility</span><i></i></div>
     <h2 class="in"><span class="ln"><span class="r">One Vision.</span></span><span class="ln"><span class="r">One Team.</span></span><span class="ln"><span class="b">One Turnkey</span></span><span class="ln"><span class="b">Experience.</span></span></h2>
     <p class="db">Design + Build</p>
   </div>
 </section>
 <section class="about2">
-  <div class="stat"><p class="v"><span id="c20">0</span><sup>%</sup></p><p class="l">project time saved, on average</p></div>
-  <div class="q"><p>You stay involved where your vision matters most. <b>We own everything in between.</b></p><a class="pill" href="../#about" style="justify-self:start">Discover CI</a></div>
+  <div class="stat"><p class="v"><span id="c20">0</span><sup>%</sup></p><p class="l">of project time saved for our clients, on average</p></div>
+  <div class="q"><p class="k lead">Your time is irreplaceable. Our curated CI process is built to protect it.</p><p>You stay involved where your vision matters most. <b>We own everything in between.</b></p><a class="pill" href="../#about" style="justify-self:start">Discover CI Design + Build</a></div>
 </section>
 
 <!-- PROJECTS -->
@@ -437,7 +628,7 @@ section{position:relative}
   </a>
 </section>
 <section class="list">
-  <div class="lh"><h2><span class="r">Your home is</span> a representation of you.</h2><a class="pill" href="../#portfolio">View the Portfolio <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 13L13 3M5 3h8v8"/></svg></a></div>
+  <div class="lh"><div><h2><span class="r">Your home is</span> a representation of you.</h2><p class="k sm">Every CI home begins with a different client, a different residence, a different way of living.</p></div><a class="pill" href="../#portfolio">View the Portfolio <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 13L13 3M5 3h8v8"/></svg></a></div>
   <ul id="plist">
     <li><a href="../#project" data-cur="View"><span class="nm">Lakeshore Luxury</span><span class="lo">Wilmette, IL</span><span class="sf">2,200 sq ft</span></a></li>
     <li><a href="../#project" data-cur="View"><span class="nm">Room to Breathe</span><span class="lo">Chicago, IL</span><span class="sf">4,070 sq ft</span></a></li>
@@ -450,13 +641,13 @@ section{position:relative}
 <section class="diff full" id="diff">
   <div class="glow" aria-hidden="true"></div><div class="tex" aria-hidden="true"></div>
   <div class="left">
-    <div style="display:grid;gap:26px"><p class="cap k"><span class="l"></span>The CI Difference</p><h2><span class="r">What</span> Turnkey <span class="r">Should Really Mean</span></h2><p class="lead">The people designing your home work directly with the people building it.</p></div>
+    <div style="display:grid;gap:26px"><p class="cap k"><span class="l"></span>The CI Difference</p><h2><span class="r">What</span> Turnkey <span class="r">Should Really Mean</span></h2><p class="lead">The people designing your home will work side by side with the people building it.</p></div>
     <div class="desc" id="desc">
       <p class="on">One vision, from planning <b>through detailing.</b></p>
       <p>Built by a team <b>already fluent in the design.</b></p>
       <p>The residence, <b>completed beyond construction.</b></p>
       <p>Designed around <b>comfort and quality of life.</b></p>
-      <p>Delivered as a home — <b>not a construction site.</b></p>
+      <p>Delivered as a home, <b>ready to be lived in.</b></p>
       <p>Fewer gaps. <b>Better decisions.</b></p>
     </div>
   </div>
@@ -474,7 +665,7 @@ section{position:relative}
     <article class="col on">
       <div class="cbg" aria-hidden="true"></div><span class="pcap">CI Turnkey photo</span>
       <p class="vt"><span class="r">CI</span> <b>Turnkey</b></p>
-      <div class="cin"><span class="tg">Flagship</span><h3 class="word"><span class="m"><span class="r">Turn</span></span><i></i><span class="m"><span class="b">Key</span></span></h3><p class="d">The complete CI experience. <b>One team to hire</b> — from the first conversation to the night you move in.</p><a class="pill fill" href="../#turnkey" style="justify-self:start">Explore CI Turnkey</a></div>
+      <div class="cin"><span class="tg">Flagship</span><h3 class="word"><span class="m"><span class="r">Turn</span></span><i></i><span class="m"><span class="b">Key</span></span></h3><p class="d">The complete CI experience. One team to hire. <b>Concierge-level service</b> from the first conversation to the night you move in.</p><a class="pill fill" href="../#turnkey" style="justify-self:start">Explore CI Turnkey</a></div>
     </article>
     <article class="col">
       <div class="cbg" aria-hidden="true"></div><span class="pcap">CI Core photo</span>
@@ -489,14 +680,14 @@ section{position:relative}
     <article class="col well">
       <div class="cbg" aria-hidden="true"></div>
       <p class="vt"><span class="r">CI</span> <b>Wellness</b></p>
-      <div class="cin"><span class="tg">Integrated with any CI service</span><h3 class="word"><span class="m"><span class="r">Well</span></span><i></i><span class="m"><span class="b">Ness</span></span></h3><p class="d"><b>Better living, designed in.</b> Light, air, water, sleep, recovery.</p><a class="pill" href="../#wellness" style="justify-self:start">Explore CI Wellness</a></div>
+      <div class="cin"><span class="tg">Integrated with any CI service</span><h3 class="word"><span class="m"><span class="r">Well</span></span><i></i><span class="m"><span class="b">Ness</span></span></h3><p class="d"><b>Better living, designed in.</b> A science-based, doctor-backed approach to living younger, longer.</p><a class="pill" href="../#wellness" style="justify-self:start">Explore CI Wellness</a></div>
     </article>
   </div>
 </section>
 
 <!-- 7. CI APPROACH -->
 <section class="appr full" id="appr">
-  <div class="ahd"><div><p class="cap k"><span class="l"></span>CI Approach</p><h2>Designed around <b>how you live.</b></h2></div><p class="k mut">We begin with questions — not about style, but about life.</p></div>
+  <div class="ahd"><div><p class="cap k"><span class="l"></span>CI Approach</p><h2>Designed around <b>how you live.</b></h2></div><p class="k mut">We begin with questions about your life. The answers become the foundation.</p></div>
   <div class="tun" id="tun">
     <p class="tq"><span><span class="r">How do you want to</span><br>use your home?</span></p>
     <p class="tq"><span><span class="r">Where do</span><br>you retreat?</span></p>
@@ -509,7 +700,7 @@ section{position:relative}
     <span class="te r" data-x="28" data-y="-30" data-d="3.2">Nutrition, Cooking</span>
     <span class="te b" data-x="-36" data-y="8" data-d="3.7">Social + Entertaining</span>
   </div>
-  <div class="afin" id="afin"><p>Personalized is not a finish. <b>It is the CI process.</b></p><a class="pill" href="../#about">Discover Our Approach</a></div>
+  <div class="afin" id="afin"><p>The home will simplify your life. <b>Personalized is the CI process.</b></p><a class="pill" href="../#contact">Bring Your Vision to Life</a></div>
   <div class="black" id="ablack" aria-hidden="true"></div>
 </section>
 
@@ -517,13 +708,100 @@ section{position:relative}
 <section class="proc full" id="proc">
   <p class="phd cap k"><span class="l"></span>Process</p>
   <h2 class="pt1" id="pt1"><span class="r">The project</span><br>is complex.</h2>
-  <h2 class="pt2" id="pt2"><span class="r">Your experience</span> doesn't have to be.</h2>
+  <h2 class="pt2" id="pt2"><span class="r">We will make it</span> simple for you.</h2>
   <div class="pst" id="pst"><svg id="psvg" aria-hidden="true"><path id="ppath"/></svg></div>
   <div class="big" id="pbig" aria-hidden="true"><p id="pbigT">Discover</p></div>
   <div class="pend" id="pend"><span class="r">One team. One process.</span><b><span class="o">Complete</span><br>responsibility.</b></div>
 </section>
 
+<!-- 9. THE CI CLIENT — concierge-level -->
+<section class="cli full" id="cli">
+  <div class="chd"><p class="cap k"><span class="l"></span>The CI Client</p><p class="k k2">For clients who value the experience as much as the result.</p></div>
+  <div class="lay dimL" aria-hidden="true">
+    <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMid slice"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+    <div class="gtw"><p class="gt"><span class="r">They expect</span><br>a high standard.</p></div>
+  </div>
+  <div class="lay litL" id="cliLit" aria-hidden="true">
+    <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMid slice"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+    <div class="gtw"><p class="gt"><span class="r">They expect</span><br>a high standard.</p></div>
+  </div>
+  <h2 class="sr">They expect a high standard. So do we.</h2>
+  <p class="sodo" id="sodo" aria-hidden="true"><span class="r">So do</span> <b>we.</b></p>
+  <p class="cnote"><span class="k">Accomplished people. Demanding lives.</span>They value <b>concierge-level service.</b> They receive it.</p>
+  <div class="tblock" aria-hidden="true"><span>Drawing</span><span>Space plan studies</span><span>Project</span><span>Collector's Home</span><span>Studio</span><span>CI Design + Build</span></div>
+</section>
+
+<!-- 10. INVEST IN YOURSELF -->
+<section class="inv full" id="inv">
+  <div class="ihd"><p class="cap k"><span class="l"></span>Your Better Life</p><p class="k k2">What do you want your life to feel like five, ten, twenty years from now?</p></div>
+  <div class="stage">
+    <p class="pre" id="ivPre">Invest in</p>
+    <div class="win" id="reel"><ul>
+      <li>Your mornings.</li><li>Your rest.</li><li>Your health.</li><li>Your time.</li><li>Your future.</li><li>Yourself.</li>
+    </ul></div>
+  </div>
+  <div class="scale" aria-hidden="true"><i class="mk" id="ivMark"></i><span style="top:0%">Today</span><span style="top:33.3%">Five years</span><span style="top:66.6%">Ten years</span><span style="top:100%">Twenty years</span></div>
+  <div class="bot" id="ivBot"><p>Your home will shape how you feel for decades. <b>We will build it around the life you want.</b></p><a class="pill fill" href="../#contact">Build Your Better Life</a></div>
+</section>
+
+<!-- 11. CLIENT STORIES -->
+<section class="voc" id="voc">
+  <div class="vhd"><div style="display:grid;gap:22px"><p class="cap k"><span class="l"></span>Client Stories</p><h2><span class="r">The CI Experience,</span> told by our clients.</h2></div><p class="k k2">Concierge-level service, in their own words.</p></div>
+  <div class="mqw" aria-hidden="true"><div class="mq" id="vmq"><span class="b">Told by our clients</span><span class="o">Told by our clients</span><span class="b">Told by our clients</span><span class="o">Told by our clients</span></div></div>
+  <div class="films">
+    <a class="film a" href="../#project" data-cur="Play"><div class="fr"><div class="ph"><span class="pc">Client video</span></div><span class="play" aria-hidden="true"></span></div><div class="m"><h3>On the CI Turnkey <b>experience</b></h3><span class="k mut">Chicago, IL</span></div></a>
+    <a class="film b" href="../#project" data-cur="Play"><div class="fr"><div class="ph"><span class="pc">Client video</span></div><span class="play" aria-hidden="true"></span></div><div class="m"><h3>A home <b>ready to be lived in</b></h3><span class="k mut">CI Turnkey</span></div></a>
+  </div>
+</section>
+
+<!-- 12. FAQ -->
+<section class="faq" id="faq">
+  <div class="fl"><p class="cap k"><span class="l"></span>FAQ</p><h2><span class="w1">Before</span><span class="w2">you</span><span class="w3">begin</span></h2><p class="k k2">What clients want to know before we build their better life together.</p><a class="pill" href="../#contact" style="justify-self:start">Bring Your Vision to Life</a></div>
+  <div class="fr" id="faqList">
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">What does “turnkey” mean at CI?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Exactly that — we will handle everything. Design, construction, furnishings, art, installation and move-in, managed by one integrated team under one roof and delivered at a concierge level.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">How involved will I be?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>As involved as you want to be. We will bring decisions to you at the right moment. The details in between are our responsibility.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">How long will my project take?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Two phases: Design &amp; Planning, then Construction. You will have a detailed schedule early — realistic timelines and clear milestones.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">How is pricing structured?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Transparently: pass-through costs at CI preferred pricing, a management fee based on project complexity and duration, and a clearly defined overhead and profit structure.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">What makes a great CI client?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Clients who value their time, their health and their wellness — and want one accountable team to protect all three.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">Where does CI work?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Significant residential renovations and new builds in Chicago and South Florida — with permitting, approvals and inspections handled by CI.</p></div></div>
+  </div>
+</section>
+
+<!-- 13. FINAL CTA — from drawing to life -->
+<section class="fin full" id="fin">
+  <div class="fhd"><p class="cap k"><span class="l"></span>Begin</p><p class="k mut">Concierge-level service · One team · Complete responsibility</p></div>
+  <div class="drw" id="fdrw" aria-hidden="true">
+    <svg viewBox="0 0 412 352"><path class="fw" d="M2 3V349M7 3V62M18 3V44M213 3V19M237 3V44M243 3V33M315 3V33M387 3V58M404 3V349M1 4H405"/><path class="fw" d="M319 9H382M278 10V33M261 26V33M242 32H316M17 43H238M18 48V64M378 48V58M17 50H379M377 55H388M6 61H19"/><path class="fw" d="M378 127V221M387 127V140M377 130H388M18 137V173M7 139V172M386 139H405M6 140H19M389 145H405M389 145V202M6 171H19"/><path class="fw" d="M389 201H405M398 210H405M398 210V221M377 218H400M18 276V299M7 277V336M6 278H19M378 286V298M398 286V346M377 289H400"/><path class="fw" d="M48 295V322M351 297H379M353 297V322M17 298H50M74 320V336M171 320V336M235 320V336M331 320V336M47 321H77M168 321H242"/><path class="fw" d="M329 321H354M371 334V345M6 335H76M170 335H236M331 335H372M370 344H400M1 348H405"/><path class="ff" d="M42 3V19M389 3V37M290 9V31M302 9V17M304 9V31M242 10H279M250 13V28M251 13H271M270 13V28M42 19H214M290 23H304M251 27H271M290 30H304M21 48H379M48 48V59M126 48V67"/><path class="ff" d="M282 48V67M47 58H126M126 67H282M60 85H366M60 85V286M366 85V286M125 93H133M187 93H195M72 103H96M72 103V127M96 103V127M109 103V111M124 103H132M146 103V110M131 120H139M180 120H189"/><path class="ff" d="M341 125H351M72 127H96M237 127H277M266 127V139M62 129V219M63 129H100M66 129V219M99 129V219M233 131V217M280 131V217M66 133H100M165 136H176M165 136V174M176 136V174M132 140H165M132 140V170"/><path class="ff" d="M176 140H186M186 140V170M66 153H100M247 163V186M399 165V184M251 166V179M235 168V179M132 170H165M176 170H186M66 174H100M165 174H176M142 175H153M142 175V213M153 175V213M132 179H142M132 179V209"/><path class="ff" d="M153 179H186M186 179V209M66 196H100M363 197V207M132 209H142M153 209H186M266 209V221M142 213H153M66 216H100M62 219H100M237 221H277M341 223H351M107 241H144M107 241V280M111 241V280M140 241V280"/><path class="ff" d="M144 241V280M173 241H210M173 241V280M177 241V280M206 241V280M210 241V280M111 269H141M177 269H206M111 277H140M177 277H206M107 280H144M173 280H210M60 286H366"/></svg>
+    <div class="dim top"><i></i><span>24'-6"</span><i></i></div>
+    <div class="dim side"><i></i><span>21'-0"</span><i></i></div>
+    <div class="tblock"><span>Drawing</span><span>Space plan</span><span>Project</span><span>Collector's Home</span></div>
+  </div>
+  <div class="real" id="freal" aria-hidden="true"><div class="ph"><span class="pc">Finished home photo</span></div></div>
+  <h2 class="hl" id="fhl"><span class="ln"><span class="r">Bring your vision</span></span><span class="ln"><span class="b">to life.</span></span></h2>
+  <div class="end" id="fend">
+    <p class="k" style="color:rgba(235,235,235,.75)">Your next chapter</p>
+    <h2><span class="r">Starts with</span> a conversation.</h2>
+    <a class="rcta" id="rcta" href="../#contact" data-cur="Begin"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><path id="rcp" d="M50,50 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#rcp" textLength="272">Concierge-level service · One team · One process ·</textPath></text></svg><span class="core">Begin Your Better Life</span></a>
+    <p class="k s">Tell us what you're considering. We will define what comes next.</p>
+  </div>
+</section>
+
 </main>
+<footer class="foot" id="foot">
+  <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+  <div class="mq2w" aria-hidden="true"><div class="mq2" id="fmq"><span class="b">Build Your Better Life</span><span class="r">Concierge-level service</span><span class="b">One team</span><span class="r">One process</span><span class="b">Complete responsibility</span><span class="b">Build Your Better Life</span><span class="r">Concierge-level service</span><span class="b">One team</span><span class="r">One process</span><span class="b">Complete responsibility</span></div></div>
+  <div class="fgrid">
+    <p class="where"><span class="sm">Studios in</span><span class="bg">Chicago</span><span class="sm mid">and</span><span class="bg o">South Florida</span></p>
+    <div class="cols">
+      <div><h4>Chicago Studio</h4><p>215 W. Huron St., Suite 1<br>Chicago, IL 60654</p><a href="tel:+13122792776">312.279.2776</a><p class="tm" data-tz="America/Chicago">—</p></div>
+      <div><h4>South Florida Studio</h4><p>561 NE 79th St, Suite 300/410<br>Miami, FL 33138</p><p class="tm" data-tz="America/New_York">—</p></div>
+      <div><h4>Concierge</h4><a href="mailto:info@cidesignbuild.com">info@cidesignbuild.com</a><a href="../#contact">Begin Your Better Life</a><a href="../#brokers">Broker Program</a><a href="../#partnerships">Partnerships</a></div>
+      <div><h4>Follow</h4><a href="https://www.instagram.com/cidesignbuild" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/cidesignbuild" target="_blank" rel="noopener">Facebook</a><a href="https://www.linkedin.com/company/cidesignbuild" target="_blank" rel="noopener">LinkedIn</a><a href="../#news">News</a></div>
+    </div>
+  </div>
+  <div class="wm" id="fwm" aria-label="/CI DSGN"><span class="fl">/</span><span class="fl">C</span><span class="fl">I</span><span class="ol">D</span><span class="ol">S</span><span class="ol">G</span><span class="ol">N</span></div>
+  <div class="bot"><span>© 2026 CI Design + Build</span><nav aria-label="Legal"><a href="../#about">About</a><a href="../#services">Services</a><a href="../#portfolio">Portfolio</a><a href="https://cidesignbuild.com/terms-and-conditions/" target="_blank" rel="noopener">Terms</a><a href="https://cidesignbuild.com/privacy-policy-2/" target="_blank" rel="noopener">Privacy</a></nav><a href="#top" id="toTop">Back to top ↑</a></div>
+</footer>
 
 </div></div>
 
@@ -575,7 +853,8 @@ function intro(){
     .to(glass,{'--intro':0,duration:1.4,ease:'power4.out'},.5)
     .to(gl,{amp:1,duration:2.2,ease:'power3.out'},.5)
     .from('#heroUi > *',{y:30,opacity:0,duration:1,ease:'power3.out',stagger:.1},1.2)
-    .from('.top',{y:-30,opacity:0,duration:.8,ease:'power3.out'},1.2);
+    .from('.top',{y:-30,opacity:0,duration:.8,ease:'power3.out'},1.2)
+    .from('.hero .eyb',{y:-20,opacity:0,duration:.8,ease:'power3.out'},1.3);
 }
 if(reduce||params.has('nopl')){pl.style.display='none';glass.style.setProperty('--intro',0);gl.amp=1;d.body.classList.remove('lock')}
 else{var o={v:0};gsap.to(o,{v:100,duration:1.4,ease:'power2.inOut',onUpdate:function(){plN.textContent=String(Math.round(o.v)).padStart(3,'0');plBar.style.width=o.v+'%'},onComplete:intro})}
@@ -630,7 +909,8 @@ at.to('#about .p1',{opacity:0,y:-20,duration:.1},.28)
   .fromTo('#sq .t3',{scaleX:0},{scaleX:1,duration:.09,ease:'none'},.63)
   .fromTo('#sq .t4',{scaleY:0},{scaleY:1,duration:.09,ease:'none'},.72)
   .from('#sq .in .ln>span',{yPercent:110,stagger:.05,duration:.2,ease:'power3.out'},.66)
-  .from('#sq .db',{opacity:0,letterSpacing:'1.4em',duration:.2},.82);
+  .from('#sq .db',{opacity:0,letterSpacing:'1.4em',duration:.2},.82)
+  .to('#sq .dim',{opacity:1,duration:.1,stagger:.06},.84);
 frags.forEach(function(f,i){gsap.fromTo(f,{rotate:0},{rotate:(i%2?1:-1)*2,duration:3+i%4,repeat:-1,yoyo:true,ease:'sine.inOut'})});
 var c20={v:0};gsap.to(c20,{v:20,ease:'power2.out',duration:1.6,onUpdate:function(){qs('#c20').textContent=Math.round(c20.v)},scrollTrigger:{trigger:'.about2',start:'top 75%'}});
 gsap.from('.about2 .q > *',{y:40,opacity:0,stagger:.12,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.about2',start:'top 75%'}});
@@ -756,6 +1036,118 @@ gsap.timeline({scrollTrigger:{trigger:'#proc',start:'top top',end:'+=340%',pin:t
   .to('#pend',{opacity:1,y:0,duration:.3},3.25)
   .to({},{duration:.25},3.55);
 gsap.set('#pend',{y:20});
+})();
+
+/* ===== 9. CI CLIENT: a light over the drawings ===== */
+(function(){
+var sec=qs('#cli'),lit=qs('#cliLit'),L={x:.5,y:.5,tx:.5,ty:.5,t:0,auto:true},st={r:.12,c:0},on=false;
+sec.addEventListener('mousemove',function(e){var r=sec.getBoundingClientRect();L.tx=(e.clientX-r.left)/r.width;L.ty=(e.clientY-r.top)/r.height;L.auto=false});
+sec.addEventListener('mouseleave',function(){L.auto=true});
+ScrollTrigger.create({trigger:sec,start:'top bottom',end:'bottom top',onToggle:function(s){on=s.isActive}});
+function tick(){L.t+=.007;if(L.auto){L.tx=.5+Math.sin(L.t*1.3)*.3;L.ty=.52+Math.sin(L.t*1.9+1)*.2}
+  L.x+=(L.tx-L.x)*.07;L.y+=(L.ty-L.y)*.07;
+  var x=L.x+(.5-L.x)*st.c,y=L.y+(.5-L.y)*st.c,R=st.r*Math.max(innerWidth,innerHeight);
+  lit.style.setProperty('--x',(x*100).toFixed(2)+'%');lit.style.setProperty('--y',(y*100).toFixed(2)+'%');lit.style.setProperty('--r',R.toFixed(1)+'px')}
+tick();gsap.ticker.add(function(){if(on)tick()});
+gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'+=240%',pin:true,scrub:.8}})
+  .fromTo('#cli .bpx',{scale:1.18},{scale:1,duration:1.1,ease:'none'},0)
+  .fromTo(st,{r:.12},{r:.19,duration:.4,ease:'none'},0)
+  .to(st,{r:1.25,c:1,duration:.36,ease:'power2.in'},.4)
+  .to('#cli .gtw',{yPercent:-95,duration:.2,ease:'power2.inOut'},.78)
+  .fromTo('#sodo',{opacity:0,yPercent:30},{opacity:1,yPercent:-5,duration:.2,ease:'power3.out'},.84)
+  .fromTo('#cli .cnote, #cli .tblock',{opacity:0,y:20},{opacity:1,y:0,duration:.12,stagger:.04},.92)
+  .to({},{duration:.08},1.02);
+})();
+
+/* ===== 10. INVEST IN YOURSELF: the reel ===== */
+(function(){
+var items=qa('#reel li'),ul=qs('#reel ul'),N=items.length,st={p:0},last=-1,mark=qs('#ivMark');
+function draw(){var f=st.p*(N-1),k=Math.round(f),lh=items[0].offsetHeight;ul.style.transform='translate3d(0,'+(-f*lh).toFixed(1)+'px,0)';
+  items.forEach(function(li,i){var dd=i-f;li.style.opacity=(dd<0?Math.max(0,1+dd*1.8):1).toFixed(3)});
+  if(k!==last){last=k;items.forEach(function(li,i){li.classList.toggle('on',i===k)})}
+  mark.style.top=(st.p*100).toFixed(2)+'%'}
+draw();addEventListener('resize',draw);
+var R=.72,step=R/(N-1);
+gsap.timeline({scrollTrigger:{trigger:'#inv',start:'top top',end:'+=320%',pin:true,scrub:.8,snap:{snapTo:function(v){if(v>R+.04)return v;return Math.round(v/step)*step},duration:{min:.2,max:.5},delay:.05,ease:'power2.inOut'}}})
+  .to(st,{p:1,duration:R,ease:'none',onUpdate:draw},0)
+  .to('#ivPre',{fontWeight:700,duration:.01},R)
+  .fromTo('#ivBot',{opacity:0,y:30},{opacity:1,y:0,duration:.12},R+.06)
+  .to({},{duration:.1},R+.18);
+gsap.from('#inv .stage',{y:80,opacity:0,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:'#inv',start:'top 70%'}});
+})();
+
+/* ===== 11. CLIENT STORIES ===== */
+(function(){
+var mq=qs('#vmq'),mx=0,vel=0,on=false;
+ScrollTrigger.create({trigger:'#voc',start:'top bottom',end:'bottom top',onToggle:function(s){on=s.isActive},onUpdate:function(s){vel=s.getVelocity()}});
+gsap.ticker.add(function(){if(!on)return;mx-=.7+Math.min(14,Math.abs(vel)/300);vel*=.9;var w=mq.scrollWidth/2;if(-mx>w)mx+=w;mq.style.transform='translate3d('+mx.toFixed(1)+'px,-50%,0)'});
+gsap.from('#voc .vhd > *',{y:50,opacity:0,stagger:.12,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#voc',start:'top 70%'}});
+qa('#voc .film').forEach(function(f,i){
+  gsap.from(qs('.fr',f),{clipPath:'inset(100% 0% 0% 0%)',duration:1.4,ease:'power4.inOut',scrollTrigger:{trigger:f,start:'top 85%'}});
+  gsap.fromTo(f,{y:i?120:40},{y:i?-120:-40,ease:'none',scrollTrigger:{trigger:'#voc',start:'top bottom',end:'bottom top',scrub:true}})});
+})();
+
+/* ===== 12. FAQ ===== */
+(function(){
+var rows=qa('#faqList .qa'),rt;
+function refresh(){clearTimeout(rt);rt=setTimeout(function(){ScrollTrigger.refresh()},120)}
+function openRow(r,o,instant){var a=qs('.ans',r);r.classList.toggle('open',o);qs('.qq',r).setAttribute('aria-expanded',o?'true':'false');
+  if(instant){gsap.set(a,{height:o?'auto':0});return}
+  gsap.to(a,{height:o?'auto':0,duration:.7,ease:'power3.inOut',onComplete:refresh});
+  if(o)gsap.fromTo(qs('p',a),{y:16,opacity:0},{y:0,opacity:1,duration:.7,delay:.15,ease:'power3.out'})}
+rows.forEach(function(r){qs('.qq',r).addEventListener('click',function(){var o=!r.classList.contains('open');rows.forEach(function(x){if(x!==r&&x.classList.contains('open'))openRow(x,false)});openRow(r,o)})});
+openRow(rows[0],true,true);
+gsap.from('#faq .fl h2 > span',{yPercent:60,opacity:0,stagger:.12,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:'#faq',start:'top 70%'}});
+gsap.from(rows,{y:40,opacity:0,stagger:.07,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#faqList',start:'top 80%'}});
+})();
+
+/* ===== 13. FINAL: from drawing to life ===== */
+(function(){
+var sec=qs('#fin'),drw=qs('#fdrw'),fw=qa('#fdrw .fw'),ff=qa('#fdrw .ff'),real=qs('#freal');
+gsap.set(drw,{xPercent:-50,yPercent:-50,x:0,y:0});fw.concat(ff).forEach(function(p){p.setAttribute('pathLength','1');p.style.strokeDasharray='1 1';p.style.strokeDashoffset='1'});
+function geo(){var Wv=sec.clientWidth,Hv=sec.clientHeight,w=Math.min(Wv*(innerWidth<901?.88:.64),Hv*(innerWidth<901?9:1.04)),h=w*352/412,cx=Wv/2,cy=Hv*(innerWidth<901?.5:.53);return {L:cx-w/2+w*.146,T:cy-h/2+h*.241,R:Wv-(cx+w/2-w*.112),B:Hv-(cy+h/2-h*.188)}}
+function rug(){var g=geo();return 'inset('+g.T.toFixed(1)+'px '+g.R.toFixed(1)+'px '+g.B.toFixed(1)+'px '+g.L.toFixed(1)+'px)'}
+gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'+=300%',pin:true,scrub:.8,invalidateOnRefresh:true}})
+  .from('#fin .fhd',{opacity:0,y:20,duration:.08},0)
+  .to(fw,{strokeDashoffset:0,duration:.16,stagger:.04,ease:'none'},0)
+  .to(ff,{strokeDashoffset:0,duration:.14,stagger:.035,ease:'none'},.2)
+  .fromTo('#fdrw .dim',{opacity:0},{opacity:1,duration:.1,stagger:.06},.12)
+  .fromTo('#fdrw .tblock',{opacity:0},{opacity:1,duration:.08},.3)
+  .fromTo(real,{autoAlpha:0,clipPath:rug},{autoAlpha:1,duration:.04,ease:'none'},.52)
+  .to(real,{clipPath:'inset(0px 0px 0px 0px)',duration:.3,ease:'power3.inOut'},.56)
+  .to(drw,{scale:1.6,opacity:0,duration:.3,ease:'power3.inOut'},.56)
+  .to('#fin .fhd .mut',{opacity:0,duration:.05},.56)
+  .from('#fhl .ln>span',{yPercent:110,stagger:.05,duration:.14,ease:'power3.out'},.74)
+  .to('#fhl',{opacity:0,filter:'blur(10px)',scale:.94,duration:.1},1)
+  .fromTo('#fend',{opacity:0},{opacity:1,duration:.1},1.06)
+  .from('#fend > *:not(#rcta)',{y:40,stagger:.03,duration:.12,ease:'power3.out'},1.06)
+  .from('#rcta',{scale:.5,rotate:-60,duration:.16,ease:'back.out(1.6)'},1.08)
+  .to({},{duration:.1},1.24);
+var rc=qs('#rcta');
+if(fine){rc.addEventListener('mousemove',function(e){var r=rc.getBoundingClientRect();gsap.to(rc,{x:(e.clientX-r.left-r.width/2)*.35,y:(e.clientY-r.top-r.height/2)*.35,duration:.4,ease:'power3.out'})});
+  rc.addEventListener('mouseleave',function(){gsap.to(rc,{x:0,y:0,duration:1,ease:'elastic.out(1,.4)'})})}
+})();
+
+/* ===== FOOTER ===== */
+(function(){
+var fmq=qs('#fmq'),mx=0,vel=0,on=false;
+ScrollTrigger.create({trigger:'#foot',start:'top bottom',end:'bottom top',onToggle:function(s){on=s.isActive},onUpdate:function(s){vel=s.getVelocity()}});
+gsap.ticker.add(function(){if(!on)return;mx-=.6+Math.min(10,Math.abs(vel)/400);vel*=.9;var w=fmq.scrollWidth/2;if(-mx>w)mx+=w;fmq.style.transform='translate3d('+mx.toFixed(1)+'px,0,0)'});
+function clocks(){qa('[data-tz]').forEach(function(el){try{el.textContent=new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit',timeZone:el.getAttribute('data-tz')}).format(new Date())+' local time'}catch(e){}});
+  var c=qs('#concT');if(c){try{c.textContent=new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/Chicago'}).format(new Date())}catch(e){}}}
+clocks();setInterval(clocks,20000);
+var wm=qs('#fwm'),ls=qa('#fwm span');
+gsap.from(ls,{yPercent:100,duration:1.2,stagger:.06,ease:'power4.out',scrollTrigger:{trigger:wm,start:'top 98%'}});
+gsap.from('#foot .where > span',{y:60,opacity:0,stagger:.08,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#foot .fgrid',start:'top 85%'}});
+gsap.from('#foot .cols > div',{y:40,opacity:0,stagger:.08,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#foot .fgrid',start:'top 85%'}});
+if(fine){wm.addEventListener('mousemove',function(e){ls.forEach(function(l){var r=l.getBoundingClientRect(),dx=Math.abs(e.clientX-(r.left+r.width/2)),v=Math.max(0,1-dx/(r.width*1.1));l.classList.toggle('hot',v>.35);gsap.to(l,{yPercent:-v*9,duration:.5,ease:'power3.out',overwrite:'auto'})})});
+  wm.addEventListener('mouseleave',function(){ls.forEach(function(l){l.classList.remove('hot');gsap.to(l,{yPercent:0,duration:.8,ease:'power3.out',overwrite:'auto'})})})}
+qs('#toTop').addEventListener('click',function(e){e.preventDefault();if(smoother)smoother.scrollTo(0,true);else scrollTo({top:0,behavior:'smooth'})});
+/* concierge chip */
+var conc=qs('#conc'),footOn=false;
+ScrollTrigger.create({trigger:'#foot',start:'top 85%',end:'bottom top',onToggle:function(s){footOn=s.isActive;conc.classList.toggle('on',!footOn&&scrollY>innerHeight)}});
+ScrollTrigger.create({start:0,end:'max',onUpdate:function(s){conc.classList.toggle('on',!footOn&&s.scroll()>innerHeight*1.2)}});
+conc.addEventListener('click',function(e){e.preventDefault();var t=ScrollTrigger.getAll().filter(function(x){return x.trigger===qs('#fin')&&x.pin})[0];var y=t?t.end-2:qs('#fin').offsetTop;if(smoother)smoother.scrollTo(y,true);else scrollTo({top:y,behavior:'smooth'})});
 })();
 
 qa('.cap .l').forEach(function(l){gsap.from(l,{scaleX:0,transformOrigin:'left',duration:1.2,ease:'power3.out',scrollTrigger:{trigger:l,start:'top 95%'}})});
