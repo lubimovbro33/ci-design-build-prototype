@@ -81,12 +81,8 @@ h1,h2,h3,h4,p{margin:0;font-weight:inherit}
 
 /* header */
 .top{position:fixed;left:0;right:0;top:0;z-index:60;display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:20px;height:84px;padding:0 var(--gxr) 0 var(--gx);transition:transform .6s var(--ease),background .4s}
-.top.hide{transform:translateY(-110%)}
 .top.solid{background:rgba(20,20,20,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
 .top .logo img{height:44px;width:auto;display:block}
-.top nav{display:flex;justify-content:center;gap:10px}
-.top nav a{border:1px solid var(--line2);border-radius:999px;padding:9px 16px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;transition:background .3s,color .3s}
-.top nav a:hover{background:var(--bright);color:var(--black)}
 .burger{appearance:none;background:none;border:0;color:var(--bright);font:inherit;font-size:10px;letter-spacing:.2em;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;cursor:pointer}
 .burger i{width:26px;height:8px;position:relative}
 .burger i::before,.burger i::after{content:"";position:absolute;left:0;right:0;height:1px;background:currentColor}
@@ -478,6 +474,60 @@ section{position:relative}
 .conc em{font-style:normal;opacity:.7;font-variant-numeric:tabular-nums}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
 
+
+/* ===== header as progress bar (Santalarch) ===== */
+.top .prog{display:flex;gap:18px;padding:0 10px}
+.top .prog a{flex:1 1 0;min-width:0;display:grid;gap:7px;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:rgba(235,235,235,.75);transition:color .3s;padding-top:4px}
+.top .prog a:hover,.top .prog a.on{color:var(--bright)}
+.top .prog a i{display:block;height:1px;background:rgba(235,235,235,.18);position:relative}
+.top .prog a i b{position:absolute;left:0;top:0;height:1px;width:100%;background:var(--bright);transform:scaleX(0);transform-origin:left}
+.top .prog a i::before{content:"";position:absolute;left:0;top:-2px;width:1px;height:5px;background:rgba(235,235,235,.5)}
+/* ===== side navigation (Fame) ===== */
+.snav{position:fixed;left:var(--gx);top:50%;transform:translateY(-50%);z-index:55;mix-blend-mode:difference;color:#fff;font-size:9px;letter-spacing:.24em;text-transform:uppercase;opacity:0;pointer-events:none;transition:opacity .5s}
+.snav.on{opacity:1;pointer-events:auto}
+.snav .sl{display:flex;align-items:center;gap:10px;cursor:default}
+.snav .sl i{width:11px;height:11px;position:relative}
+.snav .sl i::before,.snav .sl i::after{content:"";position:absolute;background:#fff;left:0;top:5px;width:11px;height:1px}
+.snav .sl i::after{transform:rotate(90deg);transition:transform .4s}
+.snav:hover .sl i::after{transform:rotate(0)}
+.snav ul{list-style:none;margin:0;padding:0;display:grid;gap:9px;max-height:0;overflow:hidden;transition:max-height .6s var(--ease),padding .4s}
+.snav:hover ul{max-height:320px;padding-top:16px}
+.snav li a{display:flex;align-items:center;gap:10px;opacity:.6;transition:opacity .3s,transform .4s var(--ease)}
+.snav li a::before{content:"";width:4px;height:4px;background:#fff}
+.snav li a:hover,.snav li a.on{opacity:1;transform:translateX(6px)}
+@media (hover:none){.snav{display:none}}
+.pl .n .lx{opacity:.55;margin-left:.6em}
+
+/* ===== SKETCHES — photos arrive as drawings (Fame / Nabil) ===== */
+.sk{background:var(--black2)}
+.sk .skt{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);z-index:3;text-align:center;font-size:clamp(2.6rem,8.4vw,10.4rem);line-height:.86;letter-spacing:-.025em;text-transform:uppercase;pointer-events:none}
+.sk .skt .o{-webkit-text-stroke:1.4px var(--bright)}
+.sk .skf{position:absolute;z-index:2;will-change:transform}
+.sk .skf .dr{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.sk .skf .dr path{fill:none;stroke:rgba(235,235,235,.55);stroke-width:1;vector-effect:non-scaling-stroke}
+.sk .skf .dr .dd{stroke-dasharray:5 6;stroke:rgba(235,235,235,.32)}
+.sk .skf .e{position:absolute;background:var(--bright)}
+.sk .skf .e1{left:0;top:0;width:100%;height:1px;transform-origin:left}
+.sk .skf .e2{right:0;top:0;width:1px;height:100%;transform-origin:top}
+.sk .skf .e3{right:0;bottom:0;width:100%;height:1px;transform-origin:right}
+.sk .skf .e4{left:0;bottom:0;width:1px;height:100%;transform-origin:bottom}
+.sk .skf .ph{position:absolute;inset:0;clip-path:inset(100% 0 0 0)}
+.sk .skf .cp{position:absolute;left:0;top:calc(100% + 12px);display:grid;gap:5px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;white-space:nowrap;opacity:0}
+.sk .skf .cp span{color:var(--muted)}
+.sk .skn{position:absolute;left:var(--gx);bottom:84px;z-index:3;color:var(--muted)}
+.sk .sks{position:absolute;right:var(--gxr);bottom:40px;z-index:3;color:var(--muted);font-size:9px;letter-spacing:.24em;text-transform:uppercase;font-variant-numeric:tabular-nums}
+
+/* ===== philosophy: tilted word plane (Santalarch) ===== */
+.philo .plane{position:absolute;inset:-10%;perspective:1000px;perspective-origin:50% 35%;overflow:hidden;pointer-events:none;z-index:0}
+.philo .pl3{position:absolute;left:-25%;top:-5%;width:150%;height:150%;transform:rotateX(56deg) rotateZ(-14deg);transform-style:preserve-3d;display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:1fr;background-image:linear-gradient(rgba(235,235,235,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(235,235,235,.07) 1px,transparent 1px);background-size:16.666% 11.11%}
+.philo .pl3 span{display:flex;align-items:center;padding-left:5%;font-size:clamp(1rem,2.3vw,2.6rem);line-height:1;text-transform:uppercase;white-space:nowrap;color:rgba(235,235,235,.11);letter-spacing:-.01em}
+.philo .pl3 span.b{color:rgba(235,235,235,.26)}
+.philo .pl3 span.o{-webkit-text-stroke:1px rgba(235,235,235,.2)}
+.philo .wrap{z-index:2}
+/* about: dashed construction geometry */
+.about .sq .geo{position:absolute;inset:0;width:100%;height:100%;overflow:visible;z-index:0}
+.about .sq .geo path{fill:none;stroke:rgba(235,235,235,.35);stroke-width:1;vector-effect:non-scaling-stroke;stroke-dasharray:1 1}
+.about .sq .in{z-index:2}
 /* ========== MOBILE ========== */
 @media (max-width:900px){
   .top{height:70px}.top nav,.top .cta{display:none}.top .logo img{height:36px}
@@ -499,6 +549,8 @@ section{position:relative}
   .ways .col .word{font-size:12.4vw;visibility:visible!important}
   .appr .ahd{flex-direction:column;gap:10px}.appr .ahd .k{text-align:left}.appr .te{font-size:5vw}.appr .afin{flex-direction:column;align-items:start}
   .proc .sl{display:none}.proc .pend b{font-size:6.2vw}
+  .snav{display:none}.top .prog{display:none}.sk .skt{font-size:11vw}.sk .skf .cp{display:none}.sk .sks{display:none}
+  .philo .pl3 span{font-size:4vw}
   .hero .eyb{top:88px}.hero .ui .sub .s{display:none}
   .about .sq .dim.side{display:none}
   .cli .chd{flex-direction:column;gap:10px;top:92px}.cli .chd .k2{text-align:left}.cli .gt,.cli .sodo{font-size:11vw}.cli .tblock{display:none}.cli .cnote{bottom:28px;right:var(--gxr)}
@@ -515,18 +567,19 @@ section{position:relative}
 <body class="lock">
 <svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false"><defs><symbol id="pl0" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M8 3V349M20 3V44M239 3V44M245 3V33M317 3V33M389 3V58M410 3V349M7 4H411M321 9H384M280 10V33M263 26V33M244 32H318M19 43H240M20 48V64M128 48V71M284 48V71M380 48V58M19 50H381M50 55H129M284 55H362M379 55H390M7 61H22M60 102V252M380 127V221M389 127V140M379 130H390M20 137V173M388 139H411M7 140H22M368 144V204M391 145H411M392 145V202M217 167V222M7 171H22M391 201H411M400 210H411M400 210V225M379 218H402M20 276V299M7 278H21M164 278V310M237 278V310M233 281V307M400 282V349M380 286V298M379 289H402M50 295V322M353 297H381M355 297V322M19 298H52M77 320V336M173 320V336M237 320V336M333 320V336M49 321H79M170 321H240M327 321H356M373 334V345M7 335H78M172 335H238M333 335H374M372 344H402M7 348H411"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M10 3V62M44 3V19M215 3V19M392 3V36M292 9V31M295 9V17M306 9V31M244 10H281M253 13H273M253 13V28M273 13V28M44 19H216M292 23H307M253 27H273M292 30H307M23 48H381M50 48V59M128 71H285M60 100H264M265 101V253M309 121H317M109 128H161M109 128V180M161 128V180M315 128V137M325 128H333M67 129H83M216 133H228M68 134H82M303 136V145M329 136V146M62 137V149M87 137V149M296 137V146M71 138V147M368 144H381M68 152H82M68 156H82M187 161V236M256 162V226M66 164H83M401 165H411M401 165V184M187 167H257M227 167V232M68 169H82M62 172V184M87 172V184M71 173V183M109 180H161M401 184H411M68 187H83M164 187H176M164 187V204M176 187V204M67 191H83M342 193H357M342 193V241M356 193V241M99 197H164M99 197V236M128 197V236M176 197H188M217 197H228M303 200V209M329 200V209M296 201V209M164 203H176M368 204H381M207 218V226M236 220H248M236 220V236M248 220V236M99 224H108M189 224H197M99 226H213M227 226H236M248 226H256M99 236H223M236 236H248M342 241H357M60 254H264M174 276V286M163 277H239M162 280V308M164 281H174M168 281V307M228 281H237M239 281V307M178 290V299M229 297H240M174 303V312M164 307H174M229 307H237M163 312H238M118 321H132"/></symbol><symbol id="pl1" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M2 3V349M7 3V62M18 3V44M213 3V19M237 3V44M243 3V33M315 3V33M387 3V58M404 3V349M1 4H405M319 9H382M278 10V33M261 26V33M242 32H316M17 43H238M18 48V64M378 48V58M17 50H379M377 55H388M6 61H19M378 127V221M387 127V140M377 130H388M18 137V173M7 139V172M386 139H405M6 140H19M389 145H405M389 145V202M6 171H19M389 201H405M398 210H405M398 210V221M377 218H400M18 276V299M7 277V336M6 278H19M378 286V298M398 286V346M377 289H400M48 295V322M351 297H379M353 297V322M17 298H50M74 320V336M171 320V336M235 320V336M331 320V336M47 321H77M168 321H242M329 321H354M371 334V345M6 335H76M170 335H236M331 335H372M370 344H400M1 348H405"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M42 3V19M389 3V37M290 9V31M302 9V17M304 9V31M242 10H279M250 13V28M251 13H271M270 13V28M42 19H214M290 23H304M251 27H271M290 30H304M21 48H379M48 48V59M126 48V67M282 48V67M47 58H126M126 67H282M60 85H366M60 85V286M366 85V286M125 93H133M187 93H195M72 103H96M72 103V127M96 103V127M109 103V111M124 103H132M146 103V110M131 120H139M180 120H189M341 125H351M72 127H96M237 127H277M266 127V139M62 129V219M63 129H100M66 129V219M99 129V219M233 131V217M280 131V217M66 133H100M165 136H176M165 136V174M176 136V174M132 140H165M132 140V170M176 140H186M186 140V170M66 153H100M247 163V186M399 165V184M251 166V179M235 168V179M132 170H165M176 170H186M66 174H100M165 174H176M142 175H153M142 175V213M153 175V213M132 179H142M132 179V209M153 179H186M186 179V209M66 196H100M363 197V207M132 209H142M153 209H186M266 209V221M142 213H153M66 216H100M62 219H100M237 221H277M341 223H351M107 241H144M107 241V280M111 241V280M140 241V280M144 241V280M173 241H210M173 241V280M177 241V280M206 241V280M210 241V280M111 269H141M177 269H206M111 277H140M177 277H206M107 280H144M173 280H210M60 286H366"/></symbol><symbol id="pl2" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M2 3V349M11 3V64M23 3V45M47 3V21M217 3V21M240 3V45M246 3V35M318 3V35M323 3V11M383 3V11M389 3V59M404 3V349M1 4H405M306 10V32M322 10H384M281 12V35M264 27V35M246 33H319M22 44H241M23 49V69M380 49V59M26 50H381M22 56H53M350 56H390M11 62H24M380 127V221M389 127V141M380 130H390M356 134V215M23 137V174M11 139V172M11 140H24M388 140H405M95 143V163M392 145V202M391 146H405M11 171H24M391 201H405M400 210V221M380 218H402M23 275V298M11 277V335M11 278H24M380 285V298M401 285V345M379 288H402M52 295V321M356 296V321M22 297H55M353 297H381M79 319V335M175 319V335M239 319V335M334 319V335M172 320H241M52 321H82M332 321H357M373 333V344M11 334H80M174 334H240M333 334H374M372 343H402M1 348H405"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M392 3V38M293 10V32M246 12H282M254 15H274M254 15V29M274 15V29M46 20H217M293 24H307M254 29H274M293 32H307M52 53V63M52 62H83M321 62H351M82 68H112M291 68H321M112 74H292M91 96H312M331 114V274M72 118V222M110 124H238M110 124V170M124 124V170M167 124V224M238 124V222M250 134H286M250 134V158M286 134V158M356 134H381M124 138H167M83 141H107M83 141V165M107 141V165M85 153H105M250 158H286M91 162H99M83 165H107M401 165V184M110 170H295M193 170V215M281 170V215M295 170V215M300 172H324M300 172V196M323 172V196M312 174V194M119 181H155M119 181V229M155 181V229M302 184H311M313 184H322M300 196H324M193 201H281M356 214H381M193 215H295M119 229H155M219 231V239M188 242H217M72 254V270M120 254V274M152 254V276M114 255V275M147 255V274M120 256H147M77 257H87M128 290H138M91 292H312"/></symbol></defs></svg>
 
-<div class="pl" id="pl" aria-hidden="true"><div class="in"><div class="wm">/CI <b>DSGN</b></div><div class="bar"><i id="plBar"></i></div><div class="n" id="plN">000</div></div></div>
+<div class="pl" id="pl" aria-hidden="true"><div class="in"><div class="wm">/CI <b>DSGN</b></div><div class="bar"><i id="plBar"></i></div><div class="n"><span id="plN">000</span><span class="lx">% · Loaded experience</span></div></div></div>
 <div class="grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
 <div class="cur" id="cur" aria-hidden="true"></div>
 <div class="follow" id="follow" aria-hidden="true"><div class="ph"><span class="pc">Project photo</span></div></div>
 
 <header class="top" id="top">
   <a class="logo" href="./" aria-label="CI Design + Build"><img src="assets/logo-white.png" alt="CI Design + Build"></a>
-  <nav aria-label="Primary"><a href="../#about">About</a><a href="../#services">Services</a><a href="../#portfolio">Portfolio</a><a href="../#contact">Contact</a></nav>
+  <nav class="prog" id="prog" aria-label="Sections"></nav>
   <a class="pill fill cta" href="../#contact">Begin Your Better Life</a>
   <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu"><i></i>Menu</button>
 </header>
 <a class="sidecta" id="sidecta" href="../#contact">Begin Your Better Life ↗</a>
+<div class="snav" id="snav" aria-label="Section navigation"><div class="sl"><i></i>Navigation</div><ul></ul></div>
 <a class="conc" id="conc" href="../#contact" aria-label="Speak with the CI concierge"><i></i><span>CI Concierge</span><em class="cl">Chicago <span id="concT"></span></em></a>
 
 <div class="menu" id="menu" aria-hidden="true">
@@ -570,13 +623,25 @@ section{position:relative}
   <p class="tag">Hero video</p>
   <div class="ui" id="heroUi">
     <div class="sub"><p class="t">Building You a <b>Better Life</b></p><p class="s">Architecture, interiors, construction, furnishings, art and wellness — one team, from the first conversation to the night we move you in.</p></div>
-    <div class="sc"><i></i>Scroll</div>
+    <div class="sc"><i></i>Scroll to begin</div>
     <a class="pill fill go" href="../#contact">Begin Your Better Life</a>
   </div>
 </section>
 
+<!-- SKETCHES -->
+<section class="sk full" id="sk">
+  <h2 class="skt"><span class="ln"><span class="r">Where a home</span></span><span class="ln"><span class="b o">becomes</span></span><span class="ln"><span class="b">a better life.</span></span></h2>
+  <div class="skf" data-x="58" data-y="9" data-w="27" data-d="1.2" style="aspect-ratio:4/5"><svg class="dr" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="dd" d="M0 0L100 100M100 0L0 100M50 0V100M0 50H100"/><path d="M0 8V0H8M92 0H100V8M100 92V100H92M8 100H0V92"/></svg><i class="e e1"></i><i class="e e2"></i><i class="e e3"></i><i class="e e4"></i><div class="ph"><span class="pc">Project photo</span></div><p class="cp"><b>Collector's Home</b><span>Chicago, IL · 5,130 sq ft · CI Turnkey</span></p></div>
+  <div class="skf" data-x="6" data-y="11" data-w="21" data-d=".7" style="aspect-ratio:3/4"><svg class="dr" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="dd" d="M0 0L100 100M100 0L0 100M50 0V100M0 50H100"/><path d="M0 8V0H8M92 0H100V8M100 92V100H92M8 100H0V92"/></svg><i class="e e1"></i><i class="e e2"></i><i class="e e3"></i><i class="e e4"></i><div class="ph"><span class="pc">Project photo</span></div><p class="cp"><b>Lakeshore Luxury</b><span>Wilmette, IL · 2,200 sq ft</span></p></div>
+  <div class="skf" data-x="31" data-y="58" data-w="17" data-d="1.6" style="aspect-ratio:1/1"><svg class="dr" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="dd" d="M0 0L100 100M100 0L0 100M50 0V100M0 50H100"/><path d="M0 8V0H8M92 0H100V8M100 92V100H92M8 100H0V92"/></svg><i class="e e1"></i><i class="e e2"></i><i class="e e3"></i><i class="e e4"></i><div class="ph"><span class="pc">Project photo</span></div><p class="cp"><b>Room to Breathe</b><span>Chicago, IL · 4,070 sq ft</span></p></div>
+  <div class="skf" data-x="69" data-y="62" data-w="25" data-d=".9" style="aspect-ratio:16/10"><svg class="dr" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="dd" d="M0 0L100 100M100 0L0 100M50 0V100M0 50H100"/><path d="M0 8V0H8M92 0H100V8M100 92V100H92M8 100H0V92"/></svg><i class="e e1"></i><i class="e e2"></i><i class="e e3"></i><i class="e e4"></i><div class="ph"><span class="pc">Project photo</span></div><p class="cp"><b>Above the Park</b><span>Lincoln Park · 5,600 sq ft</span></p></div>
+  <div class="skf" data-x="4" data-y="60" data-w="16" data-d="1.4" style="aspect-ratio:4/5"><svg class="dr" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path class="dd" d="M0 0L100 100M100 0L0 100M50 0V100M0 50H100"/><path d="M0 8V0H8M92 0H100V8M100 92V100H92M8 100H0V92"/></svg><i class="e e1"></i><i class="e e2"></i><i class="e e3"></i><i class="e e4"></i><div class="ph"><span class="pc">Project photo</span></div><p class="cp"><b>Showpiece Home</b><span>Chicago, IL · CI Turnkey</span></p></div>
+  <p class="skn k">Selected work — <b>Chicago + South Florida</b></p>
+</section>
+
 <!-- PHILOSOPHY -->
 <section class="philo full" id="philo">
+  <div class="plane" aria-hidden="true"><div class="pl3" id="pl3"><span class="">Wake</span><span class="b">Entertain</span><span class="o">Recharge</span><span class="">Recover</span><span class="b">Collect</span><span class="">Gather</span><span class="o">Light</span><span class="">Morning</span><span class="">Rest</span><span class="b">Cook</span><span class="">Host</span><span class="o">Breathe</span><span class="">Sleep</span><span class="b">Read</span><span class="o">Swim</span><span class="">Train</span><span class="b">Dine</span><span class="">Live</span><span class="o">Air</span><span class="">Water</span><span class="">Calm</span><span class="b">Energy</span><span class="">Family</span><span class="o">Quiet</span><span class="">Wake</span><span class="b">Entertain</span><span class="o">Recharge</span><span class="">Recover</span><span class="b">Collect</span><span class="">Gather</span><span class="o">Light</span><span class="">Morning</span><span class="">Rest</span><span class="b">Cook</span><span class="">Host</span><span class="o">Breathe</span><span class="">Sleep</span><span class="b">Read</span><span class="o">Swim</span><span class="">Train</span><span class="b">Dine</span><span class="">Live</span><span class="o">Air</span><span class="">Water</span><span class="">Calm</span><span class="b">Energy</span><span class="">Family</span><span class="o">Quiet</span><span class="">Wake</span><span class="b">Entertain</span><span class="o">Recharge</span><span class="">Recover</span><span class="b">Collect</span><span class="">Gather</span></div></div>
   <div class="wrap">
     <div class="hd">
       <p class="cap k"><span class="l"></span>Our Philosophy</p>
@@ -607,6 +672,7 @@ section{position:relative}
   </div>
   <div class="sq" id="sq">
     <i class="sd t1"></i><i class="sd t2"></i><i class="sd t3"></i><i class="sd t4"></i>
+    <svg class="geo" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path pathLength="1" d="M0 0L100 100"/><path pathLength="1" d="M100 0L0 100"/><path pathLength="1" d="M50 0L100 50L50 100L0 50Z"/></svg>
     <div class="dim top" aria-hidden="true"><i></i><span>One roof</span><i></i></div><div class="dim side" aria-hidden="true"><i></i><span>Complete responsibility</span><i></i></div>
     <h2 class="in"><span class="ln"><span class="r">One Vision.</span></span><span class="ln"><span class="r">One Team.</span></span><span class="ln"><span class="b">One Turnkey</span></span><span class="ln"><span class="b">Experience.</span></span></h2>
     <p class="db">Design + Build</p>
@@ -867,7 +933,7 @@ ScrollTrigger.create({trigger:'#hero',start:'top top',end:'+=170%',onLeave:funct
 
 /* ---------- header, side CTA, cursor ---------- */
 var top=qs('#top'),side=qs('#sidecta');
-ScrollTrigger.create({start:0,end:'max',onUpdate:function(st){var y=st.scroll();top.classList.toggle('solid',y>60);top.classList.toggle('hide',st.direction>0&&y>innerHeight*.6&&!menu.classList.contains('open'));side.classList.toggle('on',y>innerHeight*1.4)}});
+ScrollTrigger.create({start:0,end:'max',onUpdate:function(st){var y=st.scroll();top.classList.toggle('solid',y>60);side.classList.toggle('on',y>innerHeight*1.4);qs('#snav').classList.toggle('on',y>innerHeight*1.4)}});
 var cur=qs('#cur');
 if(fine){var cx=-50,cy=-50;addEventListener('mousemove',function(e){cx=e.clientX;cy=e.clientY});
   gsap.ticker.add(function(){cur.style.transform='translate('+cx+'px,'+cy+'px)'});
@@ -894,7 +960,8 @@ gsap.timeline({scrollTrigger:{trigger:'#philo',start:'top top',end:'+=140%',pin:
   .from('#ring .mid',{opacity:0,scale:.9,duration:.2},.05)
   .to(ringState,{p:1,duration:.7,ease:'none',onUpdate:ringDraw},.1)
   .to('#lifeWord',{color:'#EBEBEB',duration:.2},.6)
-  .from('#philoEnd',{opacity:0,y:30,duration:.2},.75);
+  .from('#philoEnd',{opacity:0,y:30,duration:.2},.75)
+  .fromTo('#pl3',{yPercent:12,rotateZ:-10},{yPercent:-14,rotateZ:-16,duration:1,ease:'none'},0);
 
 /* ---------- ABOUT: fragments → one square ---------- */
 var frags=qa('#frags .frag'),about=qs('#about');
@@ -910,7 +977,8 @@ at.to('#about .p1',{opacity:0,y:-20,duration:.1},.28)
   .fromTo('#sq .t4',{scaleY:0},{scaleY:1,duration:.09,ease:'none'},.72)
   .from('#sq .in .ln>span',{yPercent:110,stagger:.05,duration:.2,ease:'power3.out'},.66)
   .from('#sq .db',{opacity:0,letterSpacing:'1.4em',duration:.2},.82)
-  .to('#sq .dim',{opacity:1,duration:.1,stagger:.06},.84);
+  .to('#sq .dim',{opacity:1,duration:.1,stagger:.06},.84)
+  .fromTo('#sq .geo path',{strokeDashoffset:1,opacity:1},{strokeDashoffset:0,duration:.14,stagger:.04,ease:'none'},.74);
 frags.forEach(function(f,i){gsap.fromTo(f,{rotate:0},{rotate:(i%2?1:-1)*2,duration:3+i%4,repeat:-1,yoyo:true,ease:'sine.inOut'})});
 var c20={v:0};gsap.to(c20,{v:20,ease:'power2.out',duration:1.6,onUpdate:function(){qs('#c20').textContent=Math.round(c20.v)},scrollTrigger:{trigger:'.about2',start:'top 75%'}});
 gsap.from('.about2 .q > *',{y:40,opacity:0,stagger:.12,duration:1,ease:'power3.out',scrollTrigger:{trigger:'.about2',start:'top 75%'}});
@@ -929,6 +997,42 @@ var fol=qs('#follow'),fx=0,fy=0,tfx=0,tfy=0;
 if(fine){addEventListener('mousemove',function(e){tfx=e.clientX;tfy=e.clientY});gsap.ticker.add(function(){fx+=(tfx-fx)*.12;fy+=(tfy-fy)*.12;fol.style.left=fx+'px';fol.style.top=fy+'px'});
   qa('#plist a').forEach(function(a){a.addEventListener('mouseenter',function(){fol.classList.add('on')});a.addEventListener('mouseleave',function(){fol.classList.remove('on')})})}
 gsap.from('#plist li',{y:60,opacity:0,stagger:.08,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#plist',start:'top 85%'}});
+
+
+/* ===== header progress + side nav ===== */
+(function(){
+var secs=[['philo','Philosophy'],['about','About'],['proj','Projects'],['ways','Services'],['appr','Approach'],['proc','Process'],['fin','Begin']];
+var prog=qs('#prog'),snl=qs('#snav ul'),links=[],sls=[];
+secs.forEach(function(s,i){var a=d.createElement('a');a.href='#'+s[0];a.innerHTML='<span>'+s[1]+'</span><i><b></b></i>';prog.appendChild(a);links.push(a);
+  var li=d.createElement('li');li.innerHTML='<a href="#'+s[0]+'">'+s[1]+'</a>';snl.appendChild(li);sls.push(li.firstChild);
+  [a,li.firstChild].forEach(function(el){el.addEventListener('click',function(e){e.preventDefault();var tg=qs('#'+s[0]);if(smoother)smoother.scrollTo(tg,true,'top top');else tg.scrollIntoView({behavior:'smooth'})})});
+  var nxt=secs[i+1]?qs('#'+secs[i+1][0]):null;
+  ScrollTrigger.create({trigger:'#'+s[0],start:'top 84px',endTrigger:nxt||'#foot',end:nxt?'top 84px':'bottom bottom',onUpdate:function(st){qs('b',a).style.transform='scaleX('+st.progress.toFixed(4)+')'},onToggle:function(st){a.classList.toggle('on',st.isActive);sls[i].classList.toggle('on',st.isActive)}})});
+qs('#snav').addEventListener('click',function(e){});
+})();
+
+/* ===== SKETCHES: photos arrive as drawings ===== */
+(function(){
+var sec=qs('#sk'),fr=qa('#sk .skf'),ptr={x:0,y:0,tx:0,ty:0},on=false;
+function place(){var Wd=sec.clientWidth,Hd=sec.clientHeight;fr.forEach(function(f){var w=+f.dataset.w/100*(innerWidth<901?1.75:1);f.style.width=(w*Wd)+'px';f.style.left=(+f.dataset.x/100*Wd*(innerWidth<901?.55:1))+'px';f.style.top=(+f.dataset.y/100*Hd)+'px'})}
+place();addEventListener('resize',place);
+if(fine){sec.addEventListener('mousemove',function(e){ptr.tx=e.clientX/innerWidth-.5;ptr.ty=e.clientY/innerHeight-.5});
+  ScrollTrigger.create({trigger:sec,start:'top bottom',end:'bottom top',onToggle:function(s){on=s.isActive}});
+  gsap.ticker.add(function(){if(!on)return;ptr.x+=(ptr.tx-ptr.x)*.06;ptr.y+=(ptr.ty-ptr.y)*.06;fr.forEach(function(f){var k=+f.dataset.d;f.style.transform='translate3d('+(-ptr.x*34*k).toFixed(1)+'px,'+(-ptr.y*24*k).toFixed(1)+'px,0)'})})}
+var tl=gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'+=300%',pin:true,scrub:.9}});
+tl.from('#sk .skt .ln>span',{yPercent:110,stagger:.06,duration:.14,ease:'power3.out'},0);
+fr.forEach(function(f,i){var t0=.1+i*.15;
+  tl.fromTo(qs('.e1',f),{scaleX:0},{scaleX:1,duration:.03,ease:'none'},t0)
+    .fromTo(qs('.e2',f),{scaleY:0},{scaleY:1,duration:.03,ease:'none'},t0+.03)
+    .fromTo(qs('.e3',f),{scaleX:0},{scaleX:1,duration:.03,ease:'none'},t0+.06)
+    .fromTo(qs('.e4',f),{scaleY:0},{scaleY:1,duration:.03,ease:'none'},t0+.09)
+    .fromTo(qs('.dr',f),{opacity:0,scale:.96},{opacity:1,scale:1,duration:.06},t0+.04)
+    .to(qs('.ph',f),{clipPath:'inset(0% 0 0 0)',duration:.1,ease:'power2.inOut'},t0+.13)
+    .to(qs('.dr',f),{opacity:.15,duration:.06},t0+.16)
+    .to(qs('.cp',f),{opacity:1,duration:.05},t0+.2)});
+tl.to('#sk .skt',{scale:1.06,duration:.14,ease:'none'},.88).to({},{duration:.02},1);
+gsap.from('#sk .skn',{opacity:0,y:20,duration:1,ease:'power3.out',scrollTrigger:{trigger:sec,start:'top 60%'}});
+})();
 
 /* ===== 5. DIFFERENCE: turnkey dial ===== */
 (function(){
