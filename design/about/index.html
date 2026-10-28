@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>About — CI Design + Build</title>
+<meta name="description" content="CI was built around one belief: an extraordinary home begins with an extraordinary understanding of the person living in it.">
+<link rel="preload" href="../assets/TradeGothic-BoldExt.otf" as="font" type="font/otf" crossorigin>
+<link rel="preload" href="../assets/TradeGothic-Ext.otf" as="font" type="font/otf" crossorigin>
+<link rel="stylesheet" href="../assets/site.css">
+
+<style>
+
+/* hero */
+.ah{background:var(--black2)}
+.ah .bpx{position:absolute;inset:0;z-index:0}
+.ah>*:not(.bpx){position:relative;z-index:2}
+.ah .cap{margin-bottom:28px}
+.ah h1{font-size:clamp(3rem,8.8vw,10.6rem)}
+/* story */
+.story .big{font-size:clamp(1.4rem,3.1vw,3.3rem);line-height:1.08;letter-spacing:-.01em;text-transform:uppercase;max-width:30ch;font-weight:400}
+.story .big b{font-weight:700}
+.story .vals{list-style:none;margin:clamp(60px,7vw,110px) 0 0;padding:0;border-top:1px solid var(--line)}
+.story .vals li{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:24px;padding:clamp(14px,1.8vw,24px) 0;border-bottom:1px solid var(--line);font-size:clamp(1.1rem,2.2vw,2.3rem);text-transform:uppercase;letter-spacing:-.005em}
+.story .vals li span{font-size:9px;letter-spacing:.24em;color:var(--muted)}
+.story .vals li::before{content:"";position:absolute}
+.story .time{margin-top:clamp(70px,8vw,120px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:end}
+.story .time p{grid-column:1/9;font-size:clamp(1.5rem,3.6vw,4rem);line-height:.95;text-transform:uppercase;letter-spacing:-.015em;font-weight:700}
+.story .time p .r{font-weight:400}
+.story .time .k{grid-column:9/13;text-align:right;max-width:34ch;justify-self:end}
+/* why: chaos → order */
+.why{background:var(--black)}
+.why .wtop{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:grid;grid-template-columns:1fr 1fr;gap:30px;z-index:3}
+.why .wtop .st{position:relative;height:3.2em}
+.why .wtop .st p{position:absolute;left:0;top:0;font-size:clamp(1.1rem,1.8vw,1.7rem);letter-spacing:.1em;text-transform:uppercase;line-height:1.2;max-width:28ch}
+.why .wtop .st p+p{opacity:0}
+.why .parts{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);display:flex;flex-wrap:wrap;gap:14px 14px;justify-content:center;z-index:2}
+.why .parts span{display:inline-flex;align-items:center;gap:12px;border:1px solid var(--line2);border-radius:999px;padding:16px 26px;font-size:clamp(.9rem,1.5vw,1.4rem);text-transform:uppercase;letter-spacing:.06em;white-space:nowrap;will-change:transform;background:var(--black)}
+.why .parts span::before{content:"";width:5px;height:5px;background:var(--bright)}
+.why .wend{position:absolute;left:var(--gx);right:var(--gxr);bottom:44px;display:flex;justify-content:space-between;align-items:end;gap:30px;z-index:3;opacity:0}
+.why .wend p{font-size:clamp(1rem,1.5vw,1.35rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.3;max-width:34ch}
+/* model: relationship diagram */
+.model{background:var(--indigo2)}
+.model .tex{position:absolute;inset:0;background:url(../assets/glassmorph.webp) center/cover;opacity:.1;mix-blend-mode:screen;pointer-events:none}
+.model .mtop{position:absolute;left:var(--gx);top:104px;z-index:3;display:grid;gap:20px;max-width:min(36vw,520px)}
+.model .mtop h2{font-size:clamp(1.8rem,4vw,4.4rem);line-height:.9;text-transform:uppercase;letter-spacing:-.015em;font-weight:700}
+.model .mtop h2 .r{font-weight:400}
+.model .ring{position:absolute;right:calc(var(--gxr) + 6vw);top:52%;transform:translateY(-50%);width:min(60vh,38vw);aspect-ratio:1;z-index:2}
+.model .ring svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.model .ring circle.o{fill:none;stroke:rgba(235,235,235,.18);stroke-width:1}
+.model .ring .ch{fill:none;stroke:var(--blue);stroke-width:1.2;opacity:0}
+.model .ring .ch.on{opacity:1}
+.model .ring .nd{position:absolute;width:7px;height:7px;margin:-3.5px 0 0 -3.5px;background:var(--black2);border:1px solid var(--bright);transition:background .4s}
+.model .ring .nd.on{background:var(--blue);border-color:var(--blue);box-shadow:0 0 18px rgba(150,169,191,.6)}
+.model .ring .lb{position:absolute;font-size:clamp(.6rem,.85vw,.8rem);letter-spacing:.2em;text-transform:uppercase;color:rgba(235,235,235,.5);white-space:nowrap;transform:translate(-50%,-50%);transition:color .4s}
+.model .ring .lb.on{color:var(--bright)}
+.model .sent{position:absolute;left:var(--gx);bottom:92px;z-index:3;width:min(40vw,560px);height:5.2em}
+.model .sent p{position:absolute;left:0;bottom:0;font-size:clamp(1.3rem,2.4vw,2.5rem);line-height:1.08;text-transform:uppercase;letter-spacing:-.005em;opacity:0;filter:blur(8px);transform:translateY(16px);transition:opacity .6s,filter .6s,transform .7s var(--ease)}
+.model .sent p.on{opacity:1;filter:none;transform:none}
+.model .sent p b{color:var(--blue)}
+/* standard: drawing aligns with finish */
+.std{background:var(--black2)}
+.std .stop{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;align-items:start;gap:30px;z-index:3}
+.std .stop p.l{font-size:clamp(1.1rem,1.8vw,1.7rem);letter-spacing:.1em;text-transform:uppercase;line-height:1.2;max-width:30ch}
+.std .word{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);text-align:center;font-weight:700;text-transform:uppercase;font-size:clamp(3.4rem,15vw,19rem);line-height:.8;letter-spacing:-.03em;z-index:2}
+.std .word .half{display:block;overflow:hidden;height:.42em;position:relative}
+.std .word .half span{display:block;position:relative;will-change:transform}
+.std .word .half.t span{color:transparent;-webkit-text-stroke:1.5px var(--bright)}
+.std .word .half.b{height:.46em}
+.std .word .half.b span{transform:translateY(-.42em)}
+.std .cap-l,.std .cap-r{position:absolute;top:calc(50% + .5em);font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);z-index:3;margin-top:min(9vw,120px)}
+.std .cap-l{left:var(--gx)}.std .cap-r{right:var(--gxr);text-align:right}
+.std .three{position:absolute;left:var(--gx);right:var(--gxr);bottom:48px;display:grid;grid-template-columns:repeat(3,1fr);gap:24px;z-index:3}
+.std .three p{font-size:clamp(.95rem,1.35vw,1.25rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.3;border-top:1px solid var(--line);padding-top:16px;opacity:0}
+/* you */
+.you .grid8{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:clamp(50px,6vw,90px)}
+.you .cell{position:relative;aspect-ratio:1.25;border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px;display:grid;align-content:space-between;overflow:hidden;cursor:default}
+.you .cell::before{content:"";position:absolute;inset:0;background:var(--grad);transform:scaleY(0);transform-origin:bottom;transition:transform .7s var(--ease);z-index:0}
+.you .cell:hover::before{transform:none}
+.you .cell>*{position:relative;z-index:1;transition:color .4s}
+.you .cell:hover>*{color:#fff}
+.you .cell .k{color:var(--muted)}
+.you .cell p{font-size:clamp(1.1rem,2vw,2rem);text-transform:uppercase;letter-spacing:-.005em;line-height:1}
+.you .yours{margin-top:clamp(60px,8vw,120px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:end}
+.you .yours p.t{grid-column:1/8;font-size:clamp(1rem,1.5vw,1.35rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.35;max-width:40ch}
+.you .yours p.w{grid-column:8/13;text-align:right;font-weight:700;font-size:clamp(4rem,12vw,15rem);line-height:.8;letter-spacing:-.03em;text-transform:uppercase}
+/* team */
+.team .disc{display:flex;flex-wrap:wrap;gap:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;margin-bottom:clamp(60px,7vw,110px)}
+.team .disc span{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);display:inline-flex;align-items:center;gap:14px;padding-right:22px}
+.team .disc span::before{content:"";width:4px;height:4px;background:var(--bright);opacity:.6}
+.team .ppl{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:clamp(50px,6vw,90px)}
+.team .p .ph{aspect-ratio:3/4;filter:grayscale(1)}
+.team .p .ph::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(20,20,20,.6))}
+.team .p h3{margin-top:16px;font-size:clamp(.95rem,1.25vw,1.15rem);text-transform:uppercase;letter-spacing:.06em;font-weight:700}
+.team .p .k{margin-top:6px;color:var(--muted)}
+.team .comm{margin-top:clamp(60px,8vw,120px);font-size:clamp(1.8rem,5vw,5.6rem);line-height:.92;text-transform:uppercase;letter-spacing:-.02em;font-weight:700;max-width:16ch}
+.team .comm .r{font-weight:400}
+/* experience */
+.exp .rows{list-style:none;margin:clamp(50px,6vw,90px) 0 0;padding:0}
+.exp .rows li{position:relative;display:grid;grid-template-columns:auto 1fr;gap:26px;align-items:center;padding:clamp(18px,2.2vw,30px) 0;font-size:clamp(1.3rem,2.8vw,3rem);text-transform:uppercase;letter-spacing:-.01em}
+.exp .rows li i{width:clamp(60px,9vw,130px);height:1px;background:currentColor;position:relative;transform:scaleX(0);transform-origin:left}
+.exp .rows li i::before{content:"";position:absolute;right:0;top:-2px;width:5px;height:5px;background:currentColor}
+.exp .rows li::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line)}
+.exp .note{margin-top:clamp(50px,6vw,90px);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:end}
+.exp .note p{grid-column:6/13;font-size:clamp(1.1rem,2vw,2rem);line-height:1.15;letter-spacing:.06em;text-transform:uppercase}
+/* principles: horizontal */
+.pr{background:var(--black2);height:100vh;height:100svh;overflow:hidden}
+.pr .ptop{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;align-items:end;gap:30px;z-index:3}
+.pr .ghost{position:absolute;left:0;top:50%;transform:translateY(-50%);font-weight:700;font-size:28vw;line-height:.8;letter-spacing:-.04em;text-transform:uppercase;color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.12);white-space:nowrap;will-change:transform;z-index:1}
+.pr .track{position:absolute;left:var(--gx);top:calc(104px + 90px);bottom:40px;display:flex;gap:24px;align-items:stretch;will-change:transform;z-index:2}
+.pr .card{flex:none;width:min(34vw,440px);border:1px solid var(--line2);padding:28px;display:grid;align-content:space-between;background:rgba(20,20,20,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.pr .card h3{font-size:clamp(1.4rem,2.8vw,3rem);line-height:.95;text-transform:uppercase;letter-spacing:-.01em;font-weight:700}
+.pr .card h3 .r{font-weight:400;display:block}
+.pr .card p{font-size:clamp(.9rem,1.1vw,1.05rem);letter-spacing:.06em;text-transform:uppercase;line-height:1.5;color:rgba(235,235,235,.75);max-width:30ch}
+.pr .card .sqc{width:7px;height:7px;background:var(--bright)}
+@media (max-width:900px){
+  .story .time p{grid-column:1/-1}.story .time .k{grid-column:1/-1;text-align:left}
+  .why .wtop{grid-template-columns:1fr;top:92px}.why .parts span{padding:10px 14px;font-size:3.4vw}.why .wend{flex-direction:column;align-items:start;bottom:80px}
+  .model .mtop{max-width:none;right:var(--gxr);top:92px}.model .ring{width:70vw;right:50%;transform:translate(50%,-40%)}.model .sent{width:auto;right:var(--gxr);bottom:84px}
+  .std .stop{flex-direction:column;top:92px}.std .three{grid-template-columns:1fr;gap:10px;bottom:84px}.std .cap-l,.std .cap-r{display:none}
+  .you .grid8{grid-template-columns:1fr 1fr}.you .yours p.t,.you .yours p.w{grid-column:1/-1;text-align:left}
+  .team .ppl{grid-template-columns:1fr 1fr}.exp .rows li{grid-template-columns:1fr}.exp .rows li i{display:none}.exp .note p{grid-column:1/-1}
+  .pr .card{width:76vw;padding:20px}.pr .ptop{flex-direction:column;align-items:start;top:92px}.pr .track{top:200px}
+}
+
+</style>
+</head>
+<body class="lock">
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false"><defs><symbol id="pl0" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M8 3V349M20 3V44M239 3V44M245 3V33M317 3V33M389 3V58M410 3V349M7 4H411M321 9H384M280 10V33M263 26V33M244 32H318M19 43H240M20 48V64M128 48V71M284 48V71M380 48V58M19 50H381M50 55H129M284 55H362M379 55H390M7 61H22M60 102V252M380 127V221M389 127V140M379 130H390M20 137V173M388 139H411M7 140H22M368 144V204M391 145H411M392 145V202M217 167V222M7 171H22M391 201H411M400 210H411M400 210V225M379 218H402M20 276V299M7 278H21M164 278V310M237 278V310M233 281V307M400 282V349M380 286V298M379 289H402M50 295V322M353 297H381M355 297V322M19 298H52M77 320V336M173 320V336M237 320V336M333 320V336M49 321H79M170 321H240M327 321H356M373 334V345M7 335H78M172 335H238M333 335H374M372 344H402M7 348H411"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M10 3V62M44 3V19M215 3V19M392 3V36M292 9V31M295 9V17M306 9V31M244 10H281M253 13H273M253 13V28M273 13V28M44 19H216M292 23H307M253 27H273M292 30H307M23 48H381M50 48V59M128 71H285M60 100H264M265 101V253M309 121H317M109 128H161M109 128V180M161 128V180M315 128V137M325 128H333M67 129H83M216 133H228M68 134H82M303 136V145M329 136V146M62 137V149M87 137V149M296 137V146M71 138V147M368 144H381M68 152H82M68 156H82M187 161V236M256 162V226M66 164H83M401 165H411M401 165V184M187 167H257M227 167V232M68 169H82M62 172V184M87 172V184M71 173V183M109 180H161M401 184H411M68 187H83M164 187H176M164 187V204M176 187V204M67 191H83M342 193H357M342 193V241M356 193V241M99 197H164M99 197V236M128 197V236M176 197H188M217 197H228M303 200V209M329 200V209M296 201V209M164 203H176M368 204H381M207 218V226M236 220H248M236 220V236M248 220V236M99 224H108M189 224H197M99 226H213M227 226H236M248 226H256M99 236H223M236 236H248M342 241H357M60 254H264M174 276V286M163 277H239M162 280V308M164 281H174M168 281V307M228 281H237M239 281V307M178 290V299M229 297H240M174 303V312M164 307H174M229 307H237M163 312H238M118 321H132"/></symbol><symbol id="pl1" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M2 3V349M7 3V62M18 3V44M213 3V19M237 3V44M243 3V33M315 3V33M387 3V58M404 3V349M1 4H405M319 9H382M278 10V33M261 26V33M242 32H316M17 43H238M18 48V64M378 48V58M17 50H379M377 55H388M6 61H19M378 127V221M387 127V140M377 130H388M18 137V173M7 139V172M386 139H405M6 140H19M389 145H405M389 145V202M6 171H19M389 201H405M398 210H405M398 210V221M377 218H400M18 276V299M7 277V336M6 278H19M378 286V298M398 286V346M377 289H400M48 295V322M351 297H379M353 297V322M17 298H50M74 320V336M171 320V336M235 320V336M331 320V336M47 321H77M168 321H242M329 321H354M371 334V345M6 335H76M170 335H236M331 335H372M370 344H400M1 348H405"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M42 3V19M389 3V37M290 9V31M302 9V17M304 9V31M242 10H279M250 13V28M251 13H271M270 13V28M42 19H214M290 23H304M251 27H271M290 30H304M21 48H379M48 48V59M126 48V67M282 48V67M47 58H126M126 67H282M60 85H366M60 85V286M366 85V286M125 93H133M187 93H195M72 103H96M72 103V127M96 103V127M109 103V111M124 103H132M146 103V110M131 120H139M180 120H189M341 125H351M72 127H96M237 127H277M266 127V139M62 129V219M63 129H100M66 129V219M99 129V219M233 131V217M280 131V217M66 133H100M165 136H176M165 136V174M176 136V174M132 140H165M132 140V170M176 140H186M186 140V170M66 153H100M247 163V186M399 165V184M251 166V179M235 168V179M132 170H165M176 170H186M66 174H100M165 174H176M142 175H153M142 175V213M153 175V213M132 179H142M132 179V209M153 179H186M186 179V209M66 196H100M363 197V207M132 209H142M153 209H186M266 209V221M142 213H153M66 216H100M62 219H100M237 221H277M341 223H351M107 241H144M107 241V280M111 241V280M140 241V280M144 241V280M173 241H210M173 241V280M177 241V280M206 241V280M210 241V280M111 269H141M177 269H206M111 277H140M177 277H206M107 280H144M173 280H210M60 286H366"/></symbol><symbol id="pl2" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M2 3V349M11 3V64M23 3V45M47 3V21M217 3V21M240 3V45M246 3V35M318 3V35M323 3V11M383 3V11M389 3V59M404 3V349M1 4H405M306 10V32M322 10H384M281 12V35M264 27V35M246 33H319M22 44H241M23 49V69M380 49V59M26 50H381M22 56H53M350 56H390M11 62H24M380 127V221M389 127V141M380 130H390M356 134V215M23 137V174M11 139V172M11 140H24M388 140H405M95 143V163M392 145V202M391 146H405M11 171H24M391 201H405M400 210V221M380 218H402M23 275V298M11 277V335M11 278H24M380 285V298M401 285V345M379 288H402M52 295V321M356 296V321M22 297H55M353 297H381M79 319V335M175 319V335M239 319V335M334 319V335M172 320H241M52 321H82M332 321H357M373 333V344M11 334H80M174 334H240M333 334H374M372 343H402M1 348H405"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M392 3V38M293 10V32M246 12H282M254 15H274M254 15V29M274 15V29M46 20H217M293 24H307M254 29H274M293 32H307M52 53V63M52 62H83M321 62H351M82 68H112M291 68H321M112 74H292M91 96H312M331 114V274M72 118V222M110 124H238M110 124V170M124 124V170M167 124V224M238 124V222M250 134H286M250 134V158M286 134V158M356 134H381M124 138H167M83 141H107M83 141V165M107 141V165M85 153H105M250 158H286M91 162H99M83 165H107M401 165V184M110 170H295M193 170V215M281 170V215M295 170V215M300 172H324M300 172V196M323 172V196M312 174V194M119 181H155M119 181V229M155 181V229M302 184H311M313 184H322M300 196H324M193 201H281M356 214H381M193 215H295M119 229H155M219 231V239M188 242H217M72 254V270M120 254V274M152 254V276M114 255V275M147 255V274M120 256H147M77 257H87M128 290H138M91 292H312"/></symbol></defs></svg>
+<div class="pl" id="pl" aria-hidden="true"><div class="in"><div class="wm">/CI <b>DSGN</b></div><div class="bar"><i id="plBar"></i></div><div class="n"><span id="plN">000</span></div></div></div>
+<div class="grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="cur" id="cur" aria-hidden="true"></div>
+
+<header class="top" id="top">
+  <a class="logo" href="../" aria-label="CI Design + Build"><img src="../assets/logo-white.png" alt="CI Design + Build"></a>
+  <nav aria-label="Primary"><a href="../about/" aria-current="page">About</a><a href="../services/">Services</a><a href="../portfolio/">Portfolio</a><a href="../../#contact">Contact</a></nav>
+  <a class="pill fill cta" href="../../#contact">Begin Your Better Life</a>
+  <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu"><i></i>Menu</button>
+</header>
+<a class="sidecta" id="sidecta" href="../../#contact">Begin Your Better Life ↗</a>
+<a class="conc" id="conc" href="../../#contact" aria-label="Speak with the CI concierge"><i></i><span>CI Concierge</span><em class="cl">Chicago <span id="concT"></span></em></a>
+
+<div class="menu" id="menu" aria-hidden="true">
+  <div class="bar"><a href="../" aria-label="CI Design + Build"><img src="../assets/logo-white.png" alt="CI Design + Build"></a><button class="close" id="menuClose" type="button">Close ×</button></div>
+  <div class="left">
+    <nav class="links" aria-label="Full menu">
+      <a href="../"><small>01</small>Home</a>
+      <a href="../about/"><small>02</small>About</a>
+      <a href="../services/" id="svcToggle" aria-expanded="false"><small>03</small>Services <span class="plus" aria-hidden="true">+</span></a>
+      <a href="../portfolio/"><small>04</small>Portfolio</a>
+      <a href="../../#brokers"><small>05</small>Broker Program</a>
+      <a href="../../#partnerships"><small>06</small>Partnerships</a>
+      <a href="../../#news"><small>07</small>News</a>
+      <a href="../../#contact"><small>08</small>Contact</a>
+    </nav>
+    <div class="foot"><p class="k mut" style="line-height:2">215 W Huron Street, Suite 1, Chicago, IL 60654<br>312 279 2776 · Chicago + South Florida</p><a class="pill fill" href="../../#contact">Begin Your Better Life</a></div>
+  </div>
+  <div class="right">
+    <div class="svcl" id="svcList">
+      <p class="k" style="color:rgba(235,235,235,.6)">Services</p>
+      <a href="../services/#turnkey"><small>03.1</small>CI Turnkey</a>
+      <a href="../services/#core"><small>03.2</small>CI Core</a>
+      <a href="../services/#curated"><small>03.3</small>CI Curated</a>
+      <a href="../services/#wellness"><small>03.4</small>CI Wellness</a>
+      <a href="../services/" class="k" style="margin-top:8px">All services ↗</a>
+    </div>
+    <div class="wm" aria-hidden="true">/CI <b>DSGN</b></div>
+  </div>
+</div>
+
+<div id="smooth-wrapper"><div id="smooth-content">
+<main>
+
+<section class="hd1 ah" id="top-about">
+  <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+  <p class="cap k"><span class="l"></span>About CI</p>
+  <h1 data-lines><span class="ln"><span class="r">Building you a</span></span><span class="ln"><span class="b">Better Life</span></span></h1>
+  <div class="row"><p class="rv">CI was built around one belief: an extraordinary home begins with an extraordinary understanding of the person living in it — their lifestyle, their wellness, their vision for how they want to live.</p><a class="pill fill rv" data-d=".2" href="../../#contact">Bring Your Vision to Life</a></div>
+</section>
+
+<section class="sec light story" id="story">
+  <div class="g12">
+    <div style="grid-column:1/5"><p class="cap k"><span class="l"></span>Our Story</p><h2 class="h2 rv" style="margin-top:22px"><span class="r">Built by</span><br>listening<br><span class="r">to our clients.</span></h2></div>
+    <div style="grid-column:6/13"><p class="big" data-words>CI was built on what our clients needed most — and had never been given. One team that communicates. One firm that takes responsibility. One integrated process that moves with intelligence from the first conversation to the finished home.</p></div>
+  </div>
+  <ul class="vals">
+    <li class="rv"><span class="n">Exceptional quality</span><span>Heard first</span></li>
+    <li class="rv"><span class="n">Complete accountability</span><span>One firm</span></li>
+    <li class="rv"><span class="n">Transparent communication</span><span>Always</span></li>
+    <li class="rv"><span class="n">Thoughtful client education</span><span>Every step</span></li>
+    <li class="rv"><span class="n"><b>A team that sees — and delivers — the whole</b></span><span>The CI model</span></li>
+  </ul>
+  <div class="time"><p class="rv"><span class="r">Your time is your most valuable asset.</span><br>Our CI process is built to protect it.</p><p class="k mut rv" data-d=".15">That principle shaped CI from the beginning. It shapes every project today.</p></div>
+</section>
+
+<section class="why full" id="why">
+  <div class="wtop"><div><p class="cap k"><span class="l"></span>Why CI Exists</p></div><div class="st"><p>A significant residence involves <b>countless moving parts</b> — all interconnected, all requiring expert coordination.</p><p id="whyB">CI exists to make that <b>feel effortless.</b></p></div></div>
+  <div class="parts" id="parts"><span>Architecture</span><span>Engineering</span><span>Design</span><span>Trades</span><span>Approvals</span><span>Materials</span><span>Schedules</span><span>Budgets</span><span>Procurement</span><span>Installation</span></div>
+  <div class="wend" id="wend"><p>You bring the vision. You make the decisions that shape it. <b>We will handle everything required to bring it to life.</b></p><a class="pill" href="../services/">CI Ways of Work</a></div>
+</section>
+
+<section class="model full" id="model">
+  <div class="tex" aria-hidden="true"></div>
+  <div class="mtop"><p class="cap k"><span class="l"></span>The CI Model</p><h2><span class="r">One team.</span><br>Complete<br>responsibility.</h2><p class="k mut">Every element of your home is in conversation with the next — done by one team.</p></div>
+  <div class="ring" id="mring"><svg viewBox="-110 -110 220 220" aria-hidden="true"><circle class="o" r="100"/><circle class="o" r="72" style="opacity:.5"/><g id="chords"></g></svg></div>
+  <div class="sent" id="msent"><p><b>Lighting</b> shapes how materials are experienced.</p><p><b>Millwork</b> informs furniture scale.</p><p><b>Technology</b> is woven into architecture.</p><p><b>Wellness</b> is considered in planning.</p><p><b>Art</b> responds to proportion.</p><p><b>Procurement</b> drives the schedule.</p><p>Every decision is made <b>with the whole in view.</b></p></div>
+</section>
+
+<section class="std full" id="std">
+  <div class="stop"><div><p class="cap k"><span class="l"></span>The CI Standard</p><p class="l" style="margin-top:22px">Luxury is often described through materials. <b>We see it differently.</b></p></div><p class="k mut" style="max-width:30ch;text-align:right">Quality is in what aligns. What closes correctly. What feels effortless.</p></div>
+  <p class="word" aria-label="Aligned"><span class="half t"><span id="halfT">Aligned</span></span><span class="half b"><span id="halfB">Aligned</span></span></p>
+  <p class="cap-l">Between a drawing</p><p class="cap-r">and the finished detail</p>
+  <div class="three" id="three"><p>Between concept <b>and execution.</b></p><p>Between a drawing <b>and the finished detail.</b></p><p>Between what was promised <b>and what was delivered.</b></p></div>
+</section>
+
+<section class="sec light you" id="you">
+  <div class="g12"><div style="grid-column:1/6"><p class="cap k"><span class="l"></span>Designed Around You</p><h2 class="h2 rv" style="margin-top:22px"><span class="r">For the life</span><br>you're building.</h2></div><p class="lead2 rv" style="grid-column:7/13;align-self:end;color:rgba(20,20,20,.72)">We study how you live and want to live before we decide how your home should look.</p></div>
+  <div class="grid8">
+    <div class="cell rv" data-d="0.00"><span class="k">Daily</span><p>Your routines</p></div><div class="cell rv" data-d="0.05"><span class="k">Together</span><p>Your family</p></div><div class="cell rv" data-d="0.10"><span class="k">Curated</span><p>Your collections</p></div><div class="cell rv" data-d="0.15"><span class="k">Rhythm</span><p>Your habits</p></div><div class="cell rv" data-d="0.20"><span class="k">Hosting</span><p>Your entertaining style</p></div><div class="cell rv" data-d="0.25"><span class="k">Retreat</span><p>Your need for privacy</p></div><div class="cell rv" data-d="0.30"><span class="k">Health</span><p>Your relationship with wellness</p></div><div class="cell rv" data-d="0.35"><span class="k">Ahead</span><p>Your plans for the future</p></div>
+  </div>
+  <div class="yours"><p class="t rv">The most meaningful homes are an expression of the person living in them — designed around a specific life, a specific way of being, a specific vision for what home should feel like.</p><p class="w rv" data-d=".2">Yours.</p></div>
+</section>
+
+<section class="sec team" id="team">
+  <div class="disc rv"><span>Architecture</span><span>Interior design</span><span>Construction</span><span>Project management</span><span>Procurement</span><span>Furnishings</span><span>Art</span><span>Wellness</span><span>Installation</span><span>Move-in + onboarding</span></div>
+  <div class="g12"><div style="grid-column:1/7"><p class="cap k"><span class="l"></span>Our Team</p><h2 class="h2 rv" style="margin-top:22px"><span class="r">One vision from</span><br>design through<br>construction.</h2></div><p class="lead2 rv" style="grid-column:8/13;align-self:end;color:rgba(235,235,235,.75)">A CI project is shaped by many areas of expertise working toward one outcome.</p></div>
+  <div class="ppl">
+    <div class="p rv"><div class="ph"><span class="pc">Portrait</span></div><h3>Michael Miller</h3><p class="k">Founder</p></div>
+    <div class="p rv" data-d=".1"><div class="ph"><span class="pc">Portrait</span></div><h3>Name</h3><p class="k">Title</p></div>
+    <div class="p rv" data-d=".2"><div class="ph"><span class="pc">Portrait</span></div><h3>Name</h3><p class="k">Title</p></div>
+    <div class="p rv" data-d=".3"><div class="ph"><span class="pc">Portrait</span></div><h3>Name</h3><p class="k">Title</p></div>
+  </div>
+  <h2 class="comm rv"><span class="r">The value is having every discipline.</span><br>It is having them communicate.</h2>
+</section>
+
+<section class="sec indigo exp" id="exp">
+  <div class="g12"><div style="grid-column:1/7"><p class="cap k"><span class="l"></span>The CI Experience</p><h2 class="h2 rv" style="margin-top:22px">Concierge-level<br><span class="r">support, defined.</span></h2></div><p class="lead2 rv" style="grid-column:8/13;align-self:end;color:rgba(235,235,235,.75)">We take the work seriously — and make an inherently complex undertaking feel clear, collaborative and enjoyable.</p></div>
+  <ul class="rows" id="exrows">
+    <li><i></i><span>Communicating openly</span></li><li><i></i><span>Explaining decisions</span></li><li><i></i><span>Respecting your time</span></li><li><i></i><span>Being accountable</span></li><li><i></i><span>Bringing solutions rather than noise</span></li>
+  </ul>
+  <div class="note"><p class="rv">And the confidence that someone is thinking about the details <b>even when you are not.</b> That is concierge-level support to us.</p></div>
+</section>
+
+<section class="pr" id="pr">
+  <div class="ptop"><div><p class="cap k"><span class="l"></span>Our Principles</p><h2 class="h2" style="margin-top:22px"><span class="r">What guides</span> every CI project.</h2></div><p class="k mut">Scroll</p></div>
+  <p class="ghost" id="pghost" aria-hidden="true">Principles</p>
+  <div class="track" id="ptrack"><article class="card"><i class="sqc"></i><div><h3><span class="r">Listen</span>First</h3><p style="margin-top:18px">The client's life is the starting point.</p></div></article><article class="card"><i class="sqc"></i><div><h3><span class="r">Think</span>as One</h3><p style="margin-top:18px">Design and construction perform better when they communicate from the beginning.</p></div></article><article class="card"><i class="sqc"></i><div><h3><span class="r">Make It</span>Personal</h3><p style="margin-top:18px">Bespoke means the home could only belong to the person it was created for.</p></div></article><article class="card"><i class="sqc"></i><div><h3><span class="r">Design</span>for Life</h3><p style="margin-top:18px">Beauty matters. So do comfort, wellness, functionality, longevity and performance.</p></div></article><article class="card"><i class="sqc"></i><div><h3><span class="r">Respect</span>the Details</h3><p style="margin-top:18px">The smallest decisions often determine how exceptional the whole feels.</p></div></article><article class="card"><i class="sqc"></i><div><h3><span class="r">Communicate</span>Clearly</h3><p style="margin-top:18px">Clients deserve context, transparency and confidence throughout the process.</p></div></article><article class="card"><i class="sqc"></i><div><h3><span class="r">Take</span>Responsibility</h3><p style="margin-top:18px">A turnkey experience only works when someone owns the outcome.</p></div></article></div>
+</section>
+
+<section class="cta-end" id="cta">
+  <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+  <p class="k" style="color:rgba(235,235,235,.75)">Your next chapter</p>
+  <h2 class="rv"><span class="r">Your home holds the next</span> version of your life.</h2>
+  <a class="rcta rv" data-d=".15" href="../../#contact" data-cur="Begin"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><path id="rcp" d="M50,50 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#rcp" textLength="272">Concierge-level service · One team · One process ·</textPath></text></svg><span class="core">Begin Your Better Life</span></a>
+  <p class="k s rv" data-d=".3">Let's design it with intention.</p>
+</section>
+
+</main>
+<footer class="foot" id="foot">
+  <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+  <div class="mq2w" aria-hidden="true"><div class="mq2" id="fmq"><span class="b">Build Your Better Life</span><span class="r">Concierge-level service</span><span class="b">One team</span><span class="r">One process</span><span class="b">Complete responsibility</span><span class="b">Build Your Better Life</span><span class="r">Concierge-level service</span><span class="b">One team</span><span class="r">One process</span><span class="b">Complete responsibility</span></div></div>
+  <div class="fgrid">
+    <p class="where"><span class="sm">Studios in</span><span class="bg">Chicago</span><span class="sm mid">and</span><span class="bg o">South Florida</span></p>
+    <div class="cols">
+      <div><h4>Chicago Studio</h4><p>215 W. Huron St., Suite 1<br>Chicago, IL 60654</p><a href="tel:+13122792776">312.279.2776</a><p class="tm" data-tz="America/Chicago">—</p></div>
+      <div><h4>South Florida Studio</h4><p>561 NE 79th St, Suite 300/410<br>Miami, FL 33138</p><p class="tm" data-tz="America/New_York">—</p></div>
+      <div><h4>Concierge</h4><a href="mailto:info@cidesignbuild.com">info@cidesignbuild.com</a><a href="../../#contact">Begin Your Better Life</a><a href="../../#brokers">Broker Program</a><a href="../../#partnerships">Partnerships</a></div>
+      <div><h4>Follow</h4><a href="https://www.instagram.com/cidesignbuild" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/cidesignbuild" target="_blank" rel="noopener">Facebook</a><a href="https://www.linkedin.com/company/cidesignbuild" target="_blank" rel="noopener">LinkedIn</a><a href="../../#news">News</a></div>
+    </div>
+  </div>
+  <div class="wm" id="fwm" aria-label="/CI DSGN"><span class="fl">/</span><span class="fl">C</span><span class="fl">I</span><span class="ol">D</span><span class="ol">S</span><span class="ol">G</span><span class="ol">N</span></div>
+  <div class="bot"><span>© 2026 CI Design + Build</span><nav aria-label="Legal"><a href="../about/">About</a><a href="../services/">Services</a><a href="../portfolio/">Portfolio</a><a href="https://cidesignbuild.com/terms-and-conditions/" target="_blank" rel="noopener">Terms</a><a href="https://cidesignbuild.com/privacy-policy-2/" target="_blank" rel="noopener">Privacy</a></nav><a href="#top" id="toTop">Back to top ↑</a></div>
+</footer>
+</div></div>
+
+<script src="../assets/js/gsap.min.js"></script>
+<script src="../assets/js/ScrollTrigger.min.js"></script>
+<script src="../assets/js/ScrollSmoother.min.js"></script>
+<script src="../assets/js/Flip.min.js"></script>
+<script src="../assets/site.js"></script>
+<script>
+CI.onReady(function(){
+var qs=CI.qs,qa=CI.qa,fine=CI.fine,smoother=CI.smoother,d=document;
+
+/* why: chaos → order */
+(function(){
+var sec=qs('#why'),items=qa('#parts span');
+var seeds=[[-.42,-.3,-14],[.38,-.34,9],[-.1,-.4,-5],[.45,.1,17],[-.47,.12,-8],[.12,.36,12],[-.3,.38,-19],[.3,-.08,6],[-.05,.14,-11],[.44,.4,14]];
+var tl=gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'+=170%',pin:true,scrub:1,invalidateOnRefresh:true}});
+tl.fromTo(items,{x:function(i){return seeds[i][0]*innerWidth*.9},y:function(i){return seeds[i][1]*innerHeight*.72},rotate:function(i){return seeds[i][2]},opacity:.75},{x:0,y:0,rotate:0,opacity:1,duration:.6,ease:'power2.inOut',stagger:{each:.03,from:'random'}},.12)
+  .to('#why .st p:first-child',{opacity:0,y:-14,duration:.12},.3).to('#whyB',{opacity:1,duration:.12},.4)
+  .to('#wend',{opacity:1,y:0,duration:.14},.74).to({},{duration:.1},.9);
+})();
+
+/* model: relationship chords */
+(function(){
+var ring=qs('#mring'),g=qs('#chords'),NS='http://www.w3.org/2000/svg';
+var names=['Lighting', 'Millwork', 'Technology', 'Wellness', 'Art', 'Procurement', 'Architecture', 'Materials', 'Proportion', 'Furniture', 'Schedule', 'Planning'],pairs=[['Lighting', 'Materials'], ['Millwork', 'Furniture'], ['Technology', 'Architecture'], ['Wellness', 'Planning'], ['Art', 'Proportion'], ['Procurement', 'Schedule']],N=names.length,pos={},nd={},lb={};
+names.forEach(function(n,i){var a=-Math.PI/2+i/N*Math.PI*2,x=Math.cos(a)*100,y=Math.sin(a)*100;pos[n]=[x,y];
+  var e=d.createElement('i');e.className='nd';e.style.left=(50+x/2.2)+'%';e.style.top=(50+y/2.2)+'%';ring.appendChild(e);nd[n]=e;
+  var l=d.createElement('span');l.className='lb';l.textContent=n;l.style.left=(50+Math.cos(a)*121/2.2)+'%';l.style.top=(50+Math.sin(a)*121/2.2)+'%';ring.appendChild(l);lb[n]=l});
+var chords=pairs.map(function(p){var c=d.createElementNS(NS,'path');var a=pos[p[0]],b=pos[p[1]];c.setAttribute('d','M'+a[0]+','+a[1]+' Q'+((a[0]+b[0])*.18)+','+((a[1]+b[1])*.18)+' '+b[0]+','+b[1]);c.setAttribute('class','ch');c.setAttribute('pathLength','1');c.style.strokeDasharray='1 1';c.style.strokeDashoffset='1';g.appendChild(c);return c});
+var sents=qa('#msent p'),st={p:0},last=-1;
+function draw(){var k=Math.min(pairs.length,Math.floor(st.p*(pairs.length+1)));if(k===last)return;last=k;
+  names.forEach(function(n){nd[n].classList.remove('on');lb[n].classList.remove('on')});
+  chords.forEach(function(c,i){c.classList.toggle('on',i<=k-1||(k===pairs.length));});
+  if(k<pairs.length){var p=pairs[k];nd[p[0]].classList.add('on');nd[p[1]].classList.add('on');lb[p[0]].classList.add('on');lb[p[1]].classList.add('on');chords[k].classList.add('on')}
+  else{names.forEach(function(n){nd[n].classList.add('on');lb[n].classList.add('on')})}
+  sents.forEach(function(s,i){s.classList.toggle('on',i===k)})}
+gsap.timeline({scrollTrigger:{trigger:'#model',start:'top top',end:'+=300%',pin:true,scrub:1}})
+  .from('#mring svg',{rotate:-40,opacity:0,duration:.1,ease:'power2.out'},0)
+  .to(chords,{strokeDashoffset:0,duration:.12,stagger:.12,ease:'none'},.05)
+  .to(st,{p:1,duration:1,ease:'none',onUpdate:draw},0);
+draw();
+gsap.to('#mring svg',{rotate:360,duration:140,repeat:-1,ease:'none'});
+})();
+
+/* standard: halves align */
+(function(){
+gsap.set('#halfT',{xPercent:-9});gsap.set('#halfB',{xPercent:9});
+gsap.timeline({scrollTrigger:{trigger:'#std',start:'top top',end:'+=180%',pin:true,scrub:1}})
+  .to('#halfT',{xPercent:0,duration:.6,ease:'power2.inOut'},.1).to('#halfB',{xPercent:0,duration:.6,ease:'power2.inOut'},.1)
+  .to('#halfT',{color:'#EBEBEB',duration:.15},.68)
+  .to('#three p',{opacity:1,y:0,duration:.14,stagger:.06},.7).to({},{duration:.12},.9);
+gsap.set('#three p',{y:16});
+})();
+
+/* experience rows */
+qa('#exrows li').forEach(function(li,i){gsap.to(qs('i',li),{scaleX:1,duration:1,ease:'power3.out',scrollTrigger:{trigger:li,start:'top 85%'}});gsap.from(qs('span',li),{opacity:0,x:-12,duration:1,ease:'power3.out',scrollTrigger:{trigger:li,start:'top 85%'}})});
+
+/* principles: horizontal pin */
+(function(){
+var track=qs('#ptrack'),sec=qs('#pr');
+function dist(){return Math.max(0,track.scrollWidth-sec.clientWidth+parseFloat(getComputedStyle(sec).paddingLeft||0)+40)}
+gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:function(){return '+='+(dist()+innerHeight*.5)},pin:true,scrub:1,invalidateOnRefresh:true}})
+  .to(track,{x:function(){return -dist()},ease:'none'},0)
+  .to('#pghost',{xPercent:-38,ease:'none'},0);
+})();
+
+});
+</script>
+</body>
+</html>
