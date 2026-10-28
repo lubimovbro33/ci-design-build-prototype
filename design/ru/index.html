@@ -1,0 +1,1253 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>CI Design + Build — Дизайн и строительство уровня консьерж-сервиса</title>
+<meta name="description" content="Concierge-level design + build. One team from the first conversation to the night we move you in. Building You a Better Life — Chicago + South Florida.">
+<link rel="preload" href="../assets/TradeGothic-BoldExt.otf" as="font" type="font/otf" crossorigin>
+<link rel="preload" href="../assets/TradeGothic-Ext.otf" as="font" type="font/otf" crossorigin>
+<style>
+@font-face{font-family:"TG";src:url(../assets/TradeGothic-Ext.otf) format("opentype");font-weight:400;font-display:swap}
+@font-face{font-family:"TG";src:url(../assets/TradeGothic-BoldExt.otf) format("opentype");font-weight:700;font-display:swap}
+
+/* CI DSGN guideline: Eerie Black, Japanese Indigo, Granite, Bright Gray, Gradient Blue */
+:root{
+  --black:#1D1D1D;--black2:#141414;--indigo:#283E4B;--indigo2:#1E2F39;--blue:#96A9BF;--granite:#636366;--bright:#EBEBEB;
+  --ink:var(--bright);--muted:rgba(235,235,235,.55);--line:rgba(235,235,235,.14);--line2:rgba(235,235,235,.4);
+  --ph:#2E2F33;
+  --grad:linear-gradient(135deg,#96A9BF 0%,#283E4B 100%);
+  --f:"TG","Helvetica Neue",Arial,sans-serif;
+  --gx:max(20px,env(safe-area-inset-left,0px));--gxr:max(20px,env(safe-area-inset-right,0px));
+  --ease:cubic-bezier(.2,.7,.2,1);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--black);color:var(--ink);font-family:var(--f);font-size:14px;line-height:1.5;overflow-x:hidden}
+body.lock{overflow:hidden}
+a{color:inherit;text-decoration:none}
+h1,h2,h3,h4,p{margin:0;font-weight:inherit}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.b{font-weight:700}.r{font-weight:400}
+.o{color:transparent;-webkit-text-stroke:1.2px var(--ink)}
+.k{font-size:10px;letter-spacing:.22em;text-transform:uppercase;line-height:1.5}
+.mut{color:var(--muted)}
+.ln{display:block;overflow:hidden;padding-bottom:.04em}.ln>span{display:block}
+:focus-visible{outline:1px solid var(--blue);outline-offset:4px}
+
+/* brand line: square cap + hairline (+ 45° rise) */
+.cap{display:inline-flex;align-items:center;gap:12px}
+.cap::before{content:"";width:5px;height:5px;background:currentColor;flex:none}
+.cap .l{display:block;height:1px;width:56px;background:currentColor;opacity:.6}
+.rise{position:relative;display:block;height:1px;background:currentColor}
+.rise::before{content:"";position:absolute;left:0;top:-2px;width:5px;height:5px;background:currentColor}
+
+/* pills */
+.pill{display:inline-flex;align-items:center;gap:10px;border:1px solid var(--line2);border-radius:999px;padding:14px 22px;font-size:10px;letter-spacing:.2em;text-transform:uppercase;line-height:1;color:var(--ink);position:relative;overflow:hidden;isolation:isolate;transition:color .35s,border-color .35s;white-space:nowrap;background:none;cursor:pointer;font-family:var(--f)}
+.pill::before{content:"";position:absolute;inset:0;background:var(--grad);transform:translateY(101%);transition:transform .55s cubic-bezier(.77,0,.18,1);z-index:-1;border-radius:inherit}
+.pill:hover::before{transform:none}.pill:hover{color:#fff;border-color:transparent}
+.pill.fill{background:var(--bright);color:var(--black);border-color:var(--bright)}
+.pill.fill:hover{color:#fff}
+.pill svg{width:12px;height:12px}
+
+/* photo placeholder */
+.ph{position:relative;background:var(--ph);overflow:hidden}
+.ph::before{content:"";position:absolute;inset:0;background:radial-gradient(80% 60% at 70% 20%,rgba(150,169,191,.10),transparent 60%),linear-gradient(160deg,rgba(255,255,255,.04),rgba(0,0,0,.25))}
+.ph .pc{position:absolute;left:14px;bottom:12px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(235,235,235,.45);z-index:2}
+
+/* grid hairlines */
+.grid{position:fixed;inset:0;z-index:2;pointer-events:none;display:grid;grid-template-columns:repeat(4,1fr);padding:0 var(--gxr) 0 var(--gx);mix-blend-mode:difference;opacity:.09}
+.grid i{border-left:1px solid #fff}.grid i:last-child{border-right:1px solid #fff}
+
+/* cursor */
+.cur{position:fixed;left:0;top:0;z-index:200;pointer-events:none;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#fff;mix-blend-mode:difference;transition:width .35s var(--ease),height .35s var(--ease),margin .35s var(--ease)}
+.cur.big{width:56px;height:56px;margin:-28px 0 0 -28px}
+.cur.lab{width:96px;height:96px;margin:-48px 0 0 -48px;mix-blend-mode:normal;background:var(--bright);color:var(--black);display:grid;place-items:center;font-size:9px;letter-spacing:.2em;text-transform:uppercase}
+.cur.lab::after{content:attr(data-l)}
+@media (hover:none),(pointer:coarse){.cur{display:none}}
+
+/* preloader: fluted-glass curtain */
+.pl{position:fixed;inset:0;z-index:150;display:grid;place-items:center;pointer-events:none}
+.pl .s{position:absolute;top:0;bottom:0;background:var(--black2);pointer-events:auto}
+.pl .s::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.05),transparent 30%,transparent 70%,rgba(0,0,0,.4))}
+.pl .in{position:relative;z-index:2;display:grid;justify-items:center;gap:18px}
+.pl .wm{font-weight:700;font-size:clamp(2.4rem,7vw,6rem);letter-spacing:-.02em;line-height:.9;text-transform:uppercase}
+.pl .wm b{color:transparent;-webkit-text-stroke:1px var(--bright)}
+.pl .bar{width:min(320px,60vw);height:1px;background:rgba(235,235,235,.2);position:relative}
+.pl .bar i{position:absolute;left:0;top:0;height:1px;width:0;background:var(--bright)}
+.pl .bar i::after{content:"";position:absolute;right:0;top:-2px;width:5px;height:5px;background:var(--bright)}
+.pl .n{font-size:10px;letter-spacing:.22em;font-variant-numeric:tabular-nums}
+
+/* header */
+.top{position:fixed;left:0;right:0;top:0;z-index:60;display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:20px;height:84px;padding:0 var(--gxr) 0 var(--gx);transition:transform .6s var(--ease),background .4s}
+.top.hide{transform:translateY(-110%)}
+.top.solid{background:rgba(20,20,20,.7);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+.top .logo img{height:44px;width:auto;display:block}
+.top nav{display:flex;justify-content:center;gap:10px}
+.top nav a{border:1px solid var(--line2);border-radius:999px;padding:9px 16px;font-size:10px;letter-spacing:.18em;text-transform:uppercase;transition:background .3s,color .3s}
+.top nav a:hover{background:var(--bright);color:var(--black)}
+.burger{appearance:none;background:none;border:0;color:var(--bright);font:inherit;font-size:10px;letter-spacing:.2em;text-transform:uppercase;display:inline-flex;align-items:center;gap:10px;cursor:pointer}
+.burger i{width:26px;height:8px;position:relative}
+.burger i::before,.burger i::after{content:"";position:absolute;left:0;right:0;height:1px;background:currentColor}
+.burger i::before{top:0}.burger i::after{bottom:0}
+.sidecta{position:fixed;right:calc(var(--gxr) - 2px);top:50%;z-index:55;writing-mode:vertical-rl;transform:translateY(-50%) rotate(180deg);font-size:9px;letter-spacing:.26em;text-transform:uppercase;mix-blend-mode:difference;color:#fff;opacity:0;transition:opacity .5s;pointer-events:none}
+.sidecta.on{opacity:1;pointer-events:auto}
+
+/* menu — prototype structure in brand finish */
+.menu{position:fixed;inset:0;z-index:90;display:grid;grid-template-columns:1.25fr 1fr;background:var(--black);clip-path:inset(0 0 100% 0);transition:clip-path .8s cubic-bezier(.77,0,.18,1),visibility 0s .8s;visibility:hidden}
+.menu.open{clip-path:inset(0 0 0 0);visibility:visible;transition:clip-path .8s cubic-bezier(.77,0,.18,1)}
+.menu .bar{position:absolute;left:0;right:0;top:0;height:84px;display:flex;align-items:center;justify-content:space-between;padding:0 var(--gxr) 0 var(--gx);z-index:3}
+.menu .bar img{height:44px;width:auto}
+.menu .close{appearance:none;background:none;border:1px solid var(--line2);border-radius:999px;padding:9px 16px;color:var(--bright);font:inherit;font-size:10px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.menu .left{padding:124px 40px 32px var(--gx);display:grid;grid-template-rows:1fr auto;gap:30px;overflow:auto}
+.menu .links{display:grid;align-content:center;gap:4px}
+.menu .links a{display:flex;align-items:baseline;gap:18px;font-weight:700;text-transform:uppercase;font-size:clamp(1.6rem,4vw,3.8rem);line-height:1.02;letter-spacing:-.01em;transition:color .35s,filter .35s,transform .5s var(--ease)}
+.menu .links a small{font-weight:400;font-size:10px;letter-spacing:.2em;color:var(--muted);min-width:2.6em}
+.menu .links:hover a{color:var(--granite);filter:blur(1.5px)}
+.menu .links a:hover{color:var(--bright);filter:none;transform:translateX(12px)}
+.menu .links .plus{font-weight:400;font-size:.55em;color:var(--muted);transition:transform .4s}
+.menu .links a.on .plus{transform:rotate(45deg)}
+.menu .foot{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:18px}
+.menu .right{position:relative;overflow:hidden;background:var(--indigo);display:grid;align-content:center;padding:124px var(--gxr) 40px 48px}
+.menu .right::before{content:"";position:absolute;inset:0;background:url(../assets/glass-board.webp) center/cover;opacity:.18;mix-blend-mode:screen}
+.menu .svcl{position:relative;z-index:2;display:grid;gap:12px;max-width:440px;padding:30px;border:1px solid rgba(235,235,235,.18);background:rgba(235,235,235,.05);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);opacity:0;transform:translateY(16px);transition:opacity .4s,transform .5s var(--ease)}
+.menu .svcl.show{opacity:1;transform:none}
+.menu .svcl a{display:flex;gap:14px;align-items:baseline;font-weight:700;text-transform:uppercase;font-size:clamp(1.1rem,1.7vw,1.5rem);line-height:1.1;transition:color .3s}
+.menu .svcl a:hover{color:var(--blue)}
+.menu .svcl a small{font-weight:400;font-size:10px;letter-spacing:.2em;color:rgba(235,235,235,.6)}
+.menu .wm{position:absolute;left:48px;bottom:-.06em;z-index:1;font-weight:700;font-size:clamp(4rem,11vw,12rem);line-height:.85;letter-spacing:-.02em;color:rgba(235,235,235,.14);white-space:nowrap;text-transform:uppercase}
+.menu .wm b{color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.4)}
+
+/* ========== SECTIONS ========== */
+section{position:relative}
+.full{height:100vh;height:100svh;overflow:hidden}
+
+/* HERO — headline seen through fluted glass */
+.hero{background:var(--black2)}
+.hero .scene{position:absolute;top:0;bottom:0;left:0;width:100%}
+.hero .scene-bg{position:absolute;inset:0;background:
+  radial-gradient(40% 55% at 72% 34%,rgba(150,169,191,.30),transparent 70%),
+  radial-gradient(30% 40% at 18% 80%,rgba(40,62,75,.55),transparent 70%),
+  linear-gradient(180deg,#2B2C30 0%,#1B1C1F 70%,#141414 100%)}
+.hero .ht{position:absolute;left:var(--gx);right:var(--gxr);bottom:clamp(110px,16vh,170px);font-size:clamp(3rem,11.4vw,13.6rem);line-height:.84;letter-spacing:-.02em;text-transform:uppercase}
+.hero .ht span{display:block;transform:translateY(calc(var(--intro,0) * 120%))}
+.hero .ht span:nth-child(2){transform:translateY(calc(var(--intro,0) * 160%))}
+.hero .ht span:nth-child(3){transform:translateY(calc(var(--intro,0) * 200%))}
+.glass{position:absolute;inset:0;--a:1;overflow:hidden}
+.glass .strip{position:absolute;top:0;bottom:0;overflow:hidden}
+.glass .strip>.scene{will-change:transform}
+.glass .strip::after{content:"";position:absolute;inset:0;pointer-events:none;opacity:var(--a);background:linear-gradient(90deg,rgba(255,255,255,.13) 0%,rgba(255,255,255,.02) 14%,rgba(0,0,0,0) 62%,rgba(0,0,0,.42) 100%)}
+.glass .strip::before{content:"";position:absolute;top:0;bottom:0;left:0;width:1px;background:rgba(255,255,255,.12);opacity:var(--a);z-index:2}
+.hero .ui{position:absolute;left:var(--gx);right:var(--gxr);bottom:28px;z-index:5;display:grid;grid-template-columns:1fr auto 1fr;align-items:end;gap:20px}
+.hero .ui .sub{display:grid;gap:8px}
+.hero .ui .sub .t{font-size:clamp(.9rem,1.25vw,1.15rem);letter-spacing:.16em;text-transform:uppercase}
+.hero .ui .sc{display:grid;justify-items:center;gap:10px;font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:var(--muted)}
+.hero .ui .sc i{width:1px;height:42px;background:rgba(235,235,235,.25);position:relative;overflow:hidden}
+.hero .ui .sc i::after{content:"";position:absolute;left:0;top:-100%;width:1px;height:100%;background:var(--bright);animation:drip 2.4s var(--ease) infinite}
+@keyframes drip{0%{top:-100%}70%,100%{top:100%}}
+.hero .ui .go{justify-self:end}
+.hero .tag{position:absolute;right:var(--gxr);top:104px;z-index:5;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(235,235,235,.4)}
+
+/* PHILOSOPHY — day ring */
+.philo{background:var(--indigo)}
+.philo::before{content:"";position:absolute;inset:0;background:url(../assets/glass-board.webp) center/cover;opacity:.07;mix-blend-mode:screen}
+.philo .wrap{position:absolute;inset:0;display:grid;grid-template-columns:1fr auto;align-items:center;gap:4vw;padding:110px var(--gxr) 60px var(--gx)}
+.philo .hd{display:grid;gap:28px;align-self:stretch;align-content:space-between}
+.philo .hd h2{font-size:clamp(2.4rem,7.4vw,8.6rem);line-height:.86;letter-spacing:-.02em;text-transform:uppercase}
+.philo .ring{position:relative;width:min(70vh,46vw);aspect-ratio:1}
+.philo .ring svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.philo .ring .tick{stroke:rgba(235,235,235,.18);stroke-width:1.2}
+.philo .ring .tick.on{stroke:var(--bright)}
+.philo .ring .mid{position:absolute;inset:0;display:grid;place-items:center;text-align:center;align-content:center;gap:10px}
+.philo .ring .pct{font-weight:700;font-size:clamp(3.6rem,9vw,9rem);line-height:.82;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.philo .ring .pct sup{font-size:.36em;font-weight:400;vertical-align:top;position:relative;top:.2em}
+.philo .ring .cap2{max-width:16ch;font-size:clamp(.8rem,1vw,.95rem);letter-spacing:.16em;text-transform:uppercase;color:rgba(235,235,235,.75)}
+.philo .end{font-size:clamp(1rem,1.6vw,1.5rem);letter-spacing:.12em;text-transform:uppercase;max-width:26ch;line-height:1.25}
+
+/* ABOUT — fragments assemble into one square */
+.about{background:var(--black)}
+.about .frag{position:absolute;left:0;top:0;white-space:nowrap;text-transform:uppercase;line-height:1;display:flex;align-items:center;gap:12px;will-change:transform}
+.about .frag::before{content:"";width:5px;height:5px;background:var(--bright);flex:none;opacity:.7}
+.about .cap-top{position:absolute;left:var(--gx);top:112px;z-index:3}
+.about .cap-top p{font-size:clamp(1rem,1.6vw,1.45rem);letter-spacing:.12em;text-transform:uppercase;line-height:1.2}
+.about .cap-top .p2{position:absolute;left:0;top:0;opacity:0;white-space:nowrap}
+.about .sq{position:absolute;left:50%;top:52%;width:min(58vmin,620px);aspect-ratio:1;transform:translate(-50%,-50%)}
+.about .sq .sd{position:absolute;background:var(--bright)}
+.about .sq .t1{left:0;top:0;width:100%;height:1px;transform-origin:left}
+.about .sq .t2{right:0;top:0;width:1px;height:100%;transform-origin:top}
+.about .sq .t3{right:0;bottom:0;width:100%;height:1px;transform-origin:right}
+.about .sq .t4{left:0;bottom:0;width:1px;height:100%;transform-origin:bottom}
+.about .sq .in{position:absolute;inset:0;display:grid;align-content:center;padding:0 9%;gap:.1em;font-size:clamp(1.4rem,4.6vmin,3.4rem);line-height:.98;text-transform:uppercase;letter-spacing:-.01em}
+.about .sq .db{position:absolute;left:0;right:0;bottom:-38px;text-align:center;font-size:clamp(.7rem,1.4vmin,.9rem);letter-spacing:.5em;text-transform:uppercase}
+.about2{background:var(--black);padding:clamp(60px,9vw,140px) var(--gxr) clamp(80px,10vw,160px) var(--gx);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:end;border-top:1px solid var(--line)}
+.about2 .stat{grid-column:1/6;display:flex;align-items:flex-start;gap:20px}
+.about2 .stat .v{font-weight:700;font-size:clamp(6rem,17vw,19rem);line-height:.78;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.about2 .stat .v sup{font-size:.3em;font-weight:400;vertical-align:top;position:relative;top:.25em}
+.about2 .stat .l{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);max-width:18ch;margin-top:1.4em;line-height:1.6}
+.about2 .q{grid-column:7/13;display:grid;gap:28px}
+.about2 .q p{font-size:clamp(1.2rem,2.3vw,2.2rem);line-height:1.15;letter-spacing:.06em;text-transform:uppercase}
+
+/* PROJECTS — zoom-open featured + index list */
+.proj,.list{background:var(--bright);color:var(--black);--ink:var(--black);--muted:rgba(29,29,29,.55);--line:rgba(29,29,29,.14);--line2:rgba(29,29,29,.4)}
+.proj .top-cap{position:absolute;left:var(--gx);right:var(--gxr);top:110px;z-index:4;display:flex;justify-content:space-between;align-items:start;gap:20px}
+.proj .top-cap p.t{font-size:clamp(1rem,1.6vw,1.45rem);letter-spacing:.12em;text-transform:uppercase;max-width:24ch;line-height:1.2;text-align:right}
+.proj .frame{position:absolute;inset:0;z-index:2;clip-path:inset(31% 40% 31% 40%);background:var(--ph);display:block}
+.proj .frame .ph{position:absolute;inset:0}
+.proj .frame .meta{position:absolute;left:var(--gx);right:var(--gxr);bottom:30px;z-index:3;display:flex;justify-content:space-between;align-items:end;gap:20px;color:var(--bright);opacity:0}
+.proj .frame .meta h3{font-size:clamp(1.6rem,4vw,4rem);line-height:.9;text-transform:uppercase;letter-spacing:-.01em;font-weight:700}
+.proj .frame .meta .pill{color:var(--bright);border-color:rgba(235,235,235,.5)}
+.proj .w{position:absolute;top:50%;z-index:1;transform:translateY(-50%);font-size:clamp(2.4rem,8.6vw,10rem);line-height:.85;letter-spacing:-.02em;text-transform:uppercase;white-space:nowrap}
+.proj .w.l{right:61.5%}.proj .w.rr{left:61.5%}
+.list{padding:clamp(70px,9vw,140px) var(--gxr) clamp(80px,10vw,150px) var(--gx)}
+.list .lh{display:flex;justify-content:space-between;align-items:end;gap:24px;margin-bottom:clamp(30px,4vw,60px)}
+.list .lh h2{font-size:clamp(1.6rem,3.6vw,3.6rem);line-height:.95;text-transform:uppercase;letter-spacing:-.01em;max-width:16ch;font-weight:700}
+.list ul{list-style:none;margin:0;padding:0;border-top:1px solid var(--line)}
+.list li a{display:grid;grid-template-columns:1fr auto auto;align-items:baseline;gap:24px;padding:clamp(12px,1.5vw,22px) 0;border-bottom:1px solid var(--line);position:relative}
+.list li a .nm{font-size:clamp(1.8rem,5.4vw,6rem);line-height:.95;text-transform:uppercase;letter-spacing:-.015em;font-weight:400;transition:transform .6s var(--ease),color .4s}
+.list li a .lo,.list li a .sf{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.list ul:hover .nm{color:rgba(29,29,29,.22)}
+.list li a:hover .nm{color:var(--black);font-weight:700;transform:translateX(18px)}
+.list li a::after{content:"";position:absolute;left:0;bottom:-1px;height:1px;width:100%;background:var(--black);transform:scaleX(0);transform-origin:left;transition:transform .7s var(--ease)}
+.list li a:hover::after{transform:scaleX(1)}
+.follow{position:fixed;left:0;top:0;z-index:40;width:clamp(220px,20vw,320px);aspect-ratio:4/5;pointer-events:none;opacity:0;transform:translate(-50%,-50%) scale(.85) rotate(-3deg);transition:opacity .35s,transform .6s var(--ease)}
+.follow.on{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
+.follow .ph{position:absolute;inset:0}
+
+
+/* ===== 2b. LIGHT — morning sun across the plan ===== */
+.lite{background:var(--black2)}
+.lite .ltop{position:absolute;left:var(--gx);top:104px;z-index:4;width:min(38vw,540px);display:grid;gap:22px}
+.lite .ltop h2{font-size:clamp(1.9rem,4.2vw,4.6rem);line-height:.9;text-transform:uppercase;letter-spacing:-.015em;font-weight:700}
+.lite .ltop h2 .r{font-weight:400}.lite .ltop h2 .o{-webkit-text-stroke:1.2px var(--bright);color:transparent}
+.lite .ltop p{font-size:10px;letter-spacing:.22em;text-transform:uppercase;line-height:1.7;color:var(--muted);max-width:34ch}
+.lite .lplan{position:absolute;right:calc(var(--gxr) + 2vw);top:50%;width:min(50vw,88vh);aspect-ratio:412/352;transform:translateY(-50%);z-index:2}
+.lite .lplan svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.lite .lplan .dimL{color:rgba(235,235,235,.12);--fc:rgba(235,235,235,.08);--ww:1.1;--fw:.7}
+.lite .beam{position:absolute;inset:-6% 0;clip-path:polygon(0 0,8% 0,-40% 100%,-48% 100%);z-index:2}
+.lite .beam::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(150,169,191,.0),rgba(150,169,191,.16) 40%,rgba(235,235,235,.22) 60%,rgba(150,169,191,.12) 80%,transparent)}
+.lite .beam .litL{color:var(--bright);--fc:var(--blue);--ww:1.4;--fw:1;top:6%;height:88%}
+.lite .sunpath{position:absolute;left:-4%;right:-4%;top:-16%;height:34%;pointer-events:none;z-index:3}
+.lite .sunpath svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.lite .sunpath path{fill:none;stroke:rgba(235,235,235,.25);stroke-width:1;stroke-dasharray:3 6}
+.lite .sun{position:absolute;width:11px;height:11px;margin:-5.5px 0 0 -5.5px;background:var(--bright);box-shadow:0 0 30px rgba(235,235,235,.9),0 0 70px rgba(150,169,191,.6);z-index:4}
+.lite .clock{position:absolute;left:var(--gx);bottom:92px;z-index:4;display:grid;gap:8px}
+.lite .clock .t{font-weight:700;font-size:clamp(2.4rem,6vw,6.6rem);line-height:.86;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.lite .clock .t sup{font-size:.3em;font-weight:400;letter-spacing:.1em;vertical-align:top;position:relative;top:.3em;margin-left:.2em}
+.lite .lend{position:absolute;right:var(--gxr);bottom:92px;z-index:4;max-width:28ch;text-align:right;font-size:clamp(1rem,1.5vw,1.35rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.3;opacity:0}
+/* ways: level gauge */
+.ways .lvl{display:grid;gap:10px;margin-top:0;width:min(30vw,420px)}
+.ways .lvl .bar{position:relative;height:1px;background:rgba(235,235,235,.2)}
+.ways .lvl .bar i{position:absolute;left:0;top:0;height:1px;width:100%;background:var(--bright);transform:scaleX(.33);transform-origin:left;transition:transform .9s var(--ease),background .5s}
+.ways .lvl .bar i::after{content:"";position:absolute;right:-2px;top:-2px;width:5px;height:5px;background:inherit}
+.ways .lvl .bar b{position:absolute;top:-2px;width:1px;height:5px;background:rgba(235,235,235,.5)}
+.ways .lvl .mk{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.ways .lvl .mk span{transition:color .4s}.ways .lvl .mk span.on{color:var(--bright)}
+/* stories: voice lines */
+.voc .film .wave{height:34px;width:100%;display:block;overflow:visible}
+.voc .film .wave polyline{fill:none;stroke:rgba(235,235,235,.5);stroke-width:1}
+/* ===== 5. DIFFERENCE — the turnkey dial ===== */
+.diff{background:var(--indigo2)}
+.diff .glow{position:absolute;right:-60vh;top:50%;width:150vh;height:150vh;margin-top:-75vh;background:radial-gradient(circle,rgba(150,169,191,.20) 0%,rgba(150,169,191,.06) 40%,transparent 66%);pointer-events:none}
+.diff .tex{position:absolute;inset:0;background:url(../assets/glassmorph.webp) center/cover;opacity:.12;mix-blend-mode:screen;pointer-events:none}
+.diff .left{position:absolute;left:var(--gx);top:0;bottom:0;width:min(42vw,600px);display:grid;align-content:space-between;padding:112px 0 44px;z-index:4}
+.diff .left h2{font-size:clamp(2rem,4.6vw,5.2rem);line-height:.9;text-transform:uppercase;letter-spacing:-.015em;font-weight:700}
+.diff .lead{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);max-width:30ch;line-height:1.7}
+.diff .desc{position:relative;height:6em}
+.diff .desc p{position:absolute;left:0;bottom:0;font-size:clamp(1.1rem,2vw,1.9rem);line-height:1.2;letter-spacing:.08em;text-transform:uppercase;max-width:22ch;opacity:0;filter:blur(10px);transform:translateY(24px);transition:opacity .6s,filter .6s,transform .7s var(--ease)}
+.diff .desc p.on{opacity:1;filter:none;transform:none}
+.diff .dial{position:absolute;top:50%;right:-75vh;width:150vh;height:150vh;margin-top:-75vh;z-index:2}
+.diff .rotor,.diff .counter{position:absolute;inset:0;will-change:transform}
+.diff svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.diff .tick{stroke:rgba(235,235,235,.28);stroke-width:2}
+.diff .tick.lg{stroke:rgba(235,235,235,.7);stroke-width:2.5}
+.diff .orb{fill:none;stroke:rgba(235,235,235,.22);stroke-width:2}
+.diff .txr{font-family:var(--f);font-size:24px;letter-spacing:7px;fill:rgba(235,235,235,.32);text-transform:uppercase}
+.diff .txr .bb{font-weight:700;fill:rgba(235,235,235,.7)}
+.diff .lab{position:absolute;left:50%;top:50%;width:min(34vw,500px);transform-origin:0 50%;margin-top:-1.1em;font-weight:700;text-transform:uppercase;font-size:clamp(1rem,2.3vw,2.5rem);line-height:.95;letter-spacing:-.005em;color:rgba(235,235,235,.13);transition:color .5s,-webkit-text-stroke-color .5s}
+.diff .lab.on{color:var(--bright)}
+.diff .lab span{display:block;font-weight:400;font-size:.4em;letter-spacing:.24em;margin-top:.8em}
+.diff .ptr{position:absolute;top:50%;right:calc(75vh - 26px);width:clamp(80px,9vw,150px);height:1px;background:var(--bright);z-index:5}
+.diff .ptr::before{content:"";position:absolute;left:0;top:-2px;width:5px;height:5px;background:var(--bright)}
+.diff .ptr::after{content:"";position:absolute;right:-1px;top:-6px;width:13px;height:13px;border-top:1px solid var(--bright);border-right:1px solid var(--bright);transform:rotate(45deg)}
+
+/* ===== 6. WAYS OF WORK — four panes of glass ===== */
+.ways{background:var(--black)}
+.ways .whd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;align-items:end;gap:30px;z-index:3}
+.ways .lvl{position:absolute;left:var(--gx);top:calc(104px + 40px);z-index:4}
+.ways .wt{font-size:clamp(1.3rem,2.8vw,3rem);line-height:.95;text-transform:uppercase;font-weight:700;max-width:24ch;text-align:right;letter-spacing:-.01em}
+.ways .cols{position:absolute;left:0;right:0;bottom:0;top:calc(104px + clamp(80px,9vw,128px));display:flex;border-top:1px solid var(--line)}
+.ways .col{position:relative;flex:1 1 0;min-width:0;overflow:hidden;border-left:1px solid var(--line);cursor:pointer;background:var(--ph)}
+.ways .col:first-child{border-left:0}
+.ways .col .cbg{position:absolute;inset:-6%;opacity:.28;transition:opacity .9s;background:radial-gradient(70% 60% at 70% 25%,rgba(150,169,191,.18),transparent 60%),linear-gradient(160deg,#34363b,#1b1c1f)}
+.ways .col .cbg::after{content:"";position:absolute;inset:0;background:url(../assets/glass-board.webp) center/cover;opacity:.22;mix-blend-mode:screen}
+.ways .col.on .cbg{opacity:1}
+.ways .col.well{background:var(--indigo)}
+.ways .col.well .cbg{background:url(../assets/glassmorph.webp) center/cover}
+.ways .col .pcap{position:absolute;right:16px;top:14px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:rgba(235,235,235,.4);opacity:0;transition:opacity .6s}
+.ways .col.on .pcap{opacity:1}
+.ways .col .vt{position:absolute;left:50%;bottom:30px;writing-mode:vertical-rl;transform:translateX(-50%) rotate(180deg);font-size:clamp(1.3rem,2.4vw,2.6rem);text-transform:uppercase;white-space:nowrap;letter-spacing:-.005em;transition:opacity .5s,transform .8s var(--ease)}
+.ways .col.on .vt{opacity:0;transform:translateX(-50%) rotate(180deg) translateY(-40px)}
+.ways .col .cin{position:absolute;left:clamp(24px,3vw,56px);bottom:clamp(28px,5vh,56px);width:min(60vw,920px);display:grid;gap:22px;pointer-events:none}
+.ways .col.on .cin{pointer-events:auto}
+.ways .col .word{font-size:clamp(3rem,7.4vw,9rem);line-height:1;text-transform:uppercase;letter-spacing:-.035em;display:flex;align-items:center;gap:.1em;white-space:nowrap}
+.ways .col .word .m{display:block;overflow:hidden;padding:.02em 0 .04em}
+.ways .col:not(.on) .word{visibility:hidden}
+.ways .col .word .m>span{display:block}
+.ways .col .word i{display:inline-block;width:.8em;height:.05em;background:currentColor;transform-origin:left}
+.ways .col .d{font-size:clamp(.95rem,1.35vw,1.25rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.3;max-width:34ch}
+.ways .col .tg{justify-self:start;border:1px solid var(--line2);border-radius:999px;padding:7px 12px;font-size:9px;letter-spacing:.22em;text-transform:uppercase}
+.ways .col .cin>*:not(.word){opacity:0}
+
+/* ===== 7. APPROACH — fly through the questions ===== */
+.appr{background:var(--bright);color:var(--black2);--ink:var(--black2);--muted:rgba(20,20,20,.55);--line:rgba(20,20,20,.14);--line2:rgba(20,20,20,.4)}
+.appr .ahd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;align-items:start;gap:30px;z-index:3}
+.appr .ahd h2{font-size:clamp(1.1rem,1.8vw,1.7rem);letter-spacing:.12em;text-transform:uppercase;line-height:1.2;margin-top:14px}
+.appr .ahd .k{max-width:30ch;text-align:right}
+.appr .tun{position:absolute;inset:0;perspective:900px;perspective-origin:50% 50%;overflow:hidden;z-index:2}
+.appr .tq{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:0 var(--gxr) 0 var(--gx);font-size:clamp(2.2rem,7vw,8.4rem);line-height:.9;text-transform:uppercase;font-weight:700;letter-spacing:-.02em;color:var(--black2);opacity:0;pointer-events:none}
+.appr .te{position:absolute;left:50%;top:50%;white-space:nowrap;text-transform:uppercase;font-size:clamp(1.1rem,2.6vw,2.8rem);line-height:1;color:var(--granite);opacity:0;pointer-events:none}
+.appr .te.o{-webkit-text-stroke-color:var(--granite)}
+.appr .afin{position:absolute;left:var(--gx);right:var(--gxr);bottom:40px;display:flex;justify-content:space-between;align-items:end;gap:20px;z-index:3;opacity:0}
+.appr .afin p{font-size:clamp(1rem,1.6vw,1.45rem);letter-spacing:.12em;text-transform:uppercase;line-height:1.2;max-width:26ch}
+.appr .black{position:absolute;inset:0;background:var(--black2);opacity:0;z-index:4;pointer-events:none}
+
+/* ===== 8. PROCESS — the tangle becomes the line ===== */
+.proc{background:var(--black2)}
+.proc .phd{position:absolute;left:var(--gx);top:104px;z-index:4}
+.proc .pt1{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);text-align:center;z-index:3;font-size:clamp(2.6rem,9vw,11rem);line-height:.86;text-transform:uppercase;letter-spacing:-.025em;font-weight:700;mix-blend-mode:difference;color:#fff}
+.proc .pt2{position:absolute;left:var(--gx);top:150px;z-index:3;font-size:clamp(1.4rem,3vw,3.2rem);line-height:.92;text-transform:uppercase;letter-spacing:-.01em;font-weight:700;opacity:0;max-width:20ch}
+.proc .pst{position:absolute;inset:0;z-index:2}
+.proc .pst svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.proc .pst path{fill:none;stroke:var(--bright);stroke-width:1.4;stroke-linejoin:round}
+.proc .nd{position:absolute;width:9px;height:9px;margin:-4.5px 0 0 -4.5px;background:var(--black2);border:1px solid var(--bright);opacity:0;z-index:3;transition:background .3s}
+.proc .nd.on{background:var(--bright)}
+.proc .tr{position:absolute;width:15px;height:15px;margin:-7.5px 0 0 -7.5px;background:var(--blue);z-index:4;opacity:0;box-shadow:0 0 30px rgba(150,169,191,.6)}
+.proc .sl{position:absolute;z-index:3;display:grid;gap:6px;width:13vw;opacity:0;transform:translateX(-4px)}
+.proc .sl h4{font-size:clamp(.8rem,1.1vw,1.05rem);font-weight:700;letter-spacing:.14em;text-transform:uppercase}
+.proc .sl p{font-size:clamp(.6rem,.72vw,.72rem);letter-spacing:.14em;text-transform:uppercase;color:var(--muted);line-height:1.45}
+.proc .sl.on h4{color:var(--blue)}
+.proc .big{position:absolute;left:var(--gx);top:calc(50% - clamp(4rem,12vw,14rem));z-index:3;height:clamp(3rem,10vw,12rem);overflow:hidden;opacity:0}
+.proc .big p{font-size:clamp(3rem,10vw,12rem);line-height:1;text-transform:uppercase;letter-spacing:-.03em;font-weight:400;white-space:nowrap}
+.proc .pend{position:absolute;left:var(--gx);top:150px;z-index:3;font-size:clamp(1.2rem,2.4vw,2.6rem);letter-spacing:.06em;text-transform:uppercase;line-height:1;opacity:0}
+.proc .pend b{display:block;font-size:clamp(2.4rem,5.4vw,6.6rem);letter-spacing:-.02em;line-height:.88;margin-top:.25em}
+.proc .pend .o{font-weight:700}
+
+/* ===== blueprint layer (CI space plan studies, traced) ===== */
+.sprite{position:absolute;width:0;height:0;overflow:hidden}
+.bpx{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.hero .bpx{color:rgba(235,235,235,.13);--fc:rgba(150,169,191,.16);--ww:1.1;--fw:.7}
+/* architectural dimension line */
+.dim{position:absolute;display:flex;align-items:center;gap:12px;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted);white-space:nowrap;transform-origin:center}
+.dim i{flex:1;height:1px;background:currentColor;position:relative;opacity:.7}
+.dim i::before{content:"";position:absolute;top:-6px;width:1px;height:13px;background:currentColor;transform:rotate(45deg)}
+.dim i::after{content:"";position:absolute;top:-9px;width:1px;height:19px;background:currentColor;opacity:.55}
+.dim i:first-child::before,.dim i:first-child::after{left:0}
+.dim i:last-child::before,.dim i:last-child::after{right:0}
+.about .sq .dim.top{left:0;right:0;top:-34px}
+.about .sq .dim.side{left:calc(100% + 34px);top:50%;width:min(58vmin,620px);transform:translate(-50%,-50%) rotate(90deg)}
+.about .sq .dim{opacity:0}
+.hero .eyb{position:absolute;left:var(--gx);top:104px;z-index:5;color:rgba(235,235,235,.75)}
+.hero .ui .sub .s{max-width:44ch;font-size:10px;letter-spacing:.2em;text-transform:uppercase;line-height:1.7;color:var(--muted);margin-top:6px}
+.philo .endw{display:grid;gap:18px}
+.philo .endw .lead{max-width:44ch;color:rgba(235,235,235,.62);line-height:1.8}
+.about2 .q .lead{max-width:46ch;color:var(--muted);line-height:1.8}
+.list .lh .sm{max-width:40ch;margin-top:18px;color:var(--muted);line-height:1.8}
+
+/* ===== 9. THE CI CLIENT — a light over the drawings ===== */
+.cli{background:var(--black2)}
+.cli .chd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;align-items:start;gap:30px;z-index:6}
+.cli .chd .k2{max-width:32ch;text-align:right;color:var(--muted);line-height:1.8}
+.cli .lay{position:absolute;inset:0}
+.cli .lay .bpx{transform-origin:50% 50%}
+.cli .dimL .bpx{color:rgba(235,235,235,.06);--fc:rgba(235,235,235,.04)}
+.cli .litL .bpx{color:rgba(235,235,235,.78);--fc:rgba(150,169,191,.85);--ww:1.4;--fw:1}
+.cli .litL{--x:50%;--y:50%;--r:180px;background:radial-gradient(circle at var(--x) var(--y),rgba(150,169,191,.16),rgba(150,169,191,.03) 40%,transparent 70%);-webkit-mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),#000 52%,transparent 100%);mask-image:radial-gradient(circle var(--r) at var(--x) var(--y),#000 52%,transparent 100%)}
+.cli .gtw{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);text-align:center;z-index:2}
+.cli .gt{font-weight:700;text-transform:uppercase;font-size:clamp(2.4rem,8.6vw,10.6rem);line-height:.86;letter-spacing:-.025em}
+.cli .gt .r{font-weight:400}
+.cli .dimL .gt{color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.17)}
+.cli .litL .gt{color:var(--bright)}
+.cli .sodo{position:absolute;left:var(--gx);right:var(--gxr);top:50%;z-index:4;text-align:center;font-size:clamp(2.4rem,8.6vw,10.6rem);line-height:.86;letter-spacing:-.025em;text-transform:uppercase;opacity:0}
+.cli .sodo b{color:transparent;-webkit-text-stroke:1.4px var(--bright)}
+.cli .cnote{position:absolute;left:var(--gx);bottom:84px;z-index:6;max-width:34ch;font-size:clamp(.9rem,1.2vw,1.1rem);letter-spacing:.1em;text-transform:uppercase;line-height:1.3;opacity:0}
+.cli .cnote .k{display:block;margin-bottom:12px;color:var(--muted)}
+.tblock{position:absolute;right:var(--gxr);bottom:40px;z-index:6;border:1px solid var(--line2);display:grid;grid-template-columns:auto auto;font-size:9px;letter-spacing:.22em;text-transform:uppercase;opacity:0}
+.tblock span{padding:9px 14px;border-right:1px solid var(--line2);border-bottom:1px solid var(--line2);color:var(--muted)}
+.tblock span:nth-child(2n){border-right:0;color:var(--ink)}
+.tblock span:nth-last-child(-n+2){border-bottom:0}
+
+/* ===== 10. INVEST IN YOURSELF — the reel ===== */
+.inv{background:linear-gradient(135deg,#96A9BF 0%,#5E7488 42%,#283E4B 100%)}
+.inv::before{content:"";position:absolute;inset:0;background:url(../assets/glass-board.webp) center/cover;opacity:.16;mix-blend-mode:overlay;pointer-events:none}
+.inv::after{content:"";position:absolute;inset:0;background:url(../assets/glassmorph.webp) center/cover;opacity:.18;mix-blend-mode:screen;pointer-events:none}
+.inv>*{position:relative;z-index:2}
+.inv .ihd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;gap:30px}
+.inv .ihd .k2{max-width:30ch;text-align:right;color:rgba(235,235,235,.75);line-height:1.8}
+.inv .stage{position:absolute;left:var(--gx);right:calc(var(--gxr) + 13vw);top:24vh}
+.inv .pre{font-size:clamp(1.3rem,3.2vw,3.6rem);text-transform:uppercase;letter-spacing:.04em;line-height:1;margin-bottom:.35em}
+.inv .win{position:relative;font-size:clamp(2.4rem,7vw,8.6rem);height:3.4em;overflow:hidden;-webkit-mask-image:linear-gradient(180deg,#000 0,#000 34%,rgba(0,0,0,.35) 70%,transparent 100%);mask-image:linear-gradient(180deg,#000 0,#000 34%,rgba(0,0,0,.35) 70%,transparent 100%)}
+.inv .win ul{list-style:none;margin:0;padding:0;will-change:transform}
+.inv .win li{height:1.08em;line-height:1.08em;font-weight:700;text-transform:uppercase;letter-spacing:-.025em;white-space:nowrap;color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.55);transition:color .45s,-webkit-text-stroke-color .45s}
+.inv .win li.on{color:var(--bright);-webkit-text-stroke-color:transparent}
+.inv .scale{position:absolute;right:calc(var(--gxr) + 2vw);top:24vh;bottom:22vh;width:1px;background:rgba(235,235,235,.35)}
+.inv .scale span{position:absolute;right:18px;text-align:right;transform:translateY(-50%);font-size:9px;letter-spacing:.24em;text-transform:uppercase;white-space:nowrap;color:rgba(235,235,235,.7)}
+.inv .scale span::before{content:"";position:absolute;right:-18px;top:50%;width:11px;height:1px;background:rgba(235,235,235,.7)}
+.inv .scale .mk{position:absolute;left:-4px;top:0;width:9px;height:9px;margin-top:-4.5px;background:var(--bright);box-shadow:0 0 24px rgba(235,235,235,.8)}
+.inv .bot{position:absolute;left:var(--gx);right:var(--gxr);bottom:40px;padding-left:0;display:flex;justify-content:space-between;align-items:end;gap:30px;opacity:0}
+.inv .bot p{max-width:40ch;margin-bottom:46px;font-size:clamp(.95rem,1.35vw,1.25rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.3}
+
+/* ===== 11. CLIENT STORIES ===== */
+.voc{background:var(--black);padding:clamp(110px,12vw,180px) 0 clamp(100px,11vw,170px);overflow:hidden}
+.voc .vhd{position:relative;z-index:3;padding:0 var(--gxr) 0 var(--gx);display:flex;justify-content:space-between;align-items:end;gap:30px}
+.voc .vhd h2{font-size:clamp(1.6rem,3.4vw,3.6rem);line-height:.95;text-transform:uppercase;letter-spacing:-.01em;font-weight:700;max-width:17ch}
+.voc .vhd h2 .r{font-weight:400}
+.voc .vhd .k2{max-width:30ch;text-align:right;color:var(--muted);line-height:1.8}
+.voc .mqw{position:absolute;left:0;right:0;top:58%;z-index:1;pointer-events:none}
+.voc .mq{display:flex;white-space:nowrap;font-size:clamp(4.4rem,15vw,18rem);line-height:.8;text-transform:uppercase;letter-spacing:-.03em;transform:translateY(-50%);will-change:transform}
+.voc .mq span{padding-right:.35em}
+.voc .mq .b{color:rgba(235,235,235,.1)}
+.voc .mq .o{-webkit-text-stroke:1px rgba(235,235,235,.18)}
+.voc .films{position:relative;z-index:2;display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;padding:0 var(--gxr) 0 var(--gx);margin-top:clamp(60px,8vw,120px);align-items:start}
+.voc .film{position:relative;display:grid;gap:16px}
+.voc .film.a{grid-column:2/8}
+.voc .film.b{grid-column:9/13;margin-top:clamp(120px,16vw,260px)}
+.voc .film .fr{position:relative;overflow:hidden}
+.voc .film.a .fr{aspect-ratio:16/10}.voc .film.b .fr{aspect-ratio:4/5}
+.voc .film .fr .ph{position:absolute;inset:-4%;transition:transform 1.2s var(--ease)}
+.voc .film:hover .fr .ph{transform:scale(1.04)}
+.voc .film .play{position:absolute;left:50%;top:50%;z-index:3;width:84px;height:84px;margin:-42px 0 0 -42px;border:1px solid rgba(235,235,235,.6);border-radius:50%;display:grid;place-items:center;transition:transform .6s var(--ease),background .4s}
+.voc .film .play::after{content:"";margin-left:5px;border-left:14px solid var(--bright);border-top:9px solid transparent;border-bottom:9px solid transparent}
+.voc .film:hover .play{transform:scale(1.15);background:rgba(235,235,235,.1)}
+.voc .film .m{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.voc .film .m h3{font-size:clamp(.95rem,1.3vw,1.2rem);letter-spacing:.08em;text-transform:uppercase;line-height:1.25}
+
+/* ===== 12. FAQ — before you begin ===== */
+.faq{background:var(--bright);color:var(--black2);--ink:var(--black2);--muted:rgba(20,20,20,.55);--line:rgba(20,20,20,.16);--line2:rgba(20,20,20,.45);padding:clamp(110px,11vw,170px) var(--gxr) clamp(100px,10vw,160px) var(--gx);display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:24px;align-items:start}
+.faq .fl{grid-column:1/6;display:grid;gap:34px}
+.faq .fl h2{text-transform:uppercase;line-height:.84;letter-spacing:-.025em}
+.faq .fl h2 .w1,.faq .fl h2 .w3{display:block;font-weight:700;font-size:clamp(3rem,8.6vw,10rem)}
+.faq .fl h2 .w2{display:block;font-size:clamp(.9rem,1.6vw,1.5rem);letter-spacing:.3em;margin:.5em 0 .6em 3.6em}
+.faq .fl h2 .w3{color:transparent;-webkit-text-stroke:1.4px var(--black2)}
+.faq .fl .k2{max-width:30ch;color:var(--muted);line-height:1.8}
+.faq .fr{grid-column:7/13;border-bottom:1px solid var(--line)}
+.faq .qa{border-top:1px solid var(--line);position:relative}
+.faq .qa::before{content:"";position:absolute;left:0;top:-1px;height:1px;width:100%;background:var(--black2);transform:scaleX(0);transform-origin:left;transition:transform .8s var(--ease)}
+.faq .qa::after{content:"";position:absolute;left:0;top:-3px;width:5px;height:5px;background:var(--black2);opacity:0;transition:opacity .4s}
+.faq .qa.open::before{transform:scaleX(1)}.faq .qa.open::after{opacity:1}
+.faq .qq{appearance:none;background:none;border:0;color:inherit;font:inherit;width:100%;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:clamp(18px,2vw,28px) 0;cursor:pointer;text-align:left;font-size:clamp(1rem,1.45vw,1.35rem);letter-spacing:.06em;text-transform:uppercase;line-height:1.2;transition:padding .5s var(--ease)}
+.faq .qa.open .qq{font-weight:700}
+.faq .qq:hover{padding-left:12px}
+.faq .pm{position:relative;width:18px;height:18px;flex:none}
+.faq .pm::before,.faq .pm::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1px;background:currentColor;transition:transform .5s var(--ease)}
+.faq .pm::after{transform:rotate(90deg)}
+.faq .qa.open .pm::after{transform:rotate(0)}
+.faq .qa.open .pm::before{transform:rotate(180deg)}
+.faq .ans{height:0;overflow:hidden}
+.faq .ans p{padding:0 0 clamp(22px,2.4vw,32px);max-width:50ch;font-size:15px;line-height:1.7;color:rgba(20,20,20,.72)}
+
+/* ===== 13. FINAL — from drawing to life ===== */
+.fin{background:var(--black2)}
+.fin .fhd{position:absolute;left:var(--gx);right:var(--gxr);top:104px;display:flex;justify-content:space-between;gap:30px;z-index:6}
+.fin .drw{position:absolute;left:50%;top:53%;width:min(64vw,104vh);aspect-ratio:412/352;transform:translate(-50%,-50%);z-index:2}
+.fin .drw svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.fin .drw .fw{fill:none;stroke:var(--bright);stroke-width:1.15}
+.fin .drw .ff{fill:none;stroke:var(--blue);stroke-width:.8}
+.fin .drw .dim{color:rgba(235,235,235,.6)}
+.fin .drw .dim.top{left:0;right:0;top:-38px}
+.fin .drw .dim.side{left:-38px;top:50%;width:85.4%;transform:translate(-50%,-50%) rotate(-90deg)}
+.fin .drw .tblock{right:0;bottom:-58px}
+.fin .real{position:absolute;inset:0;z-index:3;opacity:0;visibility:hidden}
+.fin .hl .ln{padding-bottom:0}
+.fin .real .ph{position:absolute;inset:0}
+.fin .real::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(20,20,20,.35),rgba(20,20,20,.15) 40%,rgba(20,20,20,.7));z-index:2}
+.fin .hl{position:absolute;left:var(--gx);right:var(--gxr);top:50%;transform:translateY(-50%);z-index:4;text-align:center;font-size:clamp(2.6rem,9vw,11rem);line-height:.86;letter-spacing:-.025em;text-transform:uppercase}
+.fin .end{position:absolute;inset:0;z-index:5;display:grid;place-items:center;align-content:center;gap:clamp(26px,3.4vh,44px);text-align:center;padding:120px var(--gxr) 60px var(--gx);opacity:0}
+.fin .end h2{font-size:clamp(1.6rem,3.8vw,4.2rem);line-height:.95;text-transform:uppercase;letter-spacing:-.01em;font-weight:700;max-width:18ch}
+.fin .end h2 .r{font-weight:400}
+.fin .end .s{max-width:40ch;color:rgba(235,235,235,.75);line-height:1.8}
+.rcta{position:relative;width:clamp(150px,13vw,200px);aspect-ratio:1;display:grid;place-items:center}
+.rcta .core{position:absolute;inset:0;border-radius:50%;background:var(--bright);color:var(--black);display:grid;place-items:center;text-align:center;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;line-height:1.5;padding:0 14%;transition:background .5s,color .5s}
+.rcta:hover .core{background:var(--blue);color:var(--black2)}
+.rcta svg{position:absolute;inset:-26%;width:152%;height:152%;animation:spin 22s linear infinite;pointer-events:none}
+.rcta svg text{font-family:var(--f);font-size:8.6px;letter-spacing:3.4px;fill:rgba(235,235,235,.7);text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ===== FOOTER ===== */
+.foot{background:var(--indigo);overflow:hidden}
+.foot::before{content:"";position:absolute;inset:0;background:url(../assets/glass-board.webp) center/cover;opacity:.08;mix-blend-mode:screen;pointer-events:none}
+.foot .bpx{color:rgba(235,235,235,.06);--fc:rgba(235,235,235,.05);height:auto;top:auto;bottom:0}
+.foot>*{position:relative;z-index:2}
+.foot .mq2w{border-top:1px solid var(--line);border-bottom:1px solid var(--line);overflow:hidden;padding:clamp(14px,1.6vw,22px) 0}
+.foot .mq2{display:flex;white-space:nowrap;font-size:clamp(1.1rem,2.2vw,2.2rem);line-height:1;text-transform:uppercase;letter-spacing:.02em;will-change:transform}
+.foot .mq2 span{display:inline-flex;align-items:center;gap:.7em;padding-right:.7em}
+.foot .mq2 span::after{content:"";width:.22em;height:.22em;background:currentColor;opacity:.8}
+.foot .fgrid{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:40px 24px;padding:clamp(70px,8vw,130px) var(--gxr) 0 var(--gx)}
+.foot .where{grid-column:1/7;text-transform:uppercase}
+.foot .where .sm{display:block;font-size:10px;letter-spacing:.3em;color:rgba(235,235,235,.7);margin:.2em 0 .9em}
+.foot .where .bg{display:block;font-weight:700;font-size:clamp(2.4rem,6.4vw,7.6rem);line-height:.86;letter-spacing:-.025em}
+.foot .where .bg.o{color:transparent;-webkit-text-stroke:1.2px var(--bright)}
+.foot .where .sm.mid{margin:.9em 0 .9em 4.2em}
+.foot .cols{grid-column:8/13;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:44px 24px;align-content:start}
+.foot .cols h4{font-size:9px;letter-spacing:.26em;text-transform:uppercase;color:rgba(235,235,235,.6);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.foot .cols h4::before{content:"";width:5px;height:5px;background:currentColor}
+.foot .cols p,.foot .cols a{display:block;font-size:12px;letter-spacing:.1em;text-transform:uppercase;line-height:1.8}
+.foot .cols a{width:fit-content;background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .5s var(--ease)}
+.foot .cols a:hover{background-size:100% 1px}
+.foot .tm{font-variant-numeric:tabular-nums;color:var(--blue)}
+.foot .cta2{grid-column:8/13}
+.foot .wm{display:flex;justify-content:space-between;padding:0 var(--gxr) 0 var(--gx);margin-top:clamp(60px,8vw,120px);font-weight:700;font-size:21.6vw;line-height:.76;letter-spacing:-.04em;text-transform:uppercase;overflow:hidden;cursor:default}
+.foot .wm span{display:inline-block;will-change:transform;transition:color .35s,-webkit-text-stroke-color .35s}
+.foot .wm .ol{color:transparent;-webkit-text-stroke:1.5px var(--bright)}
+.foot .wm .ol.hot{color:var(--bright)}
+.foot .wm .fl.hot{color:transparent;-webkit-text-stroke:1.5px var(--bright)}
+.foot .bot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:14px 30px;padding:22px var(--gxr) 26px var(--gx);border-top:1px solid var(--line);font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:rgba(235,235,235,.65)}
+.foot .bot nav{display:flex;gap:24px;flex-wrap:wrap}
+
+/* concierge chip */
+.conc{position:fixed;left:var(--gx);bottom:22px;z-index:55;display:inline-flex;align-items:center;gap:12px;padding:10px 16px 10px 14px;border:1px solid rgba(255,255,255,.35);border-radius:999px;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:#fff;mix-blend-mode:difference;opacity:0;pointer-events:none;transition:opacity .5s}
+.conc.on{opacity:1;pointer-events:auto}
+.conc i{width:6px;height:6px;background:#fff;animation:blink 2.4s ease-in-out infinite}
+.conc em{font-style:normal;opacity:.7;font-variant-numeric:tabular-nums}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.2}}
+
+/* ========== MOBILE ========== */
+@media (max-width:900px){
+  .top{height:70px}.top nav,.top .cta{display:none}.top .logo img{height:36px}
+  .menu{grid-template-columns:1fr}.menu .right{min-height:40vh;padding:30px var(--gxr) 30px var(--gx)}.menu .left{padding-top:96px}.menu .bar{height:70px}.menu .bar img{height:36px}
+  .sidecta,.grid{display:none}
+  .hero .ui{grid-template-columns:1fr;justify-items:start}.hero .ui .sc{display:none}.hero .ui .go{justify-self:start}
+  .hero .ht{bottom:180px;font-size:9.4vw}
+  .about .frag{font-size:min(1em,7.4vw)!important}
+  .proj .frame .meta{flex-wrap:wrap}
+  .philo .wrap{grid-template-columns:1fr;align-content:center;padding-top:96px}.philo .ring{width:min(78vw,44vh);justify-self:center}.philo .hd{gap:16px}.philo .hd h2{font-size:12vw}
+  .about2 .stat,.about2 .q{grid-column:1/-1}
+  .proj .w.l{right:52%}.proj .w.rr{left:52%}.proj .frame{clip-path:inset(36% 34% 36% 34%)}
+  .list li a{grid-template-columns:1fr;gap:6px}
+  .diff .left{width:auto;right:var(--gxr);padding-top:96px}.diff .dial{width:120vh;height:120vh;right:-82vh;margin-top:-60vh;opacity:.85}.diff .lab{width:60vw;font-size:4.3vw}.diff .ptr{display:none}.diff .desc p{font-size:4.6vw}
+  .ways.full{height:auto}.ways .whd{position:relative;top:auto;padding:96px 0 30px;flex-direction:column;align-items:start}.ways .wt{text-align:left}
+  .ways .cols{position:relative;top:auto;flex-direction:column}
+  .ways .col{flex:none;height:78vh;border-left:0;border-top:1px solid var(--line)}
+  .ways .col .cbg{opacity:1}.ways .col .vt{display:none}.ways .col .cin{width:auto;right:20px}.ways .col .cin>*{opacity:1!important}.ways .col .pcap{opacity:1}
+  .ways .col .word{font-size:12.4vw;visibility:visible!important}
+  .appr .ahd{flex-direction:column;gap:10px}.appr .ahd .k{text-align:left}.appr .te{font-size:5vw}.appr .afin{flex-direction:column;align-items:start}
+  .proc .sl{display:none}.proc .pend b{font-size:6.2vw}
+  .lite .ltop{width:auto;right:var(--gxr);top:92px}.lite .lplan{width:84vw;right:8vw;top:56%}.lite .clock{bottom:140px}.lite .clock .t{font-size:9vw}.lite .lend{bottom:84px;left:var(--gx);text-align:left;max-width:none}
+  .ways .lvl{width:100%}
+  .hero .eyb{top:88px}.hero .ui .sub .s{display:none}
+  .about .sq .dim.side{display:none}
+  .cli .chd{flex-direction:column;gap:10px;top:92px}.cli .chd .k2{text-align:left}.cli .gt,.cli .sodo{font-size:11vw}.cli .tblock{display:none}.cli .cnote{bottom:28px;right:var(--gxr)}
+  .inv .ihd{flex-direction:column;gap:10px;top:92px}.inv .ihd .k2{text-align:left}.inv .stage{right:var(--gxr);top:30vh}.inv .win{font-size:9.4vw}.inv .pre{font-size:5.4vw}.inv .scale{display:none}.inv .bot{flex-direction:column;align-items:start;bottom:74px}.inv .bot p{margin-bottom:0}
+  .voc .vhd{flex-direction:column;align-items:start}.voc .vhd .k2{text-align:left}.voc .film.a,.voc .film.b{grid-column:1/-1;margin-top:0}.voc .films{gap:46px}
+  .faq .fl,.faq .fr{grid-column:1/-1}.faq .fl{margin-bottom:30px}.faq .fl h2 .w2{margin-left:2em}
+  .fin .drw{width:88vw;top:50%}.fin .drw .dim.side{display:none}.fin .drw .tblock{display:none}.fin .hl{font-size:11vw}.fin .fhd{flex-direction:column;gap:8px;top:92px}
+  .foot .where,.foot .cols,.foot .cta2{grid-column:1/-1}.foot .cols{grid-template-columns:1fr;gap:28px}.foot .wm{font-size:21vw}
+  .conc{bottom:14px;padding:8px 12px}.conc .cl{display:none}
+}
+@media (prefers-reduced-motion:reduce){.hero .ui .sc i::after{animation:none}}
+</style>
+<style>
+@font-face{font-family:"TGR";src:url(../assets/Inter-Regular.woff) format("woff");font-weight:400;font-display:swap}
+@font-face{font-family:"TGR";src:url(../assets/InterDisplay-Bold.woff) format("woff");font-weight:700;font-display:swap}
+:root{--f:"TG","TGR","Helvetica Neue",Arial,sans-serif}
+.top{grid-template-columns:auto 1fr auto auto auto}
+.lang{font-size:10px;letter-spacing:.2em;text-transform:uppercase;border:1px solid var(--line2);border-radius:999px;padding:9px 12px}
+.idea{position:fixed;right:var(--gxr);bottom:22px;z-index:58;width:min(360px,calc(100vw - 40px));background:rgba(20,20,20,.82);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid rgba(235,235,235,.25);padding:14px 16px 16px;color:#EBEBEB;display:grid;gap:8px;transition:opacity .4s,transform .5s var(--ease);opacity:0;transform:translateY(10px);pointer-events:none}
+.idea.on{opacity:1;transform:none;pointer-events:auto}
+.idea .k{color:rgba(235,235,235,.55);display:flex;justify-content:space-between;gap:10px}
+.idea .k button{appearance:none;background:none;border:0;color:inherit;font:inherit;letter-spacing:inherit;cursor:pointer;padding:0}
+.idea p{font-family:"TGR","Helvetica Neue",Arial,sans-serif;font-size:12px;line-height:1.5;letter-spacing:0;text-transform:none}
+.idea.min p{display:none}
+.conc{display:none}
+@media (max-width:900px){.idea{right:12px;bottom:12px;width:calc(100vw - 24px)}.idea p{font-size:11px}.conc{display:none}}
+</style>
+</head>
+<body class="lock">
+<svg class="sprite" width="0" height="0" aria-hidden="true" focusable="false"><defs><symbol id="pl0" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M8 3V349M20 3V44M239 3V44M245 3V33M317 3V33M389 3V58M410 3V349M7 4H411M321 9H384M280 10V33M263 26V33M244 32H318M19 43H240M20 48V64M128 48V71M284 48V71M380 48V58M19 50H381M50 55H129M284 55H362M379 55H390M7 61H22M60 102V252M380 127V221M389 127V140M379 130H390M20 137V173M388 139H411M7 140H22M368 144V204M391 145H411M392 145V202M217 167V222M7 171H22M391 201H411M400 210H411M400 210V225M379 218H402M20 276V299M7 278H21M164 278V310M237 278V310M233 281V307M400 282V349M380 286V298M379 289H402M50 295V322M353 297H381M355 297V322M19 298H52M77 320V336M173 320V336M237 320V336M333 320V336M49 321H79M170 321H240M327 321H356M373 334V345M7 335H78M172 335H238M333 335H374M372 344H402M7 348H411"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M10 3V62M44 3V19M215 3V19M392 3V36M292 9V31M295 9V17M306 9V31M244 10H281M253 13H273M253 13V28M273 13V28M44 19H216M292 23H307M253 27H273M292 30H307M23 48H381M50 48V59M128 71H285M60 100H264M265 101V253M309 121H317M109 128H161M109 128V180M161 128V180M315 128V137M325 128H333M67 129H83M216 133H228M68 134H82M303 136V145M329 136V146M62 137V149M87 137V149M296 137V146M71 138V147M368 144H381M68 152H82M68 156H82M187 161V236M256 162V226M66 164H83M401 165H411M401 165V184M187 167H257M227 167V232M68 169H82M62 172V184M87 172V184M71 173V183M109 180H161M401 184H411M68 187H83M164 187H176M164 187V204M176 187V204M67 191H83M342 193H357M342 193V241M356 193V241M99 197H164M99 197V236M128 197V236M176 197H188M217 197H228M303 200V209M329 200V209M296 201V209M164 203H176M368 204H381M207 218V226M236 220H248M236 220V236M248 220V236M99 224H108M189 224H197M99 226H213M227 226H236M248 226H256M99 236H223M236 236H248M342 241H357M60 254H264M174 276V286M163 277H239M162 280V308M164 281H174M168 281V307M228 281H237M239 281V307M178 290V299M229 297H240M174 303V312M164 307H174M229 307H237M163 312H238M118 321H132"/></symbol><symbol id="pl1" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M2 3V349M7 3V62M18 3V44M213 3V19M237 3V44M243 3V33M315 3V33M387 3V58M404 3V349M1 4H405M319 9H382M278 10V33M261 26V33M242 32H316M17 43H238M18 48V64M378 48V58M17 50H379M377 55H388M6 61H19M378 127V221M387 127V140M377 130H388M18 137V173M7 139V172M386 139H405M6 140H19M389 145H405M389 145V202M6 171H19M389 201H405M398 210H405M398 210V221M377 218H400M18 276V299M7 277V336M6 278H19M378 286V298M398 286V346M377 289H400M48 295V322M351 297H379M353 297V322M17 298H50M74 320V336M171 320V336M235 320V336M331 320V336M47 321H77M168 321H242M329 321H354M371 334V345M6 335H76M170 335H236M331 335H372M370 344H400M1 348H405"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M42 3V19M389 3V37M290 9V31M302 9V17M304 9V31M242 10H279M250 13V28M251 13H271M270 13V28M42 19H214M290 23H304M251 27H271M290 30H304M21 48H379M48 48V59M126 48V67M282 48V67M47 58H126M126 67H282M60 85H366M60 85V286M366 85V286M125 93H133M187 93H195M72 103H96M72 103V127M96 103V127M109 103V111M124 103H132M146 103V110M131 120H139M180 120H189M341 125H351M72 127H96M237 127H277M266 127V139M62 129V219M63 129H100M66 129V219M99 129V219M233 131V217M280 131V217M66 133H100M165 136H176M165 136V174M176 136V174M132 140H165M132 140V170M176 140H186M186 140V170M66 153H100M247 163V186M399 165V184M251 166V179M235 168V179M132 170H165M176 170H186M66 174H100M165 174H176M142 175H153M142 175V213M153 175V213M132 179H142M132 179V209M153 179H186M186 179V209M66 196H100M363 197V207M132 209H142M153 209H186M266 209V221M142 213H153M66 216H100M62 219H100M237 221H277M341 223H351M107 241H144M107 241V280M111 241V280M140 241V280M144 241V280M173 241H210M173 241V280M177 241V280M206 241V280M210 241V280M111 269H141M177 269H206M111 277H140M177 277H206M107 280H144M173 280H210M60 286H366"/></symbol><symbol id="pl2" viewBox="0 0 412 352"><path fill="none" style="stroke:var(--wc,currentColor);stroke-width:var(--ww,1.3)" d="M2 3V349M11 3V64M23 3V45M47 3V21M217 3V21M240 3V45M246 3V35M318 3V35M323 3V11M383 3V11M389 3V59M404 3V349M1 4H405M306 10V32M322 10H384M281 12V35M264 27V35M246 33H319M22 44H241M23 49V69M380 49V59M26 50H381M22 56H53M350 56H390M11 62H24M380 127V221M389 127V141M380 130H390M356 134V215M23 137V174M11 139V172M11 140H24M388 140H405M95 143V163M392 145V202M391 146H405M11 171H24M391 201H405M400 210V221M380 218H402M23 275V298M11 277V335M11 278H24M380 285V298M401 285V345M379 288H402M52 295V321M356 296V321M22 297H55M353 297H381M79 319V335M175 319V335M239 319V335M334 319V335M172 320H241M52 321H82M332 321H357M373 333V344M11 334H80M174 334H240M333 334H374M372 343H402M1 348H405"/><path fill="none" style="stroke:var(--fc,currentColor);stroke-width:var(--fw,.8)" d="M392 3V38M293 10V32M246 12H282M254 15H274M254 15V29M274 15V29M46 20H217M293 24H307M254 29H274M293 32H307M52 53V63M52 62H83M321 62H351M82 68H112M291 68H321M112 74H292M91 96H312M331 114V274M72 118V222M110 124H238M110 124V170M124 124V170M167 124V224M238 124V222M250 134H286M250 134V158M286 134V158M356 134H381M124 138H167M83 141H107M83 141V165M107 141V165M85 153H105M250 158H286M91 162H99M83 165H107M401 165V184M110 170H295M193 170V215M281 170V215M295 170V215M300 172H324M300 172V196M323 172V196M312 174V194M119 181H155M119 181V229M155 181V229M302 184H311M313 184H322M300 196H324M193 201H281M356 214H381M193 215H295M119 229H155M219 231V239M188 242H217M72 254V270M120 254V274M152 254V276M114 255V275M147 255V274M120 256H147M77 257H87M128 290H138M91 292H312"/></symbol></defs></svg>
+
+<div class="pl" id="pl" aria-hidden="true"><div class="in"><div class="wm">/CI <b>DSGN</b></div><div class="bar"><i id="plBar"></i></div><div class="n" id="plN">000</div></div></div>
+<div class="grid" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
+<div class="cur" id="cur" aria-hidden="true"></div>
+<div class="follow" id="follow" aria-hidden="true"><div class="ph"><span class="pc">Фото проекта</span></div></div>
+
+<header class="top" id="top">
+  <a class="logo" href="./" aria-label="CI Design + Build"><img src="../assets/logo-white.png" alt="CI Design + Build"></a>
+  <nav aria-label="Primary"><a href="about/">О нас</a><a href="services/">Услуги</a><a href="portfolio/">Портфолио</a><a href="../../#contact">Контакты</a></nav>
+  <a class="pill fill cta" href="../../#contact">Начните лучшую жизнь</a>
+  <a class="lang" href="../">EN</a>
+  <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="menu"><i></i>Меню</button>
+</header>
+<a class="sidecta" id="sidecta" href="../../#contact">Начните лучшую жизнь ↗</a>
+<a class="conc" id="conc" href="../../#contact" aria-label="Speak with the CI concierge"><i></i><span>Консьерж CI</span><em class="cl">Чикаго <span id="concT"></span></em></a>
+
+<div class="menu" id="menu" aria-hidden="true">
+  <div class="bar"><a href="./" aria-label="CI Design + Build"><img src="../assets/logo-white.png" alt="CI Design + Build"></a><button class="close" id="menuClose" type="button">Закрыть ×</button></div>
+  <div class="left">
+    <nav class="links" aria-label="Full menu">
+      <a href="./"><small>01</small>Главная</a>
+      <a href="about/"><small>02</small>О нас</a>
+      <a href="services/" id="svcToggle" aria-expanded="false"><small>03</small>Услуги <span class="plus" aria-hidden="true">+</span></a>
+      <a href="portfolio/"><small>04</small>Портфолио</a>
+      <a href="../../#brokers"><small>05</small>Программа для брокеров</a>
+      <a href="../../#partnerships"><small>06</small>Партнёрства</a>
+      <a href="../../#news"><small>07</small>Новости</a>
+      <a href="../../#contact"><small>08</small>Контакты</a>
+    </nav>
+    <div class="foot"><p class="k mut" style="line-height:2">215 W Huron Street, Suite 1, Chicago, IL 60654<br>312 279 2776 · Чикаго + Южная Флорида</p><a class="pill fill" href="../../#contact">Начните лучшую жизнь</a></div>
+  </div>
+  <div class="right">
+    <div class="svcl" id="svcList">
+      <p class="k" style="color:rgba(235,235,235,.6)">Услуги</p>
+      <a href="services/#turnkey"><small>03.1</small>CI Turnkey</a>
+      <a href="services/#core"><small>03.2</small>CI Core</a>
+      <a href="services/#curated"><small>03.3</small>CI Curated</a>
+      <a href="services/#wellness"><small>03.4</small>CI Wellness</a>
+      <a href="services/" class="k" style="margin-top:8px">Все услуги ↗</a>
+    </div>
+    <div class="wm" aria-hidden="true">/CI <b>DSGN</b></div>
+  </div>
+</div>
+
+<div id="smooth-wrapper"><div id="smooth-content">
+<main>
+
+<!-- HERO -->
+<section class="hero full" id="hero">
+  <h1 class="sr">Новое искусство жить</h1>
+  <div class="glass" id="glass" aria-hidden="true">
+    <div class="scene" id="scene"><div class="scene-bg"></div><svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMid slice"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg><div class="ht"><span class="r">Новое</span><span class="b">искусство</span><span class="b o">жить</span></div></div>
+  </div>
+  <p class="eyb k">Дизайн + строительство уровня консьерж-сервиса</p>
+  <p class="tag">Видео на первом экране</p>
+  <div class="ui" id="heroUi">
+    <div class="sub"><p class="t">Строим вашу <b>лучшую жизнь</b></p><p class="s">Архитектура, интерьеры, строительство, меблировка, искусство и wellness — одна команда, от первого разговора до вечера, когда мы вас заселим.</p></div>
+    <div class="sc"><i></i>Листайте</div>
+    <a class="pill fill go" href="../../#contact">Начните лучшую жизнь</a>
+  </div>
+</section>
+
+<!-- PHILOSOPHY -->
+<section class="philo full" id="philo">
+  <div class="wrap">
+    <div class="hd">
+      <p class="cap k"><span class="l"></span>Наша философия</p>
+      <h2><span class="ln"><span class="r">Строим</span></span><span class="ln"><span class="r">вашу</span></span><span class="ln"><span class="b">лучшую</span></span><span class="ln"><span class="b o" id="lifeWord">жизнь</span></span></h2>
+      <div class="endw" id="philoEnd"><p class="k lead">Дом, настроенный под вашу жизнь: как вы будете просыпаться, принимать гостей, восстанавливаться и собираться вместе; как свет будет двигаться по вашим утрам.</p><p class="end">Мы спроектируем больше, чем дом. <b>Мы спроектируем то, как вы в нём живёте.</b></p></div>
+    </div>
+    <div class="ring" id="ring">
+      <svg viewBox="-200 -200 400 400" aria-hidden="true"><g id="ticks"></g><g id="hand"><rect x="-2.5" y="-193" width="5" height="5" fill="#EBEBEB"/><line x1="0" y1="-188" x2="0" y2="-148" stroke="#EBEBEB" stroke-width="1"/></g></svg>
+      <div class="mid"><p class="pct"><span id="pct">0</span><sup>%</sup></p><p class="cap2">вашего дня проходит дома</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- LIGHT -->
+<section class="lite full" id="lite">
+  <div class="ltop"><p class="cap k"><span class="l"></span>Свет в вашей жизни</p><h2><span class="r">Как свет</span><br>будет идти<br><span class="o">по вашему утру.</span></h2><p>Как вы хотите просыпаться, принимать гостей, восстанавливаться, собирать и собираться — вплоть до угла первого луча.</p></div>
+  <div class="lplan" id="lplan">
+    <svg class="dimL" viewBox="0 0 412 352" aria-hidden="true"><use href="#pl1" width="412" height="352"/></svg>
+    <div class="beam" id="lbeam"><svg class="litL" viewBox="0 0 412 352" aria-hidden="true"><use href="#pl1" width="412" height="352"/></svg></div>
+    <div class="sunpath" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 Q50 -20 100 100"/></svg><i class="sun" id="lsun"></i></div>
+  </div>
+  <div class="clock"><span class="k mut">Ваше утро, по часам</span><p class="t"><span id="lt">06:00</span><sup id="lap"></sup></p></div>
+  <p class="lend" id="lend">Мы спроектируем, как свет <b>движется по вашему дому.</b></p>
+</section>
+
+<!-- ABOUT -->
+<section class="about full" id="about">
+  <div class="cap-top"><p class="p1">Каждая дисциплина, <b>которая нужна вашему дому.</b></p><p class="p2">Под одной крышей. <b>С первого дня.</b></p></div>
+  <div id="frags" aria-hidden="true">
+    <span class="frag b" data-p="6,24" style="font-size:clamp(1.6rem,4.4vw,4.6rem)">Архитектор</span>
+    <span class="frag r" data-p="56,18" style="font-size:clamp(1.2rem,3.2vw,3.4rem)">Дизайнер интерьера</span>
+    <span class="frag b o" data-p="32,40" style="font-size:clamp(1.8rem,5.4vw,6rem)">Подрядчик</span>
+    <span class="frag r" data-p="76,48" style="font-size:clamp(1rem,2.2vw,2.4rem)">Поставщики</span>
+    <span class="frag b" data-p="8,64" style="font-size:clamp(1.1rem,2.8vw,3rem)">Монтажник</span>
+    <span class="frag r" data-p="46,74" style="font-size:clamp(1.1rem,3vw,3.2rem)">Закупки</span>
+    <span class="frag b o" data-p="20,86" style="font-size:clamp(1rem,2.6vw,2.8rem)">Инженер</span>
+    <span class="frag b" data-p="80,80" style="font-size:clamp(1.4rem,4vw,4.4rem)">Искусство</span>
+    <span class="frag r" data-p="3,44" style="font-size:clamp(.9rem,1.8vw,2rem)">Меблировка</span>
+    <span class="frag b o" data-p="68,32" style="font-size:clamp(1rem,2.4vw,2.6rem)">Wellness</span>
+  </div>
+  <div class="sq" id="sq">
+    <i class="sd t1"></i><i class="sd t2"></i><i class="sd t3"></i><i class="sd t4"></i>
+    <div class="dim top" aria-hidden="true"><i></i><span>Одна крыша</span><i></i></div><div class="dim side" aria-hidden="true"><i></i><span>Полная ответственность</span><i></i></div>
+    <h2 class="in"><span class="ln"><span class="r">Одно видение.</span></span><span class="ln"><span class="r">Одна команда.</span></span><span class="ln"><span class="b">Один опыт</span></span><span class="ln"><span class="b">под ключ.</span></span></h2>
+    <p class="db">Дизайн + строительство</p>
+  </div>
+</section>
+<section class="about2">
+  <div class="stat"><p class="v"><span id="c20">0</span><sup>%</sup></p><p class="l">времени проекта мы экономим нашим клиентам в среднем</p></div>
+  <div class="q"><p class="k lead">Ваше время невосполнимо. Процесс CI построен так, чтобы его беречь.</p><p>Вы участвуете там, где важно ваше видение. <b>Всё остальное — на нас.</b></p><a class="pill" href="about/" style="justify-self:start">Узнать о CI Design + Build</a></div>
+</section>
+
+<!-- PROJECTS -->
+<section class="proj full" id="proj">
+  <div class="top-cap"><p class="cap k"><span class="l"></span>Избранный проект</p><p class="t">Спроектировано вокруг <b>людей, которые там живут.</b></p></div>
+  <p class="w l b" aria-hidden="true">Дом</p>
+  <p class="w rr r" aria-hidden="true">H&#8203;ome</p>
+  <a class="frame" id="frame" href="project/" data-cur="Смотреть">
+    <div class="ph"><span class="pc">Фото избранного проекта</span></div>
+    <div class="meta"><div><p class="k" style="color:rgba(235,235,235,.7);margin-bottom:10px">Чикаго, Иллинойс · 477 м² · CI Turnkey</p><h3>Дом <span class="r">коллекционера</span></h3></div><span class="pill">Смотреть проект</span></div>
+  </a>
+</section>
+<section class="list">
+  <div class="lh"><div><h2><span class="r">Ваш дом —</span> это ваше отражение.</h2><p class="k sm">Каждый дом CI начинается с другого клиента, другой резиденции, другого образа жизни.</p></div><a class="pill" href="portfolio/">Смотреть портфолио <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><path d="M3 13L13 3M5 3h8v8"/></svg></a></div>
+  <ul id="plist">
+    <li><a href="project/" data-cur="Смотреть"><span class="nm">Lakeshore Luxury</span><span class="lo">Уилметт, Иллинойс</span><span class="sf">204 м²</span></a></li>
+    <li><a href="project/" data-cur="Смотреть"><span class="nm">Room to Breathe</span><span class="lo">Чикаго, Иллинойс</span><span class="sf">378 м²</span></a></li>
+    <li><a href="project/" data-cur="Смотреть"><span class="nm">Above the Park</span><span class="lo">Линкольн-парк</span><span class="sf">520 м²</span></a></li>
+    <li><a href="project/" data-cur="Смотреть"><span class="nm">Showpiece Home</span><span class="lo">Чикаго, Иллинойс</span><span class="sf">CI Turnkey</span></a></li>
+  </ul>
+</section>
+
+<!-- 5. THE CI DIFFERENCE -->
+<section class="diff full" id="diff">
+  <div class="glow" aria-hidden="true"></div><div class="tex" aria-hidden="true"></div>
+  <div class="left">
+    <div style="display:grid;gap:26px"><p class="cap k"><span class="l"></span>Отличие CI</p><h2><span class="r">Что</span> Turnkey <span class="r">значит на самом деле</span></h2><p class="lead">Те, кто проектирует ваш дом, будут работать плечом к плечу с теми, кто его строит.</p></div>
+    <div class="desc" id="desc">
+      <p class="on">Одно видение — от планировки <b>до деталей.</b></p>
+      <p>Строит команда, <b>которая уже знает проект наизусть.</b></p>
+      <p>Резиденция, <b>завершённая за пределами стройки.</b></p>
+      <p>Спроектировано вокруг <b>комфорта и качества жизни.</b></p>
+      <p>Передаётся как дом, <b>в котором можно жить.</b></p>
+      <p>Меньше разрывов. <b>Лучше решения.</b></p>
+    </div>
+  </div>
+  <div class="ptr" aria-hidden="true"></div>
+  <div class="dial" id="dial" aria-label="Architecture + Interior Design · Construction + Project Management · Furnishings + Art · Wellness + Technology · Move-In + Onboarding · One Team">
+    <div class="counter" id="counter"><svg viewBox="-1000 -1000 2000 2000" aria-hidden="true"><defs><path id="crp" d="M -892,0 a 892,892 0 1,1 1784,0 a 892,892 0 1,1 -1784,0"/></defs><text class="txr"><textPath href="#crp" textLength="5560" lengthAdjust="spacing"><tspan class="bb">Turnkey</tspan> / Одна команда / Один процесс / <tspan class="bb">Полная ответственность</tspan> / <tspan class="bb">Turnkey</tspan> / Одно видение / Одна крыша / <tspan class="bb">Один стандарт</tspan> /</textPath></text></svg></div>
+    <div class="rotor" id="rotor"><svg viewBox="-1000 -1000 2000 2000" aria-hidden="true"><circle class="orb" r="999"/><circle class="orb" r="872" style="opacity:.5"/><circle class="orb" r="620" style="opacity:.28"/><g id="dticks"></g></svg></div>
+  </div>
+</section>
+
+<!-- 6. CI WAYS OF WORK -->
+<section class="ways full" id="ways">
+  <div class="whd"><p class="cap k"><span class="l"></span>Форматы работы CI</p><h2 class="wt"><span class="r">Выберите уровень</span> поддержки <span class="r">который подходит</span> именно вам.</h2></div>
+  <div class="lvl" id="lvl" aria-hidden="true"><div class="mk"><span data-l="1">Core</span><span data-l="2">Curated</span><span data-l="3">Turnkey</span><span data-l="4">+ Wellness</span></div><div class="bar"><b style="left:33.3%"></b><b style="left:66.6%"></b><b style="left:100%"></b><i id="lvlFill"></i></div></div>
+  <div class="cols" id="cols">
+    <article class="col on">
+      <div class="cbg" aria-hidden="true"></div><span class="pcap">Фото CI Turnkey</span>
+      <p class="vt"><span class="r">CI</span> <b>Turnkey</b></p>
+      <div class="cin"><span class="tg">Флагман</span><h3 class="word"><span class="m"><span class="r">Turn</span></span><i></i><span class="m"><span class="b">Key</span></span></h3><p class="d">Полный опыт CI. Одна команда, которую вы нанимаете. <b>Консьерж-сервис</b> от первого разговора до вечера переезда.</p><a class="pill fill" href="services/#turnkey" style="justify-self:start">Подробнее о CI Turnkey</a></div>
+    </article>
+    <article class="col">
+      <div class="cbg" aria-hidden="true"></div><span class="pcap">Фото CI Core</span>
+      <p class="vt"><span class="r">CI</span> <b>Core</b></p>
+      <div class="cin"><h3 class="word"><span class="m"><span class="r">CI</span></span><i></i><span class="m"><span class="b">Core</span></span></h3><p class="d">Основа модели CI. <b>Архитектура, интерьеры и строительство</b> — скоординированные экспертно.</p><a class="pill" href="services/#core" style="justify-self:start">Подробнее о CI Core</a></div>
+    </article>
+    <article class="col">
+      <div class="cbg" aria-hidden="true"></div><span class="pcap">Фото CI Curated</span>
+      <p class="vt"><span class="r">CI</span> <b>Curated</b></p>
+      <div class="cin"><h3 class="word"><span class="m"><span class="r">Cu</span></span><i></i><span class="m"><span class="b">Rated</span></span></h3><p class="d">Дом, <b>продуманный за пределами стройки.</b> Меблировка, искусство, стайлинг.</p><a class="pill" href="services/#curated" style="justify-self:start">Подробнее о CI Curated</a></div>
+    </article>
+    <article class="col well">
+      <div class="cbg" aria-hidden="true"></div>
+      <p class="vt"><span class="r">CI</span> <b>Wellness</b></p>
+      <div class="cin"><span class="tg">Интегрируется с любой услугой CI</span><h3 class="word"><span class="m"><span class="r">Well</span></span><i></i><span class="m"><span class="b">Ness</span></span></h3><p class="d"><b>Лучшая жизнь, заложенная в проект.</b> Научный, одобренный врачами подход к тому, чтобы жить моложе и дольше.</p><a class="pill" href="services/#wellness" style="justify-self:start">Подробнее о CI Wellness</a></div>
+    </article>
+  </div>
+</section>
+
+<!-- 7. CI APPROACH -->
+<section class="appr full" id="appr">
+  <div class="ahd"><div><p class="cap k"><span class="l"></span>Подход CI</p><h2>Спроектировано вокруг <b>того, как вы живёте.</b></h2></div><p class="k mut">Мы начинаем с вопросов о вашей жизни. Ответы становятся фундаментом.</p></div>
+  <div class="tun" id="tun">
+    <p class="tq"><span><span class="r">Как вы хотите</span><br>пользоваться домом?</span></p>
+    <p class="tq"><span><span class="r">Где вы</span><br>уединяетесь?</span></p>
+    <p class="tq"><span><span class="r">Как вы</span><br>принимаете гостей?</span></p>
+    <p class="tq"><span><span class="r">Каким должно быть</span><br>ваше утро?</span></p>
+    <p class="tq" id="tqLast"><span><span class="r">Что настолько важно,</span><br>чтобы стр<span id="zO">о</span>ить вокруг этого?</span></p>
+    <span class="te b" data-x="-34" data-y="-26" data-d=".5">Воздух, свет, вода</span>
+    <span class="te r" data-x="30" data-y="28" data-d="1.4">Отдых + восстановление</span>
+    <span class="te b o" data-x="-30" data-y="30" data-d="2.3">Энергия + тонус</span>
+    <span class="te r" data-x="28" data-y="-30" data-d="3.2">Питание, кухня</span>
+    <span class="te b" data-x="-36" data-y="8" data-d="3.7">Общение + приёмы</span>
+  </div>
+  <div class="afin" id="afin"><p>Дом упростит вашу жизнь. <b>Персонально — это и есть процесс CI.</b></p><a class="pill" href="../../#contact">Воплотите своё видение</a></div>
+  <div class="black" id="ablack" aria-hidden="true"></div>
+</section>
+
+<!-- 8. PROCESS -->
+<section class="proc full" id="proc">
+  <p class="phd cap k"><span class="l"></span>Процесс</p>
+  <h2 class="pt1" id="pt1"><span class="r">Проект</span><br>сложен.</h2>
+  <h2 class="pt2" id="pt2"><span class="r">Мы сделаем его</span> простым для вас.</h2>
+  <div class="pst" id="pst"><svg id="psvg" aria-hidden="true"><path id="ppath"/></svg></div>
+  <div class="big" id="pbig" aria-hidden="true"><p id="pbigT">Узнать</p></div>
+  <div class="pend" id="pend"><span class="r">Одна команда. Один процесс.</span><b><span class="o">Полная</span><br>ответственность.</b></div>
+</section>
+
+<!-- 9. THE CI CLIENT — concierge-level -->
+<section class="cli full" id="cli">
+  <div class="chd"><p class="cap k"><span class="l"></span>Клиент CI</p><p class="k k2">Для тех, кому процесс важен так же, как результат.</p></div>
+  <div class="lay dimL" aria-hidden="true">
+    <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMid slice"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+    <div class="gtw"><p class="gt"><span class="r">Они ждут</span><br>высокого стандарта.</p></div>
+  </div>
+  <div class="lay litL" id="cliLit" aria-hidden="true">
+    <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMid slice"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+    <div class="gtw"><p class="gt"><span class="r">Они ждут</span><br>высокого стандарта.</p></div>
+  </div>
+  <h2 class="sr">Они ждут высокого стандарта. Мы — тоже.</h2>
+  <p class="sodo" id="sodo" aria-hidden="true"><span class="r">Мы —</span> <b>тоже.</b></p>
+  <p class="cnote"><span class="k">Состоявшиеся люди. Насыщенная жизнь.</span>Они ценят <b>консьерж-сервис.</b> И получают его.</p>
+  <div class="tblock" aria-hidden="true"><span>Чертёж</span><span>Варианты планировки</span><span>Проект</span><span>Дом коллекционера</span><span>Студия</span><span>CI Design + Build</span></div>
+</section>
+
+<!-- 10. INVEST IN YOURSELF -->
+<section class="inv full" id="inv">
+  <div class="ihd"><p class="cap k"><span class="l"></span>Ваша лучшая жизнь</p><p class="k k2">Какой вы хотите чувствовать свою жизнь через пять, десять, двадцать лет?</p></div>
+  <div class="stage">
+    <p class="pre" id="ivPre">Инвестируйте в</p>
+    <div class="win" id="reel"><ul>
+      <li>свои утра.</li><li>свой отдых.</li><li>своё здоровье.</li><li>своё время.</li><li>своё будущее.</li><li>себя.</li>
+    </ul></div>
+  </div>
+  <div class="scale" aria-hidden="true"><i class="mk" id="ivMark"></i><span style="top:0%">Сегодня</span><span style="top:33.3%">Пять лет</span><span style="top:66.6%">Десять лет</span><span style="top:100%">Двадцать лет</span></div>
+  <div class="bot" id="ivBot"><p>Ваш дом будет определять ваше самочувствие десятилетиями. <b>Мы построим его вокруг той жизни, которую вы хотите.</b></p><a class="pill fill" href="../../#contact">Постройте лучшую жизнь</a></div>
+</section>
+
+<!-- 11. CLIENT STORIES -->
+<section class="voc" id="voc">
+  <div class="vhd"><div style="display:grid;gap:22px"><p class="cap k"><span class="l"></span>Истории клиентов</p><h2><span class="r">Опыт CI —</span> словами наших клиентов.</h2></div><p class="k k2">Консьерж-сервис — их собственными словами.</p></div>
+  <div class="mqw" aria-hidden="true"><div class="mq" id="vmq"><span class="b">Словами наших клиентов</span><span class="o">Словами наших клиентов</span><span class="b">Словами наших клиентов</span><span class="o">Словами наших клиентов</span></div></div>
+  <div class="films">
+    <a class="film a" href="project/" data-cur="Смотреть"><div class="fr"><div class="ph"><span class="pc">Видео клиента</span></div><span class="play" aria-hidden="true"></span></div><svg class="wave" viewBox="0 0 600 34" preserveAspectRatio="none" aria-hidden="true"><polyline points=""/></svg><div class="m"><h3>Об опыте <b>CI Turnkey</b></h3><span class="k mut">Чикаго, Иллинойс</span></div></a>
+    <a class="film b" href="project/" data-cur="Смотреть"><div class="fr"><div class="ph"><span class="pc">Видео клиента</span></div><span class="play" aria-hidden="true"></span></div><svg class="wave" viewBox="0 0 600 34" preserveAspectRatio="none" aria-hidden="true"><polyline points=""/></svg><div class="m"><h3>Дом, <b>в котором можно жить</b></h3><span class="k mut">CI Turnkey</span></div></a>
+  </div>
+</section>
+
+<!-- 12. FAQ -->
+<section class="faq" id="faq">
+  <div class="fl"><p class="cap k"><span class="l"></span>Вопросы</p><h2><span class="w1">Прежде</span><span class="w2">чем</span><span class="w3">начать</span></h2><p class="k k2">Что клиенты хотят знать до того, как мы вместе построим их лучшую жизнь.</p><a class="pill" href="../../#contact" style="justify-self:start">Воплотите своё видение</a></div>
+  <div class="fr" id="faqList">
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">Что значит «под ключ» в CI?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Ровно это: мы берём на себя всё. Дизайн, строительство, меблировка, искусство, монтаж и переезд — одна команда под одной крышей, на уровне консьерж-сервиса.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">Насколько я буду вовлечён?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Настолько, насколько захотите. Мы будем приносить решения в нужный момент. Детали между ними — наша ответственность.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">Сколько займёт проект?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Две фазы: проектирование и планирование, затем строительство. Детальный график вы получите рано — реалистичные сроки и понятные вехи.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">Как устроено ценообразование?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Прозрачно: прямые затраты по партнёрским ценам CI, плата за управление в зависимости от сложности и длительности проекта и чётко определённая структура накладных расходов и прибыли.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">Кто идеальный клиент CI?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Те, кто ценит своё время, здоровье и благополучие — и хочет одну ответственную команду, которая защитит все три.</p></div></div>
+    <div class="qa"><button class="qq" type="button" aria-expanded="false">Где работает CI?<span class="pm" aria-hidden="true"></span></button><div class="ans"><p>Крупные реконструкции и новое строительство жилья в Чикаго и Южной Флориде — разрешения, согласования и инспекции берёт на себя CI.</p></div></div>
+  </div>
+</section>
+
+<!-- 13. FINAL CTA — from drawing to life -->
+<section class="fin full" id="fin">
+  <div class="fhd"><p class="cap k"><span class="l"></span>Начало</p><p class="k mut">Консьерж-сервис · Одна команда · Полная ответственность</p></div>
+  <div class="drw" id="fdrw" aria-hidden="true">
+    <svg viewBox="0 0 412 352"><path class="fw" d="M2 3V349M7 3V62M18 3V44M213 3V19M237 3V44M243 3V33M315 3V33M387 3V58M404 3V349M1 4H405"/><path class="fw" d="M319 9H382M278 10V33M261 26V33M242 32H316M17 43H238M18 48V64M378 48V58M17 50H379M377 55H388M6 61H19"/><path class="fw" d="M378 127V221M387 127V140M377 130H388M18 137V173M7 139V172M386 139H405M6 140H19M389 145H405M389 145V202M6 171H19"/><path class="fw" d="M389 201H405M398 210H405M398 210V221M377 218H400M18 276V299M7 277V336M6 278H19M378 286V298M398 286V346M377 289H400"/><path class="fw" d="M48 295V322M351 297H379M353 297V322M17 298H50M74 320V336M171 320V336M235 320V336M331 320V336M47 321H77M168 321H242"/><path class="fw" d="M329 321H354M371 334V345M6 335H76M170 335H236M331 335H372M370 344H400M1 348H405"/><path class="ff" d="M42 3V19M389 3V37M290 9V31M302 9V17M304 9V31M242 10H279M250 13V28M251 13H271M270 13V28M42 19H214M290 23H304M251 27H271M290 30H304M21 48H379M48 48V59M126 48V67"/><path class="ff" d="M282 48V67M47 58H126M126 67H282M60 85H366M60 85V286M366 85V286M125 93H133M187 93H195M72 103H96M72 103V127M96 103V127M109 103V111M124 103H132M146 103V110M131 120H139M180 120H189"/><path class="ff" d="M341 125H351M72 127H96M237 127H277M266 127V139M62 129V219M63 129H100M66 129V219M99 129V219M233 131V217M280 131V217M66 133H100M165 136H176M165 136V174M176 136V174M132 140H165M132 140V170"/><path class="ff" d="M176 140H186M186 140V170M66 153H100M247 163V186M399 165V184M251 166V179M235 168V179M132 170H165M176 170H186M66 174H100M165 174H176M142 175H153M142 175V213M153 175V213M132 179H142M132 179V209"/><path class="ff" d="M153 179H186M186 179V209M66 196H100M363 197V207M132 209H142M153 209H186M266 209V221M142 213H153M66 216H100M62 219H100M237 221H277M341 223H351M107 241H144M107 241V280M111 241V280M140 241V280"/><path class="ff" d="M144 241V280M173 241H210M173 241V280M177 241V280M206 241V280M210 241V280M111 269H141M177 269H206M111 277H140M177 277H206M107 280H144M173 280H210M60 286H366"/></svg>
+    <div class="dim top"><i></i><span>24'-6"</span><i></i></div>
+    <div class="dim side"><i></i><span>21'-0"</span><i></i></div>
+    <div class="tblock"><span>Чертёж</span><span>Планировка</span><span>Проект</span><span>Дом коллекционера</span></div>
+  </div>
+  <div class="real" id="freal" aria-hidden="true"><div class="ph"><span class="pc">Фото готового дома</span></div></div>
+  <h2 class="hl" id="fhl"><span class="ln"><span class="r">Воплотите своё</span></span><span class="ln"><span class="b">видение.</span></span></h2>
+  <div class="end" id="fend">
+    <p class="k" style="color:rgba(235,235,235,.75)">Ваша следующая глава</p>
+    <h2><span class="r">начинается</span> с разговора.</h2>
+    <a class="rcta" id="rcta" href="../../#contact" data-cur="Начать"><svg viewBox="0 0 100 100" aria-hidden="true"><defs><path id="rcp" d="M50,50 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs><text><textPath href="#rcp" textLength="272">Консьерж-сервис · Одна команда · Один процесс ·</textPath></text></svg><span class="core">Начните лучшую жизнь</span></a>
+    <p class="k s">Расскажите, о чём вы думаете. Мы определим, что дальше.</p>
+  </div>
+</section>
+
+</main>
+<footer class="foot" id="foot">
+  <svg class="bpx" viewBox="0 0 1290 720" preserveAspectRatio="xMidYMax slice" aria-hidden="true"><use href="#pl0" x="0" y="0" width="412" height="352"/><use href="#pl1" x="430" y="0" width="412" height="352"/><use href="#pl2" x="860" y="0" width="412" height="352"/><use href="#pl2" x="-215" y="368" width="412" height="352"/><use href="#pl0" x="215" y="368" width="412" height="352"/><use href="#pl1" x="645" y="368" width="412" height="352"/><use href="#pl2" x="1075" y="368" width="412" height="352"/></svg>
+  <div class="mq2w" aria-hidden="true"><div class="mq2" id="fmq"><span class="b">Постройте лучшую жизнь</span><span class="r">Консьерж-сервис</span><span class="b">Одна команда</span><span class="r">Один процесс</span><span class="b">Полная ответственность</span><span class="b">Постройте лучшую жизнь</span><span class="r">Консьерж-сервис</span><span class="b">Одна команда</span><span class="r">Один процесс</span><span class="b">Полная ответственность</span></div></div>
+  <div class="fgrid">
+    <p class="where"><span class="sm">Студии в</span><span class="bg">Чикаго</span><span class="sm mid">и</span><span class="bg o">Южной Флориде</span></p>
+    <div class="cols">
+      <div><h4>Студия в Чикаго</h4><p>215 W. Huron St., Suite 1<br>Chicago, IL 60654</p><a href="tel:+13122792776">312.279.2776</a><p class="tm" data-tz="America/Chicago">—</p></div>
+      <div><h4>Студия в Южной Флориде</h4><p>561 NE 79th St, Suite 300/410<br>Miami, FL 33138</p><p class="tm" data-tz="America/New_York">—</p></div>
+      <div><h4>Консьерж</h4><a href="mailto:info@cidesignbuild.com">info@cidesignbuild.com</a><a href="../../#contact">Начните лучшую жизнь</a><a href="../../#brokers">Программа для брокеров</a><a href="../../#partnerships">Партнёрства</a></div>
+      <div><h4>Следите</h4><a href="https://www.instagram.com/cidesignbuild" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/cidesignbuild" target="_blank" rel="noopener">Facebook</a><a href="https://www.linkedin.com/company/cidesignbuild" target="_blank" rel="noopener">LinkedIn</a><a href="../../#news">Новости</a></div>
+    </div>
+  </div>
+  <div class="wm" id="fwm" aria-label="/CI DSGN"><span class="fl">/</span><span class="fl">C</span><span class="fl">I</span><span class="ol">D</span><span class="ol">S</span><span class="ol">G</span><span class="ol">N</span></div>
+  <div class="bot"><span>© 2026 CI Design + Build</span><nav aria-label="Legal"><a href="about/">О нас</a><a href="../../#services">Услуги</a><a href="portfolio/">Портфолио</a><a href="https://cidesignbuild.com/terms-and-conditions/" target="_blank" rel="noopener">Условия</a><a href="https://cidesignbuild.com/privacy-policy-2/" target="_blank" rel="noopener">Конфиденциальность</a></nav><a href="#top" id="toTop">Наверх ↑</a></div>
+</footer>
+
+</div></div>
+
+<script src="../assets/js/gsap.min.js"></script>
+<script src="../assets/js/ScrollTrigger.min.js"></script>
+<script src="../assets/js/ScrollSmoother.min.js"></script>
+<script>
+(function(){
+var d=document,W=window,qs=function(s,c){return(c||d).querySelector(s)},qa=function(s,c){return[].slice.call((c||d).querySelectorAll(s))};
+var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches,fine=matchMedia('(pointer:fine)').matches;
+if(!W.gsap||!W.ScrollTrigger){d.body.classList.remove('lock');qs('#pl').style.display='none';return}
+gsap.registerPlugin(ScrollTrigger);if(W.ScrollSmoother)gsap.registerPlugin(ScrollSmoother);
+var params=new URLSearchParams(location.search);
+var smoother=(!reduce&&W.ScrollSmoother&&!params.has('nosmooth'))?ScrollSmoother.create({wrapper:'#smooth-wrapper',content:'#smooth-content',smooth:1.3,effects:true,smoothTouch:.1,normalizeScroll:false}):null;
+var menu=qs('#menu');
+
+/* ---------- HERO: fluted glass ---------- */
+var glass=qs('#glass'),scene=qs('#scene'),strips=[],inners=[],gl={amp:1.8,mx:0,tmx:0,t:0};
+function buildGlass(){
+  strips.forEach(function(s){s.remove()});strips=[];inners=[];
+  var Wd=glass.clientWidth,N=innerWidth<700?9:innerWidth<1200?16:22,w=Wd/N;
+  scene.style.display='none';
+  for(var i=0;i<N;i++){var s=d.createElement('div');s.className='strip';s.style.left=(i*w)+'px';s.style.width=(w+1)+'px';
+    var c=scene.cloneNode(true);c.removeAttribute('id');c.style.display='';c.style.width=Wd+'px';c.style.left=(-i*w)+'px';c.style.transformOrigin=((i+.5)*w)+'px 50%';
+    s.appendChild(c);glass.appendChild(s);strips.push(s);inners.push(c)}
+}
+function drawGlass(){
+  gl.mx+=(gl.tmx-gl.mx)*.06;gl.t+=.006;
+  var a=gl.amp,n=inners.length;
+  for(var i=0;i<n;i++){var off=a*(Math.sin(i*1.9+gl.mx*4+gl.t)*26+Math.cos(i*.7-gl.t*1.3)*12);inners[i].style.transform='translate3d('+off.toFixed(2)+'px,0,0) scaleX('+(1+a*.05).toFixed(4)+')'}
+  glass.style.setProperty('--a',Math.min(1,a).toFixed(3));
+}
+buildGlass();
+var heroOn=true;
+gsap.ticker.add(function(){if(heroOn)drawGlass()});
+addEventListener('mousemove',function(e){gl.tmx=e.clientX/innerWidth-.5});
+var rb;addEventListener('resize',function(){clearTimeout(rb);rb=setTimeout(buildGlass,200)});
+
+/* ---------- preloader → intro ---------- */
+var pl=qs('#pl'),plN=qs('#plN'),plBar=qs('#plBar'),PS=10;
+for(var i=0;i<PS;i++){var s=d.createElement('div');s.className='s';s.style.left=(i*10)+'%';s.style.width='10.2%';pl.insertBefore(s,pl.firstChild)}
+glass.style.setProperty('--intro',1);
+function intro(){
+  d.body.classList.remove('lock');
+  gsap.timeline()
+    .to('#pl .in',{opacity:0,y:-20,duration:.5,ease:'power2.in'})
+    .to('#pl .s',{yPercent:-100,duration:1.1,ease:'power4.inOut',stagger:{each:.05,from:'center'}},'-=.1')
+    .set(pl,{display:'none'})
+    .to(glass,{'--intro':0,duration:1.4,ease:'power4.out'},.5)
+    .to(gl,{amp:1,duration:2.2,ease:'power3.out'},.5)
+    .from('#heroUi > *',{y:30,opacity:0,duration:1,ease:'power3.out',stagger:.1},1.2)
+    .from('.top',{y:-30,opacity:0,duration:.8,ease:'power3.out'},1.2)
+    .from('.hero .eyb',{y:-20,opacity:0,duration:.8,ease:'power3.out'},1.3);
+}
+if(reduce||params.has('nopl')){pl.style.display='none';glass.style.setProperty('--intro',0);gl.amp=1;d.body.classList.remove('lock')}
+else{var o={v:0};gsap.to(o,{v:100,duration:1.4,ease:'power2.inOut',onUpdate:function(){plN.textContent=String(Math.round(o.v)).padStart(3,'0');plBar.style.width=o.v+'%'},onComplete:intro})}
+
+/* hero scroll: glass clears */
+gsap.timeline({scrollTrigger:{trigger:'#hero',start:'top top',end:'+=70%',pin:true,scrub:true,onToggle:function(st){}}})
+  .to(gl,{amp:0,ease:'none'},0)
+  .to('#heroUi',{opacity:0,y:-40,ease:'none'},.6);
+ScrollTrigger.create({trigger:'#hero',start:'top top',end:'+=170%',onLeave:function(){heroOn=false},onEnterBack:function(){heroOn=true}});
+
+/* ---------- header, side CTA, cursor ---------- */
+var top=qs('#top'),side=qs('#sidecta');
+ScrollTrigger.create({start:0,end:'max',onUpdate:function(st){var y=st.scroll();top.classList.toggle('solid',y>60);top.classList.toggle('hide',st.direction>0&&y>innerHeight*.6&&!menu.classList.contains('open'));side.classList.toggle('on',y>innerHeight*1.4)}});
+var cur=qs('#cur');
+if(fine){var cx=-50,cy=-50;addEventListener('mousemove',function(e){cx=e.clientX;cy=e.clientY});
+  gsap.ticker.add(function(){cur.style.transform='translate('+cx+'px,'+cy+'px)'});
+  qa('a,button,summary').forEach(function(el){el.addEventListener('mouseenter',function(){var l=el.getAttribute('data-cur');if(l){cur.setAttribute('data-l',l);cur.classList.add('lab')}else cur.classList.add('big')});el.addEventListener('mouseleave',function(){cur.classList.remove('big','lab')})});
+}
+
+/* ---------- menu (prototype behaviour) ---------- */
+var burger=qs('#burger'),svcT=qs('#svcToggle'),svcL=qs('#svcList');
+function setMenu(o){menu.classList.toggle('open',o);menu.setAttribute('aria-hidden',o?'false':'true');burger.setAttribute('aria-expanded',o?'true':'false');if(smoother)smoother.paused(o);if(o){gsap.fromTo('.menu .links a',{y:40,opacity:0},{y:0,opacity:1,duration:.8,ease:'power3.out',stagger:.04,delay:.3})}else{svcL.classList.remove('show');svcT.classList.remove('on')}}
+burger.addEventListener('click',function(){setMenu(!menu.classList.contains('open'))});
+qs('#menuClose').addEventListener('click',function(){setMenu(false)});
+svcT.addEventListener('click',function(e){e.preventDefault();var o=!svcL.classList.contains('show');svcL.classList.toggle('show',o);svcT.classList.toggle('on',o);svcT.setAttribute('aria-expanded',o?'true':'false')});
+qa('.menu a').forEach(function(a){if(a!==svcT)a.addEventListener('click',function(){setMenu(false)})});
+addEventListener('keydown',function(e){if(e.key==='Escape')setMenu(false)});
+
+/* ---------- PHILOSOPHY: day ring ---------- */
+var ticks=qs('#ticks'),NT=96,tickEls=[];
+for(var i=0;i<NT;i++){var l=d.createElementNS('http://www.w3.org/2000/svg','line');l.setAttribute('x1',0);l.setAttribute('x2',0);l.setAttribute('y1',-178);l.setAttribute('y2',i%8===0?-156:-166);l.setAttribute('class','tick');l.setAttribute('transform','rotate('+(i/NT*360)+')');ticks.appendChild(l);tickEls.push(l)}
+var ringState={p:0},hand=qs('#hand'),pct=qs('#pct');
+function ringDraw(){var p=ringState.p,on=Math.round(p*NT*.75);for(var i=0;i<NT;i++)tickEls[i].classList.toggle('on',i<on);hand.setAttribute('transform','rotate('+(p*270)+')');pct.textContent=Math.round(p*75)}
+gsap.timeline({scrollTrigger:{trigger:'#philo',start:'top top',end:'+=140%',pin:true,scrub:1}})
+  .from('#philo h2 .ln>span',{yPercent:110,stagger:.05,duration:.25,ease:'power3.out'},0)
+  .from('#ring svg',{rotate:-90,scale:.85,opacity:.2,duration:.35,ease:'power2.out'},0)
+  .from('#ring .mid',{opacity:0,scale:.9,duration:.2},.05)
+  .to(ringState,{p:1,duration:.7,ease:'none',onUpdate:ringDraw},.1)
+  .to('#lifeWord',{color:'#EBEBEB',duration:.2},.6)
+  .from('#philoEnd',{opacity:0,y:30,duration:.2},.75);
+
+/* ---------- ABOUT: fragments → one square ---------- */
+var frags=qa('#frags .frag'),about=qs('#about');
+function placeFrags(){var W0=about.clientWidth,H0=about.clientHeight;frags.forEach(function(f){var p=f.getAttribute('data-p').split(',');f.style.left=Math.max(12,Math.min(+p[0]/100*W0,W0-f.offsetWidth-12))+'px';f.style.top=(+p[1]/100*H0)+'px'})}
+placeFrags();addEventListener('resize',placeFrags);
+var at=gsap.timeline({scrollTrigger:{trigger:'#about',start:'top top',end:'+=220%',pin:true,scrub:1,invalidateOnRefresh:true}});
+frags.forEach(function(f,i){at.to(f,{x:function(){return about.clientWidth/2-f.offsetLeft-f.offsetWidth/2},y:function(){return about.clientHeight*.52-f.offsetTop-f.offsetHeight/2},scale:.12,opacity:0,filter:'blur(6px)',duration:.4,ease:'power2.in'},.05+i*.025)});
+at.to('#about .p1',{opacity:0,y:-20,duration:.1},.28)
+  .to('#about .p2',{opacity:1,duration:.1},.38)
+  .fromTo('#sq .t1',{scaleX:0},{scaleX:1,duration:.09,ease:'none'},.45)
+  .fromTo('#sq .t2',{scaleY:0},{scaleY:1,duration:.09,ease:'none'},.54)
+  .fromTo('#sq .t3',{scaleX:0},{scaleX:1,duration:.09,ease:'none'},.63)
+  .fromTo('#sq .t4',{scaleY:0},{scaleY:1,duration:.09,ease:'none'},.72)
+  .from('#sq .in .ln>span',{yPercent:110,stagger:.05,duration:.2,ease:'power3.out'},.66)
+  .from('#sq .db',{opacity:0,letterSpacing:'1.4em',duration:.2},.82)
+  .to('#sq .dim',{opacity:1,duration:.1,stagger:.06},.84);
+frags.forEach(function(f,i){gsap.fromTo(f,{rotate:0},{rotate:(i%2?1:-1)*2,duration:3+i%4,repeat:-1,yoyo:true,ease:'sine.inOut'})});
+var c20={v:0};gsap.to(c20,{v:20,ease:'power2.out',duration:1.6,onUpdate:function(){qs('#c20').textContent=Math.round(c20.v)},scrollTrigger:{trigger:'.about2',start:'top 75%'}});
+gsap.from('.about2 .q > *',{y:18,opacity:0,stagger:.1,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'.about2',start:'top 75%'}});
+
+/* ---------- PROJECTS: frame opens ---------- */
+gsap.set('#frame .meta',{y:30});
+gsap.timeline({scrollTrigger:{trigger:'#proj',start:'top top',end:'+=160%',pin:true,scrub:1}})
+  .from('#proj .w.l',{xPercent:-8,opacity:0,duration:.15},0)
+  .from('#proj .w.rr',{xPercent:8,opacity:0,duration:.15},0)
+  .to('#proj .w.l',{xPercent:-70,opacity:0,ease:'power1.in',duration:.7},.2)
+  .to('#proj .w.rr',{xPercent:70,opacity:0,ease:'power1.in',duration:.7},.2)
+  .to('#frame',{clipPath:'inset(0% 0% 0% 0%)',ease:'power2.inOut',duration:.75},.2)
+  .to('#proj .top-cap',{opacity:0,duration:.2},.4)
+  .to('#frame .meta',{opacity:1,y:0,duration:.2},.9);
+var fol=qs('#follow'),fx=0,fy=0,tfx=0,tfy=0;
+if(fine){addEventListener('mousemove',function(e){tfx=e.clientX;tfy=e.clientY});gsap.ticker.add(function(){fx+=(tfx-fx)*.12;fy+=(tfy-fy)*.12;fol.style.left=fx+'px';fol.style.top=fy+'px'});
+  qa('#plist a').forEach(function(a){a.addEventListener('mouseenter',function(){fol.classList.add('on')});a.addEventListener('mouseleave',function(){fol.classList.remove('on')})})}
+gsap.from('#plist li',{y:22,opacity:0,stagger:.06,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#plist',start:'top 85%'}});
+
+
+/* ===== 2b. LIGHT: the morning sun sweeps the plan ===== */
+(function(){
+var beam=qs('#lbeam'),sun=qs('#lsun'),lt=qs('#lt'),lap=qs('#lap'),st={p:0};
+function draw(){var p=st.p;
+  var w=8+p*104,x0=-8+p*8,sk=-48+p*48;
+  beam.style.clipPath='polygon('+(x0)+'% 0,'+(x0+w)+'% 0,'+(x0+w+sk)+'% 100%,'+(x0+sk)+'% 100%)';
+  var sx=4+p*92,sy=100-(1-Math.pow(2*p-1,2))*100*.9;sun.style.left=sx+'%';sun.style.top=sy+'%';
+  var h=6+p*6,hh=Math.floor(h),mm=Math.round((h-hh)*60);if(mm===60){hh++;mm=0}lt.textContent=String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');lap.textContent=''}
+draw();
+gsap.timeline({scrollTrigger:{trigger:'#lite',start:'top top',end:'+=220%',pin:true,scrub:1}})
+  .to(st,{p:1,duration:1,ease:'none',onUpdate:draw},0)
+  .to('#lend',{opacity:1,y:0,duration:.15},.8);
+gsap.set('#lend',{y:14});
+gsap.from('#lite .ltop > *',{y:18,opacity:0,stagger:.1,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#lite',start:'top 60%'}});
+gsap.from('#lplan',{opacity:0,scale:.96,duration:1.4,ease:'power2.out',scrollTrigger:{trigger:'#lite',start:'top 70%'}});
+})();
+
+/* ===== 5. DIFFERENCE: turnkey dial ===== */
+(function(){
+var items=[['Архитектура','+ Дизайн интерьера'],['Строительство','+ Управление проектом'],['Меблировка','+ Искусство'],['Wellness','+ Технологии'],['Переезд','+ Онбординг'],['Одна команда','От замысла до завершения']];
+var dial=qs('#dial'),rotor=qs('#rotor'),counter=qs('#counter'),g=qs('#dticks'),STEP=30,labs=[],descs=qa('#desc p'),NS='http://www.w3.org/2000/svg';
+for(var t=0;t<180;t++){var l=d.createElementNS(NS,'line'),lg=t%5===0;l.setAttribute('x1',-999);l.setAttribute('x2',lg?-930:-962);l.setAttribute('y1',0);l.setAttribute('y2',0);l.setAttribute('class','tick'+(lg?' lg':''));l.setAttribute('transform','rotate('+(t*2)+')');g.appendChild(l)}
+items.forEach(function(it,k){var lb=d.createElement('div');lb.className='lab';lb.innerHTML=it[0]+'<span>'+it[1]+'</span>';rotor.appendChild(lb);labs.push(lb)});
+function place(){var r=dial.clientWidth/2;labs.forEach(function(lb,k){lb.style.transform='rotate('+(k*STEP)+'deg) translateX('+(-r*.8)+'px)'})}
+place();addEventListener('resize',place);
+var st={p:0},last=-1;
+function draw(){var f=st.p*(items.length-1),k=Math.round(f);rotor.style.transform='rotate('+(-f*STEP)+'deg)';counter.style.transform='rotate('+(f*STEP*.55)+'deg)';
+  if(k!==last){last=k;labs.forEach(function(l,i){l.classList.toggle('on',i===k)});descs.forEach(function(p,i){p.classList.toggle('on',i===k)})}}
+draw();
+gsap.to(st,{p:1,ease:'none',onUpdate:draw,scrollTrigger:{trigger:'#diff',start:'top top',end:'+=300%',pin:true,scrub:1,snap:{snapTo:1/(items.length-1),duration:{min:.4,max:.9},delay:.12,ease:'power1.inOut'}}});
+gsap.from('#dial',{rotate:14,opacity:0,duration:1.8,ease:'power2.out',scrollTrigger:{trigger:'#diff',start:'top 70%'}});
+gsap.from('#diff h2, #diff .lead',{y:18,opacity:0,stagger:.1,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#diff',start:'top 60%'}});
+gsap.from('.diff .ptr',{scaleX:0,transformOrigin:'right',duration:1,ease:'power3.out',delay:.4,scrollTrigger:{trigger:'#diff',start:'top 60%'}});
+})();
+
+/* ===== 6. WAYS: four panes of glass ===== */
+(function(){
+var cols=qa('#cols .col'),cur=-1;
+function act(k,instant){if(k===cur)return;var prev=cur;cur=k;var L=[3,1,2,4][k],fill=qs('#lvlFill');if(fill){fill.style.transform='scaleX('+(L===4?1:L/3)+')';fill.style.background=L===4?'#96A9BF':'#EBEBEB';qa('#lvl .mk span').forEach(function(s){s.classList.toggle('on',+s.dataset.l===L)})}
+  cols.forEach(function(c,i){c.classList.toggle('on',i===k);gsap.to(c,{flexGrow:i===k?9:1,duration:instant?0:1.3,ease:'power3.inOut'})});
+  var c=cols[k];
+  gsap.fromTo(qa('.word .m>span',c),{yPercent:110},{yPercent:0,duration:1,ease:'power4.out',stagger:.08,delay:instant?0:.35});
+  gsap.fromTo(qs('.word i',c),{scaleX:0},{scaleX:1,duration:.9,ease:'power3.inOut',delay:instant?0:.45});
+  gsap.fromTo(qa('.cin>*:not(.word)',c),{opacity:0,y:20},{opacity:1,y:0,duration:.8,stagger:.08,ease:'power3.out',delay:instant?0:.6});
+  if(prev>-1){var pc=cols[prev],pe=qa('.cin>*:not(.word)',pc);gsap.killTweensOf(pe);gsap.killTweensOf(qa('.word .m>span, .word i',pc));gsap.to(pe,{opacity:0,y:0,duration:.25,overwrite:true})}
+}
+var mm2=gsap.matchMedia();
+mm2.add('(min-width: 901px)',function(){
+  cols.forEach(function(c){c.style.flexGrow=1});act(0,true);
+  var trig=ScrollTrigger.create({trigger:'#ways',start:'top top',end:'+=320%',pin:true,onUpdate:function(s){act(Math.min(cols.length-1,Math.floor(s.progress*cols.length)))}});
+  cols.forEach(function(c,i){c.addEventListener('click',function(e){if(e.target.closest('a'))return;var y=trig.start+(i+.5)/cols.length*(trig.end-trig.start);if(smoother)smoother.scrollTo(y,true);else scrollTo({top:y,behavior:'smooth'})})});
+  return function(){cur=-1};
+});
+mm2.add('(max-width: 900px)',function(){cols.forEach(function(c){gsap.from(qa('.word .m>span',c),{yPercent:110,duration:1,stagger:.08,ease:'power4.out',scrollTrigger:{trigger:c,start:'top 55%'}});gsap.from(qs('.word i',c),{scaleX:0,duration:.9,ease:'power3.inOut',scrollTrigger:{trigger:c,start:'top 55%'}})})});
+gsap.from('#ways .wt',{y:18,opacity:0,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#ways',start:'top 70%'}});
+gsap.from('#cols .col',{opacity:0,stagger:.08,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:'#ways',start:'top 60%'}});
+})();
+
+/* ===== 7. APPROACH: fly through the questions, into the O ===== */
+(function(){
+var sec=qs('#appr'),Q=qa('#tun .tq'),E=qa('#tun .te'),D=1700,cam={c:-900,z:0},last=Q[Q.length-1],zO=qs('#zO');
+var vw=function(){return innerWidth},vh=function(){return innerHeight};
+function setEls(){E.forEach(function(e){e._x=+e.getAttribute('data-x');e._y=+e.getAttribute('data-y');e._d=+e.getAttribute('data-d')*D})}
+setEls();
+function depthStyle(el,z,keep){var op,bl;if(z<=0){op=Math.max(0,Math.min(1,1+z/2600));bl=Math.min(12,-z/180)}else{op=keep?1:Math.max(0,1-z/520);bl=keep?0:Math.min(18,z/30)}el.style.opacity=op.toFixed(3);el.style.filter=bl>.2?'blur('+bl.toFixed(1)+'px)':'none';return op}
+function draw(){
+  Q.forEach(function(q,i){var z=cam.c-i*D;var isLast=i===Q.length-1;if(isLast&&z>0)z=0;q.style.transform='translate3d(0,0,'+z.toFixed(1)+'px)';depthStyle(q,z,isLast)});
+  E.forEach(function(e){var z=cam.c-e._d;e.style.transform='translate3d(calc(-50% + '+e._x+'vw),calc(-50% + '+e._y+'vh),'+z.toFixed(1)+'px)';depthStyle(e,z,false)});
+}
+var ox=0,oy=0;
+var cvs=d.createElement('canvas').getContext('2d');
+function origin(){last.style.transform='none';var r=zO.getBoundingClientRect(),s=sec.getBoundingClientRect(),cs=getComputedStyle(zO);cvs.font=cs.fontWeight+' '+cs.fontSize+' '+cs.fontFamily;var m=cvs.measureText('O'),inkL=-m.actualBoundingBoxLeft,inkW=m.actualBoundingBoxRight+m.actualBoundingBoxLeft,base=r.top+(m.fontBoundingBoxAscent||parseFloat(cs.fontSize)*.8)+(r.height-((m.fontBoundingBoxAscent||0)+(m.fontBoundingBoxDescent||0)))/2;ox=r.left-s.left+inkL+inkW*.075;oy=base-s.top-m.actualBoundingBoxAscent*.5;last.style.transformOrigin=ox+'px '+oy+'px';draw()}
+draw();
+var zoom={s:1};
+var tl=gsap.timeline({scrollTrigger:{trigger:'#appr',start:'top top',end:'+=420%',pin:true,scrub:1,onRefresh:origin}});
+tl.to(cam,{c:(Q.length-1)*D,duration:4,ease:'none',onUpdate:draw},0)
+  .to('#afin',{opacity:1,duration:.3},4.05)
+  .to({},{duration:.35},4.05)
+  .to('#afin, #appr .ahd',{opacity:0,duration:.2},4.45)
+  .to(zoom,{s:260,duration:1,ease:'power3.in',onUpdate:function(){last.style.transform='translate3d(0,0,0) scale('+zoom.s.toFixed(3)+')'}},4.5)
+  .to('#ablack',{opacity:1,duration:.12,ease:'none'},5.38);
+addEventListener('resize',function(){setTimeout(origin,250)});
+})();
+
+/* ===== 8. PROCESS: tangle → brand line ===== */
+(function(){
+var pst=qs('#pst'),svg=qs('#psvg'),path=qs('#ppath'),N=96,tang=[],flat=[],W=0,H=0,nodes=[],labels=[],trv,big=qs('#pbigT');
+var steps=[['Узнать','Резиденция, образ жизни, видение'],['Определить','Объём + нужная услуга'],['Спроектировать','Архитектура + интерьеры, вместе'],['Построить','Замысел уже понятен'],['Подобрать','Меблировка, искусство, финальные слои'],['Передать','Переезд + онбординг']];
+var X0=.06,X1=.8,Y=.66;
+function geom(){W=pst.clientWidth;H=pst.clientHeight;svg.setAttribute('viewBox','0 0 '+W+' '+H);tang=[];flat=[];
+  var riseLen=Math.min(W*(1-X1-.05),H*(Y-.24));
+  for(var i=0;i<N;i++){var u=i/(N-1);
+    tang.push([W*.5+W*.42*Math.sin(u*9.4+.3)*Math.cos(u*3.1)+W*.06*Math.sin(u*31),H*.5+H*.34*Math.sin(u*12.7+1.1)*Math.cos(u*2.3)+H*.07*Math.cos(u*27)]);
+    if(u<.84){flat.push([W*X0+(u/.84)*W*(X1-X0),H*Y])}else{var v=(u-.84)/.16;flat.push([W*X1+v*riseLen,H*Y-v*riseLen])}}
+  nodes.forEach(function(n,k){var x=X0+(k/(steps.length-1))*(X1-X0)*.96;n.style.left=(x*100)+'%';n.style.top=(Y*100)+'%';labels[k].style.left=(x*100)+'%';labels[k].style.top=(Y*100+3)+'%'});
+  pst._rise=riseLen;
+}
+steps.forEach(function(s,k){var n=d.createElement('i');n.className='nd';pst.appendChild(n);nodes.push(n);var l=d.createElement('div');l.className='sl';l.innerHTML='<h4>'+s[0]+'</h4><p>'+s[1]+'</p>';pst.appendChild(l);labels.push(l)});
+trv=d.createElement('i');trv.className='tr';pst.appendChild(trv);
+function cat(p){var s='M'+p[0][0].toFixed(1)+','+p[0][1].toFixed(1);for(var i=0;i<p.length-1;i++){var a=p[i-1]||p[i],b=p[i],c=p[i+1],e=p[i+2]||c;s+='C'+(b[0]+(c[0]-a[0])/6).toFixed(1)+','+(b[1]+(c[1]-a[1])/6).toFixed(1)+' '+(c[0]-(e[0]-b[0])/6).toFixed(1)+','+(c[1]-(e[1]-b[1])/6).toFixed(1)+' '+c[0].toFixed(1)+','+c[1].toFixed(1)}return s}
+var pr={m:0,s:0,r:0},lastK=-1;
+function draw(){var e=pr.m,pts=[];for(var i=0;i<N;i++)pts.push([tang[i][0]+(flat[i][0]-tang[i][0])*e,tang[i][1]+(flat[i][1]-tang[i][1])*e]);path.setAttribute('d',cat(pts));
+  var ok=e>.985,a=pr.s*(steps.length-1),k=Math.round(a);
+  nodes.forEach(function(n,i){n.style.opacity=ok?1:0;n.classList.toggle('on',ok&&i<=a+.01)});
+  labels.forEach(function(l,i){l.style.opacity=ok?(i<=a+.01?1:.25):0;l.classList.toggle('on',ok&&i===k)});
+  if(ok){var x0=X0,x1=X0+(X1-X0)*.96,x=x0+(x1-x0)*pr.s,tx=x*W,ty=Y*H;if(pr.r>0){tx=X1*W+pr.r*pst._rise;ty=Y*H-pr.r*pst._rise}trv.style.opacity=1;trv.style.left=tx+'px';trv.style.top=ty+'px'}else{trv.style.opacity=0}
+  if(ok&&k!==lastK){lastK=k;gsap.fromTo(big,{yPercent:100},{yPercent:0,duration:.6,ease:'power3.out'});big.textContent=steps[k][0]}
+}
+geom();draw();
+addEventListener('resize',function(){geom();draw()});
+gsap.timeline({scrollTrigger:{trigger:'#proc',start:'top top',end:'+=340%',pin:true,scrub:1}})
+  .from('#pt1',{scale:1.15,opacity:0,duration:.3},0)
+  .to(pr,{m:1,duration:1.2,ease:'power2.inOut',onUpdate:draw},.1)
+  .to('#pt1',{opacity:0,scale:.9,filter:'blur(12px)',duration:.35},.95)
+  .to('#pt2',{opacity:1,duration:.3},1.15)
+  .to('#pbig',{opacity:1,duration:.2},1.3)
+  .to(pr,{s:1,duration:1.6,ease:'none',onUpdate:draw},1.35)
+  .to(pr,{r:1,duration:.4,ease:'power2.in',onUpdate:draw},3)
+  .to('#pbig',{opacity:0,duration:.2},3)
+  .to('#pt2',{opacity:0,y:-30,filter:'blur(8px)',duration:.25},3)
+  .to('#pend',{opacity:1,y:0,duration:.3},3.25)
+  .to({},{duration:.25},3.55);
+gsap.set('#pend',{y:20});
+})();
+
+/* ===== 9. CI CLIENT: a light over the drawings ===== */
+(function(){
+var sec=qs('#cli'),lit=qs('#cliLit'),L={x:.5,y:.5,tx:.5,ty:.5,t:0,auto:true},st={r:.12,c:0},on=false;
+sec.addEventListener('mousemove',function(e){var r=sec.getBoundingClientRect();L.tx=(e.clientX-r.left)/r.width;L.ty=(e.clientY-r.top)/r.height;L.auto=false});
+sec.addEventListener('mouseleave',function(){L.auto=true});
+ScrollTrigger.create({trigger:sec,start:'top bottom',end:'bottom top',onToggle:function(s){on=s.isActive}});
+function tick(){L.t+=.007;if(L.auto){L.tx=.5+Math.sin(L.t*1.3)*.3;L.ty=.52+Math.sin(L.t*1.9+1)*.2}
+  L.x+=(L.tx-L.x)*.07;L.y+=(L.ty-L.y)*.07;
+  var x=L.x+(.5-L.x)*st.c,y=L.y+(.5-L.y)*st.c,R=st.r*Math.max(innerWidth,innerHeight);
+  lit.style.setProperty('--x',(x*100).toFixed(2)+'%');lit.style.setProperty('--y',(y*100).toFixed(2)+'%');lit.style.setProperty('--r',R.toFixed(1)+'px')}
+tick();gsap.ticker.add(function(){if(on)tick()});
+gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'+=240%',pin:true,scrub:1}})
+  .fromTo('#cli .bpx',{scale:1.18},{scale:1,duration:1.1,ease:'none'},0)
+  .fromTo(st,{r:.12},{r:.19,duration:.4,ease:'none'},0)
+  .to(st,{r:1.25,c:1,duration:.36,ease:'power2.in'},.4)
+  .to('#cli .gtw',{yPercent:-95,duration:.2,ease:'power2.inOut'},.78)
+  .fromTo('#sodo',{opacity:0,yPercent:30},{opacity:1,yPercent:-5,duration:.2,ease:'power3.out'},.84)
+  .fromTo('#cli .cnote, #cli .tblock',{opacity:0,y:20},{opacity:1,y:0,duration:.12,stagger:.04},.92)
+  .to({},{duration:.08},1.02);
+})();
+
+/* ===== 10. INVEST IN YOURSELF: the reel ===== */
+(function(){
+var items=qa('#reel li'),ul=qs('#reel ul'),N=items.length,st={p:0},last=-1,mark=qs('#ivMark');
+function draw(){var f=st.p*(N-1),k=Math.round(f),lh=items[0].offsetHeight;ul.style.transform='translate3d(0,'+(-f*lh).toFixed(1)+'px,0)';
+  items.forEach(function(li,i){var dd=i-f;li.style.opacity=(dd<0?Math.max(0,1+dd*1.8):1).toFixed(3)});
+  if(k!==last){last=k;items.forEach(function(li,i){li.classList.toggle('on',i===k)})}
+  mark.style.top=(st.p*100).toFixed(2)+'%'}
+draw();addEventListener('resize',draw);
+var R=.72,step=R/(N-1);
+gsap.timeline({scrollTrigger:{trigger:'#inv',start:'top top',end:'+=320%',pin:true,scrub:1,snap:{snapTo:function(v){if(v>R+.04)return v;return Math.round(v/step)*step},duration:{min:.4,max:.9},delay:.12,ease:'power1.inOut'}}})
+  .to(st,{p:1,duration:R,ease:'none',onUpdate:draw},0)
+  .to('#ivPre',{fontWeight:700,duration:.01},R)
+  .fromTo('#ivBot',{opacity:0,y:30},{opacity:1,y:0,duration:.12},R+.06)
+  .to({},{duration:.1},R+.18);
+gsap.from('#inv .stage',{y:24,opacity:0,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:'#inv',start:'top 70%'}});
+})();
+
+/* ===== 11. CLIENT STORIES ===== */
+(function(){
+var waves=qa('#voc .wave polyline'),wt=0,won=false;ScrollTrigger.create({trigger:'#voc',start:'top bottom',end:'bottom top',onToggle:function(s){won=s.isActive}});
+qa('#voc .film').forEach(function(f){f.addEventListener('mouseenter',function(){f._loud=1});f.addEventListener('mouseleave',function(){f._loud=0})});
+gsap.ticker.add(function(){if(!won)return;wt+=.05;waves.forEach(function(pl,j){var f=pl.closest('.film');f._amp=(f._amp||0)+(((f._loud||0)?1:.28)-(f._amp||0))*.06;var pts=[];for(var i=0;i<=120;i++){var x=i*5,env=Math.sin(i/120*Math.PI);var y=17+env*f._amp*(Math.sin(i*.55+wt*(1.7+j*.4))*7+Math.sin(i*1.9-wt*2.3)*4+Math.sin(i*.23+wt)*5);pts.push(x+','+y.toFixed(1))}pl.setAttribute('points',pts.join(' '))})});
+var mq=qs('#vmq'),mx=0,vel=0,on=false;
+ScrollTrigger.create({trigger:'#voc',start:'top bottom',end:'bottom top',onToggle:function(s){on=s.isActive},onUpdate:function(s){vel=s.getVelocity()}});
+gsap.ticker.add(function(){if(!on)return;mx-=.7+Math.min(14,Math.abs(vel)/300);vel*=.9;var w=mq.scrollWidth/2;if(-mx>w)mx+=w;mq.style.transform='translate3d('+mx.toFixed(1)+'px,-50%,0)'});
+gsap.from('#voc .vhd > *',{y:18,opacity:0,stagger:.1,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#voc',start:'top 70%'}});
+qa('#voc .film').forEach(function(f,i){
+  gsap.from(qs('.fr',f),{clipPath:'inset(100% 0% 0% 0%)',duration:1.4,ease:'power4.inOut',scrollTrigger:{trigger:f,start:'top 85%'}});
+  gsap.fromTo(f,{y:i?60:20},{y:i?-60:-20,ease:'none',scrollTrigger:{trigger:'#voc',start:'top bottom',end:'bottom top',scrub:true}})});
+})();
+
+/* ===== 12. FAQ ===== */
+(function(){
+var rows=qa('#faqList .qa'),rt;
+function refresh(){clearTimeout(rt);rt=setTimeout(function(){ScrollTrigger.refresh()},120)}
+function openRow(r,o,instant){var a=qs('.ans',r);r.classList.toggle('open',o);qs('.qq',r).setAttribute('aria-expanded',o?'true':'false');
+  if(instant){gsap.set(a,{height:o?'auto':0});return}
+  gsap.to(a,{height:o?'auto':0,duration:.7,ease:'power3.inOut',onComplete:refresh});
+  if(o)gsap.fromTo(qs('p',a),{y:16,opacity:0},{y:0,opacity:1,duration:.7,delay:.15,ease:'power3.out'})}
+rows.forEach(function(r){qs('.qq',r).addEventListener('click',function(){var o=!r.classList.contains('open');rows.forEach(function(x){if(x!==r&&x.classList.contains('open'))openRow(x,false)});openRow(r,o)})});
+openRow(rows[0],true,true);
+gsap.from('#faq .fl h2 > span',{y:24,opacity:0,stagger:.1,duration:1.2,ease:'power3.out',scrollTrigger:{trigger:'#faq',start:'top 70%'}});
+gsap.from(rows,{y:16,opacity:0,stagger:.06,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#faqList',start:'top 80%'}});
+})();
+
+/* ===== 13. FINAL: from drawing to life ===== */
+(function(){
+var sec=qs('#fin'),drw=qs('#fdrw'),fw=qa('#fdrw .fw'),ff=qa('#fdrw .ff'),real=qs('#freal');
+gsap.set(drw,{xPercent:-50,yPercent:-50,x:0,y:0});fw.concat(ff).forEach(function(p){p.setAttribute('pathLength','1');p.style.strokeDasharray='1 1';p.style.strokeDashoffset='1'});
+function geo(){var Wv=sec.clientWidth,Hv=sec.clientHeight,w=Math.min(Wv*(innerWidth<901?.88:.64),Hv*(innerWidth<901?9:1.04)),h=w*352/412,cx=Wv/2,cy=Hv*(innerWidth<901?.5:.53);return {L:cx-w/2+w*.146,T:cy-h/2+h*.241,R:Wv-(cx+w/2-w*.112),B:Hv-(cy+h/2-h*.188)}}
+function rug(){var g=geo();return 'inset('+g.T.toFixed(1)+'px '+g.R.toFixed(1)+'px '+g.B.toFixed(1)+'px '+g.L.toFixed(1)+'px)'}
+gsap.timeline({scrollTrigger:{trigger:sec,start:'top top',end:'+=300%',pin:true,scrub:1,invalidateOnRefresh:true}})
+  .from('#fin .fhd',{opacity:0,y:20,duration:.08},0)
+  .to(fw,{strokeDashoffset:0,duration:.16,stagger:.04,ease:'none'},0)
+  .to(ff,{strokeDashoffset:0,duration:.14,stagger:.035,ease:'none'},.2)
+  .fromTo('#fdrw .dim',{opacity:0},{opacity:1,duration:.1,stagger:.06},.12)
+  .fromTo('#fdrw .tblock',{opacity:0},{opacity:1,duration:.08},.3)
+  .fromTo(real,{autoAlpha:0,clipPath:rug},{autoAlpha:1,duration:.04,ease:'none'},.52)
+  .to(real,{clipPath:'inset(0px 0px 0px 0px)',duration:.3,ease:'power3.inOut'},.56)
+  .to(drw,{scale:1.6,opacity:0,duration:.3,ease:'power3.inOut'},.56)
+  .to('#fin .fhd .mut',{opacity:0,duration:.05},.56)
+  .from('#fhl .ln>span',{yPercent:110,stagger:.05,duration:.14,ease:'power3.out'},.74)
+  .to('#fhl',{opacity:0,filter:'blur(10px)',scale:.94,duration:.1},1)
+  .fromTo('#fend',{opacity:0},{opacity:1,duration:.1},1.06)
+  .from('#fend > *:not(#rcta)',{y:40,stagger:.03,duration:.12,ease:'power3.out'},1.06)
+  .from('#rcta',{scale:.5,rotate:-60,duration:.16,ease:'back.out(1.6)'},1.08)
+  .to({},{duration:.1},1.24);
+var rc=qs('#rcta');
+if(fine){rc.addEventListener('mousemove',function(e){var r=rc.getBoundingClientRect();gsap.to(rc,{x:(e.clientX-r.left-r.width/2)*.35,y:(e.clientY-r.top-r.height/2)*.35,duration:.4,ease:'power3.out'})});
+  rc.addEventListener('mouseleave',function(){gsap.to(rc,{x:0,y:0,duration:1,ease:'elastic.out(1,.4)'})})}
+})();
+
+/* ===== FOOTER ===== */
+(function(){
+var fmq=qs('#fmq'),mx=0,vel=0,on=false;
+ScrollTrigger.create({trigger:'#foot',start:'top bottom',end:'bottom top',onToggle:function(s){on=s.isActive},onUpdate:function(s){vel=s.getVelocity()}});
+gsap.ticker.add(function(){if(!on)return;mx-=.6+Math.min(10,Math.abs(vel)/400);vel*=.9;var w=fmq.scrollWidth/2;if(-mx>w)mx+=w;fmq.style.transform='translate3d('+mx.toFixed(1)+'px,0,0)'});
+function clocks(){qa('[data-tz]').forEach(function(el){try{el.textContent=new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit',timeZone:el.getAttribute('data-tz')}).format(new Date())+' local time'}catch(e){}});
+  var c=qs('#concT');if(c){try{c.textContent=new Intl.DateTimeFormat('en-US',{hour:'numeric',minute:'2-digit',timeZone:'America/Chicago'}).format(new Date())}catch(e){}}}
+clocks();setInterval(clocks,20000);
+var wm=qs('#fwm'),ls=qa('#fwm span');
+gsap.from(ls,{yPercent:100,duration:1.2,stagger:.06,ease:'power4.out',scrollTrigger:{trigger:wm,start:'top 98%'}});
+gsap.from('#foot .where > span',{y:20,opacity:0,stagger:.08,duration:1.1,ease:'power3.out',scrollTrigger:{trigger:'#foot .fgrid',start:'top 85%'}});
+gsap.from('#foot .cols > div',{y:16,opacity:0,stagger:.08,duration:1,ease:'power3.out',scrollTrigger:{trigger:'#foot .fgrid',start:'top 85%'}});
+if(fine){wm.addEventListener('mousemove',function(e){ls.forEach(function(l){var r=l.getBoundingClientRect(),dx=Math.abs(e.clientX-(r.left+r.width/2)),v=Math.max(0,1-dx/(r.width*1.1));l.classList.toggle('hot',v>.35);gsap.to(l,{yPercent:-v*9,duration:.5,ease:'power3.out',overwrite:'auto'})})});
+  wm.addEventListener('mouseleave',function(){ls.forEach(function(l){l.classList.remove('hot');gsap.to(l,{yPercent:0,duration:.8,ease:'power3.out',overwrite:'auto'})})})}
+qs('#toTop').addEventListener('click',function(e){e.preventDefault();if(smoother)smoother.scrollTo(0,true);else scrollTo({top:0,behavior:'smooth'})});
+/* concierge chip */
+var conc=qs('#conc'),footOn=false;
+ScrollTrigger.create({trigger:'#foot',start:'top 85%',end:'bottom top',onToggle:function(s){footOn=s.isActive;conc.classList.toggle('on',!footOn&&scrollY>innerHeight)}});
+ScrollTrigger.create({start:0,end:'max',onUpdate:function(s){conc.classList.toggle('on',!footOn&&s.scroll()>innerHeight*1.2)}});
+conc.addEventListener('click',function(e){e.preventDefault();var t=ScrollTrigger.getAll().filter(function(x){return x.trigger===qs('#fin')&&x.pin})[0];var y=t?t.end-2:qs('#fin').offsetTop;if(smoother)smoother.scrollTo(y,true);else scrollTo({top:y,behavior:'smooth'})});
+})();
+
+qa('.cap .l').forEach(function(l){gsap.from(l,{scaleX:0,transformOrigin:'left',duration:1.2,ease:'power3.out',scrollTrigger:{trigger:l,start:'top 95%'}})});
+
+addEventListener('load',function(){ScrollTrigger.refresh()});if(d.fonts&&d.fonts.ready)d.fonts.ready.then(function(){ScrollTrigger.refresh()});
+})();
+</script>
+
+<div class="idea" id="idea" aria-live="polite"><span class="k"><span>Идея блока</span><button type="button" id="ideaMin">свернуть</button></span><p id="ideaT"></p></div>
+<script>
+(function(){var I={"hero": "Hero: заголовок «Redefining the Art of Living» виден сквозь рифлёное стекло (фирменная текстура CI). Стекло «плывёт» от мышки; при скролле проясняется — метафора: с CI картина становится ясной. Под стеклом — настоящие планы Collector's Home.", "philo": "Философия: «75 % дня проходит дома». Кольцо суток заполняется по скроллу, как циферблат; стрелка с квадратным наконечником — фирменная линия CI. «Life» из контура заливается — жизнь наполняется.", "lite": "Свет: тот же план этажа, по которому с 06:00 до 12:00 проходит утренний луч. Листая, вы «двигаете солнце» — так буквально показано «how light moves through your morning».", "about": "О компании: разрозненные участники стройки (архитектор, подрядчик, поставщики…) слетаются в одну точку, и из неё рисуется квадрат — рамка логотипа CI: «One Vision. One Team. One Turnkey Experience». Размерные линии подписаны «One roof / Complete responsibility».", "proj": "Избранный проект: маленький кадр между словами «Collector's» и «Home» раскрывается на весь экран — дом «открывается». Слова расступаются, как двери.", "diff": "Отличие CI: циферблат-«ключ». Листая, вы поворачиваете диск, и напротив стрелки по очереди встают дисциплины, которые CI берёт на себя. Внешнее кольцо с текстом крутится в обратную сторону — как механизм замка.", "ways": "Форматы работы: четыре стеклянные панели; активная раскрывается, остальные сжимаются в полосы. Сверху шкала «уровень поддержки» заполняется: Core — треть, Curated — две трети, Turnkey — целиком, Wellness — поверх всего (синим).", "appr": "Подход: камера летит сквозь вопросы о жизни клиента, вокруг всплывают элементы (воздух, свет, вода…). В финале — нырок в букву «О»: мы уходим вглубь жизни клиента, и экран чернеет, переходя в «Процесс».", "proc": "Процесс: запутанная линия («проект сложен») распрямляется в фирменную линию CI с изломом 45°. По ней идут шесть узлов-шагов, светящийся бегунок — это клиент, которого ведут. Финал — «Полная ответственность».", "cli": "Клиент CI: тёмные чертежи и контурный заголовок «They expect a high standard». Круг света (за курсором) показывает детали — CI «подсвечивает» то, что важно требовательному клиенту. Потом свет заливает весь экран: «So do we».", "inv": "Инвестируйте в себя: барабан, как в часах, перебирает «утра / отдых / здоровье / время / будущее / себя»; справа шкала лет: сегодня → 5 → 10 → 20. Фон — фирменный градиент CI.", "voc": "Истории клиентов: за кадрами бегущая строка «Told by our clients», которая ускоряется от скорости скролла; под каждым видео — «голосовая» волна, громче при наведении: клиенты говорят своими словами.", "faq": "Вопросы: «Before / you / begin» тремя начертаниями (жирный / разрядка / контур); аккордеон с «+», у открытого вопроса рисуется линия с квадратным наконечником.", "fin": "Финал: план Collector's Home рисуется линиями (стены, потом мебель, размеры, штамп чертежа), а из «ковра» посреди плана разрастается фото готового дома — от чертежа к жизни. Круглая кнопка — магнитная, с вращающимся текстом.", "foot": "Футер: бегущая строка ценностей, студии в Чикаго и Южной Флориде с местным временем, гигантское «/CI DSGN» — буквы приподнимаются и инвертируются под курсором."};var box=document.getElementById('idea'),tx=document.getElementById('ideaT'),mn=document.getElementById('ideaMin');
+mn.addEventListener('click',function(){box.classList.toggle('min');mn.textContent=box.classList.contains('min')?'развернуть':'свернуть'});
+function go(){if(!window.ScrollTrigger)return;Object.keys(I).forEach(function(id){var el=document.getElementById(id);if(!el)return;
+  ScrollTrigger.create({trigger:el,start:'top 55%',end:'bottom 45%',onToggle:function(s){if(s.isActive){tx.textContent=I[id];box.classList.add('on')}}})})}
+if(window.ScrollTrigger)go();else addEventListener('load',go);})();
+</script>
+</body>
+</html>
