@@ -40,7 +40,9 @@
 .ft .view{position:absolute;right:var(--gxr);bottom:100px;z-index:4}
 /* approach strip */
 .ap{background:var(--bright);color:var(--black2);--ink:var(--black2);--muted:rgba(20,20,20,.55);--line:rgba(20,20,20,.16);--line2:rgba(20,20,20,.45)}
-.ap .verbs{display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:clamp(40px,5vw,70px)}
+.ap .verbs{position:relative;display:grid;grid-template-columns:repeat(6,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:clamp(40px,5vw,70px)}
+.ap .verbs .vline{position:absolute;left:18px;right:18px;top:24px;height:1px;background:var(--black2);transform:scaleX(0);transform-origin:left;z-index:0}
+.ap .verbs div{position:relative;z-index:1}
 .ap .verbs div{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:22px 18px 28px;display:grid;gap:36px;align-content:space-between;min-height:160px}
 .ap .verbs div p{font-size:clamp(.95rem,1.35vw,1.3rem);text-transform:uppercase;letter-spacing:-.005em;line-height:1.05}
 .ap .verbs div p b{display:block}
@@ -139,7 +141,7 @@
 
 <section class="sec ap" id="ap">
   <div class="g12"><div style="grid-column:1/7"><p class="cap k"><span class="l"></span>Our Approach Behind Every Project</p><h2 class="h2 rv" style="margin-top:22px"><span class="r">Different homes.</span><br>One standard<br>of thinking.</h2></div><p class="lead2 rv" style="grid-column:8/13;align-self:end;color:rgba(20,20,20,.72)">Our portfolio spans different architectural languages and ways of living because each project responds to a different person. What remains consistent is the process behind it.</p></div>
-  <div class="verbs"><div class="rv" data-d="0.00"><i></i><p><b>Understand</b>deeply.</p></div><div class="rv" data-d="0.06"><i></i><p><b>Design</b>intentionally.</p></div><div class="rv" data-d="0.12"><i></i><p><b>Coordinate</b>early.</p></div><div class="rv" data-d="0.18"><i></i><p><b>Build</b>precisely.</p></div><div class="rv" data-d="0.24"><i></i><p><b>Curate</b>thoughtfully.</p></div><div class="rv" data-d="0.30"><i></i><p><b>Finish</b>completely.</p></div></div>
+  <div class="verbs"><i class="vline" id="vline"></i><div class="rv" data-d="0.00"><i></i><p><b>Understand</b>deeply.</p></div><div class="rv" data-d="0.06"><i></i><p><b>Design</b>intentionally.</p></div><div class="rv" data-d="0.12"><i></i><p><b>Coordinate</b>early.</p></div><div class="rv" data-d="0.18"><i></i><p><b>Build</b>precisely.</p></div><div class="rv" data-d="0.24"><i></i><p><b>Curate</b>thoughtfully.</p></div><div class="rv" data-d="0.30"><i></i><p><b>Finish</b>completely.</p></div></div>
   <div class="inev"><p class="rv">The result will feel <b>inevitable</b> — as if the home could only ever have been this way.</p></div>
 </section>
 
@@ -201,6 +203,7 @@ draw();
 gsap.from('#ft .fr:first-child',{clipPath:'inset(100% 0 0 0)',duration:1.4,ease:'power3.inOut',scrollTrigger:{trigger:'#ft',start:'top 70%'}});
 })();
 
+gsap.to('#vline',{scaleX:1,duration:1.8,ease:'power2.inOut',scrollTrigger:{trigger:'#ap .verbs',start:'top 75%'}});
 /* library: filters with Flip */
 (function(){
 var items=qa('#lgrid .it'),btns=qa('#fil button'),empty=qs('#lempty');

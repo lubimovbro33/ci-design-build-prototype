@@ -61,6 +61,12 @@
 .sc .vis{position:relative;align-self:stretch;display:grid;align-content:end;gap:14px}
 .sc .vis .ph{aspect-ratio:4/5;max-height:62vh;width:min(100%,46vh);justify-self:end}
 .sc .vis .note{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);text-align:right}
+.sc .lv{display:grid;gap:10px;width:min(100%,46vh);justify-self:end}
+.sc .lv .mk{display:flex;justify-content:space-between;font-size:9px;letter-spacing:.2em;text-transform:uppercase;color:var(--muted)}
+.sc .lv .bar{position:relative;height:1px;background:rgba(235,235,235,.2)}
+.sc .lv .bar i{position:absolute;left:0;top:0;height:1px;width:100%;background:var(--bright);transform-origin:left;transform:scaleX(0)}
+.sc .lv .bar i::after{content:"";position:absolute;right:-2px;top:-2px;width:5px;height:5px;background:inherit}
+.sc.wellness .lv .bar i{background:var(--blue)}
 .sc .num{position:absolute;right:var(--gxr);top:104px;font-size:9px;letter-spacing:.24em;text-transform:uppercase;color:var(--muted)}
 @media (max-width:900px){
   .idx li a{grid-template-columns:1fr auto}.idx li a .tg{display:none}
@@ -144,28 +150,28 @@
   <p class="num">CI Turnkey</p>
   <div class="in">
     <div><span class="tag">Flagship</span><h2 class="word" aria-label="CI Turnkey"><span class="m"><span class="r">Turn</span></span><i></i><span class="m"><span class="b">Key</span></span></h2><p class="tl">From first idea to the first night home.</p><p class="tx">The most complete expression of the CI model. Architecture, interior design, construction, furnishings, art, wellness, procurement, installation and project management — one team coordinates the complete transformation, so you can remain focused on the life waiting at the other side of the project.</p><div class="acts"><a class="pill fill" href="../../#turnkey">Explore CI Turnkey</a><a class="pill" href="../../#contact">Begin Your Better Life</a></div></div>
-    <div class="vis"><div class="ph"><span class="pc">CI Turnkey photo</span></div><p class="note">Concierge-level service from the first conversation to the night we move you in.</p></div>
+    <div class="vis"><div class="ph"><span class="pc">CI Turnkey photo</span></div><div class="lv" aria-hidden="true"><div class="mk"><span>Level of support</span><span>Everything</span></div><div class="bar"><i class="lvf" data-l="1"></i></div></div><p class="note">Concierge-level service from the first conversation to the night we move you in.</p></div>
   </div>
 </section><section class="sc core" id="core">
   <div class="tex" aria-hidden="true"></div>
   <p class="num">CI Core</p>
   <div class="in">
     <div><span class="tag">Design + Build</span><h2 class="word" aria-label="CI Core"><span class="m"><span class="r">CI</span></span><i></i><span class="m"><span class="b">Core</span></span></h2><p class="tl">Design + build, fully connected.</p><p class="tx">Architecture, interior design, construction and project management under one team. The foundation of our integrated model — a thoughtful, highly coordinated transformation of the built environment, with you free to manage every layer beyond construction.</p><div class="acts"><a class="pill fill" href="../../#core">Explore CI Core</a><a class="pill" href="../../#contact">Begin Your Better Life</a></div></div>
-    <div class="vis"><div class="ph"><span class="pc">CI Core photo</span></div><p class="note">One team, one drawing set, one site.</p></div>
+    <div class="vis"><div class="ph"><span class="pc">CI Core photo</span></div><div class="lv" aria-hidden="true"><div class="mk"><span>Level of support</span><span>Design + build</span></div><div class="bar"><i class="lvf" data-l="0.34"></i></div></div><p class="note">One team, one drawing set, one site.</p></div>
   </div>
 </section><section class="sc curated" id="curated">
   <div class="tex" aria-hidden="true"></div>
   <p class="num">CI Curated</p>
   <div class="in">
     <div><span class="tag">Beyond construction</span><h2 class="word" aria-label="CI Curated"><span class="m"><span class="r">Cu</span></span><i></i><span class="m"><span class="b">Rated</span></span></h2><p class="tl">The home, considered beyond construction.</p><p class="tx">Our integrated design-build approach extended into the layers that make a residence feel complete. Architecture and construction establish the home; furnishings, lighting, objects, art, materials and styling give it depth, personality and life — brought together into one considered whole.</p><div class="acts"><a class="pill fill" href="../../#curated">Explore CI Curated</a><a class="pill" href="../../#contact">Begin Your Better Life</a></div></div>
-    <div class="vis"><div class="ph"><span class="pc">CI Curated photo</span></div><p class="note">Considered in every layer, not just every room.</p></div>
+    <div class="vis"><div class="ph"><span class="pc">CI Curated photo</span></div><div class="lv" aria-hidden="true"><div class="mk"><span>Level of support</span><span>Beyond construction</span></div><div class="bar"><i class="lvf" data-l="0.67"></i></div></div><p class="note">Considered in every layer, not just every room.</p></div>
   </div>
 </section><section class="sc wellness" id="wellness">
   <div class="tex" aria-hidden="true"></div>
   <p class="num">CI Wellness</p>
   <div class="in">
     <div><span class="tag">Integrated with any CI service</span><h2 class="word" aria-label="CI Wellness"><span class="m"><span class="r">Well</span></span><i></i><span class="m"><span class="b">Ness</span></span></h2><p class="tl">Better living, designed in.</p><p class="tx">An integrated wellness approach that considers light, air, water, sleep, recovery, technology, materials and daily routines as part of the architecture and interior design from the beginning. A science-based, doctor-backed approach to living younger, longer.</p><div class="acts"><a class="pill fill" href="../../#wellness">Explore CI Wellness</a><a class="pill" href="../../#contact">Begin Your Better Life</a></div></div>
-    <div class="vis"><div class="ph"><span class="pc">CI Wellness photo</span></div><p class="note">Pairs with Core, Curated or Turnkey.</p></div>
+    <div class="vis"><div class="ph"><span class="pc">CI Wellness photo</span></div><div class="lv" aria-hidden="true"><div class="mk"><span>Level of support</span><span>Across every level</span></div><div class="bar"><i class="lvf" data-l="1"></i></div></div><p class="note">Pairs with Core, Curated or Turnkey.</p></div>
   </div>
 </section>
 </div>
@@ -225,6 +231,7 @@ cards.forEach(function(c,i){
     gsap.to(c,{scale:.94,opacity:.5,filter:'blur(6px)',ease:'none',scrollTrigger:{trigger:cards[i+1],start:'top bottom',end:'top top',scrub:true}})}
   gsap.from(qa('.word .m>span',c),{yPercent:110,duration:1,ease:'power4.out',stagger:.08,scrollTrigger:{trigger:c,start:'top 55%'}});
   gsap.from(qs('.word i',c),{scaleX:0,duration:.9,ease:'power3.inOut',delay:.15,scrollTrigger:{trigger:c,start:'top 55%'}});
+  gsap.to(qs('.lvf',c),{scaleX:+qs('.lvf',c).dataset.l,duration:1.4,ease:'power3.inOut',delay:.5,scrollTrigger:{trigger:c,start:'top 55%'}});
   gsap.from(qa('.tag,.tl,.tx,.acts,.vis',c),{y:18,opacity:0,duration:1,ease:'power3.out',stagger:.08,delay:.25,scrollTrigger:{trigger:c,start:'top 55%'}});
 });
 })();
