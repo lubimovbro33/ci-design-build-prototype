@@ -1,0 +1,195 @@
+/* ======================================================================= CI DSGN BRAND LAYER (guideline 2025) */
+@font-face{font-family:"TG Ext";src:url(../assets/fonts/tg-ext.woff) format("woff");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"TG Ext";src:url(../assets/fonts/tg-ext-bold.woff) format("woff");font-weight:700;font-style:normal;font-display:swap}
+:root{
+  --ivory:#EBEBEB; --ivory-2:#E3E4E6; --stone:#CFD3D8; --char:#1D1D1D; --char-2:#232426; --navy:#283E4B; --navy-2:#1F3140;
+  --steel:#96A9BF; --amber:#96A9BF; --mist:#636366; --haze:#A9B2BC;
+  --line-l:rgba(29,29,29,.18); --line-d:rgba(235,235,235,.18); --line-l2:rgba(29,29,29,.08);
+  --sans:"TG Ext","Trade Gothic LT Std Extended","Helvetica Neue",Arial,sans-serif; --mono:"TG Ext","Trade Gothic LT Std Extended",Arial,sans-serif;
+  --grad:linear-gradient(135deg,#96A9BF 0%,#5E7489 45%,#283E4B 100%);
+}
+body{font-size:14px;line-height:1.45}
+b,strong{font-weight:700}
+/* type scale for an extended face */
+.lab{font-size:10px;font-weight:400;letter-spacing:.06em}
+.mono{font-family:var(--sans);font-size:10px;letter-spacing:.07em;text-transform:uppercase;font-weight:400}
+.meta{font-size:11px;font-weight:400}
+.p{font-size:14px;line-height:1.45}
+.p b,.p strong{font-weight:700}
+.h1,.hero-title{font-weight:400;text-transform:uppercase;font-size:clamp(30px,5.2vw,78px);letter-spacing:-.025em;line-height:.92}
+.h2{font-weight:700;text-transform:uppercase;font-size:clamp(20px,2.7vw,40px);letter-spacing:-.015em;line-height:.96}
+.h3{font-weight:400;text-transform:uppercase;font-size:clamp(16px,1.6vw,24px);letter-spacing:-.005em;line-height:1.06}
+.h4{font-weight:700;text-transform:uppercase;font-size:clamp(12px,1vw,14px);letter-spacing:.02em;line-height:1.3}
+.lead{font-weight:400;font-size:clamp(14px,1.25vw,19px);line-height:1.28;letter-spacing:0}
+.giant{font-weight:400;text-transform:uppercase;letter-spacing:-.03em;line-height:.9}
+.mega{font-weight:700;letter-spacing:-.02em;line-height:.88;position:relative;z-index:1}
+.outl{-webkit-text-stroke:1px var(--steel);font-weight:400}
+.outl.i{-webkit-text-stroke-color:rgba(235,235,235,.85)} .outl.c{-webkit-text-stroke-color:var(--char)}
+.head2 .h3{font-weight:700;font-size:clamp(12px,1.05vw,15px);letter-spacing:.02em;text-transform:uppercase}
+.head2 .lead{font-size:clamp(14px,1.2vw,17px)}
+.dim{color:var(--mist)} .dark .dim{color:var(--haze)}
+
+/* lines with square endpoints (brand "LINES") */
+.sec-idx .ln,.pre .tag .ln,.index .ln,.phil .tail .tag .ln,.intro .para .mono .ln,.about .top-r .mono .ln,.cta .idx .ln,.skip .ln{position:relative;overflow:visible}
+.sec-idx .ln::before,.pre .tag .ln::before,.index .ln::before,.phil .tail .tag .ln::before,.intro .para .mono .ln::before,.about .top-r .mono .ln::before,.cta .idx .ln::before{content:"";position:absolute;left:0;top:-2px;width:5px;height:5px;background:currentColor}
+.sec-idx .n{font-weight:700}
+.sec-idx{font-size:10px}
+/* drop line (vertical line with a square end) */
+.drop{position:absolute;left:50%;top:0;width:1px;height:120px;background:var(--line-d);pointer-events:none}
+.drop::after{content:"";position:absolute;left:-2px;bottom:-5px;width:5px;height:5px;background:var(--ivory)}
+
+/* backgrounds: eerie black / japanese indigo / bright gray + glass ribs */
+.sec.dark{background:var(--char)}
+.sec.navy,.appr.navy{background:var(--navy);color:var(--ivory)}
+.sec.navy .p{color:var(--haze)}
+.glass-bg{position:absolute;inset:0;pointer-events:none;background:url(../assets/brand/glass.webp) center/cover;opacity:.22;mix-blend-mode:screen}
+.navy .img-rv::after{background:var(--navy)}
+.sec.ivory{background:var(--ivory);color:var(--char)}
+
+/* header: official logo in the centre, "CI DSGN" running label */
+.hdr .wm{display:inline-flex;align-items:center;height:100%}
+.hdr .wm img{height:34px;width:auto;display:block;transition:filter .5s}
+.hdr.on-light .wm img{filter:invert(1)}
+.pre-top .wm{font-weight:700;letter-spacing:.1em;font-size:10px}
+.nav a,.nav button{font-weight:400;letter-spacing:.07em;font-size:10px}
+.hdr .pill .lab,.pill .lab{font-size:10px;font-weight:700;letter-spacing:.07em}
+.menu-btn{font-weight:700}
+
+/* hero */
+.hero-title{max-width:26ch}
+.hero-lead{font-size:clamp(14px,1.25vw,18px);max-width:28ch}
+.meta-list li b{font-weight:700}
+.vword{font-weight:700;font-size:11px;letter-spacing:.18em}
+.pre .count{font-weight:400;letter-spacing:-.02em}
+.cue .lab{letter-spacing:.1em}
+
+/* intro */
+.intro .stair .srow .h3{text-transform:none;font-weight:400;font-size:clamp(17px,1.9vw,27px);letter-spacing:-.005em;line-height:1.12;max-width:26ch}
+.intro .stair .srow .n{font-weight:700;color:var(--navy)}
+.intro .para .p{font-size:14px;max-width:38ch}
+.intro .tk .giant{font-size:clamp(30px,5.6vw,82px);letter-spacing:-.03em;white-space:nowrap;grid-column:3/13}
+.intro .tk .giant .amber,.intro .tk .giant .amber .w{color:var(--navy)}
+.intro .tk .giant .amber .ch{color:transparent;background:linear-gradient(160deg,#7F93A8 0%,#4F6578 55%,#283E4B 100%);-webkit-background-clip:text;background-clip:text}
+.band .track span{font-size:clamp(13px,1.2vw,17px);text-transform:uppercase;letter-spacing:.02em}
+.band .track i{background:var(--navy)}
+.intro .tk .key .ring,.intro .tk .key .kh,.intro .tk .key .tick{stroke:var(--navy)}
+
+/* philosophy */
+.phil{position:relative;overflow:hidden}
+.phil .grad-bg{position:absolute;right:-10%;top:-10%;width:70%;height:80%;background:url(../assets/brand/blue-gradient.webp) center/cover;opacity:.35;pointer-events:none;mask-image:radial-gradient(60% 60% at 60% 40%,#000 20%,transparent 100%);-webkit-mask-image:radial-gradient(60% 60% at 60% 40%,#000 20%,transparent 100%)}
+.phil .mega{font-size:clamp(40px,7.4vw,110px)}
+.phil .mega .amber{color:var(--steel)}
+.phil .mega .amber .ch{color:transparent;background:linear-gradient(160deg,#C2CFDC 0%,#96A9BF 50%,#5E7489 100%);-webkit-background-clip:text;background-clip:text}
+.phil .mega-lab{font-weight:700}
+.phil .dial .num .v{font-size:clamp(90px,13.5vw,205px);letter-spacing:-.04em}
+.phil .dial .num .pc{color:var(--steel);font-weight:700}
+.phil .dial .tk.on{stroke:var(--steel)}
+.phil .txt .h3{font-size:clamp(16px,1.7vw,24px)}
+.phil .verbs{font-weight:400;font-size:clamp(18px,2.3vw,34px);letter-spacing:-.015em;line-height:1.12;text-transform:none}
+.phil .yrs .y{font-size:clamp(80px,11vw,170px);letter-spacing:-.04em}
+.phil .punch .h3{font-size:clamp(18px,2.3vw,36px);font-weight:400}
+.phil .tail .tag{text-transform:uppercase;font-weight:700;font-size:10px;letter-spacing:.07em;color:var(--steel)}
+.ghost-blur{position:absolute;pointer-events:none;filter:blur(16px);opacity:.42;color:var(--steel);z-index:0;transform:translate(14px,10px);white-space:pre}
+.chars.in ~ .ghost-blur{opacity:.42}
+
+/* about (light) */
+.about .stair3 .h3{text-transform:uppercase;font-weight:400;font-size:clamp(18px,2.3vw,36px)}
+.about .top-r .p{font-size:14px}
+.about .chip{font-size:11px;font-weight:400;border-color:rgba(29,29,29,.25)}
+.about .roof{border-color:var(--navy)} .about .roof::before{background:var(--navy)} .about .diagram.one .chip{border-color:var(--navy)}
+.about .side .h4{font-size:clamp(14px,1.3vw,18px)}
+.about .stat .num{font-size:clamp(100px,15vw,230px);letter-spacing:-.05em}
+.about .stat .num sup{color:var(--navy);font-weight:700}
+.about .stat .segs i::after{background:var(--navy)}
+.about .bot .h3{font-size:clamp(18px,2.3vw,36px)} .about .bot .h3.r{color:var(--navy)}
+
+/* projects (navy) */
+.proj .sec-head .h2{font-size:clamp(20px,2.5vw,38px)}
+.proj .card .cap .ttl{font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.02em}
+.proj .geo .vg{font-weight:700;font-size:clamp(48px,6.4vw,96px);letter-spacing:-.025em}
+.proj .geo .vg .amber{color:var(--ivory)}
+.proj .geo .gbg img{opacity:.3;filter:saturate(.5) brightness(.75)}
+.proj .geo .gbg::after{background:linear-gradient(180deg,var(--navy) 0%,rgba(40,62,75,.25) 35%,rgba(40,62,75,.3) 70%,var(--navy) 100%)}
+.proj .arrow-btn{border-color:rgba(235,235,235,.3)}
+
+/* difference */
+.diff .read.big{font-weight:400;text-transform:uppercase;font-size:clamp(20px,3.2vw,48px);letter-spacing:-.02em;line-height:1;max-width:22ch}
+.diff .item .ttl{font-weight:400;text-transform:uppercase;font-size:clamp(14px,1.55vw,22px);letter-spacing:-.005em}
+.diff .item .d{font-size:13px}
+
+/* suite (light) */
+.suite .tab .nm{font-weight:400;text-transform:uppercase;font-size:clamp(18px,3vw,44px);letter-spacing:-.02em}
+.suite .tab.on .nm{font-weight:700}
+.suite .tab::after{background:var(--navy)}
+.suite .layer{font-size:11px;border-color:rgba(29,29,29,.35)}
+.suite .layer.add{background:var(--navy);border-color:var(--navy);color:var(--ivory)} .suite .layer.add .mono{color:rgba(235,235,235,.7)}
+.suite .cnt b{font-weight:400}
+.suite .addon .nm{font-weight:400;text-transform:uppercase;font-size:clamp(16px,1.8vw,27px)}
+.suite .sw .tg{border-color:var(--navy)} .suite .sw .tg::after{background:var(--navy)} .suite .sw.on .tg{background:var(--navy);border-color:var(--navy)} .suite .sw.on .tg::after{background:var(--ivory)}
+
+/* approach (navy + glass panel + blurred ?) */
+.appr .bg img{opacity:.3;filter:saturate(.6)}
+.appr .bg::after{background:linear-gradient(180deg,rgba(40,62,75,.35),rgba(31,49,64,.85))}
+.appr .glass-panel{position:absolute;left:0;top:0;bottom:0;width:30%;background:url(../assets/brand/glass.webp) center/cover;opacity:.5;mix-blend-mode:screen;pointer-events:none;mask-image:linear-gradient(90deg,#000 70%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 70%,transparent)}
+.appr .qmark{filter:blur(5px);opacity:.55;font-weight:700;-webkit-text-stroke:0;color:rgba(150,169,191,.5)}
+.appr .lft .h3{font-size:clamp(16px,1.7vw,24px)}
+.appr .q{font-weight:400;text-transform:none;font-size:clamp(22px,3.7vw,58px);letter-spacing:-.02em;line-height:1}
+.appr .q .n{font-weight:700;color:var(--steel)}
+.appr .done .h3{font-weight:400;font-size:clamp(18px,2.3vw,36px)}
+.appr .done .fin{color:var(--steel);font-weight:700;font-size:clamp(13px,1.1vw,16px);text-transform:uppercase;letter-spacing:.03em}
+.appr .rail i.on{background:var(--steel)}
+
+/* process (eerie) */
+.proc .hd .h3{font-size:clamp(15px,1.6vw,23px)}
+.proc .step .ttl{font-weight:700;text-transform:uppercase;font-size:clamp(34px,6vw,92px);letter-spacing:-.03em;line-height:.88}
+.proc .step .n{font-weight:700}
+.proc .step .d{font-size:13px}
+.proc .step.on .dot{background:var(--steel);border-color:var(--steel)}
+.proc .fin .h3{font-size:clamp(17px,2vw,30px)}
+.proc .pic{border-color:rgba(235,235,235,.25)}
+
+/* client (navy) */
+.client .tx .h4{font-size:clamp(14px,1.3vw,18px)}
+.client .split .giant{font-size:clamp(24px,4.7vw,70px)}
+.client .split .giant.r{color:var(--steel)}
+.client .im .fr{border-color:rgba(235,235,235,.25)}
+
+/* reviews */
+.rev .card .q{font-weight:400;font-size:clamp(16px,1.7vw,25px);text-transform:none;letter-spacing:-.005em;line-height:1.18}
+
+/* faq (light) */
+.faq .qa .qh .t{font-weight:400;text-transform:none;font-size:clamp(14px,1.25vw,18px);letter-spacing:-.005em}
+.faq .qa .ab .p{font-size:14px}
+.faq .qa.open .qh .pl{background:var(--navy);border-color:var(--navy)}
+.faq .qa.open .qh .n,.faq .qa:hover .qh .n{color:var(--navy)}
+
+/* cta */
+.cta .tx .giant{font-size:clamp(28px,4.9vw,74px);letter-spacing:-.03em;max-width:12ch}
+.cta .tx .giant .amber{color:transparent;background:linear-gradient(135deg,#C9D4DF,#96A9BF);-webkit-background-clip:text;background-clip:text}
+.cta .tx .p{font-size:14px}
+
+/* footer: glass panel + "/CI DSGN" */
+.ftr{position:relative}
+.ftr .glass-left{position:absolute;left:0;top:0;bottom:0;width:26%;background:url(../assets/brand/glass.webp) center/cover;opacity:.45;mix-blend-mode:screen;pointer-events:none;mask-image:linear-gradient(90deg,#000 60%,transparent);-webkit-mask-image:linear-gradient(90deg,#000 60%,transparent)}
+.ftr .cols3,.ftr .bot{position:relative;z-index:1}
+.ftr .wmk{position:relative;z-index:1;font-weight:400;font-size:clamp(88px,15vw,230px);letter-spacing:-.035em;line-height:.8;margin:32px 0 0;transform:translateY(.1em);white-space:normal}
+.ftr .wmk .sl{color:var(--steel)}
+.ftr .wmk .l2{display:block;color:transparent;background:linear-gradient(90deg,#EBEBEB 0%,#96A9BF 60%,#283E4B 100%);-webkit-background-clip:text;background-clip:text}
+.ftr .col a{font-size:13px}
+.ftr .addr{font-size:13px}
+
+/* chapter bar */
+.chap a{font-size:9px}
+.chap a .t{font-weight:700;letter-spacing:.08em}
+
+/* pills / buttons */
+.pill{border-radius:999px}
+.pill .lab{font-size:10px}
+.arrow-btn{font-family:var(--sans)}
+
+/* responsive tweaks */
+@media (max-width:980px){
+  .intro .tk .giant{white-space:normal;font-size:clamp(34px,10.5vw,80px)}
+  .ftr .wmk{font-size:clamp(72px,22vw,160px)}
+  .appr .glass-panel,.ftr .glass-left{display:none}
+}

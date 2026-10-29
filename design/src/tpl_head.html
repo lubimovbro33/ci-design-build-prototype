@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>CI Design + Build — Homepage design</title>
+<meta name="robots" content="noindex">
+<link rel="preload" href="assets/fonts/tg-ext.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="assets/night/tower.jpg" as="image" fetchpriority="high">
+<link rel="stylesheet" href="css/site.css">
+</head>
+<body class="is-intro">
+<div class="cur" id="cur"><span class="cl">DRAG</span></div>
+
+<header class="hdr" id="hdr">
+  <div class="hdr-in">
+    <div class="cell">
+      <button class="lab menu-btn" type="button">Menu</button>
+      <nav class="nav lab" aria-label="Main">
+        <a href="#"><span class="t">About Us</span><span class="t">About Us</span></a>
+        <a href="#projects"><span class="t">Portfolio</span><span class="t">Portfolio</span></a>
+        <button type="button"><span class="t">Solutions ▾</span><span class="t">Solutions ▾</span></button>
+      </nav>
+    </div>
+    <div class="cell c"><a class="wm" href="#"><img src="assets/brand/logo-white.png" alt="CI Design + Build"></a></div>
+    <div class="cell">
+      <nav class="nav lab" aria-label="Secondary">
+        <a href="#"><span class="t">Broker Program</span><span class="t">Broker Program</span></a>
+        <a href="#"><span class="t">Partnerships</span><span class="t">Partnerships</span></a>
+        <a href="#"><span class="t">News</span><span class="t">News</span></a>
+      </nav>
+    </div>
+    <div class="cell r meta-r">
+      <span class="lab loc" style="opacity:.6">Chicago &amp; South Florida</span>
+      <a class="pill lab glass" href="#cta"><span class="dot"></span><span class="t">Begin Your Better Life</span></a>
+    </div>
+  </div>
+</header>
+
+<!-- ================================================================== 01 HERO · night tower → light-line → the window -->
+<section class="hero" id="hero">
+  <div class="scene" id="scene">
+    <div class="lay" id="towerWrap">
+      <div class="plate" id="tower">
+        <img src="assets/night/tower.jpg" alt="" width="1536" height="864" decoding="async" fetchpriority="high">
+        <div class="win-light" id="winLight"></div>
+      </div>
+    </div>
+    <div class="lay plate" id="close">
+      <img src="assets/night/window.jpg" alt="" width="1536" height="864" decoding="async">
+    </div>
+    <div class="win" id="win">
+      <video id="vid" muted playsinline loop preload="auto" poster="assets/night/win_poster.jpg">
+        <source src="assets/night/win_loop.mp4" type="video/mp4">
+      </video>
+      <div class="refl" id="refl"></div>
+      <img class="wlogo" id="wlogo" src="assets/brand/logo-white.png" alt="">
+    </div>
+    <svg class="ll" id="ll" aria-hidden="true">
+      <defs>
+        <filter id="llBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter>
+        <filter id="llBlur2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
+      </defs>
+      <g class="glow" filter="url(#llBlur)">
+        <path id="llLeadG" d="M0 0"/>
+        <path id="llRectG" d="M0 0"/>
+      </g>
+      <g class="core">
+        <path id="llLead" d="M0 0"/>
+        <path id="llRect" d="M0 0"/>
+      </g>
+      <circle id="llHead" class="head" r="9" cx="-100" cy="-100" filter="url(#llBlur2)"/>
+    </svg>
+    <div class="vignette"></div>
+    <div class="shade" id="shade"></div>
+    <div class="grain" aria-hidden="true"></div>
+  </div>
+
+  <div class="pre" id="pre" aria-hidden="true">
+    <img class="plogo" id="plogo" src="assets/brand/logo-white.png" alt="">
+    <div class="mono coords">41.89° N · 87.62° W</div>
+    <div class="mono city">CHICAGO, IL</div>
+    <div class="count"><span id="cnt">00</span><sup>%</sup></div>
+  </div>
+
+  <div class="hero-in">
+    <div class="index mono" id="index"><span class="ln"></span><span>01 — 07</span><span style="margin-left:14px">HOME</span></div>
+    <div class="cue" id="cue"><span class="lab" style="letter-spacing:.12em">Scroll</span><span class="bar"></span></div>
+    <h1 class="hero-title yode" id="title">Redefining the art of living</h1>
+    <div class="stroke" id="stroke"></div>
+    <div class="row" id="row">
+      <p class="hero-lead">For you to live your best life in the home</p>
+      <ul class="meta-list meta">
+        <li><b>A.</b><span><span class="ph">[Project]</span></span></li>
+        <li><b>L.</b><span>Chicago, IL</span></li>
+        <li><b>C.</b><span>Private residence</span></li>
+      </ul>
+      <div class="ctas">
+        <a class="pill solid light" href="#about"><span class="dot"></span><span class="t lab">Explore CI</span></a>
+        <a class="pill light glass" href="#cta"><span class="dot"></span><span class="t lab">Begin Your Better Life</span></a>
+      </div>
+    </div>
+  </div>
+  <button class="skip mono" id="skip" type="button"><span class="ln"></span>SKIP</button>
+</section>

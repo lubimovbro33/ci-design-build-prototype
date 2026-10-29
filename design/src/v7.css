@@ -1,0 +1,128 @@
+/* ======================================================================= v7: fully dark + glass + yodezeen reveal */
+html,body{background:#0B0D11}
+::selection{background:var(--steel);color:var(--char)}
+/* former light sections → "dark 2" surface: swap the tokens so every rule that used them inverts */
+.sec.ivory{--ivory:#15161A;--ivory-2:#1A1B20;--stone:#2A2D33;--char:#EBEBEB;--char-2:#E3E3E3;--mist:#A9B2BC;--haze:#7E8894;--line-l:rgba(235,235,235,.16);--line-l2:rgba(235,235,235,.07);background:var(--ivory);color:var(--char)}
+.sec.ivory .p{color:var(--mist)}
+.sec.ivory .p b,.sec.ivory .p strong{color:var(--char)}
+.sec.ivory .ph{background:rgba(235,235,235,.12)}
+.sec.ivory .pill:not(.solid){border-color:rgba(235,235,235,.5);color:var(--char)}
+.sec.ivory .pill:not(.solid) .dot{background:var(--char)} .sec.ivory .pill:not(.solid) .dot::after{background:#15161A} .sec.ivory .pill:not(.solid) .dot::before{border-color:#15161A}
+.sec.ivory .pill.solid{background:#EBEBEB;color:#15161A;border-color:#EBEBEB}
+.sec.ivory .pill.solid .dot{background:#15161A} .sec.ivory .pill.solid .dot::after{background:#EBEBEB} .sec.ivory .pill.solid .dot::before{border-color:#EBEBEB}
+.sec.ivory .arrow-btn{border-color:var(--line-l)}
+.about .chip{border-color:rgba(235,235,235,.22)}
+.suite .layer{border-color:rgba(235,235,235,.3)}
+.suite .layer.add .mono{color:rgba(235,235,235,.65)}
+.sec.dark{background:#1D1D1D}
+.sec.navy,.appr.navy{background:#283E4B}
+.proc.dark{background:#141517}
+.rev.dark{background:#1D1D1D}
+.ftr{background:#0F1013;color:var(--ivory)}
+.drop::after{background:var(--ivory)}
+.hdr.on-light{color:var(--ivory)}            /* never light any more */
+.hdr.on-light .wm img{filter:none}
+.hdr.on-light .hdr-in{border-color:rgba(235,235,235,.22)}
+.hdr.on-light .pill{border-color:rgba(235,235,235,.5);color:var(--ivory)}
+.hdr.on-light .pill .dot{background:var(--ivory)} .hdr.on-light .pill .dot::after{background:var(--char)} .hdr.on-light .pill .dot::before{border-color:var(--char)}
+.chap{color:var(--haze)} .chap.light{color:var(--haze)}
+.img-rv::after{background:#15161A} .dark .img-rv::after{background:#1D1D1D} .navy .img-rv::after{background:#283E4B}
+
+/* ------------------------------------------------------------------ GLASS SYSTEM (brand "glass board") */
+.glass,.glass-card{backdrop-filter:blur(18px) saturate(150%);-webkit-backdrop-filter:blur(18px) saturate(150%);background:linear-gradient(135deg,rgba(235,235,235,.11),rgba(235,235,235,.035) 60%,rgba(150,169,191,.06));border:1px solid rgba(235,235,235,.16);box-shadow:inset 0 1px 0 rgba(255,255,255,.14),inset 0 -1px 0 rgba(255,255,255,.03),0 24px 60px rgba(0,0,0,.28)}
+.glass-card{position:relative;padding:22px 24px}
+.glass-card::after{content:"";position:absolute;inset:0;pointer-events:none;background:url(../assets/brand/glass.webp) center/cover;opacity:.14;mix-blend-mode:screen}
+.pill.glass{border-color:rgba(235,235,235,.3);box-shadow:inset 0 1px 0 rgba(255,255,255,.18)}
+/* fluted / reeded glass overlay (lies on photos) */
+.flute{position:absolute;inset:0;pointer-events:none;z-index:2;backdrop-filter:blur(7px) saturate(115%);-webkit-backdrop-filter:blur(7px) saturate(115%);
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,0) 0px,rgba(255,255,255,.05) 7px,rgba(255,255,255,.17) 12px,rgba(255,255,255,.06) 17px,rgba(0,0,0,.14) 24px,rgba(0,0,0,.02) 30px,rgba(0,0,0,0) 36px);
+  transition:transform 1.3s var(--e-expo),opacity .8s var(--e-out)}
+.flute::before{content:"";position:absolute;inset:0;background:url(../assets/brand/glass.webp) center/cover;opacity:.22;mix-blend-mode:screen}
+.flute::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(255,255,255,.06),rgba(255,255,255,0) 30%,rgba(255,255,255,0) 70%,rgba(255,255,255,.05));mix-blend-mode:screen}
+.flute.edge{left:auto;width:42%}
+.flute.edge-l{right:auto;width:42%}
+.flute .flab{position:absolute;left:14px;bottom:12px;color:rgba(235,235,235,.8);font-size:10px;letter-spacing:.07em;text-transform:uppercase}
+/* hover: the glass slides off the photo */
+.has-flute{position:relative;overflow:hidden}
+.has-flute:hover .flute{transform:translateX(102%)}
+.has-flute:hover .flute.edge-l{transform:translateX(-102%)}
+.flute.sl{transform:translateX(0)}            /* scroll-driven slide handled by JS via --fx */
+.flute.sl{transform:translateX(var(--fx,0))}
+.has-flute:hover .flute.sl{transform:translateX(102%)}
+/* glass bar across the mega title (philosophy) */
+.phil .mega-wrap{position:relative}
+.phil .gbar{position:absolute;left:-6%;width:112%;top:44%;height:13%;z-index:2;pointer-events:none;backdrop-filter:blur(4px) brightness(1.1);-webkit-backdrop-filter:blur(4px) brightness(1.1);
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,0) 0px,rgba(255,255,255,.03) 9px,rgba(255,255,255,.1) 15px,rgba(255,255,255,.04) 21px,rgba(0,0,0,.1) 29px,rgba(0,0,0,0) 36px,rgba(0,0,0,0) 44px);
+  border-top:1px solid rgba(235,235,235,.22);border-bottom:1px solid rgba(235,235,235,.14);box-shadow:0 30px 80px rgba(0,0,0,.35);will-change:transform;transform:translateY(var(--gy,0))}
+.phil .gbar::before{content:"";position:absolute;inset:0;background:url(../assets/brand/glass.webp) center/cover;opacity:.2;mix-blend-mode:screen}
+.phil .gbar .mono{position:absolute;right:calc(var(--m) + 6%);top:50%;transform:translateY(-50%);color:rgba(235,235,235,.75)}
+.ghost-blur{z-index:0}
+/* sections: photo backgrounds behind glass */
+.about .bgp{position:absolute;right:0;top:0;width:46%;height:100%;overflow:hidden;pointer-events:none;z-index:0;opacity:.55;mask-image:linear-gradient(90deg,transparent,#000 35%);-webkit-mask-image:linear-gradient(90deg,transparent,#000 35%)}
+.about .bgp img{width:100%;height:100%;object-fit:cover;filter:saturate(.7) brightness(.8)}
+.about .top,.about .pin,.about .stat,.about .bot,.about .sec-idx{position:relative;z-index:1}
+.about .chip{background:rgba(21,22,26,.55);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.about .diagram.one .chip{background:rgba(21,22,26,.75)}
+.suite .body .stack{background:transparent}
+.suite .layer{backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);background:rgba(235,235,235,.05);box-shadow:inset 0 1px 0 rgba(255,255,255,.1)}
+.suite .layer.add{background:rgba(40,62,75,.75)}
+.suite .bgp{position:absolute;left:0;bottom:0;width:52%;height:62%;overflow:hidden;pointer-events:none;z-index:0;opacity:.5;mask-image:linear-gradient(0deg,#000 40%,transparent);-webkit-mask-image:linear-gradient(0deg,#000 40%,transparent)}
+.suite .bgp img{width:100%;height:100%;object-fit:cover;filter:saturate(.7) brightness(.75)}
+.suite .head2,.suite .tabs,.suite .body,.suite .addon{position:relative;z-index:1}
+.faq .qa.open{background:linear-gradient(135deg,rgba(235,235,235,.06),rgba(235,235,235,.02));backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.faq .list .qa{transition:background .5s var(--e-out)}
+.rev .card{position:relative}
+.rev .card .q{position:relative}
+.rev .card .vd .tag{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(29,29,29,.35);padding:8px 10px;border:1px solid rgba(235,235,235,.14)}
+.rev .play{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(235,235,235,.08)}
+.proj .card .cap{position:relative}
+.proc .pic{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);background:rgba(235,235,235,.04)}
+.proc .pic::after{content:"";position:absolute;inset:0;pointer-events:none;box-shadow:inset 0 1px 0 rgba(255,255,255,.14)}
+.appr .in .lft{backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);background:linear-gradient(135deg,rgba(235,235,235,.08),rgba(235,235,235,.02));border:1px solid rgba(235,235,235,.14);padding:26px 28px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.appr .glass-panel{display:none}
+.appr .flute{z-index:1;opacity:.9}
+.cta .tx .side{backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);background:linear-gradient(135deg,rgba(235,235,235,.09),rgba(235,235,235,.025));border:1px solid rgba(235,235,235,.16);padding:24px 26px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.cta .glow2{box-shadow:0 0 18px 4px rgba(255,217,166,.55),0 0 70px 26px rgba(255,200,140,.25);border:1px solid rgba(255,244,226,.9)}
+.ftr .glass-left{display:none}
+.ftr .bgp{position:absolute;left:0;top:0;width:34%;height:100%;overflow:hidden;pointer-events:none;z-index:0;opacity:.5}
+.ftr .bgp img{width:100%;height:100%;object-fit:cover;filter:saturate(.6) brightness(.6)}
+.ftr .bgp::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(15,16,19,0) 40%,#0F1013)}
+.ftr .cols3,.ftr .bot,.ftr .wmk{position:relative;z-index:1}
+.ftr .addr{backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);background:linear-gradient(135deg,rgba(235,235,235,.08),rgba(235,235,235,.02));border:1px solid rgba(235,235,235,.14);padding:22px 24px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.client .wrap .tx{backdrop-filter:blur(16px) saturate(140%);-webkit-backdrop-filter:blur(16px) saturate(140%);background:linear-gradient(135deg,rgba(235,235,235,.07),rgba(235,235,235,.02));border:1px solid rgba(235,235,235,.14);padding:28px 30px;box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
+.intro .strip figure{position:relative}
+.intro .strip .img-rv{position:relative}
+.diff .float{backdrop-filter:none}
+.diff .float img{filter:saturate(.9)}
+.hdr .pill.glass{backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);background:linear-gradient(135deg,rgba(235,235,235,.12),rgba(235,235,235,.04))}
+
+/* ------------------------------------------------------------------ YODEZEEN text reveal (per-char opacity, reversed stagger in each word) */
+.yode{opacity:1}
+.yode .yw{display:inline;white-space:nowrap;perspective:1000px}
+.yode .yc{display:inline;opacity:0;will-change:opacity}
+.yode.yd .yc{opacity:1}
+/* keep the old char-split util for the vertical geo words + "THIS IS TURNKEY" */
+.chars .ch{transition:transform 1.3s var(--e-out),opacity .9s var(--e-out)}
+
+/* small-screen cleanups */
+@media (max-width:980px){
+  .flute.edge,.flute.edge-l{width:60%}
+  .about .bgp,.suite .bgp,.ftr .bgp{display:none}
+  .phil .gbar{display:none}
+  .appr .in .lft,.cta .tx .side,.client .wrap .tx,.ftr .addr{padding:18px}
+}
+
+/* yode line breaks + gradient accents on yode chars */
+.yode{opacity:0} .yode.split{opacity:1}
+.yode .l{display:block}
+.intro .tk .giant .amber .yc{color:transparent;background:linear-gradient(160deg,#7F93A8 0%,#4F6578 55%,#283E4B 100%);-webkit-background-clip:text;background-clip:text}
+.sec.ivory .intro .tk .giant .amber .yc,.intro .tk .giant .amber .yc{background:linear-gradient(160deg,#C9D4DF 0%,#96A9BF 55%,#5E7489 100%);-webkit-background-clip:text;background-clip:text}
+.phil .mega .amber .yc{color:transparent;background:linear-gradient(160deg,#C2CFDC 0%,#96A9BF 50%,#5E7489 100%);-webkit-background-clip:text;background-clip:text}
+.yode .yc{padding:0;margin:0}
+.appr .in{position:relative;z-index:3}
+.appr .flute.edge-l{width:30%}
+.appr .qmark{z-index:2}
+
+/* key icon removed: the giant line takes the full row */
+.intro .tk{display:block}
+.intro .tk .giant{grid-column:auto;margin-left:0}
