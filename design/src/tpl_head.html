@@ -38,51 +38,33 @@
   </div>
 </header>
 
-<!-- ================================================================== 01 HERO · night tower → light-line → the window -->
+<!-- ================================================================== 01 HERO · logo → facade → the window → inside (WebGL) -->
 <section class="hero" id="hero">
-  <div class="scene" id="scene">
-    <div class="lay" id="towerWrap">
-      <div class="plate" id="tower">
-        <img src="assets/night/tower.jpg" alt="" width="1536" height="864" decoding="async" fetchpriority="high">
-        <div class="win-light" id="winLight"></div>
-      </div>
-    </div>
-    <div class="lay plate" id="close">
-      <img src="assets/night/window.jpg" alt="" width="1536" height="864" decoding="async">
-    </div>
-    <div class="win" id="win">
-      <video id="vid" muted playsinline loop preload="auto" poster="assets/night/win_poster.jpg">
-        <source src="assets/night/win_loop.mp4" type="video/mp4">
-      </video>
-      <div class="refl" id="refl"></div>
-      <img class="wlogo" id="wlogo" src="assets/brand/logo-white.png" alt="">
-    </div>
-    <svg class="ll" id="ll" aria-hidden="true">
-      <defs>
-        <filter id="llBlur" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="7"/></filter>
-        <filter id="llBlur2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="14"/></filter>
-      </defs>
-      <g class="glow" filter="url(#llBlur)">
-        <path id="llLeadG" d="M0 0"/>
-        <path id="llRectG" d="M0 0"/>
-      </g>
-      <g class="core">
-        <path id="llLead" d="M0 0"/>
-        <path id="llRect" d="M0 0"/>
-      </g>
-      <circle id="llHead" class="head" r="9" cx="-100" cy="-100" filter="url(#llBlur2)"/>
-    </svg>
-    <div class="vignette"></div>
-    <div class="shade" id="shade"></div>
-    <div class="grain" aria-hidden="true"></div>
-  </div>
+  <canvas class="gl" id="gl" aria-hidden="true"></canvas>
+  <video id="vid" class="glv" muted playsinline loop preload="auto" poster="assets/night/int_night_poster.jpg">
+    <source id="vsrc" src="assets/night/int_night_720.mp4" type="video/mp4">
+  </video>
+  <div class="gl-fallback" id="glFallback" aria-hidden="true"></div>
+
+  <svg class="logo" id="logo" viewBox="0 0 710 797" aria-hidden="true">
+    <defs>
+      <mask id="mC" maskUnits="userSpaceOnUse" x="0" y="0" width="710" height="797"><path id="cMask" class="cmask" d="M491.04 273.32 A184 173 0 1 0 491.04 456.68"/></mask>
+      <mask id="mT" maskUnits="userSpaceOnUse" x="0" y="0" width="710" height="797"><rect id="tMask" x="80" y="640" width="0" height="60" fill="#fff"/></mask>
+    </defs>
+    <path id="sq" class="sq" d="M602 152 V109 H96 V620 H602 V578"/>
+    <path id="ib" class="ib" d="M601 180 V549"/>
+    <path id="cF" class="cfill" fill-rule="evenodd" mask="url(#mC)" d="__C_PATH__"/>
+    <path id="tF" class="tfill" fill-rule="evenodd" mask="url(#mT)" d="__T_PATH__"/>
+  </svg>
 
   <div class="pre" id="pre" aria-hidden="true">
-    <img class="plogo" id="plogo" src="assets/brand/logo-white.png" alt="">
     <div class="mono coords">41.89° N · 87.62° W</div>
     <div class="mono city">CHICAGO, IL</div>
     <div class="count"><span id="cnt">00</span><sup>%</sup></div>
   </div>
+
+  <div class="sidewm l" id="sideL" aria-hidden="true"><span class="sl">/</span>CI</div>
+  <div class="sidewm r" id="sideR" aria-hidden="true">DESIGN+<br>BUILD</div>
 
   <div class="hero-in">
     <div class="index mono" id="index"><span class="ln"></span><span>01 — 07</span><span style="margin-left:14px">HOME</span></div>

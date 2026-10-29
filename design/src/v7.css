@@ -126,3 +126,4 @@ html,body{background:#0B0D11}
 /* key icon removed: the giant line takes the full row */
 .intro .tk{display:block}
 .intro .tk .giant{grid-column:auto;margin-left:0}
+@media (max-width:720px){ .sidewm{display:none} }
