@@ -8,6 +8,7 @@
 <link rel="preload" href="assets/fonts/tg-ext.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/reel/reel_poster.jpg" as="image" fetchpriority="high">
+<link rel="preload" href="assets/reel/still_clean.jpg" as="image">
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body class="is-intro">
@@ -16,24 +17,19 @@
 <header class="hdr" id="hdr">
   <div class="hdr-in">
     <div class="cell">
-      <button class="lab menu-btn" type="button">Menu</button>
       <nav class="nav lab" aria-label="Main">
-        <a href="#"><span class="t">About Us</span><span class="t">About Us</span></a>
-        <a href="#projects"><span class="t">Portfolio</span><span class="t">Portfolio</span></a>
-        <button type="button"><span class="t">Solutions ▾</span><span class="t">Solutions ▾</span></button>
+        <a href="#"><span class="t">About Us</span></a>
+        <a href="#projects"><span class="t">Portfolio</span></a>
+        <button type="button"><span class="t">Solutions</span></button>
+        <a href="#"><span class="t">Broker Program</span></a>
+        <a href="#"><span class="t">Partnerships</span></a>
+        <a href="#"><span class="t">News</span></a>
       </nav>
     </div>
     <div class="cell c"><a class="wm" href="#"><img src="assets/brand/logo-white.png" alt="CI Design + Build"></a></div>
-    <div class="cell">
-      <nav class="nav lab" aria-label="Secondary">
-        <a href="#"><span class="t">Broker Program</span><span class="t">Broker Program</span></a>
-        <a href="#"><span class="t">Partnerships</span><span class="t">Partnerships</span></a>
-        <a href="#"><span class="t">News</span><span class="t">News</span></a>
-      </nav>
-    </div>
     <div class="cell r meta-r">
-      <span class="lab loc" style="opacity:.6">Chicago &amp; South Florida</span>
-      <a class="pill lab glass" href="#cta"><span class="dot"></span><span class="t">Begin Your Better Life</span></a>
+      <a class="cta-blk" href="#cta"><span class="t">Begin<br>Your<br>Better Life</span><i class="sqd"></i></a>
+      <button class="menu-sq" type="button" aria-label="Menu"><i></i><i></i></button>
     </div>
   </div>
 </header>
@@ -41,6 +37,29 @@
 <!-- ================================================================== 01 HERO · the CI reel (One Bennett at blue hour → the window → inside) -->
 <section class="hero" id="hero">
   <video id="reel" class="reel" muted playsinline loop autoplay preload="auto" poster="assets/reel/reel_poster.jpg" disablepictureinpicture disableremoteplayback aria-label="CI Design + Build — One Bennett Park"></video>
+  <div class="vs" id="vs" aria-hidden="true">
+    <img class="still" id="still" src="assets/reel/still_clean.jpg" alt="" decoding="async">
+    <div class="ci-side" id="ciSide"><span class="sl">/</span>CI</div>
+    <svg class="ov" id="ov" viewBox="0 0 1916 1078" width="1916" height="1078">
+      <defs>
+        <mask id="mC" maskUnits="userSpaceOnUse" x="0" y="0" width="710" height="797"><path id="cMask" class="cmask" d="M491.04 273.32 A184 173 0 1 0 491.04 456.68"/></mask>
+        <mask id="mT" maskUnits="userSpaceOnUse" x="0" y="0" width="710" height="797"><rect id="tMask" x="80" y="640" width="0" height="60" fill="#fff"/></mask>
+        <radialGradient id="gHeadG"><stop offset="0" stop-color="#fff8ea"/><stop offset=".35" stop-color="#ffe3b0" stop-opacity=".9"/><stop offset="1" stop-color="#ffc877" stop-opacity="0"/></radialGradient>
+      </defs>
+      <g id="logoG">
+        <path id="ib" class="ib" d="M601 180 V549"/>
+        <path id="cF" class="cfill" fill-rule="evenodd" mask="url(#mC)" d="__C_PATH__"/>
+        <path id="tF" class="tfill" fill-rule="evenodd" mask="url(#mT)" d="__T_PATH__"/>
+      </g>
+      <path id="sqV" class="sqv" d=""/>
+      <g id="glowG" class="glow">
+        <path id="gHalo" class="halo" d=""/>
+        <path id="gMid" class="mid" d=""/>
+        <path id="gCore" class="core" d=""/>
+        <circle id="gHead" r="26" fill="url(#gHeadG)"/>
+      </g>
+    </svg>
+  </div>
   <div class="veil" id="veil" aria-hidden="true"></div>
   <div class="scrim" aria-hidden="true"></div>
   <div class="dark" id="dark" aria-hidden="true"></div>
@@ -51,22 +70,18 @@
     <div class="count"><span id="cnt">00</span><sup>%</sup></div>
   </div>
 
-  <div class="hero-in">
-    <div class="index mono" id="index"><span class="ln"></span><span>01 — 07</span><span style="margin-left:14px">HOME</span></div>
-    <div class="cue" id="cue"><span class="lab" style="letter-spacing:.12em">Scroll</span><span class="bar"></span></div>
-    <h1 class="hero-title bi" id="title">Redefining the art of living</h1>
-    <div class="stroke" id="stroke"></div>
-    <div class="row" id="row">
-      <p class="hero-lead">For you to live your best life in the home</p>
-      <ul class="meta-list meta">
-        <li><b>A.</b><span><span class="ph">[Project]</span></span></li>
-        <li><b>L.</b><span>Chicago, IL</span></li>
-        <li><b>C.</b><span>Private residence</span></li>
-      </ul>
-      <div class="ctas">
-        <a class="pill solid light" href="#about"><span class="dot"></span><span class="t lab">Explore CI</span></a>
-        <a class="pill light glass" href="#cta"><span class="dot"></span><span class="t lab">Begin Your Better Life</span></a>
-      </div>
+  <div class="hero-ui">
+    <span class="rule-h" aria-hidden="true"></span><span class="rule-v" aria-hidden="true"></span>
+    <h1 class="hero-title bi" id="title">Redefining<br>the art of living</h1>
+    <div class="hero-ctas" id="row">
+      <a class="blk fill" href="#about"><span class="t">Explore<br>CI</span><i class="sqd"></i></a>
+      <a class="blk line" href="#cta"><span class="t">Begin<br>Your<br>Better<br>Life</span><i class="sqd"></i></a>
+    </div>
+    <div class="preview" id="preview" aria-hidden="true">
+      <span class="pv-box"><i class="dot"></i></span>
+      <span class="pv-img"><img src="assets/img2/chairs.jpg" alt=""></span>
+      <span class="pv-img"><img src="assets/img2/bar_w.jpg" alt=""></span>
+      <span class="pv-div"></span>
     </div>
   </div>
   <button class="skip mono" id="skip" type="button"><span class="ln"></span>SKIP</button>
