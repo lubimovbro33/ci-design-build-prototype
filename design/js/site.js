@@ -51,7 +51,8 @@
   var FS = [
   'precision highp float;varying vec2 v;',
   'uniform vec2 R;uniform float T;',
-  'uniform sampler2D tW,tWb,tC,tCb,tV,tM;',
+  'uniform sampler2D tW,tWb,tC,tCb,tV,tM,tA,tAb;',
+  'uniform vec4 rA;uniform float blurA,yawA,yawB,mixAB,zoomA;',
   'uniform vec4 rW,rC;',            /* glass rects in plate uv (x,y,w,h), y down */
   'uniform vec4 rS;',               /* window glass rect on screen, px, y down */
   'uniform vec4 rV;',               /* video plane rect on screen (16:9), px */
@@ -63,9 +64,11 @@
   'vec2 plateUV(vec4 r,vec2 s){return vec2(r.x+(s.x-rS.x)/rS.z*r.z, r.y+(s.y-rS.y)/rS.w*r.w);}',   /* screen px → plate uv so that the plate glass lands on rS */
   'vec3 samp(sampler2D a,sampler2D b,vec2 uv,float bl){vec2 u=clamp(uv,0.001,0.999);vec3 s=texture2D(a,u).rgb;vec3 q=texture2D(b,u).rgb;return mix(s,q,bl);}',
   'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}',
+  'vec2 yaw(vec2 s,float th){ if(abs(th)<.0005) return s; float f=1.3; vec2 p=(s-R*.5)/R.x; float c=cos(th),sn=sin(th); float xp=p.x/(f*c-p.x*sn); float yp=p.y*(1.+xp*sn)/f; return R*.5+vec2(xp,yp)*R.x*f; }',
   'void main(){',
-  '  vec2 s=vec2(v.x*R.x,(1.-v.y)*R.y);',                                     /* screen px, y down */
+  '  vec2 s0=vec2(v.x*R.x,(1.-v.y)*R.y);',                                    /* screen px, y down */
   '  vec2 par=mo*vec2(14.,10.);',
+  '  vec2 s=yaw(s0,yawB);',                                                      /* the frontal facade arrives from a yaw */
   '  vec2 uw=plateUV(rW,s+par*.6); uw=wc+(uw-wc)/zoomW;',
   '  vec3 cw=samp(tW,tWb,uw,blurW);',
   '  float m=texture2D(tM,clamp(uw,0.,1.)).r;',
@@ -81,6 +84,10 @@
   '  vec3 lit=mix(real, mix(vc*vec3(1.02,.98,.92), real, .14), vidMix*vidA);',
   '  vec3 col=mix(fac, mix(fac,lit,winOn), inG);',
   '  col=mix(col, vc, inside);',
+  '  vec2 sa=yaw(s0,yawA); vec2 ua=(sa+par*.5-rA.xy)/rA.zw; ua=.5+(ua-.5)/zoomA;',
+  '  float inA=step(0.,ua.x)*step(ua.x,1.)*step(0.,ua.y)*step(ua.y,1.);',
+  '  vec3 ca=samp(tA,tAb,ua,blurA)*inA;',
+  '  col=mix(ca,col,mixAB);',
   /* glow frame (SDF of fr), with the running trace along the perimeter */
   '  vec2 fc=fr.xy+fr.zw*.5; vec2 fh=fr.zw*.5;',
   '  float d=abs(sdBox(s-fc,fh));',
@@ -114,16 +121,16 @@
     gl.useProgram(prog);
     var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
     var loc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    ['R','T','tW','tWb','tC','tCb','tV','tM','rW','rC','rS','rV','fr','lightsOff','zoomW','vidMix','wc','mixC','blurW','blurC','fade','winOn','trace','glow','frameA','inside','dark','grain','vidA','vidZoom','mo','head','headA','vidAsp'].forEach(function(n){ U[n] = gl.getUniformLocation(prog, n); });
-    for (var ui = 0; ui < 6; ui++) TEX[ui] = mkTex(ui);
-    gl.uniform1i(U.tW, 0); gl.uniform1i(U.tWb, 1); gl.uniform1i(U.tC, 2); gl.uniform1i(U.tCb, 3); gl.uniform1i(U.tV, 4); gl.uniform1i(U.tM, 5);
+    ['R','T','tW','tWb','tC','tCb','tV','tM','tA','tAb','rA','blurA','yawA','yawB','mixAB','zoomA','rW','rC','rS','rV','fr','lightsOff','zoomW','vidMix','wc','mixC','blurW','blurC','fade','winOn','trace','glow','frameA','inside','dark','grain','vidA','vidZoom','mo','head','headA','vidAsp'].forEach(function(n){ U[n] = gl.getUniformLocation(prog, n); });
+    for (var ui = 0; ui < 8; ui++) TEX[ui] = mkTex(ui);
+    gl.uniform1i(U.tW, 0); gl.uniform1i(U.tWb, 1); gl.uniform1i(U.tC, 2); gl.uniform1i(U.tCb, 3); gl.uniform1i(U.tV, 4); gl.uniform1i(U.tM, 5); gl.uniform1i(U.tA, 6); gl.uniform1i(U.tAb, 7);
     gl.uniform2f(U.wc, (P.wide.x + P.wide.w / 2) / P.w, (P.wide.y + P.wide.h / 2) / P.h);
     gl.uniform4f(U.rW, P.wide.x / P.w, P.wide.y / P.h, P.wide.w / P.w, P.wide.h / P.h);
     gl.uniform4f(U.rC, P.glass.x / P.w, P.glass.y / P.h, P.glass.w / P.w, P.glass.h / P.h);
   }
-  var texLoaded = 0, TEXN = 3;
+  var texLoaded = 0, TEXN = 5;
   function texDone(){ texLoaded++; }
-  if (GLOK) { loadTex(0, 'assets/night/facade.jpg', texDone); loadTex(1, 'assets/night/facade_blur.jpg', texDone); loadTex(5, 'assets/night/facade_mask.png', texDone); }
+  if (GLOK) { loadTex(0, 'assets/night/facade.jpg', texDone); loadTex(1, 'assets/night/facade_blur.jpg', texDone); loadTex(5, 'assets/night/facade_mask.png', texDone); loadTex(6, 'assets/night/tower.jpg', texDone); loadTex(7, 'assets/night/tower_blur.jpg', texDone); }
   var vidTexOK = false;
   function uploadVideo(){
     if (!GLOK || vid.readyState < 2) return;
@@ -141,6 +148,7 @@
     var c = {s:s0, px:vw / 2 - wcx * s0, py:vh / 2 - wcy * s0};
     G.R0 = mapRect(c, P.wide);                                   /* the CI window glass on screen at zoom 1 */
     G.cov = c;
+    var sa = Math.max(vw / 1536, vh / 864) * 1.06; G.rA = {x:(vw - 1536 * sa) / 2, y:(vh - 864 * sa) / 2, w:1536 * sa, h:864 * sa};
     var k = G.R0.h / LOGO.sq.h;                                  /* logo: its square is exactly as tall as the window glass, centred on it */
     G.lk = k; G.lsq = {w:LOGO.sq.w * k, h:LOGO.sq.h * k}; G.lsq.x = G.R0.x + G.R0.w / 2 - G.lsq.w / 2; G.lsq.y = G.R0.y + G.R0.h / 2 - G.lsq.h / 2;
     logo.style.transform = 'translate(' + (G.lsq.x - LOGO.sq.x * k) + 'px,' + (G.lsq.y - LOGO.sq.y * k) + 'px) scale(' + k + ')';
@@ -161,12 +169,14 @@
   var L = {sq: sq.getTotalLength(), ib: ib.getTotalLength(), c: cMask.getTotalLength()};
   function dash(el, len, p){ el.style.strokeDasharray = len; el.style.strokeDashoffset = len * (1 - p); }
   var T = {
-    sqStart:.25, sqEnd:1.25, cStart:.95, cEnd:1.75, iStart:1.55, iEnd:1.95, tStart:1.9, tEnd:2.6, cntEnd:2.7,
-    bgIn:2.0, bgFull:3.5, sharp:2.3, sharpEnd:3.8,
-    lettersOut:3.3, lettersGone:3.9, sqOut:3.6, sqGone:4.0, frIn:3.45, frFull:3.8,
-    tightStart:3.7, tightEnd:4.3, traceStart:3.65, traceEnd:5.15, bloom:5.1, bloomEnd:5.7,
-    winOn:5.35, winFull:6.05, pushStart:6.05, pushEnd:7.85, vmStart:6.3, vmEnd:7.0, frOut:7.0, frGone:7.5,
-    sideIn:5.55, sideFull:6.2, uiStart:7.45, uiEnd:8.45, end:8.7
+    aIn:.2, aFull:1.5, aSharp:.5, aSharpEnd:1.9, cntEnd:3.0,
+    turn:3.0, turnEnd:4.2, xA:3.45, xAEnd:3.85,
+    sqStart:4.25, sqEnd:5.2, cStart:4.9, cEnd:5.7, iStart:5.5, iEnd:5.9, tStart:5.85, tEnd:6.5,
+    bgIn:3.3, bgFull:4.3, sharp:3.6, sharpEnd:4.5,
+    lettersOut:6.6, lettersGone:7.2, sqOut:6.9, sqGone:7.3, frIn:6.75, frFull:7.1,
+    tightStart:7.0, tightEnd:7.6, traceStart:6.95, traceEnd:8.45, bloom:8.4, bloomEnd:9.0,
+    winOn:8.65, winFull:9.35, pushStart:9.35, pushEnd:11.15, vmStart:9.6, vmEnd:10.3, frOut:10.3, frGone:10.8,
+    sideIn:8.85, sideFull:9.5, uiStart:10.75, uiEnd:11.75, end:12.0
   };
   var short = false; try { short = sessionStorage.getItem('ci-intro-v4') === '1'; } catch(e){}
 
@@ -178,12 +188,18 @@
     tMask.setAttribute('width', 560 * seg(t, T.tStart, T.tEnd, E.out));
     var lo = 1 - seg(t, T.lettersOut, T.lettersGone, E.expo); cF.style.opacity = lo; ib.style.opacity = lo; tF.style.opacity = lo;
     sq.style.opacity = 1 - seg(t, T.sqOut, T.sqGone, E.expo);
-    var c = Math.round(100 * seg(t, T.sqStart, T.cntEnd, E.lin)); cnt.textContent = (c < 10 ? '0' : '') + c;
-    pre.style.opacity = 1 - seg(t, T.bgFull, T.bgFull + .5, E.out);
-    /* background: fades in from black, blurred → sharp, settling from a slow zoom */
-    var fade = seg(t, T.bgIn, T.bgFull, E.out);
-    var blurW = 1 - seg(t, T.sharp, T.sharpEnd, E.out);
-    var zoomW = 1.16 - .16 * seg(t, T.bgIn, T.sharpEnd + .2, E.out);
+    var c = Math.round(100 * seg(t, T.aIn, T.cntEnd, E.lin)); cnt.textContent = (c < 10 ? '0' : '') + c;
+    /* act 1: the tower from the corner — fades in from blur, slow drift; act 2: the whip-turn to the facade */
+    var aIn = seg(t, T.aIn, T.aFull, E.out), aBlur = 1 - seg(t, T.aSharp, T.aSharpEnd, E.out);
+    var turn = seg(t, T.turn, T.turnEnd, E.expo);
+    var whip = Math.sin(turn * Math.PI);                                           /* 0 → 1 → 0 across the turn */
+    UN.yawA = -turn * 1.05; UN.yawB = (1 - turn) * 1.05;
+    UN.mixAB = seg(t, T.xA, T.xAEnd, E.lin);
+    UN.blurA = Math.max(aBlur, whip); UN.zoomA = 1.1 - .06 * seg(t, T.aIn, T.turn, E.lin) + .25 * turn;
+    var fade = t < T.turn ? aIn : 1;
+    var blurW = Math.max(whip, 1 - seg(t, T.sharp, T.sharpEnd, E.out));
+    var zoomW = 1;
+    pre.style.opacity = 1 - seg(t, T.turn, T.turn + .4, E.out);
     /* the frame = the logo square, which tightens onto the window glass while the light runs round it */
     var mv = seg(t, T.tightStart, T.tightEnd, E.out);
     var frRect = mixRect(G.lsq, G.R0, mv);
@@ -216,7 +232,7 @@
     index.style.opacity = ip; index.style.transform = 'translateY(' + (8*(1-ip)) + 'px)';
     cue.style.opacity = ip; cue.style.transform = 'translateY(' + (8*(1-ip)) + 'px)';
     if (stroke) stroke.style.transform = 'scaleX(' + seg(t, T.uiStart + .3, T.uiEnd + .5, E.expo) + ')';
-    if (!state.done) skip.style.opacity = (t > T.bgFull ? 1 : 0) * (1 - seg(t, T.uiStart, T.uiStart + .3, E.out));
+    if (!state.done) skip.style.opacity = (t > T.aFull ? 1 : 0) * (1 - seg(t, T.uiStart, T.uiStart + .3, E.out));
     draw();
   }
   var darkU = 0;
@@ -228,7 +244,7 @@
     gl.uniform1f(U.dark, darkU); gl.uniform1f(U.grain, .035); gl.uniform1f(U.lightsOff, UN.lightsOff == null ? 1 : UN.lightsOff); gl.uniform1f(U.zoomW, UN.zoomW || 1); gl.uniform1f(U.vidMix, UN.vidMix == null ? 1 : UN.vidMix); gl.uniform1f(U.vidA, vidTexOK ? (UN.vidA || 0) : 0); gl.uniform1f(U.vidZoom, UN.vidZoom || 1);
     var f = UN.fr || {x:0,y:0,w:0,h:0}, r = UN.rS || {x:0,y:0,w:1,h:1};
     gl.uniform4f(U.fr, f.x, f.y, f.w, f.h); gl.uniform4f(U.rS, r.x, r.y, r.w, r.h); var rv = UN.rV || r; gl.uniform4f(U.rV, rv.x, rv.y, rv.w, rv.h);
-    gl.uniform2f(U.mo, pmx, pmy); var h = UN.head || [-999,-999]; gl.uniform2f(U.head, h[0], h[1]); gl.uniform1f(U.headA, UN.headA || 0);
+    gl.uniform2f(U.mo, pmx, pmy); var ra = G.rA || {x:0,y:0,w:1,h:1}; gl.uniform4f(U.rA, ra.x, ra.y, ra.w, ra.h); gl.uniform1f(U.blurA, UN.blurA == null ? 1 : UN.blurA); gl.uniform1f(U.yawA, UN.yawA || 0); gl.uniform1f(U.yawB, UN.yawB || 0); gl.uniform1f(U.mixAB, UN.mixAB == null ? 1 : UN.mixAB); gl.uniform1f(U.zoomA, UN.zoomA || 1); var h = UN.head || [-999,-999]; gl.uniform2f(U.head, h[0], h[1]); gl.uniform1f(U.headA, UN.headA || 0);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
