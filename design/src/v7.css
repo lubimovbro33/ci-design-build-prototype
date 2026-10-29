@@ -127,3 +127,16 @@ html,body{background:#0B0D11}
 .intro .tk{display:block}
 .intro .tk .giant{grid-column:auto;margin-left:0}
 @media (max-width:720px){ .sidewm{display:none} }
+
+/* ------------------------------------------------------------------ CI reels text: blur-in (block-level, no movement) */
+.bi{opacity:0;filter:blur(.25em);will-change:filter,opacity}
+.bi .l{display:block}
+.bi.in{animation:ci-blur-in .5s cubic-bezier(.2,.7,.2,1) forwards}
+.bi[data-d="1"].in{animation-delay:.09s}.bi[data-d="2"].in{animation-delay:.18s}.bi[data-d="3"].in{animation-delay:.27s}
+.hero-title.bi.in{animation-duration:.7s}
+.mega.bi.in{animation-duration:.8s}
+@keyframes ci-blur-in{0%{opacity:0;filter:blur(.25em)}35%{opacity:.9}100%{opacity:1;filter:blur(0)}}
+@media (prefers-reduced-motion:reduce){.bi{opacity:1;filter:none}}
+.yode{opacity:1}
+.cta .plate2{width:2851px;height:1520px}
+.cta .plate2 img{filter:brightness(1.15)}
