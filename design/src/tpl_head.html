@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex">
 <link rel="preload" href="assets/fonts/tg-ext.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
-<link rel="preload" href="assets/night/facade.jpg" as="image" fetchpriority="high">
+<link rel="preload" href="assets/reel/reel_poster.jpg" as="image" fetchpriority="high">
 <link rel="stylesheet" href="css/site.css">
 </head>
 <body class="is-intro">
@@ -38,33 +38,18 @@
   </div>
 </header>
 
-<!-- ================================================================== 01 HERO · logo → facade → the window → inside (WebGL) -->
+<!-- ================================================================== 01 HERO · the CI reel (One Bennett at blue hour → the window → inside) -->
 <section class="hero" id="hero">
-  <canvas class="gl" id="gl" aria-hidden="true"></canvas>
-  <video id="vid" class="glv" muted playsinline loop preload="auto" poster="assets/night/int_night_poster.jpg">
-    <source id="vsrc" src="assets/night/int_night_720.mp4" type="video/mp4">
-  </video>
-  <div class="gl-fallback" id="glFallback" aria-hidden="true"></div>
-
-  <svg class="logo" id="logo" viewBox="0 0 710 797" aria-hidden="true">
-    <defs>
-      <mask id="mC" maskUnits="userSpaceOnUse" x="0" y="0" width="710" height="797"><path id="cMask" class="cmask" d="M491.04 273.32 A184 173 0 1 0 491.04 456.68"/></mask>
-      <mask id="mT" maskUnits="userSpaceOnUse" x="0" y="0" width="710" height="797"><rect id="tMask" x="80" y="640" width="0" height="60" fill="#fff"/></mask>
-    </defs>
-    <path id="sq" class="sq" d="M602 578 V620 H96 V109 H602 V152"/>
-    <path id="ib" class="ib" d="M601 180 V549"/>
-    <path id="cF" class="cfill" fill-rule="evenodd" mask="url(#mC)" d="__C_PATH__"/>
-    <path id="tF" class="tfill" fill-rule="evenodd" mask="url(#mT)" d="__T_PATH__"/>
-  </svg>
+  <video id="reel" class="reel" muted playsinline loop autoplay preload="auto" poster="assets/reel/reel_poster.jpg" disablepictureinpicture disableremoteplayback aria-label="CI Design + Build — One Bennett Park"></video>
+  <div class="veil" id="veil" aria-hidden="true"></div>
+  <div class="scrim" aria-hidden="true"></div>
+  <div class="dark" id="dark" aria-hidden="true"></div>
 
   <div class="pre" id="pre" aria-hidden="true">
     <div class="mono coords">41.89° N · 87.62° W</div>
     <div class="mono city">CHICAGO, IL</div>
     <div class="count"><span id="cnt">00</span><sup>%</sup></div>
   </div>
-
-  <div class="sidewm l" id="sideL" aria-hidden="true"><span class="sl">/</span>CI</div>
-  <div class="sidewm r" id="sideR" aria-hidden="true">DESIGN+<br>BUILD</div>
 
   <div class="hero-in">
     <div class="index mono" id="index"><span class="ln"></span><span>01 — 07</span><span style="margin-left:14px">HOME</span></div>
