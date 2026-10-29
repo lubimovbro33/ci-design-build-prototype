@@ -19,10 +19,8 @@
   try { history.scrollRestoration = 'manual'; } catch(e){}
   window.scrollTo(0, 0);
 
-  /* ================================================================== plate geometry (1536 x 864 space; shared by hero + cta) */
-  var P = {w:2851, h:1520,
-    wide:{x:1400, y:524, w:330, h:452},                /* facade.jpg (real One Bennett Park, stitched from the night drone): the CI window glass */
-    glass:{x:1400, y:524, w:330, h:452}};              /* same rect for the CTA bookend */
+  /* ================================================================== plate geometry (CTA bookend only — 2D) */
+  var P = {w:2851, h:1520, glass:{x:1400, y:524, w:330, h:452}};
   function cover(vw, vh){ var s = Math.max(vw / P.w, vh / P.h); return {s:s, px:(vw - P.w * s) / 2, py:(vh - P.h * s) / 2}; }
   function mapRect(c, r){ return {x:c.px + r.x * c.s, y:c.py + r.y * c.s, w:r.w * c.s, h:r.h * c.s}; }
   function plateGeom(vw, vh){
@@ -36,74 +34,78 @@
     return g;
   }
 
-  /* ================================================================== 01 HERO INTRO v8 — WebGL (logo → facade → the window → inside) */
+  /* ================================================================== 01 HERO v10 — a 3D scene in one shader
+     world units = facade pixels (the real One Bennett facade tile 2000×786 px, repeated); y down, z towards the camera.
+     front face: plane z = 0, x < XR; side face: plane x = XR, z < 0. CI window = WIN (tile 0). */
   var cvs=$('gl'), vid=$('vid'), logo=$('logo'), pre=$('pre'), cnt=$('cnt'), hdr=$('hdr'), skip=$('skip'), cue=$('cue'), index=$('index'), row=$('row'),
       cur=$('cur'), heroIn=qs('.hero-in'), heroTitle=$('title'), stroke=$('stroke'), sideL=$('sideL'), sideR=$('sideR'), fallback=$('glFallback');
   var sq=$('sq'), ib=$('ib'), cMask=$('cMask'), tMask=$('tMask'), cF=$('cF'), tF=$('tF');
   var LOGO = {w:710, h:797, sq:{x:92, y:105, w:514, h:519}};
+  var TILE = {w:2000, h:786}, WIN = {x:970, y:262, w:330, h:452}, WC = {x:WIN.x + WIN.w/2, y:WIN.y + WIN.h/2}, XR = WC.x + 2300, XL = WC.x - 3100, YTOP = WIN.y - 262 - 3 * 786, ZD = 6500, FOC = 1.3;
   var G = {}, state = {t:0, gate:false, videoReady:false, done:false, skipped:false, inside:0};
   var rowKids = row.children, mx = 0, my = 0, pmx = 0, pmy = 0;
 
-  /* ---------- GL setup */
+  /* ---------- GL */
   var gl = cvs.getContext('webgl', {alpha:false, antialias:false, premultipliedAlpha:false, powerPreference:'high-performance'});
-  var GLOK = !!gl;
+  var GLOK = !!gl, aniso = null;
   var VS = 'attribute vec2 a;varying vec2 v;void main(){v=a*.5+.5;gl_Position=vec4(a,0.,1.);}';
   var FS = [
   'precision highp float;varying vec2 v;',
   'uniform vec2 R;uniform float T;',
-  'uniform sampler2D tW,tWb,tC,tCb,tV,tM,tA,tAb;',
-  'uniform vec4 rA;uniform float blurA,yawA,yawB,mixAB,zoomA;',
-  'uniform vec4 rW,rC;',            /* glass rects in plate uv (x,y,w,h), y down */
-  'uniform vec4 rS;',               /* window glass rect on screen, px, y down */
-  'uniform vec4 rV;',               /* video plane rect on screen (16:9), px */
-  'uniform vec4 fr;',               /* glow frame rect on screen, px */
-  'uniform float mixC,blurW,blurC,fade,winOn,trace,glow,frameA,inside,dark,grain,vidA,vidZoom,lightsOff,zoomW,vidMix;',
-  'uniform vec2 wc;',
-  'uniform vec2 mo,head;uniform float headA;',
+  'uniform sampler2D tF,tFb,tM,tV,tS;',
+  'uniform vec3 cam,tgt;uniform float f,XR,XL,YTOP,ZD;uniform vec2 tile,mo;uniform vec4 win,vidR,rVs,fr;',
+  'uniform float blur,lightsOff,winOn,vidMix,vidA,inside,fade,dark,grain,trace,trace0,glow,frameA,headA,sideSh;uniform vec2 head;',
   'float sdBox(vec2 p,vec2 b){vec2 d=abs(p)-b;return length(max(d,0.))+min(max(d.x,d.y),0.);}',
-  'vec2 plateUV(vec4 r,vec2 s){return vec2(r.x+(s.x-rS.x)/rS.z*r.z, r.y+(s.y-rS.y)/rS.w*r.w);}',   /* screen px → plate uv so that the plate glass lands on rS */
-  'vec3 samp(sampler2D a,sampler2D b,vec2 uv,float bl){vec2 u=clamp(uv,0.001,0.999);vec3 s=texture2D(a,u).rgb;vec3 q=texture2D(b,u).rgb;return mix(s,q,bl);}',
   'float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}',
-  'vec2 yaw(vec2 s,float th){ if(abs(th)<.0005) return s; float f=1.3; vec2 p=(s-R*.5)/R.x; float c=cos(th),sn=sin(th); float xp=p.x/(f*c-p.x*sn); float yp=p.y*(1.+xp*sn)/f; return R*.5+vec2(xp,yp)*R.x*f; }',
+  'vec3 samp(vec2 uv,float bl){vec3 a=texture2D(tF,uv).rgb;vec3 b=texture2D(tFb,uv).rgb;return mix(a,b,bl);}',
   'void main(){',
-  '  vec2 s0=vec2(v.x*R.x,(1.-v.y)*R.y);',                                    /* screen px, y down */
-  '  vec2 par=mo*vec2(14.,10.);',
-  '  vec2 s=yaw(s0,yawB);',                                                      /* the frontal facade arrives from a yaw */
-  '  vec2 uw=plateUV(rW,s+par*.6); uw=wc+(uw-wc)/zoomW;',
-  '  vec3 cw=samp(tW,tWb,uw,blurW);',
-  '  float m=texture2D(tM,clamp(uw,0.,1.)).r;',
-  '  float lum=dot(cw,vec3(.3,.59,.11));',
-  '  vec3 off=vec3(lum*.10)+vec3(.015,.022,.04);',                               /* lights off: dark glass with a cold cast */
-  '  vec3 fac=mix(cw*1.28,off,m*lightsOff);',
-  /* interior video mapped to the glass rect (cover), with its own parallax */
-  '  vec2 q=(s-rS.xy)/rS.zw;',                                                   /* 0..1 inside the glass */
-  '  vec2 vq=(s+par*1.6-rV.xy)/rV.zw; vq=(vq-.5)/vidZoom+.5;',
-  '  vec3 vc=texture2D(tV,clamp(vq,0.,1.)).rgb;',
-  '  float inG=step(0.,q.x)*step(q.x,1.)*step(0.,q.y)*step(q.y,1.);',
-  '  vec3 real=cw*1.05;',                                                          /* the real lit interior behind the CI window */
-  '  vec3 lit=mix(real, mix(vc*vec3(1.02,.98,.92), real, .14), vidMix*vidA);',
-  '  vec3 col=mix(fac, mix(fac,lit,winOn), inG);',
-  '  col=mix(col, vc, inside);',
-  '  vec2 sa=yaw(s0,yawA); vec2 ua=(sa+par*.5-rA.xy)/rA.zw; ua=.5+(ua-.5)/zoomA;',
-  '  float inA=step(0.,ua.x)*step(ua.x,1.)*step(0.,ua.y)*step(ua.y,1.);',
-  '  vec3 ca=samp(tA,tAb,ua,blurA)*inA;',
-  '  col=mix(ca,col,mixAB);',
-  /* glow frame (SDF of fr), with the running trace along the perimeter */
+  '  vec2 s=vec2(v.x*R.x,(1.-v.y)*R.y);',
+  '  vec2 p=(s-R*.5)/R.x;',
+  '  vec3 F=normalize(tgt-cam); vec3 Rt=normalize(cross(vec3(0.,-1.,0.),F)); vec3 Dn=cross(Rt,F);',
+  '  vec3 d=normalize(F*f+Rt*p.x+Dn*p.y);',
+  '  vec3 col=vec3(0.); float m=0.; float inG=0.; vec2 hp=vec2(0.); float hit=0.; float dist=1e9;',
+  '  if(d.z<0.){ float tf=-cam.z/d.z; vec3 h=cam+tf*d; if(h.x<=XR && h.x>=XL && h.y>=YTOP){ hit=1.; hp=h.xy; dist=tf; } }',
+  '  if(hit<.5 && cam.x>XR && d.x<0.){ float ts=(XR-cam.x)/d.x; vec3 h=cam+ts*d; if(h.z<=0. && h.z>=-ZD && h.y>=YTOP){ hit=2.; hp=vec2(-h.z+XR,h.y); dist=ts; } }',
+  '  if(hit<.5 && cam.y<YTOP && d.y>0.){ float tr=(YTOP-cam.y)/d.y; vec3 h=cam+tr*d; if(h.x<=XR && h.x>=XL && h.z<=0. && h.z>=-ZD){ hit=3.; hp=h.xz; dist=tr; } }',
+  '  if(hit>2.5){',
+  '    float edge=max(step(XR-70.,hp.x),step(-70.,hp.y));',                       /* parapet strip */
+  '    col=mix(vec3(.055,.055,.06),vec3(.16,.15,.14),edge)*(.8+.2*hash(floor(hp*.02)));',
+  '    col=mix(col,vec3(.02,.03,.05),clamp(dist/26000.,0.,.45));',
+  '  } else if(hit>.5){',
+  '    vec2 uv=vec2(fract(hp.x/tile.x),fract(hp.y/tile.y));',
+  '    vec3 c=samp(uv,blur); m=texture2D(tM,uv).r;',
+  '    float lum=dot(c,vec3(.3,.59,.11)); vec3 off=vec3(lum*.10)+vec3(.015,.022,.04);',
+  '    vec3 fac=mix(c*vec3(1.5,1.56,1.66),off,m*lightsOff);',
+  '    if(hit<1.5){',
+  '      inG=step(win.x,hp.x)*step(hp.x,win.x+win.z)*step(win.y,hp.y)*step(hp.y,win.y+win.w);',
+  '      vec2 vq=(hp-vidR.xy)/vidR.zw; vec3 vc=texture2D(tV,clamp(vq,0.,1.)).rgb;',
+  '      vec3 real=c*1.05; vec3 lit=mix(real,mix(vc*vec3(1.02,.98,.92),real,.14),vidMix*vidA);',
+  '      fac=mix(fac,lit,winOn*inG);',
+  '    } else fac*=sideSh;',
+  '    col=fac;',
+  '    col=mix(col,vec3(.03,.04,.07),clamp(dist/30000.,0.,.35));',                /* atmospheric depth */
+  '  } else {',
+  '    vec2 su=vec2(clamp(.5+d.x*.85,0.,1.),clamp(.47+d.y*1.1,0.,1.));',
+  '    col=texture2D(tS,su).rgb;',
+  '  }',
+  /* inside: the full-screen video */
+  '  vec2 q2=(s+mo*vec2(14.,10.)-rVs.xy)/rVs.zw; vec3 vfull=texture2D(tV,clamp(q2,0.,1.)).rgb;',
+  '  col=mix(col,vfull,inside);',
+  /* glow frame (screen space), clockwise from trace0 */
   '  vec2 fc=fr.xy+fr.zw*.5; vec2 fh=fr.zw*.5;',
-  '  float d=abs(sdBox(s-fc,fh));',
-  '  vec2 rp=s-fc; float per=2.*(fr.z+fr.w);',
-  '  float a=0.; vec2 n=rp/max(fh,vec2(1.));',
+  '  float dd=abs(sdBox(s-fc,fh));',
+  '  vec2 rp=s-fc; float per=2.*(fr.z+fr.w); float a=0.; vec2 n=rp/max(fh,vec2(1.));',
   '  if(abs(n.y)>abs(n.x)){ if(n.y<0.) a=(rp.x+fh.x); else a=fr.z+fr.w+(fh.x-rp.x); }',
   '  else { if(n.x>0.) a=fr.z+(rp.y+fh.y); else a=2.*fr.z+fr.w+(fh.y-rp.y); }',
-  '  a/=per; float on=step(a,trace);',
-  '  float core=smoothstep(1.6,0.,d)*on; float halo=exp(-d*d/(2.*pow(10.+glow*14.,2.)))*on;',
+  '  a=fract(a/per-trace0); float on=step(a,trace);',
+  '  float core=smoothstep(1.6,0.,dd)*on; float halo=exp(-dd*dd/(2.*pow(10.+glow*14.,2.)))*on;',
   '  vec3 warm=vec3(1.,.86,.62);',
   '  col+=warm*(core*1.1+halo*(.55+.45*glow))*frameA;',
   '  float hd=length(s-head); col+=warm*exp(-hd*hd/900.)*headA*1.4+vec3(1.)*exp(-hd*hd/60.)*headA;',
-  /* vignette, darkening, grain, fade from black */
+  /* vignette, darkening, legibility, grain, fade */
   '  vec2 cuv=v-.5; float vig=1.-dot(cuv*vec2(1.,R.y/R.x*1.3),cuv*vec2(1.,R.y/R.x*1.3))*.9;',
   '  col*=mix(1.,clamp(vig,0.,1.),.55);',
-  '  col*=1.-smoothstep(.5,1.,1.-v.y)*.42*inside-smoothstep(.85,1.,v.y)*.3*inside;',           /* legibility: darker bottom + top when inside */
+  '  col*=1.-smoothstep(.5,1.,1.-v.y)*.42*inside-smoothstep(.85,1.,v.y)*.3*inside;',
   '  col*=1.-dark;',
   '  col+=(hash(s*.37+fract(T))-.5)*grain;',
   '  col*=fade;',
@@ -111,9 +113,10 @@
   '}'].join('\n');
   var prog, U = {}, TEX = {};
   function mkShader(type, src){ var sh = gl.createShader(type); gl.shaderSource(sh, src); gl.compileShader(sh); if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) { console.error(gl.getShaderInfoLog(sh)); GLOK = false; } return sh; }
-  function mkTex(unit){ var t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([12,14,18])); return t; }
-  function loadTex(unit, src, cb){ var im = new Image(); im.onload = function(){ gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, TEX[unit]); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, im); cb && cb(); }; im.onerror = function(){ cb && cb(); }; im.src = src; }
+  function mkTex(unit, repeat){ var t = gl.createTexture(); gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, t); var wr = repeat ? gl.REPEAT : gl.CLAMP_TO_EDGE; gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, wr); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, wr); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, 1, 1, 0, gl.RGB, gl.UNSIGNED_BYTE, new Uint8Array([12,14,18])); return t; }
+  function loadTex(unit, src, mip, cb){ var im = new Image(); im.onload = function(){ gl.activeTexture(gl.TEXTURE0 + unit); gl.bindTexture(gl.TEXTURE_2D, TEX[unit]); gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, im); if (mip) { gl.generateMipmap(gl.TEXTURE_2D); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); if (aniso) gl.texParameterf(gl.TEXTURE_2D, aniso.TEXTURE_MAX_ANISOTROPY_EXT, 8); } cb && cb(); }; im.onerror = function(){ cb && cb(); }; im.src = src; }
   if (GLOK) {
+    aniso = gl.getExtension('EXT_texture_filter_anisotropic') || gl.getExtension('WEBKIT_EXT_texture_filter_anisotropic');
     prog = gl.createProgram(); gl.attachShader(prog, mkShader(gl.VERTEX_SHADER, VS)); gl.attachShader(prog, mkShader(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(prog);
     if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) { console.error(gl.getProgramInfoLog(prog)); GLOK = false; }
   }
@@ -121,107 +124,101 @@
     gl.useProgram(prog);
     var buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1, 1,-1, -1,1, 1,1]), gl.STATIC_DRAW);
     var loc = gl.getAttribLocation(prog, 'a'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
-    ['R','T','tW','tWb','tC','tCb','tV','tM','tA','tAb','rA','blurA','yawA','yawB','mixAB','zoomA','rW','rC','rS','rV','fr','lightsOff','zoomW','vidMix','wc','mixC','blurW','blurC','fade','winOn','trace','glow','frameA','inside','dark','grain','vidA','vidZoom','mo','head','headA','vidAsp'].forEach(function(n){ U[n] = gl.getUniformLocation(prog, n); });
-    for (var ui = 0; ui < 8; ui++) TEX[ui] = mkTex(ui);
-    gl.uniform1i(U.tW, 0); gl.uniform1i(U.tWb, 1); gl.uniform1i(U.tC, 2); gl.uniform1i(U.tCb, 3); gl.uniform1i(U.tV, 4); gl.uniform1i(U.tM, 5); gl.uniform1i(U.tA, 6); gl.uniform1i(U.tAb, 7);
-    gl.uniform2f(U.wc, (P.wide.x + P.wide.w / 2) / P.w, (P.wide.y + P.wide.h / 2) / P.h);
-    gl.uniform4f(U.rW, P.wide.x / P.w, P.wide.y / P.h, P.wide.w / P.w, P.wide.h / P.h);
-    gl.uniform4f(U.rC, P.glass.x / P.w, P.glass.y / P.h, P.glass.w / P.w, P.glass.h / P.h);
+    ['R','T','tF','tFb','tM','tV','tS','cam','tgt','f','XR','XL','YTOP','ZD','tile','mo','win','vidR','rVs','fr','blur','lightsOff','winOn','vidMix','vidA','inside','fade','dark','grain','trace','trace0','glow','frameA','headA','sideSh','head'].forEach(function(n){ U[n] = gl.getUniformLocation(prog, n); });
+    TEX[0] = mkTex(0, true); TEX[1] = mkTex(1, true); TEX[2] = mkTex(2, true); TEX[3] = mkTex(3, false); TEX[4] = mkTex(4, false);
+    gl.uniform1i(U.tF, 0); gl.uniform1i(U.tFb, 1); gl.uniform1i(U.tM, 2); gl.uniform1i(U.tV, 3); gl.uniform1i(U.tS, 4);
+    gl.uniform1f(U.f, FOC); gl.uniform1f(U.XR, XR); gl.uniform1f(U.XL, XL); gl.uniform1f(U.YTOP, YTOP); gl.uniform1f(U.ZD, ZD); gl.uniform2f(U.tile, TILE.w, TILE.h);
+    gl.uniform4f(U.win, WIN.x, WIN.y, WIN.w, WIN.h);
+    var vw0 = WIN.h * 16 / 9 * 1.3, vh0 = WIN.h * 1.3; gl.uniform4f(U.vidR, WC.x - vw0 / 2, WC.y - vh0 / 2, vw0, vh0);
+    gl.uniform1f(U.sideSh, .72);
+    /* the trace starts at the logo's gap (right edge, 92 % down) and runs clockwise, like the square itself */
+    gl.uniform1f(U.trace0, (514 + .918 * 519) / (2 * (514 + 519)));
   }
-  var texLoaded = 0, TEXN = 5;
+  var texLoaded = 0, TEXN = 4;
   function texDone(){ texLoaded++; }
-  if (GLOK) { loadTex(0, 'assets/night/facade.jpg', texDone); loadTex(1, 'assets/night/facade_blur.jpg', texDone); loadTex(5, 'assets/night/facade_mask.png', texDone); loadTex(6, 'assets/night/tower.jpg', texDone); loadTex(7, 'assets/night/tower_blur.jpg', texDone); }
+  if (GLOK) { loadTex(0, 'assets/night/tile.jpg', true, texDone); loadTex(1, 'assets/night/tile_blur.jpg', true, texDone); loadTex(2, 'assets/night/tile_mask.png', true, texDone); loadTex(4, 'assets/night/sky.jpg', false, texDone); }
   var vidTexOK = false;
   function uploadVideo(){
     if (!GLOK || vid.readyState < 2) return;
-    gl.activeTexture(gl.TEXTURE4); gl.bindTexture(gl.TEXTURE_2D, TEX[4]);
+    gl.activeTexture(gl.TEXTURE3); gl.bindTexture(gl.TEXTURE_2D, TEX[3]);
     try { gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, vid); vidTexOK = true; } catch(e){}
   }
 
   /* ---------- geometry */
   function layout(){
     var vw = window.innerWidth, vh = window.innerHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
-    G = plateGeom(vw, vh); G.vw = vw; G.vh = vh;
-    /* facade placement: the CI window sits at the screen centre; scale = the smallest that still covers the viewport */
-    var wcx = P.wide.x + P.wide.w / 2, wcy = P.wide.y + P.wide.h / 2;
-    var s0 = Math.max(vw / (2 * Math.min(wcx, P.w - wcx)), vh / (2 * Math.min(wcy, P.h - wcy)), vw / P.w, vh / P.h);
-    var c = {s:s0, px:vw / 2 - wcx * s0, py:vh / 2 - wcy * s0};
-    G.R0 = mapRect(c, P.wide);                                   /* the CI window glass on screen at zoom 1 */
-    G.cov = c;
-    var sa = Math.max(vw / 1536, vh / 864) * 1.06; G.rA = {x:(vw - 1536 * sa) / 2, y:(vh - 864 * sa) / 2, w:1536 * sa, h:864 * sa};
-    var k = G.R0.h / LOGO.sq.h;                                  /* logo: its square is exactly as tall as the window glass, centred on it */
+    G = plateGeom(vw, vh); G.vw = vw; G.vh = vh; G.dpr = dpr;
+    /* the frontal camera distance that makes the CI window 30 % of the viewport height (but never wider than 34 % of the width) */
+    var hT = Math.min(vh * .30, vw * .34 * WIN.h / WIN.w);
+    G.Dend = WIN.h * FOC * vw / hT;
+    /* the distance where the window glass covers the viewport ×1.12 */
+    G.Din = Math.min(WIN.h * FOC * vw / (vh * 1.12), WIN.w * FOC * vw / (vw * 1.12));
+    G.R0 = projRect(WC.x, WC.y, G.Dend);
+    var k = G.R0.h / LOGO.sq.h;
     G.lk = k; G.lsq = {w:LOGO.sq.w * k, h:LOGO.sq.h * k}; G.lsq.x = G.R0.x + G.R0.w / 2 - G.lsq.w / 2; G.lsq.y = G.R0.y + G.R0.h / 2 - G.lsq.h / 2;
     logo.style.transform = 'translate(' + (G.lsq.x - LOGO.sq.x * k) + 'px,' + (G.lsq.y - LOGO.sq.y * k) + 'px) scale(' + k + ')';
-    /* end rect: the glass grows past the viewport so we are inside */
-    var sEnd = Math.max(vw / G.R0.w, vh / G.R0.h) * 1.12;
-    G.REnd = {w:G.R0.w * sEnd, h:G.R0.h * sEnd}; G.REnd.x = (vw - G.REnd.w) / 2; G.REnd.y = (vh - G.REnd.h) / 2;
-    /* video plane: 16:9 around the dark window at the start, viewport cover at the end */
-    var v0h = Math.max(G.R0.h, G.R0.w * 9 / 16) * 1.35, v0w = v0h * 16 / 9;
-    G.V0 = {w:v0w, h:v0h, x:G.R0.x + G.R0.w / 2 - v0w / 2, y:G.R0.y + G.R0.h / 2 - v0h / 2};
     var ve = Math.max(vw / 16, vh / 9) * 1.04; G.VEnd = {w:ve * 16, h:ve * 9}; G.VEnd.x = (vw - G.VEnd.w) / 2; G.VEnd.y = (vh - G.VEnd.h) / 2;
     if (GLOK) { cvs.width = Math.round(vw * dpr); cvs.height = Math.round(vh * dpr); gl.viewport(0, 0, cvs.width, cvs.height); gl.uniform2f(U.R, vw, vh); }
-    G.dpr = dpr;
   }
+  /* projection of the CI window for a frontal camera at (cx, cy, D) looking straight at the facade */
+  function projRect(cx, cy, D){ var vw = G.vw, vh = G.vh, k = FOC * vw / D; return {x:vw / 2 + (WIN.x - cx) * k, y:vh / 2 + (WIN.y - cy) * k, w:WIN.w * k, h:WIN.h * k}; }
   function mixRect(a, b, p){ return {x:lerp(a.x, b.x, p), y:lerp(a.y, b.y, p), w:lerp(a.w, b.w, p), h:lerp(a.h, b.h, p)}; }
-  function zoomRect(a, b, p){ /* log-interpolated size, centre interpolated */ var s = Math.exp(lerp(Math.log(a.w), Math.log(b.w), p)) / a.w; var cx = lerp(a.x + a.w/2, b.x + b.w/2, p), cy = lerp(a.y + a.h/2, b.y + b.h/2, p); return {x:cx - a.w*s/2, y:cy - a.h*s/2, w:a.w*s, h:a.h*s}; }
-  function perimPoint(r, t){ var per = 2 * (r.w + r.h), d = t * per; if (d < r.w) return [r.x + d, r.y]; d -= r.w; if (d < r.h) return [r.x + r.w, r.y + d]; d -= r.h; if (d < r.w) return [r.x + r.w - d, r.y + r.h]; d -= r.w; return [r.x, r.y + r.h - d]; }
+  function perimPoint(r, t){ t = t - Math.floor(t); var per = 2 * (r.w + r.h), d = t * per; if (d < r.w) return [r.x + d, r.y]; d -= r.w; if (d < r.h) return [r.x + r.w, r.y + d]; d -= r.h; if (d < r.w) return [r.x + r.w - d, r.y + r.h]; d -= r.w; return [r.x, r.y + r.h - d]; }
 
   var L = {sq: sq.getTotalLength(), ib: ib.getTotalLength(), c: cMask.getTotalLength()};
   function dash(el, len, p){ el.style.strokeDasharray = len; el.style.strokeDashoffset = len * (1 - p); }
+  function erase(el, len, p){ el.style.strokeDasharray = '0 ' + (p * len) + ' ' + len; el.style.strokeDashoffset = 0; }   /* disappears from the start of the path onwards */
   var T = {
-    aIn:.2, aFull:1.5, aSharp:.5, aSharpEnd:1.9, cntEnd:3.0,
-    turn:3.0, turnEnd:4.2, xA:3.45, xAEnd:3.85,
-    sqStart:4.25, sqEnd:5.2, cStart:4.9, cEnd:5.7, iStart:5.5, iEnd:5.9, tStart:5.85, tEnd:6.5,
-    bgIn:3.3, bgFull:4.3, sharp:3.6, sharpEnd:4.5,
-    lettersOut:6.6, lettersGone:7.2, sqOut:6.9, sqGone:7.3, frIn:6.75, frFull:7.1,
-    tightStart:7.0, tightEnd:7.6, traceStart:6.95, traceEnd:8.45, bloom:8.4, bloomEnd:9.0,
-    winOn:8.65, winFull:9.35, pushStart:9.35, pushEnd:11.15, vmStart:9.6, vmEnd:10.3, frOut:10.3, frGone:10.8,
-    sideIn:8.85, sideFull:9.5, uiStart:10.75, uiEnd:11.75, end:12.0
+    aIn:.2, aFull:1.6, cntEnd:4.4,
+    flyStart:1.3, flyEnd:4.9,
+    sqStart:4.5, sqEnd:5.5, cStart:5.2, cEnd:6.0, iStart:5.8, iEnd:6.2, tStart:6.15, tEnd:6.8,
+    lettersOut:7.0, lettersGone:7.5, sweepStart:7.05, sweepEnd:8.35, tightStart:7.0, tightEnd:7.6, bloom:8.35, bloomEnd:8.95,
+    winOn:8.6, winFull:9.3, pushStart:9.3, pushEnd:11.1, vmStart:9.55, vmEnd:10.25, frOut:10.25, frGone:10.75,
+    sideIn:8.8, sideFull:9.45, uiStart:10.7, uiEnd:11.7, end:11.95
   };
-  var short = false; try { short = sessionStorage.getItem('ci-intro-v4') === '1'; } catch(e){}
+  var short = false; try { short = sessionStorage.getItem('ci-intro-v5') === '1'; } catch(e){}
 
   var UN = {};
+  function camAt(t){
+    /* the drone: starts high above the roof, to the right and far; swings round the corner ("like an arrow") and settles square to the CI window; then the dolly in */
+    var fly = seg(t, T.flyStart, T.flyEnd, E.push), flyR = seg(t, T.flyStart - .2, T.flyEnd + .1, E.out);
+    var phi = (1 - fly) * 1.0;                                        /* 57° → 0 */
+    var r = lerp(G.Dend * 5.2, G.Dend, seg(t, T.flyStart + .5, T.flyEnd + .25, E.push));
+    var y = lerp(YTOP - 2400, WC.y, seg(t, T.flyStart + .2, T.flyEnd + .1, E.push)) + Math.sin(t * 1.7) * 18 * (1 - fly);
+    var pu = seg(t, T.pushStart, T.pushEnd, E.push);
+    var D = Math.exp(lerp(Math.log(r), Math.log(G.Din), pu));
+    var cx = WC.x + Math.sin(phi) * D + pmx * 60 * (1 - pu), cz = Math.cos(phi) * D;
+    var drift = (t < T.flyStart) ? Math.sin(t * .9) * 60 : 0;
+    return {cam:[cx + drift, y + pmy * 40 * (1 - pu), cz], tgt:[WC.x, WC.y, 0], D:D, fly:fly, pu:pu};
+  }
   function render(t){
     var vw = G.vw, vh = G.vh;
-    /* logo drawing (SVG) */
+    var C = camAt(t);
+    /* act 1: fade in from black + blur, the counter */
+    var aIn = seg(t, T.aIn, T.aFull, E.out);
+    var c = Math.round(100 * seg(t, T.aIn, T.cntEnd, E.lin)); cnt.textContent = (c < 10 ? '0' : '') + c;
+    pre.style.opacity = 1 - seg(t, T.cntEnd, T.cntEnd + .5, E.out);
+    /* motion blur while the camera swings fast */
+    var flyV = Math.sin(seg(t, T.flyStart, T.flyEnd, E.lin) * Math.PI);
+    var blur = Math.max(1 - seg(t, T.aIn + .2, T.aFull + .4, E.out), flyV * .55, seg(t, T.pushStart + .6, T.pushEnd, E.out) * .75);
+    /* the frontal projection of the window at the current distance (valid once the camera is frontal) */
+    var RS = projRect(C.cam[0] - pmx * 60 * (1 - C.pu), C.cam[1] - pmy * 40 * (1 - C.pu), C.D);
+    /* logo: draws clockwise, then erases clockwise while the glow sweeps behind it */
     dash(sq, L.sq, seg(t, T.sqStart, T.sqEnd, E.expo)); dash(cMask, L.c, seg(t, T.cStart, T.cEnd, E.expo)); dash(ib, L.ib, seg(t, T.iStart, T.iEnd, E.out));
     tMask.setAttribute('width', 560 * seg(t, T.tStart, T.tEnd, E.out));
     var lo = 1 - seg(t, T.lettersOut, T.lettersGone, E.expo); cF.style.opacity = lo; ib.style.opacity = lo; tF.style.opacity = lo;
-    sq.style.opacity = 1 - seg(t, T.sqOut, T.sqGone, E.expo);
-    var c = Math.round(100 * seg(t, T.aIn, T.cntEnd, E.lin)); cnt.textContent = (c < 10 ? '0' : '') + c;
-    /* act 1: the tower from the corner — fades in from blur, slow drift; act 2: the whip-turn to the facade */
-    var aIn = seg(t, T.aIn, T.aFull, E.out), aBlur = 1 - seg(t, T.aSharp, T.aSharpEnd, E.out);
-    var turn = seg(t, T.turn, T.turnEnd, E.expo);
-    var whip = Math.sin(turn * Math.PI);                                           /* 0 → 1 → 0 across the turn */
-    UN.yawA = -turn * 1.05; UN.yawB = (1 - turn) * 1.05;
-    UN.mixAB = seg(t, T.xA, T.xAEnd, E.lin);
-    UN.blurA = Math.max(aBlur, whip); UN.zoomA = 1.1 - .06 * seg(t, T.aIn, T.turn, E.lin) + .25 * turn;
-    var fade = t < T.turn ? aIn : 1;
-    var blurW = Math.max(whip, 1 - seg(t, T.sharp, T.sharpEnd, E.out));
-    var zoomW = 1;
-    pre.style.opacity = 1 - seg(t, T.turn, T.turn + .4, E.out);
-    /* the frame = the logo square, which tightens onto the window glass while the light runs round it */
-    var mv = seg(t, T.tightStart, T.tightEnd, E.out);
-    var frRect = mixRect(G.lsq, G.R0, mv);
-    var trace = seg(t, T.traceStart, T.traceEnd, E.lin);
-    var frameA = seg(t, T.frIn, T.frFull, E.out) * (1 - seg(t, T.frOut, T.frGone, E.out));
+    var sweep = seg(t, T.sweepStart, T.sweepEnd, E.expo);
+    if (sweep > 0) erase(sq, L.sq, sweep); sq.style.opacity = sweep < 1 ? 1 : 0;
+    var tight = seg(t, T.tightStart, T.tightEnd, E.out);
+    var frRect = mixRect(G.lsq, RS, Math.max(tight, C.pu > 0 ? 1 : 0));
+    var frameA = (t >= T.sweepStart ? 1 : 0) * (1 - seg(t, T.frOut, T.frGone, E.out));
     var bloom = seg(t, T.bloom, T.bloom + .25, E.out) * (1 - seg(t, T.bloom + .25, T.bloomEnd + .4, E.out));
-    /* push: the glass rect grows from R0 past the viewport */
-    var pu = seg(t, T.pushStart, T.pushEnd, E.push);
-    var RS = zoomRect(G.R0, G.REnd, pu), RV = zoomRect(G.V0, G.VEnd, pu);
-    if (mv < 1) { /* before the push the glass rect is the dark window (the frame still travelling) */ }
-    var frameRect = pu > 0 ? RS : frRect;
-    var xf = 0;
     var winOn = seg(t, T.winOn, T.winFull, E.out);
-    var inside = seg(t, T.pushEnd - .15, T.pushEnd + .05, E.out);
-    state.inside = inside;
-    /* head of the trace */
-    var hp = perimPoint(frRect, trace % 1), headA = (trace > 0 && trace < 1) ? 1 : 0;
-    UN.fade = fade; UN.blurW = blurW; UN.blurC = 0; UN.mixC = 0; UN.winOn = winOn; UN.trace = trace; UN.glow = bloom; UN.frameA = frameA; UN.inside = inside;
-    UN.zoomW = zoomW; UN.lightsOff = 1; UN.vidMix = seg(t, T.vmStart, T.vmEnd, E.out);
-    UN.fr = frameRect; UN.rS = pu > 0 ? RS : G.R0; UN.rV = pu > 0 ? RV : G.V0; UN.head = hp; UN.headA = headA * frameA; UN.vidA = 1; UN.vidZoom = 1.0;
-    UN.blurW = Math.max(blurW, seg(t, T.pushStart + .5, T.pushEnd, E.out) * .75);
-    /* side wordmarks + ui */
+    var inside = seg(t, T.pushEnd - .15, T.pushEnd + .05, E.out); state.inside = inside;
+    var hp = perimPoint(frRect, sweep + (514 + .918 * 519) / (2 * (514 + 519))), headA = (sweep > 0 && sweep < 1) ? 1 : 0;
+    UN.cam = C.cam; UN.tgt = C.tgt; UN.blur = blur; UN.lightsOff = 1; UN.winOn = winOn; UN.vidMix = seg(t, T.vmStart, T.vmEnd, E.out); UN.vidA = 1; UN.inside = inside;
+    UN.fade = aIn; UN.fr = frRect; UN.trace = sweep; UN.glow = bloom; UN.frameA = frameA; UN.head = hp; UN.headA = headA;
+    /* ui */
     var sd = seg(t, T.sideIn, T.sideFull, E.out);
     sideL.style.opacity = sd; sideR.style.opacity = sd; sideL.style.transform = 'translateY(' + (10 * (1 - sd)) + 'px)'; sideR.style.transform = 'translateY(' + (10 * (1 - sd)) + 'px)';
     var u = seg(t, T.uiStart, T.uiEnd, E.out);
@@ -239,12 +236,16 @@
   function draw(){
     if (!GLOK) return;
     gl.uniform1f(U.T, performance.now() / 1000);
-    gl.uniform1f(U.fade, UN.fade || 0); gl.uniform1f(U.blurW, UN.blurW == null ? 1 : UN.blurW); gl.uniform1f(U.blurC, UN.blurC || 0); gl.uniform1f(U.mixC, UN.mixC || 0);
-    gl.uniform1f(U.winOn, UN.winOn || 0); gl.uniform1f(U.trace, UN.trace || 0); gl.uniform1f(U.glow, UN.glow || 0); gl.uniform1f(U.frameA, UN.frameA || 0); gl.uniform1f(U.inside, UN.inside || 0);
-    gl.uniform1f(U.dark, darkU); gl.uniform1f(U.grain, .035); gl.uniform1f(U.lightsOff, UN.lightsOff == null ? 1 : UN.lightsOff); gl.uniform1f(U.zoomW, UN.zoomW || 1); gl.uniform1f(U.vidMix, UN.vidMix == null ? 1 : UN.vidMix); gl.uniform1f(U.vidA, vidTexOK ? (UN.vidA || 0) : 0); gl.uniform1f(U.vidZoom, UN.vidZoom || 1);
-    var f = UN.fr || {x:0,y:0,w:0,h:0}, r = UN.rS || {x:0,y:0,w:1,h:1};
-    gl.uniform4f(U.fr, f.x, f.y, f.w, f.h); gl.uniform4f(U.rS, r.x, r.y, r.w, r.h); var rv = UN.rV || r; gl.uniform4f(U.rV, rv.x, rv.y, rv.w, rv.h);
-    gl.uniform2f(U.mo, pmx, pmy); var ra = G.rA || {x:0,y:0,w:1,h:1}; gl.uniform4f(U.rA, ra.x, ra.y, ra.w, ra.h); gl.uniform1f(U.blurA, UN.blurA == null ? 1 : UN.blurA); gl.uniform1f(U.yawA, UN.yawA || 0); gl.uniform1f(U.yawB, UN.yawB || 0); gl.uniform1f(U.mixAB, UN.mixAB == null ? 1 : UN.mixAB); gl.uniform1f(U.zoomA, UN.zoomA || 1); var h = UN.head || [-999,-999]; gl.uniform2f(U.head, h[0], h[1]); gl.uniform1f(U.headA, UN.headA || 0);
+    var cm = UN.cam || [WC.x, WC.y, 3000], tg = UN.tgt || [WC.x, WC.y, 0];
+    gl.uniform3f(U.cam, cm[0], cm[1], cm[2]); gl.uniform3f(U.tgt, tg[0], tg[1], tg[2]);
+    gl.uniform1f(U.blur, UN.blur == null ? 1 : UN.blur); gl.uniform1f(U.lightsOff, UN.lightsOff == null ? 1 : UN.lightsOff); gl.uniform1f(U.winOn, UN.winOn || 0);
+    gl.uniform1f(U.vidMix, UN.vidMix == null ? 1 : UN.vidMix); gl.uniform1f(U.vidA, vidTexOK ? (UN.vidA || 0) : 0); gl.uniform1f(U.inside, UN.inside || 0);
+    gl.uniform1f(U.fade, UN.fade == null ? 0 : UN.fade); gl.uniform1f(U.dark, darkU); gl.uniform1f(U.grain, .035);
+    var f = UN.fr || {x:0,y:0,w:0,h:0}; gl.uniform4f(U.fr, f.x, f.y, f.w, f.h);
+    var r = G.VEnd || {x:0,y:0,w:1,h:1}; gl.uniform4f(U.rVs, r.x, r.y, r.w, r.h);
+    gl.uniform1f(U.trace, UN.trace || 0); gl.uniform1f(U.glow, UN.glow || 0); gl.uniform1f(U.frameA, UN.frameA || 0);
+    var h = UN.head || [-999,-999]; gl.uniform2f(U.head, h[0], h[1]); gl.uniform1f(U.headA, UN.headA || 0);
+    gl.uniform2f(U.mo, pmx, pmy);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
   }
 
@@ -259,10 +260,10 @@
     var dt = (now - lastNow) / 1000; lastNow = now;
     var t = (now - t0) / 1000 - hold;
     if (!state.gate && t >= T.winOn - .05) {
-      if ((state.videoReady || vid.readyState >= 3) && texLoaded >= TEXN || hold >= maxHold) { state.gate = true; startVideo(); }
+      if ((state.videoReady || vid.readyState >= 3) || hold >= maxHold) { state.gate = true; startVideo(); }
       else { hold += dt; t = T.winOn - .05; }
     }
-    if (t < T.bgIn && texLoaded < TEXN && t > T.bgIn - .05) { /* wait for plates before the facade appears */ hold += dt; t = T.bgIn - .05; }
+    if (t > T.aIn - .05 && t < T.aIn && texLoaded < TEXN) { hold += dt; t = T.aIn - .05; }
     pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
     if (state.gate) uploadVideo();
     state.t = t; render(t);
@@ -274,7 +275,7 @@
     document.body.classList.add('ready'); document.body.classList.remove('is-intro');
     skip.style.opacity = 0; skip.style.pointerEvents = 'none';
     pre.style.display = 'none'; logo.style.display = 'none';
-    try { sessionStorage.setItem('ci-intro-v4', '1'); } catch(e){}
+    try { sessionStorage.setItem('ci-intro-v5', '1'); } catch(e){}
     startScroll();
   }
   function skipIntro(){
@@ -297,7 +298,7 @@
   window.addEventListener('resize', function(){ layout(); render(state.done ? T.end + 1 : state.t); onResize(); });
   render(0);
   function go(){
-    if (!GLOK) { /* fallback: plain video */ fallback.classList.add('on'); state.gate = true; startVideo(); finish(); return; }
+    if (!GLOK) { fallback.classList.add('on'); state.gate = true; startVideo(); finish(); return; }
     if (reduced) { state.gate = true; startVideo(); finish(); return; }
     if (short) { for (var k in T) T[k] = Math.round(T[k] * 55) / 100; }
     raf = requestAnimationFrame(tick);
