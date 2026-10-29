@@ -1043,3 +1043,11 @@ html,body{background:#0B0D11}
   .hero-ui .hero-ctas{left:var(--hm)}
   .preview{display:none}
 }
+
+/* ---------- random letter reveal (measured on the CI reel DHTxLHau3dW: letters fade in one by one in a random order over ~1.2 s,
+   each ~0.2 s, no movement; the exit is the same, 3x faster) */
+.rr .rc{opacity:0;transition:opacity .22s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s);will-change:opacity}
+.rr.in .rc{opacity:1}
+.rr.out .rc{opacity:0;transition-duration:.14s;transition-delay:var(--do,0s)}
+.rr .rw{display:inline-block;white-space:nowrap}
+@media (prefers-reduced-motion:reduce){.rr .rc{opacity:1;transition:none}}

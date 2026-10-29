@@ -464,6 +464,27 @@
       } else if (n.nodeType === 1 && n.tagName !== 'BR') splitNode(n, mode, st);
     });
   }
+  /* random letter reveal (.rr): every character gets its own random delay (seeded per element, so a reload looks the same) */
+  function rrHash(i){ var x = Math.sin(i * 12.9898 + 78.233) * 43758.5453; return x - Math.floor(x); }
+  function rrSplit(el, seed){
+    var n = 0, span = 1.0;
+    (function walk(node){
+      Array.prototype.slice.call(node.childNodes).forEach(function(c){
+        if (c.nodeType === 3) {
+          var parts = c.nodeValue.split(/(\s+)/), frag = document.createDocumentFragment();
+          parts.forEach(function(p){
+            if (!p) return;
+            if (/^\s+$/.test(p)) { frag.appendChild(document.createTextNode(' ')); return; }
+            var w = document.createElement('span'); w.className = 'rw';
+            for (var i = 0; i < p.length; i++) { var s = document.createElement('span'); s.className = 'rc'; s.textContent = p[i]; s.style.setProperty('--d', (rrHash(seed + n) * span).toFixed(3) + 's'); s.style.setProperty('--do', (rrHash(seed + n + 101) * .3).toFixed(3) + 's'); n++; w.appendChild(s); }
+            frag.appendChild(w);
+          });
+          node.replaceChild(frag, c);
+        } else if (c.nodeType === 1 && c.tagName !== 'BR') walk(c);
+      });
+    })(el);
+  }
+  var rrSeed = 3; qsa('.rr').forEach(function(el){ rrSplit(el, rrSeed); rrSeed += 37; });
   qsa('.chars').forEach(function(el){ splitNode(el, 'chars', {i:0}); });
   qsa('.read').forEach(function(el){ splitNode(el, 'words', {i:0}); });
   var reads = qsa('.read').map(function(el){ return {el: el, w: qsa('.w', el), n: -1}; });
@@ -538,7 +559,7 @@
       if (en.target.id === 'stat20' && !num20Done) { num20Done = true; countTo(num20, 20, 1400); }
     });
   }, {threshold: .12, rootMargin: '0px 0px -6% 0px'});
-  qsa('.rv, .lines, .wipe, .img-rv, .chars, .bi').forEach(function(el){ if (el.id !== 'title') io.observe(el); });
+  qsa('.rv, .lines, .wipe, .img-rv, .chars, .bi, .rr').forEach(function(el){ if (el.id !== 'title') io.observe(el); });
 
   /* ================================================================== anchors */
   qsa('a[href^="#"]').forEach(function(a){
@@ -785,7 +806,7 @@
 
   /* ================================================================== brand: "NN/" indexes + blurred ghost titles */
   qsa('.sec-idx > span, .index > span, .cta .idx > span').forEach(function(sp){ var m = /^(\d\d) — \d\d$/.exec(sp.textContent.trim()); if (m) { sp.textContent = m[1] + '/'; sp.classList.add('n'); } });
-  qsa('.mega').forEach(function(el){ var g = document.createElement('div'); g.className = 'ghost-blur mega'; g.setAttribute('aria-hidden', 'true'); g.innerHTML = el.innerHTML.replace(/<span class="(?:ch|yc|yw)"[^>]*>/g, '<span>'); g.style.font = getComputedStyle(el).font; g.style.left = el.offsetLeft + 'px'; g.style.top = el.offsetTop + 'px'; g.style.width = el.offsetWidth + 'px'; el.parentNode.insertBefore(g, el); });
+  qsa('.mega').forEach(function(el){ var g = document.createElement('div'); g.className = 'ghost-blur mega'; g.setAttribute('aria-hidden', 'true'); g.innerHTML = el.innerHTML.replace(/<span class="(?:ch|yc|yw|rc|rw)"[^>]*>/g, '<span>'); g.style.font = getComputedStyle(el).font; g.style.left = el.offsetLeft + 'px'; g.style.top = el.offsetTop + 'px'; g.style.width = el.offsetWidth + 'px'; el.parentNode.insertBefore(g, el); });
 
   /* ================================================================== footer wordmark fit */
   var wmk = $('wmk');
