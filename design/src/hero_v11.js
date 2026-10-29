@@ -6,7 +6,7 @@
      (the reel's own zoom-blur cut into the bar). The timeline is driven by video.currentTime, not a clock. */
   var vid=$('reel'), pre=$('pre'), cnt=$('cnt'), hdr=$('hdr'), skip=$('skip'), cue=$('cue'), index=$('index'), row=$('row'),
       cur=$('cur'), hero=$('hero'), heroIn=qs('.hero-in'), heroTitle=$('title'), stroke=$('stroke'), veil=$('veil'), dark=$('dark');
-  var T = { skipIn:.6, ui:5.75 };                      // seconds of reel time
+  var T = { skipIn:.6, ui:5.75, loopAt:17.5 };          // seconds of reel time; the reel cuts to its end-card at 17.6 s (logo bottom-left) — we loop before it
   var state = {done:false, skipped:false, playing:false, t:0};
   var mx = 0, my = 0, pmx = 0, pmy = 0;
   var repeat = false; try { repeat = sessionStorage.getItem('ci-intro-v6') === '1'; } catch(e){}
@@ -49,6 +49,7 @@
   }
   function tick(){
     var t = vid.currentTime || 0; state.t = t;
+    if (t >= T.loopAt && !vid.seeking) { try { vid.currentTime = 0; } catch(e){} }
     if (!state.done) {
       skip.classList.toggle('on', t > T.skipIn);
       if (t >= T.ui) finish();
