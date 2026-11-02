@@ -1059,7 +1059,6 @@ html,body{background:#0B0D11}
 .hero .v15 .win{position:absolute;overflow:visible}
 .hero .v15 .glass{position:absolute;overflow:hidden;opacity:0;background:#0b0907}
 .hero .v15 .glass img{position:absolute;left:50%;top:50%;width:2400px;height:auto;max-width:none;transform-origin:50% 50%;will-change:transform}
-.hero .v15 .mull{position:absolute;inset:0;width:100%;height:100%;opacity:0;pointer-events:none}
 .hero .v15 .spill{position:absolute;inset:-18%;opacity:0;pointer-events:none;mix-blend-mode:screen;
   background:radial-gradient(closest-side,rgba(255,176,96,.55),rgba(255,150,70,.18) 55%,rgba(255,140,60,0) 100%)}
 .hero .v15 .mark{position:absolute;opacity:0;pointer-events:none;--a:0deg;
