@@ -219,7 +219,7 @@
     var prev = SL[slide.cur], next = SL[i];
     clearTimeout(slide.timer);
     if (GLS) {
-      if (!slide.ready) { slide.timer = setTimeout(function(){ showSlide(i); }, 400); return; }
+      if (!slide.ready || performance.now() - slide.readyAt < 1500) { slide.timer = setTimeout(function(){ showSlide(i); }, 400); return; }   /* uploads/warm-up settle first */
       if (i !== slide.cur) {
         var now = performance.now();
         if (tr) { tr.a = tr.b; }                              /* clicked mid-change: carry on from the picture coming in */
@@ -241,7 +241,7 @@
     if (slide.on) return; slide.on = true;
     if (gl3() && window.__pre3d.slidesInit) {
       GLS = true;
-      window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return {src:s.src, bg:s.bg, dep:s.dep}; })).then(function(){ slide.ready = true; }, function(){ GLS = false; buildSlides(); });
+      window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return {src:s.src, bg:s.bg, dep:s.dep}; })).then(function(){ slide.ready = true; slide.readyAt = performance.now(); }, function(){ GLS = false; buildSlides(); });
     } else buildSlides();
     setPreview();
     slide.timer = setTimeout(nextSlide, SL[0].dur * 1000);

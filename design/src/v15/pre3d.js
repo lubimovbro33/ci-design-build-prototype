@@ -519,14 +519,17 @@ function slotRT(i){
   else if (rt.width !== s.x || rt.height !== s.y) rt.setSize(s.x, s.y);
   return rt;
 }
+/* GPU uploads one per frame, so a dozen big photos arriving together never stall a frame */
+const upQ = []; let upOn = false;
+function upload(t, res){ upQ.push([t, res]); if (!upOn){ upOn = true; requestAnimationFrame(function f(){ const j = upQ.shift(); if (j){ renderer.initTexture(j[0]); j[1](j[0]); } if (upQ.length) requestAnimationFrame(f); else upOn = false; }); } }
 function loadRaw(u){
   return new Promise((res, rej) => new THREE.TextureLoader().load(u, t => {
     t.colorSpace = THREE.NoColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.minFilter = THREE.LinearMipmapLinearFilter;
-    renderer.initTexture(t); res(t);
+    upload(t, res);
   }, undefined, rej));
 }
 function loadDep(u){
-  return new Promise((res, rej) => new THREE.TextureLoader().load(u, t => { t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; renderer.initTexture(t); res(t); }, undefined, rej));
+  return new Promise((res, rej) => new THREE.TextureLoader().load(u, t => { t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; upload(t, res); }, undefined, rej));
 }
 /* list: [{ src, bg?, dep? }] — with bg + dep a photo becomes a relief, else a flat picture */
 function slidesInit(list){
