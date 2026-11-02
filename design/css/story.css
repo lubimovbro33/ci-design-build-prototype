@@ -1,7 +1,7 @@
 /* ================================================================== the story (blocks 2–3): hero pinned, scroll plays the scene
    The hero stays on screen (sticky) for the whole pin; js (storyUpdate) drives every value from the scroll position.
    Squares, lines and the iso stack are one SVG in screen px; texts are HTML laid over the squares. */
-.hpin{position:relative;height:1340vh}
+.hpin{position:relative;height:1320vh}
 .hpin > .hero{position:sticky;top:0}
 html.hero-only .hpin{height:auto}
 html.hero-only .story{display:none}

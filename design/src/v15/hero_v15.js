@@ -148,7 +148,8 @@
   /* the five interiors the user picked on the Figma board "Hero — интерьеры (отбор)" (02.11, 18:07): professional photos */
   var HSZ = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 1700 ? '_2560.jpg' : '_1600.jpg';
   var SL = [{k:'v15', dur:7, th:'assets/v15/room_1k.jpg'}].concat(['h1_city', 'h2_kitchen', 'h3_fireplace', 'h4_skyline', 'h5_double'].map(function(n){
-    return {k:'img', src:'assets/hero/' + n + HSZ, bg:'assets/hero/' + n + '_bg' + HSZ, dep:'assets/hero/' + n + '_dep.png', th:'assets/hero/' + n + '_th.jpg', dur:6.5};
+    return {k:'img', src:'assets/hero/' + n + HSZ, bg:'assets/hero/' + n + '_bg' + HSZ, dep:'assets/hero/' + n + '_dep.png', th:'assets/hero/' + n + '_th.jpg', dur:6.5,
+            sko:'assets/hero/' + n + '_sk.jpg', skb:'assets/hero/' + n + '_bg_sk.jpg'};
   }));
   var slide = {cur:0, timer:null, on:false, els:[], ready:false, start:[]};
   var pvImgs = preview ? qsa('.pv-img img', preview) : [];
@@ -206,7 +207,7 @@
     if (gl3() && window.__pre3d.slidesInit) {
       GLS = true;
       setTimeout(function(){                                     /* after the title has landed */
-        window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return {src:s.src, bg:s.bg, dep:s.dep}; })).then(function(){ slide.ready = true; slide.readyAt = performance.now(); }, function(){ GLS = false; buildSlides(); });
+        window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return {src:s.src, bg:s.bg, dep:s.dep, sko:s.sko, skb:s.skb}; })).then(function(){ slide.ready = true; slide.readyAt = performance.now(); }, function(){ GLS = false; buildSlides(); });
       }, 1200);
     } else buildSlides();
     setPreview();
@@ -236,7 +237,7 @@
   var hpin = $('hpin'), story = $('story'), stBg = $('stBg'), stLay = $('stLay'), sqC = $('sqC'), sqL = $('sqL'), sqR = $('sqR'),
       hdL = $('hdL'), hdR = $('hdR'), ldL = $('ldL'), ldR = $('ldR'), ldqL = $('ldqL'), ldqR = $('ldqR'),
       phs = [$('ph0'), $('ph1'), $('ph2')], stDesc = $('stDesc'), stTy = $('stTy'), stTk = $('stTk'), b3L = $('b3L'), b3R = $('b3R'), stSlog = $('stSlog');
-  var ST = {on:false, s:-1, from:0, R:null, gx:null, words:[], lay:[]}, S_END = 12.4;
+  var ST = {on:false, s:-1, push:0, R:null, words:[], lay:[]}, S_END = 12.2;
   var TYDESC = 'CI Design + Build brings architecture, interior design, construction, furnishings, art, wellness, and project management together under one roof. One integrated team handling every step, one seamless process, from concept through the night our team onboards + moves you in.';
   var NS = 'http://www.w3.org/2000/svg';
   function sg(s, a, b){ return clamp01((s - a) / (b - a)); }
@@ -281,34 +282,32 @@
     var on = state.done && s > .002;
     if (!on) {
       if (ST.on) {                                                                   /* back on the hero */
-        ST.on = false; story.classList.remove('on'); heroIn.style.opacity = ''; heroIn.style.transform = ''; heroIn.style.visibility = '';
-        st15.style.opacity = 1;
+        ST.on = false; story.classList.remove('on'); heroIn.style.opacity = ''; heroIn.style.transform = ''; heroIn.style.visibility = ''; heroIn.style.filter = '';
+        st15.style.opacity = 1; if (window.__pre3d.setRoom) window.__pre3d.setRoom(-1);
         if (slide.on) { if (slide.cur === 0) render(T.end + 1); showSlide(slide.cur); }
       }
       ST.s = s; return;
     }
     if (!ST.on) {                                                                    /* entering the story: the slider pauses */
-      ST.on = true; story.classList.add('on'); clearTimeout(slide.timer); tr = null; ST.from = slide.cur; ST.s = -1;
+      ST.on = true; story.classList.add('on'); clearTimeout(slide.timer);
+      var cur = tr ? tr.b : slide.cur; tr = null; slide.cur = cur; ST.s = -1; ST.push = 0;
+      if (GLS && slide.ready && cur > 0 && window.__pre3d.setRoom) { window.__pre3d.setRoom(cur - 1); ST.push = .05 * kbOf(cur, performance.now()); }
     }
     pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
     var moved = Math.abs(pmx - lastMx) + Math.abs(pmy - lastMy) > .0004;
     if (s === ST.s && !moved) return;
     ST.s = s; lastMx = pmx; lastMy = pmy;
     /* --- the hero UI leaves */
-    var ui = sg(s, 0, .55);
-    heroIn.style.opacity = 1 - eo(ui); heroIn.style.transform = 'translateY(' + (-70 * eio(ui)).toFixed(1) + 'px)'; heroIn.style.visibility = ui >= 1 ? 'hidden' : '';
+    var ui = sg(s, 0, 1.0);
+    heroIn.style.opacity = 1 - eio(ui); heroIn.style.filter = ui > 0 ? 'blur(' + (18 * eo(ui)).toFixed(1) + 'px)' : '';
+    heroIn.style.transform = 'scale(' + (1 + .06 * eo(ui)).toFixed(4) + ')'; heroIn.style.visibility = ui >= 1 ? 'hidden' : '';
     /* --- WebGL: glass back to the room, fly out, outline, sketch, keep the window */
-    var useGL = gl3() && window.__pre3d.storyFrame, glOn = s < 4.15;
-    var cover = sg(s, 3.75, 4.1);
+    var useGL = gl3() && window.__pre3d.storyFrame, glOn = s < 3.95;
+    var cover = sg(s, 3.55, 3.9);
     stBg.style.opacity = useGL ? cover : Math.min(1, sg(s, .2, 1.4));
     if (useGL && glOn) {
-      if (ST.from !== 0 && GLS && slide.ready && s < .7) {
-        window.__pre3d.slideFrame({a:ST.from - 1, b:-1, p:eio(sg(s, 0, .7)), ka:kbOf(ST.from, performance.now()), kb:0, mx:pmx, my:pmy, scroll:0, T:T});
-      } else {
-        if (ST.from !== 0 && s >= .7) { ST.from = 0; slide.cur = 0; setPreview(); }
-        ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, fly:sg(s, .7, 2.7), ol:eio(sg(s, 1.75, 2.5)), olOp:1 - sg(s, 3.25, 3.45),
-                                         sketch:eio(sg(s, 2.5, 3.3)), keep:eio(sg(s, 3.3, 3.8))});
-      }
+      ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, push:ST.push, fly:sg(s, 0, 2.6), ol:eio(sg(s, 1.5, 2.25)), olOp:1 - sg(s, 3.05, 3.25),
+                                       sketch:eio(sg(s, 2.25, 3.1)), keep:eio(sg(s, 3.1, 3.6))});
     }
     /* --- the squares */
     var horiz = vw / vh > .95, S = horiz ? Math.min(vw * .27, vh * .46, 470) : Math.min(vh * .25, vw * .7);
@@ -317,27 +316,27 @@
     var pC = [cx, cy], pL = horiz ? [cx - step, cy] : [cx, cy - step], pR = horiz ? [cx + step, cy] : [cx, cy + step];
     var target = sqAt(cx, cy, S);
     var win = ST.R ? [ST.R.x0, ST.R.y0, ST.R.x1, ST.R.y1] : sqAt(cx, cy, S * .3);
-    var grow = eio(sg(s, 3.8, 4.5)), rc = lerpR(win, target, grow);
-    var cOp = useGL ? sg(s, 3.25, 3.45) : sg(s, 1.2, 1.6);
-    var iso = sg(s, 9.8, 10.8), isoE = eio(iso);
+    var grow = eio(sg(s, 3.6, 4.3)), rc = lerpR(win, target, grow);
+    var cOp = useGL ? sg(s, 3.05, 3.25) : sg(s, 1.2, 1.6);
+    var iso = sg(s, 9.6, 10.6), isoE = eio(iso);
     drawSq(sqC, rc, 1, isoE > 0 ? 0 : cOp);
     /* side squares draw counter-clockwise, then merge into the centre */
-    var mg = eio(sg(s, 7.3, 8.0)), dl = eio(sg(s, 5.0, 5.6)), dr = eio(sg(s, 6.0, 6.6));
+    var mg = eio(sg(s, 7.1, 7.8)), dl = eio(sg(s, 4.8, 5.4)), dr = eio(sg(s, 5.8, 6.4));
     var rl = sqAt(lerp(pL[0], cx, mg), lerp(pL[1], cy, mg), S), rr = sqAt(lerp(pR[0], cx, mg), lerp(pR[1], cy, mg), S);
-    var sideOp = 1 - sg(s, 7.8, 8.0);
+    var sideOp = 1 - sg(s, 7.6, 7.8);
     drawSq(sqL, rl, dl, dl > 0 ? sideOp : 0); drawSq(sqR, rr, dr, dr > 0 ? sideOp : 0);
     var hl = headAt(rl[0], rl[1], rl[2], rl[3], dl), hr = headAt(rr[0], rr[1], rr[2], rr[3], dr);
     hdL.setAttribute('x', hl[0] - 3.5); hdL.setAttribute('y', hl[1] - 3.5); hdL.style.opacity = dl > 0 && dl < 1 ? 1 : 0;
     hdR.setAttribute('x', hr[0] - 3.5); hdR.setAttribute('y', hr[1] - 3.5); hdR.style.opacity = dr > 0 && dr < 1 ? 1 : 0;
     /* phrases */
-    var pad = S * .085, phOut = 1 - sg(s, 7.1, 7.4);
-    var rects = [target, rl, rr], qs3 = [sg(s, 4.45, 4.95), sg(s, 5.45, 5.95), sg(s, 6.45, 6.95)];
+    var pad = S * .085, phOut = 1 - sg(s, 6.9, 7.2);
+    var rects = [target, rl, rr], qs3 = [sg(s, 4.25, 4.75), sg(s, 5.25, 5.75), sg(s, 6.25, 6.75)];
     for (var k = 0; k < 3; k++) {
       placeBox(phs[k], rects[k], pad); revealWords(k, qs3[k]);
       phs[k].style.opacity = qs3[k] > 0 ? phOut : 0;
     }
     /* the CI paragraph types itself into the merged square */
-    var ty = sg(s, 8.0, 9.2), tkq = sg(s, 9.15, 9.45), dOut = 1 - sg(s, 9.65, 9.95);
+    var ty = sg(s, 7.8, 9.0), tkq = sg(s, 8.95, 9.25), dOut = 1 - sg(s, 9.45, 9.75);
     placeBox(stDesc, target, pad);
     stDesc.style.opacity = (ty > 0 ? 1 : 0) * dOut;
     var nC = Math.round(ty * TYDESC.length), txt = TYDESC.slice(0, nC);
@@ -351,7 +350,7 @@
     var cz = Math.cos(thz), sz = Math.sin(thz), cxx = Math.cos(thx), sxx = Math.sin(thx);
     var a = cz * sc, b = sz * cxx * sc, c = -sz * sc, d = cz * cxx * sc;
     var hs = S / 2, corners = [[-hs, -hs], [hs, -hs], [hs, hs], [-hs, hs]], extL = [1e9, 0], extR = [-1e9, 0];
-    var labQ = sg(s, 10.4, 10.9);
+    var labQ = sg(s, 10.2, 10.7);
     stLay.style.opacity = isoE > 0 ? 1 : 0;
     for (var i = 0; i < 3; i++) {
       var L = ST.lay[i], h = (1 - i) * D, ox = cx, oy = cy - h * sxx * sc;
@@ -368,7 +367,7 @@
       if (i === 2) pts.forEach(function(q){ if (q[0] > extR[0]) extR = q; });
     }
     /* --- block 3: text left and right on lines with square ends */
-    var ld = eio(sg(s, 10.8, 11.4)), tq = eo(sg(s, 11.0, 11.6));
+    var ld = eio(sg(s, 10.6, 11.2)), tq = eo(sg(s, 10.8, 11.4));
     var m = Math.max(20, Math.min(48, vw * .035)), hdrH = 90;
     if (horiz) {
       var wl = Math.min(vw * .27, extL[0] - 80 - m), xl = extL[0] - 80 - wl;
@@ -386,7 +385,7 @@
     }
     b3L.style.opacity = tq; b3L.style.transform = 'translateY(' + ((1 - tq) * 16).toFixed(1) + 'px)';
     b3R.style.opacity = tq; b3R.style.transform = 'translateY(' + ((1 - tq) * 16).toFixed(1) + 'px)';
-    stSlog.style.opacity = eo(sg(s, 11.3, 11.8));
+    stSlog.style.opacity = eo(sg(s, 11.1, 11.6));
   }
 
 
