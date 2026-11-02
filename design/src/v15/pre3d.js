@@ -118,18 +118,24 @@ function roomMat(tex){
 }
 function logoMat(tex){
   return new THREE.ShaderMaterial({
-    uniforms: { map:{value:tex}, uProg:{value:0}, uOp:{value:0}, uAsp:{value:F.MARK.w / F.MARK.h}, uGain:{value:1.6}, uGlint:{value:-2}, uSpark:{value:0} },
+    uniforms: { map:{value:tex}, uProg:{value:0}, uOp:{value:0}, uAsp:{value:F.MARK.w / F.MARK.h}, uGain:{value:1}, uGlint:{value:-3}, uSpark:{value:0}, uHalo:{value:.5} },
     vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform float uProg; uniform float uOp; uniform float uAsp; uniform float uGain; uniform float uGlint; uniform float uSpark; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D map; uniform float uProg; uniform float uOp; uniform float uAsp; uniform float uGain; uniform float uGlint; uniform float uSpark; uniform float uHalo; varying vec2 vUv;
       void main(){ vec4 c = texture2D(map, vUv);
+        /* a thin halo from the logo's own alpha (no global bloom on the letters → they stay crisp) */
+        vec2 px = vec2(1. / 601., 1. / 687.); float h = 0.;
+        for (int i = 0; i < 8; i++){ float an = float(i) * .785398; vec2 o = vec2(cos(an), sin(an));
+          h += texture2D(map, vUv + o * px * 4.).a + texture2D(map, vUv + o * px * 9.).a * .5; }
+        h /= 12.;
+        float halo = max(h - c.a, 0.) * uHalo;
         vec2 p = vec2((vUv.x - .5) * uAsp, -(vUv.y - .5));
         float a = fract(atan(p.y, p.x) / 6.2831853 + 1.);              /* 0 at the right, clockwise on screen */
         float edge = smoothstep(uProg, uProg - .012, a);
         float head = exp(-abs(a - uProg) * 60.) * uSpark;
-        float g = p.x * .9 - p.y * .55 - uGlint;                        /* a diagonal glint sweeping across */
-        float glint = exp(-g * g / .0025) + exp(-g * g / .03) * .18;
-        float al = c.a * edge * uOp;
-        vec3 col = c.rgb * (uGain + 1.6 * head + 1.1 * glint);
+        float g = p.x * .9 - p.y * .55 - uGlint;                        /* a thin diagonal glint across the letters */
+        float glint = exp(-g * g / .0012);
+        float body = c.a, al = max(body, halo) * edge * uOp;
+        vec3 col = mix(vec3(1.), c.rgb, body) * (uGain * .9 + .5 * glint * body + .5 * head);
         gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
       }`,
@@ -321,7 +327,7 @@ function render3d(t, T, mx, my, scroll){
   const lu = M.logo.material.uniforms;
   lu.uProg.value = prog; lu.uOp.value = lvis;
   lu.uSpark.value = ((draw > 0 && draw < 1) || (er > 0 && er < 1)) ? 1 : 0;
-  lu.uGain.value = 1.22 + .22 * shK + .04 * Math.sin(t * 9.) * shK;
+  lu.uGain.value = 1.0 + .08 * shK; lu.uHalo.value = .42 + .22 * shK;
   lu.uGlint.value = shine > 0 && shine < 1 ? lerp(-.95, .95, ease(clamp01((shine - .15) / .7))) : -3.;
   /* frame 16: the golden light follows the eraser (counter-clockwise) and leaves the outline */
   const front = 1 - sm((t - T.olA) / (T.olB - T.olA)), oa = t < T.olA ? 0 : 1 - sm((t - T.olOutA) / (T.olOutB - T.olOutA));
@@ -338,7 +344,7 @@ function render3d(t, T, mx, my, scroll){
   if (through > 0){ M.ul.material.uniforms.uOp.value = lit * (1 - through); M.ud.material.opacity *= (1 - through); }
   M.spill.material.uniforms.uOp.value = lit * (.32 + .25 * bloomK) * (1 - sm(dive * 2.2));
   /* post */
-  bloom.strength = .5 + .22 * bloomK + lvis * (.12 + .16 * shK);
+  bloom.strength = .5 + .22 * bloomK;
   finalPass.uniforms.uTime.value = U.time.value;
   finalPass.uniforms.uFade.value = sm(t / T.fadeIn);
   finalPass.uniforms.uAb.value = .022 * Math.sin(Math.PI * clamp01(dive * 1.1));
