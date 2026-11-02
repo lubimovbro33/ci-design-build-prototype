@@ -243,15 +243,38 @@ function spillMat(){
   });
 }
 const FinalShader = {
-  uniforms: { tDiffuse:{value:null}, uTime:{value:0}, uFade:{value:0}, uAb:{value:0}, uVig:{value:.32}, uRes:{value:new THREE.Vector2(1,1)} },
+  uniforms: { tDiffuse:{value:null}, uTime:{value:0}, uFade:{value:0}, uAb:{value:0}, uVig:{value:.32}, uRes:{value:new THREE.Vector2(1,1)},
+              uSk:{value:0}, uKeep:{value:0}, uWin:{value:new THREE.Vector4(0,0,0,0)} },
   vertexShader: vtx,
-  fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime; uniform float uFade; uniform float uAb; uniform float uVig; uniform vec2 uRes; varying vec2 vUv;
+  fragmentShader: `uniform sampler2D tDiffuse; uniform float uTime; uniform float uFade; uniform float uAb; uniform float uVig; uniform vec2 uRes;
+    uniform float uSk; uniform float uKeep; uniform vec4 uWin; varying vec2 vUv;
     float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
+    float L(vec2 q){ return dot(texture2D(tDiffuse, q).rgb, vec3(.299, .587, .114)); }
+    /* the picture redrawn as an ink sketch: edges of the render (Sobel at two scales), ivory lines on the site's charcoal */
+    float edge(vec2 q, float k){
+      vec2 e = k / uRes;
+      float a = L(q + vec2(-e.x, e.y)), b = L(q + vec2(0., e.y)), c = L(q + e), dd = L(q - vec2(e.x, 0.)), f = L(q + vec2(e.x, 0.)),
+            g = L(q - e), hh = L(q - vec2(0., e.y)), i = L(q + vec2(e.x, -e.y));
+      float gx = (c + 2. * f + i) - (a + 2. * dd + g), gy = (a + 2. * b + c) - (g + 2. * hh + i);
+      return length(vec2(gx, gy));
+    }
     void main(){
       vec2 d = vUv - .5; float r2 = dot(d, d);
       vec2 o = d * uAb * r2;
       vec3 c = vec3(texture2D(tDiffuse, vUv + o).r, texture2D(tDiffuse, vUv).g, texture2D(tDiffuse, vUv - o).b);
       c *= 1. - uVig * smoothstep(.12, .62, r2 * 1.6);
+      if (uSk > 0.){
+        float e1 = edge(vUv, 1.), e2 = edge(vUv, 2.5);
+        float ln = max(smoothstep(.09, .3, e1), smoothstep(.12, .4, e2) * .7);
+        ln *= .55 + .45 * h(floor(vUv * uRes / 3.) + 3.1);                        /* a little pencil breakup */
+        vec3 paper = vec3(.0667);
+        vec3 sk = paper + vec3(.93, .91, .87) * ln * .88 + c * .05;
+        vec2 pw = vec2(14.) / uRes;                                                   /* keep only the CI window */
+        float inW = smoothstep(uWin.x - pw.x, uWin.x, vUv.x) * smoothstep(uWin.z + pw.x, uWin.z, vUv.x)
+                  * smoothstep(uWin.y - pw.y, uWin.y, vUv.y) * smoothstep(uWin.w + pw.y, uWin.w, vUv.y);
+        sk = mix(sk, paper, uKeep * (1. - inW));
+        c = mix(c, sk, uSk);
+      }
       float g = h(vUv * uRes + fract(uTime * 37.)) - .5;
       c += g * .045;
       gl_FragColor = vec4(c * uFade, 1.);
@@ -402,8 +425,10 @@ function pose(t, T, mx, my, scroll){
 }
 
 let lastT = null;
+function skyK(e){ const k = (Zc - SKYZ) / Zc * (M.sky.userData.over || 1) * e; M.sky.scale.set(k, k, 1); }
 function render3d(t, T, mx, my, scroll, toTex){
   lastT = T;
+  if (SK.on){ SK.on = false; skyK(1); finalPass.uniforms.uSk.value = 0; finalPass.uniforms.uKeep.value = 0; }
   U.time.value = performance.now() / 1000;
   const dive = pose(t, T, mx || 0, my || 0, scroll || 0);
   /* frame 15: the logo draws clockwise, then shines (glint, brighter bloom), then erases counter-clockwise */
@@ -440,6 +465,50 @@ function render3d(t, T, mx, my, scroll, toTex){
   finalPass.uniforms.uAb.value = .022 * Math.sin(Math.PI * clamp01(dive * 1.1));
   if (toTex){ composer.renderToScreen = false; composer.render(); composer.renderToScreen = true; return composer.readBuffer.texture; }
   composer.render();
+}
+
+/* ---------------------------------------------------------------- the story (blocks 2–3), scroll-driven
+   From the hero the camera flies back out: out of the room, through the window (the intro's dive reversed), then pulls
+   back from the facade on the window's axis; the golden outline draws round the window again (counter-clockwise); the
+   picture redraws itself as an ink sketch, everything but the CI window fades, and site.js takes over with the squares.
+   o: { fly 0..1, ol 0..1 (outline drawn), olOp, sketch 0..1, keep 0..1, mx, my, T } */
+const SK = { on: false }, SPLIT = .58, SKZ = 1.28;
+function storyFrame(o){
+  const T = o.T; lastT = T; SK.on = true;
+  U.time.value = performance.now() / 1000;
+  const f = clamp01(o.fly || 0), mx = o.mx || 0, my = o.my || 0;
+  let dive = 0, tEff = T.push, u = 0;
+  if (f < SPLIT){ tEff = lerp(T.pushEnd, T.push, ease(f / SPLIT)); dive = pose(tEff, T, mx, my, 0); }
+  else {
+    u = ease((f - SPLIT) / (1 - SPLIT));
+    const x = lerp(C.x, H.x, u), y = lerp(C.y, H.y, u), z = lerp(Zc * .98, Zc * SKZ, u);
+    camera.position.set(x - mx * MP_OUT, y + my * MP_OUT * .7, z); look.set(x, y, -520); camera.lookAt(look);
+  }
+  skyK(1 + .32 * u);
+  const lu = M.logo.material.uniforms; lu.uOp.value = 0; lu.uSpark.value = 0; M.shadow.material.uniforms.uOp.value = 0;
+  const ol = clamp01(o.ol || 0), ou = M.ol.material.uniforms;
+  ou.uFront.value = 1 - ol; ou.uOp.value = ol > 0 ? (o.olOp == null ? 1 : o.olOp) : 0; ou.uHead.value = ol > .001 && ol < .999 ? 1 : 0;
+  M.ud.material.opacity = 0;
+  M.ul.material.uniforms.uOp.value = 1; M.ul.material.uniforms.uGain.value = 1;
+  for (const m of [M.room, M.roomN]){ m.material.uniforms.uLight.value = sm((tEff - T.push - .35) / .9); m.material.uniforms.uGain.value = 1; }
+  const cz = camera.position.z, through = 1 - clamp01((cz - 6) / 70);
+  if (through > 0) M.ul.material.uniforms.uOp.value = 1 - through;
+  M.spill.material.uniforms.uOp.value = .32 * (1 - sm(dive * 2.2));
+  bloom.strength = .5;
+  const fu = finalPass.uniforms;
+  fu.uTime.value = U.time.value; fu.uFade.value = 1; fu.uAb.value = .022 * Math.sin(Math.PI * clamp01(dive * 1.1));
+  fu.uSk.value = clamp01(o.sketch || 0); fu.uKeep.value = clamp01(o.keep || 0);
+  const r = winRect(); fu.uWin.value.set(r.x0 / vw, 1 - r.y1 / vh, r.x1 / vw, 1 - r.y0 / vh);
+  renderer.setRenderTarget(null); composer.render();
+  return r;
+}
+/* the CI window (the outline's rect) on screen, CSS px */
+function winRect(){
+  const r = F.OL, xs = [], ys = [];
+  for (const [x, y] of [[r.x, r.y], [r.x + r.w, r.y], [r.x, r.y + r.h], [r.x + r.w, r.y + r.h]]){
+    v3.set(x, -y, 0).project(camera); xs.push((v3.x * .5 + .5) * vw); ys.push((.5 - v3.y * .5) * vh);
+  }
+  return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
 }
 
 /* ---------------------------------------------------------------- the hero slider: interiors through fluted glass
@@ -604,7 +673,7 @@ function slideFrame(o){
   try {
     if (!canvas) throw new Error('no canvas');
     await build();
-    PRE3D.render = render3d; PRE3D.resize = resize; PRE3D.slidesInit = slidesInit; PRE3D.slideFrame = slideFrame; PRE3D.ok = true; PRE3D.state = 'ready';
+    PRE3D.render = render3d; PRE3D.resize = resize; PRE3D.slidesInit = slidesInit; PRE3D.slideFrame = slideFrame; PRE3D.storyFrame = storyFrame; PRE3D.winRect = winRect; PRE3D.ok = true; PRE3D.state = 'ready';
   } catch (e) {
     console.warn('[pre3d] fallback to DOM:', e && e.message);
     PRE3D.state = 'error';
