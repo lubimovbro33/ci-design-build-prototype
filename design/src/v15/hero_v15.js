@@ -1,20 +1,21 @@
-  /* ================================================================== 01 HERO v15 — lights off → the CI outline → our window lights up → inside
-     One frontal night facade (assets/v15/fac_*.jpg, approved 2 Nov): dark grey stone, 7 asymmetric columns, every apartment dark,
-     glass with sparse cool city reflections; the centre column has square single-pane windows and the CENTRAL square window sits
-     exactly at the image centre (ChatGPT generation → graded/cleaned → Topaz ×2 in Weave). Plain DOM layers, one transform per frame:
-       .cam  = the facade (cover-fit, scale z about the screen centre = the window centre)
-       .win  = the window rect inside .cam: the room photo inside the glass (its own slower scale = the room is deeper than the
-               facade; the frame stays the facade's own), the warm spill on the stone
-       .mark = the official CI logo mark (crop of logo-white.png), drawn clockwise with a conic mask, centred on the window.
-     Timeline ≤ 5 s: fade in 0–.35 · slow drift z 1→1.03 · logo .7–1.5 · logo out 2.3–2.65 · window lights 2.45–3.05 (bloom) ·
-     push 3.05–4.65 (expo, z → 7.8; the frame flies by) · UI 4.3 · end 4.75 → the room photo is slide 0 of the hero slider. */
+  /* ================================================================== 01 HERO v15 — the preloader by the user's Figma frames 13 → 15 → 16 → 14
+     Picture = ChatGPT outpaint of the cover of CI's reel DajISPfwHmc (night limestone tower, Chicago skyline right), placed exactly
+     as in Figma (image stretched to 2033×1477 at −57,−251 in a 1920×1080 frame; assets are that frame at 2×, 3840×2160):
+       13  every window dark (the lit window covered by a dark window from two floors up, Figma rect 874,442 167×179)  → pre_dark_*.jpg
+       15  the official CI DESIGN + BUILD logo (Figma rect 865,432 190×217) drawn clockwise over that window            → logo_db.png
+       16  the logo goes, a warm outline draws round the window (Figma rect 877,448 163×164, 3 px #F8BD79, glow 8.6)     → svg .ol
+       14  the window lights up: the original lit window with the couple (Figma frame 14)                                 → pre_litwin.jpg
+     then we push into the window (zoom about the window centre) and land in room 1450_34 = slide 0 of the hero slider. ≤ 5 s. */
   var hero=$('hero'), heroIn=qs('.hero-ui'), heroTitle=$('title'), pre=$('pre'), cnt=$('cnt'), hdr=$('hdr'), skip=$('skip'), veil=$('veil'), dark=$('dark'),
       cur=$('cur'), slidesEl=$('slides'), preview=$('preview');
-  var st15=$('v15'), cam=$('v15cam'), facImg=$('v15fac'), win=$('v15win'), glass=$('v15glass'), roomImg=$('v15room'), spill=$('v15spill'), mark=$('v15mark');
-  var FAC = {w:3840, h:2160, win:{x:1632, y:786, w:574, h:580}, inset:{l:19, t:26, r:15, b:20}};   /* the central window (outer frame) in fac_4k px; glass = frame − inset */
+  var st15=$('v15'), cam=$('v15cam'), facImg=$('v15fac'), win=$('v15win'), glass=$('v15glass'), litImg=$('v15lit'), roomImg=$('v15room'), spill=$('v15spill'), mark=$('v15mark'), ol=$('v15ol'), olPath=$('v15olp');
+  var FAC  = {w:3840, h:2160, win:{x:1748, y:884, w:334, h:358}};          /* Figma frame ×2: the window patch (dark ↔ lit)          */
+  var OL   = {x:1754, y:896, w:326, h:328, sw:6};                           /* Figma "Rectangle 11" ×2, stroke inside                  */
+  var MARK = {x:1730, y:864, w:380, h:434};                                 /* Figma "CI DB LOGO FINAL-White" ×2                       */
   var ROOM = {w:2400, h:1729};
-  var Z_END = 7.8, MARK_W = .78;                                             /* logo mark = 78 % of the glass width */
-  var T = {fadeIn:.35, drift:3.05, logoA:.70, logoB:1.50, outA:2.30, outB:2.65, litA:2.45, litB:3.05, push:3.05, pushEnd:4.65, ui:4.30, end:4.75};
+  var Z_END = 7.8;
+  var T = {fadeIn:.35, drift:3.05, logoA:.55, logoB:1.35, outA:1.85, outB:2.20, olA:1.90, olB:2.50, litA:2.50, litB:3.00, olOutA:3.05, olOutB:3.50,
+           push:3.05, pushEnd:4.65, roomA:3.20, roomB:3.75, ui:4.30, end:4.75};
   var G = {}, state = {t:0, done:false, skipped:false, phase:'pre'};
   var mx = 0, my = 0, pmx = 0, pmy = 0, scrollZoom = 0;
   var short = false; try { short = sessionStorage.getItem('ci-intro-v15') === '1'; } catch(e){}
@@ -24,28 +25,28 @@
   /* ---------- sources: pick sizes for the screen */
   (function pick(){
     var px = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2);
-    facImg.src = px > 2600 ? 'assets/v15/fac_4k.jpg' : px > 1700 ? 'assets/v15/fac_2k.jpg' : 'assets/v15/fac_1k.jpg';
+    facImg.src = px > 2600 ? 'assets/v15/pre_dark_4k.jpg' : px > 1700 ? 'assets/v15/pre_dark_2k.jpg' : 'assets/v15/pre_dark_1k.jpg';
     roomImg.src = px > 1500 ? 'assets/v15/room_2k.jpg' : 'assets/v15/room_1k.jpg';
   })();
-  var need = [facImg, roomImg, mark], loaded = 0;
+  var need = [facImg, litImg, roomImg, mark], loaded = 0;
   function isOk(im){ return im.complete && im.naturalWidth > 0; }
   need.forEach(function(im){ if (isOk(im)) loaded++; else { im.addEventListener('load', function(){ loaded++; }); im.addEventListener('error', function(){ loaded++; }); } });
 
   /* ---------- geometry */
+  function place(el, r){ el.style.left = r.x + 'px'; el.style.top = r.y + 'px'; el.style.width = r.w + 'px'; el.style.height = r.h + 'px'; }
   function layout(){
     var vw = window.innerWidth, vh = window.innerHeight;
-    var c = Math.max(vw / FAC.w, vh / FAC.h);                                 /* cover; the window centre (1920,1080) = the screen centre */
+    var c = Math.max(vw / FAC.w, vh / FAC.h);                                 /* cover-fit, picture centred */
     G = {vw:vw, vh:vh, c:c};
     cam.style.width = FAC.w + 'px'; cam.style.height = FAC.h + 'px';
-    var W = FAC.win;
-    win.style.left = W.x + 'px'; win.style.top = W.y + 'px'; win.style.width = W.w + 'px'; win.style.height = W.h + 'px';
-    var b = FAC.inset; glass.style.left = b.l + 'px'; glass.style.top = b.t + 'px'; glass.style.right = b.r + 'px'; glass.style.bottom = b.b + 'px';
-    G.gw = W.w - b.l - b.r; G.gh = W.h - b.t - b.b;                          /* glass, fac px */
-    /* the room photo: on-screen scale s(z) = sEnd·(z/Z_END)^.88, sEnd = cover of the viewport ×1.02 → always covers the glass */
+    var W = FAC.win; place(win, W); place(mark, MARK);
+    place(ol, OL); ol.setAttribute('viewBox', '0 0 ' + OL.w + ' ' + OL.h);
+    var h = OL.sw / 2, R = OL.w - h, B = OL.h - h, my2 = OL.h / 2;              /* clockwise from the right edge's middle (the logo's gap side) */
+    olPath.setAttribute('d', 'M' + R + ' ' + my2 + 'V' + B + 'H' + h + 'V' + h + 'H' + R + 'V' + my2);
+    G.gw = W.w; G.gh = W.h;
+    G.wcx = W.x + W.w / 2; G.wcy = W.y + W.h / 2;                            /* zoom about the window centre */
     G.sEnd = Math.max(vw / ROOM.w, vh / ROOM.h) * 1.02;
     G.zEnd = Math.max(Z_END, Math.max(vw / (G.gw * c), vh / (G.gh * c)) * 1.06);
-    var mw = G.gw * MARK_W, gcx = W.x + b.l + G.gw / 2, gcy = W.y + b.t + G.gh / 2;   /* centred on the glass */
-    mark.style.width = mw + 'px'; mark.style.left = (gcx - mw / 2) + 'px'; mark.style.top = (gcy - mw * 520 / 532 / 2) + 'px';
   }
   function zAt(t){
     if (t < T.push) return 1 + .03 * clamp01(t / T.drift);
@@ -53,17 +54,22 @@
   }
   function render(t){
     var z = zAt(t) * (1 + scrollZoom), c = G.c, k = c * z;                    /* fac px → screen px */
-    var tx = G.vw / 2 - FAC.w / 2 * k, ty = G.vh / 2 - FAC.h / 2 * k;
+    var sx = G.vw / 2 + (G.wcx - FAC.w / 2) * c, sy = G.vh / 2 + (G.wcy - FAC.h / 2) * c;   /* the window's screen position at z = 1 stays put */
+    var tx = sx - G.wcx * k, ty = sy - G.wcy * k;
     cam.style.transform = 'translate3d(' + (tx + pmx * -10) + 'px,' + (ty + pmy * -8) + 'px,0) scale(' + k + ')';
-    var fade = sm15(t / T.fadeIn); st15.style.opacity = fade;
-    /* logo: clockwise conic wipe from the right-hand side */
-    var lp = sm15((t - T.logoA) / (T.logoB - T.logoA)), la = t < T.outA ? 1 : 1 - clamp01((t - T.outA) / (T.outB - T.outA));
-    mark.style.setProperty('--a', (lp * 360).toFixed(1) + 'deg'); mark.style.opacity = (lp > 0 ? .92 * la : 0);
-    /* the window */
+    st15.style.opacity = sm15(t / T.fadeIn);
+    /* 15 · the logo draws clockwise, then goes */
+    var lp = sm15((t - T.logoA) / (T.logoB - T.logoA)), la = t < T.outA ? 1 : 1 - sm15((t - T.outA) / (T.outB - T.outA));
+    mark.style.setProperty('--a', (lp * 360).toFixed(1) + 'deg'); mark.style.opacity = (lp > 0 ? la : 0);
+    /* 16 · the warm outline draws clockwise round the window, stays through the lighting, fades as we push */
+    var op = sm15((t - T.olA) / (T.olB - T.olA)), oa = 1 - sm15((t - T.olOutA) / (T.olOutB - T.olOutA));
+    olPath.style.strokeDashoffset = (1 - op).toFixed(4); ol.style.opacity = op > 0 ? oa : 0;
+    /* 14 · the window lights up (bloom), then the room takes over inside the glass during the push */
     var lit = sm15((t - T.litA) / (T.litB - T.litA)), bloom = 1 + .25 * Math.sin(Math.PI * clamp01((t - T.litA) / .8));
-    var passed = sm15((t - T.push) / .9);
-    glass.style.opacity = lit; roomImg.style.filter = 'brightness(' + bloom.toFixed(3) + ')';
-    var zr = zAt(t), sOn = Math.max(G.sEnd * Math.pow(zr / G.zEnd, .88), Math.max(G.gw / ROOM.w, G.gh / ROOM.h) * c * zr * 1.12), sLoc = sOn / k * (1 + scrollZoom);   /* room scale inside .cam */
+    var room = sm15((t - T.roomA) / (T.roomB - T.roomA)), passed = sm15((t - T.push) / .9);
+    litImg.style.opacity = lit; litImg.style.filter = 'brightness(' + bloom.toFixed(3) + ')';
+    roomImg.style.opacity = room;
+    var zr = zAt(t), sOn = Math.max(G.sEnd * Math.pow(zr / G.zEnd, .88), Math.max(G.gw / ROOM.w, G.gh / ROOM.h) * c * zr * 1.12), sLoc = sOn / k * (1 + scrollZoom);
     roomImg.style.transform = 'translate(-50%,-50%) scale(' + sLoc + ')';
     spill.style.opacity = lit * bloom * (1 - .6 * passed) * .9;
     if (!state.done && t >= T.ui) uiOn();
@@ -105,7 +111,7 @@
   function finish(){
     if (state.done) return; state.done = true; cancelAnimationFrame(raf);
     uiOn(); state.t = T.end + 1; render(T.end + 1);
-    pre.style.display = 'none'; mark.style.display = 'none';
+    pre.style.display = 'none'; mark.style.display = 'none'; ol.style.display = 'none';
     try { sessionStorage.setItem('ci-intro-v15', '1'); } catch(e){}
     startScroll(); startSlider(); idleLoop();
   }
