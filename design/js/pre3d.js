@@ -553,6 +553,8 @@ function slidesInit(list){
     const room = lastT ? render3d(lastT.end + 1, lastT, 0, 0, 0, true) : SLD.tex[0];
     [room].concat(SLD.tex).forEach((t, i, all) => { u.tA.value = t; u.tB.value = all[(i + 1) % all.length]; u.uP.value = .5; renderer.setRenderTarget(rt); renderer.render(SLD.scene, SLD.cam); });
     renderer.setRenderTarget(null); rt.dispose(); u.uP.value = 0;
+    const i0 = SLD.ps.findIndex(Boolean);                               /* full-size slots allocated now, not on the first change */
+    if (i0 >= 0){ const o0 = { mx: 0, my: 0, scroll: 0 }; drawPhoto(i0, 0, 0, 0, o0); drawPhoto(i0, 1, 0, 0, o0); renderer.setRenderTarget(null); }
     SLD.ready = true;
   });
   return SLD.promise;
