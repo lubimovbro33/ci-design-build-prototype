@@ -522,15 +522,16 @@ function slotRT(i){
 /* GPU uploads one per frame, so a dozen big photos arriving together never stall a frame */
 const upQ = []; let upOn = false;
 function upload(t, res){ upQ.push([t, res]); if (!upOn){ upOn = true; requestAnimationFrame(function f(){ const j = upQ.shift(); if (j){ renderer.initTexture(j[0]); j[1](j[0]); } if (upQ.length) requestAnimationFrame(f); else upOn = false; }); } }
-function loadRaw(u){
-  return new Promise((res, rej) => new THREE.TextureLoader().load(u, t => {
-    t.colorSpace = THREE.NoColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.minFilter = THREE.LinearMipmapLinearFilter;
-    upload(t, res);
-  }, undefined, rej));
+/* decode off the main thread (ImageBitmap), so the upload itself is cheap; plain <img> loading where that is missing */
+const IBL = typeof createImageBitmap === 'function' ? new THREE.ImageBitmapLoader().setOptions({ imageOrientation: 'flipY', premultiplyAlpha: 'none', colorSpaceConversion: 'none' }) : null;
+function loadAny(u, prep){
+  return new Promise((res, rej) => {
+    if (IBL) IBL.load(u, bmp => { const t = new THREE.Texture(bmp); t.flipY = false; t.needsUpdate = true; prep(t); upload(t, res); }, undefined, rej);
+    else new THREE.TextureLoader().load(u, t => { prep(t); upload(t, res); }, undefined, rej);
+  });
 }
-function loadDep(u){
-  return new Promise((res, rej) => new THREE.TextureLoader().load(u, t => { t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; upload(t, res); }, undefined, rej));
-}
+function loadRaw(u){ return loadAny(u, t => { t.colorSpace = THREE.NoColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.minFilter = THREE.LinearMipmapLinearFilter; }); }
+function loadDep(u){ return loadAny(u, t => { t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; }); }
 /* list: [{ src, bg?, dep? }] — with bg + dep a photo becomes a relief, else a flat picture */
 function slidesInit(list){
   if (SLD.mat) return SLD.promise;

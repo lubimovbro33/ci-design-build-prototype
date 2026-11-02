@@ -241,7 +241,9 @@
     if (slide.on) return; slide.on = true;
     if (gl3() && window.__pre3d.slidesInit) {
       GLS = true;
-      window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return {src:s.src, bg:s.bg, dep:s.dep}; })).then(function(){ slide.ready = true; slide.readyAt = performance.now(); }, function(){ GLS = false; buildSlides(); });
+      setTimeout(function(){                                     /* after the title has landed */
+        window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return {src:s.src, bg:s.bg, dep:s.dep}; })).then(function(){ slide.ready = true; slide.readyAt = performance.now(); }, function(){ GLS = false; buildSlides(); });
+      }, 1200);
     } else buildSlides();
     setPreview();
     slide.timer = setTimeout(nextSlide, SL[0].dur * 1000);
