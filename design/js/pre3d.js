@@ -71,10 +71,10 @@ const SKGL = `
   float skH(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float skN(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
     return mix(mix(skH(i), skH(i + vec2(1., 0.)), f.x), mix(skH(i + vec2(0., 1.)), skH(i + 1.), f.x), f.y); }
-  float skR(vec2 uv, float k){ float n = .65 * skN(uv * 6.) + .35 * skN(uv * 19.); return smoothstep(n - .14, n + .14, k * 1.32 - .16); }
+  float skR(vec2 uv, float k){ float n = (1. - uv.y) * .82 + .18 * skN(uv * vec2(9., 14.)); return smoothstep(n - .05, n + .05, k * 1.12 - .06); }   /* a clean sweep from the top, pencil-ragged front */
   vec3 skMix(vec3 col, vec3 sk, vec2 uv, float k){ if (k <= 0.) return col; float r = skR(uv, k);
-    float edge = r * (1. - r) * 4.;                                   /* a faint bright front where the drawing arrives */
-    return mix(col, sk, r) + vec3(.9, .85, .78) * edge * .06 * (1. - k); }`;
+    float edge = r * (1. - r) * 4.;                                   /* a thin bright front where the drawing arrives */
+    return mix(col, sk, r) + vec3(.9, .87, .82) * edge * .1 * (1. - k); }`;
 
 function skyMat(tex){
   return new THREE.ShaderMaterial({
@@ -93,7 +93,7 @@ function skyMat(tex){
         float sp = pow(max(0., sin(uTime * (.7 + 1.5 * h(cell + 7.)) + h(cell) * 40.)), 26.) * step(.62, h(cell + 1.7));   /* glints */
         c.rgb *= mix(1., tw, m) * uLift;
         c.rgb += c.rgb * m * (.62 + 2.2 * sp);                     /* lights feed the bloom, some sparkle */
-        if (uSk > 0.) c.rgb = skMix(c.rgb, texture2D(skMap, vUv).rgb, vUv, uSk);
+        if (uSk > 0.) c.rgb = skMix(c.rgb, texture2D(skMap, vUv).rgb + vec3(.82, .8, .76) * pow(l, 2.2) * .22, vUv, uSk);   /* + the city lights as faint pencil dots */
         gl_FragColor = c;
         #include <colorspace_fragment>
       }`,
