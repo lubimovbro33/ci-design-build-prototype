@@ -499,7 +499,9 @@ function storyFrame(o){
   fu.uTime.value = U.time.value; fu.uFade.value = 1; fu.uAb.value = .022 * Math.sin(Math.PI * clamp01(dive * 1.1));
   fu.uSk.value = clamp01(o.sketch || 0); fu.uKeep.value = clamp01(o.keep || 0);
   const r = winRect(); fu.uWin.value.set(r.x0 / vw, 1 - r.y1 / vh, r.x1 / vw, 1 - r.y0 / vh);
-  renderer.setRenderTarget(null); composer.render();
+  renderer.setRenderTarget(null);
+  if (o.toTex){ composer.renderToScreen = false; composer.render(); composer.renderToScreen = true; return r; }
+  composer.render();
   return r;
 }
 /* the CI window (the outline's rect) on screen, CSS px */
@@ -626,6 +628,7 @@ function slidesInit(list){
     const room = lastT ? render3d(lastT.end + 1, lastT, 0, 0, 0, true) : SLD.tex[0];
     [room].concat(SLD.tex).forEach((t, i, all) => { u.tA.value = t; u.tB.value = all[(i + 1) % all.length]; u.uP.value = .5; renderer.setRenderTarget(rt); renderer.render(SLD.scene, SLD.cam); });
     renderer.setRenderTarget(null); rt.dispose(); u.uP.value = 0;
+    if (lastT) storyFrame({ T: lastT, fly: .9, ol: 1, sketch: .6, keep: .3, toTex: true });   /* the story's sketch pass, warmed off screen */
     const i0 = SLD.ps.findIndex(Boolean);                               /* full-size slots allocated now, not on the first change */
     if (i0 >= 0){ const o0 = { mx: 0, my: 0, scroll: 0 }; drawPhoto(i0, 0, 0, 0, o0); drawPhoto(i0, 1, 0, 0, o0); renderer.setRenderTarget(null); }
     SLD.ready = true;
