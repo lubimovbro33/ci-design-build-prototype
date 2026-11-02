@@ -8,6 +8,7 @@
 <link rel="preload" href="assets/fonts/tg-ext.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="css/site.css">
+<link rel="stylesheet" href="css/story.css">
 <script>(function(){var h=location.hostname,q=location.search;if(/^ci-hero|^ci-preloader/.test(h)||/[?&]hero(=|&|$)/.test(q))document.documentElement.classList.add('hero-only');})();</script>
 
 </head>
@@ -35,6 +36,7 @@
 </header>
 
 <!-- ================================================================== 01 HERO · v15: lights off → the CI outline → our window lights up → inside -->
+<div class="hpin" id="hpin">
 <section class="hero" id="hero">
   <div class="v15" id="v15" aria-hidden="true">
     <canvas class="gl" id="v15gl"></canvas>
@@ -75,36 +77,27 @@
     </div>
   </div>
   <button class="skip mono" id="skip" type="button"><span class="ln"></span>SKIP</button>
-</section>
-<!-- ================================================================== 02 INTRO · quiet → one giant line -->
-<section class="sec ivory intro" id="intro">
-  <div class="drop" aria-hidden="true"></div>
-  <div class="mlab mono rv"><span>01 — 07</span><span>HOME · INTRO</span></div>
-  <div class="stair">
-    <div class="srow" style="--i:0"><span class="n mono">01</span><h3 class="h3 rr">It should reflect how you want to live.</h3></div>
-    <div class="srow" style="--i:3"><span class="n mono">02</span><h3 class="h3 rr" data-d="1">Support how you feel.</h3></div>
-    <div class="srow" style="--i:6"><span class="n mono">03</span><h3 class="h3 rr" data-d="2">Perform as beautifully as it appears.</h3></div>
-  </div>
-  <div class="strip">
-    <figure class="f1 rv"><div class="img-rv rv px has-flute"><img src="assets/img2/ext_window_p.jpg" alt="" loading="lazy"><div class="flute sl"><span class="flab">Glass · 01</span></div></div><figcaption class="mono"><span>FIG. 01</span><span>EXTERIOR</span></figcaption></figure>
-    <figure class="f2 rv" data-d="1"><div class="img-rv rv px has-flute"><img src="assets/img2/living2_p.jpg" alt="" loading="lazy"><div class="flute edge"></div></div><figcaption class="mono"><span>FIG. 02</span><span>LIVING</span></figcaption></figure>
-    <figure class="f3 rv" data-d="2"><div class="img-rv rv px has-flute"><img src="assets/img2/bust_day.jpg" alt="" loading="lazy"><div class="flute sl edge-l"></div></div><figcaption class="mono"><span>FIG. 03</span><span>DETAIL</span></figcaption></figure>
-  </div>
-  <div class="para grid">
-    <div class="c1-3 mono mist rv"><span class="ln"></span>CI DESIGN + BUILD</div>
-    <p class="p c7-11 rv" data-d="1">CI Design + Build brings architecture, interior design, construction, furnishings, art, wellness, and project management together <b>under one roof</b>. One integrated team handling every step, one seamless process, from concept through the night our team onboards + moves you in.</p>
-  </div>
-  <div class="tk rv" id="tk">
-    <h2 class="giant rr">This is <span class="amber">turnkey.</span></h2>
-  </div>
-  <div class="band" aria-hidden="true">
-    <div class="track">
-      <span>Turnkey solutions.<i></i>Bespoke interiors.<i></i>Building You A Better Life.<i></i></span>
-      <span>Turnkey solutions.<i></i>Bespoke interiors.<i></i>Building You A Better Life.<i></i></span>
-    </div>
+  <!-- the story (blocks 2–3): flown back out of the window, the facade becomes a sketch, the CI window becomes the squares -->
+  <div class="story" id="story">
+    <div class="st-bg" id="stBg" aria-hidden="true"></div>
+    <svg class="st-svg" id="stSvg" aria-hidden="true">
+      <g id="stLay"></g>
+      <path class="ld" id="ldL" pathLength="1"/><path class="ld" id="ldR" pathLength="1"/>
+      <rect class="ldq" id="ldqL" width="7" height="7"/><rect class="ldq" id="ldqR" width="7" height="7"/>
+      <path class="sq" id="sqL" pathLength="1"/><path class="sq" id="sqR" pathLength="1"/>
+      <path class="sq gold" id="sqC" pathLength="1"/>
+      <rect class="hd" id="hdL" width="7" height="7"/><rect class="hd" id="hdR" width="7" height="7"/>
+    </svg>
+    <div class="st-ph" id="ph0"><span class="n">01</span><p>It should reflect how you want to live.</p></div>
+    <div class="st-ph" id="ph1"><span class="n">02</span><p>Support how you feel.</p></div>
+    <div class="st-ph" id="ph2"><span class="n">03</span><p>Perform as beautifully as it appears.</p></div>
+    <div class="st-desc" id="stDesc"><span class="lab">CI Design + Build</span><p class="ty" id="stTy"></p><p class="tk" id="stTk">This is <span class="amber">turnkey.</span></p></div>
+    <div class="st-b3 l" id="b3L"><span class="lab">02/ Our philosophy · Building You A Better Life</span><h3>We believe the best homes begin with life, not a look.</h3></div>
+    <div class="st-b3 r" id="b3R"><p>The average person spends 75% of their day at home. The quality of that environment shapes everything — your lifestyle, your health, your longevity goals.</p></div>
+    <div class="st-slog" id="stSlog">Turnkey solutions. Bespoke interiors. Building You A Better Life.</div>
   </div>
 </section>
-
+</div>
 <!-- ================================================================== 03 PHILOSOPHY · mega -->
 <section class="sec dark phil" id="philosophy">
   <div class="grad-bg" aria-hidden="true"></div>
@@ -121,10 +114,6 @@
         <div class="num"><span class="v outl"><span id="dialNum">0</span></span><sup class="pc">%</sup><span class="s mono">OF THE DAY · AT HOME</span></div>
         <span class="lbl mono t">00</span><span class="lbl mono r">06</span><span class="lbl mono b">12</span><span class="lbl mono l">18</span>
       </div>
-    </div>
-    <div class="txt">
-      <p class="p rv">The average person spends 75% of their day at home. The quality of that environment shapes everything — your lifestyle, your health, your longevity goals.</p>
-      <h3 class="h3 rr"><span class="l">We believe the best homes</span><span class="l">begin with life, not a look.</span></h3>
     </div>
   </div>
   <div class="cols2">
@@ -426,7 +415,7 @@
 </footer>
 
 <nav class="chap mono" id="chap" aria-label="Chapters">
-  <a href="#hero" data-ch="hero"><span>01</span><span class="t">Home</span><i></i></a>
+  <a href="#hpin" data-ch="hpin"><span>01</span><span class="t">Home</span><i></i></a>
   <a href="#philosophy" data-ch="philosophy"><span>02</span><span class="t">Philosophy</span><i></i></a>
   <a href="#about" data-ch="about"><span>03</span><span class="t">About CI</span><i></i></a>
   <a href="#projects" data-ch="projects"><span>04</span><span class="t">Projects</span><i></i></a>

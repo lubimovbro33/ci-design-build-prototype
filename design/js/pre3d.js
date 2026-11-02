@@ -265,7 +265,7 @@ const FinalShader = {
       c *= 1. - uVig * smoothstep(.12, .62, r2 * 1.6);
       if (uSk > 0.){
         float e1 = edge(vUv, 1.), e2 = edge(vUv, 2.5);
-        float ln = max(smoothstep(.09, .3, e1), smoothstep(.12, .4, e2) * .7);
+        float ln = max(smoothstep(.12, .36, e1), smoothstep(.16, .46, e2) * .7);
         ln *= .55 + .45 * h(floor(vUv * uRes / 3.) + 3.1);                        /* a little pencil breakup */
         vec3 paper = vec3(.0667);
         vec3 sk = paper + vec3(.93, .91, .87) * ln * .88 + c * .05;

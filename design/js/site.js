@@ -178,7 +178,7 @@
     var start = performance.now(), from = Math.max(state.t, T.litA);
     (function f(now){ var p = clamp01((now - start) / 900); var t = lerp(from, T.end, E.expo(p)); state.t = t; render(t); if (p < 1) requestAnimationFrame(f); else finish(); })(start);
   }
-  function idleLoop(){ (function f(){ if (slide.cur === 0 && !tr && !loopOn && !document.hidden) { var dx = mx - pmx, dy = my - pmy; if (Math.abs(dx) + Math.abs(dy) > .0005) { pmx += dx * .06; pmy += dy * .06; render(T.end + 1); } } requestAnimationFrame(f); })(); }
+  function idleLoop(){ (function f(){ if (slide.cur === 0 && !tr && !loopOn && !ST.on && !document.hidden) { var dx = mx - pmx, dy = my - pmy; if (Math.abs(dx) + Math.abs(dy) > .0005) { pmx += dx * .06; pmy += dy * .06; render(T.end + 1); } } requestAnimationFrame(f); })(); }
 
   /* ================================================================== the hero slider (interiors): slide 0 = the room we entered */
   /* the five interiors the user picked on the Figma board "Hero — интерьеры (отбор)" (02.11, 18:07): professional photos */
@@ -199,7 +199,7 @@
   function kbOf(i, now){ return i === 0 ? 0 : clamp01((now - (slide.start[i] || now)) / ((SL[i].dur + TR_DUR) * 1000)); }
   function glFrame(a, b, p, now){ window.__pre3d.slideFrame({a:a - 1, b:b - 1, p:p, ka:kbOf(a, now), kb:kbOf(b, now), mx:pmx, my:pmy, scroll:scrollZoom, T:T}); }
   function glLoop(now){
-    if (document.hidden) { loopOn = false; return; }
+    if (document.hidden || ST.on) { loopOn = false; return; }
     pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
     if (tr) {
       var p = clamp01((now - tr.t0) / (TR_DUR * 1000));
@@ -211,7 +211,7 @@
     requestAnimationFrame(glLoop);
   }
   function ensureLoop(){ if (loopOn) return; loopOn = true; requestAnimationFrame(glLoop); }
-  function drawIdle(){ if (GLS && (slide.cur !== 0 || tr)) { ensureLoop(); return; } render(T.end + 1); }
+  function drawIdle(){ if (ST.on) return; if (GLS && (slide.cur !== 0 || tr)) { ensureLoop(); return; } render(T.end + 1); }
   function setPreview(){
     for (var j = 0; j < pvImgs.length; j++) { var s = SL[(slide.cur + 1 + j) % SL.length]; pvImgs[j].src = s.th; pvImgs[j].parentNode.setAttribute('data-i', (slide.cur + 1 + j) % SL.length); }
   }
@@ -236,7 +236,7 @@
     slide.timer = setTimeout(nextSlide, next.dur * 1000);
     setPreview();
   }
-  function nextSlide(){ if (!slide.on) return; showSlide((slide.cur + 1) % SL.length); }
+  function nextSlide(){ if (!slide.on || ST.on) return; showSlide((slide.cur + 1) % SL.length); }
   function startSlider(){
     if (slide.on) return; slide.on = true;
     if (gl3() && window.__pre3d.slidesInit) {
@@ -248,7 +248,7 @@
     setPreview();
     slide.timer = setTimeout(nextSlide, SL[0].dur * 1000);
     if (preview) qsa('.pv-img', preview).forEach(function(el){ el.style.pointerEvents = 'auto'; el.style.cursor = 'none'; el.addEventListener('click', function(){ var i = parseInt(el.getAttribute('data-i'), 10); if (!isNaN(i)) showSlide(i); }); });
-    document.addEventListener('visibilitychange', function(){ if (document.hidden) { clearTimeout(slide.timer); } else if (slide.on) { showSlide(slide.cur); } });
+    document.addEventListener('visibilitychange', function(){ if (document.hidden) { clearTimeout(slide.timer); } else if (slide.on && !ST.on) { showSlide(slide.cur); } });
   }
 
   /* ---------- cursor + mouse */
@@ -261,13 +261,170 @@
   layout();
   window.addEventListener('resize', function(){ layout(); if (gl3()) window.__pre3d.resize(); if (state.done) drawIdle(); else render(state.t); onResize(); });
   render(0);
-  function heroScroll(hy, vh){
-    var p = clamp01(hy / vh);
-    scrollZoom = p * .08; heroOff = p >= 1;
-    dark.style.opacity = p * .8;
-    if (state.done) drawIdle();
-    heroIn.style.opacity = 1 - clamp01(p * 1.4); heroIn.style.transform = 'translateY(' + (hy * .12) + 'px)';
+  /* ================================================================== the story: hero → blocks 2–3 (user's whiteboard, 02.11 18:34)
+     The hero is pinned (.hpin, sticky) and the scroll plays one scene, s = viewport-heights scrolled into the pin:
+       hero UI out → (if a photo is up: the glass wave back to the room) → the camera flies back out of the room, through the
+       window, and pulls back from the tower → the golden outline draws round the window → the picture becomes an ink sketch →
+       only the CI window stays → it becomes the central square: phrase 01 → a square draws on the left (counter-clockwise),
+       phrase 02 → on the right, phrase 03 → the three merge into one, the CI paragraph types itself in, "This is turnkey." →
+       the square tilts into an isometric stack of three layers (the three phrases) → block 3's text left and right on lines
+       with square ends. Everything is a pure function of s (scrolling back plays it backwards). */
+  var hpin = $('hpin'), story = $('story'), stBg = $('stBg'), stLay = $('stLay'), sqC = $('sqC'), sqL = $('sqL'), sqR = $('sqR'),
+      hdL = $('hdL'), hdR = $('hdR'), ldL = $('ldL'), ldR = $('ldR'), ldqL = $('ldqL'), ldqR = $('ldqR'),
+      phs = [$('ph0'), $('ph1'), $('ph2')], stDesc = $('stDesc'), stTy = $('stTy'), stTk = $('stTk'), b3L = $('b3L'), b3R = $('b3R'), stSlog = $('stSlog');
+  var ST = {on:false, s:-1, from:0, R:null, gx:null, words:[], lay:[]}, S_END = 12.4;
+  var TYDESC = 'CI Design + Build brings architecture, interior design, construction, furnishings, art, wellness, and project management together under one roof. One integrated team handling every step, one seamless process, from concept through the night our team onboards + moves you in.';
+  var NS = 'http://www.w3.org/2000/svg';
+  function sg(s, a, b){ return clamp01((s - a) / (b - a)); }
+  function eo(u){ return 1 - Math.pow(1 - clamp01(u), 3); }                       /* ease out */
+  function eio(u){ u = clamp01(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+  /* phrases: one masked span per word */
+  phs.forEach(function(el, k){
+    var p = qs('p', el), ws = p.textContent.split(' ');
+    p.innerHTML = ws.map(function(w){ return '<span class="w"><span>' + w + '</span></span>'; }).join(' ');
+    ST.words[k] = qsa('.w > span', p);
+  });
+  function revealWords(k, q){ var ws = ST.words[k], n = ws.length; for (var i = 0; i < n; i++) { var u = eo(clamp01(q * (n + 1.2) - i)); ws[i].style.transform = 'translateY(' + ((1 - u) * 105).toFixed(1) + '%)'; } }
+  /* iso layers (bottom → top in the DOM so the top one covers) */
+  [2, 1, 0].forEach(function(i){
+    var g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'lay' + (i === 0 ? ' top' : ''));
+    var path = document.createElementNS(NS, 'path'), tg = document.createElementNS(NS, 'g');
+    var n = document.createElementNS(NS, 'text'); n.setAttribute('class', 'n'); n.textContent = '0' + (i + 1);
+    var t = document.createElementNS(NS, 'text'), line = '', lines = [];          /* the phrase, wrapped to fit the layer */
+    qs('p', phs[i]).textContent.replace(/\s+/g, ' ').trim().toUpperCase().split(' ').forEach(function(w){ if ((line + ' ' + w).trim().length > 15 && line) { lines.push(line); line = w; } else line = (line + ' ' + w).trim(); });
+    lines.push(line);
+    lines.forEach(function(l){ var ts = document.createElementNS(NS, 'tspan'); ts.textContent = l; t.appendChild(ts); });
+    tg.appendChild(n); tg.appendChild(t); g.appendChild(path); g.appendChild(tg); stLay.appendChild(g);
+    ST.lay[i] = {g:g, path:path, tg:tg, n:n, t:t};
+  });
+  function sqPath(x0, y0, x1, y1){ var cy = (y0 + y1) / 2; return 'M' + x1 + ' ' + cy + 'V' + y0 + 'H' + x0 + 'V' + y1 + 'H' + x1 + 'V' + cy; }   /* from the right middle, counter-clockwise */
+  function headAt(x0, y0, x1, y1, p){                                              /* the point at fraction p along sqPath */
+    var w = x1 - x0, h = y1 - y0, L = 2 * (w + h), d = p * L, cy = (y0 + y1) / 2;
+    if (d <= h / 2) return [x1, cy - d]; d -= h / 2;
+    if (d <= w) return [x1 - d, y0]; d -= w;
+    if (d <= h) return [x0, y0 + d]; d -= h;
+    if (d <= w) return [x0 + d, y1]; d -= w;
+    return [x1, y1 - d];
   }
+  function drawSq(el, r, p, op){ el.setAttribute('d', sqPath(r[0], r[1], r[2], r[3])); el.style.strokeDasharray = Math.max(p, 0.0001) + ' 2'; el.style.opacity = op; }
+  function placeBox(el, r, pad){ el.style.left = r[0] + 'px'; el.style.top = r[1] + 'px'; el.style.width = (r[2] - r[0]) + 'px'; el.style.height = (r[3] - r[1]) + 'px'; el.style.padding = pad + 'px'; }
+  function sqAt(cx, cy, S){ return [cx - S / 2, cy - S / 2, cx + S / 2, cy + S / 2]; }
+  function lerpR(a, b, k){ return [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k), lerp(a[3], b[3], k)]; }
+  var lastMx = 9, lastMy = 9;
+  function storyUpdate(vh){
+    if (!hpin || !story) return;
+    var vw = window.innerWidth, s = clamp01(-hpin.getBoundingClientRect().top / vh / S_END) * S_END;
+    var on = state.done && s > .002;
+    if (!on) {
+      if (ST.on) {                                                                   /* back on the hero */
+        ST.on = false; story.classList.remove('on'); heroIn.style.opacity = ''; heroIn.style.transform = ''; heroIn.style.visibility = '';
+        st15.style.opacity = 1;
+        if (slide.on) { if (slide.cur === 0) render(T.end + 1); showSlide(slide.cur); }
+      }
+      ST.s = s; return;
+    }
+    if (!ST.on) {                                                                    /* entering the story: the slider pauses */
+      ST.on = true; story.classList.add('on'); clearTimeout(slide.timer); tr = null; ST.from = slide.cur; ST.s = -1;
+    }
+    pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
+    var moved = Math.abs(pmx - lastMx) + Math.abs(pmy - lastMy) > .0004;
+    if (s === ST.s && !moved) return;
+    ST.s = s; lastMx = pmx; lastMy = pmy;
+    /* --- the hero UI leaves */
+    var ui = sg(s, 0, .55);
+    heroIn.style.opacity = 1 - eo(ui); heroIn.style.transform = 'translateY(' + (-70 * eio(ui)).toFixed(1) + 'px)'; heroIn.style.visibility = ui >= 1 ? 'hidden' : '';
+    /* --- WebGL: glass back to the room, fly out, outline, sketch, keep the window */
+    var useGL = gl3() && window.__pre3d.storyFrame, glOn = s < 4.15;
+    var cover = sg(s, 3.75, 4.1);
+    stBg.style.opacity = useGL ? cover : Math.min(1, sg(s, .2, 1.4));
+    if (useGL && glOn) {
+      if (ST.from !== 0 && GLS && slide.ready && s < .7) {
+        window.__pre3d.slideFrame({a:ST.from - 1, b:-1, p:eio(sg(s, 0, .7)), ka:kbOf(ST.from, performance.now()), kb:0, mx:pmx, my:pmy, scroll:0, T:T});
+      } else {
+        if (ST.from !== 0 && s >= .7) { ST.from = 0; slide.cur = 0; setPreview(); }
+        ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, fly:sg(s, .7, 2.7), ol:eio(sg(s, 1.75, 2.5)), olOp:1 - sg(s, 3.25, 3.45),
+                                         sketch:eio(sg(s, 2.5, 3.3)), keep:eio(sg(s, 3.3, 3.8))});
+      }
+    }
+    /* --- the squares */
+    var horiz = vw / vh > .95, S = horiz ? Math.min(vw * .27, vh * .46, 470) : Math.min(vh * .25, vw * .7);
+    story.style.setProperty('--S', S + 'px');
+    var gap = S * .12, cx = vw / 2, cy = vh / 2 + (horiz ? vh * .015 : 30), step = S + gap;
+    var pC = [cx, cy], pL = horiz ? [cx - step, cy] : [cx, cy - step], pR = horiz ? [cx + step, cy] : [cx, cy + step];
+    var target = sqAt(cx, cy, S);
+    var win = ST.R ? [ST.R.x0, ST.R.y0, ST.R.x1, ST.R.y1] : sqAt(cx, cy, S * .3);
+    var grow = eio(sg(s, 3.8, 4.5)), rc = lerpR(win, target, grow);
+    var cOp = useGL ? sg(s, 3.25, 3.45) : sg(s, 1.2, 1.6);
+    var iso = sg(s, 9.8, 10.8), isoE = eio(iso);
+    drawSq(sqC, rc, 1, isoE > 0 ? 0 : cOp);
+    /* side squares draw counter-clockwise, then merge into the centre */
+    var mg = eio(sg(s, 7.3, 8.0)), dl = eio(sg(s, 5.0, 5.6)), dr = eio(sg(s, 6.0, 6.6));
+    var rl = sqAt(lerp(pL[0], cx, mg), lerp(pL[1], cy, mg), S), rr = sqAt(lerp(pR[0], cx, mg), lerp(pR[1], cy, mg), S);
+    var sideOp = 1 - sg(s, 7.8, 8.0);
+    drawSq(sqL, rl, dl, dl > 0 ? sideOp : 0); drawSq(sqR, rr, dr, dr > 0 ? sideOp : 0);
+    var hl = headAt(rl[0], rl[1], rl[2], rl[3], dl), hr = headAt(rr[0], rr[1], rr[2], rr[3], dr);
+    hdL.setAttribute('x', hl[0] - 3.5); hdL.setAttribute('y', hl[1] - 3.5); hdL.style.opacity = dl > 0 && dl < 1 ? 1 : 0;
+    hdR.setAttribute('x', hr[0] - 3.5); hdR.setAttribute('y', hr[1] - 3.5); hdR.style.opacity = dr > 0 && dr < 1 ? 1 : 0;
+    /* phrases */
+    var pad = S * .085, phOut = 1 - sg(s, 7.1, 7.4);
+    var rects = [target, rl, rr], qs3 = [sg(s, 4.45, 4.95), sg(s, 5.45, 5.95), sg(s, 6.45, 6.95)];
+    for (var k = 0; k < 3; k++) {
+      placeBox(phs[k], rects[k], pad); revealWords(k, qs3[k]);
+      phs[k].style.opacity = qs3[k] > 0 ? phOut : 0;
+    }
+    /* the CI paragraph types itself into the merged square */
+    var ty = sg(s, 8.0, 9.2), tkq = sg(s, 9.15, 9.45), dOut = 1 - sg(s, 9.65, 9.95);
+    placeBox(stDesc, target, pad);
+    stDesc.style.opacity = (ty > 0 ? 1 : 0) * dOut;
+    var nC = Math.round(ty * TYDESC.length), txt = TYDESC.slice(0, nC);
+    if (stTy.getAttribute('data-n') !== String(nC)) {
+      stTy.setAttribute('data-n', nC);
+      stTy.innerHTML = txt.replace('under one roof', '<b>under one roof</b>') + (ty > 0 && ty < 1 ? '<i class="car"></i>' : '');
+    }
+    stTk.style.opacity = eo(tkq); stTk.style.transform = 'translateY(' + ((1 - eo(tkq)) * 12).toFixed(1) + 'px)';
+    /* --- the iso stack */
+    var thz = isoE * Math.PI / 4, thx = isoE * 54.7 * Math.PI / 180, sc = lerp(1, horiz ? .72 : .62, isoE), D = S * .34 * isoE;
+    var cz = Math.cos(thz), sz = Math.sin(thz), cxx = Math.cos(thx), sxx = Math.sin(thx);
+    var a = cz * sc, b = sz * cxx * sc, c = -sz * sc, d = cz * cxx * sc;
+    var hs = S / 2, corners = [[-hs, -hs], [hs, -hs], [hs, hs], [-hs, hs]], extL = [1e9, 0], extR = [-1e9, 0];
+    var labQ = sg(s, 10.4, 10.9);
+    stLay.style.opacity = isoE > 0 ? 1 : 0;
+    for (var i = 0; i < 3; i++) {
+      var L = ST.lay[i], h = (1 - i) * D, ox = cx, oy = cy - h * sxx * sc;
+      var pts = corners.map(function(q){ return [a * q[0] + c * q[1] + ox, b * q[0] + d * q[1] + oy]; });
+      L.path.setAttribute('d', 'M' + pts.map(function(q){ return q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join('L') + 'Z');
+      L.tg.setAttribute('transform', 'matrix(' + [a, b, c, d, ox, oy].map(function(v){ return v.toFixed(4); }).join(' ') + ')');
+      var fs = S * .062;
+      var tsp = L.t.childNodes, nl = tsp.length, y0 = hs - pad - (nl - 1) * fs * 1.08;
+      for (var j = 0; j < nl; j++) { tsp[j].setAttribute('x', -hs + pad); tsp[j].setAttribute('y', (y0 + j * fs * 1.08).toFixed(1)); }
+      L.n.setAttribute('x', -hs + pad); L.n.setAttribute('y', (-hs + pad + S * .03).toFixed(1)); L.n.setAttribute('font-size', (S * .03).toFixed(1));
+      L.t.setAttribute('font-size', fs.toFixed(1));
+      L.tg.style.opacity = labQ;
+      if (i === 0) pts.forEach(function(q){ if (q[0] < extL[0]) extL = q; });
+      if (i === 2) pts.forEach(function(q){ if (q[0] > extR[0]) extR = q; });
+    }
+    /* --- block 3: text left and right on lines with square ends */
+    var ld = eio(sg(s, 10.8, 11.4)), tq = eo(sg(s, 11.0, 11.6));
+    var m = Math.max(20, Math.min(48, vw * .035)), hdrH = 90;
+    if (horiz) {
+      var wl = Math.min(vw * .27, extL[0] - 80 - m), xl = extL[0] - 80 - wl;
+      b3L.style.left = xl + 'px'; b3L.style.width = wl + 'px'; b3L.style.top = Math.max(hdrH, extL[1] - 18) + 'px';
+      var xr = extR[0] + 80, wr = Math.min(vw * .24, vw - m - xr);
+      b3R.style.left = xr + 'px'; b3R.style.width = wr + 'px'; b3R.style.top = (extR[1] - 12) + 'px';
+      ldL.setAttribute('d', 'M' + extL[0] + ' ' + extL[1] + 'H' + (extL[0] - 64)); ldR.setAttribute('d', 'M' + extR[0] + ' ' + extR[1] + 'H' + (extR[0] + 64));
+      ldqL.setAttribute('x', extL[0] - 64 - 7); ldqL.setAttribute('y', extL[1] - 3.5); ldqR.setAttribute('x', extR[0] + 64); ldqR.setAttribute('y', extR[1] - 3.5);
+      ldL.style.opacity = ldR.style.opacity = ld > 0 ? 1 : 0; ldL.style.strokeDasharray = ldR.style.strokeDasharray = Math.max(ld, .0001) + ' 2';
+      ldqL.style.opacity = ldqR.style.opacity = ld >= 1 ? 1 : 0;
+    } else {
+      b3L.style.left = m + 'px'; b3L.style.width = (vw - 2 * m) + 'px'; b3L.style.top = (hdrH + 4) + 'px';
+      b3R.style.left = m + 'px'; b3R.style.width = (vw - 2 * m) + 'px'; b3R.style.top = (cy + S * .62) + 'px';
+      ldL.style.opacity = ldR.style.opacity = ldqL.style.opacity = ldqR.style.opacity = 0;
+    }
+    b3L.style.opacity = tq; b3L.style.transform = 'translateY(' + ((1 - tq) * 16).toFixed(1) + 'px)';
+    b3R.style.opacity = tq; b3R.style.transform = 'translateY(' + ((1 - tq) * 16).toFixed(1) + 'px)';
+    stSlog.style.opacity = eo(sg(s, 11.3, 11.8));
+  }
+
 
   /* ================================================================== YODEZEEN text reveal
      measured on yodezeen.com: every character is its own inline span (opacity 0 → 1, expo-out);
@@ -721,8 +878,7 @@
   function loop(now){
     var y = window.scrollY || window.pageYOffset, vh = window.innerHeight;
     // hero parallax after the intro
-    var hy = Math.min(y, vh);
-    if (hy !== lastHy) { heroScroll(hy, vh); lastHy = hy; }
+    storyUpdate(vh);
     smoothStep(); y = window.scrollY || window.pageYOffset;
     updateDial(vh); updateAbout(vh, now); updateAppr(vh); updateProc(vh); updateCta(vh); updateReads(vh); updatePx(vh); updateYode(vh); updateGlass(vh);
     if (y !== lastY || vh !== lastVH) { updateHdr(); updateChap(y, vh); }
