@@ -60,7 +60,8 @@ function placeRect(m){
   const { r, z, axis } = m.userData, k = axis ? (Zc - z) / Zc : 1;
   const cx = r.x + r.w / 2, cy = -(r.y + r.h / 2);
   m.position.set(C.x + (cx - C.x) * k, C.y + (cy - C.y) * k, z);
-  m.scale.set(k, k, 1);
+  const o = m.userData.over || 1;                                  /* optional overscan (sky: room for the mouse parallax) */
+  m.scale.set(k * o, k * o, 1);
 }
 
 /* ---------------------------------------------------------------- shaders */
@@ -280,7 +281,7 @@ async function build(){
   layoutCamera();
   const clipEdge = [ new THREE.Plane(new THREE.Vector3(-1, 0, 0), F.EDGE - .5) ];       /* keep things left of the corner */
 
-  M.sky = rectPlane(skyMat(tSky), { x:F.RX, y:F.RY, w:F.RW, h:F.RH }, SKYZ, true); M.sky.renderOrder = 0; scene.add(M.sky);
+  M.sky = rectPlane(skyMat(tSky), { x:F.RX, y:F.RY, w:F.RW, h:F.RH }, SKYZ, true); M.sky.userData.over = 1.04; placeRect(M.sky); M.sky.renderOrder = 0; scene.add(M.sky);
   const facW = tFac.image.width / tSky.image.width * F.RW;
   M.fac = rectPlane((() => { const m = facadeMat(tFac, tWin); m.uniforms.winMask.value = tWinM; return m; })(), { x:F.RX - F.EXT, y:F.RY, w:facW, h:F.RH }, 0, false); M.fac.renderOrder = 5; scene.add(M.fac);
   /* the building's side wall round the corner: the facade texture repeated, in shadow, receding into the city */
@@ -357,11 +358,11 @@ function resize(){
   scene.traverse(o => { if (o.userData && o.userData.r) placeRect(o); });
   /* room plane: covers the view from the final pose (camera at z = ZEND) */
   const dist = ZEND - ROOMZ, visH = 2 * dist * TAN, visW = visH * camera.aspect;
-  const h = Math.max(visH, visW / ROOM_AR) * 1.08, w = h * ROOM_AR;           /* a little overscan for the mouse parallax */
+  const h = Math.max(visH, visW / ROOM_AR) * 1.10, w = h * ROOM_AR;           /* a little overscan for the mouse parallax */
   M.room.scale.set(w, h, 1); M.roomN.scale.set(w, h, 1);
 }
 const ZEND = -40;
-const MP_OUT = 110, MP_IN = 18;   /* mouse parallax: camera slide at the screen edge (×0.5), outside / in the room */
+const MP_OUT = 170, MP_IN = 26;   /* mouse parallax: camera slide at the screen edge (×0.5), outside / in the room */
 
 /* ---------------------------------------------------------------- camera path + state */
 const v3 = new THREE.Vector3(), look = new THREE.Vector3();
@@ -393,7 +394,7 @@ function pose(t, T, mx, my, scroll){
      outside the pivot is 400 behind the facade (the tower drifts one way, the city the other), inside it is the
      doorway wall (the sofa slides one way, the dining room and the wine wall the other) */
   const dk = sm(Math.min(1, dive * 2.2)), mp = lerp(MP_OUT, MP_IN, dk);
-  v3.set(lx - x, ly - y, lz - z); const L = v3.length(); v3.multiplyScalar((L + 400 * (1 - dk)) / L);
+  v3.set(lx - x, ly - y, lz - z); const L = v3.length(); v3.multiplyScalar((L + 520 * (1 - dk)) / L);
   look.set(x + v3.x, y + v3.y, z + v3.z);
   camera.position.set(x - mx * mp, y + my * mp * .7, z); camera.lookAt(look);
   return dive;

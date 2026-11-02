@@ -58,8 +58,8 @@ sofa = poly_mask([(0, 690), (40, 660), (100, 650), (160, 622), (215, 622), (262,
                   (420, 758), (428, 716), (440, 710), (470, 745), (482, 770), (500, 775), (590, 781), (655, 820), (697, 864), (0, 864)])
 table = ell_mask(688, 800, 98, 21) | rect(698, 812, 713, 864) | rect(764, 812, 780, 864) | rect(630, 724, 692, 800) | ell_mask(705, 779, 24, 11)
 Dn = np.full((H, W), np.nan, np.float32)
-Dn[lamp] = 2.7
-Dn[sofa] = 1.35 + 1.3 * np.clip(xx[sofa] / 700, 0, 1)                  # the sofa runs away from us, into the room
+Dn[lamp] = 2.1
+Dn[sofa] = 1.6 + 1.05 * np.clip(xx[sofa] / 700, 0, 1)                  # the sofa runs away from us, into the room
 Dn[table] = 2.4                                                          # coffee table, glass, bowl (in front of the sofa's far end)
 poly = lamp | sofa | table
 photo = np.array(Image.open('/tmp/room_view.jpg').convert('RGB'))
