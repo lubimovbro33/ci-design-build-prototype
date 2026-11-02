@@ -130,7 +130,7 @@ function logoMat(tex){
         float halo = max(h - c.a, 0.) * uHalo;
         vec2 p = vec2((vUv.x - .5) * uAsp, -(vUv.y - .5));
         float a = fract(atan(p.y, p.x) / 6.2831853 + 1.);              /* 0 at the right, clockwise on screen */
-        float edge = smoothstep(uProg, uProg - .012, a);
+        float edge = uProg >= .999 ? 1. : smoothstep(uProg, uProg - .012, a);
         float head = exp(-abs(a - uProg) * 60.) * uSpark;
         float g = p.x * .9 - p.y * .55 - uGlint;                        /* a thin diagonal glint across the letters */
         float glint = exp(-g * g / .0012);
@@ -170,6 +170,17 @@ function outlineMat(){
       }`,
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
   })};
+}
+function shadowMat(){
+  return new THREE.ShaderMaterial({
+    uniforms: { uOp:{value:0} },
+    vertexShader: vtx,
+    fragmentShader: `uniform float uOp; varying vec2 vUv;
+      void main(){ vec2 p = vUv - .5; float r2 = dot(p, p);
+        float a = exp(-r2 / .055) * .42 * uOp;                       /* big radius, barely there */
+        gl_FragColor = vec4(0., 0., 0., a); }`,
+    transparent: true, depthWrite: false
+  });
 }
 function spillMat(){
   return new THREE.ShaderMaterial({
@@ -252,6 +263,9 @@ async function build(){
   /* outline (frame 16) and logo (frame 15) */
   const om = outlineMat();
   M.ol = rectPlane(om.mat, { x:F.OL.x - om.pad, y:F.OL.y - om.pad, w:F.OL.w + 2 * om.pad, h:F.OL.h + 2 * om.pad }, 1, false); M.ol.renderOrder = 7; scene.add(M.ol);
+  const SH = 2.6;                                                   /* shadow plane = 2.6 × the logo */
+  M.shadow = rectPlane(shadowMat(), { x:F.MARK.x - F.MARK.w * (SH - 1) / 2, y:F.MARK.y - F.MARK.h * (SH - 1) / 2, w:F.MARK.w * SH, h:F.MARK.h * SH }, 1.5, false);
+  M.shadow.material.clippingPlanes = clipEdge; M.shadow.renderOrder = 7; scene.add(M.shadow);
   M.logo = rectPlane(logoMat(tLogo), F.MARK, 2, false); M.logo.renderOrder = 8; scene.add(M.logo);
 
   composer = new EffectComposer(renderer);
@@ -326,6 +340,7 @@ function render3d(t, T, mx, my, scroll){
   const prog = t < T.outA ? draw : 1 - er, lvis = draw > 0 && er < 1 ? 1 : 0;
   const lu = M.logo.material.uniforms;
   lu.uProg.value = prog; lu.uOp.value = lvis;
+  M.shadow.material.uniforms.uOp.value = sm(draw * 1.4) * (1 - er);
   lu.uSpark.value = ((draw > 0 && draw < 1) || (er > 0 && er < 1)) ? 1 : 0;
   lu.uGain.value = 1.0 + .08 * shK; lu.uHalo.value = .42 + .22 * shK;
   lu.uGlint.value = shine > 0 && shine < 1 ? lerp(-.95, .95, ease(clamp01((shine - .15) / .7))) : -3.;
