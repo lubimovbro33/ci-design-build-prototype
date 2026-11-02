@@ -178,31 +178,58 @@
     var start = performance.now(), from = Math.max(state.t, T.litA);
     (function f(now){ var p = clamp01((now - start) / 900); var t = lerp(from, T.end, E.expo(p)); state.t = t; render(t); if (p < 1) requestAnimationFrame(f); else finish(); })(start);
   }
-  function idleLoop(){ (function f(){ if (slide.cur === 0 && !document.hidden) { var dx = mx - pmx, dy = my - pmy; if (Math.abs(dx) + Math.abs(dy) > .0005) { pmx += dx * .06; pmy += dy * .06; render(T.end + 1); } } requestAnimationFrame(f); })(); }
+  function idleLoop(){ (function f(){ if (slide.cur === 0 && !tr && !loopOn && !document.hidden) { var dx = mx - pmx, dy = my - pmy; if (Math.abs(dx) + Math.abs(dy) > .0005) { pmx += dx * .06; pmy += dy * .06; render(T.end + 1); } } requestAnimationFrame(f); })(); }
 
   /* ================================================================== the hero slider (interiors): slide 0 = the room we entered */
-  var SL = [
-    {k:'v15', dur:7, th:'assets/v15/room_1k.jpg'},
-    {k:'img', src:'assets/img2/living2_w.jpg', dur:6.5},
-    {k:'img', src:'assets/img2/foyer_w.jpg', dur:6.5},
-    {k:'img', src:'assets/img2/hall_w.jpg', dur:6.5},
-    {k:'img', src:'assets/img2/living3_w.jpg', dur:6.5},
-    {k:'img', src:'assets/img2/dining_w.jpg', dur:6.5},
-    {k:'img', src:'assets/img2/chaise.jpg', dur:6.5}
-  ];
-  var slide = {cur:0, timer:null, on:false, els:[]};
+  /* the five interiors the user picked on the Figma board "Hero — интерьеры (отбор)" (02.11, 18:07): professional photos */
+  var HSZ = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 1700 ? '_2560.jpg' : '_1600.jpg';
+  var SL = [{k:'v15', dur:7, th:'assets/v15/room_1k.jpg'}].concat(['h1_city', 'h2_kitchen', 'h3_fireplace', 'h4_skyline', 'h5_double'].map(function(n){
+    return {k:'img', src:'assets/hero/' + n + HSZ, th:'assets/hero/' + n + '_th.jpg', dur:6.5};
+  }));
+  var slide = {cur:0, timer:null, on:false, els:[], ready:false, start:[]};
   var pvImgs = preview ? qsa('.pv-img img', preview) : [];
   function buildSlides(){
     SL.forEach(function(s, i){
-      if (s.k === 'img') { var im = document.createElement('img'); im.className = 'sl'; im.src = s.src; im.alt = ''; im.decoding = 'async'; slidesEl.appendChild(im); slide.els[i] = im; s.th = s.src; }
+      if (s.k === 'img') { var im = document.createElement('img'); im.className = 'sl'; im.src = s.src; im.alt = ''; im.decoding = 'async'; slidesEl.appendChild(im); slide.els[i] = im; }
     });
   }
+  /* WebGL: the slides change through a wave of fluted glass (js/pre3d.js slideFrame); DOM crossfade is the fallback */
+  var GLS = false, tr = null, loopOn = false, TR_DUR = 2.2, heroOff = false;
+  function ease3(u){ u = clamp01(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
+  function kbOf(i, now){ return i === 0 ? 0 : clamp01((now - (slide.start[i] || now)) / ((SL[i].dur + TR_DUR) * 1000)); }
+  function glFrame(a, b, p, now){ window.__pre3d.slideFrame({a:a - 1, b:b - 1, p:p, ka:kbOf(a, now), kb:kbOf(b, now), mx:pmx, my:pmy, scroll:scrollZoom, T:T}); }
+  function glLoop(now){
+    if (document.hidden) { loopOn = false; return; }
+    pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
+    if (tr) {
+      var p = clamp01((now - tr.t0) / (TR_DUR * 1000));
+      if (!heroOff) glFrame(tr.a, tr.b, ease3(p), now);
+      if (p >= 1) tr = null;
+    } else if (slide.cur !== 0) {
+      if (!heroOff) glFrame(slide.cur, slide.cur, 0, now);
+    } else { loopOn = false; render(T.end + 1); return; }      /* back in the 3D room: idleLoop redraws on mouse moves */
+    requestAnimationFrame(glLoop);
+  }
+  function ensureLoop(){ if (loopOn) return; loopOn = true; requestAnimationFrame(glLoop); }
+  function drawIdle(){ if (GLS && (slide.cur !== 0 || tr)) { ensureLoop(); return; } render(T.end + 1); }
   function setPreview(){
     for (var j = 0; j < pvImgs.length; j++) { var s = SL[(slide.cur + 1 + j) % SL.length]; pvImgs[j].src = s.th; pvImgs[j].parentNode.setAttribute('data-i', (slide.cur + 1 + j) % SL.length); }
   }
   function showSlide(i){
     var prev = SL[slide.cur], next = SL[i];
     clearTimeout(slide.timer);
+    if (GLS) {
+      if (!slide.ready) { slide.timer = setTimeout(function(){ showSlide(i); }, 400); return; }
+      if (i !== slide.cur) {
+        var now = performance.now();
+        if (tr) { tr.a = tr.b; }                              /* clicked mid-change: carry on from the picture coming in */
+        tr = {a: tr ? tr.a : slide.cur, b: i, t0: now};
+        slide.start[i] = now; slide.cur = i;
+      }
+      slide.timer = setTimeout(nextSlide, (next.dur + (i !== 0 ? TR_DUR : 0)) * 1000);
+      setPreview(); ensureLoop();
+      return;
+    }
     if (prev.k === 'img') slide.els[slide.cur].classList.remove('on');
     slide.cur = i;
     if (next.k === 'img') slide.els[i].classList.add('on');
@@ -211,7 +238,12 @@
   }
   function nextSlide(){ if (!slide.on) return; showSlide((slide.cur + 1) % SL.length); }
   function startSlider(){
-    if (slide.on) return; slide.on = true; buildSlides(); setPreview();
+    if (slide.on) return; slide.on = true;
+    if (gl3() && window.__pre3d.slidesInit) {
+      GLS = true;
+      window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return s.src; })).then(function(){ slide.ready = true; }, function(){ GLS = false; buildSlides(); });
+    } else buildSlides();
+    setPreview();
     slide.timer = setTimeout(nextSlide, SL[0].dur * 1000);
     if (preview) qsa('.pv-img', preview).forEach(function(el){ el.style.pointerEvents = 'auto'; el.style.cursor = 'none'; el.addEventListener('click', function(){ var i = parseInt(el.getAttribute('data-i'), 10); if (!isNaN(i)) showSlide(i); }); });
     document.addEventListener('visibilitychange', function(){ if (document.hidden) { clearTimeout(slide.timer); } else if (slide.on) { showSlide(slide.cur); } });
@@ -225,13 +257,13 @@
   document.addEventListener('pointerover', function(e){ var t = e.target.closest('a,button,.qh,.tab,.sw,.pv-img'); if (t) cur.classList.add('link'); });
   document.addEventListener('pointerout', function(e){ var t = e.target.closest('a,button,.qh,.tab,.sw,.pv-img'); if (t) cur.classList.remove('link'); });
   layout();
-  window.addEventListener('resize', function(){ layout(); if (gl3()) window.__pre3d.resize(); render(state.done ? T.end + 1 : state.t); onResize(); });
+  window.addEventListener('resize', function(){ layout(); if (gl3()) window.__pre3d.resize(); if (state.done) drawIdle(); else render(state.t); onResize(); });
   render(0);
   function heroScroll(hy, vh){
     var p = clamp01(hy / vh);
-    scrollZoom = p * .08;
+    scrollZoom = p * .08; heroOff = p >= 1;
     dark.style.opacity = p * .8;
-    if (state.done) render(T.end + 1);
+    if (state.done) drawIdle();
     heroIn.style.opacity = 1 - clamp01(p * 1.4); heroIn.style.transform = 'translateY(' + (hy * .12) + 'px)';
   }
 
