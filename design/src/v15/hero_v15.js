@@ -148,7 +148,7 @@
   /* the five interiors the user picked on the Figma board "Hero — интерьеры (отбор)" (02.11, 18:07): professional photos */
   var HSZ = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 1700 ? '_2560.jpg' : '_1600.jpg';
   var SL = [{k:'v15', dur:7, th:'assets/v15/room_1k.jpg'}].concat(['h1_city', 'h2_kitchen', 'h3_fireplace', 'h4_skyline', 'h5_double'].map(function(n){
-    return {k:'img', src:'assets/hero/' + n + HSZ, th:'assets/hero/' + n + '_th.jpg', dur:6.5};
+    return {k:'img', src:'assets/hero/' + n + HSZ, bg:'assets/hero/' + n + '_bg' + HSZ, dep:'assets/hero/' + n + '_dep.png', th:'assets/hero/' + n + '_th.jpg', dur:6.5};
   }));
   var slide = {cur:0, timer:null, on:false, els:[], ready:false, start:[]};
   var pvImgs = preview ? qsa('.pv-img img', preview) : [];
@@ -158,7 +158,7 @@
     });
   }
   /* WebGL: the slides change through a wave of fluted glass (js/pre3d.js slideFrame); DOM crossfade is the fallback */
-  var GLS = false, tr = null, loopOn = false, TR_DUR = 2.2, heroOff = false;
+  var GLS = false, tr = null, loopOn = false, TR_DUR = 2.6, heroOff = false;
   function ease3(u){ u = clamp01(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
   function kbOf(i, now){ return i === 0 ? 0 : clamp01((now - (slide.start[i] || now)) / ((SL[i].dur + TR_DUR) * 1000)); }
   function glFrame(a, b, p, now){ window.__pre3d.slideFrame({a:a - 1, b:b - 1, p:p, ka:kbOf(a, now), kb:kbOf(b, now), mx:pmx, my:pmy, scroll:scrollZoom, T:T}); }
@@ -205,7 +205,7 @@
     if (slide.on) return; slide.on = true;
     if (gl3() && window.__pre3d.slidesInit) {
       GLS = true;
-      window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return s.src; })).then(function(){ slide.ready = true; }, function(){ GLS = false; buildSlides(); });
+      window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return {src:s.src, bg:s.bg, dep:s.dep}; })).then(function(){ slide.ready = true; }, function(){ GLS = false; buildSlides(); });
     } else buildSlides();
     setPreview();
     slide.timer = setTimeout(nextSlide, SL[0].dur * 1000);
