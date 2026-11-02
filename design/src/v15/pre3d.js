@@ -78,9 +78,10 @@ function skyMat(tex){
         float m = smoothstep(.36, .8, l);                          /* city lights only */
         vec2 cell = floor(vUv * vec2(900., 650.));
         float t = uTime * 1.6 + h(cell) * 6.283;
-        float tw = .8 + .2 * sin(t) * sin(t * .37 + h(cell + 3.1) * 4.0);
+        float tw = .72 + .28 * sin(t) * sin(t * .37 + h(cell + 3.1) * 4.0);
+        float sp = pow(max(0., sin(uTime * (.7 + 1.5 * h(cell + 7.)) + h(cell) * 40.)), 26.) * step(.62, h(cell + 1.7));   /* glints */
         c.rgb *= mix(1., tw, m) * uLift;
-        c.rgb += c.rgb * m * .62;                                  /* lights feed the bloom */
+        c.rgb += c.rgb * m * (.62 + 2.2 * sp);                     /* lights feed the bloom, some sparkle */
         gl_FragColor = c;
         #include <colorspace_fragment>
       }`,
@@ -89,11 +90,11 @@ function skyMat(tex){
 }
 function facadeMat(tex, win){
   return new THREE.ShaderMaterial({
-    uniforms: { map:{value:tex}, winMap:{value:win}, uTime:U.time, uLife:{value:1} },
+    uniforms: { map:{value:tex}, winMap:{value:win}, winMask:{value:null}, uTime:U.time, uLife:{value:1} },
     vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform sampler2D winMap; uniform float uTime; uniform float uLife; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D map; uniform sampler2D winMap; uniform sampler2D winMask; uniform float uTime; uniform float uLife; varying vec2 vUv;
       void main(){ vec4 c = texture2D(map, vUv); if (c.a < .5) discard;
-        vec3 w = texture2D(winMap, vUv).rgb; float id = w.r, m = w.g;
+        vec3 w = texture2D(winMap, vUv).rgb; float id = w.r, m = texture2D(winMask, vUv).r;
         vec3 col = c.rgb;
         if (id > .002){
           float h1 = fract(id * 91.7), h2 = fract(id * 13.31 + .2), h3 = fract(id * 47.13 + .5);
@@ -247,6 +248,7 @@ async function build(){
 
   const hi = hiDPI(), base = 'assets/v15/gl/';
   const tWin = await new Promise((res, rej) => new THREE.TextureLoader().load(base + 'facade_win.png', t => { t.colorSpace = THREE.NoColorSpace; t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; res(t); }, undefined, rej));
+  const tWinM = await new Promise((res, rej) => new THREE.TextureLoader().load(base + 'facade_winmask.png', t => { t.colorSpace = THREE.NoColorSpace; res(t); }, undefined, rej));
   const [tSky, tFac, tUD, tUL, tJamb, tRoom, tLogo] = await Promise.all([
     loadTex(base + (hi ? 'sky_2x.jpg' : 'sky_1x.jpg')), loadTex(base + (hi ? 'facade_2x.webp' : 'facade_1x.webp')),
     loadTex(base + 'unit_dark.jpg'), loadTex(base + 'unit_lit.webp'), loadTex(base + 'jamb.jpg'),
@@ -257,7 +259,7 @@ async function build(){
 
   M.sky = rectPlane(skyMat(tSky), { x:F.RX, y:F.RY, w:F.RW, h:F.RH }, SKYZ, true); M.sky.renderOrder = 0; scene.add(M.sky);
   const facW = tFac.image.width / tSky.image.width * F.RW;
-  M.fac = rectPlane(facadeMat(tFac, tWin), { x:F.RX - F.EXT, y:F.RY, w:facW, h:F.RH }, 0, false); M.fac.renderOrder = 5; scene.add(M.fac);
+  M.fac = rectPlane((() => { const m = facadeMat(tFac, tWin); m.uniforms.winMask.value = tWinM; return m; })(), { x:F.RX - F.EXT, y:F.RY, w:facW, h:F.RH }, 0, false); M.fac.renderOrder = 5; scene.add(M.fac);
   /* the building's side wall round the corner: the facade texture repeated, in shadow, receding into the city */
   const SIDE = 2200;
   const tSide = tFac.clone(); tSide.wrapS = THREE.RepeatWrapping; tSide.repeat.set(SIDE / facW * .9, 1); tSide.offset.set(.05, 0); tSide.needsUpdate = true;
@@ -302,6 +304,9 @@ async function build(){
   finalPass = new ShaderPass(FinalShader); composer.addPass(finalPass);
   resize();
   window.addEventListener('resize', resize);
+  [tSky, tFac, tUD, tUL, tJamb, tRoom, tLogo, tWin, tWinM].forEach(t => renderer.initTexture(t));
+  renderer.compile(scene, camera);
+  finalPass.uniforms.uFade.value = 0; composer.render(); composer.render();
 }
 
 function layoutCamera(){

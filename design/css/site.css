@@ -1069,3 +1069,11 @@ html,body{background:#0B0D11}
 .hero .v15 canvas.gl{position:absolute;inset:0;width:100%;height:100%;display:none}
 .hero .v15.gl canvas.gl{display:block}
 .hero .v15.gl .cam{display:none}
+
+/* ================================================================== hero-only domain (ci-hero.vercel.app or ?hero): just the preloader + the first screen */
+html.hero-only, html.hero-only body{height:100%;overflow:hidden!important;overscroll-behavior:none}
+html.hero-only body > section:not(#hero), html.hero-only #footer, html.hero-only #chap{display:none!important}
+html.hero-only .hero{height:100vh;height:100dvh}
+
+/* the intro is not skippable (user, 2 Nov) */
+#skip{display:none!important}

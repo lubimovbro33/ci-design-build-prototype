@@ -14,7 +14,7 @@
   var MARK = {x:1730, y:864, w:380, h:434};                                 /* Figma "CI DB LOGO FINAL-White" ×2                       */
   var ROOM = {w:2400, h:1729};
   var Z_END = 7.8;
-  var T = {fadeIn:.45, orbit:2.40, drift:3.05, logoA:.50, logoB:1.30, shineA:1.30, shineB:2.40, outA:2.50, outB:3.20, olA:2.62, olB:3.32, litA:3.32, litB:3.82, olOutA:3.95, olOutB:4.35,
+  var T = {fadeIn:1.10, orbit:2.40, drift:3.05, logoA:.50, logoB:1.30, shineA:1.30, shineB:2.40, outA:2.50, outB:3.20, olA:2.62, olB:3.32, litA:3.32, litB:3.82, olOutA:3.95, olOutB:4.35,
            push:4.00, pushEnd:5.55, roomA:4.15, roomB:4.70, ui:5.30, end:5.80};
   /* WebGL 3D scene (js/pre3d.js, three.js) when the browser has WebGL2; the DOM layers below are the fallback */
   var GL = (function(){ try { var c = document.createElement('canvas'); return !!(window.WebGL2RenderingContext && c.getContext('webgl2')); } catch(e){ return false; } })();
@@ -111,11 +111,14 @@
     pre.classList.add('out'); veil.classList.add('off'); st15.classList.add('on');
     if (gl3()) st15.classList.add('gl');
     if (reduced) { finish(); return; }
-    state.phase = 'intro'; t0 = performance.now();
+    state.phase = 'intro'; t0 = performance.now(); state.t = 0; lastNow = null;
     raf = requestAnimationFrame(tick);
   }
-  function tick(now){
-    var t = (now - t0) / 1000;
+  var lastNow = null;
+  function tick(now){                                                       /* own clock: a slow first frame never makes the intro jump */
+    if (lastNow === null) lastNow = now;
+    var dt = Math.min((now - lastNow) / 1000, 1 / 30); lastNow = now;
+    var t = state.t + dt;
     pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
     state.t = t; render(t);
     if (t < T.end) raf = requestAnimationFrame(tick); else finish();
@@ -139,8 +142,6 @@
     var start = performance.now(), from = Math.max(state.t, T.litA);
     (function f(now){ var p = clamp01((now - start) / 900); var t = lerp(from, T.end, E.expo(p)); state.t = t; render(t); if (p < 1) requestAnimationFrame(f); else finish(); })(start);
   }
-  skip.addEventListener('click', skipIntro);
-  window.addEventListener('keydown', function(e){ if (!state.done && (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); skipIntro(); } });
   function idleLoop(){ (function f(){ if (slide.cur === 0 && !document.hidden) { var dx = mx - pmx, dy = my - pmy; if (Math.abs(dx) + Math.abs(dy) > .0005) { pmx += dx * .06; pmy += dy * .06; render(T.end + 1); } } requestAnimationFrame(f); })(); }
 
   /* ================================================================== the hero slider (interiors): slide 0 = the room we entered */
