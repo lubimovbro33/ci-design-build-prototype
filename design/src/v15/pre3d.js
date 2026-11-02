@@ -130,24 +130,45 @@ function unitLitMat(tex){
     transparent: true, depthWrite: false
   });
 }
-function roomMat(tex){
+/* the room photo is a relief, not a flat card: every vertex is pushed along its ray from the final eye position by the
+   hand-built depth map (room_depth.png, metres) → from the final pose it is exactly the photo, and any camera move
+   (mouse, the dive) shows real parallax: the sofa slides past the doorway, the dining room and the wine wall stay deep */
+function roomMat(tex, dep, near){
   return new THREE.ShaderMaterial({
-    uniforms: { map:{value:tex}, uLight:{value:0}, uGain:{value:1} },
-    vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform float uLight; uniform float uGain; varying vec2 vUv;
+    defines: near ? { NEAR: 1 } : {},
+    uniforms: { map:{value:tex}, dmap:{value:dep}, uEye:{value:new THREE.Vector3()}, uDK:{value:1}, uLight:{value:0}, uGain:{value:1} },
+    transparent: !!near, depthWrite: !near,
+    vertexShader: `uniform sampler2D dmap; uniform vec3 uEye; uniform float uDK; varying vec2 vUv;
+      void main(){ vUv = position.xy + .5;                       /* = uv on the room plane; the near layer runs a bit past it */
+        vec4 wp = modelMatrix * vec4(position, 1.);
+        vec4 dd = textureLod(dmap, vUv, 0.);
+        #ifdef NEAR
+        float D = 1. + dd.g * 5.5;
+        #else
+        float D = 1. + dd.r * 5.5;                                   /* metres; the doorway wall (3.5 m) stays on the plane */
+        #endif
+        float s = pow(D / 3.5, .8);
+        wp.xyz = uEye + (wp.xyz - uEye) * mix(1., s, uDK);
+        gl_Position = projectionMatrix * viewMatrix * wp; }`,
+    fragmentShader: `uniform sampler2D map; uniform sampler2D dmap; uniform float uLight; uniform float uGain; varying vec2 vUv;
       void main(){ vec3 c = texture2D(map, vUv).rgb;
+        #ifdef NEAR
+        float al = texture2D(dmap, vUv).b; if (al < .004) discard;   /* the cut-out of the near furniture */
+        #else
+        float al = 1.;
+        #endif
         vec3 night = c * vec3(1.08, .88, .66) * .8;               /* seen from outside at night: warm, dimmer */
         vec3 col = mix(c, night, 1. - uLight) * uGain;
-        gl_FragColor = vec4(col, 1.);
+        gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
       }`
   });
 }
 function logoMat(tex){
   return new THREE.ShaderMaterial({
-    uniforms: { map:{value:tex}, uProg:{value:0}, uOp:{value:0}, uAsp:{value:F.MARK.w / F.MARK.h}, uGain:{value:1}, uGlint:{value:-3}, uSpark:{value:0}, uHalo:{value:.5} },
+    uniforms: { map:{value:tex}, uProg:{value:0}, uOp:{value:0}, uAsp:{value:F.MARK.w / F.MARK.h}, uGain:{value:1}, uGlint:{value:-3}, uSpark:{value:0}, uHalo:{value:.5}, uSoft:{value:.04} },
     vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform float uProg; uniform float uOp; uniform float uAsp; uniform float uGain; uniform float uGlint; uniform float uSpark; uniform float uHalo; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D map; uniform float uProg; uniform float uOp; uniform float uAsp; uniform float uGain; uniform float uGlint; uniform float uSpark; uniform float uHalo; uniform float uSoft; varying vec2 vUv;
       void main(){ vec4 c = texture2D(map, vUv);
         /* a thin halo from the logo's own alpha (no global bloom on the letters → they stay crisp) */
         vec2 px = vec2(1. / 601., 1. / 687.); float h = 0.;
@@ -157,12 +178,12 @@ function logoMat(tex){
         float halo = max(h - c.a, 0.) * uHalo;
         vec2 p = vec2((vUv.x - .5) * uAsp, -(vUv.y - .5));
         float a = fract(atan(p.y, p.x) / 6.2831853 + 1.);              /* 0 at the right, clockwise on screen */
-        float edge = uProg >= .999 ? 1. : smoothstep(uProg, uProg - .012, a);
-        float head = exp(-abs(a - uProg) * 60.) * uSpark;
+        float edge = uProg >= .999 ? 1. : smoothstep(uProg + .002, uProg - uSoft, a);   /* a soft sweep, not a hard cut */
+        float head = exp(-abs(a - uProg) * 40.) * uSpark;
         float g = p.x * .9 - p.y * .55 - uGlint;                        /* a thin diagonal glint across the letters */
         float glint = exp(-g * g / .0012);
         float body = c.a, al = max(body, halo) * edge * uOp;
-        vec3 col = mix(vec3(1.), c.rgb, body) * (uGain * .9 + .5 * glint * body + .5 * head);
+        vec3 col = mix(vec3(1.), c.rgb, body) * (uGain * .9 + (.5 * glint + .45 * head) * body);
         gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
       }`,
@@ -249,10 +270,12 @@ async function build(){
   const hi = hiDPI(), base = 'assets/v15/gl/';
   const tWin = await new Promise((res, rej) => new THREE.TextureLoader().load(base + 'facade_win.png', t => { t.colorSpace = THREE.NoColorSpace; t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; res(t); }, undefined, rej));
   const tWinM = await new Promise((res, rej) => new THREE.TextureLoader().load(base + 'facade_winmask.png', t => { t.colorSpace = THREE.NoColorSpace; res(t); }, undefined, rej));
-  const [tSky, tFac, tUD, tUL, tJamb, tRoom, tLogo] = await Promise.all([
+  const tDep = await new Promise((res, rej) => new THREE.TextureLoader().load(base + 'room_depth.png', t => { t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; res(t); }, undefined, rej));
+  const [tSky, tFac, tUD, tUL, tJamb, tRoom, tLogo, tRoomBg] = await Promise.all([
     loadTex(base + (hi ? 'sky_2x.jpg' : 'sky_1x.jpg')), loadTex(base + (hi ? 'facade_2x.webp' : 'facade_1x.webp')),
     loadTex(base + 'unit_dark.jpg'), loadTex(base + 'unit_lit.webp'), loadTex(base + 'jamb.jpg'),
-    loadTex('assets/v15/' + (hi ? 'room_2k.jpg' : 'room_1k.jpg')), loadTex('assets/v15/logo_db.png')
+    loadTex('assets/v15/' + (hi ? 'room_2k.jpg' : 'room_1k.jpg')), loadTex('assets/v15/logo_db.png'),
+    loadTex(base + (hi ? 'room_bg_2k.jpg' : 'room_bg_1k.jpg'))
   ]);
   layoutCamera();
   const clipEdge = [ new THREE.Plane(new THREE.Vector3(-1, 0, 0), F.EDGE - .5) ];       /* keep things left of the corner */
@@ -283,9 +306,18 @@ async function build(){
   M.jamb.add(quad(x0,y0,x1,y0), quad(x1,y1,x0,y1), quad(x0,y1,x0,y0), quad(x1,y0,x1,y1));
   M.jamb.renderOrder = 2; scene.add(M.jamb);
   /* the room behind the window */
-  tRoom.minFilter = THREE.LinearMipmapLinearFilter;
-  M.room = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), roomMat(tRoom)); M.room.material.clippingPlanes = clipEdge;
+  /* two layers: the room (furniture near us painted out) and, on top, the near furniture cut out — sofa, lamp, coffee
+     table — each on its own depth, so the sofa really slides in front of the room instead of dragging it along */
+  tRoom.minFilter = tRoomBg.minFilter = THREE.LinearMipmapLinearFilter;
+  const roomGeo = new THREE.PlaneGeometry(1.12, 1.12, 224, 162);       /* edge texels stretch a little past the photo */
+  M.room = new THREE.Mesh(roomGeo, roomMat(tRoomBg, tDep, 0)); M.room.material.clippingPlanes = clipEdge;
   M.room.position.set(H.x, H.y, ROOMZ); M.room.renderOrder = 1; scene.add(M.room);
+  M.roomN = new THREE.Mesh(roomGeo, roomMat(tRoom, tDep, 1)); M.roomN.material.clippingPlanes = clipEdge;
+  M.roomN.position.set(H.x, H.y, ROOMZ); M.roomN.renderOrder = 1.5; scene.add(M.roomN);
+  [M.room, M.roomN].forEach(m => m.material.uniforms.uEye.value.set(H.x, H.y, ZEND));
+  /* a dark interior behind the photo: while the camera is in the window, rays that miss the photo hit this, not the city */
+  M.roomBack = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000), new THREE.MeshBasicMaterial({ color: 0x0c0a08, clippingPlanes: clipEdge, toneMapped: false }));
+  M.roomBack.position.set(H.x, H.y, ROOMZ - 600); M.roomBack.renderOrder = .9; scene.add(M.roomBack);
   /* light spill on the stone */
   M.spill = new THREE.Mesh(new THREE.PlaneGeometry(1100, 1100), spillMat()); M.spill.material.clippingPlanes = clipEdge;
   M.spill.position.set(H.x, H.y, .6); M.spill.renderOrder = 6; scene.add(M.spill);
@@ -304,7 +336,7 @@ async function build(){
   finalPass = new ShaderPass(FinalShader); composer.addPass(finalPass);
   resize();
   window.addEventListener('resize', resize);
-  [tSky, tFac, tUD, tUL, tJamb, tRoom, tLogo, tWin, tWinM].forEach(t => renderer.initTexture(t));
+  [tSky, tFac, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep].forEach(t => renderer.initTexture(t));
   renderer.compile(scene, camera);
   finalPass.uniforms.uFade.value = 0; composer.render(); composer.render();
 }
@@ -325,10 +357,11 @@ function resize(){
   scene.traverse(o => { if (o.userData && o.userData.r) placeRect(o); });
   /* room plane: covers the view from the final pose (camera at z = ZEND) */
   const dist = ZEND - ROOMZ, visH = 2 * dist * TAN, visW = visH * camera.aspect;
-  const h = Math.max(visH, visW / ROOM_AR) * 1.04, w = h * ROOM_AR;
-  M.room.scale.set(w, h, 1);
+  const h = Math.max(visH, visW / ROOM_AR) * 1.08, w = h * ROOM_AR;           /* a little overscan for the mouse parallax */
+  M.room.scale.set(w, h, 1); M.roomN.scale.set(w, h, 1);
 }
 const ZEND = -40;
+const MP_OUT = 110, MP_IN = 18;   /* mouse parallax: camera slide at the screen edge (×0.5), outside / in the room */
 
 /* ---------------------------------------------------------------- camera path + state */
 const v3 = new THREE.Vector3(), look = new THREE.Vector3();
@@ -356,10 +389,13 @@ function pose(t, T, mx, my, scroll){
     z = ROOMZ + Math.pow(d0, 1 - e) * Math.pow(d1, e);
     x = lerp(x, H.x, c); y = lerp(y, H.y, c); lx = lerp(lx, H.x, c); ly = lerp(ly, H.y, c); lz = lerp(0, ROOMZ, c);
   }
-  /* mouse parallax (stronger outside, gentle in the room) */
-  const mp = dive > .99 ? 4 : 18 * (1 - dive) + 4;
-  x += -mx * mp; y += my * mp * .7;
-  camera.position.set(x, y, z); look.set(lx - mx * mp * .3, ly + my * mp * .2, lz); camera.lookAt(look);
+  /* mouse parallax: the camera slides with the cursor but keeps looking at a pivot point on its view axis —
+     outside the pivot is 400 behind the facade (the tower drifts one way, the city the other), inside it is the
+     doorway wall (the sofa slides one way, the dining room and the wine wall the other) */
+  const dk = sm(Math.min(1, dive * 2.2)), mp = lerp(MP_OUT, MP_IN, dk);
+  v3.set(lx - x, ly - y, lz - z); const L = v3.length(); v3.multiplyScalar((L + 400 * (1 - dk)) / L);
+  look.set(x + v3.x, y + v3.y, z + v3.z);
+  camera.position.set(x - mx * mp, y + my * mp * .7, z); camera.lookAt(look);
   return dive;
 }
 
@@ -371,7 +407,8 @@ function render3d(t, T, mx, my, scroll){
   const shine = clamp01((t - T.shineA) / (T.shineB - T.shineA)), shK = Math.sin(Math.PI * shine);
   const prog = t < T.outA ? draw : 1 - er, lvis = draw > 0 && er < 1 ? 1 : 0;
   const lu = M.logo.material.uniforms;
-  lu.uProg.value = prog; lu.uOp.value = lvis;
+  lu.uProg.value = prog; lu.uOp.value = lvis * (1 - Math.pow(er, 1.4));
+  lu.uSoft.value = t < T.outA ? .05 : .05 + .1 * er;
   M.shadow.material.uniforms.uOp.value = sm(draw * 1.4) * (1 - er);
   lu.uSpark.value = ((draw > 0 && draw < 1) || (er > 0 && er < 1)) ? 1 : 0;
   lu.uGain.value = 1.0 + .08 * shK; lu.uHalo.value = .42 + .22 * shK;
@@ -384,8 +421,10 @@ function render3d(t, T, mx, my, scroll){
   const lit = sm((t - T.litA) / (T.litB - T.litA)), bloomK = Math.sin(Math.PI * clamp01((t - T.litA) / .9));
   M.ud.material.opacity = 1 - lit;
   M.ul.material.uniforms.uOp.value = lit; M.ul.material.uniforms.uGain.value = 1 + .22 * bloomK;
-  M.room.material.uniforms.uLight.value = sm((t - T.push - .35) / .9);
-  M.room.material.uniforms.uGain.value = lit * (1 + .18 * bloomK);
+  for (const m of [M.room, M.roomN]){
+    m.material.uniforms.uLight.value = sm((t - T.push - .35) / .9);
+    m.material.uniforms.uGain.value = lit * (1 + .18 * bloomK);
+  }
   /* the glass unit dissolves as the camera reaches the window */
   const cz = camera.position.z, through = 1 - clamp01((cz - 6) / 70);
   if (through > 0){ M.ul.material.uniforms.uOp.value = lit * (1 - through); M.ud.material.opacity *= (1 - through); }
