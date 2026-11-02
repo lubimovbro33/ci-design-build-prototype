@@ -400,7 +400,9 @@ function pose(t, T, mx, my, scroll){
   return dive;
 }
 
+let lastT = null;
 function render3d(t, T, mx, my, scroll, toTex){
+  lastT = T;
   U.time.value = performance.now() / 1000;
   const dive = pose(t, T, mx || 0, my || 0, scroll || 0);
   /* frame 15: the logo draws clockwise, then shines (glint, brighter bloom), then erases counter-clockwise */
@@ -499,7 +501,15 @@ function slidesInit(urls){
   SLD.promise = Promise.all(urls.map(u => new Promise((res, rej) => new THREE.TextureLoader().load(u, t => {
     t.colorSpace = THREE.NoColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); t.minFilter = THREE.LinearMipmapLinearFilter;
     renderer.initTexture(t); res(t);
-  }, undefined, rej)))).then(ts => { SLD.tex = ts; renderer.compile(SLD.scene, SLD.cam); SLD.ready = true; });
+  }, undefined, rej)))).then(ts => {
+    SLD.tex = ts; renderer.compile(SLD.scene, SLD.cam);
+    /* warm-up off screen: every photo bound once and the room-into-a-texture path run once, so the first change never hitches */
+    const rt = new THREE.WebGLRenderTarget(64, 64), u = SLD.mat.uniforms;
+    const room = lastT ? render3d(lastT.end + 1, lastT, 0, 0, 0, true) : ts[0];
+    [room].concat(ts).forEach((t, i, all) => { u.tA.value = t; u.tB.value = all[(i + 1) % all.length]; u.uP.value = .5; renderer.setRenderTarget(rt); renderer.render(SLD.scene, SLD.cam); });
+    renderer.setRenderTarget(null); rt.dispose(); u.uP.value = 0;
+    SLD.ready = true;
+  });
   return SLD.promise;
 }
 /* cover-fit a texture to the screen, zoomed by z about (.5,.5) and shifted by (px, py) in screen fractions */
