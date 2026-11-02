@@ -1066,3 +1066,6 @@ html,body{background:#0B0D11}
   -webkit-mask-image:conic-gradient(from 90deg,#000 var(--a),transparent var(--a));mask-image:conic-gradient(from 90deg,#000 var(--a),transparent var(--a))}
 .hero .v15 .ol{position:absolute;overflow:visible;opacity:0;pointer-events:none;filter:drop-shadow(0 0 17px rgb(255,208,150))}
 .hero .v15 .ol path{fill:none;stroke:#F8BD79;stroke-width:6;stroke-linecap:square;stroke-dasharray:1;stroke-dashoffset:1}
+.hero .v15 canvas.gl{position:absolute;inset:0;width:100%;height:100%;display:none}
+.hero .v15.gl canvas.gl{display:block}
+.hero .v15.gl .cam{display:none}

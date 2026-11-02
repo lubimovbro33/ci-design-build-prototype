@@ -14,8 +14,11 @@
   var MARK = {x:1730, y:864, w:380, h:434};                                 /* Figma "CI DB LOGO FINAL-White" ×2                       */
   var ROOM = {w:2400, h:1729};
   var Z_END = 7.8;
-  var T = {fadeIn:.35, drift:3.05, logoA:.55, logoB:1.35, outA:1.85, outB:2.20, olA:1.90, olB:2.50, litA:2.50, litB:3.00, olOutA:3.05, olOutB:3.50,
-           push:3.05, pushEnd:4.65, roomA:3.20, roomB:3.75, ui:4.30, end:4.75};
+  var T = {fadeIn:.45, orbit:2.35, drift:3.05, logoA:.55, logoB:1.35, outA:1.70, outB:2.05, olA:1.75, olB:2.35, litA:2.35, litB:2.85, olOutA:3.00, olOutB:3.40,
+           push:3.15, pushEnd:4.70, roomA:3.30, roomB:3.85, ui:4.45, end:4.95};
+  /* WebGL 3D scene (js/pre3d.js, three.js) when the browser has WebGL2; the DOM layers below are the fallback */
+  var GL = (function(){ try { var c = document.createElement('canvas'); return !!(window.WebGL2RenderingContext && c.getContext('webgl2')); } catch(e){ return false; } })();
+  function gl3(){ return GL && window.__pre3d && window.__pre3d.state === 'ready'; }
   var G = {}, state = {t:0, done:false, skipped:false, phase:'pre'};
   var mx = 0, my = 0, pmx = 0, pmy = 0, scrollZoom = 0;
   var short = false; try { short = sessionStorage.getItem('ci-intro-v15') === '1'; } catch(e){}
@@ -23,11 +26,13 @@
   function expo15(u){ u = clamp01(u); if (u === 0 || u === 1) return u; return u < .5 ? Math.pow(2, 20 * u - 10) / 2 : 1 - Math.pow(2, -20 * u + 10) / 2; }
 
   /* ---------- sources: pick sizes for the screen */
-  (function pick(){
+  function pickDom(){
+    if (facImg.src) return;
     var px = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2);
     facImg.src = px > 2600 ? 'assets/v15/pre_dark_4k.jpg' : px > 1700 ? 'assets/v15/pre_dark_2k.jpg' : 'assets/v15/pre_dark_1k.jpg';
     roomImg.src = px > 1500 ? 'assets/v15/room_2k.jpg' : 'assets/v15/room_1k.jpg';
-  })();
+  }
+  if (!GL) pickDom();
   var need = [facImg, litImg, roomImg, mark], loaded = 0;
   function isOk(im){ return im.complete && im.naturalWidth > 0; }
   need.forEach(function(im){ if (isOk(im)) loaded++; else { im.addEventListener('load', function(){ loaded++; }); im.addEventListener('error', function(){ loaded++; }); } });
@@ -53,6 +58,12 @@
     return 1.03 * Math.pow(G.zEnd / 1.03, expo15((t - T.push) / (T.pushEnd - T.push)));
   }
   function render(t){
+    if (st15.classList.contains('gl')) {                                      /* the 3D scene draws everything (fade, logo, outline, light, fly-in) */
+      window.__pre3d.render(t, T, pmx, pmy, scrollZoom); st15.style.opacity = 1;
+      if (!state.done && t >= T.ui) uiOn();
+      if (!state.done) skip.classList.toggle('on', t > .5 && t < T.ui);
+      return;
+    }
     var z = zAt(t) * (1 + scrollZoom), c = G.c, k = c * z;                    /* fac px → screen px */
     var sx = G.vw / 2 + (G.wcx - FAC.w / 2) * c, sy = G.vh / 2 + (G.wcy - FAC.h / 2) * c;   /* the window's screen position at z = 1 stays put */
     var tx = sx - G.wcx * k, ty = sy - G.wcy * k;
@@ -81,8 +92,13 @@
   function preTick(now){
     if (preDone) return;
     var el = (now - pre0) / 1000;
-    var target = Math.max(Math.min(.9, el / 1.2), loaded / need.length * .95);
-    if (loaded >= need.length || el > 3 || short && el > .4) target = 1;
+    if (GL && !gl3() && (el > 6 || (window.__pre3d && window.__pre3d.state === 'error'))) { GL = false; pickDom(); pre0 = now; el = 0; }
+    var target;
+    if (GL) { target = gl3() ? 1 : Math.min(.92, el / 2.2); }
+    else {
+      target = Math.max(Math.min(.9, el / 1.2), loaded / need.length * .95);
+      if (loaded >= need.length || el > 3 || short && el > .4) target = 1;
+    }
     shown += (target * 100 - shown) * .2; if (target >= 1 && shown > 98.5) shown = 100;
     cnt.textContent = (shown < 10 ? '0' : '') + Math.round(shown);
     if (shown >= 100) { preDone = true; startIntro(); return; }
@@ -93,6 +109,7 @@
   var raf = null, t0 = null;
   function startIntro(){
     pre.classList.add('out'); veil.classList.add('off'); st15.classList.add('on');
+    if (gl3()) st15.classList.add('gl');
     if (reduced) { finish(); return; }
     state.phase = 'intro'; t0 = performance.now();
     raf = requestAnimationFrame(tick);
@@ -171,7 +188,7 @@
   document.addEventListener('pointerover', function(e){ var t = e.target.closest('a,button,.qh,.tab,.sw,.pv-img'); if (t) cur.classList.add('link'); });
   document.addEventListener('pointerout', function(e){ var t = e.target.closest('a,button,.qh,.tab,.sw,.pv-img'); if (t) cur.classList.remove('link'); });
   layout();
-  window.addEventListener('resize', function(){ layout(); render(state.done ? T.end + 1 : state.t); onResize(); });
+  window.addEventListener('resize', function(){ layout(); if (gl3()) window.__pre3d.resize(); render(state.done ? T.end + 1 : state.t); onResize(); });
   render(0);
   function heroScroll(hy, vh){
     var p = clamp01(hy / vh);
