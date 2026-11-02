@@ -50,8 +50,8 @@
   var MARK = {x:1730, y:864, w:380, h:434};                                 /* Figma "CI DB LOGO FINAL-White" ×2                       */
   var ROOM = {w:2400, h:1729};
   var Z_END = 7.8;
-  var T = {fadeIn:.45, orbit:2.35, drift:3.05, logoA:.55, logoB:1.35, outA:1.70, outB:2.05, olA:1.75, olB:2.35, litA:2.35, litB:2.85, olOutA:3.00, olOutB:3.40,
-           push:3.15, pushEnd:4.70, roomA:3.30, roomB:3.85, ui:4.45, end:4.95};
+  var T = {fadeIn:.45, orbit:2.40, drift:3.05, logoA:.50, logoB:1.30, shineA:1.30, shineB:2.40, outA:2.50, outB:3.20, olA:2.62, olB:3.32, litA:3.32, litB:3.82, olOutA:3.95, olOutB:4.35,
+           push:4.00, pushEnd:5.55, roomA:4.15, roomB:4.70, ui:5.30, end:5.80};
   /* WebGL 3D scene (js/pre3d.js, three.js) when the browser has WebGL2; the DOM layers below are the fallback */
   var GL = (function(){ try { var c = document.createElement('canvas'); return !!(window.WebGL2RenderingContext && c.getContext('webgl2')); } catch(e){ return false; } })();
   function gl3(){ return GL && window.__pre3d && window.__pre3d.state === 'ready'; }

@@ -118,16 +118,18 @@ function roomMat(tex){
 }
 function logoMat(tex){
   return new THREE.ShaderMaterial({
-    uniforms: { map:{value:tex}, uProg:{value:0}, uOp:{value:0}, uAsp:{value:F.MARK.w / F.MARK.h} },
+    uniforms: { map:{value:tex}, uProg:{value:0}, uOp:{value:0}, uAsp:{value:F.MARK.w / F.MARK.h}, uGain:{value:1.6}, uGlint:{value:-2}, uSpark:{value:0} },
     vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform float uProg; uniform float uOp; uniform float uAsp; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D map; uniform float uProg; uniform float uOp; uniform float uAsp; uniform float uGain; uniform float uGlint; uniform float uSpark; varying vec2 vUv;
       void main(){ vec4 c = texture2D(map, vUv);
         vec2 p = vec2((vUv.x - .5) * uAsp, -(vUv.y - .5));
-        float a = atan(p.y, p.x) / 6.2831853; a = fract(a + 1.);            /* 0 at the right, clockwise on screen */
+        float a = fract(atan(p.y, p.x) / 6.2831853 + 1.);              /* 0 at the right, clockwise on screen */
         float edge = smoothstep(uProg, uProg - .012, a);
-        float head = exp(-abs(a - uProg) * 70.) * step(.001, uProg) * (1. - step(.999, uProg));
+        float head = exp(-abs(a - uProg) * 60.) * uSpark;
+        float g = p.x * .9 - p.y * .55 - uGlint;                        /* a diagonal glint sweeping across */
+        float glint = exp(-g * g / .0025) + exp(-g * g / .03) * .18;
         float al = c.a * edge * uOp;
-        vec3 col = c.rgb * (1.35 + 2.5 * head);
+        vec3 col = c.rgb * (uGain + 1.6 * head + 1.1 * glint);
         gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
       }`,
@@ -137,34 +139,25 @@ function logoMat(tex){
 function outlineMat(){
   const pad = 46, r = F.OL;
   return { pad, mat: new THREE.ShaderMaterial({
-    uniforms: { uProg:{value:0}, uOp:{value:0}, uSize:{value:new THREE.Vector2(r.w, r.h)}, uPad:{value:pad}, uCol:{value:new THREE.Color(0xF8BD79)}, uGlow:{value:new THREE.Color(255/255, 208/255, 150/255)} },
+    uniforms: { uFront:{value:1}, uOp:{value:0}, uHead:{value:0}, uSize:{value:new THREE.Vector2(r.w, r.h)}, uPad:{value:pad}, uCol:{value:new THREE.Color(0xF8BD79)}, uGlow:{value:new THREE.Color(255/255, 208/255, 150/255)} },
     vertexShader: vtx,
-    fragmentShader: `uniform float uProg; uniform float uOp; uniform vec2 uSize; uniform float uPad; uniform vec3 uCol; uniform vec3 uGlow; varying vec2 vUv;
+    fragmentShader: `uniform float uFront; uniform float uOp; uniform float uHead; uniform vec2 uSize; uniform float uPad; uniform vec3 uCol; uniform vec3 uGlow; varying vec2 vUv;
       void main(){
         vec2 full = uSize + 2. * uPad;
-        vec2 p = vec2(vUv.x * full.x - uPad, (1. - vUv.y) * full.y - uPad);      /* rect px, y down */
-        float sw = 3., ins = sw * .5;
-        vec2 a = vec2(ins), b = uSize - ins;                                          /* centre line of the stroke (inside) */
-        vec2 q = clamp(p, a, b);
-        float dx = min(abs(p.x - a.x), abs(p.x - b.x)), dy = min(abs(p.y - a.y), abs(p.y - b.y));
-        bool inside = p.x > a.x && p.x < b.x && p.y > a.y && p.y < b.y;
+        vec2 p = vec2(vUv.x * full.x - uPad, (1. - vUv.y) * full.y - uPad);          /* rect px, y down */
+        float ins = 1.5; vec2 a0 = vec2(ins), b0 = uSize - ins;                         /* 3 px stroke inside */
+        vec2 q = clamp(p, a0, b0);
+        float dx = min(abs(p.x - a0.x), abs(p.x - b0.x)), dy = min(abs(p.y - a0.y), abs(p.y - b0.y));
+        bool inside = p.x > a0.x && p.x < b0.x && p.y > a0.y && p.y < b0.y;
         float d = inside ? min(dx, dy) : length(p - q);
-        /* nearest point on the perimeter → arc position, clockwise from the right edge's middle */
-        vec2 n = p; if (inside){ if (dx < dy) n.x = (abs(p.x - a.x) < abs(p.x - b.x)) ? a.x : b.x; else n.y = (abs(p.y - a.y) < abs(p.y - b.y)) ? a.y : b.y; } else n = q;
-        float W = b.x - a.x, Hh = b.y - a.y, P = 2. * (W + Hh), s;
-        float my = (a.y + b.y) * .5;
-        if (abs(n.x - b.x) < .01 && n.y >= my) s = n.y - my;
-        else if (abs(n.y - b.y) < .01) s = Hh * .5 + (b.x - n.x);
-        else if (abs(n.x - a.x) < .01) s = Hh * .5 + W + (b.y - n.y);
-        else if (abs(n.y - a.y) < .01) s = Hh * 1.5 + W + (n.x - a.x);
-        else s = Hh * 1.5 + 2. * W + (n.y - a.y);
-        s /= P;
-        float on = smoothstep(uProg + .004, uProg - .004, s);
+        vec2 r = p - uSize * .5;
+        float ang = fract(atan(r.y, r.x) / 6.2831853 + 1.);                             /* same angle as the logo's wipe */
+        float on = uFront <= .0005 ? 1. : smoothstep(uFront - .004, uFront + .004, ang);
         float core = smoothstep(ins + .9, ins - .4, d) * on;
-        float glow = exp(-d / 8.6) * .55 * on;
-        float hd = length(p - n) + abs(s - uProg) * P;                                  /* the running light */
-        float head = exp(-hd / 7.) * step(.001, uProg) * (1. - step(.999, uProg)) * 2.2;
-        vec3 col = uCol * core * 1.6 + uGlow * (glow + head);
+        float glow = exp(-d / 8.6) * .6 * on;
+        float da = abs(ang - uFront); da = min(da, 1. - da);
+        float head = exp(-(d + da * 650.) / 7.) * uHead * 2.6;                          /* the golden light running ahead */
+        vec3 col = uCol * core * 1.7 + uGlow * (glow + head);
         float al = clamp(core + glow + head, 0., 1.) * uOp;
         gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
@@ -257,7 +250,7 @@ async function build(){
 
   composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), .6, .5, .84); composer.addPass(bloom);
+  bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), .6, .38, .86); composer.addPass(bloom);
   composer.addPass(new OutputPass());
   finalPass = new ShaderPass(FinalShader); composer.addPass(finalPass);
   resize();
@@ -321,12 +314,19 @@ function pose(t, T, mx, my, scroll){
 function render3d(t, T, mx, my, scroll){
   U.time.value = performance.now() / 1000;
   const dive = pose(t, T, mx || 0, my || 0, scroll || 0);
-  /* frame 15: logo */
-  const lp = sm((t - T.logoA) / (T.logoB - T.logoA)), la = 1 - sm((t - T.outA) / (T.outB - T.outA));
-  M.logo.material.uniforms.uProg.value = lp; M.logo.material.uniforms.uOp.value = lp > 0 ? la : 0;
-  /* frame 16: outline */
-  const op = sm((t - T.olA) / (T.olB - T.olA)), oa = 1 - sm((t - T.olOutA) / (T.olOutB - T.olOutA));
-  M.ol.material.uniforms.uProg.value = op; M.ol.material.uniforms.uOp.value = op > 0 ? oa : 0;
+  /* frame 15: the logo draws clockwise, then shines (glint, brighter bloom), then erases counter-clockwise */
+  const draw = sm((t - T.logoA) / (T.logoB - T.logoA)), er = sm((t - T.outA) / (T.outB - T.outA));
+  const shine = clamp01((t - T.shineA) / (T.shineB - T.shineA)), shK = Math.sin(Math.PI * shine);
+  const prog = t < T.outA ? draw : 1 - er, lvis = draw > 0 && er < 1 ? 1 : 0;
+  const lu = M.logo.material.uniforms;
+  lu.uProg.value = prog; lu.uOp.value = lvis;
+  lu.uSpark.value = ((draw > 0 && draw < 1) || (er > 0 && er < 1)) ? 1 : 0;
+  lu.uGain.value = 1.22 + .22 * shK + .04 * Math.sin(t * 9.) * shK;
+  lu.uGlint.value = shine > 0 && shine < 1 ? lerp(-.95, .95, ease(clamp01((shine - .15) / .7))) : -3.;
+  /* frame 16: the golden light follows the eraser (counter-clockwise) and leaves the outline */
+  const front = 1 - sm((t - T.olA) / (T.olB - T.olA)), oa = t < T.olA ? 0 : 1 - sm((t - T.olOutA) / (T.olOutB - T.olOutA));
+  const ou = M.ol.material.uniforms;
+  ou.uFront.value = front; ou.uOp.value = oa; ou.uHead.value = front > .001 && front < .999 ? 1 : 0;
   /* frame 14: the window lights */
   const lit = sm((t - T.litA) / (T.litB - T.litA)), bloomK = Math.sin(Math.PI * clamp01((t - T.litA) / .9));
   M.ud.material.opacity = 1 - lit;
@@ -338,7 +338,7 @@ function render3d(t, T, mx, my, scroll){
   if (through > 0){ M.ul.material.uniforms.uOp.value = lit * (1 - through); M.ud.material.opacity *= (1 - through); }
   M.spill.material.uniforms.uOp.value = lit * (.32 + .25 * bloomK) * (1 - sm(dive * 2.2));
   /* post */
-  bloom.strength = .55 + .22 * bloomK + .25 * lp * la;
+  bloom.strength = .5 + .22 * bloomK + lvis * (.12 + .16 * shK);
   finalPass.uniforms.uTime.value = U.time.value;
   finalPass.uniforms.uFade.value = sm(t / T.fadeIn);
   finalPass.uniforms.uAb.value = .022 * Math.sin(Math.PI * clamp01(dive * 1.1));
