@@ -236,9 +236,8 @@
        with square ends. Everything is a pure function of s (scrolling back plays it backwards). */
   var hpin = $('hpin'), story = $('story'), stBg = $('stBg'), stLay = $('stLay'), sqC = $('sqC'), sqL = $('sqL'), sqR = $('sqR'),
       hdL = $('hdL'), hdR = $('hdR'), ldL = $('ldL'), ldR = $('ldR'), ldqL = $('ldqL'), ldqR = $('ldqR'),
-      phs = [$('ph0'), $('ph1'), $('ph2')], stDesc = $('stDesc'), stTy = $('stTy'), stTk = $('stTk'), b3L = $('b3L'), b3R = $('b3R'), stSlog = $('stSlog');
-  var ST = {on:false, s:-1, push:0, R:null, words:[], lay:[]}, S_END = 12.2;
-  var TYDESC = 'CI Design + Build brings architecture, interior design, construction, furnishings, art, wellness, and project management together under one roof. One integrated team handling every step, one seamless process, from concept through the night our team onboards + moves you in.';
+      phs = [$('ph0'), $('ph1'), $('ph2')], stTk = $('stTk'), pts = [$('pt0'), $('pt1'), $('pt2')], stSlog = $('stSlog');
+  var ST = {on:false, s:-1, push:0, R:null, words:[], lay:[], ld:[]}, S_END = 11;
   var NS = 'http://www.w3.org/2000/svg';
   function sg(s, a, b){ return clamp01((s - a) / (b - a)); }
   function eo(u){ return 1 - Math.pow(1 - clamp01(u), 3); }                       /* ease out */
@@ -261,6 +260,11 @@
     lines.forEach(function(l){ var ts = document.createElementNS(NS, 'tspan'); ts.textContent = l; t.appendChild(ts); });
     tg.appendChild(n); tg.appendChild(t); g.appendChild(path); g.appendChild(tg); stLay.appendChild(g);
     ST.lay[i] = {g:g, path:path, tg:tg, n:n, t:t};
+  });
+  [0, 1, 2].forEach(function(i){
+    var l = document.createElementNS(NS, 'path'); l.setAttribute('class', 'ld'); l.setAttribute('pathLength', '1');
+    var q = document.createElementNS(NS, 'rect'); q.setAttribute('class', 'ldq'); q.setAttribute('width', 7); q.setAttribute('height', 7);
+    stLay.parentNode.appendChild(l); stLay.parentNode.appendChild(q); ST.ld[i] = {l:l, q:q};
   });
   function sqPath(x0, y0, x1, y1){ var cy = (y0 + y1) / 2; return 'M' + x1 + ' ' + cy + 'V' + y0 + 'H' + x0 + 'V' + y1 + 'H' + x1 + 'V' + cy; }   /* from the right middle, counter-clockwise */
   function headAt(x0, y0, x1, y1, p){                                              /* the point at fraction p along sqPath */
@@ -297,95 +301,88 @@
     var moved = Math.abs(pmx - lastMx) + Math.abs(pmy - lastMy) > .0004;
     if (s === ST.s && !moved) return;
     ST.s = s; lastMx = pmx; lastMy = pmy;
-    /* --- the hero UI leaves */
+    /* --- the hero text blurs away while we already fly */
     var ui = sg(s, 0, 1.0);
     heroIn.style.opacity = 1 - eio(ui); heroIn.style.filter = ui > 0 ? 'blur(' + (18 * eo(ui)).toFixed(1) + 'px)' : '';
     heroIn.style.transform = 'scale(' + (1 + .06 * eo(ui)).toFixed(4) + ')'; heroIn.style.visibility = ui >= 1 ? 'hidden' : '';
-    /* --- WebGL: glass back to the room, fly out, outline, sketch, keep the window */
-    var useGL = gl3() && window.__pre3d.storyFrame, glOn = s < 3.95;
-    var cover = sg(s, 3.55, 3.9);
-    stBg.style.opacity = useGL ? cover : Math.min(1, sg(s, .2, 1.4));
-    if (useGL && glOn) {
-      ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, push:ST.push, fly:sg(s, 0, 2.6), ol:eio(sg(s, 1.5, 2.25)), olOp:1 - sg(s, 3.05, 3.25),
-                                       sketch:eio(sg(s, 2.25, 3.1)), keep:eio(sg(s, 3.1, 3.6))});
-    }
-    /* --- the squares */
+    /* --- the squares' size: the window stops exactly at this size (no grow) */
     var horiz = vw / vh > .95, S = horiz ? Math.min(vw * .27, vh * .46, 470) : Math.min(vh * .25, vw * .7);
     story.style.setProperty('--S', S + 'px');
-    var gap = S * .12, cx = vw / 2, cy = vh / 2 + (horiz ? vh * .015 : 30), step = S + gap;
-    var pC = [cx, cy], pL = horiz ? [cx - step, cy] : [cx, cy - step], pR = horiz ? [cx + step, cy] : [cx, cy + step];
-    var target = sqAt(cx, cy, S);
-    var win = ST.R ? [ST.R.x0, ST.R.y0, ST.R.x1, ST.R.y1] : sqAt(cx, cy, S * .3);
-    var grow = eio(sg(s, 3.6, 4.3)), rc = lerpR(win, target, grow);
-    var cOp = useGL ? sg(s, 3.05, 3.25) : sg(s, 1.2, 1.6);
-    var iso = sg(s, 9.6, 10.6), isoE = eio(iso);
-    drawSq(sqC, rc, 1, isoE > 0 ? 0 : cOp);
-    /* side squares draw counter-clockwise, then merge into the centre */
-    var mg = eio(sg(s, 7.1, 7.8)), dl = eio(sg(s, 4.8, 5.4)), dr = eio(sg(s, 5.8, 6.4));
+    var gap = S * .12, cx = vw / 2, cy = vh / 2, step = S + gap;
+    /* --- WebGL: fly out of the window to that distance, outline, the sketch comes and goes, only the window stays */
+    var useGL = gl3() && window.__pre3d.storyFrame, glOn = s < 3.65;
+    stBg.style.opacity = useGL ? sg(s, 3.3, 3.6) : Math.min(1, sg(s, .2, 1.4));
+    if (useGL && glOn) {
+      ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, push:ST.push, winPx:S, fly:sg(s, 0, 1.8), ol:eio(sg(s, 1.05, 1.7)), olOp:1 - sg(s, 2.95, 3.1),
+                                       sketch:eio(sg(s, 1.8, 2.45)), keep:eio(sg(s, 2.75, 3.25))});
+    }
+    var target = [cx - S / 2, cy - S / 2, cx + S / 2, cy + S / 2];
+    var win = ST.R ? [ST.R.x0, ST.R.y0, ST.R.x1, ST.R.y1] : target;
+    var rc = lerpR(win, target, eio(sg(s, 3.2, 3.6)));                               /* only the cursor's offset is taken out */
+    var cOp = useGL ? sg(s, 2.95, 3.1) : sg(s, 1.2, 1.6);
+    var iso = sg(s, 8.5, 9.5), isoE = eio(iso);
+    var pL = horiz ? [cx - step, cy] : [cx, cy - step], pR = horiz ? [cx + step, cy] : [cx, cy + step];
+    /* --- three squares: centre (the window), left and right drawn counter-clockwise, then they merge */
+    var mg = eio(sg(s, 6.5, 7.2)), dl = eio(sg(s, 4.2, 4.8)), dr = eio(sg(s, 5.2, 5.8));
     var rl = sqAt(lerp(pL[0], cx, mg), lerp(pL[1], cy, mg), S), rr = sqAt(lerp(pR[0], cx, mg), lerp(pR[1], cy, mg), S);
-    var sideOp = 1 - sg(s, 7.6, 7.8);
+    var sideOp = 1 - sg(s, 7.0, 7.2), tkq = sg(s, 7.2, 7.7), tkOut = 1 - sg(s, 8.3, 8.6);
+    drawSq(sqC, rc, 1, isoE > 0 ? 0 : cOp);
+    /* the window's gold (the intro) turns into the CI palette — Bright Gray line, Gradient Blue glow — as the square takes over */
+    var cool = eio(sg(s, 3.1, 3.7)), fin = eo(tkq) * tkOut;
+    sqC.style.stroke = 'rgb(' + Math.round(lerp(248, 235, cool)) + ',' + Math.round(lerp(189, 235, cool)) + ',' + Math.round(lerp(121, 235, cool)) + ')';
+    sqC.style.strokeWidth = lerp(2, 1.5, cool) + fin * .5;
+    sqC.style.filter = 'drop-shadow(0 0 ' + (lerp(7, 5, cool) + 14 * fin).toFixed(1) + 'px rgba(' + Math.round(lerp(255, 150, cool)) + ',' + Math.round(lerp(208, 169, cool)) + ',' + Math.round(lerp(150, 191, cool)) + ',' + (lerp(.7, .45, cool) + .4 * fin).toFixed(2) + '))';   /* the finale glows */
     drawSq(sqL, rl, dl, dl > 0 ? sideOp : 0); drawSq(sqR, rr, dr, dr > 0 ? sideOp : 0);
     var hl = headAt(rl[0], rl[1], rl[2], rl[3], dl), hr = headAt(rr[0], rr[1], rr[2], rr[3], dr);
     hdL.setAttribute('x', hl[0] - 3.5); hdL.setAttribute('y', hl[1] - 3.5); hdL.style.opacity = dl > 0 && dl < 1 ? 1 : 0;
     hdR.setAttribute('x', hr[0] - 3.5); hdR.setAttribute('y', hr[1] - 3.5); hdR.style.opacity = dr > 0 && dr < 1 ? 1 : 0;
-    /* phrases */
-    var pad = S * .085, phOut = 1 - sg(s, 6.9, 7.2);
-    var rects = [target, rl, rr], qs3 = [sg(s, 4.25, 4.75), sg(s, 5.25, 5.75), sg(s, 6.25, 6.75)];
-    for (var k = 0; k < 3; k++) {
-      placeBox(phs[k], rects[k], pad); revealWords(k, qs3[k]);
-      phs[k].style.opacity = qs3[k] > 0 ? phOut : 0;
-    }
-    /* the CI paragraph types itself into the merged square */
-    var ty = sg(s, 7.8, 9.0), tkq = sg(s, 8.95, 9.25), dOut = 1 - sg(s, 9.45, 9.75);
-    placeBox(stDesc, target, pad);
-    stDesc.style.opacity = (ty > 0 ? 1 : 0) * dOut;
-    var nC = Math.round(ty * TYDESC.length), txt = TYDESC.slice(0, nC);
-    if (stTy.getAttribute('data-n') !== String(nC)) {
-      stTy.setAttribute('data-n', nC);
-      stTy.innerHTML = txt.replace('under one roof', '<b>under one roof</b>') + (ty > 0 && ty < 1 ? '<i class="car"></i>' : '');
-    }
-    stTk.style.opacity = eo(tkq); stTk.style.transform = 'translateY(' + ((1 - eo(tkq)) * 12).toFixed(1) + 'px)';
-    /* --- the iso stack */
-    var thz = isoE * Math.PI / 4, thx = isoE * 54.7 * Math.PI / 180, sc = lerp(1, horiz ? .72 : .62, isoE), D = S * .34 * isoE;
-    var cz = Math.cos(thz), sz = Math.sin(thz), cxx = Math.cos(thx), sxx = Math.sin(thx);
-    var a = cz * sc, b = sz * cxx * sc, c = -sz * sc, d = cz * cxx * sc;
-    var hs = S / 2, corners = [[-hs, -hs], [hs, -hs], [hs, hs], [-hs, hs]], extL = [1e9, 0], extR = [-1e9, 0];
-    var labQ = sg(s, 10.2, 10.7);
+    var pad = S * .085, phOut = 1 - sg(s, 6.3, 6.6);
+    var rects = [target, rl, rr], qs3 = [sg(s, 3.65, 4.15), sg(s, 4.65, 5.15), sg(s, 5.65, 6.15)];
+    for (var k = 0; k < 3; k++) { placeBox(phs[k], rects[k], pad); revealWords(k, qs3[k]); phs[k].style.opacity = qs3[k] > 0 ? phOut : 0; }
+    /* --- the finale: one panel, "This is turnkey." */
+    placeBox(stTk, target, pad);
+    stTk.style.opacity = eo(tkq) * tkOut; qs('p', stTk).style.transform = 'translateY(' + ((1 - eo(tkq)) * 18).toFixed(1) + 'px)';
+    /* --- it splits into three layers (isometric); each part of the CI paragraph on a line with a square end */
+    var thz = isoE * Math.PI / 4, thx = isoE * 54.7 * Math.PI / 180, sc = lerp(1, horiz ? .72 : .6, isoE), D = S * .34 * isoE;
+    var czz = Math.cos(thz), szz = Math.sin(thz), cxx = Math.cos(thx), sxx = Math.sin(thx);
+    var a = czz * sc, b = szz * cxx * sc, c = -szz * sc, d = czz * cxx * sc;
+    var hs = S / 2, corners = [[-hs, -hs], [hs, -hs], [hs, hs], [-hs, hs]], ext = [];
+    var labQ = sg(s, 9.1, 9.6);
     stLay.style.opacity = isoE > 0 ? 1 : 0;
     for (var i = 0; i < 3; i++) {
       var L = ST.lay[i], h = (1 - i) * D, ox = cx, oy = cy - h * sxx * sc;
-      var pts = corners.map(function(q){ return [a * q[0] + c * q[1] + ox, b * q[0] + d * q[1] + oy]; });
-      L.path.setAttribute('d', 'M' + pts.map(function(q){ return q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join('L') + 'Z');
+      var ptsL = corners.map(function(q){ return [a * q[0] + c * q[1] + ox, b * q[0] + d * q[1] + oy]; });
+      L.path.setAttribute('d', 'M' + ptsL.map(function(q){ return q[0].toFixed(1) + ' ' + q[1].toFixed(1); }).join('L') + 'Z');
       L.tg.setAttribute('transform', 'matrix(' + [a, b, c, d, ox, oy].map(function(v){ return v.toFixed(4); }).join(' ') + ')');
-      var fs = S * .062;
-      var tsp = L.t.childNodes, nl = tsp.length, y0 = hs - pad - (nl - 1) * fs * 1.08;
+      var fs = S * .062, tsp = L.t.childNodes, nl = tsp.length, y0 = hs - pad - (nl - 1) * fs * 1.08;
       for (var j = 0; j < nl; j++) { tsp[j].setAttribute('x', -hs + pad); tsp[j].setAttribute('y', (y0 + j * fs * 1.08).toFixed(1)); }
       L.n.setAttribute('x', -hs + pad); L.n.setAttribute('y', (-hs + pad + S * .03).toFixed(1)); L.n.setAttribute('font-size', (S * .03).toFixed(1));
-      L.t.setAttribute('font-size', fs.toFixed(1));
-      L.tg.style.opacity = labQ;
-      if (i === 0) pts.forEach(function(q){ if (q[0] < extL[0]) extL = q; });
-      if (i === 2) pts.forEach(function(q){ if (q[0] > extR[0]) extR = q; });
+      L.t.setAttribute('font-size', fs.toFixed(1)); L.tg.style.opacity = labQ;
+      var lft = [1e9, 0], rgt = [-1e9, 0];
+      ptsL.forEach(function(q){ if (q[0] < lft[0]) lft = q; if (q[0] > rgt[0]) rgt = q; });
+      ext[i] = {l:lft, r:rgt};
     }
-    /* --- block 3: text left and right on lines with square ends */
-    var ld = eio(sg(s, 10.6, 11.2)), tq = eo(sg(s, 10.8, 11.4));
-    var m = Math.max(20, Math.min(48, vw * .035)), hdrH = 90;
-    if (horiz) {
-      var wl = Math.min(vw * .27, extL[0] - 80 - m), xl = extL[0] - 80 - wl;
-      b3L.style.left = xl + 'px'; b3L.style.width = wl + 'px'; b3L.style.top = Math.max(hdrH, extL[1] - 18) + 'px';
-      var xr = extR[0] + 80, wr = Math.min(vw * .24, vw - m - xr);
-      b3R.style.left = xr + 'px'; b3R.style.width = wr + 'px'; b3R.style.top = (extR[1] - 12) + 'px';
-      ldL.setAttribute('d', 'M' + extL[0] + ' ' + extL[1] + 'H' + (extL[0] - 64)); ldR.setAttribute('d', 'M' + extR[0] + ' ' + extR[1] + 'H' + (extR[0] + 64));
-      ldqL.setAttribute('x', extL[0] - 64 - 7); ldqL.setAttribute('y', extL[1] - 3.5); ldqR.setAttribute('x', extR[0] + 64); ldqR.setAttribute('y', extR[1] - 3.5);
-      ldL.style.opacity = ldR.style.opacity = ld > 0 ? 1 : 0; ldL.style.strokeDasharray = ldR.style.strokeDasharray = Math.max(ld, .0001) + ' 2';
-      ldqL.style.opacity = ldqR.style.opacity = ld >= 1 ? 1 : 0;
-    } else {
-      b3L.style.left = m + 'px'; b3L.style.width = (vw - 2 * m) + 'px'; b3L.style.top = (hdrH + 4) + 'px';
-      b3R.style.left = m + 'px'; b3R.style.width = (vw - 2 * m) + 'px'; b3R.style.top = (cy + S * .62) + 'px';
-      ldL.style.opacity = ldR.style.opacity = ldqL.style.opacity = ldqR.style.opacity = 0;
+    var m = Math.max(20, Math.min(48, vw * .035));
+    for (var i2 = 0; i2 < 3; i2++) {
+      var side = i2 === 1 ? 1 : -1, ld = eio(sg(s, 9.5 + i2 * .15, 10.0 + i2 * .15)), tq = eo(sg(s, 9.7 + i2 * .15, 10.2 + i2 * .15));
+      var P = pts[i2], LD = ST.ld[i2];
+      if (horiz) {
+        var e = side < 0 ? ext[i2].l : ext[i2].r, x1 = e[0] + side * 64;
+        LD.l.setAttribute('d', 'M' + e[0].toFixed(1) + ' ' + e[1].toFixed(1) + 'H' + x1.toFixed(1));
+        LD.q.setAttribute('x', (side < 0 ? x1 - 7 : x1).toFixed(1)); LD.q.setAttribute('y', (e[1] - 3.5).toFixed(1));
+        var wP = Math.min(vw * .26, side < 0 ? x1 - 22 - m : vw - m - x1 - 22);
+        P.style.width = wP + 'px'; P.style.left = (side < 0 ? x1 - 22 - wP : x1 + 22) + 'px';
+        P.style.top = (e[1] - 12) + 'px';
+        LD.l.style.opacity = ld > 0 ? 1 : 0; LD.l.style.strokeDasharray = Math.max(ld, .0001) + ' 2'; LD.q.style.opacity = ld >= 1 ? 1 : 0;
+      } else {
+        LD.l.style.opacity = LD.q.style.opacity = 0;
+        P.style.left = m + 'px'; P.style.width = (vw - 2 * m) + 'px';
+        P.style.top = (i2 === 0 ? 92 : i2 === 1 ? cy + S * .55 : cy + S * .55 + 70) + 'px';
+      }
+      P.style.opacity = tq; P.style.transform = 'translateY(' + ((1 - tq) * 14).toFixed(1) + 'px)';
     }
-    b3L.style.opacity = tq; b3L.style.transform = 'translateY(' + ((1 - tq) * 16).toFixed(1) + 'px)';
-    b3R.style.opacity = tq; b3R.style.transform = 'translateY(' + ((1 - tq) * 16).toFixed(1) + 'px)';
-    stSlog.style.opacity = eo(sg(s, 11.1, 11.6));
+    stSlog.style.opacity = eo(sg(s, 10.1, 10.6));
   }
+
 
 

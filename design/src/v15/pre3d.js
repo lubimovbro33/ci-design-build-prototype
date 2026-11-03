@@ -73,6 +73,8 @@ const SKGL = `
     return mix(mix(skH(i), skH(i + vec2(1., 0.)), f.x), mix(skH(i + vec2(0., 1.)), skH(i + 1.), f.x), f.y); }
   float skR(vec2 uv, float k){ float n = 1. - uv.y; return smoothstep(n - .04, n + .04, k * 1.1 - .05); }   /* a clean, straight sweep from the top */
   vec3 skMix(vec3 col, vec3 sk, vec2 uv, float k){ if (k <= 0.) return col; float r = skR(uv, k);
+    float lm = clamp((pow(max(sk.g, 0.), 1. / 2.2) - .067) / .82, 0., 1.);    /* the drawing's line mask → CI Bright Gray on Eerie Black */
+    sk = mix(vec3(.0123), vec3(.83), lm);
     float edge = r * (1. - r) * 4.;                                   /* a thin bright front where the drawing arrives */
     return mix(col, sk, r) + vec3(.9, .87, .82) * edge * .05 * (1. - k); }`;
 
@@ -180,7 +182,7 @@ function roomMat(tex, dep, near){
         #endif
         vec3 night = c * vec3(1.08, .88, .66) * .8;               /* seen from outside at night: warm, dimmer */
         vec3 col = mix(c, night, 1. - uLight) * uGain;
-        if (uSk > 0.){ vec3 sk = uSkOk > .5 ? texture2D(skMap, vUv).rgb : vec3(dot(col, vec3(.3, .59, .11)) * .25 + .005);
+        if (uSk > 0.){ vec3 sk = uSkOk > .5 ? texture2D(skMap, vUv).rgb : vec3(.0055);
           col = skMix(col, sk, vUv, uSk); }
         gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
@@ -280,7 +282,7 @@ const FinalShader = {
         vec2 pw = vec2(14.) / uRes;
         float inW = smoothstep(uWin.x - pw.x, uWin.x, vUv.x) * smoothstep(uWin.z + pw.x, uWin.z, vUv.x)
                   * smoothstep(uWin.y - pw.y, uWin.y, vUv.y) * smoothstep(uWin.w + pw.y, uWin.w, vUv.y);
-        c = mix(c, vec3(.0667), uKeep * (1. - inW));
+        c = mix(c, vec3(.1137), uKeep * (1. - inW));                              /* Eerie Black #1D1D1D */
       }
       float g = h(vUv * uRes + fract(uTime * 37.)) - .5;
       c += g * .045;
@@ -510,11 +512,13 @@ function storyFrame(o){
   const f = clamp01(o.fly || 0), mx = o.mx || 0, my = o.my || 0;
   /* the camera stays on the window's axis and backs away: distance to the room plane grows geometrically (an even zoom rate),
      shaped so the first part — out of the room, through the glass — takes its time and the end settles */
-  const g = Math.pow(sm(f), 1.6), dIn = (ZEND - ROOMZ) * (1 - (o.push || 0)), dOut = Zc * SKZ - ROOMZ;
+  /* stop where the CI window is exactly the size of the text square (o.winPx), not back at the drone view (user 03.11 08:50) */
+  const winPx = o.winPx || 380, zEnd = F.OL.w * vh / (2 * TAN * winPx);
+  const g = Math.pow(sm(f), 1.6), dIn = (ZEND - ROOMZ) * (1 - (o.push || 0)), dOut = zEnd - ROOMZ;
   const dist = dIn * Math.pow(dOut / dIn, g), z = ROOMZ + dist;
-  const out = sm((dist - 290) / 700), mp = lerp(MP_IN, MP_OUT, out);
+  const out = sm((dist - 290) / Math.max(120, (dOut - 290) * .8)), mp = lerp(MP_IN, Math.max(MP_IN, z * .1), out);   /* parallax scales with the distance */
   camera.position.set(H.x - mx * mp, H.y + my * mp * .7, z); look.set(H.x, H.y, lerp(ROOMZ, -520, out)); camera.lookAt(look);
-  const dive = 1 - out, u = sm((dist - 900) / (dOut - 900));
+  const dive = 1 - out, u = 0;
   skyK(1 + .32 * u);
   const lu = M.logo.material.uniforms; lu.uOp.value = 0; lu.uSpark.value = 0; M.shadow.material.uniforms.uOp.value = 0;
   const ol = clamp01(o.ol || 0), ou = M.ol.material.uniforms;
