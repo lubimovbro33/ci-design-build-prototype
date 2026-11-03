@@ -20,7 +20,7 @@ import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
 import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
 import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 
-const PRE3D = window.__pre3d = { state: 'loading', ok: false, render(){}, resize(){} };
+const PRE3D = window.__pre3d = { state: 'loading', ok: false, busy: true, render(){}, resize(){} };
 
 const F = { RX:-57, RY:-251, RW:2033, RH:1477, EDGE:1110.5, EXT:912,
             PATCH:{x:874, y:442, w:167, h:179}, OL:{x:877, y:448, w:163, h:164}, MARK:{x:865, y:432, w:190, h:217} };
@@ -332,7 +332,8 @@ async function build(){
   ]);
   const two = x2 ? await Promise.race([x2, new Promise(r => setTimeout(() => r(null), 1000))]) : null;
   const tSky = two ? two[0] : tSky1, tFac = two ? two[1] : tFac1;
-  if (x2 && !two) x2.then(v => { if (v) LATE.x2 = v; });
+  if (x2 && !two) x2.then(v => { if (!v) return; const sd = sideTex(v[1]);
+    Promise.all([v[0], v[1], sd].map(t => new Promise(r => upload(t, r)))).then(() => { LATE.x2 = [v[0], v[1], sd]; }); });
   layoutCamera();
   const clipEdge = [ new THREE.Plane(new THREE.Vector3(-1, 0, 0), F.EDGE - .5) ];       /* keep things left of the corner */
 
@@ -398,7 +399,12 @@ async function build(){
   resize();
   window.addEventListener('resize', resize);
   [tSky, tFac, tSide, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep].forEach(t => renderer.initTexture(t));
-  renderer.compile(scene, camera); renderer.compile(LN.scene, camera);
+  /* programs compile in the background (KHR_parallel_shader_compile) for where they really draw: the scene into the
+     composer's buffer, the lines onto the screen — the still stays smooth while they build */
+  try {
+    renderer.setRenderTarget(composer.renderTarget1); const cj = [renderer.compileAsync(scene, camera)];
+    renderer.setRenderTarget(null); cj.push(renderer.compileAsync(LN.scene, camera)); await Promise.all(cj);
+  } catch (e) { renderer.setRenderTarget(null); renderer.compile(scene, camera); renderer.compile(LN.scene, camera); }
   finalPass.uniforms.uFade.value = 0; composer.render(); composer.render();
 }
 
@@ -725,13 +731,12 @@ function life(){
 }
 function lateSwap(){
   const v = LATE.x2; if (!v) return; LATE.x2 = null;
-  M.sky.material.uniforms.map.value = v[0]; M.fac.material.uniforms.map.value = v[1];
-  const old = M.side.material.map, t = v[1].clone(); t.wrapS = THREE.RepeatWrapping; t.repeat.copy(old.repeat); t.offset.copy(old.offset); t.needsUpdate = true;
-  M.side.material.map = t;
+  M.sky.material.uniforms.map.value = v[0]; M.fac.material.uniforms.map.value = v[1]; M.side.material.map = v[2];
 }
+function sideTex(f){ const old = M.tSide, t = f.clone(); t.wrapS = THREE.RepeatWrapping; t.repeat.copy(old.repeat); t.offset.copy(old.offset); t.needsUpdate = true; return t; }
 /* every program and GPU resource the intro will touch, used once while the still covers the canvas */
-function warm(T){
-  for (const t of [.9, 3.7, 4.7, 5.6, 0]) render3d(t, T, 0, 0, 0);
+async function warm(T){
+  for (const t of [.9, 3.7, 4.7, 5.6, 0]){ render3d(t, T, 0, 0, 0); await new Promise(r => requestAnimationFrame(r)); }
   LIFE.t0 = 0;
 }
 function loadSketch(){ return Promise.resolve(); }                /* v7: the raster drawings are retired */
@@ -824,7 +829,10 @@ function slotRT(i){
 }
 /* GPU uploads one per frame, so a dozen big photos arriving together never stall a frame */
 const upQ = []; let upOn = false;
-function upload(t, res){ upQ.push([t, res]); if (!upOn){ upOn = true; let rest = false; requestAnimationFrame(function f(){ if (!rest){ const j = upQ.shift(); if (j){ renderer.initTexture(j[0]); j[1](j[0]); } } rest = !rest; if (upQ.length) requestAnimationFrame(f); else upOn = false; }); } }   /* one upload every other frame */
+function upload(t, res){ upQ.push([t, res]); if (!upOn){ upOn = true; let rest = false, wait = 0; requestAnimationFrame(function f(){
+  const calm = !PRE3D.busy || wait > 150;                         /* nothing moves on screen (or it has waited ~2.5 s) */
+  if (!rest && calm){ const j = upQ.shift(); if (j){ renderer.initTexture(j[0]); j[1](j[0]); } wait = 0; rest = true; } else { if (!calm) wait++; rest = false; }
+  if (upQ.length) requestAnimationFrame(f); else upOn = false; }); } }   /* a GPU upload (20–60 ms) only lands on a still frame */
 /* decode off the main thread (ImageBitmap), so the upload itself is cheap; plain <img> loading where that is missing */
 const IBL = typeof createImageBitmap === 'function' ? new THREE.ImageBitmapLoader().setOptions({ imageOrientation: 'flipY', premultiplyAlpha: 'none', colorSpaceConversion: 'none' }) : null;
 function loadAny(u, prep){

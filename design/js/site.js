@@ -18,6 +18,7 @@
   var M = function(){ return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) || 48; };
   try { history.scrollRestoration = 'manual'; } catch(e){}
   window.scrollTo(0, 0);
+  if (/[?&]perf/.test(location.search)) { window.__perfLog = []; (function f(n){ var l = window.__perfLog; l.push(Math.round(n)); if (l.length < 2400) requestAnimationFrame(f); })(performance.now()); }   /* debug: frame times from the very start */
 
   /* ================================================================== plate geometry (CTA bookend only — 2D) */
   var P = {w:2851, h:1520, glass:{x:1400, y:524, w:330, h:452}};
@@ -130,8 +131,8 @@
     var el = (now - pre0) / 1000;
     if (GL && !gl3() && (el > 6 || (window.__pre3d && window.__pre3d.state === 'error'))) { GL = false; pickDom(); pre0 = now; el = 0; }
     if (GL && gl3()) {                                                              /* the 3D is up: warm it under the still, go next frame */
-      preDone = true; try { if (window.__pre3d.warm) window.__pre3d.warm(T); } catch (e) {}
-      requestAnimationFrame(function(){ requestAnimationFrame(startIntro); }); return;
+      preDone = true; var go = function(){ requestAnimationFrame(startIntro); };
+      try { if (window.__pre3d.warm) window.__pre3d.warm(T).then(go, go); else go(); } catch (e) { go(); } return;
     }
     var target;
     if (GL) { target = gl3() ? 1 : Math.min(.92, el / 2.2); }
@@ -186,7 +187,10 @@
     var start = performance.now(), from = Math.max(state.t, T.litA);
     (function f(now){ var p = clamp01((now - start) / 900); var t = lerp(from, T.end, E.expo(p)); state.t = t; render(t); if (p < 1) requestAnimationFrame(f); else finish(); })(start);
   }
-  function idleLoop(){ (function f(){ if (slide.cur === 0 && !tr && !loopOn && !ST.on && !document.hidden) { var dx = mx - pmx, dy = my - pmy; if (Math.abs(dx) + Math.abs(dy) > .0005) { pmx += dx * .06; pmy += dy * .06; render(T.end + 1); } } requestAnimationFrame(f); })(); }
+  var lastSY = 0;
+  function idleLoop(){ (function f(){ var still = false, sy = window.scrollY; if (slide.cur === 0 && !tr && !loopOn && !ST.on && !document.hidden) { var dx = mx - pmx, dy = my - pmy; if (Math.abs(dx) + Math.abs(dy) > .0005) { pmx += dx * .06; pmy += dy * .06; render(T.end + 1); } else still = true; }
+    if (window.__pre3d) window.__pre3d.busy = !(still || document.hidden) || sy !== lastSY; lastSY = sy;   /* GPU uploads wait for a still frame */
+    requestAnimationFrame(f); })(); }
 
   /* ================================================================== the hero slider (interiors): slide 0 = the room we entered */
   /* the five interiors the user picked on the Figma board "Hero — интерьеры (отбор)" (02.11, 18:07): professional photos */
