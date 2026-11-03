@@ -469,8 +469,74 @@
     return { sec: sec, pin: pin, update: update };
   }
 
+  /* ================================================================== 07 APPROACH · each question sets out a grid axis; the answers become the foundation */
+  /* a structural grid in plan (bubbled axes, as on a drawing), drawn by the questions; then the plan tilts into perspective and
+     the frame of a house rises from it — footings, columns, floors. One small camera, projected by hand into one SVG. */
+  function approach(){
+    var sec = document.getElementById('approach'); if (!sec || !sec.classList.contains('ch')) return null;
+    var pin = sec.querySelector('.ch-pin'), svg = sec.querySelector('#apDraw'), phases = [].slice.call(sec.querySelectorAll('.ch-t > [data-a]'));
+    var rows = [].slice.call(sec.querySelectorAll('#apQs li')), txs = rows.map(function(r){ return r.querySelector('.tx'); });
+    var XS = [-2, -1, 0, 1, 2], ZS = [-1.5, -.5, .5, 1.5], EXT = .75, LV = [0, .95, 1.9, 2.75];   /* axes, overrun, floor levels */
+    var Q0 = .13, QD = .095, QT = .062;                                    /* question i types over [Q0 + i·QD, + QT] */
+    var gGrid = el('g', {}, svg), gFrame = el('g', {}, svg), gBub = el('g', {}, svg);
+    var mk = function(g, cls){ return el('path', {'class': cls, 'vector-effect': 'non-scaling-stroke'}, g); };
+    var axN = XS.map(function(){ return mk(gGrid, 'ap-ax'); }), axL = ZS.map(function(){ return mk(gGrid, 'ap-ax'); });
+    var foot = mk(gFrame, 'ap-ft'), cols = mk(gFrame, 'ap-col'), slabs = LV.slice(1).map(function(){ return mk(gFrame, 'ap-sl'); }), beams = LV.slice(1).map(function(){ return mk(gFrame, 'ap-bm'); });
+    var bub = function(t){ var g = el('g', {'class': 'ap-bub'}, gBub); el('circle', {r: 15, 'vector-effect': 'non-scaling-stroke'}, g); var x = el('text', {y: 5}, g); x.textContent = t; return g; };
+    var bN = XS.map(function(_, i){ return bub(String(i + 1)); }), bL = ZS.map(function(_, i){ return bub('ABCD'[i]); });
+    var W = 1, H = 1, CX = 0, CY = 0, F = 1, cam = null;
+    function size(){ var r = svg.getBoundingClientRect(); W = r.width || 1; H = r.height || 1; svg.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H)); }
+    function setCam(yaw, pitch, dist, ty, zoom){
+      var cp = Math.cos(pitch), C = [dist * Math.sin(yaw) * cp, ty + dist * Math.sin(pitch), dist * Math.cos(yaw) * cp];
+      var f = [-C[0], ty - C[1], -C[2]], fl = Math.hypot(f[0], f[1], f[2]); f = [f[0] / fl, f[1] / fl, f[2] / fl];
+      var r = [Math.cos(yaw), 0, -Math.sin(yaw)], u = [r[1] * f[2] - r[2] * f[1], r[2] * f[0] - r[0] * f[2], r[0] * f[1] - r[1] * f[0]];
+      cam = {C: C, f: f, r: r, u: u}; F = zoom;
+    }
+    function pr(x, y, z){ var d = [x - cam.C[0], y - cam.C[1], z - cam.C[2]], zz = d[0] * cam.f[0] + d[1] * cam.f[1] + d[2] * cam.f[2];
+      return [CX + F * (d[0] * cam.r[0] + d[1] * cam.r[1] + d[2] * cam.r[2]) / zz, CY - F * (d[0] * cam.u[0] + d[1] * cam.u[1] + d[2] * cam.u[2]) / zz]; }
+    function L(a, b){ var p = pr(a[0], a[1], a[2]), q = pr(b[0], b[1], b[2]); return 'M' + f1(p[0]) + ' ' + f1(p[1]) + 'L' + f1(q[0]) + ' ' + f1(q[1]); }
+    function part(a, b, k){ return L(a, [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)]); }
+    var lastSz = '';
+    function update(p){
+      var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
+      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
+        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      /* the questions type themselves; the one being asked is bright, the answered ones settle */
+      var act = -1;
+      rows.forEach(function(r, i){ var a = Q0 + i * QD, t = sg(p, a, a + QT), full = txs[i].dataset.t, n = Math.ceil(full.length * eo(t) - 1e-6);
+        if (txs[i].textContent.length !== n) txs[i].textContent = full.slice(0, n);
+        r.style.opacity = (sg(p, a - .012, a)).toFixed(3); if (p >= a) act = i;
+        r.classList.toggle('typing', t > 0 && t < 1); });
+      rows.forEach(function(r, i){ r.classList.toggle('on', i === act && p < .6); });
+      /* the camera: a plan from straight above, then it tips over into a three-quarter view and drifts */
+      var tilt = sm(sg(p, .6, .74)), dr = sg(p, .74, 1), narrow = W / H < .9;
+      var yaw = lerp(0, -.62, tilt) - .16 * dr, pitch = lerp(Math.PI / 2 - .0001, .5, tilt) - .05 * dr, dist = lerp(20, 24, tilt);
+      var zoom = Math.min(W * (narrow ? .9 : .66) / (5.6 / dist), H * .78 / (4.8 / dist)) * lerp(1, .82, tilt);
+      CX = W / 2; CY = H * lerp(.5, .58, tilt); setCam(yaw, pitch, dist, lerp(0, 1.3, sm(sg(p, .7, .86))), zoom);
+      /* the grid axes: question i draws axis i+1 and (to D) one lettered axis */
+      var xa = XS[0] - EXT, xb = XS[4] + EXT, za = ZS[0] - EXT, zb = ZS[3] + EXT, bs = narrow ? ' scale(.72)' : '', bf = 1 - .55 * sm(sg(p, .86, .94));
+      XS.forEach(function(x, i){ var a = Q0 + i * QD, k = eo(sg(p, a + .01, a + QT)); axN[i].setAttribute('d', k > 0 ? part([x, 0, za], [x, 0, zb], k) : '');
+        var b = pr(x, 0, za - .32); bN[i].setAttribute('transform', 'translate(' + f1(b[0]) + ' ' + f1(b[1]) + ')' + bs); bN[i].style.opacity = (sg(p, a + QT * .7, a + QT) * bf).toFixed(3); });
+      ZS.forEach(function(z, i){ var a = Q0 + i * QD + .02, k = eo(sg(p, a + .01, a + QT)); axL[i].setAttribute('d', k > 0 ? part([xa, 0, z], [xb, 0, z], k) : '');
+        var b = pr(xa - .32, 0, z); bL[i].setAttribute('transform', 'translate(' + f1(b[0]) + ' ' + f1(b[1]) + ')' + bs); bL[i].style.opacity = (sg(p, a + QT * .7, a + QT) * bf).toFixed(3); });
+      /* footings at every crossing; columns rise; the floors arrive one by one, beams running out along the axes */
+      var kf = sg(p, .66, .72), kc = eo(sg(p, .7, .8)), d = '', dc = '';
+      if (kf > 0) XS.forEach(function(x, i){ ZS.forEach(function(z, j){ var s = .13 * eo(sg(kf, (i + j) / 14, (i + j) / 14 + .4));
+        if (s > 0) d += L([x - s, 0, z - s], [x + s, 0, z - s]) + L([x + s, 0, z - s], [x + s, 0, z + s]) + L([x + s, 0, z + s], [x - s, 0, z + s]) + L([x - s, 0, z + s], [x - s, 0, z - s]);
+        var h = LV[3] * eo(sg(kc, (i + j) / 16, (i + j) / 16 + .5)); if (h > 0) dc += L([x, 0, z], [x, h, z]); }); });
+      foot.setAttribute('d', d); cols.setAttribute('d', dc);
+      LV.slice(1).forEach(function(y, l){ var k = eo(sg(p, .76 + l * .04, .83 + l * .04)), ds = '', db = '';
+        if (k > 0){ var e = .32;                                           /* the slab's edge overhangs the grid a little */
+          ds = part([XS[0] - e, y, ZS[0] - e], [XS[4] + e, y, ZS[0] - e], k) + part([XS[4] + e, y, ZS[0] - e], [XS[4] + e, y, ZS[3] + e], k) + part([XS[4] + e, y, ZS[3] + e], [XS[0] - e, y, ZS[3] + e], k) + part([XS[0] - e, y, ZS[3] + e], [XS[0] - e, y, ZS[0] - e], k);
+          XS.forEach(function(x){ db += part([x, y, ZS[0]], [x, y, ZS[3]], k); }); ZS.forEach(function(z){ db += part([XS[0], y, z], [XS[4], y, z], k); }); }
+        slabs[l].setAttribute('d', ds); beams[l].setAttribute('d', db); });
+      gGrid.style.opacity = (1 - .45 * sm(sg(p, .78, .9))).toFixed(3);
+    }
+    return { sec: sec, pin: pin, update: update };
+  }
+
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy(), about(), projects(), difference(), suite()].filter(Boolean), dirty = true;
+  var CH = [philosophy(), about(), projects(), difference(), suite(), approach()].filter(Boolean), dirty = true;
   function measure(){ var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
   window.addEventListener('resize', function(){ dirty = true; }); window.addEventListener('load', function(){ dirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ dirty = true; }).observe(document.body);
