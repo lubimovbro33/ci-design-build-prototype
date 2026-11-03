@@ -479,6 +479,7 @@
     var sec = document.getElementById('approach'); if (!sec || !sec.classList.contains('ch')) return null;
     var pin = sec.querySelector('.ch-pin'), svg = sec.querySelector('#apDraw'), phases = [].slice.call(sec.querySelectorAll('.ch-t > [data-a]'));
     var rows = [].slice.call(sec.querySelectorAll('#apQs li')), txs = rows.map(function(r){ return r.querySelector('.tx'); });
+    var chs = txs.map(function(t){ var s = t.dataset.t, out = []; t.textContent = ''; for (var i = 0; i < s.length; i++){ var c = document.createElement('i'); c.textContent = s[i]; c.style.setProperty('--i', i + 1); t.appendChild(c); out.push(c); } t.setAttribute('aria-label', s); return out; }), curC = [];
     var XS = [-2, -1, 0, 1, 2], ZS = [-1.5, -.5, .5, 1.5], EXT = .75, LV = [0, .95, 1.9, 2.75];   /* axes, overrun, floor levels */
     var Q0 = .13, QD = .095, QT = .062;                                    /* question i types over [Q0 + i·QD, + QT] */
     var gGrid = el('g', {}, svg), gFrame = el('g', {}, svg), gBub = el('g', {}, svg);
@@ -507,7 +508,7 @@
       /* the questions type themselves; the one being asked is bright, the answered ones settle */
       var act = -1;
       rows.forEach(function(r, i){ var a = Q0 + i * QD, t = sg(p, a, a + QT), full = txs[i].dataset.t, n = Math.ceil(full.length * eo(t) - 1e-6);
-        if (txs[i].textContent.length !== n) txs[i].textContent = full.slice(0, n);
+        if (txs[i].__n !== n){ txs[i].__n = n; txs[i].style.setProperty('--n', n); var c = chs[i][Math.max(0, n - 1)]; if (curC[i] !== c){ if (curC[i]) curC[i].classList.remove('ap-c'); c.classList.add('ap-c'); curC[i] = c; } }
         r.style.opacity = (sg(p, a - .012, a)).toFixed(3); if (p >= a) act = i;
         r.classList.toggle('typing', t > 0 && t < 1); });
       rows.forEach(function(r, i){ r.classList.toggle('on', i === act && p < .6); });

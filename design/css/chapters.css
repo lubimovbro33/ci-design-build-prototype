@@ -207,7 +207,10 @@
 .ch-appr .ap-qs .bb{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;transition:border-color .5s,color .5s}
 .ch-appr .ap-qs li.on .bb{border-color:var(--acc);color:var(--acc)}
 .ch-appr .ap-qs .tx{font-weight:400;text-transform:uppercase;font-size:clamp(17px,1.6vw,24px);line-height:1.08;letter-spacing:-.005em;min-height:1.1em}
-.ch-appr .ap-qs li.typing .tx::after{content:"";display:inline-block;width:1px;height:.95em;margin-left:4px;vertical-align:-.1em;background:var(--acc);animation:apCaret .8s steps(1) infinite}
+/* typed without touching the text: every letter is there, shown up to --n (a style change, not a DOM text write) */
+.ch-appr .ap-qs .tx i{font-style:normal;opacity:clamp(0, calc(var(--n, 0) - var(--i) + 1), 1)}
+.ch-appr .ap-qs .tx i.ap-c{position:relative}
+.ch-appr .ap-qs li.typing .tx i.ap-c::after{content:"";position:absolute;right:-5px;top:.05em;width:1px;height:.95em;background:var(--acc);animation:apCaret .8s steps(1) infinite}
 @keyframes apCaret{50%{opacity:0}}
 .ch-appr .ap-draw path{fill:none;stroke:var(--hl)}
 .ch-appr .ap-ax{stroke-opacity:.42}
@@ -342,7 +345,7 @@
 .ch-cta .ct-veil{position:absolute;inset:0;pointer-events:none;opacity:var(--vl,0);background:linear-gradient(90deg,rgba(0,0,0,.84) 0%,rgba(0,0,0,.6) 40%,rgba(0,0,0,.25) 75%,rgba(0,0,0,.1) 100%),linear-gradient(0deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 30%,rgba(0,0,0,0) 55%)}
 .ch-cta .ch-idx{z-index:3}
 .ch-cta .ct-tx{position:absolute;left:var(--m);right:var(--m);bottom:calc(var(--m) + 64px);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(24px,4vw,80px);align-items:end;z-index:3}
-.ch-cta .ct-h{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(34px,5.4vw,92px);line-height:.94;letter-spacing:-.035em;opacity:0;text-shadow:0 0 40px rgba(0,0,0,.35)}
+.ch-cta .ct-h{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(34px,5.4vw,92px);line-height:.94;letter-spacing:-.035em;opacity:0}
 .ch-cta .ct-h .acc{color:var(--acc)}
 .ch-cta .ct-side{opacity:0;max-width:440px}
 .ch-cta .ct-side .ch-lead.sub{margin-top:12px}
