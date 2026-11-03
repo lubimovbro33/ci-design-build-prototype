@@ -221,3 +221,27 @@
   .ch-appr .ap-draw{left:var(--m);right:auto;top:calc(var(--hdr) + 60px);transform:none;width:calc(100% - 2 * var(--m));height:40vh}
   .ch-appr .ap-qs{gap:12px}
 }
+
+/* ---------------------------------------------------------------- 08 PROCESS */
+.ch-proc .ch-pin{height:760vh}
+.ch-proc .pr-n{display:block;color:var(--acc);margin-bottom:16px}
+.ch-proc .ch-h{font-size:clamp(28px,3vw,46px)}
+.ch-proc .pr-box{position:absolute;right:var(--m);top:47%;transform:translateY(-50%);width:min(54vw,980px);aspect-ratio:16/9;opacity:var(--fr,0);outline:1px solid rgba(235,235,235,.22);outline-offset:10px;background:#000;overflow:hidden}
+.ch-proc .pr-in{position:absolute;inset:0;transform-origin:60% 50%;will-change:transform}
+.ch-proc .pr-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0}
+.ch-proc .pr-svg{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
+.ch-proc .pr-pts{fill:none;stroke:var(--hl);stroke-opacity:.75;stroke-width:2;stroke-linecap:square}
+.ch-proc .pr-scan{fill:none;stroke:var(--acc);stroke-width:1;opacity:0}
+.ch-proc .pr-lab{position:absolute;left:14px;top:12px;color:var(--hl);text-transform:uppercase;mix-blend-mode:difference}
+.ch-proc .pr-rail{position:absolute;right:var(--m);width:min(54vw,980px);top:calc(47% + min(54vw,980px) * .28125 + 34px);display:grid;grid-template-columns:repeat(6,1fr);gap:14px;opacity:var(--rl,0)}
+.ch-proc .pr-rail > div{position:relative;display:flex;gap:10px;padding-top:12px;color:var(--dimc);text-transform:uppercase;transition:color .4s}
+.ch-proc .pr-rail > div i{position:absolute;left:0;right:0;top:0;height:1px;background:rgba(235,235,235,.18)}
+.ch-proc .pr-rail > div i::after{content:"";position:absolute;left:0;top:0;height:1px;width:calc(var(--f,0) * 100%);background:var(--hl)}
+.ch-proc .pr-rail > div.on{color:var(--hl)}
+.ch-proc .pr-rail > div.on i::before{content:"";position:absolute;left:calc(var(--f,0) * 100% - 3px);top:-3px;width:7px;height:7px;background:var(--acc)}
+@media (max-aspect-ratio: 1/1){
+  .ch-proc .pr-box{left:var(--m);right:auto;top:calc(var(--hdr) + 84px);transform:none;width:calc(100% - 2 * var(--m))}
+  .ch-proc .pr-rail{left:var(--m);right:auto;width:calc(100% - 2 * var(--m));top:calc(var(--hdr) + 84px + (100vw - 2 * var(--m)) * .5625 + 30px);gap:6px}
+  .ch-proc .pr-rail > div span:last-child{display:none}
+  .ch-proc .ch-t{bottom:calc(var(--m) + 96px)}
+}

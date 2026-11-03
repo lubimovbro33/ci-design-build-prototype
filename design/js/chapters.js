@@ -535,8 +535,66 @@
     return { sec: sec, pin: pin, update: update };
   }
 
+  /* ================================================================== 08 PROCESS · one room, six stages: surveyed, scoped, drawn, built, curated, lit */
+  function process(){
+    var sec = document.getElementById('process'); if (!sec || !sec.classList.contains('ch')) return null;
+    var pin = sec.querySelector('.ch-pin'), stage = sec.querySelector('.ch-stage'), phases = [].slice.call(sec.querySelectorAll('.ch-t > [data-a]'));
+    var box = sec.querySelector('#prBox'), svg = sec.querySelector('#prSvg'), lab = sec.querySelector('#prLab'), rail = [].slice.call(sec.querySelectorAll('#prRail > div'));
+    var imgs = {}; [].slice.call(box.querySelectorAll('.pr-img')).forEach(function(im){ imgs[im.dataset.k] = im; });
+    var inner = document.createElement('div'); inner.className = 'pr-in'; box.insertBefore(inner, box.firstChild);
+    ['clay', 'day', 'eve'].forEach(function(k){ inner.appendChild(imgs[k]); }); inner.appendChild(svg);
+    var NAMES = ['Discover', 'Define', 'Design', 'Build', 'Curate', 'Deliver'], S0 = .1, SD = .13;
+    var D = null, gPts, clipR, scan, gScope, gLines;
+    var defs = el('defs', {}, svg); clipR = el('rect', {x: 0, y: 0, width: 0, height: 899}, el('clipPath', {id: 'prClip'}, defs));
+    var glow = el('linearGradient', {id: 'prScanG', x1: 0, x2: 1, y1: 0, y2: 0}, defs);
+    el('stop', {offset: 0, 'stop-color': '#96A9BF', 'stop-opacity': 0}, glow); el('stop', {offset: 1, 'stop-color': '#96A9BF', 'stop-opacity': .22}, glow);
+    gScope = el('g', {'class': 'dg'}, svg); gLines = el('g', {'class': 'dg'}, svg);
+    var scanBand = el('rect', {x: 0, y: 0, width: 140, height: 899, fill: 'url(#prScanG)', opacity: 0}, svg);
+    scan = el('path', {d: 'M0 0V899', 'class': 'pr-scan', 'vector-effect': 'non-scaling-stroke'}, svg);
+    /* the scope: the wall we will work on, its dimension strings (no figures), the stations it was measured from */
+    var SX0 = 346, SX1 = 1585, SY0 = 232, SY1 = 690;
+    line(gScope, rectD(SX0, SY0, SX1 - SX0, SY1 - SY0), 'w1', 0);
+    line(gScope, seg(SX0, 186, SX1, 186), 'w2', .15); [SX0, 650, 842, 1430, SX1].forEach(function(x, i){ line(gScope, seg(x - 7, 193, x + 7, 179), 'w2', .2 + i * .03); line(gScope, seg(x, 172, x, 200), 'w3', .2 + i * .03); });
+    line(gScope, seg(300, SY0, 300, SY1), 'w2', .15); [SY0, 298, 638, SY1].forEach(function(y, i){ line(gScope, seg(293, y + 7, 307, y - 7), 'w2', .25 + i * .03); line(gScope, seg(286, y, 314, y), 'w3', .25 + i * .03); });
+    [[SX0, SY0], [SX1, SY0], [SX1, SY1], [SX0, SY1]].forEach(function(q, i){ line(gScope, circD(q[0], q[1], 9), 'w2', .4 + i * .04); });
+    line(gScope, seg(1136 - 18, 468, 1136 + 18, 468), 'w2', .5); line(gScope, seg(1136, 450, 1136, 486), 'w2', .5);
+    fetch('assets/proc/data.json').then(function(r){ return r.json(); }).then(function(d){
+      D = d; var pp = d.p, s = '';
+      for (var i = 0; i < pp.length; i += 2) s += 'M' + pp[i] + ' ' + pp[i + 1] + 'h.1';
+      gPts = el('path', {d: s, 'class': 'pr-pts', 'clip-path': 'url(#prClip)', 'vector-effect': 'non-scaling-stroke'}, svg); svg.insertBefore(gPts, gScope);
+      d.l.forEach(function(q, j){ var L = Math.hypot(q[2] - q[0], q[3] - q[1]) || 1, ex = (q[2] - q[0]) / L * 14, ey = (q[3] - q[1]) / L * 14;
+        line(gLines, seg(q[0] - ex, q[1] - ey, q[2] + ex, q[3] + ey), q[4] > .3 ? 'w1' : 'w2', .55 * j / d.l.length); });
+      last = -1; if (cur != null) update(cur);
+    }).catch(function(){});
+    var last = -1, cur = null, lastStep = -2;
+    function update(p){
+      cur = p;
+      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
+        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      stage.style.setProperty('--fr', sg(p, .05, .1).toFixed(3));
+      /* 01 survey: a scanner sweeps the room, the points stay behind it */
+      var sw = sm(sg(p, .11, .22)); clipR.setAttribute('width', f1(1600 * sw));
+      scan.setAttribute('transform', 'translate(' + f1(1600 * sw) + ' 0)'); scanBand.setAttribute('x', f1(1600 * sw - 140));
+      var sOn = sw > 0 && sw < 1 ? 1 : 0; scan.style.opacity = sOn; scanBand.setAttribute('opacity', sOn);
+      if (gPts) gPts.style.opacity = ((1 - .7 * sm(sg(p, .26, .31))) * (1 - sm(sg(p, .39, .45)))).toFixed(3);
+      /* 02 scope */
+      gScope.style.setProperty('--k', sg(p, .26, .36).toFixed(3)); gScope.style.opacity = (1 - .75 * sm(sg(p, .4, .46)) - .25 * sm(sg(p, .52, .56))).toFixed(3);
+      /* 03 the drawing; 04 the grey build under it; 05 colour; 06 the lights come on */
+      gLines.style.setProperty('--k', sg(p, .39, .49).toFixed(3));
+      gLines.style.opacity = (1 - .45 * sm(sg(p, .53, .58)) - .4 * sm(sg(p, .65, .7)) - .15 * sm(sg(p, .78, .82))).toFixed(3);
+      imgs.clay.style.opacity = sm(sg(p, .52, .58)).toFixed(3); imgs.day.style.opacity = sm(sg(p, .65, .71)).toFixed(3); imgs.eve.style.opacity = sm(sg(p, .78, .86)).toFixed(3);
+      inner.style.transform = 'scale(' + (1 + .05 * sm(sg(p, .5, 1))).toFixed(4) + ')';
+      /* the rail */
+      var step = -1;
+      rail.forEach(function(r, i){ var a = S0 + i * SD, k = sg(p, a, a + SD); r.style.setProperty('--f', k.toFixed(3)); if (p >= a) step = i; r.classList.toggle('on', p >= a && (p < a + SD || i === 5)); });
+      if (step !== lastStep){ lastStep = step; lab.textContent = step < 0 ? '' : '0' + (step + 1) + ' / ' + NAMES[step]; }
+      stage.style.setProperty('--rl', sg(p, .07, .11).toFixed(3));
+    }
+    return { sec: sec, pin: pin, update: update };
+  }
+
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy(), about(), projects(), difference(), suite(), approach()].filter(Boolean), dirty = true;
+  var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process()].filter(Boolean), dirty = true;
   function measure(){ var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
   window.addEventListener('resize', function(){ dirty = true; }); window.addEventListener('load', function(){ dirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ dirty = true; }).observe(document.body);
