@@ -154,8 +154,9 @@ body.ready .cur,body.is-intro .cur{opacity:1}
 .pre.out{opacity:0}
 .pre .count{position:absolute;right:var(--m);bottom:var(--m);font-weight:400;font-size:clamp(34px,4vw,60px);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .pre .count sup{font-size:.34em;vertical-align:top;margin-left:.08em;letter-spacing:0;color:var(--steel)}
-.pre .coords{position:absolute;right:var(--m);top:calc(var(--m) + 2px);color:var(--haze)}
-.pre .city{position:absolute;left:var(--m);bottom:calc(var(--m) + 6px);color:var(--haze)}
+.pre .poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 50%;display:block}   /* the first frame of the flight (user 03.11 10:43) */
+.pre .coords{position:absolute;right:var(--m);top:calc(var(--m) + 2px);color:var(--haze);text-shadow:0 0 12px rgba(0,0,0,.6)}
+.pre .city{position:absolute;left:var(--m);bottom:calc(var(--m) + 6px);color:var(--haze);text-shadow:0 0 12px rgba(0,0,0,.6)}
 /* hero text layer — comes in with the reel's cut into the bar (5.75 s) */
 .hero-in{position:absolute;left:var(--m);right:var(--m);bottom:var(--m);z-index:8;color:var(--ivory)}
 .index{position:absolute;left:0;bottom:calc(100% + 24px);display:flex;gap:14px;align-items:center;color:var(--haze);opacity:0;transform:translateY(8px);transition:opacity .9s var(--e-out) .35s,transform .9s var(--e-out) .35s}

@@ -129,6 +129,7 @@
     if (preDone) return;
     var el = (now - pre0) / 1000;
     if (GL && !gl3() && (el > 6 || (window.__pre3d && window.__pre3d.state === 'error'))) { GL = false; pickDom(); pre0 = now; el = 0; }
+    if (GL && gl3()) { preDone = true; startIntro(); return; }                     /* the 3D is up: go now (the still covers the wait) */
     var target;
     if (GL) { target = gl3() ? 1 : Math.min(.92, el / 2.2); }
     else {
@@ -144,6 +145,8 @@
 
   var raf = null, t0 = null;
   function startIntro(){
+    var still = $('prePoster'), stillOn = !!still && isOk(still);
+    if (gl3() && stillOn) { window.__pre3d.noFade = true; veil.style.transition = 'none'; }   /* the still IS this frame: cross-fade, no dip */
     pre.classList.add('out'); veil.classList.add('off'); st15.classList.add('on');
     if (gl3()) st15.classList.add('gl');
     if (reduced) { finish(); return; }
@@ -155,6 +158,7 @@
     if (lastNow === null) lastNow = now;
     var dt = Math.min((now - lastNow) / 1000, 1 / 30); lastNow = now;
     var t = state.t + dt;
+    if (window.__pre3d && window.__pre3d.roomReady === false && st15.classList.contains('gl')) t = Math.min(t, Math.max(state.t, T.push - .1));   /* the room is still on its way: the drone waits at the window */
     pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
     state.t = t; render(t);
     if (t < T.end) raf = requestAnimationFrame(tick); else finish();

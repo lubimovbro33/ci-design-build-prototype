@@ -306,14 +306,14 @@ async function build(){
   U.time = { value: 0 };
 
   const hi = hiDPI(), base = 'assets/v15/gl/';
-  const tWin = await new Promise((res, rej) => new THREE.TextureLoader().load(base + 'facade_win.png', t => { t.colorSpace = THREE.NoColorSpace; t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; res(t); }, undefined, rej));
-  const tWinM = await new Promise((res, rej) => new THREE.TextureLoader().load(base + 'facade_winmask.png', t => { t.colorSpace = THREE.NoColorSpace; res(t); }, undefined, rej));
-  const tDep = await new Promise((res, rej) => new THREE.TextureLoader().load(base + 'room_depth.png', t => { t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; res(t); }, undefined, rej));
-  const [tSky, tFac, tUD, tUL, tJamb, tRoom, tLogo, tRoomBg] = await Promise.all([
-    loadTex(base + (hi ? 'sky_2x.jpg' : 'sky_1x.jpg')), loadTex(base + (hi ? 'facade_2x.webp' : 'facade_1x.webp')),
-    loadTex(base + 'unit_dark.jpg'), loadTex(base + 'unit_lit.webp'), loadTex(base + 'jamb.jpg'),
-    loadTex('assets/v15/' + (hi ? 'room_2k.jpg' : 'room_1k.jpg')), loadTex('assets/v15/logo_db.png'),
-    loadTex(base + (hi ? 'room_bg_2k.jpg' : 'room_bg_1k.jpg'))
+  /* v7.1 (user 03.11 10:43): no black wait. The page opens on the first frame (a still of this very scene, plain HTML) and the 3D
+     waits only for what its first seconds show (≈ 0.75 MB at 1×); the window maps, the room and the 2× pictures follow while
+     the drone flies (loadRest). Until then: 1-px black stand-ins. */
+  const blank = nearest => { const t = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1); if (nearest) t.magFilter = t.minFilter = THREE.NearestFilter; t.needsUpdate = true; return t; };
+  const tWin = blank(true), tWinM = blank(), tDep = blank(), tRoom = blank(), tRoomBg = blank();
+  const [tSky, tFac, tUD, tUL, tJamb, tLogo] = await Promise.all([
+    loadTex(base + 'sky_1x.jpg'), loadTex(base + 'facade_1x.webp'), loadTex(base + 'unit_dark.jpg'), loadTex(base + 'unit_lit.webp'),
+    loadTex(base + 'jamb.jpg'), loadTex('assets/v15/logo_db.png')
   ]);
   layoutCamera();
   const clipEdge = [ new THREE.Plane(new THREE.Vector3(-1, 0, 0), F.EDGE - .5) ];       /* keep things left of the corner */
@@ -496,7 +496,8 @@ function render3d(t, T, mx, my, scroll, toTex){
   /* post */
   bloom.strength = .5 + .22 * bloomK;
   finalPass.uniforms.uTime.value = U.time.value;
-  finalPass.uniforms.uFade.value = sm(t / T.fadeIn);
+  finalPass.uniforms.uFade.value = PRE3D.noFade || PRE3D.still ? 1 : sm(t / T.fadeIn);   /* opened on the still: no fade from black */
+  life();
   finalPass.uniforms.uAb.value = .022 * Math.sin(Math.PI * clamp01(dive * 1.1));
   if (toTex){ composer.renderToScreen = false; composer.render(); composer.renderToScreen = true; return composer.readBuffer.texture; }
   composer.render();
@@ -533,6 +534,7 @@ function storyFrame(o){
   bloom.strength = .5;
   const fu = finalPass.uniforms;
   fu.uTime.value = U.time.value; fu.uFade.value = 1; fu.uAb.value = 0;            /* no colour fringes */
+  life();
   const draw = clamp01(o.draw || 0), back = clamp01(o.out || 0); setSk(draw); bloom.strength = .5 * (1 - .6 * draw);
   fu.uKeep.value = 0;
   const r = winRect(); fu.uWin.value.set(r.x0 / vw, 1 - r.y1 / vh, r.x1 / vw, 1 - r.y0 / vh);
@@ -695,6 +697,31 @@ function lineSize(){
   if (!LN.scene) return;
   const pr = renderer.getPixelRatio();
   for (const m of LN.mats){ m.resolution.set(vw * pr, vh * pr); m.linewidth = m.userData.lw * pr; }
+}
+/* the rest of the scene, in the background once the drone is up: window maps (the lamps then come on gently), the room
+   (the dive waits for it: PRE3D.roomReady), the 2× sky and facade on large screens */
+const LIFE = { t0: 0 };
+function life(){ M.fac.material.uniforms.uLife.value = PRE3D.still ? 0 : LIFE.t0 ? sm((performance.now() - LIFE.t0) / 2500) : 0; }
+function loadRest(){
+  const hi = hiDPI(), base = 'assets/v15/gl/', an = renderer.capabilities.getMaxAnisotropy();
+  const srgb = t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = an; }, lin = t => { t.colorSpace = THREE.NoColorSpace; };
+  PRE3D.roomReady = false;
+  Promise.all([
+    loadAny(base + 'facade_win.png', t => { lin(t); t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; }),
+    loadAny(base + 'facade_winmask.webp', lin),
+    loadDep(base + 'room_depth.png'),
+    loadAny('assets/v15/' + (hi ? 'room_2k.jpg' : 'room_1k.jpg'), srgb), loadAny(base + (hi ? 'room_bg_2k.jpg' : 'room_bg_1k.jpg'), srgb)
+  ]).then(([w, wm, d, r, rb]) => {
+    const fu = M.fac.material.uniforms; fu.winMap.value = w; fu.winMask.value = wm; LIFE.t0 = performance.now();
+    Object.assign(ROOMS, { bg: rb, o: r, d: d });
+    if (ROOMS.cur < 0){ const ub = M.room.material.uniforms, un = M.roomN.material.uniforms; ub.map.value = rb; un.map.value = r; ub.dmap.value = un.dmap.value = d; }
+    PRE3D.roomReady = true;
+  }, e => { console.warn('[pre3d] room', e); PRE3D.roomReady = true; });
+  if (hi) Promise.all([loadAny(base + 'sky_2x.jpg', srgb), loadAny(base + 'facade_2x.webp', srgb)]).then(([s2, f2]) => {
+    M.sky.material.uniforms.map.value = s2; M.fac.material.uniforms.map.value = f2;
+    const old = M.side.material.map, t = f2.clone(); t.wrapS = THREE.RepeatWrapping; t.repeat.copy(old.repeat); t.offset.copy(old.offset); t.needsUpdate = true;
+    M.side.material.map = t;
+  }, e => console.warn('[pre3d] 2x', e));
 }
 function loadSketch(){ return Promise.resolve(); }                /* v7: the raster drawings are retired */
 
@@ -874,6 +901,7 @@ function slideFrame(o){
   try {
     if (!canvas) throw new Error('no canvas');
     await build();
+    loadRest();
     PRE3D.render = render3d; PRE3D.resize = resize; PRE3D.slidesInit = slidesInit; PRE3D.slideFrame = slideFrame; PRE3D.storyFrame = storyFrame; PRE3D.winRect = winRect; PRE3D.setRoom = setRoom; PRE3D.ok = true; PRE3D.state = 'ready';
   } catch (e) {
     console.warn('[pre3d] fallback to DOM:', e && e.message);
