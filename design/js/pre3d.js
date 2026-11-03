@@ -16,6 +16,9 @@ import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
 import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
 import { OutputPass } from 'three/addons/postprocessing/OutputPass.js';
+import { LineSegments2 } from 'three/addons/lines/LineSegments2.js';
+import { LineSegmentsGeometry } from 'three/addons/lines/LineSegmentsGeometry.js';
+import { LineMaterial } from 'three/addons/lines/LineMaterial.js';
 
 const PRE3D = window.__pre3d = { state: 'loading', ok: false, render(){}, resize(){} };
 
@@ -67,22 +70,22 @@ function placeRect(m){
 /* ---------------------------------------------------------------- shaders */
 const vtx = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
 /* the story's sketch: every surface swaps to its ink drawing (assets *_sk) in organic patches, as if redrawn by hand */
+/* v7 (user 03.11 10:16): no raster sketch any more. Around the CI window the photo melts to black behind one soft, wavy front
+   that spreads from the window (screen space, device px); the vector drawing (LN, below) is drawn by the same front */
+const FRU = { uFC:{value:new THREE.Vector2()}, uFR:{value:-1e5}, uFW:{value:160}, uFN:{value:1 / 230}, uFS:{value:140} };
 const SKGL = `
+  uniform vec2 uFC; uniform float uFR; uniform float uFW; uniform float uFN; uniform float uFS;
   float skH(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float skN(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
     return mix(mix(skH(i), skH(i + vec2(1., 0.)), f.x), mix(skH(i + vec2(0., 1.)), skH(i + 1.), f.x), f.y); }
-  float skR(vec2 uv, float k){                                       /* a soft, wavy reveal: large smooth noise, a slight pull from the top */
-    float n = .58 * skN(uv * 3.2 + 1.7) + .22 * skN(uv * 8.5 + 4.1) + .2 * (1. - uv.y);
-    return smoothstep(n - .17, n + .17, k * 1.4 - .2); }
-  vec3 skMix(vec3 col, vec3 sk, vec2 uv, float k){ if (k <= 0.) return col; float r = skR(uv, k);
-    float lm = clamp((pow(max(sk.g, 0.), 1. / 2.2) - .13) / .76, 0., 1.);     /* the drawing's line mask (its #111 paper → 0) */
-    sk = vec3(.83 * pow(lm, 2.2));                                           /* Bright Gray lines on pure black (mapped in display terms) */
-    float edge = r * (1. - r) * 4.;                                   /* a thin bright front where the drawing arrives */
-    return mix(col, sk, r) + vec3(.92, .92, .92) * edge * .035 * (1. - k); }`;
+  float skR(){ vec2 p = gl_FragCoord.xy;
+    float d = length(p - uFC) + uFW * (skN(p * uFN + 1.7) * .75 + skN(p * uFN * 2.7 + 4.1) * .25 - .5);
+    return 1. - smoothstep(uFR - uFS, uFR, d); }
+  vec3 skMix(vec3 col, vec3 sk, vec2 uv, float k){ if (k <= 0.) return col; return col * (1. - skR()); }`;
 
 function skyMat(tex){
   return new THREE.ShaderMaterial({
-    uniforms: { map:{value:tex}, uTime:U.time, uLift:{value:1}, skMap:{value:null}, uSk:{value:0} },
+    uniforms: Object.assign({ map:{value:tex}, uTime:U.time, uLift:{value:1}, skMap:{value:null}, uSk:{value:0} }, FRU),
     vertexShader: vtx,
     fragmentShader: `uniform sampler2D map; uniform float uTime; uniform float uLift; uniform sampler2D skMap; uniform float uSk; varying vec2 vUv;
       float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
@@ -106,7 +109,7 @@ function skyMat(tex){
 }
 function facadeMat(tex, win){
   return new THREE.ShaderMaterial({
-    uniforms: { map:{value:tex}, winMap:{value:win}, winMask:{value:null}, uTime:U.time, uLife:{value:1}, skMap:{value:null}, uSk:{value:0} },
+    uniforms: Object.assign({ map:{value:tex}, winMap:{value:win}, winMask:{value:null}, uTime:U.time, uLife:{value:1}, skMap:{value:null}, uSk:{value:0} }, FRU),
     vertexShader: vtx,
     fragmentShader: `uniform sampler2D map; uniform sampler2D winMap; uniform sampler2D winMask; uniform float uTime; uniform float uLife;
       uniform sampler2D skMap; uniform float uSk; varying vec2 vUv;
@@ -137,14 +140,14 @@ function basicTex(tex, opts){ return new THREE.MeshBasicMaterial(Object.assign({
 
 function unitLitMat(tex){
   return new THREE.ShaderMaterial({
-    uniforms: { map:{value:tex}, uOp:{value:0}, uGain:{value:1}, skMap:{value:null}, uSk:{value:0} },
+    uniforms: Object.assign({ map:{value:tex}, uOp:{value:0}, uGain:{value:1}, skMap:{value:null}, uSk:{value:0}, uCU:{value:new THREE.Vector4(0, 0, 1, 1)} }, FRU),
     vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform float uOp; uniform float uGain; uniform sampler2D skMap; uniform float uSk; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D map; uniform float uOp; uniform float uGain; uniform sampler2D skMap; uniform float uSk; uniform vec4 uCU; varying vec2 vUv;
       ${SKGL}
       void main(){ vec4 c = texture2D(map, vUv); vec3 col = c.rgb;
         float warm = smoothstep(.25,.8,dot(col, vec3(.5,.35,.15)));
         col *= mix(1., uGain, warm);
-        if (uSk > 0.) col = skMix(col, texture2D(skMap, vUv).rgb, vUv, uSk);
+        if (uSk > 0. && (vUv.x < uCU.x || vUv.x > uCU.z || vUv.y < uCU.y || vUv.y > uCU.w)) col = skMix(col, vec3(0.), vUv, uSk);   /* only past the outline */
         gl_FragColor = vec4(col, c.a * uOp);
         #include <colorspace_fragment>
       }`,
@@ -327,6 +330,7 @@ async function build(){
   const P = F.PATCH;
   M.ud = rectPlane(new THREE.MeshBasicMaterial({ map: tUD, transparent: true, depthWrite: false, toneMapped: false }), P, -DEPTH, false); M.ud.renderOrder = 3; scene.add(M.ud);
   M.ul = rectPlane(unitLitMat(tUL), P, -DEPTH + .5, false); M.ul.renderOrder = 4; scene.add(M.ul);
+  M.ul.material.uniforms.uCU.value.set((F.OL.x - P.x) / P.w, 1 - (F.OL.y + F.OL.h - P.y) / P.h, (F.OL.x + F.OL.w - P.x) / P.w, 1 - (F.OL.y - P.y) / P.h);
   tJamb.wrapS = tJamb.wrapT = THREE.RepeatWrapping;
   const jm = new THREE.MeshBasicMaterial({ map: tJamb, color: 0x6a5f58, side: THREE.DoubleSide, toneMapped: false });
   M.jamb = new THREE.Group();
@@ -364,6 +368,7 @@ async function build(){
   M.shadow = rectPlane(shadowMat(), { x:F.MARK.x - F.MARK.w * (SH - 1) / 2, y:F.MARK.y - F.MARK.h * (SH - 1) / 2, w:F.MARK.w * SH, h:F.MARK.h * SH }, 1.5, false);
   M.shadow.material.clippingPlanes = clipEdge; M.shadow.renderOrder = 7; scene.add(M.shadow);
   M.logo = rectPlane(logoMat(tLogo), F.MARK, 2, false); M.logo.renderOrder = 8; scene.add(M.logo);
+  buildLines();
 
   composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
@@ -373,7 +378,7 @@ async function build(){
   resize();
   window.addEventListener('resize', resize);
   [tSky, tFac, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep].forEach(t => renderer.initTexture(t));
-  renderer.compile(scene, camera);
+  renderer.compile(scene, camera); renderer.compile(LN.scene, camera);
   finalPass.uniforms.uFade.value = 0; composer.render(); composer.render();
 }
 
@@ -391,7 +396,7 @@ function resize(){
   bloom.resolution.set(vw / 2, vh / 2);
   finalPass.uniforms.uRes.value.set(vw, vh);
   scene.traverse(o => { if (o.userData && o.userData.r) placeRect(o); });
-  scaleRoom();
+  scaleRoom(); lineSize();
   if (SLD.ps) SLD.ps.forEach(ps => ps && layoutPhoto(ps));
 }
 const ZEND = -40;
@@ -411,11 +416,6 @@ function setRoom(i){
   if (t){
     ub.map.value = t.b; un.map.value = t.o; ub.dmap.value = un.dmap.value = t.d; ub.uRaw.value = un.uRaw.value = 1; ROOMS.ar = t.o.image.width / t.o.image.height; ROOMS.k = 1.10;
     ub.uSkOk.value = un.uSkOk.value = 0;
-    if (t.skUrl && !t.skP){                                         /* this photo's drawing, fetched now */
-      const srgb = x => { x.colorSpace = THREE.SRGBColorSpace; };
-      t.skP = Promise.all([loadAny(t.skUrl.b, srgb), loadAny(t.skUrl.o, srgb)]).then(([b2, o2]) => { t.sk = { b: b2, o: o2 }; if (ROOMS.cur === i) setRoomSk(t.sk, 1); });
-    }
-    if (t.sk) setRoomSk(t.sk, 1);
   }
   else { ub.map.value = ROOMS.bg; un.map.value = ROOMS.o; ub.dmap.value = un.dmap.value = ROOMS.d; ub.uRaw.value = un.uRaw.value = 0; ROOMS.ar = ROOM_AR; ROOMS.k = 1.13;
     if (ROOMS.skb) setRoomSk({ b: ROOMS.skb, o: ROOMS.sko }, 1); else ub.uSkOk.value = un.uSkOk.value = 0; }
@@ -463,7 +463,7 @@ let lastT = null;
 function skyK(e){ const k = (Zc - SKYZ) / Zc * (M.sky.userData.over || 1) * e; M.sky.scale.set(k, k, 1); }
 function render3d(t, T, mx, my, scroll, toTex){
   lastT = T;
-  if (SK.on){ SK.on = false; skyK(1); setSk(0); finalPass.uniforms.uKeep.value = 0; }
+  if (SK.on){ SK.on = false; skyK(1); setSk(0); FRU.uFR.value = -1e5; finalPass.uniforms.uKeep.value = 0; }
   U.time.value = performance.now() / 1000;
   const dive = pose(t, T, mx || 0, my || 0, scroll || 0);
   /* frame 15: the logo draws clockwise, then shines (glint, brighter bloom), then erases counter-clockwise */
@@ -523,8 +523,7 @@ function storyFrame(o){
   const dive = 1 - out, u = 0;
   skyK(1 + .32 * u);
   const lu = M.logo.material.uniforms; lu.uOp.value = 0; lu.uSpark.value = 0; M.shadow.material.uniforms.uOp.value = 0;
-  const ol = clamp01(o.ol || 0), ou = M.ol.material.uniforms;
-  ou.uFront.value = 1 - ol; ou.uOp.value = ol > 0 ? (o.olOp == null ? 1 : o.olOp) : 0; ou.uHead.value = ol > .001 && ol < .999 ? 1 : 0;
+  const ol = clamp01(o.ol || 0); M.ol.material.uniforms.uOp.value = 0;            /* v7: the gold outline is retired; a hairline draws it (LN.ol) */
   M.ud.material.opacity = 0;
   M.ul.material.uniforms.uOp.value = 1; M.ul.material.uniforms.uGain.value = 1;
   for (const m of [M.room, M.roomN]){ m.material.uniforms.uLight.value = 1 - out; m.material.uniforms.uGain.value = 1; }
@@ -533,37 +532,171 @@ function storyFrame(o){
   M.spill.material.uniforms.uOp.value = .32 * (1 - sm(dive * 2.2));
   bloom.strength = .5;
   const fu = finalPass.uniforms;
-  fu.uTime.value = U.time.value; fu.uFade.value = 1; fu.uAb.value = .016 * Math.sin(Math.PI * out);
-  const skv = clamp01(o.sketch || 0); setSk(skv); bloom.strength = .5 * (1 - .75 * skv);
-  fu.uKeep.value = clamp01(o.keep || 0);
+  fu.uTime.value = U.time.value; fu.uFade.value = 1; fu.uAb.value = 0;            /* no colour fringes */
+  const draw = clamp01(o.draw || 0), back = clamp01(o.out || 0); setSk(draw); bloom.strength = .5 * (1 - .6 * draw);
+  fu.uKeep.value = 0;
   const r = winRect(); fu.uWin.value.set(r.x0 / vw, 1 - r.y1 / vh, r.x1 / vw, 1 - r.y0 / vh);
+  /* the front: from the CI window's centre out past the farthest corner of the screen (device px) */
+  const pr = renderer.getPixelRatio(), fcx = (r.x0 + r.x1) / 2 * pr, fcy = (vh - (r.y0 + r.y1) / 2) * pr;
+  const rmax = Math.hypot(Math.max(fcx, vw * pr - fcx), Math.max(fcy, vh * pr - fcy));
+  FRU.uFC.value.set(fcx, fcy); FRU.uFW.value = 260 * pr; FRU.uFN.value = 1 / (300 * pr); FRU.uFS.value = 340 * pr;   /* a wide, soft, wavy band */
+  LNU.uLCap.value = 260 * pr; LNU.uLMax.value = rmax;
+  const span = rmax + FRU.uFW.value + FRU.uFS.value, lspan = rmax + FRU.uFW.value + LNU.uLCap.value * LNU.uLSp.value + .35 * FRU.uFS.value;
+  FRU.uFR.value = draw > 0 ? lerp(-FRU.uFW.value, span, draw) : -1e5;
+  LNU.uLR.value = draw > 0 ? lerp(-FRU.uFW.value, lspan, draw) - .35 * FRU.uFS.value : -1e5;          /* lines surface inside the band */
+  LNU.uLR2.value = back > 0 ? lerp(lspan, -FRU.uFW.value - 2, back) : 1e9;
+  LNU.uOL.value = ol; LN.ol.material.uniforms.uOp.value = o.olOp == null ? 1 : o.olOp;
+  LN.fac.visible = LN.guide.visible = draw > 0 && back < 1; LN.ol.visible = ol > 0 && LN.ol.material.uniforms.uOp.value > 0;
   renderer.setRenderTarget(null);
   if (o.toTex){ composer.renderToScreen = false; composer.render(); composer.renderToScreen = true; return r; }
   composer.render();
+  if (LN.fac.visible || LN.ol.visible){ renderer.autoClear = false; renderer.render(LN.scene, camera); renderer.autoClear = true; }
   return r;
 }
-/* the sketch amount on every surface that has a drawing; side wall, jambs and the spill go dark */
-const SKT = { ok: false };
+/* the photo around the CI window melts with the front; the window itself stays a live photo (user 03.11 10:21);
+   the stone in the recess, the side wall and the light spill go dark as soon as the front leaves the window */
 function setSk(k){
-  const on = SKT.ok ? k : 0;
-  for (const m of [M.sky, M.fac, M.ul, M.room, M.roomN]) m.material.uniforms.uSk.value = on;
-  M.side.material.color.setRGB(.16 * (1 - k), .165 * (1 - k), .2 * (1 - k));                 /* the drawing sits on pure black (user 03.11 10:11) */
-  M.jamb.children.forEach(q => q.material.color.setHex(0x6a5f58).multiplyScalar(1 - k));
-  if (k > 0) M.spill.material.uniforms.uOp.value *= 1 - k;
+  for (const m of [M.sky, M.fac, M.ul]) m.material.uniforms.uSk.value = k > 0 ? 1 : 0;   /* M.ul: only outside the outline */
+  for (const m of [M.room, M.roomN]) m.material.uniforms.uSk.value = 0;
+  const j = clamp01(k * 4);
+  M.side.material.color.setRGB(.16 * (1 - j), .165 * (1 - j), .2 * (1 - j));
+  M.jamb.children.forEach(q => q.material.color.setHex(0x6a5f58).multiplyScalar(1 - j));
+  if (k > 0) M.spill.material.uniforms.uOp.value *= 1 - j;
 }
 /* the drawings load quietly after the slider has warmed up (≈ 2.3 MB); a hero photo's drawing loads when the story starts from it */
-function loadSketch(){
-  if (SKT.p) return SKT.p;
-  const b = 'assets/v15/gl/', srgb = t => { t.colorSpace = THREE.SRGBColorSpace; };
-  SKT.p = Promise.all([loadAny(b + 'sky_sk.jpg', srgb), loadAny(b + 'facade_sk.webp', srgb), loadAny(b + 'unit_sk.webp', srgb),
-                       loadAny(b + 'room_bg_sk.jpg', srgb), loadAny(b + 'room_sk.jpg', srgb)]).then(([sk, fa, un, rb, rn]) => {
-    M.sky.material.uniforms.skMap.value = sk; M.fac.material.uniforms.skMap.value = fa; M.ul.material.uniforms.skMap.value = un;
-    Object.assign(ROOMS, { skb: rb, sko: rn });
-    if (ROOMS.cur < 0){ M.room.material.uniforms.skMap.value = rb; M.roomN.material.uniforms.skMap.value = rn; M.room.material.uniforms.uSkOk.value = M.roomN.material.uniforms.uSkOk.value = 1; }
-    SKT.ok = true;
-  }, e => console.warn('[pre3d] sketch', e));
-  return SKT.p;
+/* ---------------------------------------------------------------- v7: the drawing, in true vector hairlines
+   An architect's elevation of the facade, built from the facade's own grid (facade_win.png: 7 floors, 5 triple + 4 single bays),
+   in 3D: openings on the face, the glass 14 units back with its mullions and transoms, the recess corners joining them, the
+   two-storey surrounds with their caps, sills and spandrels, the flat arches over the single windows, the building's corner;
+   dashed: the floor lines and the CI window's own guides. 1 CSS px, CI Bright Gray, no glow, rendered after the post (MSAA).
+   Every segment grows from its end nearer the CI window as the front passes it, and later retracts into the window. */
+const LN = { on: false, mats: [] };
+const LNU = { uLC: FRU.uFC, uLR:{value:-1e5}, uLR2:{value:1e9}, uLW: FRU.uFW, uLN: FRU.uFN, uLSp:{value:1.5}, uLCap:{value:260}, uLMax:{value:1000},
+              uOL:{value:0}, uInk:{value:new THREE.Color(0xEBEBEB)} };
+const LNV = `
+  uniform vec2 uLC; uniform float uLR; uniform float uLR2; uniform float uLW; uniform float uLN; uniform float uLSp; uniform float uLCap; uniform float uLMax;
+  uniform float uSeq; uniform float uOL;
+  varying float vVis; varying float vB;
+  float lnH(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+  float lnN(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
+    return mix(mix(lnH(i), lnH(i + vec2(1., 0.)), f.x), mix(lnH(i + vec2(0., 1.)), lnH(i + 1.), f.x), f.y); }
+`;
+const LNCUT = `
+  { vec4 cs = projectionMatrix * start, ce = projectionMatrix * end;
+    vec2 ps = (cs.xy / cs.w * .5 + .5) * resolution, pe = (ce.xy / ce.w * .5 + .5) * resolution;
+    float kk; vB = instanceColorStart.r;
+    if (uSeq > .5) kk = clamp(uOL * 4. - instanceColorStart.g * 4., 0., 1.);           /* the window's outline: edge after edge */
+    else {
+      float d0 = length(ps - uLC), ds = d0 + uLW * (lnN(ps * uLN + 1.7) * .75 + lnN(ps * uLN * 2.7 + 4.1) * .25 - .5);
+      float lc = min(max(length(pe - ps), 1.), uLCap) * uLSp;
+      kk = min(clamp((uLR - ds) / lc, 0., 1.), clamp((uLR2 - ds) / lc, 0., 1.));
+      vB *= 1. - .55 * smoothstep(.3, 1., d0 / uLMax);                                  /* quieter towards the edges */
+    }
+    vVis = kk > .002 ? 1. : 0.;
+    end = mix(start, end, kk);
+    #ifdef USE_DASH
+    vLineDistance = dashScale * mix(instanceDistanceStart, instanceDistanceEnd, position.y < .5 ? 0. : kk);
+    #endif
+  }
+`;
+function lineMat(o){
+  const m = new LineMaterial({ color: 0xffffff, linewidth: 1, vertexColors: true, transparent: true, depthTest: false, depthWrite: false,
+                               dashed: !!o.dash, dashSize: o.dash || 1, gapSize: o.gap || 1 });
+  Object.assign(m.uniforms, LNU, { uSeq: { value: o.seq ? 1 : 0 }, uOp: { value: 1 } });
+  m.vertexShader = m.vertexShader.replace('void main() {', LNV + '\nvoid main() {')
+    .replace('vec4 end = modelViewMatrix * vec4( instanceEnd, 1.0 );', 'vec4 end = modelViewMatrix * vec4( instanceEnd, 1.0 );' + LNCUT);
+  m.fragmentShader = m.fragmentShader.replace('void main() {', 'uniform vec3 uInk; uniform float uOp; varying float vVis; varying float vB;\nvoid main() {')
+    .replace('gl_FragColor = vec4( diffuseColor.rgb, alpha );', 'gl_FragColor = vec4( uInk, alpha * vB * vVis * uOp );');
+  if (m.vertexShader.indexOf('uLR2') < 0 || m.fragmentShader.indexOf('uInk') < 0) console.warn('[pre3d] line shader patch failed');
+  m.userData.lw = o.lw || 1; LN.mats.push(m);
+  return m;
 }
+function lineObj(segs, mat){
+  const g = new LineSegmentsGeometry(), pos = new Float32Array(segs.length * 6), col = new Float32Array(segs.length * 6);
+  segs.forEach((q, i) => { pos.set(q.slice(0, 6), i * 6); col.set([q[6], q[7] || 0, 0, q[6], q[7] || 0, 0], i * 6); });
+  g.setPositions(pos); g.setColors(col);
+  const o = new LineSegments2(g, mat); if (mat.dashed) o.computeLineDistances(); o.frustumCulled = false; o.renderOrder = 20;
+  return o;
+}
+function facadeLines(){
+  /* facade texture px (x → right, y → down) to world: x − 969, 251 − y; the CI window = F.OL */
+  const ROWS = [[8,168],[234,400],[475,629],[707,870],[940,1090],[1156,1302],[1363,1474]];
+  const TRI = [[[67,100],[120,190],[209,232]], [[523,556],[576,646],[665,688]], [[979,1012],[1032,1102],[1121,1144]],
+               [[1383,1413],[1433,1508],[1528,1566]], [[1843,1869],[1890,1966],[1986,2009]]];
+  const ONE = [[315,406],[771,862],[1227,1318],[1661,1757]];
+  const CIX0 = F.OL.x + 969, CIX1 = CIX0 + F.OL.w, CIY0 = F.OL.y + 251, CIY1 = CIY0 + F.OL.h, CORNER = F.EDGE + 969;
+  const cx = F.OL.x + F.OL.w / 2, cy = -(F.OL.y + F.OL.h / 2), S = [], D = [], O = [];
+  const put = (arr, ax, ay, az, bx, by, bz, B) => {
+    let p = [ax - 969, 251 - ay, az], q = [bx - 969, 251 - by, bz];
+    const dx = q[0] - p[0], dy = q[1] - p[1], L2 = dx * dx + dy * dy, t = L2 > 0 ? ((cx - p[0]) * dx + (cy - p[1]) * dy) / L2 : 0;
+    if (t > .02 && t < .98){                                                          /* passes the window: grow both ways from it */
+      const m = [p[0] + dx * t, p[1] + dy * t, p[2] + (q[2] - p[2]) * t];
+      arr.push([m[0], m[1], m[2], p[0], p[1], p[2], B], [m[0], m[1], m[2], q[0], q[1], q[2], B]); return;
+    }
+    if (Math.hypot(q[0] - cx, q[1] - cy) < Math.hypot(p[0] - cx, p[1] - cy)) { const u = p; p = q; q = u; }
+    arr.push([p[0], p[1], p[2], q[0], q[1], q[2], B]);
+  };
+  const ln = (ax, ay, bx, by, B, z = 0, arr = S) => put(arr, ax, ay, z, bx, by, z, B);
+  const rect = (x0, y0, x1, y1, B, z = 0, arr = S) => { ln(x0, y0, x1, y0, B, z, arr); ln(x1, y0, x1, y1, B, z, arr); ln(x1, y1, x0, y1, B, z, arr); ln(x0, y1, x0, y0, B, z, arr); };
+  const GZ = -14, IN = 3;
+  const pane = (x0, x1, y0, y1) => {
+    rect(x0, y0, x1, y1, .42);                                                       /* the opening */
+    rect(x0 + IN, y0 + IN, x1 - IN, y1 - IN, .17, GZ);                               /* the glass, set back */
+    for (const [a, b, sx, sy] of [[x0, y0, 1, 1], [x1, y0, -1, 1], [x1, y1, -1, -1], [x0, y1, 1, -1]]) put(S, a, b, 0, a + sx * IN, b + sy * IN, GZ, .15);
+    const ty = y0 + .23 * (y1 - y0); ln(x0 + IN, ty, x1 - IN, ty, .14, GZ);          /* transom */
+    if (x1 - x0 >= 60) ln((x0 + x1) / 2, y0 + IN, (x0 + x1) / 2, y1 - IN, .14, GZ);   /* mullion */
+  };
+  ROWS.forEach((r, ri) => {
+    TRI.forEach((g, gi) => { if (ri === 3 && gi === 4) return; g.forEach(q => pane(q[0], q[1], r[0], r[1])); });
+    ONE.forEach(q => {
+      pane(q[0], q[1], r[0], r[1]);
+      rect(q[0] - 8, r[1] + 4, q[1] + 8, r[1] + 11, .22);                              /* sill */
+      const yb = r[0] - 2, yt = r[0] - 26, a0 = q[0] - 2, a1 = q[1] + 2, b0 = q[0] - 7, b1 = q[1] + 7;     /* flat arch */
+      ln(b0, yt, b1, yt, .18); ln(a0, yb, b0, yt, .14); ln(a1, yb, b1, yt, .14);
+      for (let k = 1; k < 9; k++){ const t = k / 9; if (k === 4 || k === 5) continue; ln(a0 + (a1 - a0) * t, yb, b0 + (b1 - b0) * t, yt, .08); }
+      ln(a0 + (a1 - a0) * 4 / 9, yb, b0 + (b1 - b0) * 4 / 9, yt, .14); ln(a0 + (a1 - a0) * 5 / 9, yb, b0 + (b1 - b0) * 5 / 9, yt, .14);   /* keystone */
+    });
+  });
+  [[0, 1], [2, 3], [4, 5], [6, -1]].forEach(([a, b]) => {                             /* two-storey surrounds of the triple bays */
+    const top = ROWS[a], bot = b >= 0 ? ROWS[b] : null;
+    TRI.forEach(g => {
+      const x0 = g[0][0] - 10, x1 = g[2][1] + 10, y0 = top[0] - 20, y1 = bot ? bot[1] + 10 : 1500;
+      ln(x0, y0, x1, y0, .26); ln(x0, y0, x0, y1, .26); ln(x1, y0, x1, y1, .26); if (bot) ln(x0, y1, x1, y1, .26);
+      rect(x0 - 6, y0 - 9, x1 + 6, y0, .22);                                          /* cap */
+      if (bot){
+        ln(x0, bot[1] + 4, x1, bot[1] + 4, .18);                                      /* lower sill */
+        const sy0 = top[1] + 9; ln(x0, sy0, x1, sy0, .2);                             /* upper sill / spandrel */
+        for (const x of [g[0][1], g[1][0], g[1][1], g[2][0]]) ln(x, sy0, x, bot[0], .15);
+      }
+    });
+  });
+  ln(CORNER, -60, CORNER, 1540, .4);                                                   /* the building's corner */
+  for (let i = 0; i < ROWS.length - 1; i++){ const y = (ROWS[i][1] + ROWS[i + 1][0]) / 2; ln(1150, y, CORNER + 900, y, .12, 0, D); }   /* floor lines */
+  /* the CI window: its recess in 3D, and its guides — the square the panel will be, constructed */
+  rect(CIX0 + 2, CIY0 + 2, CIX1 - 2, CIY1 - 2, .34, -DEPTH);
+  for (const [a, b, sx, sy] of [[CIX0, CIY0, 1, 1], [CIX1, CIY0, -1, 1], [CIX1, CIY1, -1, -1], [CIX0, CIY1, 1, -1]]) put(S, a, b, 0, a + sx * 2, b + sy * 2, -DEPTH, .34);
+  ln(CIX0, CIY0, CIX0 - 900, CIY0, .2, 0, D); ln(CIX1, CIY0, CIX1 + 1100, CIY0, .2, 0, D);
+  ln(CIX0, CIY1, CIX0 - 900, CIY1, .2, 0, D); ln(CIX1, CIY1, CIX1 + 1100, CIY1, .2, 0, D);
+  ln(CIX0, CIY0, CIX0, CIY0 - 700, .2, 0, D); ln(CIX1, CIY0, CIX1, CIY0 - 700, .2, 0, D);
+  ln(CIX0, CIY1, CIX0, CIY1 + 700, .2, 0, D); ln(CIX1, CIY1, CIX1, CIY1 + 700, .2, 0, D);
+  /* the outline itself, counter-clockwise from the top-right corner (r = brightness, g = order) */
+  const W = (ax, ay, bx, by, i) => O.push([ax - 969, 251 - ay, 0, bx - 969, 251 - by, 0, 1, i / 4]);
+  W(CIX1, CIY0, CIX0, CIY0, 0); W(CIX0, CIY0, CIX0, CIY1, 1); W(CIX0, CIY1, CIX1, CIY1, 2); W(CIX1, CIY1, CIX1, CIY0, 3);
+  return { S, D, O };
+}
+function buildLines(){
+  const L = facadeLines();
+  LN.scene = new THREE.Scene();
+  LN.fac = lineObj(L.S, lineMat({ lw: 1 })); LN.guide = lineObj(L.D, lineMat({ lw: 1, dash: 4, gap: 5 })); LN.ol = lineObj(L.O, lineMat({ lw: 1, seq: true }));
+  LN.scene.add(LN.fac, LN.guide, LN.ol);
+  LN.n = L.S.length + L.D.length + L.O.length;
+}
+function lineSize(){
+  if (!LN.scene) return;
+  const pr = renderer.getPixelRatio();
+  for (const m of LN.mats){ m.resolution.set(vw * pr, vh * pr); m.linewidth = m.userData.lw * pr; }
+}
+function loadSketch(){ return Promise.resolve(); }                /* v7: the raster drawings are retired */
 
 /* the CI window (the outline's rect) on screen, CSS px */
 function winRect(){
@@ -690,7 +823,7 @@ function slidesInit(list){
     const room = lastT ? render3d(lastT.end + 1, lastT, 0, 0, 0, true) : SLD.tex[0];
     [room].concat(SLD.tex).forEach((t, i, all) => { u.tA.value = t; u.tB.value = all[(i + 1) % all.length]; u.uP.value = .5; renderer.setRenderTarget(rt); renderer.render(SLD.scene, SLD.cam); });
     renderer.setRenderTarget(null); rt.dispose(); u.uP.value = 0;
-    if (lastT) storyFrame({ T: lastT, fly: .9, ol: 1, sketch: .6, keep: .3, toTex: true });   /* the story's sketch pass, warmed off screen */
+    if (lastT) storyFrame({ T: lastT, fly: .9, ol: 1, draw: .6, toTex: true });   /* the story's pass, warmed off screen */
     const i0 = SLD.ps.findIndex(Boolean);                               /* full-size slots allocated now, not on the first change */
     if (i0 >= 0){ const o0 = { mx: 0, my: 0, scroll: 0 }; drawPhoto(i0, 0, 0, 0, o0); drawPhoto(i0, 1, 0, 0, o0); renderer.setRenderTarget(null); }
     SLD.ready = true;
