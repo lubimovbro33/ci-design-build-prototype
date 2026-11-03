@@ -13,6 +13,9 @@
   function lerp(a, b, t){ return a + (b - a) * t; }
   function el(tag, attrs, parent){ var e = document.createElementNS(NS, tag); for (var k in attrs) e.setAttribute(k, attrs[k]); if (parent) parent.appendChild(e); return e; }
   function f1(v){ return Math.round(v * 10) / 10; }
+  /* text is written only when it changes: a DOM text write every frame costs a third of the frame rate where the page is observed
+     (the Vercel preview toolbar watches the DOM; measured on M4: 60 → 40 fps for one write per frame) */
+  function txt(e, v){ v = String(v); if (e && e.__t !== v){ e.__t = v; e.textContent = v; } }
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   /* a hairline that draws itself: pathLength 1, its own delay --d inside its group's progress --k (CSS does the rest) */
@@ -133,10 +136,10 @@
       /* the 75 %: the at-home hours fill the scale bar */
       var kr = sg(p, .1, .15); gRule.style.setProperty('--k', kr.toFixed(3));
       var kf = eo(sg(p, .13, .22)); fill.style.strokeDashoffset = (1 - kf).toFixed(4);
-      pctEl.textContent = Math.round(75 * kf); stage.style.setProperty('--pc', (sg(p, .11, .15) * (1 - sg(p, .88, .94))).toFixed(3));
+      txt(pctEl, Math.round(75 * kf)); stage.style.setProperty('--pc', (sg(p, .11, .15) * (1 - sg(p, .88, .94))).toFixed(3));
       /* the day: 06:00 → 24:00 while the verbs are read */
       var hr = 5 + 19 * sg(p, .36, .76), th = Math.min(23.99, hr), mm = Math.floor((th % 1) * 60);
-      hourT.textContent = (th < 10 ? '0' : '') + Math.floor(th) + ':' + (mm < 10 ? '0' : '') + mm;
+      txt(hourT, (th < 10 ? '0' : '') + Math.floor(th) + ':' + (mm < 10 ? '0' : '') + mm);
       
       cursor.setAttribute('transform', 'translate(' + f1(W * th / 24) + ' 0)'); cursor.style.opacity = (sg(p, .34, .38) * (1 - sg(p, .9, .96))).toFixed(3);
       var day = sm((hr - 5.6) / 1.2) * (1 - sm((hr - 18.6) / 1.4)), theta = (hr - 6) / 12 * Math.PI, sx = -Math.cos(theta), sy = -Math.sin(theta), elev = Math.max(0, Math.sin(theta));
@@ -249,7 +252,7 @@
       gT.style.opacity = tk.toFixed(3);
       bars.forEach(function(b){ var k = sg(p, .63 + b.d * .1, .67 + b.d * .1); b.e.style.strokeDashoffset = (1 - k).toFixed(3); });
       var ks = sg(p, .7, .76); saved.style.strokeDashoffset = (1 - ks).toFixed(3); savT.forEach(function(e){ e.style.opacity = ks.toFixed(3); });
-      pctEl.textContent = Math.round(20 * eo(ks)); stage.style.setProperty('--pc', sg(p, .69, .72).toFixed(3));
+      txt(pctEl, Math.round(20 * eo(ks))); stage.style.setProperty('--pc', sg(p, .69, .72).toFixed(3));
       /* your decisions, our everything-in-between */
       var km = sg(p, .82, .9); own.style.strokeDashoffset = (1 - km).toFixed(3);
       dots.forEach(function(d, i){ d.style.opacity = sg(p, .8 + i * .012, .82 + i * .012).toFixed(3); });
@@ -307,7 +310,7 @@
         if (o > .5) cur = i;
       });
       gF.style.opacity = (1 - .55 * sm(sg(p, .38, .44)) * (1 - sm(sg(p, .86, .9)))).toFixed(3);
-      if (idx) idx.textContent = '0' + (cur < 0 ? 1 : cur + 1);
+      txt(idx, '0' + (cur < 0 ? 1 : cur + 1));
       stage.style.setProperty('--geo', sg(p, .9, .95).toFixed(3));
     }
     return { sec: sec, pin: pin, update: update };
