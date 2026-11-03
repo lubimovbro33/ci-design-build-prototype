@@ -651,7 +651,7 @@ function facadeLines(){
     ONE.forEach(q => {
       pane(q[0], q[1], r[0], r[1]);
       rect(q[0] - 8, r[1] + 4, q[1] + 8, r[1] + 11, .22);                              /* sill */
-      const yb = r[0] - 2, yt = r[0] - 26, a0 = q[0] - 2, a1 = q[1] + 2, b0 = q[0] - 7, b1 = q[1] + 7;     /* flat arch */
+      const yb = r[0] - 2, yt = r[0] - 24, a0 = q[0] - 2, a1 = q[1] + 2, b0 = q[0] - 5, b1 = q[1] + 5;     /* flat arch */
       ln(b0, yt, b1, yt, .18); ln(a0, yb, b0, yt, .14); ln(a1, yb, b1, yt, .14);
       for (let k = 1; k < 9; k++){ const t = k / 9; if (k === 4 || k === 5) continue; ln(a0 + (a1 - a0) * t, yb, b0 + (b1 - b0) * t, yt, .08); }
       ln(a0 + (a1 - a0) * 4 / 9, yb, b0 + (b1 - b0) * 4 / 9, yt, .14); ln(a0 + (a1 - a0) * 5 / 9, yb, b0 + (b1 - b0) * 5 / 9, yt, .14);   /* keystone */
@@ -673,8 +673,8 @@ function facadeLines(){
   ln(CORNER, -60, CORNER, 1540, .4);                                                   /* the building's corner */
   for (let i = 0; i < ROWS.length - 1; i++){ const y = (ROWS[i][1] + ROWS[i + 1][0]) / 2; ln(1150, y, CORNER + 900, y, .12, 0, D); }   /* floor lines */
   /* the CI window: its recess in 3D, and its guides — the square the panel will be, constructed */
-  rect(CIX0 + 2, CIY0 + 2, CIX1 - 2, CIY1 - 2, .34, -DEPTH);
-  for (const [a, b, sx, sy] of [[CIX0, CIY0, 1, 1], [CIX1, CIY0, -1, 1], [CIX1, CIY1, -1, -1], [CIX0, CIY1, 1, -1]]) put(S, a, b, 0, a + sx * 2, b + sy * 2, -DEPTH, .34);
+  rect(CIX0 + 2, CIY0 + 2, CIX1 - 2, CIY1 - 2, .2, -DEPTH);
+  for (const [a, b, sx, sy] of [[CIX0, CIY0, 1, 1], [CIX1, CIY0, -1, 1], [CIX1, CIY1, -1, -1], [CIX0, CIY1, 1, -1]]) put(S, a, b, 0, a + sx * 2, b + sy * 2, -DEPTH, .24);
   ln(CIX0, CIY0, CIX0 - 900, CIY0, .2, 0, D); ln(CIX1, CIY0, CIX1 + 1100, CIY0, .2, 0, D);
   ln(CIX0, CIY1, CIX0 - 900, CIY1, .2, 0, D); ln(CIX1, CIY1, CIX1 + 1100, CIY1, .2, 0, D);
   ln(CIX0, CIY0, CIX0, CIY0 - 700, .2, 0, D); ln(CIX1, CIY0, CIX1, CIY0 - 700, .2, 0, D);
@@ -823,7 +823,9 @@ function slidesInit(list){
     const room = lastT ? render3d(lastT.end + 1, lastT, 0, 0, 0, true) : SLD.tex[0];
     [room].concat(SLD.tex).forEach((t, i, all) => { u.tA.value = t; u.tB.value = all[(i + 1) % all.length]; u.uP.value = .5; renderer.setRenderTarget(rt); renderer.render(SLD.scene, SLD.cam); });
     renderer.setRenderTarget(null); rt.dispose(); u.uP.value = 0;
-    if (lastT) storyFrame({ T: lastT, fly: .9, ol: 1, draw: .6, toTex: true });   /* the story's pass, warmed off screen */
+    if (lastT){ storyFrame({ T: lastT, fly: .9, ol: 1, draw: .6, toTex: true });   /* the story's pass, warmed off screen */
+      LN.mats.forEach(m => m.uniforms.uOp.value = 0); renderer.autoClear = false; renderer.render(LN.scene, camera); renderer.autoClear = true;   /* + the lines' screen program, invisibly */
+      LN.mats.forEach(m => m.uniforms.uOp.value = 1); }
     const i0 = SLD.ps.findIndex(Boolean);                               /* full-size slots allocated now, not on the first change */
     if (i0 >= 0){ const o0 = { mx: 0, my: 0, scroll: 0 }; drawPhoto(i0, 0, 0, 0, o0); drawPhoto(i0, 1, 0, 0, o0); renderer.setRenderTarget(null); }
     SLD.ready = true;
