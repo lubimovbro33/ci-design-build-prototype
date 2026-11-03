@@ -8,6 +8,7 @@ html.hero-only .story{display:none}
 
 .story{--S:380px;--gold:#96A9BF;--ink:#EBEBEB;--mist:#A9B3BE;--indigo:#283E4B;position:absolute;inset:0;z-index:9;pointer-events:none;color:var(--ink);visibility:hidden}
 .story.on{visibility:visible}
+.story > :not(.st-bg){translate:var(--px,0px) var(--py,0px)}   /* the layer rides with the CI window in 3D */
 .story .st-bg{position:absolute;inset:0;opacity:0;background:radial-gradient(60% 55% at 50% 48%,rgba(40,62,75,.32),rgba(40,62,75,0) 70%),#000}
 .story .st-svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
 .story .sq{fill:none;stroke:rgba(235,235,235,.82);stroke-width:1.2;stroke-linecap:square;opacity:0}

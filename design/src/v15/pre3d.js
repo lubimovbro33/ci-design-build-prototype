@@ -542,9 +542,8 @@ function render3d(t, T, mx, my, scroll, toTex){
    o: { fly 0..1, ol 0..1 (outline drawn), olOp, sketch 0..1, keep 0..1, mx, my, T } */
 const SK = { on: false }, SPLIT = .58, SKZ = 1.28;
 const SIDEC = [.065, .067, .085];   /* the side wall's shade (its texture is raw sRGB, read as linear) */
-function storyFrame(o){
-  const T = o.T; lastT = T; SK.on = true;
-  U.time.value = performance.now() / 1000;
+/* the story's camera for these params (no render); returns how far it has come out ('out' 0..1) */
+function storyPose(o){
   const f = clamp01(o.fly || 0), mx = o.mx || 0, my = o.my || 0;
   /* the camera stays on the window's axis and backs away: distance to the room plane grows geometrically (an even zoom rate),
      shaped so the first part — out of the room, through the glass — takes its time and the end settles */
@@ -554,6 +553,15 @@ function storyFrame(o){
   const dist = dIn * Math.pow(dOut / dIn, g), z = ROOMZ + dist;
   const out = sm((dist - 290) / Math.max(120, (dOut - 290) * .8)), mp = lerp(MP_IN, Math.max(MP_IN, z * .1), out);   /* parallax scales with the distance */
   camera.position.set(H.x - mx * mp, H.y + my * mp * .7, z); look.set(H.x, H.y, lerp(ROOMZ, -520, out)); camera.lookAt(look);
+  camera.updateMatrixWorld();
+  return out;
+}
+/* where the CI window is on screen for these params — the DOM panels stay attached to it in 3D after the canvas is covered */
+function storyRect(o){ storyPose(o); return winRect(); }
+function storyFrame(o){
+  const T = o.T; lastT = T; SK.on = true;
+  U.time.value = performance.now() / 1000;
+  const out = storyPose(o);
   const dive = 1 - out, u = 0;
   skyK(1 + .32 * u);
   const lu = M.logo.material.uniforms; lu.uOp.value = 0; lu.uSpark.value = 0; M.shadow.material.uniforms.uOp.value = 0;
@@ -940,7 +948,7 @@ function slideFrame(o){
     if (!canvas) throw new Error('no canvas');
     await build();
     PRE3D.roomReady = true; PRE3D.warm = warm;
-    PRE3D.render = render3d; PRE3D.resize = resize; PRE3D.slidesInit = slidesInit; PRE3D.slideFrame = slideFrame; PRE3D.storyFrame = storyFrame; PRE3D.winRect = winRect; PRE3D.setRoom = setRoom; PRE3D.ok = true; PRE3D.state = 'ready';
+    PRE3D.render = render3d; PRE3D.resize = resize; PRE3D.slidesInit = slidesInit; PRE3D.slideFrame = slideFrame; PRE3D.storyFrame = storyFrame; PRE3D.storyRect = storyRect; PRE3D.winRect = winRect; PRE3D.setRoom = setRoom; PRE3D.ok = true; PRE3D.state = 'ready';
   } catch (e) {
     console.warn('[pre3d] fallback to DOM:', e && e.message);
     PRE3D.state = 'error';

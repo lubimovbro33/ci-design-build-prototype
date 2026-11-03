@@ -350,6 +350,7 @@
     pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
     var moved = Math.abs(pmx - lastMx) + Math.abs(pmy - lastMy) > .0004;
     if (s === ST.s && !moved) return;
+    var sameS = s === ST.s;
     ST.s = s; lastMx = pmx; lastMy = pmy;
     /* --- the hero text blurs away while we already fly */
     var ui = sg(s, 0, 1.0);
@@ -366,6 +367,15 @@
        behind one soft front from the window, the window stays a live photo; the drawing retracts into the window, whose line
        becomes the panel's line at the very same pixels while the drone eases in to the panel's size */
     var grow = eio(sg(s, 2.5, 3.05));
+    /* the panels ride with the window in 3D (user 03.11 19:48): while the canvas shows, the panel's line IS the window's rect;
+       after it, the whole story layer moves with the cursor exactly as the window would at that depth (one compositor shift) */
+    var par = [0, 0];
+    if (useGL && !glOn && window.__pre3d.storyRect) {
+      var R2 = window.__pre3d.storyRect({mx:pmx, my:pmy, push:ST.push, winPx:S, fly:1});
+      par = [(R2.x0 + R2.x1) / 2 - cx, (R2.y0 + R2.y1) / 2 - cy];
+    }
+    story.style.setProperty('--px', par[0].toFixed(1) + 'px'); story.style.setProperty('--py', par[1].toFixed(1) + 'px');
+    if (sameS && useGL && !glOn) return;                                               /* only the cursor moved: the shift is all */
     if (useGL && glOn) {
       var g0 = window.__perfLog ? performance.now() : 0;
       ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, push:ST.push, winPx:S * lerp(.78, 1, grow), fly:sg(s, 0, 1.6), ol:eio(sg(s, 1.05, 1.6)),
@@ -373,8 +383,8 @@
       if (g0) ST.dbg = performance.now() - g0;
     } else ST.dbg = 0;
     var target = [cx - S / 2, cy - S / 2, cx + S / 2, cy + S / 2];
-    var win = ST.R ? [ST.R.x0, ST.R.y0, ST.R.x1, ST.R.y1] : target;
-    var rc = lerpR(win, target, eio(sg(s, 2.85, 3.15)));                             /* exactly the window; the end absorbs the mouse parallax */
+    var win = ST.R && useGL && glOn ? [ST.R.x0, ST.R.y0, ST.R.x1, ST.R.y1] : target;
+    var rc = win;                                                                    /* exactly the window (after the canvas: the layer's shift) */
     var cOp = useGL ? sg(s, 2.45, 2.55) : sg(s, 1.2, 1.6);
     var sL = s - .3;                                                                 /* everything after the window: 0.3 later than v6 */
     var iso = sg(sL, 7.8, 8.8), isoE = eio(iso);
