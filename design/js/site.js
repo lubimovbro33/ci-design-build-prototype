@@ -136,7 +136,7 @@
       if (loaded >= need.length || el > 3 || short && el > .4) target = 1;
     }
     shown += (target * 100 - shown) * .2; if (target >= 1 && shown > 98.5) shown = 100;
-    cnt.textContent = (shown < 10 ? '0' : '') + Math.round(shown);
+    if (cnt) cnt.textContent = (shown < 10 ? '0' : '') + Math.round(shown);   /* the % counter is gone (user 03.11 10:12); the wait stays */
     if (shown >= 100) { preDone = true; startIntro(); return; }
     requestAnimationFrame(preTick);
   }

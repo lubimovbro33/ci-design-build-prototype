@@ -75,8 +75,8 @@ const SKGL = `
     float n = .58 * skN(uv * 3.2 + 1.7) + .22 * skN(uv * 8.5 + 4.1) + .2 * (1. - uv.y);
     return smoothstep(n - .17, n + .17, k * 1.4 - .2); }
   vec3 skMix(vec3 col, vec3 sk, vec2 uv, float k){ if (k <= 0.) return col; float r = skR(uv, k);
-    float lm = clamp((pow(max(sk.g, 0.), 1. / 2.2) - .067) / .82, 0., 1.);    /* the drawing's line mask → CI Bright Gray on Eerie Black */
-    sk = mix(vec3(0.), vec3(.83), lm);                                       /* Bright Gray lines on black */
+    float lm = clamp((pow(max(sk.g, 0.), 1. / 2.2) - .13) / .76, 0., 1.);     /* the drawing's line mask (its #111 paper → 0) */
+    sk = vec3(.83 * pow(lm, 2.2));                                           /* Bright Gray lines on pure black (mapped in display terms) */
     float edge = r * (1. - r) * 4.;                                   /* a thin bright front where the drawing arrives */
     return mix(col, sk, r) + vec3(.92, .92, .92) * edge * .035 * (1. - k); }`;
 
@@ -547,8 +547,8 @@ const SKT = { ok: false };
 function setSk(k){
   const on = SKT.ok ? k : 0;
   for (const m of [M.sky, M.fac, M.ul, M.room, M.roomN]) m.material.uniforms.uSk.value = on;
-  M.side.material.color.setRGB(.16 * (1 - k * .85), .165 * (1 - k * .85), .2 * (1 - k * .85));
-  M.jamb.children.forEach(q => q.material.color.setHex(k > 0 ? 0x2a2a2a : 0x6a5f58));
+  M.side.material.color.setRGB(.16 * (1 - k), .165 * (1 - k), .2 * (1 - k));                 /* the drawing sits on pure black (user 03.11 10:11) */
+  M.jamb.children.forEach(q => q.material.color.setHex(0x6a5f58).multiplyScalar(1 - k));
   if (k > 0) M.spill.material.uniforms.uOp.value *= 1 - k;
 }
 /* the drawings load quietly after the slider has warmed up (≈ 2.3 MB); a hero photo's drawing loads when the story starts from it */
