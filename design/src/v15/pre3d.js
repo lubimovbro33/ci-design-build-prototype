@@ -76,7 +76,7 @@ const SKGL = `
     return smoothstep(n - .17, n + .17, k * 1.4 - .2); }
   vec3 skMix(vec3 col, vec3 sk, vec2 uv, float k){ if (k <= 0.) return col; float r = skR(uv, k);
     float lm = clamp((pow(max(sk.g, 0.), 1. / 2.2) - .067) / .82, 0., 1.);    /* the drawing's line mask → CI Bright Gray on Eerie Black */
-    sk = mix(vec3(.0123), vec3(.83), lm);
+    sk = mix(vec3(0.), vec3(.83), lm);                                       /* Bright Gray lines on black */
     float edge = r * (1. - r) * 4.;                                   /* a thin bright front where the drawing arrives */
     return mix(col, sk, r) + vec3(.92, .92, .92) * edge * .035 * (1. - k); }`;
 
@@ -184,7 +184,7 @@ function roomMat(tex, dep, near){
         #endif
         vec3 night = c * vec3(1.08, .88, .66) * .8;               /* seen from outside at night: warm, dimmer */
         vec3 col = mix(c, night, 1. - uLight) * uGain;
-        if (uSk > 0.){ vec3 sk = uSkOk > .5 ? texture2D(skMap, vUv).rgb : vec3(.0055);
+        if (uSk > 0.){ vec3 sk = uSkOk > .5 ? texture2D(skMap, vUv).rgb : vec3(0.);
           col = skMix(col, sk, vUv, uSk); }
         gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
@@ -284,7 +284,7 @@ const FinalShader = {
         vec2 pw = vec2(14.) / uRes;
         float inW = smoothstep(uWin.x - pw.x, uWin.x, vUv.x) * smoothstep(uWin.z + pw.x, uWin.z, vUv.x)
                   * smoothstep(uWin.y - pw.y, uWin.y, vUv.y) * smoothstep(uWin.w + pw.y, uWin.w, vUv.y);
-        c = mix(c, vec3(.1137), uKeep * (1. - inW));                              /* Eerie Black #1D1D1D */
+        c = mix(c, vec3(0.), uKeep * (1. - inW));                                 /* black */
       }
       float g = h(vUv * uRes + fract(uTime * 37.)) - .5;
       c += g * .045;
@@ -298,7 +298,7 @@ async function build(){
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.localClippingEnabled = true;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
-  scene = new THREE.Scene(); scene.background = new THREE.Color(0x05070b);
+  scene = new THREE.Scene(); scene.background = new THREE.Color(0x000000);
   camera = new THREE.PerspectiveCamera(FOV, 1, 1, 30000);
   U.time = { value: 0 };
 
