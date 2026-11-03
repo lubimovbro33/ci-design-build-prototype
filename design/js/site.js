@@ -129,7 +129,10 @@
     if (preDone) return;
     var el = (now - pre0) / 1000;
     if (GL && !gl3() && (el > 6 || (window.__pre3d && window.__pre3d.state === 'error'))) { GL = false; pickDom(); pre0 = now; el = 0; }
-    if (GL && gl3()) { preDone = true; startIntro(); return; }                     /* the 3D is up: go now (the still covers the wait) */
+    if (GL && gl3()) {                                                              /* the 3D is up: warm it under the still, go next frame */
+      preDone = true; try { if (window.__pre3d.warm) window.__pre3d.warm(T); } catch (e) {}
+      requestAnimationFrame(function(){ requestAnimationFrame(startIntro); }); return;
+    }
     var target;
     if (GL) { target = gl3() ? 1 : Math.min(.92, el / 2.2); }
     else {
@@ -145,6 +148,7 @@
 
   var raf = null, t0 = null;
   function startIntro(){
+    if (state.done || state.phase === 'intro') return;                               /* skipped meanwhile / already running */
     var still = $('prePoster'), stillOn = !!still && isOk(still);
     if (gl3() && stillOn) { window.__pre3d.noFade = true; veil.style.transition = 'none'; }   /* the still IS this frame: cross-fade, no dip */
     pre.classList.add('out'); veil.classList.add('off'); st15.classList.add('on');

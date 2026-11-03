@@ -47,6 +47,13 @@ const lerp = (a, b, t) => a + (b - a) * t;
 
 function hiDPI(){ return Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 2200; }
 
+function loadTexRaw(url){                                         /* sRGB pictures uploaded raw (RGBA8), decoded in the shader */
+  return new Promise((res, rej) => new THREE.TextureLoader().load(url, t => { t.colorSpace = THREE.NoColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); decoded(t, res); }, undefined, rej));
+}
+function decoded(t, res){ const im = t.image; if (im && im.decode) im.decode().then(() => res(t), () => res(t)); else res(t); }   /* decode off the main thread */
+function loadTexLin(url, nearest){
+  return new Promise((res, rej) => new THREE.TextureLoader().load(url, t => { t.colorSpace = THREE.NoColorSpace; if (nearest){ t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; } res(t); }, undefined, rej));
+}
 function loadTex(url){
   return new Promise((res, rej) => new THREE.TextureLoader().load(url, t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); res(t); }, undefined, rej));
 }
@@ -74,6 +81,7 @@ const vtx = `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMa
    that spreads from the window (screen space, device px); the vector drawing (LN, below) is drawn by the same front */
 const FRU = { uFC:{value:new THREE.Vector2()}, uFR:{value:-1e5}, uFW:{value:160}, uFN:{value:1 / 230}, uFS:{value:140} };
 const SKGL = `
+  vec3 s2l(vec3 c){ return mix(c / 12.92, pow((c + .055) / 1.055, vec3(2.4)), step(.04045, c)); }   /* raw sRGB texel → linear */
   uniform vec2 uFC; uniform float uFR; uniform float uFW; uniform float uFN; uniform float uFS;
   float skH(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float skN(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
@@ -85,13 +93,13 @@ const SKGL = `
 
 function skyMat(tex){
   return new THREE.ShaderMaterial({
-    uniforms: Object.assign({ map:{value:tex}, uTime:U.time, uLift:{value:1}, skMap:{value:null}, uSk:{value:0} }, FRU),
+    uniforms: Object.assign({ map:{value:tex}, uTime:U.time, uLift:{value:1}, skMap:{value:null}, uSk:{value:0}, uCityK:{value:.3}, uCityOut:{value:0}, uCityMode:{value:0} }, FRU),
     vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform float uTime; uniform float uLift; uniform sampler2D skMap; uniform float uSk; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D map; uniform float uTime; uniform float uLift; uniform sampler2D skMap; uniform float uSk; uniform float uCityK; uniform float uCityOut; uniform float uCityMode; varying vec2 vUv;
       float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
       ${SKGL}
       void main(){
-        vec4 c = texture2D(map, vUv);
+        vec4 c = texture2D(map, vUv); c.rgb = s2l(c.rgb);
         float l = dot(c.rgb, vec3(.299,.587,.114));
         float m = smoothstep(.36, .8, l);                          /* city lights only */
         vec2 cell = floor(vUv * vec2(900., 650.));
@@ -100,7 +108,12 @@ function skyMat(tex){
         float sp = pow(max(0., sin(uTime * (.7 + 1.5 * h(cell + 7.)) + h(cell) * 40.)), 26.) * step(.62, h(cell + 1.7));   /* glints */
         c.rgb *= mix(1., tw, m) * uLift;
         c.rgb += c.rgb * m * (.62 + 2.2 * sp);                     /* lights feed the bloom, some sparkle */
-        if (uSk > 0.) c.rgb = skMix(c.rgb, texture2D(skMap, vUv).rgb, vUv, uSk);
+        if (uSk > 0.){                                              /* the city stays in the drawing: quiet, colourless (user 03.11 16:24) */
+          float r = skR(), g;
+          if (uCityMode > .5){ vec3 sk = texture2D(skMap, vUv).rgb; g = .55 * pow(clamp((pow(max(sk.g, 0.), 1. / 2.2) - .13) / .76, 0., 1.), 2.2); }
+          else { g = dot(c.rgb, vec3(.2126, .7152, .0722)); g = uCityK * g / (1. + .9 * g); }   /* soft highlights: the lights stay quiet */
+          c.rgb = mix(c.rgb, vec3(.93, .96, 1.) * g * (1. - uCityOut), r);
+        }
         gl_FragColor = c;
         #include <colorspace_fragment>
       }`,
@@ -114,7 +127,7 @@ function facadeMat(tex, win){
     fragmentShader: `uniform sampler2D map; uniform sampler2D winMap; uniform sampler2D winMask; uniform float uTime; uniform float uLife;
       uniform sampler2D skMap; uniform float uSk; varying vec2 vUv;
       ${SKGL}
-      void main(){ vec4 c = texture2D(map, vUv); if (c.a < .5) discard;
+      void main(){ vec4 c = texture2D(map, vUv); if (c.a < .5) discard; c.rgb = s2l(c.rgb);
         vec3 w = texture2D(winMap, vUv).rgb; float id = w.r, m = texture2D(winMask, vUv).r;
         vec3 col = c.rgb;
         if (id > .002){
@@ -144,7 +157,7 @@ function unitLitMat(tex){
     vertexShader: vtx,
     fragmentShader: `uniform sampler2D map; uniform float uOp; uniform float uGain; uniform sampler2D skMap; uniform float uSk; uniform vec4 uCU; varying vec2 vUv;
       ${SKGL}
-      void main(){ vec4 c = texture2D(map, vUv); vec3 col = c.rgb;
+      void main(){ vec4 c = texture2D(map, vUv); vec3 col = s2l(c.rgb);
         float warm = smoothstep(.25,.8,dot(col, vec3(.5,.35,.15)));
         col *= mix(1., uGain, warm);
         if (uSk > 0. && (vUv.x < uCU.x || vUv.x > uCU.z || vUv.y < uCU.y || vUv.y > uCU.w)) col = skMix(col, vec3(0.), vUv, uSk);   /* only past the outline */
@@ -179,7 +192,7 @@ function roomMat(tex, dep, near){
       uniform sampler2D skMap; uniform float uSk; uniform float uSkOk; varying vec2 vUv;
       ${SKGL}
       void main(){ vec3 c = texture2D(map, vUv).rgb;
-        if (uRaw > .5) c = pow(pow(c, vec3(1.08)) * .9, vec3(2.2));   /* a hero photo (raw sRGB) in the 3D room: its grade, to linear */
+        c = uRaw > .5 ? pow(pow(c, vec3(1.08)) * .9, vec3(2.2)) : s2l(c);   /* a hero photo: its grade; the room 1450_34: plain sRGB → linear */
         #ifdef NEAR
         float al = texture2D(dmap, vUv).b; if (al < .004) discard;   /* the cut-out of the near furniture */
         #else
@@ -306,15 +319,20 @@ async function build(){
   U.time = { value: 0 };
 
   const hi = hiDPI(), base = 'assets/v15/gl/';
-  /* v7.1 (user 03.11 10:43): no black wait. The page opens on the first frame (a still of this very scene, plain HTML) and the 3D
-     waits only for what its first seconds show (≈ 0.75 MB at 1×); the window maps, the room and the 2× pictures follow while
-     the drone flies (loadRest). Until then: 1-px black stand-ins. */
-  const blank = nearest => { const t = new THREE.DataTexture(new Uint8Array([0, 0, 0, 255]), 1, 1); if (nearest) t.magFilter = t.minFilter = THREE.NearestFilter; t.needsUpdate = true; return t; };
-  const tWin = blank(true), tWinM = blank(), tDep = blank(), tRoom = blank(), tRoomBg = blank();
-  const [tSky, tFac, tUD, tUL, tJamb, tLogo] = await Promise.all([
-    loadTex(base + 'sky_1x.jpg'), loadTex(base + 'facade_1x.webp'), loadTex(base + 'unit_dark.jpg'), loadTex(base + 'unit_lit.webp'),
-    loadTex(base + 'jamb.jpg'), loadTex('assets/v15/logo_db.png')
+  /* v7.2 (user 03.11 16:23, "the start lags a little"): everything the intro shows is uploaded here, under the still,
+     never during the flight; sRGB pictures go up raw (3x cheaper on ANGLE/Metal) and are decoded in the shaders. On large
+     screens the 2x sky/facade join if they arrive within 1 s of the rest, else the 1x fly and the 2x swap in after the intro. */
+  const big = hi ? '2k' : '1k';
+  const x2 = hi ? Promise.all([loadTexRaw(base + 'sky_2x.jpg'), loadTexRaw(base + 'facade_2x.webp')]).catch(() => null) : null;
+  const [tSky1, tFac1, tUD, tUL, tJamb, tLogo, tWin, tWinM, tDep, tRoom, tRoomBg] = await Promise.all([
+    loadTexRaw(base + 'sky_1x.jpg'), loadTexRaw(base + 'facade_1x.webp'), loadTex(base + 'unit_dark.jpg'), loadTexRaw(base + 'unit_lit.webp'),
+    loadTex(base + 'jamb.jpg'), loadTex('assets/v15/logo_db.png'), loadTexLin(base + 'facade_win.png', true), loadTexLin(base + 'facade_winmask.webp'),
+    new Promise((res, rej) => new THREE.TextureLoader().load(base + 'room_depth.png', t => { t.colorSpace = THREE.NoColorSpace; t.generateMipmaps = false; t.minFilter = THREE.LinearFilter; res(t); }, undefined, rej)),
+    loadTexRaw('assets/v15/room_' + big + '.jpg'), loadTexRaw(base + 'room_bg_' + big + '.jpg')
   ]);
+  const two = x2 ? await Promise.race([x2, new Promise(r => setTimeout(() => r(null), 1000))]) : null;
+  const tSky = two ? two[0] : tSky1, tFac = two ? two[1] : tFac1;
+  if (x2 && !two) x2.then(v => { if (v) LATE.x2 = v; });
   layoutCamera();
   const clipEdge = [ new THREE.Plane(new THREE.Vector3(-1, 0, 0), F.EDGE - .5) ];       /* keep things left of the corner */
 
@@ -323,8 +341,8 @@ async function build(){
   M.fac = rectPlane((() => { const m = facadeMat(tFac, tWin); m.uniforms.winMask.value = tWinM; return m; })(), { x:F.RX - F.EXT, y:F.RY, w:facW, h:F.RH }, 0, false); M.fac.renderOrder = 5; scene.add(M.fac);
   /* the building's side wall round the corner: the facade texture repeated, in shadow, receding into the city */
   const SIDE = 2200;
-  const tSide = tFac.clone(); tSide.wrapS = THREE.RepeatWrapping; tSide.repeat.set(SIDE / facW * .9, 1); tSide.offset.set(.05, 0); tSide.needsUpdate = true;
-  M.side = new THREE.Mesh(new THREE.PlaneGeometry(SIDE, F.RH), new THREE.MeshBasicMaterial({ map: tSide, color: new THREE.Color(.16, .165, .2), alphaTest: .5, toneMapped: false }));
+  const tSide = M.tSide = tFac.clone(); tSide.wrapS = THREE.RepeatWrapping; tSide.repeat.set(SIDE / facW * .9, 1); tSide.offset.set(.05, 0); tSide.needsUpdate = true;
+  M.side = new THREE.Mesh(new THREE.PlaneGeometry(SIDE, F.RH), new THREE.MeshBasicMaterial({ map: tSide, color: new THREE.Color(SIDEC[0], SIDEC[1], SIDEC[2]), alphaTest: .5, toneMapped: false }));
   M.side.rotation.y = Math.PI / 2; M.side.position.set(F.EDGE, -(F.RY + F.RH / 2), -SIDE / 2); M.side.renderOrder = 5; scene.add(M.side);
   /* recess: unit planes at −DEPTH, jambs between */
   const P = F.PATCH;
@@ -369,6 +387,8 @@ async function build(){
   M.shadow.material.clippingPlanes = clipEdge; M.shadow.renderOrder = 7; scene.add(M.shadow);
   M.logo = rectPlane(logoMat(tLogo), F.MARK, 2, false); M.logo.renderOrder = 8; scene.add(M.logo);
   buildLines();
+  if (/[?&]city=pencil/.test(location.search))                    /* option: the 02.11 pencil city instead of the quiet photo */
+    new THREE.TextureLoader().load(base + 'sky_city_pencil.webp', t => { t.colorSpace = THREE.SRGBColorSpace; const u = M.sky.material.uniforms; u.skMap.value = t; u.uCityMode.value = 1; });
 
   composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
@@ -377,7 +397,7 @@ async function build(){
   finalPass = new ShaderPass(FinalShader); composer.addPass(finalPass);
   resize();
   window.addEventListener('resize', resize);
-  [tSky, tFac, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep].forEach(t => renderer.initTexture(t));
+  [tSky, tFac, tSide, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep].forEach(t => renderer.initTexture(t));
   renderer.compile(scene, camera); renderer.compile(LN.scene, camera);
   finalPass.uniforms.uFade.value = 0; composer.render(); composer.render();
 }
@@ -497,7 +517,7 @@ function render3d(t, T, mx, my, scroll, toTex){
   bloom.strength = .5 + .22 * bloomK;
   finalPass.uniforms.uTime.value = U.time.value;
   finalPass.uniforms.uFade.value = PRE3D.noFade || PRE3D.still ? 1 : sm(t / T.fadeIn);   /* opened on the still: no fade from black */
-  life();
+  life(); if (LATE.x2 && t > T.end) lateSwap();
   finalPass.uniforms.uAb.value = .022 * Math.sin(Math.PI * clamp01(dive * 1.1));
   if (toTex){ composer.renderToScreen = false; composer.render(); composer.renderToScreen = true; return composer.readBuffer.texture; }
   composer.render();
@@ -509,6 +529,7 @@ function render3d(t, T, mx, my, scroll, toTex){
    picture redraws itself as an ink sketch, everything but the CI window fades, and site.js takes over with the squares.
    o: { fly 0..1, ol 0..1 (outline drawn), olOp, sketch 0..1, keep 0..1, mx, my, T } */
 const SK = { on: false }, SPLIT = .58, SKZ = 1.28;
+const SIDEC = [.065, .067, .085];   /* the side wall's shade (its texture is raw sRGB, read as linear) */
 function storyFrame(o){
   const T = o.T; lastT = T; SK.on = true;
   U.time.value = performance.now() / 1000;
@@ -536,6 +557,7 @@ function storyFrame(o){
   fu.uTime.value = U.time.value; fu.uFade.value = 1; fu.uAb.value = 0;            /* no colour fringes */
   life();
   const draw = clamp01(o.draw || 0), back = clamp01(o.out || 0); setSk(draw); bloom.strength = .5 * (1 - .6 * draw);
+  M.sky.material.uniforms.uCityOut.value = back;                                  /* the city goes with the drawing */
   fu.uKeep.value = 0;
   const r = winRect(); fu.uWin.value.set(r.x0 / vw, 1 - r.y1 / vh, r.x1 / vw, 1 - r.y0 / vh);
   /* the front: from the CI window's centre out past the farthest corner of the screen (device px) */
@@ -548,7 +570,7 @@ function storyFrame(o){
   LNU.uLR.value = draw > 0 ? lerp(-FRU.uFW.value, lspan, draw) - .35 * FRU.uFS.value : -1e5;          /* lines surface inside the band */
   LNU.uLR2.value = back > 0 ? lerp(lspan, -FRU.uFW.value - 2, back) : 1e9;
   LNU.uOL.value = ol; LN.ol.material.uniforms.uOp.value = o.olOp == null ? 1 : o.olOp;
-  LN.fac.visible = LN.guide.visible = draw > 0 && back < 1; LN.ol.visible = ol > 0 && LN.ol.material.uniforms.uOp.value > 0;
+  LN.fac.visible = draw > 0 && back < 1; LN.ol.visible = ol > 0 && LN.ol.material.uniforms.uOp.value > 0;
   renderer.setRenderTarget(null);
   if (o.toTex){ composer.renderToScreen = false; composer.render(); composer.renderToScreen = true; return r; }
   composer.render();
@@ -561,7 +583,7 @@ function setSk(k){
   for (const m of [M.sky, M.fac, M.ul]) m.material.uniforms.uSk.value = k > 0 ? 1 : 0;   /* M.ul: only outside the outline */
   for (const m of [M.room, M.roomN]) m.material.uniforms.uSk.value = 0;
   const j = clamp01(k * 4);
-  M.side.material.color.setRGB(.16 * (1 - j), .165 * (1 - j), .2 * (1 - j));
+  M.side.material.color.setRGB(SIDEC[0] * (1 - j), SIDEC[1] * (1 - j), SIDEC[2] * (1 - j));
   M.jamb.children.forEach(q => q.material.color.setHex(0x6a5f58).multiplyScalar(1 - j));
   if (k > 0) M.spill.material.uniforms.uOp.value *= 1 - j;
 }
@@ -673,14 +695,9 @@ function facadeLines(){
     });
   });
   ln(CORNER, -60, CORNER, 1540, .4);                                                   /* the building's corner */
-  for (let i = 0; i < ROWS.length - 1; i++){ const y = (ROWS[i][1] + ROWS[i + 1][0]) / 2; ln(1150, y, CORNER + 900, y, .12, 0, D); }   /* floor lines */
-  /* the CI window: its recess in 3D, and its guides — the square the panel will be, constructed */
+  /* the CI window's recess in 3D (no dashed lines: user 03.11 16:24) */
   rect(CIX0 + 2, CIY0 + 2, CIX1 - 2, CIY1 - 2, .2, -DEPTH);
   for (const [a, b, sx, sy] of [[CIX0, CIY0, 1, 1], [CIX1, CIY0, -1, 1], [CIX1, CIY1, -1, -1], [CIX0, CIY1, 1, -1]]) put(S, a, b, 0, a + sx * 2, b + sy * 2, -DEPTH, .24);
-  ln(CIX0, CIY0, CIX0 - 900, CIY0, .2, 0, D); ln(CIX1, CIY0, CIX1 + 1100, CIY0, .2, 0, D);
-  ln(CIX0, CIY1, CIX0 - 900, CIY1, .2, 0, D); ln(CIX1, CIY1, CIX1 + 1100, CIY1, .2, 0, D);
-  ln(CIX0, CIY0, CIX0, CIY0 - 700, .2, 0, D); ln(CIX1, CIY0, CIX1, CIY0 - 700, .2, 0, D);
-  ln(CIX0, CIY1, CIX0, CIY1 + 700, .2, 0, D); ln(CIX1, CIY1, CIX1, CIY1 + 700, .2, 0, D);
   /* the outline itself, counter-clockwise from the top-right corner (r = brightness, g = order) */
   const W = (ax, ay, bx, by, i) => O.push([ax - 969, 251 - ay, 0, bx - 969, 251 - by, 0, 1, i / 4]);
   W(CIX1, CIY0, CIX0, CIY0, 0); W(CIX0, CIY0, CIX0, CIY1, 1); W(CIX0, CIY1, CIX1, CIY1, 2); W(CIX1, CIY1, CIX1, CIY0, 3);
@@ -689,39 +706,33 @@ function facadeLines(){
 function buildLines(){
   const L = facadeLines();
   LN.scene = new THREE.Scene();
-  LN.fac = lineObj(L.S, lineMat({ lw: 1 })); LN.guide = lineObj(L.D, lineMat({ lw: 1, dash: 4, gap: 5 })); LN.ol = lineObj(L.O, lineMat({ lw: 1, seq: true }));
-  LN.scene.add(LN.fac, LN.guide, LN.ol);
-  LN.n = L.S.length + L.D.length + L.O.length;
+  LN.fac = lineObj(L.S, lineMat({ lw: 1 })); LN.ol = lineObj(L.O, lineMat({ lw: 1, seq: true }));
+  LN.scene.add(LN.fac, LN.ol);
+  LN.n = L.S.length + L.O.length;
 }
 function lineSize(){
   if (!LN.scene) return;
   const pr = renderer.getPixelRatio();
   for (const m of LN.mats){ m.resolution.set(vw * pr, vh * pr); m.linewidth = m.userData.lw * pr; }
 }
-/* the rest of the scene, in the background once the drone is up: window maps (the lamps then come on gently), the room
-   (the dive waits for it: PRE3D.roomReady), the 2× sky and facade on large screens */
-const LIFE = { t0: 0 };
-function life(){ M.fac.material.uniforms.uLife.value = PRE3D.still ? 0 : LIFE.t0 ? sm((performance.now() - LIFE.t0) / 2500) : 0; }
-function loadRest(){
-  const hi = hiDPI(), base = 'assets/v15/gl/', an = renderer.capabilities.getMaxAnisotropy();
-  const srgb = t => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = an; }, lin = t => { t.colorSpace = THREE.NoColorSpace; };
-  PRE3D.roomReady = false;
-  Promise.all([
-    loadAny(base + 'facade_win.png', t => { lin(t); t.magFilter = t.minFilter = THREE.NearestFilter; t.generateMipmaps = false; }),
-    loadAny(base + 'facade_winmask.webp', lin),
-    loadDep(base + 'room_depth.png'),
-    loadAny('assets/v15/' + (hi ? 'room_2k.jpg' : 'room_1k.jpg'), srgb), loadAny(base + (hi ? 'room_bg_2k.jpg' : 'room_bg_1k.jpg'), srgb)
-  ]).then(([w, wm, d, r, rb]) => {
-    const fu = M.fac.material.uniforms; fu.winMap.value = w; fu.winMask.value = wm; LIFE.t0 = performance.now();
-    Object.assign(ROOMS, { bg: rb, o: r, d: d });
-    if (ROOMS.cur < 0){ const ub = M.room.material.uniforms, un = M.roomN.material.uniforms; ub.map.value = rb; un.map.value = r; ub.dmap.value = un.dmap.value = d; }
-    PRE3D.roomReady = true;
-  }, e => { console.warn('[pre3d] room', e); PRE3D.roomReady = true; });
-  if (hi) Promise.all([loadAny(base + 'sky_2x.jpg', srgb), loadAny(base + 'facade_2x.webp', srgb)]).then(([s2, f2]) => {
-    M.sky.material.uniforms.map.value = s2; M.fac.material.uniforms.map.value = f2;
-    const old = M.side.material.map, t = f2.clone(); t.wrapS = THREE.RepeatWrapping; t.repeat.copy(old.repeat); t.offset.copy(old.offset); t.needsUpdate = true;
-    M.side.material.map = t;
-  }, e => console.warn('[pre3d] 2x', e));
+/* the lamps in the windows come on gently once the flight starts; the 2x sky/facade, if they came late, swap in after the
+   intro (the camera is in the room then, the facade out of sight) */
+const LIFE = { t0: 0 }, LATE = { x2: null };
+function life(){
+  if (PRE3D.still){ M.fac.material.uniforms.uLife.value = 0; return; }
+  if (!LIFE.t0) LIFE.t0 = performance.now();
+  M.fac.material.uniforms.uLife.value = sm((performance.now() - LIFE.t0) / 2500);
+}
+function lateSwap(){
+  const v = LATE.x2; if (!v) return; LATE.x2 = null;
+  M.sky.material.uniforms.map.value = v[0]; M.fac.material.uniforms.map.value = v[1];
+  const old = M.side.material.map, t = v[1].clone(); t.wrapS = THREE.RepeatWrapping; t.repeat.copy(old.repeat); t.offset.copy(old.offset); t.needsUpdate = true;
+  M.side.material.map = t;
+}
+/* every program and GPU resource the intro will touch, used once while the still covers the canvas */
+function warm(T){
+  for (const t of [.9, 3.7, 4.7, 5.6, 0]) render3d(t, T, 0, 0, 0);
+  LIFE.t0 = 0;
 }
 function loadSketch(){ return Promise.resolve(); }                /* v7: the raster drawings are retired */
 
@@ -813,7 +824,7 @@ function slotRT(i){
 }
 /* GPU uploads one per frame, so a dozen big photos arriving together never stall a frame */
 const upQ = []; let upOn = false;
-function upload(t, res){ upQ.push([t, res]); if (!upOn){ upOn = true; requestAnimationFrame(function f(){ const j = upQ.shift(); if (j){ renderer.initTexture(j[0]); j[1](j[0]); } if (upQ.length) requestAnimationFrame(f); else upOn = false; }); } }
+function upload(t, res){ upQ.push([t, res]); if (!upOn){ upOn = true; let rest = false; requestAnimationFrame(function f(){ if (!rest){ const j = upQ.shift(); if (j){ renderer.initTexture(j[0]); j[1](j[0]); } } rest = !rest; if (upQ.length) requestAnimationFrame(f); else upOn = false; }); } }   /* one upload every other frame */
 /* decode off the main thread (ImageBitmap), so the upload itself is cheap; plain <img> loading where that is missing */
 const IBL = typeof createImageBitmap === 'function' ? new THREE.ImageBitmapLoader().setOptions({ imageOrientation: 'flipY', premultiplyAlpha: 'none', colorSpaceConversion: 'none' }) : null;
 function loadAny(u, prep){
@@ -839,22 +850,31 @@ function slidesInit(list){
     const parts = [loadRaw(it.src)];
     if (it.bg && it.dep) parts.push(loadRaw(it.bg), loadDep(it.dep));
     return Promise.all(parts);
-  })).then(sets => {
+  })).then(async sets => {
     SLD.tex = sets.map(s => s[0]);
     SLD.trip = sets.map((s, i) => s.length === 3 ? { o: s[0], b: s[1], d: s[2], skUrl: list[i].sko ? { o: list[i].sko, b: list[i].skb } : null } : null);
     SLD.ps = sets.map(s => s.length === 3 ? photoScene(s[0], s[1], s[2]) : null);
-    renderer.compile(SLD.scene, SLD.cam);
-    /* warm-up off screen: every photo (and its relief) drawn once, the room-to-texture path run once → no hitch on the first change */
+    /* v7.2: the programs compile without blocking (KHR_parallel_shader_compile), both the off-screen and the on-screen
+       variants; the warm-up then runs one step per frame, so the hero never freezes while the slider gets ready */
+    const nf = () => new Promise(r => requestAnimationFrame(() => r()));
     const rt = new THREE.WebGLRenderTarget(64, 64), u = SLD.mat.uniforms;
-    SLD.ps.forEach(ps => { if (ps){ renderer.setRenderTarget(rt); ps.cam.position.set(0, 0, 0); ps.cam.lookAt(0, 0, -PD); renderer.render(ps.sc, ps.cam); } });
+    try {
+      renderer.setRenderTarget(rt);
+      const jobs = [renderer.compileAsync(SLD.scene, SLD.cam)].concat(SLD.ps.filter(Boolean).map(ps => renderer.compileAsync(ps.sc, ps.cam)));
+      renderer.setRenderTarget(null); jobs.push(renderer.compileAsync(SLD.scene, SLD.cam));
+      await Promise.all(jobs);
+    } catch (e) { renderer.setRenderTarget(null); renderer.compile(SLD.scene, SLD.cam); }
+    for (const ps of SLD.ps) if (ps){ await nf(); renderer.setRenderTarget(rt); ps.cam.position.set(0, 0, 0); ps.cam.lookAt(0, 0, -PD); renderer.render(ps.sc, ps.cam); renderer.setRenderTarget(null); }
+    await nf();
     const room = lastT ? render3d(lastT.end + 1, lastT, 0, 0, 0, true) : SLD.tex[0];
     [room].concat(SLD.tex).forEach((t, i, all) => { u.tA.value = t; u.tB.value = all[(i + 1) % all.length]; u.uP.value = .5; renderer.setRenderTarget(rt); renderer.render(SLD.scene, SLD.cam); });
     renderer.setRenderTarget(null); rt.dispose(); u.uP.value = 0;
+    await nf();
     if (lastT){ storyFrame({ T: lastT, fly: .9, ol: 1, draw: .6, toTex: true });   /* the story's pass, warmed off screen */
       LN.mats.forEach(m => m.uniforms.uOp.value = 0); renderer.autoClear = false; renderer.render(LN.scene, camera); renderer.autoClear = true;   /* + the lines' screen program, invisibly */
       LN.mats.forEach(m => m.uniforms.uOp.value = 1); }
     const i0 = SLD.ps.findIndex(Boolean);                               /* full-size slots allocated now, not on the first change */
-    if (i0 >= 0){ const o0 = { mx: 0, my: 0, scroll: 0 }; drawPhoto(i0, 0, 0, 0, o0); drawPhoto(i0, 1, 0, 0, o0); renderer.setRenderTarget(null); }
+    if (i0 >= 0){ const o0 = { mx: 0, my: 0, scroll: 0 }; await nf(); drawPhoto(i0, 0, 0, 0, o0); renderer.setRenderTarget(null); await nf(); drawPhoto(i0, 1, 0, 0, o0); renderer.setRenderTarget(null); }
     SLD.ready = true;
     setTimeout(loadSketch, 1500);
   });
@@ -901,7 +921,7 @@ function slideFrame(o){
   try {
     if (!canvas) throw new Error('no canvas');
     await build();
-    loadRest();
+    PRE3D.roomReady = true; PRE3D.warm = warm;
     PRE3D.render = render3d; PRE3D.resize = resize; PRE3D.slidesInit = slidesInit; PRE3D.slideFrame = slideFrame; PRE3D.storyFrame = storyFrame; PRE3D.winRect = winRect; PRE3D.setRoom = setRoom; PRE3D.ok = true; PRE3D.state = 'ready';
   } catch (e) {
     console.warn('[pre3d] fallback to DOM:', e && e.message);
