@@ -118,7 +118,11 @@
     ['00', '06', '12', '18', '24'].forEach(function(s, i){ var t = el('text', {x: W * i / 4, y: RY + 26, 'class': 'rl', 'text-anchor': 'middle'}, gRule); t.textContent = s; });
     var fill = el('path', {d: seg(W * 6 / 24, RY, W, RY), 'class': 'ph-fill', pathLength: 1, 'vector-effect': 'non-scaling-stroke'}, svg);
     var cursor = el('g', {'class': 'ph-cur'}, svg); el('path', {d: seg(0, RY - 22, 0, RY + 6), 'vector-effect': 'non-scaling-stroke'}, cursor); el('rect', {x: -3, y: RY - 25, width: 6, height: 6}, cursor);
-    var hourT = el('text', {x: 0, y: RY - 36, 'class': 'hr', 'text-anchor': 'middle'}, cursor);
+    /* the clock: every hour and every ten minutes already set as text, one of each shown (no text is written while the day runs) */
+    var HRS = [], MNS = [], shownH = null, shownM = null;
+    for (var q = 0; q < 24; q++){ var th0 = el('text', {x: 2, y: RY - 36, 'class': 'hr', 'text-anchor': 'end'}, cursor); th0.textContent = (q < 10 ? '0' : '') + q + ':'; th0.style.display = 'none'; HRS.push(th0); }
+    for (var q2 = 0; q2 < 6; q2++){ var tm0 = el('text', {x: 2, y: RY - 36, 'class': 'hr', 'text-anchor': 'start'}, cursor); tm0.textContent = q2 + '0'; tm0.style.display = 'none'; MNS.push(tm0); }
+    function clock(h, m){ var a = HRS[h], b = MNS[m]; if (a !== shownH){ if (shownH) shownH.style.display = 'none'; a.style.display = ''; shownH = a; } if (b !== shownM){ if (shownM) shownM.style.display = 'none'; b.style.display = ''; shownM = b; } }
     /* five, ten, twenty years: the home's outline grows outward like rings */
     var gYrs = el('g', {'class': 'dg'}, svg), YR = [{d: 34, t: '5'}, {d: 70, t: '10'}, {d: 112, t: '20'}];
     YR.forEach(function(y, i){ line(gYrs, rectD(-y.d, -y.d, W + 2 * y.d, H + 2 * y.d, y.d * .9), 'w3 yr', i * .22);
@@ -139,7 +143,7 @@
       txt(pctEl, Math.round(75 * kf)); stage.style.setProperty('--pc', (sg(p, .11, .15) * (1 - sg(p, .88, .94))).toFixed(3));
       /* the day: 06:00 → 24:00 while the verbs are read */
       var hr = 5 + 19 * sg(p, .36, .76), th = Math.min(23.99, hr), mm = Math.floor((th % 1) * 6) * 10;   /* the clock ticks in tens of minutes */
-      txt(hourT, (th < 10 ? '0' : '') + Math.floor(th) + ':' + (mm < 10 ? '0' : '') + mm);
+      clock(Math.floor(th), mm / 10);
       
       cursor.setAttribute('transform', 'translate(' + f1(W * th / 24) + ' 0)'); cursor.style.opacity = (sg(p, .34, .38) * (1 - sg(p, .9, .96))).toFixed(3);
       var day = sm((hr - 5.6) / 1.2) * (1 - sm((hr - 18.6) / 1.4)), theta = (hr - 6) / 12 * Math.PI, sx = -Math.cos(theta), sy = -Math.sin(theta), elev = Math.max(0, Math.sin(theta));
