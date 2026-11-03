@@ -365,9 +365,11 @@
        becomes the panel's line at the very same pixels while the drone eases in to the panel's size */
     var grow = eio(sg(s, 2.5, 3.05));
     if (useGL && glOn) {
+      var g0 = window.__perfLog ? performance.now() : 0;
       ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, push:ST.push, winPx:S * lerp(.78, 1, grow), fly:sg(s, 0, 1.6), ol:eio(sg(s, 1.05, 1.6)),
                                        olOp:1 - sg(s, 2.45, 2.55), draw:eio(sg(s, 1.45, 2.3)), out:eio(sg(s, 2.45, 2.95))});
-    }
+      if (g0) ST.dbg = performance.now() - g0;
+    } else ST.dbg = 0;
     var target = [cx - S / 2, cy - S / 2, cx + S / 2, cy + S / 2];
     var win = ST.R ? [ST.R.x0, ST.R.y0, ST.R.x1, ST.R.y1] : target;
     var rc = lerpR(win, target, eio(sg(s, 2.85, 3.15)));                             /* exactly the window; the end absorbs the mouse parallax */
@@ -903,7 +905,9 @@
   function loop(now){
     var y = window.scrollY || window.pageYOffset, vh = window.innerHeight;
     // hero parallax after the intro
+    var pf = window.__perfLog ? performance.now() : 0;
     storyUpdate(vh);
+    if (pf) { var pf2 = performance.now(); if (pf2 - pf > 8) (window.__perfStory = window.__perfStory || []).push([Math.round(pf), +ST.s.toFixed(2), +(pf2 - pf).toFixed(1), +(ST.dbg || 0).toFixed(1)]); }
     smoothStep(); y = window.scrollY || window.pageYOffset;
     /* v7.2: a section's update runs only while the section is near the screen. Each one reads layout after the previous one
        wrote styles, so running all nine every frame forced nine layouts a frame (holding still in the story: 45 fps) */
