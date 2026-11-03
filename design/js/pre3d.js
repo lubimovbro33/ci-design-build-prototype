@@ -332,8 +332,8 @@ async function build(){
   ]);
   const two = x2 ? await Promise.race([x2, new Promise(r => setTimeout(() => r(null), 1000))]) : null;
   const tSky = two ? two[0] : tSky1, tFac = two ? two[1] : tFac1;
-  if (x2 && !two) x2.then(v => { if (!v) return; const sd = sideTex(v[1]);
-    Promise.all([v[0], v[1], sd].map(t => new Promise(r => upload(t, r)))).then(() => { LATE.x2 = [v[0], v[1], sd]; }); });
+  if (x2 && !two) x2.then(v => { if (!v) return;
+    Promise.all([v[0], v[1]].map(t => new Promise(r => upload(t, r)))).then(() => { LATE.x2 = v; }); });
   layoutCamera();
   const clipEdge = [ new THREE.Plane(new THREE.Vector3(-1, 0, 0), F.EDGE - .5) ];       /* keep things left of the corner */
 
@@ -342,7 +342,7 @@ async function build(){
   M.fac = rectPlane((() => { const m = facadeMat(tFac, tWin); m.uniforms.winMask.value = tWinM; return m; })(), { x:F.RX - F.EXT, y:F.RY, w:facW, h:F.RH }, 0, false); M.fac.renderOrder = 5; scene.add(M.fac);
   /* the building's side wall round the corner: the facade texture repeated, in shadow, receding into the city */
   const SIDE = 2200;
-  const tSide = M.tSide = tFac.clone(); tSide.wrapS = THREE.RepeatWrapping; tSide.repeat.set(SIDE / facW * .9, 1); tSide.offset.set(.05, 0); tSide.needsUpdate = true;
+  const tSide = M.tSide = tFac1.clone();                              /* the dark side wall: 1x is plenty */ tSide.wrapS = THREE.RepeatWrapping; tSide.repeat.set(SIDE / facW * .9, 1); tSide.offset.set(.05, 0); tSide.needsUpdate = true;
   M.side = new THREE.Mesh(new THREE.PlaneGeometry(SIDE, F.RH), new THREE.MeshBasicMaterial({ map: tSide, color: new THREE.Color(SIDEC[0], SIDEC[1], SIDEC[2]), alphaTest: .5, toneMapped: false }));
   M.side.rotation.y = Math.PI / 2; M.side.position.set(F.EDGE, -(F.RY + F.RH / 2), -SIDE / 2); M.side.renderOrder = 5; scene.add(M.side);
   /* recess: unit planes at −DEPTH, jambs between */
@@ -398,14 +398,15 @@ async function build(){
   finalPass = new ShaderPass(FinalShader); composer.addPass(finalPass);
   resize();
   window.addEventListener('resize', resize);
-  [tSky, tFac, tSide, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep].forEach(t => renderer.initTexture(t));
+  const nf = () => new Promise(r => requestAnimationFrame(r));
+  for (const t of [tSky, tFac, tSide, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep]){ renderer.initTexture(t); await nf(); }   /* one upload per frame */
   /* programs compile in the background (KHR_parallel_shader_compile) for where they really draw: the scene into the
      composer's buffer, the lines onto the screen — the still stays smooth while they build */
   try {
     renderer.setRenderTarget(composer.renderTarget1); const cj = [renderer.compileAsync(scene, camera)];
     renderer.setRenderTarget(null); cj.push(renderer.compileAsync(LN.scene, camera)); await Promise.all(cj);
   } catch (e) { renderer.setRenderTarget(null); renderer.compile(scene, camera); renderer.compile(LN.scene, camera); }
-  finalPass.uniforms.uFade.value = 0; composer.render(); composer.render();
+  finalPass.uniforms.uFade.value = 0; composer.render(); await nf(); composer.render();
 }
 
 function layoutCamera(){
@@ -731,9 +732,8 @@ function life(){
 }
 function lateSwap(){
   const v = LATE.x2; if (!v) return; LATE.x2 = null;
-  M.sky.material.uniforms.map.value = v[0]; M.fac.material.uniforms.map.value = v[1]; M.side.material.map = v[2];
+  M.sky.material.uniforms.map.value = v[0]; M.fac.material.uniforms.map.value = v[1];
 }
-function sideTex(f){ const old = M.tSide, t = f.clone(); t.wrapS = THREE.RepeatWrapping; t.repeat.copy(old.repeat); t.offset.copy(old.offset); t.needsUpdate = true; return t; }
 /* every program and GPU resource the intro will touch, used once while the still covers the canvas */
 async function warm(T){
   for (const t of [.9, 3.7, 4.7, 5.6, 0]){ render3d(t, T, 0, 0, 0); await new Promise(r => requestAnimationFrame(r)); }
@@ -806,8 +806,9 @@ const SlideShader = {
 };
 /* a hero photo as a relief (the same two-layer build as the room): background with the near things painted out + the near
    things cut out on top, each pushed along its ray by assets/hero/NAME_dep.png (Depth Anything V2 + hand-picked objects) */
+let PSGEO = null;
 function photoScene(tO, tB, tD){
-  const sc = new THREE.Scene(), geo = new THREE.PlaneGeometry(1.12, 1.12, 224, 162);
+  const sc = new THREE.Scene(), geo = PSGEO || (PSGEO = new THREE.PlaneGeometry(1.12, 1.12, 224, 162));   /* one relief mesh for all photos */
   const bg = new THREE.Mesh(geo, roomMat(tB, tD, 0)), nr = new THREE.Mesh(geo, roomMat(tO, tD, 1));
   for (const m of [bg, nr]){ const u = m.material.uniforms; u.uLight.value = 1; u.uGain.value = 1; u.uEye.value.set(0, 0, 0); m.position.set(0, 0, -PD); sc.add(m); }
   bg.renderOrder = 1; nr.renderOrder = 2;
@@ -829,6 +830,7 @@ function slotRT(i){
 }
 /* GPU uploads one per frame, so a dozen big photos arriving together never stall a frame */
 const upQ = []; let upOn = false;
+function calmFrame(){ return new Promise(r => { let n = 0; requestAnimationFrame(function f(){ if (!PRE3D.busy || ++n > 150) r(); else requestAnimationFrame(f); }); }); }
 function upload(t, res){ upQ.push([t, res]); if (!upOn){ upOn = true; let rest = false, wait = 0; requestAnimationFrame(function f(){
   const calm = !PRE3D.busy || wait > 150;                         /* nothing moves on screen (or it has waited ~2.5 s) */
   if (!rest && calm){ const j = upQ.shift(); if (j){ renderer.initTexture(j[0]); j[1](j[0]); } wait = 0; rest = true; } else { if (!calm) wait++; rest = false; }
@@ -861,10 +863,12 @@ function slidesInit(list){
   })).then(async sets => {
     SLD.tex = sets.map(s => s[0]);
     SLD.trip = sets.map((s, i) => s.length === 3 ? { o: s[0], b: s[1], d: s[2], skUrl: list[i].sko ? { o: list[i].sko, b: list[i].skb } : null } : null);
-    SLD.ps = sets.map(s => s.length === 3 ? photoScene(s[0], s[1], s[2]) : null);
+    SLD.ps = [];
+    for (const s of sets){ SLD.ps.push(s.length === 3 ? photoScene(s[0], s[1], s[2]) : null); }
     /* v7.2: the programs compile without blocking (KHR_parallel_shader_compile), both the off-screen and the on-screen
        variants; the warm-up then runs one step per frame, so the hero never freezes while the slider gets ready */
-    const nf = () => new Promise(r => requestAnimationFrame(() => r()));
+    const nf = calmFrame;                                              /* each step on a still frame */
+    await nf();
     const rt = new THREE.WebGLRenderTarget(64, 64), u = SLD.mat.uniforms;
     try {
       renderer.setRenderTarget(rt);
