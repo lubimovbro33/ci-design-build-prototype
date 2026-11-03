@@ -93,9 +93,9 @@ const SKGL = `
 
 function skyMat(tex){
   return new THREE.ShaderMaterial({
-    uniforms: Object.assign({ map:{value:tex}, uTime:U.time, uLift:{value:1}, skMap:{value:null}, uSk:{value:0}, uCityK:{value:.3}, uCityOut:{value:0}, uCityMode:{value:0} }, FRU),
+    uniforms: Object.assign({ map:{value:tex}, uTime:U.time, uLift:{value:1}, skMap:{value:null}, uSk:{value:0}, uCityK:{value:.4}, uCityOut:{value:0}, uCityMode:{value:0}, uLMax: LNU.uLMax }, FRU),
     vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform float uTime; uniform float uLift; uniform sampler2D skMap; uniform float uSk; uniform float uCityK; uniform float uCityOut; uniform float uCityMode; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D map; uniform float uTime; uniform float uLift; uniform sampler2D skMap; uniform float uSk; uniform float uCityK; uniform float uCityOut; uniform float uCityMode; uniform float uLMax; varying vec2 vUv;
       float h(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
       ${SKGL}
       void main(){
@@ -108,10 +108,12 @@ function skyMat(tex){
         float sp = pow(max(0., sin(uTime * (.7 + 1.5 * h(cell + 7.)) + h(cell) * 40.)), 26.) * step(.62, h(cell + 1.7));   /* glints */
         c.rgb *= mix(1., tw, m) * uLift;
         c.rgb += c.rgb * m * (.62 + 2.2 * sp);                     /* lights feed the bloom, some sparkle */
-        if (uSk > 0.){                                              /* the city stays in the drawing: quiet, colourless (user 03.11 16:24) */
+        if (uSk > 0.){                  /* in the drawing the city keeps only its lit windows: fine points on the same black (user 03.11 16:50) */
           float r = skR(), g;
-          if (uCityMode > .5){ vec3 sk = texture2D(skMap, vUv).rgb; g = .55 * pow(clamp((pow(max(sk.g, 0.), 1. / 2.2) - .13) / .76, 0., 1.), 2.2); }
-          else { g = dot(c.rgb, vec3(.2126, .7152, .0722)); g = uCityK * g / (1. + .9 * g); }   /* soft highlights: the lights stay quiet */
+          if (uCityMode > 1.5){ g = dot(c.rgb, vec3(.2126, .7152, .0722)); g = .3 * g / (1. + .9 * g); }                 /* ?city=photo: the quiet B&W photo */
+          else if (uCityMode > .5){ vec3 sk = texture2D(skMap, vUv).rgb; g = .55 * pow(clamp((pow(max(sk.g, 0.), 1. / 2.2) - .13) / .76, 0., 1.), 2.2); }   /* ?city=pencil */
+          else { float lm = smoothstep(.24, .62, l); g = uCityK * lm * lm * (.55 + .45 * tw)
+                 * (1. - .6 * smoothstep(.3, 1., length(gl_FragCoord.xy - uFC) / uLMax)); }                          /* the lights, quieter towards the edges like the lines */
           c.rgb = mix(c.rgb, vec3(.93, .96, 1.) * g * (1. - uCityOut), r);
         }
         gl_FragColor = c;
@@ -153,14 +155,15 @@ function basicTex(tex, opts){ return new THREE.MeshBasicMaterial(Object.assign({
 
 function unitLitMat(tex){
   return new THREE.ShaderMaterial({
-    uniforms: Object.assign({ map:{value:tex}, uOp:{value:0}, uGain:{value:1}, skMap:{value:null}, uSk:{value:0}, uCU:{value:new THREE.Vector4(0, 0, 1, 1)} }, FRU),
+    uniforms: Object.assign({ map:{value:tex}, uOp:{value:0}, uGain:{value:1}, skMap:{value:null}, uSk:{value:0}, uCU:{value:new THREE.Vector4(0, 0, 1, 1)}, uPier:{value:new THREE.Vector4(-1, -1, -1, -1)} }, FRU),
     vertexShader: vtx,
-    fragmentShader: `uniform sampler2D map; uniform float uOp; uniform float uGain; uniform sampler2D skMap; uniform float uSk; uniform vec4 uCU; varying vec2 vUv;
+    fragmentShader: `uniform sampler2D map; uniform float uOp; uniform float uGain; uniform sampler2D skMap; uniform float uSk; uniform vec4 uCU; uniform vec4 uPier; varying vec2 vUv;
       ${SKGL}
       void main(){ vec4 c = texture2D(map, vUv); vec3 col = s2l(c.rgb);
         float warm = smoothstep(.25,.8,dot(col, vec3(.5,.35,.15)));
         col *= mix(1., uGain, warm);
-        if (uSk > 0. && (vUv.x < uCU.x || vUv.x > uCU.z || vUv.y < uCU.y || vUv.y > uCU.w)) col = skMix(col, vec3(0.), vUv, uSk);   /* only past the outline */
+        bool pier = (vUv.x > uPier.x && vUv.x < uPier.y) || (vUv.x > uPier.z && vUv.x < uPier.w);   /* the stone between the panes */
+        if (uSk > 0. && (pier || vUv.x < uCU.x || vUv.x > uCU.z || vUv.y < uCU.y || vUv.y > uCU.w)) col = skMix(col, vec3(0.), vUv, uSk);   /* past the outline + the piers */
         gl_FragColor = vec4(col, c.a * uOp);
         #include <colorspace_fragment>
       }`,
@@ -349,6 +352,7 @@ async function build(){
   const P = F.PATCH;
   M.ud = rectPlane(new THREE.MeshBasicMaterial({ map: tUD, transparent: true, depthWrite: false, toneMapped: false }), P, -DEPTH, false); M.ud.renderOrder = 3; scene.add(M.ud);
   M.ul = rectPlane(unitLitMat(tUL), P, -DEPTH + .5, false); M.ul.renderOrder = 4; scene.add(M.ul);
+  M.ul.material.uniforms.uPier.value.set((900 - P.x) / P.w, (921 - P.x) / P.w, (997 - P.x) / P.w, (1017 - P.x) / P.w);   /* the triple window's piers (frame x) */
   M.ul.material.uniforms.uCU.value.set((F.OL.x - P.x) / P.w, 1 - (F.OL.y + F.OL.h - P.y) / P.h, (F.OL.x + F.OL.w - P.x) / P.w, 1 - (F.OL.y - P.y) / P.h);
   tJamb.wrapS = tJamb.wrapT = THREE.RepeatWrapping;
   const jm = new THREE.MeshBasicMaterial({ map: tJamb, color: 0x6a5f58, side: THREE.DoubleSide, toneMapped: false });
@@ -388,7 +392,8 @@ async function build(){
   M.shadow.material.clippingPlanes = clipEdge; M.shadow.renderOrder = 7; scene.add(M.shadow);
   M.logo = rectPlane(logoMat(tLogo), F.MARK, 2, false); M.logo.renderOrder = 8; scene.add(M.logo);
   buildLines();
-  if (/[?&]city=pencil/.test(location.search))                    /* option: the 02.11 pencil city instead of the quiet photo */
+  if (/[?&]city=photo/.test(location.search)) M.sky.material.uniforms.uCityMode.value = 2;   /* option: the quiet B&W photo of 16:24 */
+  if (/[?&]city=pencil/.test(location.search))                    /* option: the 02.11 pencil city */
     new THREE.TextureLoader().load(base + 'sky_city_pencil.webp', t => { t.colorSpace = THREE.SRGBColorSpace; const u = M.sky.material.uniforms; u.skMap.value = t; u.uCityMode.value = 1; });
 
   composer = new EffectComposer(renderer);
@@ -705,6 +710,7 @@ function facadeLines(){
   /* the CI window's recess in 3D (no dashed lines: user 03.11 16:24) */
   rect(CIX0 + 2, CIY0 + 2, CIX1 - 2, CIY1 - 2, .2, -DEPTH);
   for (const [a, b, sx, sy] of [[CIX0, CIY0, 1, 1], [CIX1, CIY0, -1, 1], [CIX1, CIY1, -1, -1], [CIX0, CIY1, 1, -1]]) put(S, a, b, 0, a + sx * 2, b + sy * 2, -DEPTH, .24);
+  for (const x of [900, 921, 997, 1017]) put(S, x + 969, CIY0 + 2, -DEPTH + .5, x + 969, CIY1 - 2, -DEPTH + .5, .3);   /* the piers' edges in the window */
   /* the outline itself, counter-clockwise from the top-right corner (r = brightness, g = order) */
   const W = (ax, ay, bx, by, i) => O.push([ax - 969, 251 - ay, 0, bx - 969, 251 - by, 0, 1, i / 4]);
   W(CIX1, CIY0, CIX0, CIY0, 0); W(CIX0, CIY0, CIX0, CIY1, 1); W(CIX0, CIY1, CIX1, CIY1, 2); W(CIX1, CIY1, CIX1, CIY0, 3);
