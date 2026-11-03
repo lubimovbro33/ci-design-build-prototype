@@ -164,8 +164,101 @@
     return { sec: sec, pin: pin, update: update };
   }
 
+  /* ================================================================== 03 ABOUT · five firms, five misregistered layers → one section under one roof */
+  function about(){
+    var sec = document.getElementById('about'); if (!sec || !sec.classList.contains('ch')) return null;
+    var pin = sec.querySelector('.ch-pin'), svg = sec.querySelector('#abDraw'), phases = [].slice.call(sec.querySelectorAll('.ch-t > [data-a]'));
+    var stage = sec.querySelector('.ch-stage'), pctEl = sec.querySelector('#abPct');
+    var defs = el('defs', {}, svg);
+    /* a two-storey residence in section, x 40..860, ground y 600, upper floor y 330, eaves y 80 */
+    var LAY = [
+      { k: 'ARCHITECTS', off: [-250, -40, -2.5] }, { k: 'DESIGNERS', off: [-110, 60, 1.6] }, { k: 'CONTRACTORS', off: [40, -70, -1.2] },
+      { k: 'VENDORS', off: [170, 50, 2.2] }, { k: 'INSTALLERS', off: [300, -30, -1.8] } ];
+    var gSec = el('g', {}, svg);
+    LAY.forEach(function(L, i){ L.g = el('g', {'class': 'dg'}, gSec); L.box = el('path', {d: rectD(-10, 50, 920, 580), 'class': 'box', 'vector-effect': 'non-scaling-stroke'}, L.g);
+      L.t = el('text', {x: -10, y: 36, 'class': 'lt'}, L.g); L.t.textContent = L.k; });
+    var A = LAY[0].g, D = LAY[1].g, C = LAY[2].g, V = LAY[3].g, I = LAY[4].g;
+    var dly = function(x, y){ return .05 + .45 * (Math.abs(x - 450) / 450 * .5 + Math.abs(y - 340) / 300 * .5); };
+    /* architects: the envelope and its openings */
+    [[40, 80, 40, 400], [40, 520, 40, 600], [54, 80, 54, 400], [54, 520, 54, 600], [860, 80, 860, 150], [860, 270, 860, 600], [846, 80, 846, 150], [846, 270, 846, 600],
+     [40, 80, 860, 80]].forEach(function(q){ line(A, seg(q[0], q[1], q[2], q[3]), 'w1', dly(q[0], q[1])); });
+    [[40, 400, 54, 400], [40, 520, 54, 520], [47, 400, 47, 520], [860, 150, 846, 150], [860, 270, 846, 270], [853, 150, 853, 270]].forEach(function(q){ line(A, seg(q[0], q[1], q[2], q[3]), 'w2', dly(q[0], q[1]) + .05); });
+    /* contractors: foundation, slabs, stair */
+    [[0, 600, 900, 600], [40, 614, 860, 614], [40, 330, 860, 330], [40, 344, 540, 344], [700, 344, 860, 344]].forEach(function(q){ line(C, seg(q[0], q[1], q[2], q[3]), 'w1', dly((q[0] + q[2]) / 2, q[1])); });
+    line(C, seg(60, 614, 60, 650), 'w2', .3); line(C, seg(840, 614, 840, 650), 'w2', .3); line(C, seg(30, 650, 90, 650), 'w2', .32); line(C, seg(810, 650, 870, 650), 'w2', .32);
+    var st = 'M540 600'; for (var k = 0; k < 9; k++) st += 'H' + (540 + (k + 1) * 18) + 'V' + (600 - (k + 1) * 30); line(C, st, 'w2', .25); line(C, seg(540, 600, 702, 330), 'w3', .3);
+    /* designers: partitions, kitchen, millwork */
+    line(D, seg(470, 80, 470, 250), 'w2', .2); line(D, seg(470, 250, 470, 330), 'w3', .25);
+    line(D, rectD(80, 520, 210, 80), 'w2', .22); line(D, seg(80, 540, 290, 540), 'w3', .26); line(D, rectD(80, 400, 210, 50), 'w2', .24); line(D, seg(150, 400, 150, 450), 'w3', .26); line(D, seg(220, 400, 220, 450), 'w3', .26);
+    line(D, rectD(700, 150, 130, 180), 'w2', .2); for (var j = 1; j < 5; j++) line(D, seg(700, 150 + j * 36, 830, 150 + j * 36), 'w3', .24);
+    /* vendors: what fills the rooms */
+    line(V, 'M330 600V560Q330 548 342 548H508Q520 548 520 560V600', 'w2', .3); line(V, seg(330, 572, 520, 572), 'w3', .32);
+    line(V, seg(360, 548, 360, 530), 'w3', .33); line(V, seg(490, 548, 490, 530), 'w3', .33); line(V, seg(355, 530, 495, 530), 'w3', .33);
+    line(V, rectD(90, 285, 210, 45, 6), 'w2', .3); line(V, seg(90, 300, 300, 300), 'w3', .32); line(V, rectD(84, 250, 14, 80), 'w3', .33);
+    line(V, 'M530 330V308Q530 300 538 300H672Q680 300 680 308V330', 'w2', .32);              /* the bath */
+    line(V, rectD(150, 560, 90, 8), 'w3', .34); line(V, seg(160, 568, 160, 600), 'w3', .34); line(V, seg(230, 568, 230, 600), 'w3', .34);
+    /* installers: light, art, curtains */
+    [[195, 344, 195, 470], [420, 80, 420, 200]].forEach(function(q){ line(I, seg(q[0], q[1], q[2], q[3]), 'w3', .35); });
+    line(I, 'M170 470H220L210 482H180Z', 'w2', .36); line(I, 'M400 200H440L432 212H408Z', 'w2', .36);
+    line(I, rectD(580, 150, 80, 100), 'w2', .36); line(I, rectD(590, 160, 60, 80), 'w3', .38);
+    for (var c = 0; c < 4; c++){ line(I, seg(64 + c * 6, 395, 64 + c * 6, 525), 'w3', .4); line(I, seg(836 - c * 6, 145, 836 - c * 6, 275), 'w3', .4); }
+    /* the roof: one line over everything */
+    var gRoof = el('g', {'class': 'dg roof'}, svg);
+    line(gRoof, 'M10 92L450 -110L890 92', 'w1', 0); line(gRoof, 'M40 80L450 -92L860 80', 'w2', .1);
+    /* disciplines, each pointing at its part of the house */
+    var DIS = [['ARCHITECTURE', 47, 460, -1], ['INTERIOR DESIGN', 765, 240, 1], ['CONSTRUCTION', 640, 460, 1], ['FURNISHINGS', 425, 548, 1], ['ART', 620, 200, 1],
+               ['WELLNESS', 605, 300, 1], ['PROCUREMENT', 185, 425, -1], ['INSTALLATION', 195, 476, -1], ['PROJECT MANAGEMENT', 450, -60, 1]];
+    var gDis = el('g', {}, svg), dis = DIS.map(function(d, i){
+      var g = el('g', {'class': 'ab-dis'}, gDis), lx = d[3] > 0 ? 960 : -60, ly = 20 + i * 64;
+      if (d[0] === 'PROJECT MANAGEMENT') ly = -120;
+      el('path', {d: 'M' + d[1] + ' ' + d[2] + 'L' + (d[3] > 0 ? lx - 20 : lx + 20) + ' ' + ly + 'H' + lx, 'class': 'ld', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, g);
+      el('rect', {x: d[1] - 3, y: d[2] - 3, width: 6, height: 6, 'class': 'sq'}, g);
+      var t = el('text', {x: lx + (d[3] > 0 ? 10 : -10), y: ly + 5, 'class': 'dt', 'text-anchor': d[3] > 0 ? 'start' : 'end'}, g); t.textContent = d[0];
+      return g; });
+    /* time: the traditional model hands off five times; CI runs the same work together and finishes a fifth sooner */
+    var gT = el('g', {'class': 'ab-time'}, svg), TY = 760, X0 = 0, X1 = 900;
+    var trad = [[0, .16], [.21, .37], [.42, .66], [.71, .84], [.88, 1]], ci = [[0, .2], [.08, .36], [.18, .66], [.4, .72], [.56, .8]];
+    var lab1 = el('text', {x: X0, y: TY - 22, 'class': 'tl'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
+    var lab2 = el('text', {x: X0, y: TY + 118, 'class': 'tl'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
+    var bars = [];
+    trad.forEach(function(b, i){ bars.push({e: el('path', {d: seg(X0 + b[0] * X1, TY + i * 12, X0 + b[1] * X1, TY + i * 12), 'class': 'bar t', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT), d: i * .08}); });
+    ci.forEach(function(b, i){ bars.push({e: el('path', {d: seg(X0 + b[0] * X1, TY + 140 + i * 12, X0 + b[1] * X1, TY + 140 + i * 12), 'class': 'bar c', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT), d: .3 + i * .06}); });
+    var saved = el('path', {d: seg(X1 * .8, TY + 200, X1, TY + 200), 'class': 'sav', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
+    var savT = [el('path', {d: seg(X1 * .8, TY + 192, X1 * .8, TY + 208), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT), el('path', {d: seg(X1, TY + 192, X1, TY + 208), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT)];
+    /* your decisions on CI's line; everything in between is ours */
+    var MS = [.0, .2, .36, .56, .8], own = el('path', {d: seg(0, TY + 236, X1 * .8, TY + 236), 'class': 'own', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
+    var dots = MS.map(function(m){ return el('rect', {x: m * X1 - 4, y: TY + 232, width: 8, height: 8, 'class': 'ms'}, gT); });
+
+    function update(p){
+      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
+        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      /* the five layers draw, spread apart in their own frames; then they come together and register */
+      var kd = sg(p, .02, .16), j = sm(sg(p, .3, .46)), fr = sg(p, .12, .2) * (1 - sg(p, .3, .38));
+      LAY.forEach(function(L, i){ L.g.style.setProperty('--k', kd.toFixed(3));
+        /* spread: five small separate drawings in a row, each in its own frame, slightly askew; together: one */
+        var s = sm(sg(p, .1, .24)) * (1 - j), sc = lerp(1, .3, s), tx = lerp(450, -186 + i * 334, s), ty = lerp(340, 330 + L.off[1] * .6, s), r = L.off[2] * s;
+        L.g.setAttribute('transform', 'translate(' + f1(tx) + ' ' + f1(ty) + ') rotate(' + r.toFixed(2) + ') scale(' + sc.toFixed(4) + ') translate(-450 -340)');
+        L.box.style.opacity = fr.toFixed(3); L.t.style.opacity = (sg(p, .14, .2) * (1 - sg(p, .3, .36))).toFixed(3); });
+      /* one roof */
+      gRoof.style.setProperty('--k', sg(p, .46, .54).toFixed(3));
+      /* the disciplines */
+      dis.forEach(function(g, i){ var k = sg(p, .5 + i * .012, .54 + i * .012) * (1 - sg(p, .6, .63)); g.style.opacity = k.toFixed(3); g.firstChild.style.strokeDashoffset = (1 - k).toFixed(3); });
+      /* the section steps back while time is measured; 20 % */
+      var tk = sm(sg(p, .6, .66));
+      gSec.style.opacity = (1 - .62 * tk).toFixed(3); gRoof.style.opacity = (1 - .62 * tk).toFixed(3);
+      gT.style.opacity = tk.toFixed(3);
+      bars.forEach(function(b){ var k = sg(p, .63 + b.d * .1, .67 + b.d * .1); b.e.style.strokeDashoffset = (1 - k).toFixed(3); });
+      var ks = sg(p, .7, .76); saved.style.strokeDashoffset = (1 - ks).toFixed(3); savT.forEach(function(e){ e.style.opacity = ks.toFixed(3); });
+      pctEl.textContent = Math.round(20 * eo(ks)); stage.style.setProperty('--pc', sg(p, .69, .72).toFixed(3));
+      /* your decisions, our everything-in-between */
+      var km = sg(p, .82, .9); own.style.strokeDashoffset = (1 - km).toFixed(3);
+      dots.forEach(function(d, i){ d.style.opacity = sg(p, .8 + i * .012, .82 + i * .012).toFixed(3); });
+    }
+    return { sec: sec, pin: pin, update: update };
+  }
+
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy()].filter(Boolean), dirty = true;
+  var CH = [philosophy(), about()].filter(Boolean), dirty = true;
   function measure(){ var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
   window.addEventListener('resize', function(){ dirty = true; }); window.addEventListener('load', function(){ dirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ dirty = true; }).observe(document.body);
