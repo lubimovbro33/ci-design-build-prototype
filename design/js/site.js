@@ -187,6 +187,8 @@
     var start = performance.now(), from = Math.max(state.t, T.litA);
     (function f(now){ var p = clamp01((now - start) / 900); var t = lerp(from, T.end, E.expo(p)); state.t = t; render(t); if (p < 1) requestAnimationFrame(f); else finish(); })(start);
   }
+  if (skip) skip.addEventListener('click', skipIntro);                                /* (lost in v15: SKIP showed but did nothing) */
+  window.addEventListener('keydown', function(e){ if (!state.done && (e.key === 'Escape' || e.key === ' ' || e.key === 'Enter')) { e.preventDefault(); skipIntro(); } });
   var lastSY = 0;
   function idleLoop(){ (function f(){ var still = false, sy = window.scrollY; if (slide.cur === 0 && !tr && !loopOn && !ST.on && !document.hidden) { var dx = mx - pmx, dy = my - pmy; if (Math.abs(dx) + Math.abs(dy) > .0005) { pmx += dx * .06; pmy += dy * .06; render(T.end + 1); } else still = true; }
     if (window.__pre3d) window.__pre3d.busy = !(still || document.hidden) || sy !== lastSY; lastSY = sy;   /* GPU uploads wait for a still frame */
