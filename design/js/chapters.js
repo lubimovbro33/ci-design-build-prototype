@@ -593,8 +593,65 @@
     return { sec: sec, pin: pin, update: update };
   }
 
+  /* ================================================================== 09 CLIENT · two lines that meet exactly */
+  function client(){
+    var sec = document.getElementById('client'); if (!sec || !sec.classList.contains('ch')) return null;
+    var pin = sec.querySelector('.ch-pin'), stage = sec.querySelector('.ch-stage'), phases = [].slice.call(sec.querySelectorAll('.cl-t > [data-a]'));
+    var ph1 = sec.querySelector('.cl-ph1'), ph2 = sec.querySelector('.cl-ph2'), l1 = sec.querySelector('.cl-l1'), l2 = sec.querySelector('.cl-l2'), svg = sec.querySelector('.cl-svg');
+    var mk = function(cls){ return el('path', {'class': cls, pathLength: 1, 'vector-effect': 'non-scaling-stroke'}, svg); };
+    var fa = mk('cl-ln'), fb = mk('cl-ln'), A = mk('cl-ln'), B = mk('cl-ln'), C = mk('cl-ln faint');
+    var sq1 = el('rect', {width: 7, height: 7, 'class': 'cl-sq'}, svg), sq2 = el('rect', {width: 7, height: 7, 'class': 'cl-sq'}, svg), loupe = el('circle', {r: 10, 'class': 'cl-loupe', 'vector-effect': 'non-scaling-stroke'}, svg);
+    var G = null, lastSz = '';
+    function layout(){
+      var sb = stage.getBoundingClientRect(), W = sb.width, H = sb.height, por = W / H < 1, m = parseFloat(getComputedStyle(stage).getPropertyValue('--m')) || 48;
+      svg.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H));
+      l1.style.transform = 'none'; var r1 = l1.getBoundingClientRect(), b1 = ph1.getBoundingClientRect();
+      var yA = r1.bottom - sb.top + (por ? 22 : 30), X = por ? W - m : Math.round(W * .52), yB = por ? yA + Math.min(H * .34, (W - 2 * m) * .75) : H - m - 44;
+      ph2.style.left = m + 'px'; ph2.style.top = yA + 'px'; ph2.style.width = (X - m) + 'px'; ph2.style.height = (yB - yA) + 'px';
+      if (por){ l2.style.left = m + 'px'; l2.style.top = (yB + 22) + 'px'; } else { l2.style.left = (X + 44) + 'px'; l2.style.top = (yA + 26) + 'px'; }
+      var f = [b1.left - sb.left, b1.top - sb.top, b1.right - sb.left, b1.bottom - sb.top];
+      fa.setAttribute('d', 'M' + f1(f[0]) + ' ' + f1(f[1]) + 'H' + f1(f[2]) + 'V' + f1(f[3]));
+      fb.setAttribute('d', 'M' + f1(f[0]) + ' ' + f1(f[1]) + 'V' + f1(f[3]) + 'H' + f1(f[2]));
+      A.setAttribute('d', 'M' + f1(m) + ' ' + f1(yA) + 'H' + f1(X)); B.setAttribute('d', 'M' + f1(X) + ' ' + f1(yB) + 'V' + f1(yA));
+      C.setAttribute('d', 'M' + f1(m) + ' ' + f1(yA) + 'V' + f1(yB) + 'H' + f1(X));
+      sq1.setAttribute('x', f1(f[2] - 3.5)); sq1.setAttribute('y', f1(f[3] - 3.5)); sq2.setAttribute('x', f1(X - 3.5)); sq2.setAttribute('y', f1(yA - 3.5));
+      loupe.setAttribute('cx', f1(X)); loupe.setAttribute('cy', f1(yA));
+      G = {W: W, H: H};
+    }
+    function draw(e, k){ e.style.strokeDashoffset = (1 - k).toFixed(4); e.style.opacity = k > 0 ? '' : 0; }
+    function update(p){
+      var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz || !G){ lastSz = sz; layout(); }
+      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
+        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      /* i · the portrait's frame: two lines leave one corner and meet, exactly, at the opposite one */
+      var out1 = 1 - sm(sg(p, .42, .47)), kf = eo(sg(p, .03, .15));
+      draw(fa, kf); draw(fb, kf); fa.style.opacity = fb.style.opacity = kf > 0 ? out1 : 0;
+      sq1.style.opacity = (sg(p, .145, .16) * out1).toFixed(3);
+      ph1.style.opacity = (sm(sg(p, .15, .22)) * out1).toFixed(3); ph1.querySelector('img').style.transform = 'scale(' + (1.08 - .08 * sm(sg(p, .15, .45))).toFixed(4) + ')';
+      /* ii · their standard (a line from the left), ours (a line from below): they meet at one point */
+      var k1 = sg(p, .46, .51); l1.style.opacity = k1.toFixed(3); l1.style.transform = 'translateY(' + ((1 - eo(k1)) * 22).toFixed(1) + 'px)';
+      draw(A, eo(sg(p, .5, .6))); draw(B, eo(sg(p, .58, .68)));
+      var km = sg(p, .675, .69); sq2.style.opacity = km.toFixed(3);
+      var kr = sg(p, .68, .76); loupe.setAttribute('r', f1(6 + 34 * eo(kr))); loupe.style.opacity = (kr > 0 ? (1 - kr) * .9 : 0).toFixed(3);
+      var k2 = sg(p, .7, .75); l2.style.opacity = k2.toFixed(3); l2.style.transform = 'translateY(' + ((1 - eo(k2)) * 22).toFixed(1) + 'px)';
+      draw(C, sg(p, .74, .84));
+      ph2.style.opacity = sm(sg(p, .76, .84)).toFixed(3); ph2.querySelector('img').style.transform = 'scale(' + (1.1 - .1 * sm(sg(p, .76, 1))).toFixed(4) + ')';
+    }
+    return { sec: sec, pin: pin, update: update };
+  }
+
+  /* ================================================================== 10 REVIEWS · 11 FAQ — quiet sections: their lines draw once as they arrive */
+  (function(){
+    var els = [].slice.call(document.querySelectorAll('.ch-rev .rv-card, .ch-rev .rv-hd, .ch-faq .fq-hd, .ch-faq .qa'));
+    [].slice.call(document.querySelectorAll('.ch-faq .qa')).forEach(function(q, i){ q.style.setProperty('--i', i); });
+    if (!els.length) return;
+    if (!('IntersectionObserver' in window) || reduced){ els.forEach(function(e){ e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {rootMargin: '0px 0px -12% 0px'});
+    els.forEach(function(e){ io.observe(e); });
+  })();
+
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process()].filter(Boolean), dirty = true;
+  var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process(), client()].filter(Boolean), dirty = true;
   function measure(){ var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
   window.addEventListener('resize', function(){ dirty = true; }); window.addEventListener('load', function(){ dirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ dirty = true; }).observe(document.body);
