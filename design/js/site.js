@@ -95,6 +95,7 @@
     return 1.03 * Math.pow(G.zEnd / 1.03, expo15((t - T.push) / (T.pushEnd - T.push)));
   }
   function render(t){
+    if (window.__pre3d && window.__pre3d.cta) return;                         /* the canvas is lent to the CTA (js/chapters.js) */
     if (st15.classList.contains('gl')) {                                      /* the 3D scene draws everything (fade, logo, outline, light, fly-in) */
       window.__pre3d.render(t, T, pmx, pmy, scrollZoom); st15.style.opacity = 1;
       if (!state.done && t >= T.ui) uiOn();
@@ -212,7 +213,7 @@
   var GLS = false, tr = null, loopOn = false, TR_DUR = 2.6, heroOff = false;
   function ease3(u){ u = clamp01(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
   function kbOf(i, now){ return i === 0 ? 0 : clamp01((now - (slide.start[i] || now)) / ((SL[i].dur + TR_DUR) * 1000)); }
-  function glFrame(a, b, p, now){ window.__pre3d.slideFrame({a:a - 1, b:b - 1, p:p, ka:kbOf(a, now), kb:kbOf(b, now), mx:pmx, my:pmy, scroll:scrollZoom, T:T}); }
+  function glFrame(a, b, p, now){ if (window.__pre3d.cta) return; window.__pre3d.slideFrame({a:a - 1, b:b - 1, p:p, ka:kbOf(a, now), kb:kbOf(b, now), mx:pmx, my:pmy, scroll:scrollZoom, T:T}); }
   function glLoop(now){
     if (document.hidden || ST.on) { loopOn = false; return; }
     pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
@@ -575,7 +576,8 @@
   var chap = $('chap'), chapLinks = qsa('a', chap), chapSecs = chapLinks.map(function(a){ return $(a.getAttribute('data-ch')); }), chapOn = -1;
   function updateChap(y, vh){
     if (!chap) return;
-    chap.classList.toggle('show', state.done && y > vh * .7);
+    var ftr = $('footer'), ftop = ftr ? ftr.getBoundingClientRect().top : 1e9;   /* the footer has its own street line: the rail steps aside */
+    chap.classList.toggle('show', state.done && y > vh * .7 && ftop > vh * .92);
     var idx = 0, tops = chapSecs.map(function(s){ return s.getBoundingClientRect().top + y; });
     for (var i = 0; i < tops.length; i++) if (y + vh * .5 >= tops[i]) idx = i;
     var next = idx + 1 < tops.length ? tops[idx + 1] : document.documentElement.scrollHeight - vh;

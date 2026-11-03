@@ -650,16 +650,89 @@
     els.forEach(function(e){ io.observe(e); });
   })();
 
+  /* ================================================================== 12 CTA · the bookend: the facade at night as its drawing, built again, and in through the same window */
+  /* the 3D scene of the opening (js/pre3d.js) is lent to this stage: its canvas moves here while the CTA is near and goes home after.
+     The facade starts as the architect's elevation (the story's sketch, held), the photo returns from the edges in to the CI window,
+     the hairline round the window draws, and the camera flies in through it to the lit room where the site began. */
+  function cta(){
+    var sec = document.getElementById('cta'); if (!sec || !sec.classList.contains('ch')) return null;
+    var pin = sec.querySelector('.ch-pin'), stage = sec.querySelector('.ch-stage'), host = sec.querySelector('#ctGl'), fb = sec.querySelector('.ct-fb'), tx = sec.querySelector('#ctTx');
+    var head = tx.querySelector('.ct-h'), side = tx.querySelector('.ct-side');
+    var canvas = document.getElementById('v15gl'), home = null, next = null, lent = false, P = 0, lastR = '', mx = 0, my = 0, pmx = 0, pmy = 0;
+    window.addEventListener('pointermove', function(e){ mx = e.clientX / window.innerWidth - .5; my = e.clientY / window.innerHeight - .5; }, {passive: true});
+    function glOK(){ var g = window.__pre3d; return !!(canvas && g && g.state === 'ready' && g.storyFrame && window.__intro && window.__intro.T && !reduced); }
+    function lend(on){
+      var g = window.__pre3d; if (on === lent) return;
+      if (on){ home = canvas.parentNode; next = canvas.nextSibling; host.appendChild(canvas); g.cta = true; if (g.setRoom) g.setRoom(-1); lent = true; sec.classList.add('gl'); lastR = ''; }
+      else { if (home) home.insertBefore(canvas, next && next.parentNode === home ? next : null); g.cta = false; lent = false; sec.classList.remove('gl'); }
+    }
+    function frame(){
+      pmx += (mx - pmx) * .06; pmy += (my - pmy) * .06;
+      var key = P.toFixed(4) + ',' + pmx.toFixed(4) + ',' + pmy.toFixed(4); if (key === lastR) return; lastR = key;
+      var W = window.innerWidth, p = P;
+      window.__pre3d.storyFrame({T: window.__intro.T, mx: pmx, my: pmy, push: 0, winPx: Math.max(70, W * .075),
+        fly: 1 - Math.pow(sm(sg(p, .3, .86)), 1.15), draw: 1 - sm(sg(p, .08, .3)), out: 0, ol: sg(p, .14, .26), olOp: 1 - sg(p, .5, .62)});
+    }
+    function near(on){
+      var ok = on && glOK(); lend(ok);
+      if (lent) frame();
+    }
+    function update(p){
+      P = p;
+      if (!lent){ var z = 1 + 1.6 * Math.pow(sm(sg(p, .3, .9)), 1.6); fb.style.transform = 'scale(' + z.toFixed(4) + ')'; }
+      /* the line: over the drawing first, it stays on the glass while the world moves behind it; then the rest */
+      var kh = sg(p, .02, .08); head.style.opacity = kh.toFixed(3); head.style.transform = 'translateY(' + ((1 - eo(kh)) * 22).toFixed(1) + 'px)';
+      var ks = sg(p, .84, .92); side.style.opacity = ks.toFixed(3); side.style.transform = 'translateY(' + ((1 - eo(ks)) * 18).toFixed(1) + 'px)'; side.style.visibility = ks > 0 ? '' : 'hidden';
+      stage.style.setProperty('--vl', sm(sg(p, .7, .9)).toFixed(3));
+    }
+    return { sec: sec, pin: pin, update: update, near: near };
+  }
+
+  /* ================================================================== FOOTER · a street elevation in hairlines, its windows as points of light; one is ours */
+  (function(){
+    var svg = document.getElementById('ftCity'); if (!svg) return;
+    var seed = 11; function rnd(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+    var GY = 330, x = -10, i = 0, dots = '', lit = '', CI = null, gB = el('g', {'class': 'ft-b'}, svg);
+    while (x < 1610){
+      var w = 46 + Math.round(rnd() * 96), tall = rnd() < .18, h = tall ? 210 + rnd() * 110 : 60 + rnd() * 150, d = 'M' + f1(x) + ' ' + GY + 'V' + f1(GY - h);
+      var sb = h > 150 && rnd() < .5 ? Math.round(w * (.14 + rnd() * .12)) : 0, sh = sb ? 18 + rnd() * 26 : 0;
+      if (sb) d += 'H' + f1(x + sb) + 'V' + f1(GY - h - sh) + 'H' + f1(x + w - sb) + 'V' + f1(GY - h) + 'H' + f1(x + w);
+      else d += 'H' + f1(x + w);
+      d += 'V' + GY;
+      if (tall && rnd() < .6) d += 'M' + f1(x + w / 2) + ' ' + f1(GY - h - sh) + 'V' + f1(GY - h - sh - 22 - rnd() * 30);
+      var p = el('path', {d: d, pathLength: 1, 'vector-effect': 'non-scaling-stroke'}, gB); p.style.setProperty('--i', i);
+      /* windows: a point per bay and floor; a few are lit */
+      var bx = 9 + Math.round(rnd() * 4), fy = 11 + Math.round(rnd() * 3);
+      for (var yy = GY - 14; yy > GY - h + 8; yy -= fy) for (var xx = x + 7; xx < x + w - 5; xx += bx){
+        var q = 'M' + f1(xx) + ' ' + f1(yy) + 'h.1';
+        if (!CI && x > 300 && x < 520 && h > 150 && yy < GY - 90){ CI = [xx, yy]; continue; }
+        if (rnd() < .07) lit += q; else dots += q;
+      }
+      x += w + (rnd() < .3 ? 6 + Math.round(rnd() * 14) : 0); i++;
+    }
+    el('path', {d: 'M0 ' + GY + 'H1600', 'class': 'ft-gl', pathLength: 1, 'vector-effect': 'non-scaling-stroke'}, svg);
+    el('path', {d: dots, 'class': 'ft-dots', 'vector-effect': 'non-scaling-stroke'}, svg);
+    el('path', {d: lit, 'class': 'ft-lit', 'vector-effect': 'non-scaling-stroke'}, svg);
+    if (CI) el('rect', {x: f1(CI[0] - 3), y: f1(CI[1] - 3), width: 6, height: 6, 'class': 'ft-ci'}, svg);
+    var ft = document.getElementById('footer');
+    if (!('IntersectionObserver' in window) || reduced){ ft.classList.add('in'); return; }
+    var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ ft.classList.add('in'); io.disconnect(); } }, {rootMargin: '0px 0px -10% 0px'});
+    io.observe(svg);
+  })();
+
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process(), client()].filter(Boolean), dirty = true;
-  function measure(){ var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
+  var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process(), client(), cta()].filter(Boolean), dirty = true;
+  var SVGS = [].slice.call(document.querySelectorAll('.ch svg'));
+  function dashScale(){ SVGS.forEach(function(v){ var m = v.getScreenCTM && v.getScreenCTM(); if (m && m.a) v.style.setProperty('--ds', Math.max(m.a, .05).toFixed(4)); }); }
+  function measure(){ dashScale(); var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
   window.addEventListener('resize', function(){ dirty = true; }); window.addEventListener('load', function(){ dirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ dirty = true; }).observe(document.body);
   function tick(){
     if (dirty) measure();
     var y = window.scrollY || window.pageYOffset, vh = window.innerHeight;
-    for (var i = 0; i < CH.length; i++){ var c = CH[i];
-      if (y + vh * 1.5 < c.top || y > c.top + c.h + vh * .5) continue;
+    for (var i = 0; i < CH.length; i++){ var c = CH[i], away = y + vh * 1.5 < c.top || y > c.top + c.h + vh * .5;
+      if (c.near) c.near(!away);
+      if (away) continue;
       var p = reduced ? 1 : clamp01((y - c.top) / Math.max(1, c.h - vh));
       if (p !== c.last){ c.last = p; c.update(p, vh); } }
     requestAnimationFrame(tick);

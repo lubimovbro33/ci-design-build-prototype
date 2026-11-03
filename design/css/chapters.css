@@ -8,7 +8,8 @@
 .ch-idx .ln::before{content:"";position:absolute;left:0;top:-2px;width:5px;height:5px;background:currentColor}
 
 /* hairlines that draw themselves (pathLength 1; --k = the group's progress, --d = this line's delay) */
-.ch svg .dw{fill:none;stroke:var(--hl);stroke-linecap:square;stroke-dasharray:1 1;stroke-dashoffset:calc(1 - clamp(0, (var(--k, 0) - var(--d, 0)) * 6, 1))}
+/* --ds: the drawing's scale on screen; with non-scaling strokes the dash is in screen units, so it is scaled to cover the path */
+.ch svg .dw{fill:none;stroke:var(--hl);stroke-linecap:square;stroke-dasharray:var(--ds,1) var(--ds,1);stroke-dashoffset:calc(var(--ds,1) * (1 - clamp(0, (var(--k, 0) - var(--d, 0)) * 6, 1)))}
 .ch svg .w1{stroke-opacity:.78}
 .ch svg .w2{stroke-opacity:.5}
 .ch svg .w3{stroke-opacity:.24}
@@ -109,7 +110,7 @@
 /* ---------------------------------------------------------------- 04 PROJECTS */
 .ch-proj .ch-pin{height:640vh}
 .ch-proj .pj-draw{position:absolute;right:calc(var(--m) - 1vw);top:52%;transform:translateY(-50%);width:min(58vw,1000px);height:min(84vh,780px);overflow:visible}
-.ch-proj .pj-draw .reg{fill:none;stroke:var(--acc);stroke-opacity:.55;stroke-dasharray:1 1;stroke-dashoffset:calc(1 - clamp(0, (var(--k, 0) - var(--d, 0)) * 3, 1))}
+.ch-proj .pj-draw .reg{fill:none;stroke:var(--acc);stroke-opacity:.55;stroke-dasharray:var(--ds,1) var(--ds,1);stroke-dashoffset:calc(var(--ds,1) * (1 - clamp(0, (var(--k, 0) - var(--d, 0)) * 3, 1)))}
 .ch-proj .pj-draw .regdot{fill:var(--acc)}
 .ch-proj .pj-frame{position:absolute;left:0;top:0;width:10px;height:10px;overflow:hidden;opacity:0;outline:1px solid rgba(235,235,235,.55);outline-offset:6px;z-index:3;will-change:transform,width,height}
 .ch-proj .pj-frame img{width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
@@ -329,4 +330,48 @@
   .ch-faq .fq-hd{position:relative;top:0;margin-bottom:28px}
   .ch-faq .qh{grid-template-columns:36px 1fr 28px;gap:10px}
   .ch-faq .ain{padding:0 0 24px 46px}
+}
+
+/* ---------------------------------------------------------------- 12 CTA */
+.ch-cta .ch-pin{height:440vh}
+.ch-cta .ct-gl{position:absolute;inset:0;overflow:hidden;background:#000}
+.ch-cta .ct-gl canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.ch-cta .ct-fb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:50% 46%}
+.ch-cta.gl .ct-fb{display:none}
+.ch-cta .ct-veil{position:absolute;inset:0;pointer-events:none;opacity:var(--vl,0);background:linear-gradient(90deg,rgba(0,0,0,.84) 0%,rgba(0,0,0,.6) 40%,rgba(0,0,0,.25) 75%,rgba(0,0,0,.1) 100%),linear-gradient(0deg,rgba(0,0,0,.85) 0%,rgba(0,0,0,.4) 30%,rgba(0,0,0,0) 55%)}
+.ch-cta .ch-idx{z-index:3}
+.ch-cta .ct-tx{position:absolute;left:var(--m);right:var(--m);bottom:calc(var(--m) + 64px);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,4fr);gap:clamp(24px,4vw,80px);align-items:end;z-index:3}
+.ch-cta .ct-h{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(34px,5.4vw,92px);line-height:.94;letter-spacing:-.035em;opacity:0;text-shadow:0 0 40px rgba(0,0,0,.35)}
+.ch-cta .ct-h .acc{color:var(--acc)}
+.ch-cta .ct-side{opacity:0;max-width:440px}
+.ch-cta .ct-side .ch-lead.sub{margin-top:12px}
+@media (max-aspect-ratio: 1/1){
+  .ch-cta .ct-tx{grid-template-columns:1fr;bottom:calc(var(--m) + 50px)}
+  .ch-cta .ct-h{font-size:clamp(30px,9vw,48px)}
+}
+
+/* ---------------------------------------------------------------- FOOTER */
+.ch-ftr{padding:calc(var(--m) * 2 + 20px) 0 0;overflow:hidden}
+.ch-ftr .ft-top{padding:0 var(--m);display:grid;grid-template-columns:minmax(0,3fr) minmax(0,3fr) repeat(3,minmax(0,2fr));gap:var(--gap,24px);align-items:start}
+.ch-ftr .ft-logo img{width:clamp(64px,6vw,96px);height:auto;display:block}
+.ch-ftr .ft-addr{display:flex;flex-direction:column;gap:18px;font-size:15px;line-height:1.5;color:var(--dimc)}
+.ch-ftr .ft-addr .l1{color:var(--hl)}
+.ch-ftr .ft-addr .mono{color:var(--acc)}
+.ch-ftr .ft-col{display:flex;flex-direction:column;gap:10px}
+.ch-ftr .ft-col .lab{color:var(--dimc);margin-bottom:8px}
+.ch-ftr .ft-col a{color:var(--hl);text-transform:uppercase;font-size:14px;letter-spacing:.01em;width:max-content;position:relative}
+.ch-ftr .ft-col a::after{content:"";position:absolute;left:0;right:0;bottom:-3px;height:1px;background:var(--acc);transform:scaleX(0);transform-origin:0 0;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
+.ch-ftr .ft-col a:hover::after{transform:scaleX(1)}
+.ch-ftr .ft-city{display:block;width:100%;height:clamp(200px,30vw,420px);margin-top:clamp(40px,6vw,96px)}
+.ch-ftr .ft-b path{fill:none;stroke:var(--hl);stroke-opacity:.42;stroke-dasharray:var(--ds,1) var(--ds,1);stroke-dashoffset:var(--ds,1);transition:stroke-dashoffset 2.2s cubic-bezier(.65,0,.35,1) calc(var(--i) * 45ms)}
+.ch-ftr .ft-gl{fill:none;stroke:var(--hl);stroke-opacity:.6;stroke-dasharray:var(--ds,1) var(--ds,1);stroke-dashoffset:var(--ds,1);transition:stroke-dashoffset 1.8s cubic-bezier(.65,0,.35,1)}
+.ch-ftr .ft-dots{fill:none;stroke:var(--hl);stroke-opacity:.16;stroke-width:1.6;stroke-linecap:square;opacity:0;transition:opacity 1.6s ease 1.6s}
+.ch-ftr .ft-lit{fill:none;stroke:#F2E6CF;stroke-opacity:.9;stroke-width:2;stroke-linecap:square;opacity:0;transition:opacity 1.6s ease 2.2s}
+.ch-ftr .ft-ci{fill:var(--acc);opacity:0;transition:opacity .8s ease 3s;filter:drop-shadow(0 0 6px rgba(150,169,191,.9))}
+.ch-ftr.in .ft-b path,.ch-ftr.in .ft-gl{stroke-dashoffset:0}
+.ch-ftr.in .ft-dots,.ch-ftr.in .ft-lit,.ch-ftr.in .ft-ci{opacity:1}
+.ch-ftr .ft-bot{display:flex;justify-content:space-between;padding:18px var(--m) 26px;color:var(--dimc)}
+@media (max-aspect-ratio: 1/1){
+  .ch-ftr .ft-top{grid-template-columns:1fr 1fr;row-gap:36px}
+  .ch-ftr .ft-logo,.ch-ftr .ft-addr{grid-column:1/-1}
 }
