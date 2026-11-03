@@ -273,7 +273,7 @@
   var hpin = $('hpin'), story = $('story'), stBg = $('stBg'), stLay = $('stLay'), sqC = $('sqC'), sqL = $('sqL'), sqR = $('sqR'),
       hdL = $('hdL'), hdR = $('hdR'), ldL = $('ldL'), ldR = $('ldR'), ldqL = $('ldqL'), ldqR = $('ldqR'),
       phs = [$('ph0'), $('ph1'), $('ph2')], stTk = $('stTk'), pts = [$('pt0'), $('pt1'), $('pt2')], stSlog = $('stSlog');
-  var ST = {on:false, s:-1, push:0, R:null, words:[], lay:[], ld:[]}, S_END = 11;
+  var ST = {on:false, s:-1, push:0, R:null, words:[], lay:[], ld:[]}, S_END = 10.3;
   var NS = 'http://www.w3.org/2000/svg';
   function sg(s, a, b){ return clamp01((s - a) / (b - a)); }
   function eo(u){ return 1 - Math.pow(1 - clamp01(u), 3); }                       /* ease out */
@@ -346,25 +346,27 @@
     story.style.setProperty('--S', S + 'px');
     var gap = S * .12, cx = vw / 2, cy = vh / 2, step = S + gap;
     /* --- WebGL: fly out of the window to that distance, outline, the sketch comes and goes, only the window stays */
-    var useGL = gl3() && window.__pre3d.storyFrame, glOn = s < 3.65;
-    stBg.style.opacity = useGL ? sg(s, 3.3, 3.6) : Math.min(1, sg(s, .2, 1.4));
+    var useGL = gl3() && window.__pre3d.storyFrame, glOn = s < 2.9;
+    stBg.style.opacity = useGL ? sg(s, 2.55, 2.85) : Math.min(1, sg(s, .2, 1.4));
     if (useGL && glOn) {
-      ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, push:ST.push, winPx:S, fly:sg(s, 0, 1.8), ol:eio(sg(s, 1.05, 1.7)), olOp:1 - sg(s, 2.95, 3.1),
-                                       sketch:eio(sg(s, 1.8, 2.45)), keep:eio(sg(s, 2.75, 3.25))});
+      /* a little further out than the square (a drone's distance); the sketch starts while the outline is still drawing and
+         everything but the window melts away right after (user 03.11 09:04) */
+      ST.R = window.__pre3d.storyFrame({T:T, mx:pmx, my:pmy, push:ST.push, winPx:S * .78, fly:sg(s, 0, 1.8), ol:eio(sg(s, 1.0, 1.6)), olOp:1 - sg(s, 2.2, 2.4),
+                                       sketch:eio(sg(s, 1.2, 2.0)), keep:eio(sg(s, 1.9, 2.6))});
     }
     var target = [cx - S / 2, cy - S / 2, cx + S / 2, cy + S / 2];
     var win = ST.R ? [ST.R.x0, ST.R.y0, ST.R.x1, ST.R.y1] : target;
-    var rc = lerpR(win, target, eio(sg(s, 3.2, 3.6)));                               /* only the cursor's offset is taken out */
-    var cOp = useGL ? sg(s, 2.95, 3.1) : sg(s, 1.2, 1.6);
-    var iso = sg(s, 8.5, 9.5), isoE = eio(iso);
+    var rc = lerpR(win, target, eio(sg(s, 2.3, 2.9)));                               /* the window grows the last bit into the square */
+    var cOp = useGL ? sg(s, 2.2, 2.4) : sg(s, 1.2, 1.6);
+    var iso = sg(s, 7.8, 8.8), isoE = eio(iso);
     var pL = horiz ? [cx - step, cy] : [cx, cy - step], pR = horiz ? [cx + step, cy] : [cx, cy + step];
     /* --- three squares: centre (the window), left and right drawn counter-clockwise, then they merge */
-    var mg = eio(sg(s, 6.5, 7.2)), dl = eio(sg(s, 4.2, 4.8)), dr = eio(sg(s, 5.2, 5.8));
+    var mg = eio(sg(s, 5.8, 6.5)), dl = eio(sg(s, 3.5, 4.1)), dr = eio(sg(s, 4.5, 5.1));
     var rl = sqAt(lerp(pL[0], cx, mg), lerp(pL[1], cy, mg), S), rr = sqAt(lerp(pR[0], cx, mg), lerp(pR[1], cy, mg), S);
-    var sideOp = 1 - sg(s, 7.0, 7.2), tkq = sg(s, 7.2, 7.7), tkOut = 1 - sg(s, 8.3, 8.6);
+    var sideOp = 1 - sg(s, 6.3, 6.5), tkq = sg(s, 6.5, 7.0), tkOut = 1 - sg(s, 7.6, 7.9);
     drawSq(sqC, rc, 1, isoE > 0 ? 0 : cOp);
     /* the window's gold (the intro) turns into the CI palette — Bright Gray line, Gradient Blue glow — as the square takes over */
-    var cool = eio(sg(s, 3.1, 3.7)), fin = eo(tkq) * tkOut;
+    var cool = eio(sg(s, 2.3, 2.9)), fin = eo(tkq) * tkOut;
     sqC.style.stroke = 'rgb(' + Math.round(lerp(248, 235, cool)) + ',' + Math.round(lerp(189, 235, cool)) + ',' + Math.round(lerp(121, 235, cool)) + ')';
     sqC.style.strokeWidth = lerp(2, 1.5, cool) + fin * .5;
     sqC.style.filter = 'drop-shadow(0 0 ' + (lerp(7, 5, cool) + 14 * fin).toFixed(1) + 'px rgba(' + Math.round(lerp(255, 150, cool)) + ',' + Math.round(lerp(208, 169, cool)) + ',' + Math.round(lerp(150, 191, cool)) + ',' + (lerp(.7, .45, cool) + .4 * fin).toFixed(2) + '))';   /* the finale glows */
@@ -372,8 +374,8 @@
     var hl = headAt(rl[0], rl[1], rl[2], rl[3], dl), hr = headAt(rr[0], rr[1], rr[2], rr[3], dr);
     hdL.setAttribute('x', hl[0] - 3.5); hdL.setAttribute('y', hl[1] - 3.5); hdL.style.opacity = dl > 0 && dl < 1 ? 1 : 0;
     hdR.setAttribute('x', hr[0] - 3.5); hdR.setAttribute('y', hr[1] - 3.5); hdR.style.opacity = dr > 0 && dr < 1 ? 1 : 0;
-    var pad = S * .085, phOut = 1 - sg(s, 6.3, 6.6);
-    var rects = [target, rl, rr], qs3 = [sg(s, 3.65, 4.15), sg(s, 4.65, 5.15), sg(s, 5.65, 6.15)];
+    var pad = S * .085, phOut = 1 - sg(s, 5.6, 5.9);
+    var rects = [target, rl, rr], qs3 = [sg(s, 2.95, 3.45), sg(s, 3.95, 4.45), sg(s, 4.95, 5.45)];
     for (var k = 0; k < 3; k++) { placeBox(phs[k], rects[k], pad); revealWords(k, qs3[k]); phs[k].style.opacity = qs3[k] > 0 ? phOut : 0; }
     /* --- the finale: one panel, "This is turnkey." */
     placeBox(stTk, target, pad);
@@ -383,7 +385,7 @@
     var czz = Math.cos(thz), szz = Math.sin(thz), cxx = Math.cos(thx), sxx = Math.sin(thx);
     var a = czz * sc, b = szz * cxx * sc, c = -szz * sc, d = czz * cxx * sc;
     var hs = S / 2, corners = [[-hs, -hs], [hs, -hs], [hs, hs], [-hs, hs]], ext = [];
-    var labQ = sg(s, 9.1, 9.6);
+    var labQ = sg(s, 8.4, 8.9);
     stLay.style.opacity = isoE > 0 ? 1 : 0;
     for (var i = 0; i < 3; i++) {
       var L = ST.lay[i], h = (1 - i) * D, ox = cx, oy = cy - h * sxx * sc;
@@ -400,7 +402,7 @@
     }
     var m = Math.max(20, Math.min(48, vw * .035));
     for (var i2 = 0; i2 < 3; i2++) {
-      var side = i2 === 1 ? 1 : -1, ld = eio(sg(s, 9.5 + i2 * .15, 10.0 + i2 * .15)), tq = eo(sg(s, 9.7 + i2 * .15, 10.2 + i2 * .15));
+      var side = i2 === 1 ? 1 : -1, ld = eio(sg(s, 8.8 + i2 * .15, 9.3 + i2 * .15)), tq = eo(sg(s, 9.0 + i2 * .15, 9.5 + i2 * .15));
       var P = pts[i2], LD = ST.ld[i2];
       if (horiz) {
         var e = side < 0 ? ext[i2].l : ext[i2].r, x1 = e[0] + side * 64;
@@ -417,7 +419,7 @@
       }
       P.style.opacity = tq; P.style.transform = 'translateY(' + ((1 - tq) * 14).toFixed(1) + 'px)';
     }
-    stSlog.style.opacity = eo(sg(s, 10.1, 10.6));
+    stSlog.style.opacity = eo(sg(s, 9.4, 9.9));
   }
 
 

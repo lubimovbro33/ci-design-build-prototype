@@ -71,12 +71,14 @@ const SKGL = `
   float skH(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
   float skN(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3. - 2. * f);
     return mix(mix(skH(i), skH(i + vec2(1., 0.)), f.x), mix(skH(i + vec2(0., 1.)), skH(i + 1.), f.x), f.y); }
-  float skR(vec2 uv, float k){ float n = 1. - uv.y; return smoothstep(n - .04, n + .04, k * 1.1 - .05); }   /* a clean, straight sweep from the top */
+  float skR(vec2 uv, float k){                                       /* a soft, wavy reveal: large smooth noise, a slight pull from the top */
+    float n = .58 * skN(uv * 3.2 + 1.7) + .22 * skN(uv * 8.5 + 4.1) + .2 * (1. - uv.y);
+    return smoothstep(n - .17, n + .17, k * 1.4 - .2); }
   vec3 skMix(vec3 col, vec3 sk, vec2 uv, float k){ if (k <= 0.) return col; float r = skR(uv, k);
     float lm = clamp((pow(max(sk.g, 0.), 1. / 2.2) - .067) / .82, 0., 1.);    /* the drawing's line mask → CI Bright Gray on Eerie Black */
     sk = mix(vec3(.0123), vec3(.83), lm);
     float edge = r * (1. - r) * 4.;                                   /* a thin bright front where the drawing arrives */
-    return mix(col, sk, r) + vec3(.9, .87, .82) * edge * .05 * (1. - k); }`;
+    return mix(col, sk, r) + vec3(.92, .92, .92) * edge * .035 * (1. - k); }`;
 
 function skyMat(tex){
   return new THREE.ShaderMaterial({
