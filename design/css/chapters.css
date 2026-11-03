@@ -264,6 +264,7 @@
 .ch-client .cl-sq{fill:var(--acc);opacity:0}
 .ch-client .cl-loupe{fill:none;stroke:var(--acc);opacity:0}
 @media (max-aspect-ratio: 1/1){
+  .ch-client .cl-t{width:auto}
   .ch-client .cl-ph1{right:auto;left:var(--m);top:calc(var(--hdr) + 80px);transform:none;width:calc(100% - 2 * var(--m));aspect-ratio:auto;height:40vh}
   .ch-client .cl-l1{top:calc(var(--hdr) + 70px);font-size:clamp(28px,8.4vw,44px)}
   .ch-client .cl-l2{font-size:clamp(28px,8.4vw,44px)}
