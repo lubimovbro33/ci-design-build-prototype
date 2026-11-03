@@ -886,12 +886,31 @@
   var running = false, lastY = -1, lastVH = 0, lastHy = -1;
   function onResize(){ layoutCta(); fitWmk(); lastY = -1; }
   function startScroll(){ if (running) return; running = true; layoutCta(); requestAnimationFrame(loop); }
+  /* document ranges of the scroll-driven sections, cached (re-measured on resize / load / when the page's height changes) */
+  var SEC = {}, secDirty = true;
+  function secRange(els){ var y = window.scrollY || window.pageYOffset, t = 1e9, b = -1e9, n = 0;
+    els.forEach(function(el){ if (!el) return; var r = el.getBoundingClientRect(); t = Math.min(t, r.top + y); b = Math.max(b, r.bottom + y); n++; });
+    return n ? {t: t, b: b} : null; }
+  function secCache(){
+    secDirty = false;
+    SEC = { dial: secRange([philCols]), about: secRange([aboutPin]), appr: secRange([apprPin]), proc: secRange([procPin]), cta: secRange([ctaPin]),
+            reads: secRange(reads.map(function(r){ return r.el; })), px: secRange(pxs.map(function(p){ return p.el; })), yode: secRange(yodeScroll),
+            glass: secRange(flutes.map(function(f){ return f.parentNode; }).concat(gbarHost ? [gbarHost] : [])) };
+  }
+  function near(k, y, vh){ var r = SEC[k]; return !r || (r.b > y - vh * .6 && r.t < y + vh * 1.6); }
+  window.addEventListener('load', function(){ secDirty = true; });
+  if (window.ResizeObserver) new ResizeObserver(function(){ secDirty = true; }).observe(document.body);
   function loop(now){
     var y = window.scrollY || window.pageYOffset, vh = window.innerHeight;
     // hero parallax after the intro
     storyUpdate(vh);
     smoothStep(); y = window.scrollY || window.pageYOffset;
-    updateDial(vh); updateAbout(vh, now); updateAppr(vh); updateProc(vh); updateCta(vh); updateReads(vh); updatePx(vh); updateYode(vh); updateGlass(vh);
+    /* v7.2: a section's update runs only while the section is near the screen. Each one reads layout after the previous one
+       wrote styles, so running all nine every frame forced nine layouts a frame (holding still in the story: 45 fps) */
+    if (secDirty || vh !== lastVH) secCache();
+    if (near('dial', y, vh)) updateDial(vh); if (near('about', y, vh)) updateAbout(vh, now); if (near('appr', y, vh)) updateAppr(vh);
+    if (near('proc', y, vh)) updateProc(vh); if (near('cta', y, vh)) updateCta(vh); if (near('reads', y, vh)) updateReads(vh);
+    if (near('px', y, vh)) updatePx(vh); if (near('yode', y, vh)) updateYode(vh); if (near('glass', y, vh)) updateGlass(vh);
     if (y !== lastY || vh !== lastVH) { updateHdr(); updateChap(y, vh); }
     lastY = y; lastVH = vh;
     requestAnimationFrame(loop);
