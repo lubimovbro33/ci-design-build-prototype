@@ -10,6 +10,7 @@
 <link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/story.css">
+<link rel="stylesheet" href="css/chapters.css">
 <script>(function(){var h=location.hostname,q=location.search;if(/^ci-hero|^ci-preloader/.test(h)||/[?&]hero(=|&|$)/.test(q))document.documentElement.classList.add('hero-only');})();</script>
 
 </head>
@@ -101,42 +102,22 @@
   </div>
 </section>
 </div>
-<!-- ================================================================== 03 PHILOSOPHY · mega -->
-<section class="sec dark phil" id="philosophy">
-  <div class="grad-bg" aria-hidden="true"></div>
-  <div class="sec-idx mono rv"><span class="ln"></span><span>02 — 07</span><span style="margin-left:14px">OUR PHILOSOPHY</span></div>
-  <div class="mega-wrap">
-    <div class="mega-lab mono rv"><span>BUILDING YOU</span><span>A BETTER LIFE</span></div>
-    <h2 class="mega rr" id="megaTitle">BUILDING<br>YOU<br>A BETTER<br><span class="amber">LIFE</span></h2>
-    <div class="gbar" id="gbar" aria-hidden="true"><span class="mono">GLASS · BUILDING YOU A BETTER LIFE</span></div>
-  </div>
-  <div class="dial-row">
-    <div class="dial-wrap">
-      <div class="dial" id="dial">
-        <svg viewBox="0 0 520 520" id="dialSvg"></svg>
-        <div class="num"><span class="v outl"><span id="dialNum">0</span></span><sup class="pc">%</sup><span class="s mono">OF THE DAY · AT HOME</span></div>
-        <span class="lbl mono t">00</span><span class="lbl mono r">06</span><span class="lbl mono b">12</span><span class="lbl mono l">18</span>
+<!-- ================================================================== 02 PHILOSOPHY · a day passes over the plan of a home (v8) -->
+<section class="ch ch-phil" id="philosophy">
+  <div class="ch-pin" id="philPin">
+    <div class="ch-stage">
+      <div class="ch-idx mono"><span class="ln"></span><span>02 — 07</span><span>OUR PHILOSOPHY</span></div>
+      <div class="ph-t">
+        <div data-a="-1" data-b=".11"><h2 class="ph-title">Building You<br>a Better Life</h2></div>
+        <div data-a=".11" data-b=".25"><p class="ph-lead">The average person spends 75% of their day at home. The quality of that environment shapes everything — your lifestyle, your health, your longevity goals.</p></div>
+        <div data-a=".25" data-b=".35"><h3 class="ph-h">We believe the best homes begin with life, not a look.</h3></div>
+        <div data-a=".35" data-b=".86"><p class="ph-lead ph-verbs">How you want to <span class="vb">wake up</span>, <span class="vb">entertain</span>, <span class="vb">recharge</span>, <span class="vb">recover</span>, <span class="vb">collect</span>, <span class="vb">gather</span>, how you want light to move through your morning. What you want your life to feel like and be in five, ten, or twenty years from now.</p></div>
+        <div data-a=".86" data-b=".94"><div class="ph-tag mono"><span class="ln"></span>This is part of the CI concierge level service</div><p class="ph-p">Rather than designing around a predetermined aesthetic, we design around your lifestyle. Architecture, materials, lighting, furnishings, technology, art, and wellness become part of one considered environment.</p></div>
+        <div data-a=".94" data-b="9"><h3 class="ph-h">Because good design should change more than the home.</h3><h3 class="ph-h dim">It should change the experience of living in it.</h3></div>
       </div>
+      <svg class="ph-plan" id="phPlan" viewBox="-150 -175 1300 1010" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+      <div class="ph-pct"><span class="v"><span id="phPct">0</span><sup>%</sup></span><span class="mono">OF THE DAY · AT HOME</span></div>
     </div>
-    <div class="txt">
-      <p class="p rv">The average person spends 75% of their day at home. The quality of that environment shapes everything — your lifestyle, your health, your longevity goals.</p>
-      <h3 class="h3 rr"><span class="l">We believe the best homes</span><span class="l">begin with life, not a look.</span></h3>
-    </div>
-  </div>
-  <div class="cols2">
-    <p class="read verbs" id="verbs">How you want to <span class="vb">wake up</span>, <span class="vb">entertain</span>, <span class="vb">recharge</span>, <span class="vb">recover</span>, <span class="vb">collect</span>, <span class="vb">gather</span>, how you want light to move through your morning. What you want your life to feel like and be in five, ten, or twenty years from now.</p>
-    <div class="yrs rv" aria-hidden="true">
-      <span class="y outl" style="--k:0">5</span><span class="y outl" style="--k:1">10</span><span class="y outl" style="--k:2">20</span>
-      <span class="ylab mono">YEARS<br>FROM NOW</span>
-    </div>
-  </div>
-  <div class="tail grid">
-    <div class="tag mono c1-4 rv"><span class="ln"></span>This is part of the CI concierge level service</div>
-    <p class="p c7-11 rv" data-d="1">Rather than designing around a predetermined aesthetic, we design around your lifestyle. Architecture, materials, lighting, furnishings, technology, art, and wellness become part of one considered environment.</p>
-  </div>
-  <div class="punch">
-    <h3 class="h3 rr"><span class="l">Because good design should change more than the home.</span></h3>
-    <h3 class="h3 dim rr" data-d="1"><span class="l">It should change the experience of living in it.</span></h3>
   </div>
 </section>
 
@@ -434,5 +415,6 @@
 <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
 <script type="module" src="js/pre3d.js"></script>
 <script src="js/site.js"></script>
+<script src="js/chapters.js"></script>
 </body>
 </html>

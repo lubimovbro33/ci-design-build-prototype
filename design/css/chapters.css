@@ -1,0 +1,56 @@
+/* CI Design + Build — chapters after the story (v8): one drawing carried through the page.
+   Black, 1 px Bright Gray hairlines in three strengths, colour only inside frames, Gradient Blue accents. */
+.ch{position:relative;background:#000;color:#EBEBEB;--hl:#EBEBEB;--acc:#96A9BF;--dimc:#7B8087}
+.ch-pin{position:relative}
+.ch-stage{position:sticky;top:0;height:100vh;overflow:hidden}
+.ch-idx{position:absolute;left:var(--m);top:calc(var(--hdr) + 44px);display:flex;gap:14px;align-items:center;color:var(--dimc);z-index:2}
+.ch-idx .ln{width:28px;height:1px;background:currentColor;position:relative}
+.ch-idx .ln::before{content:"";position:absolute;left:0;top:-2px;width:5px;height:5px;background:currentColor}
+
+/* hairlines that draw themselves (pathLength 1; --k = the group's progress, --d = this line's delay) */
+.ch svg .dw{fill:none;stroke:var(--hl);stroke-linecap:square;stroke-dasharray:1 1;stroke-dashoffset:calc(1 - clamp(0, (var(--k, 0) - var(--d, 0)) * 6, 1))}
+.ch svg .w1{stroke-opacity:.78}
+.ch svg .w2{stroke-opacity:.5}
+.ch svg .w3{stroke-opacity:.24}
+.ch svg text{font-family:var(--sans);text-transform:uppercase;letter-spacing:.08em}
+
+/* ---------------------------------------------------------------- 02 PHILOSOPHY */
+.ch-phil .ch-pin{height:620vh}
+.ch-phil .ph-t{position:absolute;left:var(--m);top:50%;transform:translateY(-50%);width:min(34vw,500px);display:grid;z-index:2}
+.ch-phil .ph-t > div{grid-area:1/1;align-self:center;will-change:opacity,transform}
+.ch-phil .ph-title{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(34px,4.4vw,68px);line-height:.92;letter-spacing:-.03em}
+.ch-phil .ph-h{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(20px,2vw,30px);line-height:1.06;letter-spacing:-.01em}
+.ch-phil .ph-h + .ph-h{margin-top:.5em}
+.ch-phil .ph-h.dim{color:var(--dimc)}
+.ch-phil .ph-lead{margin:0;font-size:clamp(15px,1.3vw,20px);line-height:1.34;letter-spacing:-.005em;color:var(--dimc)}
+.ch-phil .ph-lead:not(.ph-verbs){color:var(--hl)}
+.ch-phil .ph-verbs .vb{color:var(--dimc);transition:color .5s}
+.ch-phil .ph-verbs .vb.on{color:var(--hl)}
+.ch-phil .ph-p{margin:18px 0 0;font-size:14px;line-height:1.5;color:var(--dimc);max-width:42ch}
+.ch-phil .ph-tag{display:flex;gap:14px;align-items:center;color:var(--acc)}
+.ch-phil .ph-tag .ln{width:28px;height:1px;background:currentColor;position:relative}
+.ch-phil .ph-tag .ln::before{content:"";position:absolute;left:0;top:-2px;width:5px;height:5px;background:currentColor}
+.ch-phil .ph-plan{position:absolute;right:calc(var(--m) - 1vw);top:50%;transform:translateY(-50%);width:min(60vw,1060px);height:min(88vh,820px);overflow:visible}
+.ch-phil .ph-plan .ph-fill{fill:none;stroke:var(--acc);stroke-width:2;stroke-dasharray:1 1;stroke-dashoffset:1}
+.ch-phil .ph-plan .ph-cur path{stroke:var(--hl);stroke-width:1}
+.ch-phil .ph-plan .ph-cur rect{fill:var(--hl)}
+.ch-phil .ph-plan .hr{font-size:18px;fill:var(--hl);letter-spacing:.06em}
+.ch-phil .ph-plan .rl{font-size:15px;fill:var(--dimc)}
+.ch-phil .ph-plan .yl{font-size:16px;fill:var(--dimc)}
+.ch-phil .ph-plan .yl.lab{font-size:13px}
+.ch-phil .ph-plan .ph-tag{opacity:0}
+.ch-phil .ph-plan .ph-tag .tx{font-size:15px;fill:var(--hl)}
+.ch-phil .ph-plan .ph-tag .dot{fill:var(--acc)}
+.ch-phil .ph-plan .ph-tag .ring{fill:none;stroke:var(--acc);stroke-width:1}
+.ch-phil .ph-pct{position:absolute;left:var(--m);bottom:calc(var(--m) + 46px);display:flex;flex-direction:column;gap:10px;opacity:var(--pc, 0);z-index:2}
+.ch-phil .ph-pct .v{font-weight:400;font-size:clamp(56px,7vw,112px);line-height:.8;letter-spacing:-.04em;color:var(--hl);font-variant-numeric:tabular-nums}
+.ch-phil .ph-pct sup{font-size:.3em;vertical-align:top;margin-left:.06em;color:var(--acc);letter-spacing:0}
+.ch-phil .ph-pct .mono{color:var(--dimc)}
+
+@media (max-aspect-ratio: 1/1){
+  .ch-phil .ph-plan{left:var(--m);right:var(--m);top:calc(var(--hdr) + 70px);transform:none;width:auto;height:46vh}
+  .ch-phil .ph-t{top:auto;bottom:calc(var(--m) + 40px);transform:none;width:auto;right:var(--m)}
+  .ch-phil .ph-t > div{align-self:end}
+  .ch-phil .ph-pct{display:none}
+  .ch-phil .ph-title{font-size:clamp(30px,9vw,46px)}
+}
