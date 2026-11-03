@@ -257,8 +257,97 @@
     return { sec: sec, pin: pin, update: update };
   }
 
+  /* ================================================================== 04 PROJECTS · lit windows in a facade drawing; each opens into its home */
+  function projects(){
+    var sec = document.getElementById('projects'); if (!sec || !sec.classList.contains('ch')) return null;
+    var pin = sec.querySelector('.ch-pin'), svg = sec.querySelector('#pjDraw'), phases = [].slice.call(sec.querySelectorAll('.ch-t > [data-a]'));
+    var frames = [].slice.call(sec.querySelectorAll('.pj-frame')), caps = [].slice.call(sec.querySelectorAll('.pj-cap')), idx = sec.querySelector('#pjIdx'), stage = sec.querySelector('.ch-stage');
+    var W = 900, H = 1000, COLS = 6, ROWS = 7, BW = W / COLS, FH = H / ROWS, ww = 84, wh = 100;
+    var defs = el('defs', {}, svg), gF = el('g', {'class': 'dg'}, svg), gReg = el('g', {'class': 'dg reg'}, svg), gLit = el('g', {}, svg);
+    var dly = function(x, y){ return .02 + .55 * Math.hypot(x - W / 2, y - H / 2) / 670; };
+    line(gF, rectD(0, 0, W, H), 'w1', .02); line(gF, seg(-60, H, W + 60, H), 'w1', .05);
+    for (var r = 1; r < ROWS; r++) line(gF, seg(0, r * FH, W, r * FH), 'w3', dly(W / 2, r * FH));
+    var win = function(c, r){ return { x: c * BW + (BW - ww) / 2, y: r * FH + (FH - wh) / 2 + 6 }; };
+    for (var c = 0; c < COLS; c++) for (var rr = 0; rr < ROWS; rr++){
+      var q = win(c, rr), d = dly(q.x + ww / 2, q.y + wh / 2);
+      line(gF, rectD(q.x, q.y, ww, wh), 'w2', d); line(gF, rectD(q.x + 5, q.y + 5, ww - 10, wh - 10), 'w3', d + .04); line(gF, seg(q.x + ww / 2, q.y + 5, q.x + ww / 2, q.y + wh - 5), 'w3', d + .06);
+      line(gF, seg(q.x - 6, q.y + wh + 6, q.x + ww + 6, q.y + wh + 6), 'w3', d + .05);
+    }
+    /* regulating lines: the facade's proportion, traced over it */
+    [[0, 0, W, H], [W, 0, 0, H], [0, 0, W, H * .5], [W, 0, 0, H * .5], [0, H * .5, W, H], [W, H * .5, 0, H], [W / 2, 0, W / 2, H], [0, H / 2, W, H / 2]].forEach(function(q, i){ line(gReg, seg(q[0], q[1], q[2], q[3]), 'reg', i * .08); });
+    el('circle', {cx: W / 2, cy: H / 2, r: 4, 'class': 'regdot'}, gReg);
+    /* three homes, three lit windows */
+    var PJ = [win(1, 3), win(4, 1), win(3, 5)], imgs = frames.map(function(f){ return f.querySelector('img').getAttribute('src'); });
+    var lit = PJ.map(function(q, i){
+      var cp = el('clipPath', {id: 'pjC' + i}, defs); el('rect', {x: q.x + 5, y: q.y + 5, width: ww - 10, height: wh - 10}, cp);
+      var im = el('image', {href: imgs[i], x: q.x + 5 - 40, y: q.y + 5, width: ww - 10 + 80, height: wh - 10, preserveAspectRatio: 'xMidYMid slice', 'clip-path': 'url(#pjC' + i + ')', opacity: 0}, gLit);
+      return im; });
+    var vbW = 1300, vbX = -200, vbY = -60, vbH = 1140;                    /* = the viewBox */
+    function winRect(i){                                                  /* the lit window on screen, in the stage's px */
+      var b = svg.getBoundingClientRect(), sb = stage.getBoundingClientRect(), k = Math.min(b.width / vbW, b.height / vbH);
+      var ox = b.left - sb.left + (b.width - vbW * k) / 2 - vbX * k, oy = b.top - sb.top + (b.height - vbH * k) / 2 - vbY * k, q = PJ[i];
+      return [ox + (q.x + 5) * k, oy + (q.y + 5) * k, (ww - 10) * k, (wh - 10) * k];
+    }
+    function update(p){
+      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
+        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      gF.style.setProperty('--k', sg(p, 0, .12).toFixed(3));
+      lit.forEach(function(im, i){ im.setAttribute('opacity', sg(p, .13 + i * .03, .17 + i * .03).toFixed(3)); });
+      var kreg = sg(p, .25, .34); gReg.style.setProperty('--k', kreg.toFixed(3)); gReg.style.opacity = (1 - sg(p, .38, .42)).toFixed(3);
+      /* each home in turn: its window opens into a large frame, then closes back */
+      var sb = stage.getBoundingClientRect(), big = [sb.width * .4, sb.height * .17, sb.width * .56 - 0, sb.height * .64];
+      if (sb.width / sb.height < 1) big = [sb.width * .06, sb.height * .14, sb.width * .88, sb.height * .42];
+      var cur = -1;
+      frames.forEach(function(f, i){
+        var a = .4 + i * .16, o = sm(sg(p, a, a + .05)) * (1 - sm(sg(p, a + .12, a + .16)));
+        var w = winRect(i), r = [lerp(w[0], big[0], o), lerp(w[1], big[1], o), lerp(w[2], big[2], o), lerp(w[3], big[3], o)];
+        f.style.transform = 'translate(' + r[0].toFixed(1) + 'px,' + r[1].toFixed(1) + 'px)'; f.style.width = r[2].toFixed(1) + 'px'; f.style.height = r[3].toFixed(1) + 'px';
+        f.style.opacity = (o > .002 ? 1 : 0); f.querySelector('img').style.transform = 'scale(' + (1.08 - .08 * o + .03 * sg(p, a, a + .16)).toFixed(4) + ')';
+        caps[i].style.opacity = sg(p, a + .04, a + .07) * (1 - sg(p, a + .11, a + .13));
+        if (o > .5) cur = i;
+      });
+      gF.style.opacity = (1 - .55 * sm(sg(p, .38, .44)) * (1 - sm(sg(p, .86, .9)))).toFixed(3);
+      if (idx) idx.textContent = '0' + (cur < 0 ? 1 : cur + 1);
+      stage.style.setProperty('--geo', sg(p, .9, .95).toFixed(3));
+    }
+    return { sec: sec, pin: pin, update: update };
+  }
+
+  /* ================================================================== 05 DIFFERENCE · the drawing lies exactly on the built room */
+  var DIFF = [{"src":"assets/img2/dining_w.jpg","w":1400,"h":787,"l":[[694,232,1343,42,1.0],[162,265,162,618,0.731],[696,293,168,248,0.73],[460,286,460,573,0.697],[167,171,693,231,0.515],[369,576,369,278,0.453],[1376,160,1376,421,0.385],[1356,419,1356,169,0.336],[1384,419,1384,162,0.323],[1348,166,1348,422,0.312],[1376,453,1376,735,0.299],[1347,456,1347,730,0.279],[1385,667,1385,458,0.23],[1356,637,1356,453,0.178],[899,410,899,250,0.17],[1328,455,1159,455,0.167],[678,564,678,310,0.147],[167,1,167,171,0.131],[1088,178,903,222,0.094],[174,583,174,424,0.089]]},{"src":"assets/img2/cove.jpg","w":1400,"h":788,"l":[[843,357,218,592,1.0],[467,602,1394,338,0.605],[574,4,911,238,0.505],[896,242,546,5,0.48],[210,629,902,392,0.422],[989,208,739,3,0.28],[593,2,912,228,0.24],[1224,686,1120,354,0.237],[1227,696,1395,675,0.235],[0,649,209,674,0.145],[1399,256,1244,2,0.141],[1161,695,833,736,0.138],[823,745,1056,717,0.066],[620,9,798,136,0.044]]},{"src":"assets/img2/foyer_w.jpg","w":1400,"h":787,"l":[[206,122,668,150,1.0],[1188,121,1188,506,0.976],[164,0,164,386,0.473],[178,512,178,177,0.42],[968,187,1176,93,0.267],[264,273,264,623,0.266],[782,207,1113,5,0.219],[549,195,780,207,0.196],[180,177,382,188,0.18],[501,747,675,775,0.172],[773,685,492,698,0.161],[487,661,793,661,0.13],[176,616,176,784,0.109],[710,318,710,523,0.105],[1148,5,994,93,0.082],[971,215,1182,225,0.078],[1155,339,1155,519,0.075],[878,320,878,546,0.066],[1199,6,1019,103,0.046]]},{"src":"assets/img2/art_w.jpg","w":1400,"h":787,"l":[[346,176,1330,66,1.0],[356,616,1123,663,0.398],[468,270,1113,222,0.293],[0,558,232,539,0.246],[232,318,2,288,0.232],[1116,565,474,565,0.203],[0,320,211,342,0.199],[0,70,345,174,0.164],[204,514,17,525,0.151],[1394,785,1176,765,0.121],[238,314,238,545,0.11],[1,279,238,312,0.105],[285,550,285,277,0.098],[232,546,0,568,0.093],[1388,586,1117,586,0.077],[1,312,187,332,0.062],[855,634,1122,649,0.057],[1343,462,1147,462,0.047],[971,533,645,533,0.043],[971,301,971,507,0.041],[1292,336,1137,343,0.035],[728,281,885,271,0.022]]},{"src":"assets/img2/living2_w.jpg","w":1400,"h":787,"l":[[331,131,848,3,1.0],[308,782,87,722,0.697],[707,742,406,688,0.624],[330,217,2,158,0.514],[1294,568,1294,730,0.385],[0,49,331,130,0.375],[288,567,288,229,0.37],[860,511,1080,511,0.266],[58,177,274,215,0.256],[685,578,1054,608,0.252],[659,376,659,114,0.236],[761,658,1033,691,0.236],[666,154,666,367,0.212],[668,368,1074,348,0.208],[327,411,327,569,0.201],[92,309,92,516,0.173],[297,468,297,246,0.143],[165,220,165,397,0.116],[273,406,273,564,0.114],[902,71,667,118,0.11]]},{"src":"assets/img2/kitchen_w.jpg","w":1400,"h":787,"l":[[38,762,38,0,1.0],[159,651,919,786,0.809],[25,756,25,196,0.778],[661,653,661,131,0.648],[6,749,6,204,0.636],[530,638,530,158,0.505],[266,247,266,544,0.467],[482,581,482,263,0.357],[29,176,29,0,0.327],[953,287,953,490,0.277],[267,198,491,218,0.268],[891,730,1067,757,0.261],[473,580,473,264,0.253],[1266,682,1266,2,0.245],[9,174,9,10,0.244],[261,637,490,671,0.244],[474,262,268,247,0.24],[514,602,514,239,0.228],[530,69,271,31,0.224],[282,25,529,63,0.178],[508,270,508,595,0.176],[1061,583,1061,411,0.151],[494,77,268,46,0.143],[1068,755,1263,730,0.14],[608,37,400,2,0.129],[463,542,463,270,0.074],[1091,468,1262,468,0.058],[609,718,450,691,0.041],[502,48,257,10,0.041],[1212,311,1212,154,0.019]]}];
+  function difference(){
+    var sec = document.getElementById('difference'); if (!sec || !sec.classList.contains('ch')) return null;
+    var pin = sec.querySelector('.ch-pin'), phases = [].slice.call(sec.querySelectorAll('.ch-t > [data-a]')), stage = sec.querySelector('.ch-stage');
+    var host = sec.querySelector('.df-frames'), caps = [].slice.call(sec.querySelectorAll('.df-cap')), nums = [].slice.call(sec.querySelectorAll('.df-idx i'));
+    var items = DIFF.map(function(d, i){
+      var s = el('svg', {viewBox: '0 0 ' + d.w + ' ' + d.h, preserveAspectRatio: 'xMidYMid slice', 'class': 'df-svg'}, host);
+      var im = el('image', {href: d.src, x: 0, y: 0, width: d.w, height: d.h, preserveAspectRatio: 'xMidYMid slice', opacity: 0}, s);
+      var g = el('g', {'class': 'dg'}, s);
+      d.l.forEach(function(q, j){ var L = Math.hypot(q[2] - q[0], q[3] - q[1]), ex = (q[2] - q[0]) / L * 16, ey = (q[3] - q[1]) / L * 16;
+        line(g, seg(q[0] - ex, q[1] - ey, q[2] + ex, q[3] + ey), q[4] > .5 ? 'w1' : 'w2', .5 * j / d.l.length); });
+      return { s: s, im: im, g: g };
+    });
+    function update(p){
+      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
+        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      var A = .17, D = .135, cur = 0;
+      items.forEach(function(it, i){
+        var a = A + i * D, on = sg(p, a - .01, a + .01) * (i === items.length - 1 ? 1 : 1 - sg(p, a + D - .01, a + D + .01));
+        it.s.style.opacity = on.toFixed(3); it.s.style.visibility = on > 0 ? '' : 'hidden';
+        var kl = sg(p, a, a + D * .4); it.g.style.setProperty('--k', kl.toFixed(3));
+        var ki = sm(sg(p, a + D * .35, a + D * .6)); it.im.setAttribute('opacity', ki.toFixed(3));
+        it.g.style.opacity = (1 - .7 * sm(sg(p, a + D * .6, a + D * .85))).toFixed(3);
+        if (p >= a - .01) cur = i;
+        caps[i].style.opacity = (sg(p, a + D * .15, a + D * .3) * (i === items.length - 1 ? 1 : 1 - sg(p, a + D - .02, a + D))).toFixed(3);
+      });
+      nums.forEach(function(n, i){ n.classList.toggle('on', i === cur && p >= A - .01); });
+      stage.style.setProperty('--fr', sg(p, A - .04, A).toFixed(3));
+    }
+    return { sec: sec, pin: pin, update: update };
+  }
+
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy(), about()].filter(Boolean), dirty = true;
+  var CH = [philosophy(), about(), projects(), difference()].filter(Boolean), dirty = true;
   function measure(){ var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
   window.addEventListener('resize', function(){ dirty = true; }); window.addEventListener('load', function(){ dirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ dirty = true; }).observe(document.body);

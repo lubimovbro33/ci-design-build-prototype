@@ -101,3 +101,47 @@
   .ch .ch-pct{display:none}
   .ch-about .ab-draw{left:var(--m);right:var(--m);top:calc(var(--hdr) + 70px);transform:none;width:auto;height:46vh}
 }
+
+.ch .ch-title.one{display:block;font-size:clamp(26px,3vw,48px)}
+.ch .ch-big{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(22px,2.3vw,36px);line-height:1.04;letter-spacing:-.015em}
+.ch .ch-lead b{font-weight:700;color:var(--hl)}
+
+/* ---------------------------------------------------------------- 04 PROJECTS */
+.ch-proj .ch-pin{height:640vh}
+.ch-proj .pj-draw{position:absolute;right:calc(var(--m) - 1vw);top:52%;transform:translateY(-50%);width:min(58vw,1000px);height:min(84vh,780px);overflow:visible}
+.ch-proj .pj-draw .reg{fill:none;stroke:var(--acc);stroke-opacity:.55;stroke-dasharray:1 1;stroke-dashoffset:calc(1 - clamp(0, (var(--k, 0) - var(--d, 0)) * 3, 1))}
+.ch-proj .pj-draw .regdot{fill:var(--acc)}
+.ch-proj .pj-frame{position:absolute;left:0;top:0;width:10px;height:10px;overflow:hidden;opacity:0;outline:1px solid rgba(235,235,235,.55);outline-offset:6px;z-index:3;will-change:transform,width,height}
+.ch-proj .pj-frame img{width:100%;height:100%;object-fit:cover;transform-origin:50% 50%}
+.ch-proj .pj-caps{display:grid}
+.ch-proj .pj-cap{grid-area:1/1;display:flex;flex-direction:column;gap:12px;opacity:0}
+.ch-proj .pj-cap .n{color:var(--acc)}
+.ch-proj .pj-cap .ttl{font-weight:400;text-transform:uppercase;font-size:clamp(20px,2vw,30px);line-height:1.06}
+.ch-proj .pj-cap .ph{font-size:14px;color:var(--dimc)}
+.ch-proj .pj-count{margin-top:26px;color:var(--dimc)}
+.ch-proj .pj-geo{position:absolute;left:var(--m);right:var(--m);bottom:calc(var(--m) + 46px);display:flex;align-items:center;gap:18px;color:var(--dimc);opacity:var(--geo,0)}
+.ch-proj .pj-geo i{flex:1;height:1px;background:rgba(235,235,235,.3);position:relative}
+.ch-proj .pj-geo i::before,.ch-proj .pj-geo i::after{content:"";position:absolute;top:-2px;width:5px;height:5px;background:var(--acc)}
+.ch-proj .pj-geo i::before{left:0}.ch-proj .pj-geo i::after{right:0}
+
+/* ---------------------------------------------------------------- 05 DIFFERENCE */
+.ch-diff .ch-pin{height:780vh}
+.ch-diff .df-box{position:absolute;right:var(--m);top:50%;transform:translateY(-52%);width:min(54vw,980px);aspect-ratio:16/9}
+.ch-diff .df-frames{position:absolute;inset:0;opacity:var(--fr,0);outline:1px solid rgba(235,235,235,.22);outline-offset:10px;background:#000}
+.ch-diff .df-svg{position:absolute;inset:0;width:100%;height:100%;opacity:0}
+.ch-diff .df-idx{position:absolute;right:0;bottom:calc(100% + 26px);display:flex;gap:18px;opacity:var(--fr,0)}
+.ch-diff .df-idx i{font-style:normal;color:var(--dimc);transition:color .4s}
+.ch-diff .df-idx i.on{color:var(--hl)}
+.ch-diff .df-caps{position:absolute;left:0;right:0;top:calc(100% + 30px);display:grid}
+.ch-diff .df-cap{grid-area:1/1;display:grid;grid-template-columns:40px 1fr 1fr;gap:18px;align-items:baseline;opacity:0}
+.ch-diff .df-cap .n{color:var(--acc)}
+.ch-diff .df-cap .ttl{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(15px,1.3vw,20px);line-height:1.1}
+.ch-diff .df-cap .d{margin:0;font-size:14px;line-height:1.45;color:var(--dimc)}
+
+@media (max-aspect-ratio: 1/1){
+  .ch-proj .pj-draw{left:var(--m);right:var(--m);top:calc(var(--hdr) + 70px);transform:none;width:auto;height:44vh}
+  .ch-proj .pj-geo{display:none}
+  .ch-diff .df-box{left:var(--m);right:var(--m);top:calc(var(--hdr) + 90px);transform:none;width:auto}
+  .ch-diff .df-cap{grid-template-columns:32px 1fr}
+  .ch-diff .df-cap .d{grid-column:2}
+}
