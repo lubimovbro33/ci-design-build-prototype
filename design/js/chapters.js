@@ -793,6 +793,13 @@
     new IntersectionObserver(function(es){ var was = on; on = es[0].isIntersecting; if (on && !was) requestAnimationFrame(drift); }).observe(sec);
   })();
 
+  /* ================================================================== 10 REVIEWS · v9: two testimonials, dots switch the card and the film still behind it */
+  (function(){
+    var sec = document.querySelector('.rv2'); if (!sec) return;
+    var dots = [].slice.call(sec.querySelectorAll('.rv2-dots button')), qs = [].slice.call(sec.querySelectorAll('.rv2-q')), bgs = [].slice.call(sec.querySelectorAll('.rv2-bg'));
+    dots.forEach(function(d, i){ d.addEventListener('click', function(){ [dots, qs, bgs].forEach(function(a){ a.forEach(function(e, k){ e.classList.toggle('on', k === i); }); }); }); });
+  })();
+
   /* light sections: the header and the chapter rail turn to ink while one is under them */
   var INK = [].slice.call(document.querySelectorAll('[data-ink]')), hdrEl = document.getElementById('hdr'), chapEl = document.getElementById('chap'), inkH = null, inkC = null;
   function ink(){
