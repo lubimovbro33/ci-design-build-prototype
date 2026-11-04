@@ -761,6 +761,38 @@
     if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ var was = inView; inView = es[0].isIntersecting; if (inView && !was){ t0 = performance.now() - DUR * parseFloat(tiles[cur].style.getPropertyValue('--pr') || 0); loop(); } }, {threshold: .5}).observe(st);
   })();
 
+  /* ================================================================== 05 DIFFERENCE · v9: the photograph ruled into a grid; a discipline opens as a card in its cell, the photograph follows */
+  (function(){
+    var st = document.querySelector('.df2-stage'); if (!st) return;
+    var grid = st.querySelector('.df2-grid'), cells = [].slice.call(st.querySelectorAll('.df2-cell')), bgs = [].slice.call(st.querySelectorAll('.df2-bg'));
+    [['25%', 0, '25%', '100%'], ['50%', '30%', '50%', '100%'], ['75%', 0, '75%', '100%'], [0, '30%', '100%', '30%'], [0, '63%', '100%', '63%']].forEach(function(q){ el('line', {x1: q[0], y1: q[1], x2: q[2], y2: q[3]}, grid); });
+    [['25%', '30%'], ['50%', '30%'], ['75%', '30%'], ['25%', '63%'], ['50%', '63%'], ['75%', '63%']].forEach(function(q){ var s = el('svg', {x: q[0], y: q[1], width: 1, height: 1, overflow: 'visible'}, grid); el('path', {d: 'M-7 0H7M0 -7V7'}, s); });
+    var cur = 0, inView = false, hover = false, timer = null;
+    function show(i){ cur = i; cells.forEach(function(c, k){ c.classList.toggle('on', k === i); c.setAttribute('aria-expanded', k === i ? 'true' : 'false'); }); bgs.forEach(function(b, k){ b.classList.toggle('on', k === i); }); plan(); }
+    function plan(){ clearTimeout(timer); if (inView && !hover && !reduced) timer = setTimeout(function(){ show((cur + 1) % cells.length); }, 5200); }
+    cells.forEach(function(c, i){ c.addEventListener('click', function(){ show(i); });
+      c.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse'){ hover = true; if (i !== cur) show(i); else plan(); } });
+      c.addEventListener('pointerleave', function(){ hover = false; plan(); }); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ inView = es[0].isIntersecting; plan(); }, {threshold: .45}).observe(st);
+  })();
+
+  /* ================================================================== 09 CLIENT · v9: reveals, and the photographs drift at their own depths */
+  (function(){
+    var sec = document.querySelector('.cl2'); if (!sec) return;
+    var rv = [].slice.call(sec.querySelectorAll('.cl2-rv')), photo = sec.querySelector('.cl2-photo img'), frs = [].slice.call(sec.querySelectorAll('.cl2-fr')), emb = sec.querySelector('.cl2-emb'), on = false;
+    if (!('IntersectionObserver' in window) || reduced){ rv.forEach(function(e){ e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {rootMargin: '0px 0px -15% 0px'});
+    rv.forEach(function(e){ io.observe(e); });
+    var DEP = [-.16, .1, -.28];
+    function drift(){ if (!on) return; var vh = window.innerHeight, r = sec.getBoundingClientRect(), k = (r.top + r.height / 2 - vh / 2) / vh;
+      var pr = photo.parentNode.getBoundingClientRect(), kp = (pr.top + pr.height / 2 - vh / 2) / vh; photo.style.transform = 'translate3d(0,' + (kp * -9 - 7).toFixed(2) + '%,0)';
+      var por = window.innerWidth < window.innerHeight;
+      frs.forEach(function(f, i){ if (por){ f.style.transform = ''; return; } var kf = (r.top + f.offsetTop + f.offsetHeight / 2 - vh / 2) / vh; f.style.transform = 'translate3d(0,' + (kf * DEP[i] * vh).toFixed(1) + 'px,0)'; });
+      emb.style.transform = 'rotate(180deg) translate3d(0,' + (k * 120).toFixed(1) + 'px,0)';
+      requestAnimationFrame(drift); }
+    new IntersectionObserver(function(es){ var was = on; on = es[0].isIntersecting; if (on && !was) requestAnimationFrame(drift); }).observe(sec);
+  })();
+
   /* light sections: the header and the chapter rail turn to ink while one is under them */
   var INK = [].slice.call(document.querySelectorAll('[data-ink]')), hdrEl = document.getElementById('hdr'), chapEl = document.getElementById('chap'), inkH = null, inkC = null;
   function ink(){

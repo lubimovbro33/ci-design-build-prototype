@@ -473,3 +473,91 @@
   .pj2-view{order:-1}
   .pj2-foot{flex-direction:column;align-items:flex-start;gap:20px}
 }
+
+/* ---------------------------------------------------------------- 05 DIFFERENCE · v9: a photograph ruled into a grid; disciplines open as cards in its cells */
+.df2{position:relative;color:#fff;background:#111}
+.df2-stage{position:relative;height:100vh;min-height:760px;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:30% 33% 37%}
+.df2-bg{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
+.df2-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.08);transition:transform 8s cubic-bezier(.2,.6,.3,1)}
+.df2-bg.on{opacity:1}
+.df2-bg.on img{transform:scale(1.01)}
+.df2-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.2) 30%,rgba(0,0,0,.25) 100%)}
+.df2-grid{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.df2-grid line{stroke:#fff;stroke-opacity:.22;stroke-width:1}
+.df2-grid path{fill:none;stroke:#fff;stroke-opacity:.6;stroke-width:1}
+.df2-head{grid-column:1/5;grid-row:1;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;padding-top:var(--hdr)}
+.df2-lab{color:rgba(255,255,255,.75)}
+.df2-title{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(30px,3.8vw,64px);line-height:.96;letter-spacing:-.035em;max-width:14em}
+.df2-cells{display:contents}
+.df2-cell{all:unset;box-sizing:border-box;position:relative;z-index:2;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;overflow:hidden}
+.df2-cell.c1{grid-column:1;grid-row:2}.df2-cell.c2{grid-column:2;grid-row:2}.df2-cell.c3{grid-column:3;grid-row:2}.df2-cell.c4{grid-column:4;grid-row:2}.df2-cell.c5{grid-column:3;grid-row:3}.df2-cell.c6{grid-column:4;grid-row:3}
+.df2-nm{font-weight:400;text-transform:uppercase;font-size:clamp(15px,1.35vw,22px);line-height:1.08;letter-spacing:-.005em;max-width:12em;text-shadow:0 1px 14px rgba(0,0,0,.35);transition:opacity .4s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.df2-card{position:absolute;inset:0;background:#EBEBEB;color:#1D1D1D;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;text-align:left;padding:clamp(18px,1.8vw,30px);clip-path:inset(100% 0 0 0);transition:clip-path .8s cubic-bezier(.77,0,.18,1)}
+.df2-cn{color:#636366;position:absolute;left:clamp(18px,1.8vw,30px);top:clamp(16px,1.6vw,26px)}
+.df2-ct{font-weight:400;text-transform:uppercase;font-size:clamp(15px,1.3vw,21px);line-height:1.06;letter-spacing:-.01em}
+.df2-cd{font-size:13px;line-height:1.45;color:#3A3A3C;max-width:30ch;font-family:var(--sans);text-transform:none}
+.df2-pm{position:absolute;right:16px;bottom:16px;width:34px;height:34px;border:1px solid rgba(255,255,255,.65);border-radius:50%;z-index:2;transition:border-color .4s}
+.df2-pm::before,.df2-pm::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:1px;margin-left:-6px;background:#fff;transition:transform .5s cubic-bezier(.2,.8,.2,1),background .4s}
+.df2-pm::after{transform:rotate(90deg)}
+.df2-cell:hover .df2-nm{transform:translateY(-4px)}
+.df2-cell.on .df2-nm{opacity:0}
+.df2-cell.on .df2-card{clip-path:inset(0 0 0 0)}
+.df2-cell.on .df2-pm{border-color:rgba(29,29,29,.4)}
+.df2-cell.on .df2-pm::before,.df2-cell.on .df2-pm::after{background:#1D1D1D}
+.df2-cell.on .df2-pm::after{transform:rotate(0)}
+.df2-cell:focus-visible{outline:2px solid #96A9BF;outline-offset:-2px}
+.df2-panel{grid-column:1/3;grid-row:3;position:relative;z-index:2;background:#EBEBEB;color:#1D1D1D;display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2vw,36px);padding:clamp(22px,2.4vw,40px)}
+.df2-big{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(17px,1.55vw,26px);line-height:1.08;letter-spacing:-.015em;border-left:1px solid rgba(29,29,29,.3);padding-left:18px}
+.df2-small{display:flex;flex-direction:column;justify-content:flex-end;gap:12px}
+.df2-small p{margin:0;font-size:13px;line-height:1.5;color:#3A3A3C}
+.df2-small b{color:#1D1D1D}
+@media (max-aspect-ratio: 1/1){
+  .df2-stage{height:auto;min-height:100svh;grid-template-columns:1fr 1fr;grid-template-rows:auto repeat(3,minmax(150px,auto)) auto}
+  .df2-head{grid-column:1/3;padding:calc(var(--hdr) + 40px) var(--m) 30px}
+  .df2-cell.c1{grid-column:1;grid-row:2}.df2-cell.c2{grid-column:2;grid-row:2}.df2-cell.c3{grid-column:1;grid-row:3}.df2-cell.c4{grid-column:2;grid-row:3}.df2-cell.c5{grid-column:1;grid-row:4}.df2-cell.c6{grid-column:2;grid-row:4}
+  .df2-panel{grid-column:1/3;grid-row:5;grid-template-columns:1fr}
+  .df2-grid{display:none}
+  .df2-cell{border-top:1px solid rgba(255,255,255,.2)}
+  .df2-cn{display:none}
+  .df2-card{padding:14px 14px 50px;gap:8px}
+  .df2-cd{font-size:12px}
+  .df2-cell:nth-child(odd){border-right:1px solid rgba(255,255,255,.2)}
+}
+
+/* ---------------------------------------------------------------- 09 CLIENT · v9: a card over a large photograph on a deep colour; embossed type; a loose collage */
+.cl2{position:relative;overflow:hidden;color:#EBEBEB;background:linear-gradient(165deg,#17222B 0%,#22323E 45%,#2B4352 100%)}
+.cl2-emb{position:absolute;left:-1.2vw;top:4vh;writing-mode:vertical-rl;transform:rotate(180deg);font-family:"TG Ext",sans-serif;font-weight:400;text-transform:uppercase;font-size:clamp(90px,15vw,260px);line-height:.8;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.07);text-shadow:1px 1px 0 rgba(255,255,255,.035),-1px -1px 0 rgba(0,0,0,.25);pointer-events:none;white-space:nowrap}
+.cl2-top{position:relative;height:100vh;min-height:720px}
+.cl2-photo{position:absolute;left:27vw;right:0;top:calc(var(--hdr) + 40px);bottom:8vh;overflow:hidden}
+.cl2-photo img{width:100%;height:118%;object-fit:cover;display:block;will-change:transform}
+.cl2-card{position:absolute;left:10vw;bottom:4vh;width:min(32vw,520px);min-height:56vh;background:#EBEBEB;color:#1D1D1D;padding:clamp(26px,2.6vw,44px) clamp(26px,2.6vw,44px) clamp(26px,2.6vw,44px) clamp(40px,3.6vw,60px);display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.28)}
+.cl2-card::before{content:"";position:absolute;left:clamp(22px,1.8vw,30px);top:clamp(26px,2.6vw,44px);bottom:clamp(26px,2.6vw,44px);width:1px;background:rgba(29,29,29,.35)}
+.cl2-lab{color:#636366;margin-bottom:22px}
+.cl2-h{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(24px,2.5vw,42px);line-height:.98;letter-spacing:-.03em}
+.cl2-p{margin-top:auto;padding-top:30px;display:flex;flex-direction:column;gap:12px}
+.cl2-p p{margin:0;font-size:14px;line-height:1.5;color:#3A3A3C}
+.cl2-p b{color:#1D1D1D}
+.cl2-dot{position:absolute;right:22px;bottom:22px;width:9px;height:9px;border-radius:50%;background:#283E4B}
+.cl2-say{position:relative;height:120vh;min-height:860px}
+.cl2-l1,.cl2-l2{position:absolute;margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(40px,6.4vw,112px);line-height:.9;letter-spacing:-.045em;z-index:2}
+.cl2-l1{left:var(--m);top:10vh;display:flex;flex-direction:column}
+.cl2-l1 span:nth-child(2){padding-left:1em}
+.cl2-l2{right:var(--m);bottom:12vh;color:#96A9BF}
+.cl2-fr{position:absolute;border:8px solid #EBEBEB;box-shadow:0 24px 60px rgba(0,0,0,.3);will-change:transform;overflow:hidden}
+.cl2-fr img{width:100%;height:100%;object-fit:cover;display:block}
+.cl2-f1{right:8vw;top:26vh;width:min(18vw,300px);aspect-ratio:4/5}
+.cl2-f2{left:22vw;top:52vh;width:min(30vw,500px);aspect-ratio:16/10}
+.cl2-f3{right:33vw;top:46vh;width:min(14vw,230px);aspect-ratio:9/7}
+.cl2-rv{opacity:0;transform:translateY(26px);transition:opacity 1.1s ease,transform 1.3s cubic-bezier(.2,.8,.2,1)}
+.cl2-rv.in{opacity:1;transform:none}
+.cl2 .cl2-card.cl2-rv{transform:translateY(40px)}
+.cl2 .cl2-card.cl2-rv.in{transform:none}
+@media (max-aspect-ratio: 1/1){
+  .cl2-top{height:auto;min-height:0;padding:calc(var(--hdr) + 40px) var(--m) 60px}
+  .cl2-photo{position:relative;left:auto;right:auto;top:auto;bottom:auto;height:46vh;margin:0 calc(var(--m) * -1)}
+  .cl2-card{position:relative;left:auto;bottom:auto;width:auto;min-height:0;margin-top:-60px}
+  .cl2-say{height:auto;min-height:0;padding:40px var(--m) 80px;display:flex;flex-direction:column;gap:28px}
+  .cl2-l1,.cl2-l2,.cl2-fr{position:relative;left:auto;right:auto;top:auto;bottom:auto}
+  .cl2-l1,.cl2-l2{font-size:clamp(34px,10vw,52px)}
+  .cl2-f1{width:60%;align-self:flex-end}.cl2-f2{width:86%}.cl2-f3{display:none}
+}
