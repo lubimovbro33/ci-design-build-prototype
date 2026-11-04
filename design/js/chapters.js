@@ -181,9 +181,13 @@
     var LAY = [
       { k: 'ARCHITECTS', off: [-250, -40, -2.5] }, { k: 'DESIGNERS', off: [-110, 60, 1.6] }, { k: 'CONTRACTORS', off: [40, -70, -1.2] },
       { k: 'VENDORS', off: [170, 50, 2.2] }, { k: 'INSTALLERS', off: [300, -30, -1.8] } ];
+    /* v9 (user 04.11: "some colour here"): five firms, five colours — sand, terracotta, sage, steel blue, lilac; registered under one roof they become one drawing */
+    var COL = [[217, 182, 140], [208, 138, 116], [157, 182, 142], [142, 175, 214], [196, 155, 208]], ONE = [235, 235, 235];
+    function mix(a, b, t){ return 'rgb(' + Math.round(lerp(a[0], b[0], t)) + ',' + Math.round(lerp(a[1], b[1], t)) + ',' + Math.round(lerp(a[2], b[2], t)) + ')'; }
     var gSec = el('g', {}, svg);
     LAY.forEach(function(L, i){ L.g = el('g', {'class': 'dg'}, gSec); L.box = el('path', {d: rectD(-10, 50, 920, 580), 'class': 'box', 'vector-effect': 'non-scaling-stroke'}, L.g);
-      L.t = el('text', {x: -10, y: 36, 'class': 'lt'}, L.g); L.t.textContent = L.k; });
+      L.t = el('text', {x: -10, y: 36, 'class': 'lt'}, L.g); L.t.textContent = L.k; L.c = COL[i];
+      L.t.style.fill = mix(L.c, L.c, 0); L.box.style.stroke = mix(L.c, L.c, 0); L.box.style.fill = mix(L.c, L.c, 0); L.g.style.setProperty('--hl', mix(L.c, L.c, 0)); });
     var A = LAY[0].g, D = LAY[1].g, C = LAY[2].g, V = LAY[3].g, I = LAY[4].g;
     var dly = function(x, y){ return .05 + .45 * (Math.abs(x - 450) / 450 * .5 + Math.abs(y - 340) / 300 * .5); };
     /* architects: the envelope and its openings */
@@ -228,7 +232,7 @@
     var lab1 = el('text', {x: X0, y: TY - 22, 'class': 'tl'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
     var lab2 = el('text', {x: X0, y: TY + 118, 'class': 'tl'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
     var bars = [];
-    trad.forEach(function(b, i){ bars.push({e: el('path', {d: seg(X0 + b[0] * X1, TY + i * 12, X0 + b[1] * X1, TY + i * 12), 'class': 'bar t', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT), d: i * .08}); });
+    trad.forEach(function(b, i){ var e = el('path', {d: seg(X0 + b[0] * X1, TY + i * 12, X0 + b[1] * X1, TY + i * 12), 'class': 'bar t', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT); e.style.stroke = mix(COL[i], COL[i], 0); bars.push({e: e, d: i * .08}); });
     ci.forEach(function(b, i){ bars.push({e: el('path', {d: seg(X0 + b[0] * X1, TY + 140 + i * 12, X0 + b[1] * X1, TY + 140 + i * 12), 'class': 'bar c', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT), d: .3 + i * .06}); });
     var saved = el('path', {d: seg(X1 * .8, TY + 200, X1, TY + 200), 'class': 'sav', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
     var savT = [el('path', {d: seg(X1 * .8, TY + 192, X1 * .8, TY + 208), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT), el('path', {d: seg(X1, TY + 192, X1, TY + 208), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT)];
@@ -245,7 +249,8 @@
         /* spread: five small separate drawings in a row, each in its own frame, slightly askew; together: one */
         var s = sm(sg(p, .1, .24)) * (1 - j), sc = lerp(1, .3, s), tx = lerp(450, -186 + i * 334, s), ty = lerp(340, 330 + L.off[1] * .6, s), r = L.off[2] * s;
         L.g.setAttribute('transform', 'translate(' + f1(tx) + ' ' + f1(ty) + ') rotate(' + r.toFixed(2) + ') scale(' + sc.toFixed(4) + ') translate(-450 -340)');
-        L.box.style.opacity = fr.toFixed(3); L.t.style.opacity = (sg(p, .14, .2) * (1 - sg(p, .3, .36))).toFixed(3); });
+        L.box.style.opacity = fr.toFixed(3); L.t.style.opacity = (sg(p, .14, .2) * (1 - sg(p, .3, .36))).toFixed(3);
+        if (L.j !== j){ L.j = j; L.g.style.setProperty('--hl', mix(L.c, ONE, j)); } });
       /* one roof */
       gRoof.style.setProperty('--k', sg(p, .46, .54).toFixed(3));
       /* the disciplines */
@@ -431,49 +436,61 @@
       layers.push({g: g, gd: gd, lab: lab, num: num, i: li, pos: -1});
     });
     var VBH = 1500, HS = 1380, PH = FC[1];                               /* plate height on paper */
-    function layout(set){                                                 /* each layer's place in a state: present ones stacked, absent ones lifted out */
+    function layout(set){                                                 /* each layer's place: present ones stacked, absent ones lifted out */
       var N = set.length, gp = Math.min(200, (HS - PH) / Math.max(1, N - 1)), top = (VBH - (PH + (N - 1) * gp)) / 2, out = {};
       ORDER.forEach(function(_, li){
         var k = set.indexOf(li);
-        if (k >= 0) out[li] = {y: top + (N - 1 - k) * gp, o: 1, pos: k};
-        else { var v = set.filter(function(x){ return x < li; }).length - .5; out[li] = {y: top + (N - 1 - v) * gp - 320, o: 0, pos: -1}; }
+        if (k >= 0) out[li] = {y: top + (N - 1 - k) * gp, o: 1};
+        else { var v = set.filter(function(x){ return x < li; }).length - .5; out[li] = {y: top + (N - 1 - v) * gp - 320, o: 0}; }
       });
-      out.top = top; out.bot = top + (N - 1) * gp; out.N = N; return out;
+      out.top = top; out.bot = top + (N - 1) * gp; return out;
     }
-    var LS = ST.map(layout), ENTER = {5: [.5, .6], 9: [.78, .88]};
-    function state(p){                                                    /* blended between the tiers */
-      var t = [sm(sg(p, .3, .38)), sm(sg(p, .5, .58)), sm(sg(p, .78, .86))], k = t[2] > 0 ? 2 : t[1] > 0 ? 1 : 0, a = LS[k], b = LS[k + 1], u = t[k];
-      return {a: a, b: b, u: u, dom: u < .5 ? k : k + 1};
+    /* v9 (user 04.11): the tiers are chosen, not scrolled — tabs and the switch restack the plates; a reading cursor climbs the stack on its own, a label under the pointer takes it */
+    var tier = 0, well = false, inView = false, started = false, hoverL = -1, cyc = -1, raf = 0, tgt = null, topN = 0, botN = 0, spK = 0, cycT = null;
+    function curSet(){ var s = ST[tier].slice(); if (well && s.indexOf(6) < 0) s.push(9); return s; }
+    layers.forEach(function(L){ L.y = 0; L.o = 0; L.k = 0; L.em = 0; L.ty = 0; L.to = 0;
+      L.lab.addEventListener('pointerenter', function(){ hoverL = L.i; kick(); }); L.lab.addEventListener('pointerleave', function(){ hoverL = -1; kick(); }); });
+    function apply(first){
+      var set = curSet(); tgt = layout(set);
+      layers.forEach(function(L){ var t = tgt[L.i]; L.ty = t.y; L.to = t.o; if (first){ L.y = t.y; } var k = set.indexOf(L.i); if (k >= 0) txt(L.num, (k < 9 ? '0' : '') + (k + 1));
+        L.g.classList.toggle('add', L.i === 9 || (well && L.i === 6)); });
+      if (first){ topN = tgt.top; botN = tgt.bot; }
+      txt(cnt, set.length);
+      tabs.forEach(function(b, i){ b.classList.toggle('on', i === tier); b.setAttribute('aria-selected', i === tier ? 'true' : 'false'); });
+      descs.forEach(function(d, i){ d.classList.toggle('on', i === tier); });
+      if (sw){ sw.classList.toggle('on', well); sw.setAttribute('aria-pressed', well ? 'true' : 'false'); }
+      cyc = well ? Math.max(set.indexOf(9), set.indexOf(6)) : -1; restartCycle(); kick();
     }
-    function go(pp){ var top = pin.getBoundingClientRect().top + (window.scrollY || window.pageYOffset); window.scrollTo({top: top + pp * (pin.offsetHeight - window.innerHeight), behavior: 'smooth'}); }
-    tabs.forEach(function(b, i){ b.addEventListener('click', function(){ go([.2, .44, .67][i]); }); });
-    if (sw) sw.addEventListener('click', function(){ go(sw.classList.contains('on') ? .67 : .93); });
-    var lastDom = -1, portrait = null;
-    function update(p){
-      var pt = window.innerWidth < window.innerHeight; if (pt !== portrait){ portrait = pt; svg.setAttribute('viewBox', pt ? '40 0 1600 1500' : '0 0 2100 1500'); }
-      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
-        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
-      var s = state(p), dom = s.dom, H = [[.12, .3], [.38, .5], [.6, .78], [.86, 1]][dom], ht = sg(p, H[0], H[1]), hold = ht > 0 && ht < 1 ? 1 : 0, setD = ST[dom];
-      layers.forEach(function(L, j){
-        var A = s.a[L.i], B = s.b[L.i], y = lerp(A.y, B.y, s.u), o = lerp(A.o, B.o, s.u);
-        var e = ENTER[L.i], kd = e ? sg(p, e[0], e[1]) : sg(p, .01 + L.i * .011, .1 + L.i * .011);
-        var kp = setD.indexOf(L.i), em = dom === 3 ? (L.i === 9 ? 1 : 0) : kp < 0 ? 0 : Math.max(0, 1 - Math.abs(ht * setD.length - (kp + .5)) * 1.2) * hold;
-        var dimK = dom === 3 ? sm(sg(p, .86, .9)) : Math.min(sm(sg(ht, 0, .06)), 1 - sm(sg(ht, .94, 1)));
-        L.em = em; L.gd.style.opacity = (1 - .45 * dimK * (1 - em)).toFixed(3); L.lab.classList.toggle('em', em > .5 || (dimK < .5 && kp >= 0));
-        L.gd.style.setProperty('--k', kd.toFixed(3)); L.lab.style.opacity = (sg(kd, .25, .6) * o).toFixed(3);
-        L.g.setAttribute('transform', 'translate(' + f1(-46 * sm(em)) + ' ' + f1(y) + ')'); L.g.style.opacity = o.toFixed(3); L.g.style.visibility = o > .002 ? '' : 'hidden';
+    function restartCycle(){ clearInterval(cycT); if (!inView || reduced) return;
+      cycT = setInterval(function(){ if (hoverL >= 0) return; var n = curSet().length; cyc = (cyc + 1) % n; kick(); }, 2000); }
+    function kick(){ if (!raf) raf = requestAnimationFrame(frame); }
+    function frame(){
+      raf = 0; var set = curSet(), moving = false, anyEm = false;
+      layers.forEach(function(L){ var kp = set.indexOf(L.i), want = hoverL >= 0 ? (L.i === hoverL ? 1 : 0) : (kp >= 0 && kp === cyc ? 1 : 0); if (want) anyEm = true; L.want = want; });
+      layers.forEach(function(L){
+        L.y += (L.ty - L.y) * .12; L.o += (L.to - L.o) * .14;
+        if (L.to > .5) L.k = Math.min(1, L.k + .022); else if (L.o < .02) L.k = 0;
+        L.em += (L.want - L.em) * .16;
+        var dim = anyEm ? 1 - .45 * (1 - L.em) : 1;
+        L.g.setAttribute('transform', 'translate(' + f1(-46 * sm(L.em)) + ' ' + f1(L.y) + ')'); L.g.style.opacity = L.o.toFixed(3); L.g.style.visibility = L.o > .004 ? '' : 'hidden';
+        L.gd.style.setProperty('--k', L.k.toFixed(3)); L.gd.style.opacity = dim.toFixed(3);
+        L.lab.style.opacity = (sg(L.k, .25, .6) * L.o).toFixed(3); L.lab.classList.toggle('em', anyEm ? L.em > .5 : true);
+        if (Math.abs(L.ty - L.y) > .3 || Math.abs(L.to - L.o) > .003 || (L.to > .5 && L.k < 1) || Math.abs(L.want - L.em) > .004) moving = true;
       });
-      var top = lerp(s.a.top, s.b.top, s.u), bot = lerp(s.a.bot, s.b.bot, s.u), ks = sg(p, .1, .16);
-      spine.forEach(function(sp, i){ var c = [LC, FC, RC][i]; sp.setAttribute('d', 'M' + f1(c[0]) + ' ' + f1(top + c[1]) + 'V' + f1(top + c[1] + (bot - top) * ks)); });
-      if (dom !== lastDom){ lastDom = dom; var set = ST[dom];
-        layers.forEach(function(L){ var k = set.indexOf(L.i); if (k >= 0) L.num.textContent = (k < 9 ? '0' : '') + (k + 1); });
-        cnt.textContent = set.length; tabs.forEach(function(b, i){ b.classList.toggle('on', i === Math.min(2, dom)); });
-        if (sw){ sw.classList.toggle('on', dom === 3); sw.setAttribute('aria-pressed', dom === 3 ? 'true' : 'false'); } }
-      var w = [1 - sm(sg(p, .3, .38)), sm(sg(p, .3, .38)) * (1 - sm(sg(p, .5, .58))), sm(sg(p, .5, .58))];
-      descs.forEach(function(d, i){ var o = sm(clamp01(w[i] * 2 - 1)); d.style.opacity = o.toFixed(3); d.style.visibility = o > 0 ? '' : 'hidden'; d.style.transform = 'translateY(' + ((1 - o) * 10).toFixed(1) + 'px)'; });
-      stage.style.setProperty('--pc', (sg(p, .08, .12) * (1 - sg(p, .97, 1))).toFixed(3));
+      topN += (tgt.top - topN) * .12; botN += (tgt.bot - botN) * .12; spK = Math.min(1, spK + .02);
+      spine.forEach(function(sp, i){ var c = [LC, FC, RC][i]; sp.setAttribute('d', 'M' + f1(c[0]) + ' ' + f1(topN + c[1]) + 'V' + f1(topN + c[1] + (botN - topN) * spK)); });
+      if (Math.abs(tgt.top - topN) > .3 || spK < 1) moving = true;
+      if (moving) kick();
     }
-    return { sec: sec, pin: pin, update: update };
+    tabs.forEach(function(b, i){ b.addEventListener('click', function(){ if (tier !== i){ tier = i; apply(); } }); });
+    if (sw) sw.addEventListener('click', function(){ well = !well; apply(); });
+    var portrait = null;
+    function fit(){ var pt = window.innerWidth < window.innerHeight; if (pt !== portrait){ portrait = pt; svg.setAttribute('viewBox', pt ? '40 0 1600 1500' : '0 0 2100 1500'); } }
+    fit(); window.addEventListener('resize', fit);
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ inView = es[0].isIntersecting;
+      if (inView && !started){ started = true; apply(true); } else restartCycle(); }, {threshold: .25}).observe(svg);
+    else { started = true; apply(true); }
+    return null;
   }
 
   /* ================================================================== 07 APPROACH · each question sets out a grid axis; the answers become the foundation */
@@ -543,60 +560,54 @@
     return { sec: sec, pin: pin, update: update };
   }
 
-  /* ================================================================== 08 PROCESS · one room, six stages: surveyed, scoped, drawn, built, curated, lit */
+  /* ================================================================== 08 PROCESS · v9 (user 04.11: "from a broken line you structure everything"):
+     the project as it usually is — many strands crossing, tangled; a front travels left to right through the six steps and,
+     behind it, every strand lies down into one straight line. At the end: one line, six stations. */
   function process(){
-    var sec = document.getElementById('process'); if (!sec || !sec.classList.contains('ch')) return null;
+    var sec = document.getElementById('process'); if (!sec || !sec.classList.contains('ch-proc2')) return null;
     var pin = sec.querySelector('.ch-pin'), stage = sec.querySelector('.ch-stage'), phases = [].slice.call(sec.querySelectorAll('.ch-t > [data-a]'));
-    var box = sec.querySelector('#prBox'), svg = sec.querySelector('#prSvg'), lab = sec.querySelector('#prLab'), rail = [].slice.call(sec.querySelectorAll('#prRail > div'));
-    var imgs = {}; [].slice.call(box.querySelectorAll('.pr-img')).forEach(function(im){ imgs[im.dataset.k] = im; });
-    var inner = document.createElement('div'); inner.className = 'pr-in'; box.insertBefore(inner, box.firstChild);
-    ['clay', 'day', 'eve'].forEach(function(k){ inner.appendChild(imgs[k]); }); inner.appendChild(svg);
-    var NAMES = ['Discover', 'Define', 'Design', 'Build', 'Curate', 'Deliver'], S0 = .1, SD = .13;
-    var D = null, gPts, clipR, scan, gScope, gLines;
-    var defs = el('defs', {}, svg); clipR = el('rect', {x: 0, y: 0, width: 0, height: 899}, el('clipPath', {id: 'prClip'}, defs));
-    var glow = el('linearGradient', {id: 'prScanG', x1: 0, x2: 1, y1: 0, y2: 0}, defs);
-    el('stop', {offset: 0, 'stop-color': '#96A9BF', 'stop-opacity': 0}, glow); el('stop', {offset: 1, 'stop-color': '#96A9BF', 'stop-opacity': .22}, glow);
-    gScope = el('g', {'class': 'dg'}, svg); gLines = el('g', {'class': 'dg'}, svg);
-    var scanBand = el('rect', {x: 0, y: 0, width: 140, height: 899, fill: 'url(#prScanG)', opacity: 0}, svg);
-    scan = el('path', {d: 'M0 0V899', 'class': 'pr-scan', 'vector-effect': 'non-scaling-stroke'}, svg);
-    /* the scope: the wall we will work on, its dimension strings (no figures), the stations it was measured from */
-    var SX0 = 346, SX1 = 1585, SY0 = 232, SY1 = 690;
-    line(gScope, rectD(SX0, SY0, SX1 - SX0, SY1 - SY0), 'w1', 0);
-    line(gScope, seg(SX0, 186, SX1, 186), 'w2', .15); [SX0, 650, 842, 1430, SX1].forEach(function(x, i){ line(gScope, seg(x - 7, 193, x + 7, 179), 'w2', .2 + i * .03); line(gScope, seg(x, 172, x, 200), 'w3', .2 + i * .03); });
-    line(gScope, seg(300, SY0, 300, SY1), 'w2', .15); [SY0, 298, 638, SY1].forEach(function(y, i){ line(gScope, seg(293, y + 7, 307, y - 7), 'w2', .25 + i * .03); line(gScope, seg(286, y, 314, y), 'w3', .25 + i * .03); });
-    [[SX0, SY0], [SX1, SY0], [SX1, SY1], [SX0, SY1]].forEach(function(q, i){ line(gScope, circD(q[0], q[1], 9), 'w2', .4 + i * .04); });
-    line(gScope, seg(1136 - 18, 468, 1136 + 18, 468), 'w2', .5); line(gScope, seg(1136, 450, 1136, 486), 'w2', .5);
-    fetch('assets/proc/data.json').then(function(r){ return r.json(); }).then(function(d){
-      D = d; var pp = d.p, s = '';
-      for (var i = 0; i < pp.length; i += 2) s += 'M' + pp[i] + ' ' + pp[i + 1] + 'h.1';
-      gPts = el('path', {d: s, 'class': 'pr-pts', 'clip-path': 'url(#prClip)', 'vector-effect': 'non-scaling-stroke'}, svg); svg.insertBefore(gPts, gScope);
-      d.l.forEach(function(q, j){ var L = Math.hypot(q[2] - q[0], q[3] - q[1]) || 1, ex = (q[2] - q[0]) / L * 14, ey = (q[3] - q[1]) / L * 14;
-        line(gLines, seg(q[0] - ex, q[1] - ey, q[2] + ex, q[3] + ey), q[4] > .3 ? 'w1' : 'w2', .55 * j / d.l.length); });
-      last = -1; if (cur != null) update(cur);
-    }).catch(function(){});
-    var last = -1, cur = null, lastStep = -2;
+    var svg = sec.querySelector('#prSvg2'), ims = [].slice.call(sec.querySelectorAll('.pr2-im')), pl = sec.querySelector('#prPl'), labs = [].slice.call(sec.querySelectorAll('.pr2-lab'));
+    var NAMES = ['DISCOVER', 'DEFINE', 'DESIGN', 'BUILD', 'CURATE', 'DELIVER'], NS0 = 11, N = 140;
+    var gT = el('g', {}, svg), strands = [], i;
+    for (i = 0; i < NS0; i++) strands.push({e: el('path', {'class': 'pr2-s', 'vector-effect': 'non-scaling-stroke'}, gT),
+      w: [1.3 + (i * 1.7) % 3.1, 3.2 + (i * 2.3) % 4.4, 7.1 + (i * 1.1) % 5.3], ph: [i * 1.9, i * 2.7 + 1, i * .7 + 2], a: [.55, .3, .15], sk: (i % 2 ? 1 : -1) * (.2 + (i % 4) * .12)});
+    var one = el('path', {'class': 'pr2-one', 'vector-effect': 'non-scaling-stroke'}, svg), glint = el('path', {'class': 'pr2-gl', 'vector-effect': 'non-scaling-stroke'}, svg);
+    var nodes = NAMES.map(function(){ var g = el('g', {'class': 'pr2-node'}, svg); el('circle', {r: 9, 'vector-effect': 'non-scaling-stroke'}, g); el('rect', {x: -3, y: -3, width: 6, height: 6}, g);
+      var ring = el('circle', {r: 9, 'class': 'ring', 'vector-effect': 'non-scaling-stroke'}, g); return {g: g, ring: ring}; });
+    var W = 1, H = 1, X0 = 0, X1 = 1, Y0 = 0, A = 1, lastSz = '', lastStep = -2;
+    function size(){ var r = stage.getBoundingClientRect(), m = parseFloat(getComputedStyle(stage).getPropertyValue('--m')) || 48; W = r.width; H = r.height;
+      svg.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H)); X0 = m; X1 = W - m; Y0 = H * (W / H < 1 ? .5 : .7); A = H * (W / H < 1 ? .075 : .13); }
     function update(p){
-      cur = p;
+      var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
       phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
         e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
-      stage.style.setProperty('--fr', sg(p, .05, .1).toFixed(3));
-      /* 01 survey: a scanner sweeps the room, the points stay behind it */
-      var sw = sm(sg(p, .11, .22)); clipR.setAttribute('width', f1(1600 * sw));
-      scan.setAttribute('transform', 'translate(' + f1(1600 * sw) + ' 0)'); scanBand.setAttribute('x', f1(1600 * sw - 140));
-      var sOn = sw > 0 && sw < 1 ? 1 : 0; scan.style.opacity = sOn; scanBand.setAttribute('opacity', sOn);
-      if (gPts) gPts.style.opacity = ((1 - .7 * sm(sg(p, .26, .31))) * (1 - sm(sg(p, .39, .45)))).toFixed(3);
-      /* 02 scope */
-      gScope.style.setProperty('--k', sg(p, .26, .36).toFixed(3)); gScope.style.opacity = (1 - .75 * sm(sg(p, .4, .46)) - .25 * sm(sg(p, .52, .56))).toFixed(3);
-      /* 03 the drawing; 04 the grey build under it; 05 colour; 06 the lights come on */
-      gLines.style.setProperty('--k', sg(p, .39, .49).toFixed(3));
-      gLines.style.opacity = (1 - .45 * sm(sg(p, .53, .58)) - .4 * sm(sg(p, .65, .7)) - .15 * sm(sg(p, .78, .82))).toFixed(3);
-      imgs.clay.style.opacity = sm(sg(p, .52, .58)).toFixed(3); imgs.day.style.opacity = sm(sg(p, .65, .71)).toFixed(3); imgs.eve.style.opacity = sm(sg(p, .78, .86)).toFixed(3);
-      inner.style.transform = 'scale(' + (1 + .05 * sm(sg(p, .5, 1))).toFixed(4) + ')';
-      /* the rail */
+      /* the front: where the work has been brought together */
+      var band = (X1 - X0) * .09, fx = X0 + (X1 - X0 + band * .6) * sg(p, .1, .88), kin = sg(p, .0, .08), t = p * 2.2;
+      strands.forEach(function(s, j){
+        var d = '';
+        for (var k = 0; k <= N; k++){
+          var u = k / N, x = X0 + (X1 - X0) * u, f = 0;
+          for (var q = 0; q < 3; q++) f += s.a[q] * Math.sin(u * s.w[q] * 6.283 + s.ph[q] + t * (q + 1) * .35);
+          f += s.sk * Math.sin(u * 3.1416);
+          var mrg = sm((fx - x) / band + .5), y = Y0 + A * f * (1 - mrg) * Math.min(1, .25 + u * 1.5 + .75 * (1 - kin));
+          if (u > kin * 1.02 && kin < 1) break;
+          d += (k ? 'L' : 'M') + f1(x) + ' ' + f1(y);
+        }
+        s.e.setAttribute('d', d);
+      });
+      var fe = Math.max(X0, Math.min(X1, fx - band * .5));
+      one.setAttribute('d', fe > X0 ? 'M' + f1(X0) + ' ' + f1(Y0) + 'H' + f1(fe) : '');
+      /* the finished line: a glint runs along it once */
+      var gk = sg(p, .9, 1); glint.setAttribute('d', gk > 0 && gk < 1 ? 'M' + f1(X0 + (X1 - X0) * Math.max(0, gk * 1.15 - .15)) + ' ' + f1(Y0) + 'H' + f1(X0 + (X1 - X0) * Math.min(1, gk * 1.15)) : '');
       var step = -1;
-      rail.forEach(function(r, i){ var a = S0 + i * SD, k = sg(p, a, a + SD); r.style.setProperty('--f', k.toFixed(3)); if (p >= a) step = i; r.classList.toggle('on', p >= a && (p < a + SD || i === 5)); });
-      if (step !== lastStep){ lastStep = step; lab.textContent = step < 0 ? '' : '0' + (step + 1) + ' / ' + NAMES[step]; }
-      stage.style.setProperty('--rl', sg(p, .07, .11).toFixed(3));
+      nodes.forEach(function(n, k){ var xs = X0 + (X1 - X0) * (k + .5) / 6, on = sg(fx, xs - band * .2, xs + band * .3);
+        n.g.setAttribute('transform', 'translate(' + f1(xs) + ' ' + f1(Y0) + ')'); n.g.style.opacity = on.toFixed(3);
+        var pr = sg(fx, xs, xs + band * 1.6); n.ring.setAttribute('r', f1(9 + 26 * eo(pr))); n.ring.style.opacity = (pr > 0 && pr < 1 ? 1 - pr : 0).toFixed(3);
+        if (on > .5) step = k;
+        labs[k].style.opacity = on.toFixed(3); labs[k].classList.toggle('on', on > .5 && (p < .88 ? k === Math.min(5, Math.floor((p - .1) / .13)) : true)); });
+      if (step !== lastStep){ lastStep = step; ims.forEach(function(im, k){ im.classList.toggle('on', k === step); }); if (step >= 0) txt(pl, '0' + (step + 1) + ' / ' + NAMES[step]); }
+      stage.style.setProperty('--pic', (sg(p, .1, .14) * (1 - sg(p, .86, .9))).toFixed(3));
+      stage.style.setProperty('--ly', f1(Y0) + 'px');
     }
     return { sec: sec, pin: pin, update: update };
   }
@@ -728,6 +739,37 @@
     io.observe(svg);
   })();
 
+  /* ================================================================== 04 PROJECTS · v9: the photographs are the background; five projects, the key one first and taller */
+  (function(){
+    var st = document.getElementById('pjStage'); if (!st) return;
+    var bgs = [].slice.call(st.querySelectorAll('.pj3-bg')), infos = [].slice.call(st.querySelectorAll('.pj3-info')), tiles = [].slice.call(st.querySelectorAll('.pj3-tile'));
+    var cur = 0, inView = false, hover = false, DUR = 6500, t0 = 0, raf = 0;
+    function show(i){
+      if (i === cur) return; var prev = cur; cur = i;
+      bgs.forEach(function(b, k){ b.classList.toggle('on', k === i); b.classList.toggle('was', k === prev); });
+      infos.forEach(function(e, k){ e.classList.toggle('on', k === i); });
+      tiles.forEach(function(e, k){ e.classList.toggle('on', k === i); e.style.setProperty('--pr', 0); });
+      t0 = performance.now(); loop();
+    }
+    function loop(){ if (raf) return; raf = requestAnimationFrame(function step(now){ raf = 0;
+      if (!inView || hover || reduced){ return; }
+      var k = Math.min(1, (now - t0) / DUR); tiles[cur].style.setProperty('--pr', k.toFixed(3));
+      if (k >= 1) show((cur + 1) % tiles.length); else raf = requestAnimationFrame(step); }); }
+    tiles.forEach(function(e, i){ e.addEventListener('click', function(){ show(i); }); });
+    st.querySelector('.pj3-tiles').addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse'){ hover = true; } });
+    st.querySelector('.pj3-tiles').addEventListener('pointerleave', function(){ hover = false; t0 = performance.now() - DUR * parseFloat(tiles[cur].style.getPropertyValue('--pr') || 0); loop(); });
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ var was = inView; inView = es[0].isIntersecting; if (inView && !was){ t0 = performance.now() - DUR * parseFloat(tiles[cur].style.getPropertyValue('--pr') || 0); loop(); } }, {threshold: .5}).observe(st);
+  })();
+
+  /* light sections: the header and the chapter rail turn to ink while one is under them */
+  var INK = [].slice.call(document.querySelectorAll('[data-ink]')), hdrEl = document.getElementById('hdr'), chapEl = document.getElementById('chap'), inkH = null, inkC = null;
+  function ink(){
+    if (!INK.length) return; var vh = window.innerHeight, yh = 40, yc = vh - 18, h = false, c = false;
+    for (var i = 0; i < INK.length; i++){ var r = INK[i].getBoundingClientRect(); if (r.top <= yh && r.bottom >= yh) h = true; if (r.top <= yc && r.bottom >= yc) c = true; }
+    if (h !== inkH){ inkH = h; if (hdrEl) hdrEl.classList.toggle('ink', h); }
+    if (c !== inkC){ inkC = c; if (chapEl) chapEl.classList.toggle('ink', c); }
+  }
+
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
   var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process(), client(), cta()].filter(Boolean), dirty = true;
   var SVGS = [].slice.call(document.querySelectorAll('.ch svg'));
@@ -736,6 +778,7 @@
   window.addEventListener('resize', function(){ dirty = true; }); window.addEventListener('load', function(){ dirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ dirty = true; }).observe(document.body);
   function tick(){
+    ink();
     if (dirty) measure();
     var y = window.scrollY || window.pageYOffset, vh = window.innerHeight;
     for (var i = 0; i < CH.length; i++){ var c = CH[i], away = y + vh * 1.5 < c.top || y > c.top + c.h + vh * .5;
