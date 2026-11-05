@@ -197,7 +197,8 @@
 
   /* ================================================================== the hero slider (interiors): slide 0 = the room we entered */
   /* the five interiors the user picked on the Figma board "Hero — интерьеры (отбор)" (02.11, 18:07): professional photos */
-  var HSZ = Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 1700 ? '_2560.jpg' : '_1600.jpg';
+  var LITE = document.documentElement.classList.contains('lite');
+  var HSZ = LITE ? '_1600.jpg' : Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 1700 ? '_2560.jpg' : '_1600.jpg';
   var SL = [{k:'v15', dur:7, th:'assets/v15/room_1k.jpg'}].concat(['h1_city', 'h2_kitchen', 'h3_fireplace', 'h4_skyline', 'h5_double'].map(function(n){
     return {k:'img', src:'assets/hero/' + n + HSZ, bg:'assets/hero/' + n + '_bg' + HSZ, dep:'assets/hero/' + n + '_dep.png', th:'assets/hero/' + n + '_th.jpg', dur:6.5,
             sko:'assets/hero/' + n + '_sk.jpg', skb:'assets/hero/' + n + '_bg_sk.jpg'};
@@ -271,7 +272,7 @@
   var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
   var cx = 0, cy = 0, tx = 0, ty = 0, curLab = qs('.cl', cur);
   window.addEventListener('pointermove', function(e){ tx = e.clientX; ty = e.clientY; mx = (e.clientX / window.innerWidth - .5); my = (e.clientY / window.innerHeight - .5); });
-  (function curLoop(){ cx += (tx - cx) * .6; cy += (ty - cy) * .6; cur.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)'; requestAnimationFrame(curLoop); })();
+  if (!coarse) (function curLoop(){ cx += (tx - cx) * .6; cy += (ty - cy) * .6; cur.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)'; requestAnimationFrame(curLoop); })();   /* touch: no cursor, no loop */
   document.addEventListener('pointerover', function(e){ var t = e.target.closest('a,button,.qh,.tab,.sw,.pv-img'); if (t) cur.classList.add('link'); });
   document.addEventListener('pointerout', function(e){ var t = e.target.closest('a,button,.qh,.tab,.sw,.pv-img'); if (t) cur.classList.remove('link'); });
   layout();
@@ -355,7 +356,7 @@
     ST.s = s; lastMx = pmx; lastMy = pmy;
     /* --- the hero text blurs away while we already fly */
     var ui = sg(s, 0, 1.0);
-    heroIn.style.opacity = 1 - eio(ui); heroIn.style.filter = ui > 0 ? 'blur(' + (18 * eo(ui)).toFixed(1) + 'px)' : '';
+    heroIn.style.opacity = 1 - eio(ui); heroIn.style.filter = ui > 0 && !LITE ? 'blur(' + (18 * eo(ui)).toFixed(1) + 'px)' : '';
     heroIn.style.transform = 'scale(' + (1 + .06 * eo(ui)).toFixed(4) + ')'; heroIn.style.visibility = ui >= 1 ? 'hidden' : '';
     /* --- the squares' size: the window stops exactly at this size (no grow) */
     var horiz = vw / vh > .95, S = horiz ? Math.min(vw * .27, vh * .46, 470) : Math.min(vh * .25, vw * .7);
@@ -397,7 +398,7 @@
     drawSq(sqC, rc, 1, isoE > 0 ? 0 : cOp);
     var fin = eo(tkq) * tkOut;                                                       /* the same 1 px Bright Gray as the drawing; only the finale glows */
     sqC.style.stroke = '#EBEBEB'; sqC.style.strokeWidth = 1 + fin * .5;
-    sqC.style.filter = fin > .001 ? 'drop-shadow(0 0 ' + (14 * fin).toFixed(1) + 'px rgba(150,169,191,' + (.85 * fin).toFixed(2) + '))' : 'none';
+    sqC.style.filter = fin > .001 && !LITE ? 'drop-shadow(0 0 ' + (14 * fin).toFixed(1) + 'px rgba(150,169,191,' + (.85 * fin).toFixed(2) + '))' : 'none';
     drawSq(sqL, rl, dl, dl > 0 ? sideOp : 0); drawSq(sqR, rr, dr, dr > 0 ? sideOp : 0);
     var hl = headAt(rl[0], rl[1], rl[2], rl[3], dl), hr = headAt(rr[0], rr[1], rr[2], rr[3], dr);
     hdL.setAttribute('x', hl[0] - 3.5); hdL.setAttribute('y', hl[1] - 3.5); hdL.style.opacity = dl > 0 && dl < 1 ? 1 : 0;

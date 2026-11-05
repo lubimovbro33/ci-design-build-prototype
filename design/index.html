@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="css/story.css">
 <link rel="stylesheet" href="css/chapters.css">
 <script>(function(){var h=location.hostname,q=location.search;if(/^ci-hero|^ci-preloader/.test(h)||/[?&]hero(=|&|$)/.test(q))document.documentElement.classList.add('hero-only');})();</script>
+<script>(function(){var d=document.documentElement,m=window.matchMedia,c=m&&m('(pointer: coarse)').matches,s=Math.max(screen.width||9999,screen.height||9999);if(c||s<1000||/[?&]lite/.test(location.search))d.classList.add('lite');})();</script>
 
 </head>
 <body class="is-intro">
@@ -73,8 +74,8 @@
     </div>
     <div class="preview" id="preview" aria-hidden="true">
       <span class="pv-box"><i class="dot"></i></span>
-      <span class="pv-img"><img src="assets/img2/living2_w.jpg" alt=""></span>
-      <span class="pv-img"><img src="assets/img2/foyer_w.jpg" alt=""></span>
+      <span class="pv-img"><img src="assets/hero/h1_city_th.jpg" alt="" decoding="async"></span>
+      <span class="pv-img"><img src="assets/hero/h2_kitchen_th.jpg" alt="" decoding="async"></span>
       <span class="pv-div"></span>
     </div>
   </div>
@@ -146,11 +147,11 @@
 <section class="pj3" id="projects">
   <div class="pj3-stage" id="pjStage">
     <div class="pj3-bgs">
-      <div class="pj3-bg on" data-i="0"><img src="assets/pj/collectors.webp" alt="" loading="lazy" decoding="async"></div>
-      <div class="pj3-bg" data-i="1"><img src="assets/pj/urban.webp" alt="" loading="lazy" decoding="async"></div>
-      <div class="pj3-bg" data-i="2"><img src="assets/pj/breathe.webp" alt="" loading="lazy" decoding="async"></div>
-      <div class="pj3-bg" data-i="3"><img src="assets/pj/superior.webp" alt="" loading="lazy" decoding="async"></div>
-      <div class="pj3-bg" data-i="4"><img src="assets/pj/grant.webp" alt="" loading="lazy" decoding="async"></div>
+      <div class="pj3-bg on" data-i="0"><img src="assets/pj/collectors.webp" srcset="assets/pj/collectors_m.webp 1200w, assets/pj/collectors.webp 2560w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+      <div class="pj3-bg" data-i="1"><img src="assets/pj/urban.webp" srcset="assets/pj/urban_m.webp 1200w, assets/pj/urban.webp 1800w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+      <div class="pj3-bg" data-i="2"><img src="assets/pj/breathe.webp" srcset="assets/pj/breathe_m.webp 1200w, assets/pj/breathe.webp 1800w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+      <div class="pj3-bg" data-i="3"><img src="assets/pj/superior.webp" srcset="assets/pj/superior_m.webp 1200w, assets/pj/superior.webp 1800w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+      <div class="pj3-bg" data-i="4"><img src="assets/pj/grant.webp" srcset="assets/pj/grant_m.webp 1200w, assets/pj/grant.webp 1800w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
     </div>
     <div class="pj3-shade"></div>
     <div class="pj3-head">
@@ -167,11 +168,11 @@
     </div>
     <a class="pj3-go" href="#" aria-label="View project"></a>
     <div class="pj3-tiles" id="pjTiles">
-      <button class="pj3-tile on" type="button" data-i="0" aria-label="Collectors Home"><img src="assets/pj/collectors.webp" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">01</span><span class="pj3-tt">Collectors Home</span><span class="pj3-tm mono">STREETERVILLE · CHICAGO</span></button>
-      <button class="pj3-tile" type="button" data-i="1" aria-label="Urban Sanctuary"><img src="assets/pj/urban.webp" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">02</span><span class="pj3-tt">Urban Sanctuary</span><span class="pj3-tm mono">GOLD COAST · CHICAGO</span></button>
-      <button class="pj3-tile" type="button" data-i="2" aria-label="Room To Breathe"><img src="assets/pj/breathe.webp" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">03</span><span class="pj3-tt">Room To Breathe</span><span class="pj3-tm mono">LINCOLN PARK · CHICAGO</span></button>
-      <button class="pj3-tile" type="button" data-i="3" aria-label="500 W Superior"><img src="assets/pj/superior.webp" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">04</span><span class="pj3-tt">500 W Superior</span><span class="pj3-tm mono">RIVER NORTH · CHICAGO</span></button>
-      <button class="pj3-tile" type="button" data-i="4" aria-label="444 W Grant"><img src="assets/pj/grant.webp" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">05</span><span class="pj3-tt">444 W Grant</span><span class="pj3-tm mono">LINCOLN PARK · CHICAGO</span></button>
+      <button class="pj3-tile on" type="button" data-i="0" aria-label="Collectors Home"><img src="assets/pj/collectors.webp" srcset="assets/pj/collectors_m.webp 1200w, assets/pj/collectors.webp 2560w" sizes="(max-aspect-ratio: 1/1) 34vw, 24vw" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">01</span><span class="pj3-tt">Collectors Home</span><span class="pj3-tm mono">STREETERVILLE · CHICAGO</span></button>
+      <button class="pj3-tile" type="button" data-i="1" aria-label="Urban Sanctuary"><img src="assets/pj/urban.webp" srcset="assets/pj/urban_m.webp 1200w, assets/pj/urban.webp 1800w" sizes="(max-aspect-ratio: 1/1) 34vw, 24vw" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">02</span><span class="pj3-tt">Urban Sanctuary</span><span class="pj3-tm mono">GOLD COAST · CHICAGO</span></button>
+      <button class="pj3-tile" type="button" data-i="2" aria-label="Room To Breathe"><img src="assets/pj/breathe.webp" srcset="assets/pj/breathe_m.webp 1200w, assets/pj/breathe.webp 1800w" sizes="(max-aspect-ratio: 1/1) 34vw, 24vw" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">03</span><span class="pj3-tt">Room To Breathe</span><span class="pj3-tm mono">LINCOLN PARK · CHICAGO</span></button>
+      <button class="pj3-tile" type="button" data-i="3" aria-label="500 W Superior"><img src="assets/pj/superior.webp" srcset="assets/pj/superior_m.webp 1200w, assets/pj/superior.webp 1800w" sizes="(max-aspect-ratio: 1/1) 34vw, 24vw" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">04</span><span class="pj3-tt">500 W Superior</span><span class="pj3-tm mono">RIVER NORTH · CHICAGO</span></button>
+      <button class="pj3-tile" type="button" data-i="4" aria-label="444 W Grant"><img src="assets/pj/grant.webp" srcset="assets/pj/grant_m.webp 1200w, assets/pj/grant.webp 1800w" sizes="(max-aspect-ratio: 1/1) 34vw, 24vw" alt="" loading="lazy" decoding="async"><span class="pj3-tn mono">05</span><span class="pj3-tt">444 W Grant</span><span class="pj3-tm mono">LINCOLN PARK · CHICAGO</span></button>
     </div>
     <a class="pill pj3-pill" href="#"><span class="dot"></span><span class="t lab">View the Portfolio</span></a>
   </div>
@@ -180,12 +181,12 @@
 <!-- ================================================================== 05 DIFFERENCE · v9 (user 04.11, refs: a photograph ruled into a grid, cards that open in its cells) -->
 <section class="df2" id="difference">
   <div class="df2-stage">
-    <div class="df2-bg on"><img src="assets/df/d1.webp" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d2.webp" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d3.webp" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d4.webp" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d5.webp" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d6.webp" alt="" loading="lazy" decoding="async"></div>
+    <div class="df2-bg on"><img src="assets/df/d1.webp" srcset="assets/df/d1_m.webp 1200w, assets/df/d1.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+    <div class="df2-bg"><img src="assets/df/d2.webp" srcset="assets/df/d2_m.webp 1200w, assets/df/d2.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+    <div class="df2-bg"><img src="assets/df/d3.webp" srcset="assets/df/d3_m.webp 1200w, assets/df/d3.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+    <div class="df2-bg"><img src="assets/df/d4.webp" srcset="assets/df/d4_m.webp 1200w, assets/df/d4.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+    <div class="df2-bg"><img src="assets/df/d5.webp" srcset="assets/df/d5_m.webp 1200w, assets/df/d5.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+    <div class="df2-bg"><img src="assets/df/d6.webp" srcset="assets/df/d6_m.webp 1200w, assets/df/d6.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
     <div class="df2-shade"></div>
     <svg class="df2-grid" aria-hidden="true"></svg>
     <div class="df2-head"><span class="mono df2-lab">04 — 07 · THE CI DIFFERENCE</span><h2 class="df2-title">What Turnkey Should Really Mean</h2></div>
@@ -267,14 +268,14 @@
   <div class="ch-pin" id="prPin">
     <div class="pr4-stage">
       <div class="pr4-idx mono"><span class="ln"></span><span>06 — 07</span><span>THE CI PROCESS</span></div>
-      <div class="pr4-bg" aria-hidden="true"><img src="assets/pr/before.webp" alt="" loading="lazy" decoding="async"></div>
+      <div class="pr4-bg" aria-hidden="true"><img src="assets/pr/before.webp" srcset="assets/pr/before_m.webp 1200w, assets/pr/before.webp 1400w" sizes="(max-aspect-ratio: 1/1) 100vw, 50vw" alt="" loading="lazy" decoding="async"></div>
       <div class="pr4-fr" id="pr4Fr">
-        <figure class="pr4-im" data-i="0"><img src="assets/pr/before.webp" alt="" loading="lazy" decoding="async"><figcaption class="mono">THE RESIDENCE · BEFORE</figcaption></figure>
-        <figure class="pr4-im contain" data-i="1"><img src="assets/pr/plan.webp" alt="" loading="lazy" decoding="async"><figcaption class="mono">FLOOR PLAN · 3RD LEVEL</figcaption></figure>
-        <figure class="pr4-im" data-i="2"><img src="assets/pr/render.webp" alt="" loading="lazy" decoding="async"><figcaption class="mono">VISUALISATION · LIVING ROOM</figcaption></figure>
+        <figure class="pr4-im" data-i="0"><img src="assets/pr/before.webp" srcset="assets/pr/before_m.webp 1200w, assets/pr/before.webp 1400w" sizes="(max-aspect-ratio: 1/1) 100vw, 50vw" alt="" loading="lazy" decoding="async"><figcaption class="mono">THE RESIDENCE · BEFORE</figcaption></figure>
+        <figure class="pr4-im contain" data-i="1"><img src="assets/pr/plan.webp" srcset="assets/pr/plan_m.webp 1200w, assets/pr/plan.webp 1800w" sizes="(max-aspect-ratio: 1/1) 100vw, 50vw" alt="" loading="lazy" decoding="async"><figcaption class="mono">FLOOR PLAN · 3RD LEVEL</figcaption></figure>
+        <figure class="pr4-im" data-i="2"><img src="assets/pr/render.webp" srcset="assets/pr/render_m.webp 1200w, assets/pr/render.webp 1758w" sizes="(max-aspect-ratio: 1/1) 100vw, 50vw" alt="" loading="lazy" decoding="async"><figcaption class="mono">VISUALISATION · LIVING ROOM</figcaption></figure>
         <figure class="pr4-im" data-i="3"><img src="assets/pr/site.webp" alt="" loading="lazy" decoding="async"><figcaption class="mono">ON SITE</figcaption></figure>
-        <figure class="pr4-im" data-i="4"><img src="assets/pr/palette.webp" alt="" loading="lazy" decoding="async"><figcaption class="mono">FINISH PALETTE · LIVING ROOM</figcaption></figure>
-        <figure class="pr4-im" data-i="5"><img src="assets/pr/after.webp" alt="" loading="lazy" decoding="async"><figcaption class="mono">ROOM TO BREATHE · LINCOLN PARK, CHICAGO</figcaption></figure>
+        <figure class="pr4-im" data-i="4"><img src="assets/pr/palette.webp" srcset="assets/pr/palette_m.webp 1200w, assets/pr/palette.webp 1686w" sizes="(max-aspect-ratio: 1/1) 100vw, 50vw" alt="" loading="lazy" decoding="async"><figcaption class="mono">FINISH PALETTE · LIVING ROOM</figcaption></figure>
+        <figure class="pr4-im" data-i="5"><img src="assets/pr/after.webp" srcset="assets/pr/after_m.webp 1200w, assets/pr/after.webp 2000w" sizes="(max-aspect-ratio: 1/1) 100vw, 50vw" alt="" loading="lazy" decoding="async"><figcaption class="mono">ROOM TO BREATHE · LINCOLN PARK, CHICAGO</figcaption></figure>
       </div>
       <i class="pr4-frb" aria-hidden="true"></i>
       <h2 class="pr4-t1"><span>The Project</span><span>Is Complex.</span></h2>
@@ -307,7 +308,7 @@
 <section class="cl2" id="client">
   <div class="cl2-emb" aria-hidden="true">HIGH STANDARD</div>
   <div class="cl2-top">
-    <div class="cl2-photo"><img src="assets/df/cl.webp" alt="" loading="lazy" decoding="async"></div>
+    <div class="cl2-photo"><img src="assets/df/cl.webp" srcset="assets/df/cl_m.webp 1200w, assets/df/cl.webp 2000w" sizes="(max-aspect-ratio: 1/1) 100vw, 75vw" alt="" loading="lazy" decoding="async"></div>
     <div class="cl2-card cl2-rv">
       <span class="mono cl2-lab">06 — 07 · THE CI CLIENT</span>
       <h2 class="cl2-h">For Clients Who Value the Experience as Much as the Result</h2>
@@ -320,8 +321,8 @@
   </div>
   <div class="cl2-say">
     <h2 class="cl2-l1 cl2-rv"><span>They expect</span><span>a high standard.</span></h2>
-    <div class="cl2-fr cl2-f1"><img src="assets/img2/bust_p.jpg" alt="" loading="lazy" decoding="async"></div>
-    <div class="cl2-fr cl2-f2"><img src="assets/img2/chaise.jpg" alt="" loading="lazy" decoding="async"></div>
+    <div class="cl2-fr cl2-f1"><img src="assets/img2/bust_p.jpg" srcset="assets/img2/bust_p_m.webp 1200w, assets/img2/bust_p.jpg 1600w" sizes="(max-aspect-ratio: 1/1) 50vw, 25vw" alt="" loading="lazy" decoding="async"></div>
+    <div class="cl2-fr cl2-f2"><img src="assets/img2/chaise.jpg" srcset="assets/img2/chaise_m.webp 1200w, assets/img2/chaise.jpg 2000w" sizes="(max-aspect-ratio: 1/1) 70vw, 32vw" alt="" loading="lazy" decoding="async"></div>
     <div class="cl2-fr cl2-f3"><img src="assets/df/c3.webp" alt="" loading="lazy" decoding="async"></div>
     <h2 class="cl2-l2 cl2-rv">So do we.</h2>
   </div>
@@ -329,8 +330,8 @@
 
 <!-- ================================================================== 11 REVIEWS -->
 <section class="rv2" id="reviews">
-  <div class="rv2-bg on"><img src="assets/img2/dining_w.jpg" alt="" loading="lazy" decoding="async"></div>
-  <div class="rv2-bg"><img src="assets/img2/hall_w.jpg" alt="" loading="lazy" decoding="async"></div>
+  <div class="rv2-bg on"><img src="assets/img2/dining_w.jpg" srcset="assets/img2/dining_w_m.webp 1200w, assets/img2/dining_w.jpg 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+  <div class="rv2-bg"><img src="assets/img2/hall_w.jpg" srcset="assets/img2/hall_w_m.webp 1200w, assets/img2/hall_w.jpg 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
   <div class="rv2-shade"></div>
   <div class="rv2-head"><span class="mono rv2-lab">06 — 07 · REVIEWS</span><h2 class="rv2-title">The CI Experience, Told by Our Clients</h2></div>
   <button class="rv2-play" type="button" aria-label="Play"><i></i></button>
@@ -367,7 +368,7 @@
 <section class="ch ch-cta" id="cta">
   <div class="ch-pin" id="ctPin">
     <div class="ch-stage">
-      <div class="ct-gl" id="ctGl"><img class="ct-fb" src="assets/night/facade.jpg" alt="" loading="lazy" decoding="async"></div>
+      <div class="ct-gl" id="ctGl"><img class="ct-fb" src="assets/night/facade.jpg" srcset="assets/night/facade_m.webp 1200w, assets/night/facade.jpg 2851w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
       <div class="ct-veil"></div>
       <div class="ch-idx mono"><span class="ln"></span><span>07 — 07</span><span>NEXT CHAPTER</span></div>
       <div class="ct-tx" id="ctTx">

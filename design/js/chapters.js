@@ -17,6 +17,7 @@
      (the Vercel preview toolbar watches the DOM; measured on M4: 60 → 40 fps for one write per frame) */
   function txt(e, v){ v = String(v); if (e && e.__t !== v){ e.__t = v; e.textContent = v; } }
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var LITE = document.documentElement.classList.contains('lite');                 /* phones: no per-frame blur filters */
 
   /* a hairline that draws itself: pathLength 1, its own delay --d inside its group's progress --k (CSS does the rest) */
   function line(g, d, cls, delay){ var p = el('path', {d: d, pathLength: 1, 'class': 'dw ' + (cls || ''), 'vector-effect': 'non-scaling-stroke'}, g); p.style.setProperty('--d', f1(delay || 0)); return p; }
@@ -663,7 +664,7 @@
       path.setAttribute('d', cat(pts));
       /* the opening line, over the knot */
       var k1 = sg(p, 0, .06), ko = sg(p, .3, .38); t1.style.opacity = (Math.min(1, .25 + k1) * (1 - ko)).toFixed(3);
-      t1.style.transform = 'translateY(-50%) scale(' + (1.1 - .1 * eo(sg(p, 0, .12)) - .08 * ko).toFixed(4) + ')'; t1.style.filter = ko > 0 ? 'blur(' + f1(12 * ko) + 'px)' : '';
+      t1.style.transform = 'translateY(-50%) scale(' + (1.1 - .1 * eo(sg(p, 0, .12)) - .08 * ko).toFixed(4) + ')'; t1.style.filter = ko > 0 && !LITE ? 'blur(' + f1(12 * ko) + 'px)' : '';
       t1.style.visibility = ko >= 1 ? 'hidden' : '';
       var k2 = sg(p, .37, .42) * (1 - sg(p, .84, .88)); t2.style.opacity = k2.toFixed(3); t2.style.transform = 'translateY(' + f1((1 - eo(sg(p, .37, .42))) * 18 - 24 * sg(p, .86, .9)) + 'px)';
       /* the six steps: the square walks them; the step's word rises above the line */

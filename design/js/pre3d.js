@@ -45,7 +45,8 @@ const ease = x => { x = clamp01(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow
 const expoIO = x => { x = clamp01(x); if (x === 0 || x === 1) return x; return x < .5 ? Math.pow(2, 20 * x - 10) / 2 : 1 - Math.pow(2, -20 * x + 10) / 2; };
 const lerp = (a, b, t) => a + (b - a) * t;
 
-function hiDPI(){ return Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 2200; }
+const LITE = document.documentElement.classList.contains('lite');          /* phones / touch: lighter GL (no MSAA, DPR ≤ 1.5, 1600-px textures) */
+function hiDPI(){ if (LITE) return false; return Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 2200; }
 
 function loadTexRaw(url){                                         /* sRGB pictures uploaded raw (RGBA8), decoded in the shader */
   return new Promise((res, rej) => new THREE.TextureLoader().load(url, t => { t.colorSpace = THREE.NoColorSpace; t.anisotropy = renderer.capabilities.getMaxAnisotropy(); decoded(t, res); }, undefined, rej));
@@ -313,8 +314,8 @@ const FinalShader = {
 
 /* ---------------------------------------------------------------- build */
 async function build(){
-  renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: false, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: !LITE, alpha: false, powerPreference: 'high-performance' });
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, LITE ? 1.5 : 2));
   renderer.localClippingEnabled = true;
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   scene = new THREE.Scene(); scene.background = new THREE.Color(0x000000);
@@ -425,7 +426,7 @@ function resize(){
   layoutCamera();
   renderer.setSize(vw, vh, false);
   composer.setSize(vw, vh);
-  bloom.resolution.set(vw / 2, vh / 2);
+  bloom.resolution.set(vw / (LITE ? 3 : 2), vh / (LITE ? 3 : 2));
   finalPass.uniforms.uRes.value.set(vw, vh);
   scene.traverse(o => { if (o.userData && o.userData.r) placeRect(o); });
   scaleRoom(); lineSize();

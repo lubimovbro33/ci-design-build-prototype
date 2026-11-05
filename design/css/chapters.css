@@ -693,3 +693,25 @@
 .pr4-end b{font-size:clamp(28px,3.4vw,62px)}
 .pr4-end .r{font-size:clamp(14px,1.5vw,24px)}
 @media (max-aspect-ratio: 1/1){ .pr4-end{width:auto;right:var(--m)} }
+
+/* ================================================================== MOBILE v1 (user 05.11 09:06: the whole page, comfortable on a phone, and above all no lag) */
+/* phones / touch (html.lite, set in <head>): the expensive per-frame effects go; what is drawn stays the same */
+.lite .cur{display:none!important}
+.lite .pr4-t1{mix-blend-mode:normal;will-change:transform,opacity}
+.lite .pr4-im figcaption{-webkit-backdrop-filter:none;backdrop-filter:none;background:rgba(20,20,22,.82)}
+.lite .story .st-tk{-webkit-backdrop-filter:none;backdrop-filter:none;background:linear-gradient(155deg,rgba(92,112,130,.55),rgba(40,62,75,.9) 55%,rgba(0,0,0,.94))}
+.lite .story .lay.top path{filter:none}
+.lite .hero .v15 .ol{filter:none}
+@media (max-aspect-ratio: 1/1){
+  /* the text beats sit on their own soft black ground, so a long beat never runs into the drawing above it */
+  .ch-phil .ph-t > div,.ch-about .ch-t > div,.ch-appr .ch-t > div{padding-top:56px;background:linear-gradient(to top,#000 calc(100% - 56px),rgba(0,0,0,0))}
+  .ch-about .ab-draw{height:40vh;top:calc(var(--hdr) + 56px)}
+  /* the CTA's words always on a darkened ground (the photograph behind them is bright on a phone) */
+  .ch-cta .ct-veil{opacity:max(var(--vl,0),.62)}
+  .ch-cta .ct-tx{bottom:calc(var(--m) + 48px)}
+}
+@media (max-aspect-ratio: 1/1) and (max-height: 720px){
+  .ch .ch-h,.ch-phil .ph-h{font-size:18px}
+  .ch .ch-lead,.ch .ch-p,.ch-phil .ph-lead,.ch-phil .ph-p{font-size:13px;line-height:1.45}
+  .ch-about .ab-draw{height:34vh}
+}
