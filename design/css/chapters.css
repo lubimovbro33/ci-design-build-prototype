@@ -594,3 +594,44 @@
   .rv2-head{max-width:none}
   .rv2-card{width:auto;min-height:320px}
 }
+
+/* ---------------------------------------------------------------- 08 PROCESS · v10: one real home through the six steps (refs: a card over a large photograph on a deep field, embossed type) */
+.pr3{position:relative;color:#EBEBEB;background:linear-gradient(160deg,#18181A 0%,#232427 50%,#2A3138 100%)}
+.pr3 .ch-pin{height:640vh}
+.pr3-stage{position:sticky;top:0;height:100vh;min-height:640px;overflow:hidden}
+.pr3-emb{position:absolute;left:-1vw;top:2vh;writing-mode:vertical-rl;transform:rotate(180deg);font-family:"TG Ext",sans-serif;text-transform:uppercase;font-size:clamp(90px,13.5vw,240px);line-height:.8;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.07);text-shadow:1px 1px 0 rgba(255,255,255,.03),-1px -1px 0 rgba(0,0,0,.3);pointer-events:none;white-space:nowrap}
+.pr3-pic{position:absolute;left:27vw;right:0;top:calc(var(--hdr) + 40px);bottom:9vh;overflow:hidden;background:#1A1A1C}
+.pr3-im{position:absolute;inset:0;margin:0;clip-path:inset(0 0 0 100%);transition:clip-path 1.1s cubic-bezier(.77,0,.18,1)}
+.pr3-im img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.1);transition:transform 2.2s cubic-bezier(.2,.8,.2,1)}
+.pr3-im.on{clip-path:inset(0);z-index:2}
+.pr3-im.on img{transform:scale(1.02)}
+.pr3-im.was{clip-path:inset(0);z-index:1}
+.pr3-im.contain{background:#EBEBEB}
+.pr3-im.contain img{object-fit:contain;padding:4% 6% 4% 22%;box-sizing:border-box}
+.pr3-cap{position:absolute;right:16px;bottom:14px;z-index:3;color:#fff;background:rgba(20,20,22,.55);padding:6px 9px;backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.pr3-card{position:absolute;z-index:4;left:9vw;bottom:5vh;width:min(30vw,500px);height:min(58vh,560px);background:#EBEBEB;color:#1D1D1D;padding:clamp(26px,2.6vw,44px) clamp(26px,2.6vw,44px) clamp(22px,2.2vw,36px) clamp(40px,3.6vw,60px);display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.3)}
+.pr3-card::before{content:"";position:absolute;left:clamp(22px,1.8vw,30px);top:clamp(26px,2.6vw,44px);bottom:clamp(22px,2.2vw,36px);width:1px;background:rgba(29,29,29,.3)}
+.pr3-cs{position:relative;flex:1;display:grid}
+.pr3-c{grid-area:1/1;display:flex;flex-direction:column;opacity:0;visibility:hidden;transform:translateY(14px);transition:opacity .45s,transform .7s cubic-bezier(.2,.8,.2,1),visibility 0s .45s}
+.pr3-c.on{opacity:1;visibility:visible;transform:none;transition:opacity .7s .25s,transform 1s cubic-bezier(.2,.8,.2,1) .25s,visibility 0s}
+.pr3-k{color:#636366}
+.pr3-h{margin:clamp(22px,3vh,40px) 0 0;font-weight:400;text-transform:uppercase;font-size:clamp(34px,3.9vw,70px);line-height:.9;letter-spacing:-.04em}
+.pr3-h.sm{font-size:clamp(21px,2.05vw,36px);line-height:.98;letter-spacing:-.03em}
+.pr3-d{margin:auto 0 0;font-size:15px;line-height:1.5;color:#3A3A3C;max-width:34ch}
+.pr3-nav{display:flex;align-items:center;gap:12px;margin-top:22px}
+.pr3-ar{all:unset;cursor:pointer;position:relative;width:42px;height:42px;border:1px solid rgba(29,29,29,.3);border-radius:50%;transition:border-color .3s,background .3s,opacity .3s}
+.pr3-ar::before{content:"";position:absolute;left:50%;top:50%;width:14px;height:1px;margin-left:-7px;background:#1D1D1D}
+.pr3-ar::after{content:"";position:absolute;top:50%;width:6px;height:6px;margin-top:-3.5px;border-top:1px solid #1D1D1D;border-right:1px solid #1D1D1D}
+.pr3-ar.next::after{right:13px;transform:rotate(45deg)} .pr3-ar.prev::after{left:13px;transform:rotate(-135deg)}
+.pr3-ar:hover{border-color:#1D1D1D}
+.pr3-ar[disabled]{opacity:.3;pointer-events:none}
+.pr3-ticks{margin-left:auto;display:flex;gap:6px}
+.pr3-ticks i{width:16px;height:2px;background:rgba(29,29,29,.18);transition:background .4s}
+.pr3-ticks i.on{background:#283E4B}
+@media (max-aspect-ratio: 1/1){
+  .pr3-pic{left:0;top:calc(var(--hdr) + 30px);bottom:auto;height:44vh}
+  .pr3-card{left:var(--m);right:var(--m);width:auto;bottom:calc(var(--m) + 30px);height:auto;min-height:40vh}
+  .pr3-h{font-size:clamp(34px,10vw,52px)}
+  .pr3-im.contain img{padding:4%}
+  .pr3-emb{display:none}
+}

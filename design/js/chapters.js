@@ -612,6 +612,25 @@
     return { sec: sec, pin: pin, update: update };
   }
 
+  /* ================================================================== 08 PROCESS · v10: one real home (Room To Breathe) through the six steps — the scroll turns the pages, the arrows too */
+  function process3(){
+    var sec = document.getElementById('process'); if (!sec || !sec.classList.contains('pr3')) return null;
+    var pin = sec.querySelector('.ch-pin'), ims = [].slice.call(sec.querySelectorAll('.pr3-im')), cs = [].slice.call(sec.querySelectorAll('.pr3-c')), ticks = [].slice.call(sec.querySelectorAll('.pr3-ticks i'));
+    var cap = sec.querySelector('#prCap'), CAPS = cap.getAttribute('data-caps').split('|'), prev = sec.querySelector('.pr3-ar.prev'), next = sec.querySelector('.pr3-ar.next'), N = 8, cur = -1;
+    function imgOf(s){ return Math.min(s, 6); }                          /* the last page keeps the finished room */
+    function go(s){ s = Math.max(0, Math.min(N - 1, s)); var top = pin.getBoundingClientRect().top + (window.scrollY || window.pageYOffset); window.scrollTo({top: top + (s + .5) / N * (pin.offsetHeight - window.innerHeight), behavior: 'smooth'}); }
+    prev.addEventListener('click', function(){ go(cur - 1); }); next.addEventListener('click', function(){ go(cur + 1); });
+    function update(p){
+      var s = Math.max(0, Math.min(N - 1, Math.floor(p * N)));
+      if (s === cur) return; var pi = cur < 0 ? -1 : imgOf(cur); cur = s;
+      var ii = imgOf(s); ims.forEach(function(e, k){ e.classList.toggle('on', k === ii); e.classList.toggle('was', k === pi && pi !== ii); });
+      cs.forEach(function(e, k){ e.classList.toggle('on', k === s); });
+      ticks.forEach(function(t, k){ t.classList.toggle('on', k + 1 <= s); });
+      txt(cap, CAPS[s] || ''); prev.disabled = s === 0; next.disabled = s === N - 1;
+    }
+    return { sec: sec, pin: pin, update: update };
+  }
+
   /* ================================================================== 09 CLIENT · two lines that meet exactly */
   function client(){
     var sec = document.getElementById('client'); if (!sec || !sec.classList.contains('ch')) return null;
@@ -810,7 +829,7 @@
   }
 
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process(), client(), cta()].filter(Boolean), dirty = true;
+  var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process(), process3(), client(), cta()].filter(Boolean), dirty = true;
   var SVGS = [].slice.call(document.querySelectorAll('.ch svg'));
   function dashScale(){ SVGS.forEach(function(v){ var m = v.getScreenCTM && v.getScreenCTM(); if (m && m.a) v.style.setProperty('--ds', Math.max(m.a, .05).toFixed(4)); }); }
   function measure(){ dashScale(); var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
