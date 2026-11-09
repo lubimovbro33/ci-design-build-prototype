@@ -118,28 +118,15 @@ img{display:block;max-width:100%}
 .dark .arrow-btn{border-color:var(--line-d)} .dark .arrow-btn:hover{background:var(--ivory);color:var(--char);border-color:var(--ivory)}
 
 /* cursor ------------------------------------------------------------------ */
-/* ---------- the cursor (user 09.11 15:13 "круче, кастомнее, вау"): a drafting reticle. A 4 px square marks the exact point; four
-   corner marks (the drawing grid's corner marks) follow it on a spring and, over anything you can press, leave the pointer and frame
-   that thing — its own rectangle + 6 px — while the point keeps moving inside; two hairline guides cross the whole screen and a tiny
-   X / Y readout rides with it while the mouse moves, then fade. Monochrome, difference-blended, so it reads on photographs and on black. */
+/* ---------- the cursor (user 09.11 15:13 → 15:18: "вау", but no lines over things, nothing code-like). It is the square from the
+   buttons: an 8 px Bright Gray square that follows on a soft spring and leans into its motion; over a button that has a corner square
+   it glides into that square and becomes it; over other pressable things it grows a little; where something can be dragged or
+   opened it opens into a 72 px square with the word. Difference-blended, so it reads on photographs and on black. */
 .cur{position:fixed;inset:0;z-index:1000;pointer-events:none;mix-blend-mode:difference;opacity:0;transition:opacity .4s}
 body.ready .cur.on,body.is-intro .cur.on{opacity:1}
-.cur .cd{position:absolute;left:0;top:0;width:4px;height:4px;margin:-2px 0 0 -2px;background:#fff;transition:transform .12s linear;will-change:transform}
-.cur .cr{position:absolute;left:0;top:0;width:28px;height:28px;will-change:transform,width,height}
-.cur .k{position:absolute;width:8px;height:8px;border:0 solid #fff;transition:width .45s var(--e-out),height .45s var(--e-out)}
-.cur .k.tl{left:0;top:0;border-width:1px 0 0 1px} .cur .k.tr{right:0;top:0;border-width:1px 1px 0 0}
-.cur .k.bl{left:0;bottom:0;border-width:0 0 1px 1px} .cur .k.br{right:0;bottom:0;border-width:0 1px 1px 0}
-.cur.link .k{width:12px;height:12px}
-.cur .cg{position:absolute;left:0;top:0;background:#fff;opacity:0;transition:opacity .9s;will-change:transform}
-.cur .cgx{width:100%;height:1px} .cur .cgy{width:1px;height:100%}
-.cur.moving .cg{opacity:.07} .cur.link .cg{opacity:0!important}
-@counter-style ci-pad4{system:extends decimal;pad:4 "0"}
-.cur .cc{position:absolute;left:0;top:0;font-family:"TG Ext",sans-serif;font-size:9px;letter-spacing:.12em;color:#fff;white-space:nowrap;opacity:0;transition:opacity .9s;counter-reset:cx var(--cx,0) cy var(--cy,0)}
-.cur .cc::before{content:"X " counter(cx, ci-pad4) "   Y " counter(cy, ci-pad4)}
-.cur.moving .cc{opacity:.5} .cur.link .cc{opacity:0!important}
-.cur .cl{position:absolute;left:calc(100% + 10px);top:-2px;font-family:"TG Ext",sans-serif;font-size:10px;letter-spacing:.12em;color:#fff;opacity:0;transition:opacity .3s;white-space:nowrap}
-.cur.drag .cl,.cur.lab .cl{opacity:1}
-.cur.down .cd{transform:scale(1.8)}
+.cur .cd{position:absolute;left:0;top:0;width:8px;height:8px;background:#fff;will-change:transform,width,height;display:grid;place-items:center;overflow:hidden}
+.cur .cl{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-weight:500;font-size:11px;letter-spacing:-.02em;text-transform:uppercase;color:#000;opacity:0;transition:opacity .25s;white-space:nowrap}
+.cur.lab,.cur.drag{mix-blend-mode:normal} .cur.lab .cd,.cur.drag .cd{background:#EBEBEB} .cur.lab .cl,.cur.drag .cl{opacity:1;transition-delay:.12s}
 
 /* ======================================================================= HERO v13 (reel act 1 → GL facade → slider) */
 .hero{position:relative;height:100vh;height:100svh;min-height:600px;overflow:hidden;background:#000;color:var(--ivory)}
