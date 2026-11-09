@@ -405,7 +405,8 @@
    display size, one Bright Gray panel. Sizes in --u (1/1920 of the width), the hero's grid: rule 395, column 417, panel = the
    header's CTA + menu (1511…1896), from 24 under them to 24 over the chapter rule. */
 .pj4{background:#000;color:#EBEBEB;--pb:calc(36px + 24 * var(--u))}
-.pj4 .ch-pin{height:540vh}
+.pj4-pin,.pj4-stage{position:relative;height:100vh;min-height:680px;overflow:hidden}
+.pj4-stage{touch-action:pan-y}
 .pj4 .lab{font-family:"TG Ext",sans-serif;font-weight:400;font-size:max(10px, calc(11 * var(--u)));letter-spacing:.08em;text-transform:uppercase;line-height:1.2}
 /* the photograph: natural, full bleed; the next one opens out of a window (the CI window) to full bleed, its picture settling from
    ×1.22 as it opens; then a slow drift. Only two soft shadows: under the header and under the name. */
@@ -422,7 +423,7 @@
   background:linear-gradient(180deg,rgba(0,0,0,.32) 0,rgba(0,0,0,0) calc(220 * var(--u))),
              radial-gradient(70% 62% at 12% 100%,rgba(0,0,0,.5) 0,rgba(0,0,0,.22) 45%,rgba(0,0,0,0) 72%)}
 /* the name: the hero title's face and size, on a hairline (the hero's rule at 395) */
-.pj4-cap{position:absolute;z-index:5;left:var(--f-col);right:calc(433 * var(--u));bottom:var(--pb)}
+.pj4-cap{position:absolute;z-index:5;left:var(--f-col);right:calc(433 * var(--u));bottom:calc(var(--pb) + max(40px, calc(48 * var(--u))) + 44 * var(--u))}
 .pj4-rule{position:absolute;left:calc(-22 * var(--u));top:0;bottom:0;width:1px;background:rgba(255,255,255,.4)}
 .pj4-cs{display:grid}
 .pj4-c{grid-area:1/1;display:flex;flex-direction:column;align-items:flex-start;gap:calc(22 * var(--u));pointer-events:none}
@@ -452,7 +453,6 @@
 .pj4-r .n{font-family:"TG Ext",sans-serif;font-size:max(10px, calc(10.5 * var(--u)));letter-spacing:.08em;text-transform:uppercase}
 .pj4-r .nm{font-family:"TG Ext",sans-serif;font-size:max(12px, calc(15 * var(--u)));letter-spacing:-.01em;text-transform:uppercase;white-space:nowrap;transition:transform .7s cubic-bezier(.16,1,.3,1)}
 .pj4-r .sq{width:max(5px, calc(6 * var(--u)));height:max(5px, calc(6 * var(--u)));background:#1D1D1D;transform:scale(0);transition:transform .5s cubic-bezier(.16,1,.3,1)}
-.pj4-r .pr{position:absolute;left:0;top:-1px;width:100%;height:1px;background:#1D1D1D;transform:scaleX(var(--pr,0));transform-origin:0 50%}
 .pj4-r.on{color:#1D1D1D}
 .pj4-r.on .sq{transform:none}
 @media (hover:hover){ .pj4-r:hover{color:#1D1D1D} .pj4-r:hover .nm{transform:translateX(calc(6 * var(--u)))} .pj4-r:hover .sq{transform:scale(.6)} .pj4-r.on:hover .sq{transform:none} }
@@ -475,6 +475,23 @@
 }
 .pj4-cta:active{transform:scale(.99)}
 .pj4-cta:focus-visible{outline:1px solid #1D1D1D;outline-offset:3px}
+/* the slider controls (v11): two Bright Gray squares with drawn arrows, then the pagination — a number and a hairline per project;
+   the active line fills while the project plays (7 s), then the next opens. Hovering the panel or the controls holds it. */
+.pj4-ctl{position:absolute;z-index:6;left:var(--f-col);bottom:var(--pb);display:flex;align-items:center;gap:calc(8 * var(--u))}
+.pj4-ar{all:unset;box-sizing:border-box;cursor:pointer;position:relative;width:max(40px, calc(48 * var(--u)));height:max(40px, calc(48 * var(--u)));background:var(--bright);color:#1D1D1D;display:grid;place-items:center;overflow:hidden}
+.pj4-ar svg{width:44%;height:44%;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:square;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+@media (hover:hover){ .pj4-ar.next:hover svg{transform:translateX(18%)} .pj4-ar.prev:hover svg{transform:translateX(-18%)} }
+.pj4-ar:active{transform:scale(.96)}
+.pj4-ar:focus-visible,.pj4-pg button:focus-visible{outline:1px solid #fff;outline-offset:3px}
+.pj4-pg{list-style:none;margin:0 0 0 calc(28 * var(--u));padding:0;display:flex;gap:calc(22 * var(--u))}
+.pj4-pg button{all:unset;cursor:pointer;display:flex;align-items:center;gap:calc(12 * var(--u));padding:calc(10 * var(--u)) 0;font-family:"TG Ext",sans-serif;font-size:max(10px, calc(11 * var(--u)));letter-spacing:.08em;color:rgba(255,255,255,.55);transition:color .5s}
+.pj4-pg i{position:relative;display:block;width:calc(64 * var(--u));min-width:28px;height:1px;background:rgba(255,255,255,.3);overflow:hidden}
+.pj4-pg i::after{content:"";position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:0 50%}
+.pj4-pg button.on{color:#fff}
+.pj4-pg button.run i::after{animation:pj4-prog 7s linear forwards}
+.pj4.paused .pj4-pg button.run i::after,.pj4.hold .pj4-pg button.run i::after{animation-play-state:paused}
+@media (hover:hover){ .pj4-pg button:hover{color:#fff} }
+@keyframes pj4-prog{from{transform:scaleX(0)}to{transform:scaleX(1)}}
 @media (prefers-reduced-motion:reduce){.pj4-im,.pj4-im img,.pj4-nm .l>span,.pj4-k>span,.pj4-mt>span,.pj4-cta .ln,.pj4-cta .t .bo,.pj4-cta .t .bn{transition:none!important}.pj4-im.on .kb{animation:none}}
 /* phones / portrait: the panel goes under the name, full width; the intro text stays, the lead is dropped below 760 px of height */
 @media (max-aspect-ratio: 1/1), (max-width: 900px){
@@ -487,6 +504,8 @@
   .pj4-r{height:40px;grid-template-columns:12px 30px 1fr}
   .pj4-cta .t{left:16px;top:12px}
   .pj4-cap{left:calc(var(--hm) + 14px);right:var(--hm);bottom:auto;top:calc(var(--hdr) + 40px)}
+  .pj4-ctl{left:var(--hm);right:var(--hm);bottom:auto;top:calc(var(--hdr) + 40px + clamp(34px,10.5vw,56px) * 2 + 74px)}
+  .pj4-pg{margin-left:12px;gap:10px} .pj4-pg i{width:18px;min-width:18px}
   .pj4-rule{left:-14px}
   .pj4-nm{font-size:clamp(34px,10.5vw,56px)}
   .pj4-veil{background:linear-gradient(180deg,rgba(0,0,0,.45) 0,rgba(0,0,0,.1) 40%,rgba(0,0,0,0) 60%)}
@@ -495,7 +514,8 @@
 
 /* ---------------------------------------------------------------- 05 DIFFERENCE · v9: a photograph ruled into a grid; disciplines open as cards in its cells */
 .df2{position:relative;color:#fff;background:#111}
-.df2-stage{position:relative;height:100vh;min-height:760px;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:30% 33% 37%}
+.df2-pin{position:relative;height:240vh}
+.df2-stage{position:sticky;top:0;height:100vh;min-height:760px;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:30% 33% 37%}
 .df2-bg{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
 .df2-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.08);transition:transform 8s cubic-bezier(.2,.6,.3,1)}
 .df2-bg.on{opacity:1}
@@ -542,6 +562,31 @@
   .df2-cd{font-size:12px}
   .df2-cell:nth-child(odd){border-right:1px solid rgba(255,255,255,.2)}
 }
+
+/* ---- the opening into 05 (user 09.11 12:51–12:53, refs Alma + Tudor): black, one portrait window (400×540, the CI window) in the
+   middle with the chapter's first photograph and a hairline frame 26 outside it; "Next / The CI Difference" on a hairline at the
+   left; a percentage bottom-right (Tudor's 60 %). The scroll opens the window to full bleed (the photograph settling from ×1.15 to
+   the chapter's ×1.01), the frame and the words go, the count reaches 100 %, then the cover fades and the chapter is there. js: chapters.js nx */
+.df2-nx{position:absolute;inset:0;z-index:20;background:#000;pointer-events:none}
+.df2-nx-ph{position:absolute;inset:0;overflow:hidden;clip-path:inset(calc(50% - 270 * var(--u)) calc(50% - 200 * var(--u)))}
+.df2-nx-ph img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.15)}
+.df2-nx-fr{position:absolute;left:calc(50% - 226 * var(--u));top:calc(50% - 296 * var(--u));width:calc(452 * var(--u));height:calc(592 * var(--u));border:1px solid rgba(255,255,255,.26);box-sizing:border-box}
+.df2-nx-cap{position:absolute;left:calc(121 * var(--u));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-start;gap:calc(22 * var(--u));padding-left:calc(22 * var(--u));color:#EBEBEB}
+.df2-nx-rule{position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,.4)}
+.df2-nx-cap .lab{font-family:"TG Ext",sans-serif;font-size:max(10px, calc(11 * var(--u)));letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.7)}
+.df2-nx-t{font-family:"TG Ext",sans-serif;font-weight:700;font-size:max(28px, calc(64 * var(--u)));line-height:1;letter-spacing:-.07em;text-transform:uppercase;color:#EBEBEB}
+.df2-nx-pc{position:absolute;right:calc(24 * var(--u));bottom:calc(36px + 24 * var(--u));font-family:"TG Ext",sans-serif;font-size:max(24px, calc(56 * var(--u)));letter-spacing:-.05em;line-height:1;color:rgba(235,235,235,.38);counter-reset:pc var(--pc,0)}
+.df2-nx-pc::after{content:counter(pc) "%"}
+@property --pc{syntax:'<integer>';inherits:false;initial-value:0}
+.df2.nx-on .df2-head,.df2.nx-on .df2-panel{opacity:0;transform:translateY(24px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform 1.1s cubic-bezier(.16,1,.3,1)}
+.df2.nx-on.open .df2-head,.df2.nx-on.open .df2-panel{opacity:1;transform:none}
+.df2.nx-on.open .df2-panel{transition-delay:.15s}
+@media (max-aspect-ratio: 1/1), (max-width: 900px){
+  .df2-nx-cap{left:var(--hm);top:calc(var(--hdr) + 30px);transform:none}
+  .df2-nx-ph{clip-path:inset(calc(50% - 34vw) 28vw)}
+  .df2-nx-fr{left:calc(28vw - 14px);top:calc(50% - 34vw - 14px);width:calc(44vw + 28px);height:calc(68vw + 28px)}
+}
+@media (prefers-reduced-motion:reduce){.df2-nx{display:none}.df2-pin{height:auto}.df2-stage{position:relative}}
 
 /* ---------------------------------------------------------------- 09 CLIENT · v9: a card over a large photograph on a deep colour; embossed type; a loose collage */
 .cl2{position:relative;overflow:hidden;color:#EBEBEB;background:linear-gradient(165deg,#17222B 0%,#22323E 45%,#2B4352 100%)}

@@ -613,26 +613,28 @@
     return { sec: sec, pin: pin, update: update };
   }
 
-  /* ================================================================== 04 PROJECTS · v10 (user 09.11 10:58): the scroll turns five projects.
-     p → step s (0..4) and the progress inside it (the index row's hairline fills). A step change swaps classes: the next photograph
-     opens out of a window to full bleed (css), the name rises line by line, the index moves its square. A click on a row scrolls to it. */
-  function projects4(){
-    var sec = document.getElementById('projects'); if (!sec || !sec.classList.contains('pj4')) return null;
-    var pin = sec.querySelector('.ch-pin'), ims = [].slice.call(sec.querySelectorAll('.pj4-im')), cs = [].slice.call(sec.querySelectorAll('.pj4-c')),
-        rs = [].slice.call(sec.querySelectorAll('.pj4-r')), N = rs.length, cur = 0, wasT = 0;
-    function go(s){ var top = pin.getBoundingClientRect().top + (window.scrollY || window.pageYOffset); window.scrollTo({top: top + (s + .5) / N * (pin.offsetHeight - window.innerHeight), behavior: 'smooth'}); }
-    rs.forEach(function(r, i){ r.addEventListener('click', function(){ go(i); }); });
-    function show(s){
-      var prev = cur; cur = s; clearTimeout(wasT);
-      ims.forEach(function(e, k){ e.classList.toggle('on', k === s); e.classList.toggle('was', k === prev); });
-      cs.forEach(function(e, k){ e.classList.toggle('on', k === s); e.classList.toggle('was', k === prev); });
-      rs.forEach(function(e, k){ e.classList.toggle('on', k === s); if (k !== s) e.style.setProperty('--pr', k < s ? 1 : 0); });
-      wasT = setTimeout(function(){ ims.forEach(function(e){ e.classList.remove('was'); }); cs.forEach(function(e){ e.classList.remove('was'); }); }, 1400);
-    }
+  /* ================================================================== 05 DIFFERENCE · the opening (09.11 12:51): the window in the black
+     opens to full bleed with the scroll; the photograph is the chapter's own first background, so when the cover fades nothing moves */
+  function diffOpen(){
+    var sec = document.getElementById('difference'); if (!sec) return null;
+    var pin = sec.querySelector('.df2-pin'), nx = sec.querySelector('.df2-nx'); if (!pin || !nx) return null;
+    var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), fr = nx.querySelector('.df2-nx-fr'), cap = nx.querySelector('.df2-nx-cap'), pc = nx.querySelector('.df2-nx-pc'), open = -1;
+    sec.classList.add('nx-on');
+    function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
     function update(p){
-      var f = p * N, s = Math.max(0, Math.min(N - 1, Math.floor(f)));
-      if (s !== cur) show(s);
-      var k = (Math.min(f, N) - s).toFixed(3); if (rs[s].__pr !== k){ rs[s].__pr = k; rs[s].style.setProperty('--pr', k); }
+      var vw = window.innerWidth, vh = window.innerHeight, u = vw / 1920, port = vw <= 900 || vw / vh <= 1;
+      var W = port ? vw * .44 : 400 * u, H = port ? vw * .68 : 540 * u, m = port ? 14 : 26 * u;
+      var e = ease(clamp01((p - .05) / .55)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
+      ph.style.clipPath = 'inset(' + T.toFixed(1) + 'px ' + L.toFixed(1) + 'px)';
+      im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')';
+      fr.style.transform = 'scale(' + ((W + 2 * m + e * (vw - W)) / (W + 2 * m)).toFixed(4) + ',' + ((H + 2 * m + e * (vh - H)) / (H + 2 * m)).toFixed(4) + ')';
+      fr.style.opacity = Math.max(0, 1 - e * 2.4).toFixed(3);
+      cap.style.opacity = Math.max(0, 1 - e * 2.6).toFixed(3);
+      cap.style.marginLeft = (-60 * u * e).toFixed(1) + 'px';
+      pc.style.setProperty('--pc', Math.round(e * 100));
+      pc.style.opacity = (e < .92 ? 1 : Math.max(0, 1 - (e - .92) / .08)).toFixed(3);
+      var f = clamp01((p - .62) / .1); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
+      var o = p > .64 ? 1 : 0; if (o !== open){ open = o; sec.classList.toggle('open', !!o); }
     }
     return { sec: sec, pin: pin, update: update };
   }
@@ -839,6 +841,41 @@
     io.observe(svg);
   })();
 
+  /* ================================================================== 04 PROJECTS · v11 (user 09.11 12:51): a slider, not the scroll.
+     Arrows, the pagination (the active line fills while it plays, 7 s, then the next one opens), the panel's index rows, swipe.
+     Held while the pointer is on the panel or the controls, and while the section is off screen. */
+  (function(){
+    var sec = document.getElementById('projects'); if (!sec || !sec.classList.contains('pj4')) return;
+    var q = function(s){ return [].slice.call(sec.querySelectorAll(s)); };
+    var ims = q('.pj4-im'), cs = q('.pj4-c'), rs = q('.pj4-r'), pgs = q('.pj4-pg button'), N = ims.length, cur = 0, lock = 0, wasT = 0;
+    function show(s){
+      var prev = cur; cur = s; clearTimeout(wasT);
+      ims.forEach(function(e, k){ e.classList.toggle('on', k === s); e.classList.toggle('was', k === prev); });
+      cs.forEach(function(e, k){ e.classList.toggle('on', k === s); e.classList.toggle('was', k === prev); });
+      rs.forEach(function(e, k){ e.classList.toggle('on', k === s); });
+      pgs.forEach(function(e, k){ e.classList.toggle('on', k === s); e.classList.remove('run'); });
+      void sec.offsetWidth; pgs[s].classList.add('run');
+      wasT = setTimeout(function(){ ims.forEach(function(e){ e.classList.remove('was'); }); cs.forEach(function(e){ e.classList.remove('was'); }); }, 1400);
+    }
+    function go(s){ s = (s + N) % N; var now = performance.now(); if (s === cur || now < lock) return; lock = now + 950; show(s); }
+    pgs.forEach(function(b, i){ b.addEventListener('click', function(){ go(i); }); });
+    rs.forEach(function(b, i){ b.addEventListener('click', function(){ go(i); }); });
+    sec.querySelector('.pj4-ar.prev').addEventListener('click', function(){ go(cur - 1); });
+    sec.querySelector('.pj4-ar.next').addEventListener('click', function(){ go(cur + 1); });
+    sec.addEventListener('animationend', function(e){ if (e.animationName === 'pj4-prog') go(cur + 1); });
+    q('.pj4-pn, .pj4-ctl').forEach(function(el){
+      el.addEventListener('pointerenter', function(e){ if (e.pointerType !== 'touch') sec.classList.add('hold'); });
+      el.addEventListener('pointerleave', function(){ sec.classList.remove('hold'); });
+    });
+    sec.addEventListener('keydown', function(e){ if (e.key === 'ArrowRight') go(cur + 1); else if (e.key === 'ArrowLeft') go(cur - 1); });
+    var sx = null, sy = 0, stage = sec.querySelector('.pj4-stage');
+    stage.addEventListener('pointerdown', function(e){ if (e.pointerType === 'mouse' || e.target.closest('.pj4-pn, .pj4-ctl')) return; sx = e.clientX; sy = e.clientY; });
+    stage.addEventListener('pointerup', function(e){ if (sx === null) return; var dx = e.clientX - sx, dy = e.clientY - sy; sx = null; if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.3) go(cur + (dx < 0 ? 1 : -1)); });
+    sec.classList.add('paused');
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(en){ sec.classList.toggle('paused', !en[0].isIntersecting); }, {threshold: .55}).observe(sec);
+    else sec.classList.remove('paused');
+  })();
+
   /* ================================================================== 05 DIFFERENCE · v9: the photograph ruled into a grid; a discipline opens as a card in its cell, the photograph follows */
   (function(){
     var st = document.querySelector('.df2-stage'); if (!st) return;
@@ -888,7 +925,7 @@
   }
 
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy(), about(), projects(), projects4(), difference(), suite(), approach(), process(), process3(), process4(), client(), cta()].filter(Boolean), dirty = true;
+  var CH = [philosophy(), about(), projects(), diffOpen(), difference(), suite(), approach(), process(), process3(), process4(), client(), cta()].filter(Boolean), dirty = true;
   var SVGS = [].slice.call(document.querySelectorAll('.ch svg'));
   function dashScale(){ SVGS.forEach(function(v){ var m = v.getScreenCTM && v.getScreenCTM(); if (m && m.a) v.style.setProperty('--ds', Math.max(m.a, .05).toFixed(4)); }); }
   function measure(){ dashScale(); var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
