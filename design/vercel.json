@@ -1,0 +1,10 @@
+{
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=600, stale-while-revalidate=2592000" }
+      ]
+    }
+  ]
+}

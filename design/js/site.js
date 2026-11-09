@@ -44,7 +44,7 @@
        14  the window lights up: the original lit window with the couple (Figma frame 14)                                 → pre_litwin.jpg
      then we push into the window (zoom about the window centre) and land in room 1450_34 = slide 0 of the hero slider. ≤ 5 s. */
   var hero=$('hero'), heroIn=qs('.hero-ui'), heroTitle=$('title'), pre=$('pre'), cnt=$('cnt'), hdr=$('hdr'), skip=$('skip'), veil=$('veil'), dark=$('dark'),
-      cur=$('cur'), slidesEl=$('slides'), preview=$('preview');
+      cur=$('cur'), slidesEl=$('slides');
   var st15=$('v15'), cam=$('v15cam'), facImg=$('v15fac'), win=$('v15win'), glass=$('v15glass'), litImg=$('v15lit'), roomImg=$('v15room'), spill=$('v15spill'), mark=$('v15mark'), ol=$('v15ol'), olPath=$('v15olp');
   var FAC  = {w:3840, h:2160, win:{x:1748, y:884, w:334, h:358}};          /* Figma frame ×2: the window patch (dark ↔ lit)          */
   var OL   = {x:1754, y:896, w:326, h:328, sw:6};                           /* Figma "Rectangle 11" ×2, stroke inside                  */
@@ -199,45 +199,14 @@
   /* the five interiors the user picked on the Figma board "Hero — интерьеры (отбор)" (02.11, 18:07): professional photos */
   var LITE = document.documentElement.classList.contains('lite');
   var HSZ = LITE ? '_1600.jpg' : Math.max(window.innerWidth, window.innerHeight * 16 / 9) * Math.min(window.devicePixelRatio || 1, 2) > 1700 ? '_2560.jpg' : '_1600.jpg';
-  var SL = [{k:'v15', dur:7, th:'assets/v15/room_th.jpg'}].concat(['h1_city', 'h2_kitchen', 'h3_fireplace', 'h4_skyline', 'h5_double'].map(function(n){
-    return {k:'img', src:'assets/hero/' + n + HSZ, bg:'assets/hero/' + n + '_bg' + HSZ, dep:'assets/hero/' + n + '_dep.png', th:'assets/hero/' + n + '_th.jpg', dur:6.5,
+  var SL = [{k:'v15', dur:3.5}].concat(['h1_city', 'h2_kitchen', 'h3_fireplace', 'h4_skyline', 'h5_double'].map(function(n){
+    return {k:'img', src:'assets/hero/' + n + HSZ, bg:'assets/hero/' + n + '_bg' + HSZ, dep:'assets/hero/' + n + '_dep.png', dur:3.25,
             sko:'assets/hero/' + n + '_sk.jpg', skb:'assets/hero/' + n + '_bg_sk.jpg'};
   }));
-  var slide = {cur:0, timer:null, on:false, els:[], ready:false, start:[], due:0, left:0, paused:false};
-  /* the pagination (bottom-left): one tile per slide in a fixed order; the current one opens into the framed box and its
-     bottom edge fills for exactly as long as the slider waits; hover pauses, a tile jumps to its slide, ← → step */
-  var pvIts = [], pvN = $('pvN'), pvT = $('pvT'), pvDiv = preview ? preview.querySelector('.pv-div') : null;
-  function two(n){ return (n < 10 ? '0' : '') + n; }
-  function buildPreview(){
-    if (!preview || pvIts.length || (window.matchMedia && window.matchMedia('(max-width:900px)').matches)) return;
-    SL.forEach(function(s, i){
-      var b = document.createElement('button'); b.type = 'button'; b.className = 'pv-it';
-      b.setAttribute('aria-label', 'Slide ' + (i + 1) + ' of ' + SL.length);
-      b.innerHTML = '<img alt="" decoding="async" src="' + s.th + '"><i class="dot"></i><i class="bar"></i>';
-      b.addEventListener('click', function(){ if (slide.on && !ST.on && i !== slide.cur) showSlide(i); });
-      preview.insertBefore(b, pvDiv); pvIts.push(b);
-    });
-    if (pvT) pvT.textContent = two(SL.length);
-    preview.addEventListener('pointerenter', function(){
-      if (!slide.on || ST.on || slide.paused) return;
-      slide.paused = true; slide.left = Math.max(600, slide.due - performance.now()); clearTimeout(slide.timer); preview.classList.add('hold');
-    });
-    preview.addEventListener('pointerleave', function(){
-      if (!slide.paused) return; slide.paused = false;
-      if (!slide.on || ST.on || document.hidden) return;
-      slide.due = performance.now() + slide.left; slide.timer = setTimeout(nextSlide, slide.left); preview.classList.remove('hold');
-    });
-  }
-  function holdPreview(){ clearTimeout(slide.timer); if (preview) preview.classList.add('hold'); }
-  /* the next change in ms; the open tile's bar restarts and runs for the same time */
-  function armTimer(ms){
-    clearTimeout(slide.timer);
-    var it = pvIts[slide.cur];
-    if (preview) { preview.style.setProperty('--pv-d', ms + 'ms'); preview.classList.remove('hold'); }
-    if (it) { var bar = it.querySelector('.bar'); bar.style.animation = 'none'; void bar.offsetWidth; bar.style.animation = ''; }
-    if (slide.paused) { slide.left = ms; if (preview) preview.classList.add('hold'); return; }
-    slide.due = performance.now() + ms; slide.timer = setTimeout(nextSlide, ms);
-  }
+  /* the pause on each picture (user 09.11: twice as often as before, 7 / 6.5 s → 3.5 / 3.25 s); the glass change itself and
+     the slow push-in keep their speed (KB_T = the old 6.5 + 2.6 s) */
+  var slide = {cur:0, timer:null, on:false, els:[], ready:false, start:[]};
+  function armTimer(ms){ clearTimeout(slide.timer); slide.timer = setTimeout(nextSlide, ms); }
   function buildSlides(){
     SL.forEach(function(s, i){
       if (s.k === 'img') { var im = document.createElement('img'); im.className = 'sl'; im.src = s.src; im.alt = ''; im.decoding = 'async'; slidesEl.appendChild(im); slide.els[i] = im; }
@@ -246,7 +215,8 @@
   /* WebGL: the slides change through a wave of fluted glass (js/pre3d.js slideFrame); DOM crossfade is the fallback */
   var GLS = false, tr = null, loopOn = false, TR_DUR = 2.6, heroOff = false;
   function ease3(u){ u = clamp01(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
-  function kbOf(i, now){ return i === 0 ? 0 : clamp01((now - (slide.start[i] || now)) / ((SL[i].dur + TR_DUR) * 1000)); }
+  var KB_T = 9.1;
+  function kbOf(i, now){ return i === 0 ? 0 : clamp01((now - (slide.start[i] || now)) / (KB_T * 1000)); }
   function glFrame(a, b, p, now){ if (window.__pre3d.cta) return; window.__pre3d.slideFrame({a:a - 1, b:b - 1, p:p, ka:kbOf(a, now), kb:kbOf(b, now), mx:pmx, my:pmy, scroll:scrollZoom, T:T}); }
   function glLoop(now){
     if (document.hidden || ST.on) { loopOn = false; return; }
@@ -262,10 +232,6 @@
   }
   function ensureLoop(){ if (loopOn) return; loopOn = true; requestAnimationFrame(glLoop); }
   function drawIdle(){ if (ST.on) return; if (GLS && (slide.cur !== 0 || tr)) { ensureLoop(); return; } render(T.end + 1); }
-  function setPreview(){
-    for (var j = 0; j < pvIts.length; j++) { var on = j === slide.cur; pvIts[j].classList.toggle('on', on); if (on) pvIts[j].setAttribute('aria-current', 'true'); else pvIts[j].removeAttribute('aria-current'); }
-    if (pvN) pvN.textContent = two(slide.cur + 1);
-  }
   function showSlide(i){
     var prev = SL[slide.cur], next = SL[i];
     clearTimeout(slide.timer);
@@ -277,13 +243,13 @@
         tr = {a: tr ? tr.a : slide.cur, b: i, t0: now};
         slide.start[i] = now; slide.cur = i;
       }
-      setPreview(); armTimer((next.dur + (i !== 0 ? TR_DUR : 0)) * 1000); ensureLoop();
+      armTimer((next.dur + (i !== 0 ? TR_DUR : 0)) * 1000); ensureLoop();
       return;
     }
     if (prev.k === 'img') slide.els[slide.cur].classList.remove('on');
     slide.cur = i;
     if (next.k === 'img') slide.els[i].classList.add('on');
-    setPreview(); armTimer(next.dur * 1000);
+    armTimer(next.dur * 1000);
   }
   function nextSlide(){ if (!slide.on || ST.on) return; showSlide((slide.cur + 1) % SL.length); }
   function startSlider(){
@@ -294,15 +260,8 @@
         window.__pre3d.slidesInit(SL.slice(1).map(function(s){ return {src:s.src, bg:s.bg, dep:s.dep, sko:s.sko, skb:s.skb}; })).then(function(){ slide.ready = true; slide.readyAt = performance.now(); }, function(){ GLS = false; buildSlides(); });
       }, 1200);
     } else buildSlides();
-    buildPreview(); setPreview(); armTimer(SL[0].dur * 1000);
-    document.addEventListener('visibilitychange', function(){ if (document.hidden) { holdPreview(); } else if (slide.on && !ST.on) { showSlide(slide.cur); } });
-    document.addEventListener('keydown', function(e){                 /* ← → step the slides while the hero is on screen */
-      if (!slide.on || ST.on || e.altKey || e.metaKey || e.ctrlKey || e.shiftKey) return;
-      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-      var t = e.target; if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName))) return;
-      if (window.scrollY > window.innerHeight * .25) return;
-      e.preventDefault(); showSlide((slide.cur + (e.key === 'ArrowRight' ? 1 : SL.length - 1)) % SL.length);
-    });
+    armTimer(SL[0].dur * 1000);
+    document.addEventListener('visibilitychange', function(){ if (document.hidden) { clearTimeout(slide.timer); } else if (slide.on && !ST.on) { showSlide(slide.cur); } });
   }
 
   /* ---------- cursor + mouse */
@@ -382,7 +341,7 @@
       ST.s = s; return;
     }
     if (!ST.on) {                                                                    /* entering the story: the slider pauses */
-      ST.on = true; story.classList.add('on'); holdPreview();
+      ST.on = true; story.classList.add('on'); clearTimeout(slide.timer);
       var cur = tr ? tr.b : slide.cur; tr = null; slide.cur = cur; ST.s = -1; ST.push = 0;
       if (GLS && slide.ready && cur > 0 && window.__pre3d.setRoom) { window.__pre3d.setRoom(cur - 1); ST.push = .05 * kbOf(cur, performance.now()); }
     }

@@ -5,14 +5,37 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CI Design + Build — Homepage design</title>
 <meta name="robots" content="noindex">
-<link rel="preload" as="image" href="assets/v15/poster_1920.webp" imagesrcset="assets/v15/poster_1280.webp 1280w, assets/v15/poster_1920.webp 1920w, assets/v15/poster_2560.webp 2560w" imagesizes="100vw" fetchpriority="high">
+<link rel="preload" as="image" href="assets/v15/poster_v2_1920.webp" imagesrcset="assets/v15/poster_v2_1280.webp 1280w, assets/v15/poster_v2_1920.webp 1920w, assets/v15/poster_v2_2560.webp 2560w" imagesizes="100vw" fetchpriority="high">
 <link rel="preload" href="assets/fonts/tg-ext.woff" as="font" type="font/woff" crossorigin>
+<!-- the 3D intro starts sooner (user 09.11 "we still wait half a second or a second"): the import map comes first, the whole
+     module graph is fetched in parallel instead of three waves, and the intro's textures start with the HTML instead of after three.js -->
+<script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
+<link rel="modulepreload" href="js/pre3d.js">
+<link rel="modulepreload" href="assets/vendor/three/three.module.min.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/EffectComposer.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/RenderPass.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/UnrealBloomPass.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/ShaderPass.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/OutputPass.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/MaskPass.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/Pass.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/lines/LineSegments2.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/lines/LineSegmentsGeometry.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/lines/LineMaterial.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/shaders/CopyShader.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/shaders/LuminosityHighPassShader.js">
+<link rel="modulepreload" href="assets/vendor/three/addons/shaders/OutputShader.js">
 <link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/story.css">
 <link rel="stylesheet" href="css/chapters.css">
 <script>(function(){var h=location.hostname,q=location.search;if(/^ci-hero|^ci-preloader/.test(h)||/[?&]hero(=|&|$)/.test(q))document.documentElement.classList.add('hero-only');})();</script>
 <script>(function(){var d=document.documentElement,m=window.matchMedia,c=m&&m('(pointer: coarse)').matches,s=Math.max(screen.width||9999,screen.height||9999);if(c||s<1000||/[?&]lite/.test(location.search))d.classList.add('lite');})();</script>
+<script>(function(){if(!window.WebGL2RenderingContext)return;   /* the intro's textures, same picks as js/pre3d.js (hiDPI, room 1k/2k) */
+var d=document.documentElement,lite=d.classList.contains('lite'),px=Math.max(innerWidth,innerHeight*16/9)*Math.min(devicePixelRatio||1,2),hi=!lite&&px>2200,big=hi?'2k':'1k',g='assets/v15/gl/';
+var L=[g+'sky_1x.jpg',g+'facade_1x.webp',g+'unit_dark.jpg',g+'unit_lit.webp',g+'jamb.jpg','assets/v15/logo_db.png',g+'facade_win.png',g+'facade_winmask.webp',g+'room_depth.png','assets/v15/room_'+big+'.jpg',g+'room_bg_'+big+'.jpg'];
+if(hi)L.push(g+'sky_2x.jpg',g+'facade_2x.webp');
+L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as='image';l.href=u;l.crossOrigin='anonymous';document.head.appendChild(l);});})();</script>
 
 </head>
 <body class="is-intro">
@@ -60,9 +83,8 @@
 
 
   <div class="pre" id="pre" aria-hidden="true">
-    <img class="poster" id="prePoster" src="assets/v15/poster_1920.webp" srcset="assets/v15/poster_1280.webp 1280w, assets/v15/poster_1920.webp 1920w, assets/v15/poster_2560.webp 2560w" sizes="100vw" alt="" fetchpriority="high" decoding="async">
+    <img class="poster" id="prePoster" src="assets/v15/poster_v2_1920.webp" srcset="assets/v15/poster_v2_1280.webp 1280w, assets/v15/poster_v2_1920.webp 1920w, assets/v15/poster_v2_2560.webp 2560w" sizes="100vw" alt="" fetchpriority="high" decoding="async">
     <div class="mono coords">41.89° N · 87.62° W</div>
-    <div class="mono city">CHICAGO, IL</div>
   </div>
 
   <div class="hero-ui">
@@ -71,12 +93,6 @@
     <div class="hero-ctas" id="row">
       <a class="blk fill" href="#about"><span class="t">Explore<br>CI</span><i class="sqd"></i></a>
       <a class="blk line" href="#cta"><span class="t">Begin<br>Your<br>Better<br>Life</span><i class="sqd"></i></a>
-    </div>
-    <!-- hero slide pagination: one tile per slide in a fixed order; the current slide opens into the framed box,
-         its bottom edge fills while the slide plays; hover pauses, click jumps, ← → on the keyboard (built in js/site.js) -->
-    <div class="preview" id="preview" role="group" aria-label="Hero slides">
-      <span class="pv-n mono" aria-hidden="true"><span class="ln"></span><b id="pvN">01</b> / <span id="pvT">06</span></span>
-      <span class="pv-div" aria-hidden="true"></span>
     </div>
   </div>
   <button class="skip mono" id="skip" type="button"><span class="ln"></span>SKIP</button>
@@ -410,7 +426,6 @@
   <a href="#cta" data-ch="cta"><span>07</span><span class="t">Contact</span><i></i></a>
 </nav>
 
-<script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
 <script type="module" src="js/pre3d.js"></script>
 <script src="js/site.js"></script>
 <script src="js/chapters.js"></script>

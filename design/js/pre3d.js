@@ -26,6 +26,9 @@ const F = { RX:-57, RY:-251, RW:2033, RH:1477, EDGE:1110.5, EXT:912,
             PATCH:{x:874, y:442, w:167, h:179}, OL:{x:877, y:448, w:163, h:164}, MARK:{x:865, y:432, w:190, h:217} };
 const FOV = 30, TAN = Math.tan(FOV / 2 * Math.PI / 180);
 const DEPTH = 22;            /* window recess */
+/* the facade photo ends 1477 px down; at the drone's starting angle its bottom edge showed as a dark wedge in the lower left
+   (user 09.11). The plane now runs EXB further down and the extra part repeats the photo's lowest floor (pitch FLOOR px) */
+const EXB = 800, FLOOR = 207;
 const ROOMZ = -300;          /* room photo plane */
 const SKYZ = -5200;          /* skyline plane */
 const H = { x: F.PATCH.x + F.PATCH.w / 2, y: -(F.PATCH.y + F.PATCH.h / 2) };   /* window centre, world */
@@ -125,13 +128,17 @@ function skyMat(tex){
 }
 function facadeMat(tex, win){
   return new THREE.ShaderMaterial({
-    uniforms: Object.assign({ map:{value:tex}, winMap:{value:win}, winMask:{value:null}, uTime:U.time, uLife:{value:1}, skMap:{value:null}, uSk:{value:0} }, FRU),
+    uniforms: Object.assign({ map:{value:tex}, winMap:{value:win}, winMask:{value:null}, uTime:U.time, uLife:{value:1}, skMap:{value:null}, uSk:{value:0},
+                              uK:{value:(F.RH + EXB) / F.RH}, uPv:{value:FLOOR / 1477} }, FRU),
     vertexShader: vtx,
     fragmentShader: `uniform sampler2D map; uniform sampler2D winMap; uniform sampler2D winMask; uniform float uTime; uniform float uLife;
-      uniform sampler2D skMap; uniform float uSk; varying vec2 vUv;
+      uniform sampler2D skMap; uniform float uSk; uniform float uK; uniform float uPv; varying vec2 vUv;
       ${SKGL}
-      void main(){ vec4 c = texture2D(map, vUv); if (c.a < .5) discard; c.rgb = s2l(c.rgb);
-        vec3 w = texture2D(winMap, vUv).rgb; float id = w.r, m = texture2D(winMask, vUv).r;
+      void main(){ vec2 uv = vUv; uv.y = 1. - (1. - uv.y) * uK;          /* the photo keeps its place at the top; below it, its last floor repeats */
+        float rep = 0.; if (uv.y < 0.){ rep = floor(uv.y / uPv); uv.y -= rep * uPv; }
+        vec4 c = texture2D(map, uv); if (c.a < .5) discard; c.rgb = s2l(c.rgb);
+        vec3 w = texture2D(winMap, uv).rgb; float id = w.r, m = texture2D(winMask, uv).r;
+        if (rep < 0. && id > .002) id = .003 + fract(id + rep * .1731) * .99;   /* repeated windows get lamps of their own */
         vec3 col = c.rgb;
         if (id > .002){
           float h1 = fract(id * 91.7), h2 = fract(id * 13.31 + .2), h3 = fract(id * 47.13 + .5);
@@ -146,7 +153,7 @@ function facadeMat(tex, win){
           float lit = smoothstep(.12, .35, c.r - c.b) * smoothstep(.15, .4, c.r);
           col *= 1. + lit * .1 * sin(uTime * .7 + id * 40.) * uLife;
         }
-        if (uSk > 0.) col = skMix(col, texture2D(skMap, vUv).rgb, vUv, uSk);
+        if (uSk > 0.) col = skMix(col, texture2D(skMap, uv).rgb, uv, uSk);
         gl_FragColor = vec4(col, 1.);
         #include <colorspace_fragment>
       }`
@@ -343,12 +350,12 @@ async function build(){
 
   M.sky = rectPlane(skyMat(tSky), { x:F.RX, y:F.RY, w:F.RW, h:F.RH }, SKYZ, true); M.sky.userData.over = 1.04; placeRect(M.sky); M.sky.renderOrder = 0; scene.add(M.sky);
   const facW = tFac.image.width / tSky.image.width * F.RW;
-  M.fac = rectPlane((() => { const m = facadeMat(tFac, tWin); m.uniforms.winMask.value = tWinM; return m; })(), { x:F.RX - F.EXT, y:F.RY, w:facW, h:F.RH }, 0, false); M.fac.renderOrder = 5; scene.add(M.fac);
+  M.fac = rectPlane((() => { const m = facadeMat(tFac, tWin); m.uniforms.winMask.value = tWinM; return m; })(), { x:F.RX - F.EXT, y:F.RY, w:facW, h:F.RH + EXB }, 0, false); M.fac.renderOrder = 5; scene.add(M.fac);
   /* the building's side wall round the corner: the facade texture repeated, in shadow, receding into the city */
   const SIDE = 2200;
-  const tSide = M.tSide = tFac1.clone();                              /* the dark side wall: 1x is plenty */ tSide.wrapS = THREE.RepeatWrapping; tSide.repeat.set(SIDE / facW * .9, 1); tSide.offset.set(.05, 0); tSide.needsUpdate = true;
-  M.side = new THREE.Mesh(new THREE.PlaneGeometry(SIDE, F.RH), new THREE.MeshBasicMaterial({ map: tSide, color: new THREE.Color(SIDEC[0], SIDEC[1], SIDEC[2]), alphaTest: .5, toneMapped: false }));
-  M.side.rotation.y = Math.PI / 2; M.side.position.set(F.EDGE, -(F.RY + F.RH / 2), -SIDE / 2); M.side.renderOrder = 5; scene.add(M.side);
+  const tSide = M.tSide = tFac1.clone();                              /* the dark side wall: 1x is plenty */ tSide.wrapS = tSide.wrapT = THREE.RepeatWrapping; tSide.repeat.set(SIDE / facW * .9, (F.RH + EXB) / F.RH); tSide.offset.set(.05, -EXB / F.RH); tSide.needsUpdate = true;
+  M.side = new THREE.Mesh(new THREE.PlaneGeometry(SIDE, F.RH + EXB), new THREE.MeshBasicMaterial({ map: tSide, color: new THREE.Color(SIDEC[0], SIDEC[1], SIDEC[2]), alphaTest: .5, toneMapped: false }));
+  M.side.rotation.y = Math.PI / 2; M.side.position.set(F.EDGE, -(F.RY + (F.RH + EXB) / 2), -SIDE / 2); M.side.renderOrder = 5; scene.add(M.side);
   /* recess: unit planes at −DEPTH, jambs between */
   const P = F.PATCH;
   M.ud = rectPlane(new THREE.MeshBasicMaterial({ map: tUD, transparent: true, depthWrite: false, toneMapped: false }), P, -DEPTH, false); M.ud.renderOrder = 3; scene.add(M.ud);
@@ -777,15 +784,17 @@ const PD = 260;                                                   /* photo relie
 const SlideShader = {
   vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }`,
   fragmentShader: `uniform sampler2D tA; uniform sampler2D tB; uniform vec4 fA; uniform vec4 fB; uniform float uPhA; uniform float uPhB;
-    uniform float uP; uniform float uN; uniform float uTime; uniform vec2 uRes; varying vec2 vUv;
+    uniform float uP; uniform float uN; uniform float uTime; uniform vec2 uRes; uniform float uLinA; uniform float uLinB; varying vec2 vUv;
+    vec3 l2s(vec3 c){ c = max(c, 0.); return mix(c * 12.92, 1.055 * pow(c, vec3(1. / 2.4)) - .055, step(.0031308, c)); }
     float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
     vec3 grade(vec3 c, float ph, vec2 uv){                     /* photos: a touch moodier + the room's vignette */
       vec2 d = uv - .5; float r2 = dot(d, d);
       vec3 g = pow(c, vec3(1.08)) * .9 * (1. - .3 * smoothstep(.12, .62, r2 * 1.6));
       return mix(c, g, ph);
     }
-    vec3 sA(vec2 uv){ return texture2D(tA, uv * fA.xy + fA.zw).rgb; }
-    vec3 sB(vec2 uv){ return texture2D(tB, uv * fB.xy + fB.zw).rgb; }
+    /* the relief photos come from a linear render target: back to sRGB (they were shown too dark before, user 09.11) */
+    vec3 sA(vec2 uv){ vec3 c = texture2D(tA, uv * fA.xy + fA.zw).rgb; return uLinA > .5 ? l2s(c) : c; }
+    vec3 sB(vec2 uv){ vec3 c = texture2D(tB, uv * fB.xy + fB.zw).rgb; return uLinB > .5 ? l2s(c) : c; }
     /* frosted glass: a 7-tap soft kernel, slightly taller than wide */
     vec3 fA7(vec2 q, float r){ return sA(q) * .22 + (sA(q + vec2(r, 0.)) + sA(q - vec2(r, 0.))) * .17 + (sA(q + vec2(r * 2., r * .5)) + sA(q - vec2(r * 2., r * .5))) * .11 + (sA(q + vec2(-r * .6, r * 1.6)) + sA(q - vec2(-r * .6, r * 1.6))) * .11; }
     vec3 fB7(vec2 q, float r){ return sB(q) * .22 + (sB(q + vec2(r, 0.)) + sB(q - vec2(r, 0.))) * .17 + (sB(q + vec2(r * 2., r * .5)) + sB(q - vec2(r * 2., r * .5))) * .11 + (sB(q + vec2(-r * .6, r * 1.6)) + sB(q - vec2(-r * .6, r * 1.6))) * .11; }
@@ -813,8 +822,8 @@ const SlideShader = {
         col *= 1. - g * .38 * smoothstep(.465, .5, abs(fx));    /* the seam between ribs */
         col += vec3(1., .8, .6) * g * .03;                      /* warm light in the glass */
       }
-      float ph = mix(uPhA, uPhB, k);
-      col = grade(col, ph, uv);
+      float ph = mix(uPhA, uPhB, k), lin = mix(uLinA, uLinB, k);
+      col = grade(col, ph * (1. - lin), uv);              /* the reliefs are graded once already (roomMat), like in the story */
       col += (h(uv * uRes + fract(uTime * 37.)) - .5) * .045 * ph;
       gl_FragColor = vec4(col, 1.);
     }`
@@ -865,7 +874,7 @@ function slidesInit(list){
   if (SLD.mat) return SLD.promise;
   SLD.mat = new THREE.ShaderMaterial({
     uniforms: { tA:{value:null}, tB:{value:null}, fA:{value:new THREE.Vector4(1,1,0,0)}, fB:{value:new THREE.Vector4(1,1,0,0)}, uPhA:{value:0}, uPhB:{value:1},
-                uP:{value:0}, uN:{value:20}, uTime:{value:0}, uRes:{value:new THREE.Vector2(1,1)} },
+                uP:{value:0}, uN:{value:20}, uTime:{value:0}, uRes:{value:new THREE.Vector2(1,1)}, uLinA:{value:0}, uLinB:{value:0} },
     vertexShader: SlideShader.vertexShader, fragmentShader: SlideShader.fragmentShader, depthTest: false, depthWrite: false
   });
   SLD.scene = new THREE.Scene(); SLD.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -931,13 +940,13 @@ function slideFrame(o){
   if (o.a < 0 || o.b < 0) roomTex = render3d(o.T.end + 1, o.T, o.mx, o.my, o.scroll, true);
   const side = (i, k, slot, zx, zT) => {                         /* zx: relief dolly, zT: flat zoom during the change */
     if (i < 0) return { t: roomTex, w: vw, h: vh, z: zT, px: 0, py: 0, ph: 0 };
-    if (SLD.ps[i]) return { t: drawPhoto(i, slot, k, zx, o), w: vw, h: vh, z: 1, px: 0, py: 0, ph: 1 };
+    if (SLD.ps[i]) return { t: drawPhoto(i, slot, k, zx, o), w: vw, h: vh, z: 1, px: 0, py: 0, ph: 1, lin: 1 };
     const t = SLD.tex[i];
     return { t, w: t.image.width, h: t.image.height, z: (1.05 + .06 * k) * zT * (1 + o.scroll), px: o.mx * .014, py: -o.my * .01, ph: 1 };
   };
   const A = side(o.a, o.ka || 0, 0, .07 * p, 1 + .07 * p);
   const B = (o.b === o.a && p === 0) ? A : side(o.b, o.kb || 0, 1, .06 * (1 - p), 1 + .06 * (1 - p));
-  u.tA.value = A.t; u.tB.value = B.t; u.uPhA.value = A.ph; u.uPhB.value = B.ph;
+  u.tA.value = A.t; u.tB.value = B.t; u.uPhA.value = A.ph; u.uPhB.value = B.ph; u.uLinA.value = A.lin || 0; u.uLinB.value = B.lin || 0;
   fit(u.fA.value, A.w, A.h, A.z, A.px, A.py); fit(u.fB.value, B.w, B.h, B.z, B.px, B.py);
   u.uP.value = p; u.uN.value = Math.max(6, Math.round(vw / 92)); u.uTime.value = performance.now() / 1000;
   u.uRes.value.set(vw, vh);
