@@ -987,26 +987,36 @@ html,body{background:#0B0D11}
 .hdr .wm img{height:max(64px, calc(168.67 * var(--u)));width:auto}
 /* the logo (user 09.11): 1 · it shrinks with the first half-screen of scroll to the frame's small state (Figma 289:8827: the mark
    81×88 at 24/24 = ×0.609 of 133×144) and grows back on the way up — scaled about the mark's top-left corner (js: updateLogo);
-   2 · a warm light runs round it every few seconds, clockwise from the top — the light that runs round the CI window in the intro.
-   Only the official PNG is used: the light is a conic gradient masked by the logo's own shape. */
+   2 · every 10 s it draws itself again, the way it draws in the intro (pre3d.js, frame 15): it erases counter-clockwise to a faint
+   ghost, then a warm pen draws it back clockwise from 3 o'clock, the fresh strokes glowing gold and cooling to white behind it.
+   Only the official PNG is used: the wipe is a conic mask on the image, the pen a conic gradient masked by the logo's own shape. */
 .hdr .cell.c{transform-origin:calc(8.8 * var(--u)) calc(12 * var(--u));will-change:transform}
-.hdr .wm{position:relative}
-.hdr .wm-glow{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 0 calc(6 * var(--u)) rgba(248,189,121,.8))}
+@property --lp{syntax:'<angle>';inherits:true;initial-value:366deg}
+.hdr .wm{position:relative;animation:ci-logo-draw 10s linear 2.6s infinite}
+.hdr .wm img{-webkit-mask:conic-gradient(from 90deg at 50% 42%,#000 calc(var(--lp) - 2deg),rgba(0,0,0,.14) calc(var(--lp) + 2deg));
+  mask:conic-gradient(from 90deg at 50% 42%,#000 calc(var(--lp) - 2deg),rgba(0,0,0,.14) calc(var(--lp) + 2deg))}
+.hdr .wm-glow{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 0 calc(5 * var(--u)) rgba(248,189,121,.85))}
+.hdr .wm .wm-glow{opacity:1}   /* an old rule dims every span in .wm to 50 % */
 .hdr .wm-fx{position:absolute;inset:0;opacity:0;
-  background:conic-gradient(from var(--la) at 50% 43%,transparent 0 62%,rgba(248,189,121,0) 62%,rgba(248,189,121,1) 92%,#fff3e0 98.6%,transparent 99.4%);
+  background:conic-gradient(from 90deg at 50% 42%,transparent 0 calc(var(--lp) - 60deg),rgba(248,189,121,0) calc(var(--lp) - 60deg),rgba(248,189,121,.95) calc(var(--lp) - 6deg),#fff6e8 calc(var(--lp) - .6deg),transparent calc(var(--lp) + .6deg));
   -webkit-mask:url(../assets/brand/logo-white.png) 0 0/100% 100% no-repeat;mask:url(../assets/brand/logo-white.png) 0 0/100% 100% no-repeat;
-  animation:ci-logo 7.5s cubic-bezier(.45,0,.3,1) 2.2s infinite}
-@property --la{syntax:'<angle>';inherits:false;initial-value:-60deg}
-@keyframes ci-logo{0%{--la:-60deg;opacity:0}5%{opacity:1}36%{opacity:1}42%{--la:300deg;opacity:0}100%{--la:300deg;opacity:0}}
-@media (prefers-reduced-motion:reduce){.hdr .wm-fx{animation:none}}
+  animation:ci-logo-pen 10s linear 2.6s infinite}
+@keyframes ci-logo-draw{
+  0%{--lp:366deg;animation-timing-function:cubic-bezier(.55,0,.65,1)}
+  9%{--lp:-6deg}
+  13%{--lp:-6deg;animation-timing-function:cubic-bezier(.35,.08,.3,1)}
+  39%{--lp:366deg}
+  100%{--lp:366deg}}
+@keyframes ci-logo-pen{0%,12.6%{opacity:0}14.2%{opacity:1}35%{opacity:1}40%{opacity:0}100%{opacity:0}}
+@media (prefers-reduced-motion:reduce){.hdr .wm,.hdr .wm-fx{animation:none}}
 .hdr .cell:first-child{display:none}                       /* the nav is not in the frame */
 .hdr .cell.r{display:flex;position:absolute;right:calc(24 * var(--u));top:calc(24 * var(--u));gap:calc(12 * var(--u));align-items:stretch}
 .hdr .loc{display:none!important}
 .hdr .cta-blk{--sq:#000;--fx-fg:var(--light);--ta0:78deg;display:block;position:relative;width:max(150px, calc(295 * var(--u)));height:max(44px, calc(78 * var(--u)));background:var(--light);color:#000;text-decoration:none}
-.hdr .cta-blk .t{position:absolute;left:calc(16 * var(--u));top:calc(16 * var(--u));font-family:"TG Ext",sans-serif;font-weight:400;font-size:max(10px, calc(18 * var(--u)));line-height:.93;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap}
+.hdr .cta-blk .t{position:absolute;left:calc(16 * var(--u));top:calc(13 * var(--u));font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-weight:500;font-size:max(10px, calc(18 * var(--u)));line-height:.93;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap}
 .hdr .menu-sq{position:relative;width:max(44px, calc(78 * var(--u)));height:max(44px, calc(78 * var(--u)));border:1px solid rgba(235,235,235,.18);background:transparent;cursor:none;padding:0;transition:border-color .6s var(--e-out)}
-.hdr .menu-sq i{position:absolute;left:calc(23 * var(--u) - 1px);width:calc(33 * var(--u));height:max(1px, calc(1.5 * var(--u)));background:var(--light);transition:transform .7s cubic-bezier(.7,0,.2,1)}
-.hdr .menu-sq i:first-child{top:calc(33 * var(--u) - 1px);transform-origin:100% 50%} .hdr .menu-sq i:last-child{top:calc(44 * var(--u) - 1px);transform-origin:0 50%}
+.hdr .menu-sq i{position:absolute;left:calc(23 * var(--u) - 1px);width:calc(33 * var(--u));height:max(1px, calc(1.5 * var(--u)));background:var(--light);transition:background-color .45s var(--e-out)}
+.hdr .menu-sq i:nth-of-type(1){top:calc(33 * var(--u) - 1px)} .hdr .menu-sq i:nth-of-type(2){top:calc(44 * var(--u) - 1px)}
 .hdr .pill{display:none}
 .hdr .menu-btn{display:none}
 
@@ -1029,38 +1039,69 @@ html,body{background:#0B0D11}
 @media (prefers-reduced-motion:reduce){.hero-title .fc{opacity:1;filter:none;transition:none}.hero-title .tl{transform:none;transition:none}}
 .hero-ui .hero-ctas{position:absolute;left:var(--f-nav);bottom:calc(24 * var(--u));display:flex;gap:calc(10 * var(--u))}
 .blk{position:relative;display:block;width:max(96px, calc(170 * var(--u)));height:max(138px, calc(244 * var(--u)));text-decoration:none;color:var(--bright);border:2px solid #fff;background:transparent}
-.blk .t{position:absolute;left:calc(12 * var(--u) - 2px);top:calc(12 * var(--u));font-family:"TG Ext",sans-serif;font-weight:700;font-size:max(12px, calc(20 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;white-space:nowrap}
+.blk .t{position:absolute;left:calc(12 * var(--u) - 2px);top:calc(12 * var(--u) - 2px);font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-weight:600;font-size:max(12px, calc(20 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;white-space:nowrap}
 .blk.fill{--sq:#000;--fx-fg:var(--light);--ta0:148deg;background:var(--light);color:#000;border-color:var(--light)}
 .blk.line{--sq:var(--bright);--fx-fg:#000;--ta0:148deg;--sqr:calc(10 * var(--u) - 2px)}   /* its square sits 10 from the right in the frame */
 .hero-ui .hero-ctas .blk{opacity:0;transform:translateY(14px);transition:opacity .9s var(--e-out),transform .9s var(--e-out)}
 .hero-ui .hero-ctas .blk:nth-child(2){transition-delay:.1s}
 .hero.ui .hero-ctas .blk{opacity:1;transform:none;transition-delay:.55s} .hero.ui .hero-ctas .blk:nth-child(2){transition-delay:.65s}
 
-/* ---------- the buttons, variant B "drawing" (user 09.11 10:06, drawn on the Explore block in the frame): on hover two hairlines
-   draw out of the corner square — 99 up and 66 to the left, through its centre — the square moves into the corner (7 px, 7 from
-   the edges) and spins twice, ending square again. js adds +720° per hover (--rot), so leaving mid-spin finishes the turn forward
-   instead of snapping back. Header CTA: the same lines from its square (66 left, 40 down), the square spins in place. */
-.blk .sqd,.hdr .cta-blk .sqd{position:absolute;display:block;background:var(--sq);rotate:var(--rot, 0deg);
-  transition:rotate 1.3s cubic-bezier(.65,0,.35,1),translate .85s cubic-bezier(.7,0,.2,1),scale .85s cubic-bezier(.7,0,.2,1)}
+/* ---------- the buttons, variant B "drawing" (user 09.11 10:06 → 10:18): on hover two hairlines draw out of the corner square,
+   99 up and 66 to the left, through its centre (Figma frame, Explore block). The square itself stays still (the spin was dropped).
+   The lines don't grow evenly: they shoot out to ~60 %, catch and pull back a touch, then run on past the end and settle — the
+   vertical one first, the horizontal one a beat later with its own rhythm. On leave they retract smoothly. */
+.blk .sqd,.hdr .cta-blk .sqd{position:absolute;display:block;background:var(--sq)}
 .blk .sqd{right:calc(11 * var(--u) - 2px);bottom:calc(11 * var(--u) - 2px);width:calc(6 * var(--u));height:calc(6 * var(--u))}
 .blk.line .sqd{right:calc(10 * var(--u) - 2px)}
 .hdr .cta-blk .sqd{right:calc(8 * var(--u));top:calc(8 * var(--u));width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)))}
-.blk .ln,.hdr .cta-blk .ln{position:absolute;display:block;background:var(--sq);transition:transform .5s cubic-bezier(.7,0,.2,1)}
-.blk .lv{right:calc(10 * var(--u) - 2px);bottom:calc(14 * var(--u) - 2px);width:1px;height:calc(99 * var(--u));transform:scaleY(0);transform-origin:50% 100%}
-.blk .lh{right:calc(14 * var(--u) - 2px);bottom:calc(10 * var(--u) - 2px);height:1px;width:calc(66 * var(--u));transform:scaleX(0);transform-origin:100% 50%}
+.blk .ln,.hdr .cta-blk .ln{position:absolute;display:block;background:var(--sq);transition:transform .45s cubic-bezier(.7,0,.2,1)}
+.blk .lv{right:calc(13 * var(--u) - 2px);bottom:calc(17 * var(--u) - 2px);width:1px;height:calc(99 * var(--u));transform:scaleY(0);transform-origin:50% 100%}
+.blk .lh{right:calc(17 * var(--u) - 2px);bottom:calc(13 * var(--u) - 2px);height:1px;width:calc(66 * var(--u));transform:scaleX(0);transform-origin:100% 50%}
+.blk.line .lv{right:calc(12 * var(--u) - 2px)} .blk.line .lh{right:calc(16 * var(--u) - 2px)}
 .hdr .cta-blk .lh{right:calc(16 * var(--u));top:calc(12 * var(--u));height:1px;width:calc(66 * var(--u));transform:scaleX(0);transform-origin:100% 50%}
 .hdr .cta-blk .lv{right:calc(12 * var(--u));top:calc(16 * var(--u));width:1px;height:calc(40 * var(--u));transform:scaleY(0);transform-origin:50% 0}
+@keyframes ci-draw-v{
+  0%{transform:scaleY(0);animation-timing-function:cubic-bezier(.2,.9,.3,1)}
+  30%{transform:scaleY(.62);animation-timing-function:cubic-bezier(.5,0,.5,1)}
+  44%{transform:scaleY(.54);animation-timing-function:cubic-bezier(.3,.8,.25,1)}
+  76%{transform:scaleY(1.06);animation-timing-function:cubic-bezier(.4,0,.4,1)}
+  90%{transform:scaleY(.985)}
+  100%{transform:scaleY(1)}}
+@keyframes ci-draw-h{
+  0%{transform:scaleX(0);animation-timing-function:cubic-bezier(.2,.9,.3,1)}
+  24%{transform:scaleX(.48);animation-timing-function:cubic-bezier(.5,0,.5,1)}
+  38%{transform:scaleX(.42);animation-timing-function:cubic-bezier(.3,.8,.25,1)}
+  74%{transform:scaleX(1.07);animation-timing-function:cubic-bezier(.4,0,.4,1)}
+  88%{transform:scaleX(.98)}
+  100%{transform:scaleX(1)}}
 .blk:active,.hdr .cta-blk:active,.hdr .menu-sq:active{transform:scale(.985)}
 @media (hover:hover){
-  .blk:hover .ln,.hdr .cta-blk:hover .ln{transform:none;transition:transform .95s cubic-bezier(.7,0,.2,1) .12s}
-  .blk:hover .lh,.hdr .cta-blk:hover .lh{transition-delay:.2s}
-  .blk.fill:hover .sqd{translate:calc(3.5 * var(--u)) calc(3.5 * var(--u));scale:1.1667}
-  .blk.line:hover .sqd{translate:calc(2.5 * var(--u)) calc(3.5 * var(--u));scale:1.1667}
-  .hdr .menu-sq:hover{border-color:rgba(235,235,235,.5)}
-  .hdr .menu-sq:hover i:first-child{transform:scaleX(1.45)} .hdr .menu-sq:hover i:last-child{transform:scaleX(.5)}
+  .blk:hover .lv,.hdr .cta-blk:hover .lv{transform:none;animation:ci-draw-v .95s both}
+  .blk:hover .lh,.hdr .cta-blk:hover .lh{transform:none;animation:ci-draw-h 1.05s .14s both}
 }
-.hdr .menu-sq i{transform-origin:0 50%!important}
-@media (prefers-reduced-motion:reduce){.blk .sqd,.hdr .cta-blk .sqd,.blk .ln,.hdr .cta-blk .ln{transition:none}}
+/* ---------- the menu square (user 09.11 10:20): on hover its 18 % frame is traced round to full white — counter-clockwise from the
+   top-right corner behind a warm head, the light that runs round the CI window in the intro — and the two lines rewrite themselves
+   (out to the right, back in from the left, one after the other) and turn white. On leave the white frame fades back to 18 %. */
+@property --mp{syntax:'<angle>';inherits:false;initial-value:420deg}
+.hdr .menu-sq{--ms:#fff}
+.hdr .menu-sq .ms-tr{position:absolute;inset:-1px;pointer-events:none;opacity:0;transition:opacity .6s var(--e-out);filter:drop-shadow(0 0 3px rgba(248,189,121,.6))}
+.hdr .menu-sq .ms-tr>span{position:absolute;inset:0;box-sizing:border-box;padding:1px;
+  background:conic-gradient(from 45deg,transparent 0 calc(359.6deg - var(--mp)),#fff3e0 calc(360deg - var(--mp)),#F8BD79 calc(365deg - var(--mp)),var(--ms) calc(410deg - var(--mp)),var(--ms) 360deg);
+  -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
+@keyframes ci-ms-trace{0%{--mp:0deg}100%{--mp:420deg}}
+@keyframes ci-ms-line{
+  0%{clip-path:inset(0 0 0 0);animation-timing-function:cubic-bezier(.6,0,.85,.45)}
+  44%{clip-path:inset(0 0 0 100%)}
+  45%{clip-path:inset(0 100% 0 0);animation-timing-function:cubic-bezier(.12,.6,.22,1)}
+  100%{clip-path:inset(0 0 0 0)}}
+@media (hover:hover){
+  .hdr .menu-sq:hover .ms-tr{opacity:1;transition:none}
+  .hdr .menu-sq:hover .ms-tr>span{animation:ci-ms-trace 1.2s cubic-bezier(.5,.05,.3,1) both}
+  .hdr .menu-sq:hover i{background:var(--ms);animation:ci-ms-line .85s both}
+  .hdr .menu-sq:hover i:nth-of-type(2){animation-delay:.09s}
+}
+@media (prefers-reduced-motion:reduce){.hdr .menu-sq .ms-tr>span,.hdr .menu-sq i{animation:none!important}}
+@media (prefers-reduced-motion:reduce){.blk .ln,.hdr .cta-blk .ln{transition:none;animation:none!important}}
 /* the label: variant A exactly as on /lab/buttons.html (user 09.11 10:12: "точь-в-точь") — each line slides up into a 6 px blur
    and fades while a sharp copy rises from below, line after line (55 ms), .7 s cubic-bezier(.16,1,.3,1), whole lines (no letter
    split, so the tracking is untouched). The one fix: the lab cut the blur off at the line's edge (overflow hidden); here the line
@@ -1095,7 +1136,7 @@ html,body{background:#0B0D11}
   .hdr .cta-blk .t{font-size:10px;left:10px;top:9px}
   .hdr .cell.r{right:var(--hm);top:var(--hm);gap:8px}
   .hdr .cell.c{left:calc(var(--hm) - 6px);top:calc(var(--hm) - 8px)}
-  .hdr .menu-sq i{left:12px;width:18px} .hdr .menu-sq i:first-child{top:18px} .hdr .menu-sq i:last-child{top:24px}
+  .hdr .menu-sq i{left:12px;width:18px} .hdr .menu-sq i:nth-of-type(1){top:18px} .hdr .menu-sq i:nth-of-type(2){top:24px}
   .hero-ui .rule-v{display:none}
   .hero-ui .hero-title{left:var(--hm);top:33%;font-size:clamp(28px,8.6vw,54px);white-space:normal;max-width:9ch}
   .hero-ui .hero-ctas{left:var(--hm);bottom:var(--hm);gap:8px}

@@ -941,8 +941,6 @@
     t.parentNode.setAttribute('aria-label', lines.join(' '));
     t.innerHTML = lines.map(function(l, i){ return '<span class="bl" style="--i:' + i + '"><span class="bo" aria-hidden="true">' + l + '</span><span class="bn" aria-hidden="true">' + l + '</span></span>'; }).join('');
   });
-  /* button hover (variant B): every hover spins the corner square two more turns forward (css: rotate: var(--rot)) */
-  qsa('.blk, .hdr .cta-blk').forEach(function(el){ var r = 0; el.addEventListener('pointerenter', function(e){ if (e.pointerType === 'touch') return; r += 720; el.style.setProperty('--rot', r + 'deg'); }); });
   var wmCell = $('wmCell'), LOGO_S = 81 / 133, logoK = -1;
   function updateLogo(y, vh){
     if (!wmCell) return;
