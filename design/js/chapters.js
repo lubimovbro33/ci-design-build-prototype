@@ -720,49 +720,73 @@
     var sec = document.getElementById('process'); if (!sec || !sec.classList.contains('pr4')) return null;
     var pin = sec.querySelector('.ch-pin'), stage = sec.querySelector('.pr4-stage'), svg = sec.querySelector('#pr4Svg'), t1 = sec.querySelector('.pr4-t1'), t2 = sec.querySelector('.pr4-t2');
     var bws = [].slice.call(sec.querySelectorAll('.pr4-bw')), labs = [].slice.call(sec.querySelectorAll('.pr4-lab')), sq = sec.querySelector('.pr4-sq'), end = sec.querySelector('.pr4-end'), big = sec.querySelector('.pr4-big');
-    var fr = sec.querySelector('.pr4-fr'), frb = sec.querySelector('.pr4-frb'), ims = [].slice.call(sec.querySelectorAll('.pr4-im')), bg = sec.querySelector('.pr4-bg'), labsBox = sec.querySelector('.pr4-labs'), FR = [0, 0, 1, 1], curI = -1;
-    var path = el('path', {'class': 'ln'}, svg), nds = labs.map(function(){ return el('rect', {width: 9, height: 9, 'class': 'nd'}, svg); });
-    var N = 110, W = 1, H = 1, X0 = 0, X1 = 0, Y = 0, RL = 0, lastSz = '', cur = -1;
+    var fr = sec.querySelector('.pr4-fr'), ims = [].slice.call(sec.querySelectorAll('.pr4-im')), labsBox = sec.querySelector('.pr4-labs'), cap = sec.querySelector('.pr4-cap'), cv = sec.querySelector('.pr4-cv'), FR = [0, 0, 1, 1], curI = -1;
+    var cx = cv && cv.getContext('2d'); if (!cx) return null;
+    var nds = labs.map(function(){ return el('rect', {width: 9, height: 9, 'class': 'nd'}, svg); });
+    var CAPS = ims.map(function(f){ var c = f.querySelector('figcaption'); return c ? c.textContent : ''; });
+    var N = 320, W = 1, H = 1, X0 = 0, X1 = 0, Y = 0, RL = 0, KR = 1, KX = 0, KY = 0, DPR = 1, lastSz = '', cur = -1, P = 0;
+    /* 15:20 · the knot (youniqlabs-like): a real 3D knot — a (2,5) torus knot, a little irregular — drawn as one white line in
+       perspective, turning all the time; where it passes in front of itself the back strand breaks (a knot drawing, not a
+       scribble), the near strands are thicker. On the scroll it straightens into the one line of the six steps. */
+    var KN = []; for (var i = 0; i < N; i++){ var t = i / N * Math.PI * 2, r = 2 + .9 * Math.cos(5 * t);
+      KN.push([r * Math.cos(2 * t), r * Math.sin(2 * t), -.9 * Math.sin(5 * t)]); }
+    KN.push(KN[0]);
     function size(){ var r = stage.getBoundingClientRect(), por = r.width < r.height; W = r.width; H = r.height; svg.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H));
+      DPR = Math.min(window.devicePixelRatio || 1, 2); cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
       var m = parseFloat(getComputedStyle(stage).getPropertyValue('--m')) || 48, hd = parseFloat(getComputedStyle(stage).getPropertyValue('--hdr')) || 70;
       X0 = W * (por ? .07 : .06); X1 = W * (por ? .78 : .8); Y = H * (por ? .84 : .78); RL = Math.min(W * (1 - X1 / W - .05), H * (por ? .1 : .16));
-      FR = por ? [m, hd + 72, W - m, hd + 72 + H * .28] : [W * .5, hd + 60, W - m, Y - 70];
+      KR = Math.min(W * (por ? .3 : .16), H * .21) / 2.9; KX = W * .5; KY = H * .63;
+      var pw = por ? Math.min(W * .34, 170) : Math.max(190, Math.min(W * .15, 300)), ph = pw * 1.25;
+      FR = [W - m - pw, hd + (por ? 24 : 40), W - m, hd + (por ? 24 : 40) + ph];
+      fr.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[1]) + 'px)'; fr.style.width = f1(pw) + 'px'; fr.style.height = f1(ph) + 'px';
+      cap.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[3] + 12) + 'px)'; cap.style.width = f1(pw) + 'px';
       labs.forEach(function(l, k){ l.style.left = f1(nx(k)) + 'px'; l.style.top = f1(Y + 18) + 'px'; });
       nds.forEach(function(n, k){ n.setAttribute('x', f1(nx(k) - 4.5)); n.setAttribute('y', f1(Y - 4.5)); });
       big.style.setProperty('--bt', f1(por ? Y - 200 : Y - 70 - Math.min(W * .063, 118) - 120) + 'px'); }
     function nx(k){ return X0 + k / 5 * (X1 - X0) * .96; }
-    function cat(p){ var s = 'M' + f1(p[0][0]) + ' ' + f1(p[0][1]);
-      for (var i = 0; i < p.length - 1; i++){ var a = p[i - 1] || p[i], b = p[i], c = p[i + 1], e = p[i + 2] || c;
-        s += 'C' + f1(b[0] + (c[0] - a[0]) / 6) + ' ' + f1(b[1] + (c[1] - a[1]) / 6) + ' ' + f1(c[0] - (e[0] - b[0]) / 6) + ' ' + f1(c[1] - (e[1] - b[1]) / 6) + ' ' + f1(c[0]) + ' ' + f1(c[1]); }
-      return s; }
+    var T0 = performance.now();
+    function draw(){
+      var T = (performance.now() - T0) / 1000, p = P;
+      var e = sm(sg(p, .1, .36)), e2 = e * e * (3 - 2 * e);
+      var ay = T * (reduced ? 0 : .38) + p * 5.2, ax = 1.0 + .25 * Math.sin(T * .21 + p * 2), ca = Math.cos(ay), sa = Math.sin(ay), cb = Math.cos(ax), sb = Math.sin(ax), F = 7.5;
+      var S = [];
+      for (var i = 0; i <= N; i++){ var k = KN[i], x = k[0] * ca + k[2] * sa, z = -k[0] * sa + k[2] * ca, y = k[1] * cb - z * sb; z = k[1] * sb + z * cb;
+        var f = F / (F - z), u = i / N, kx = KX + x * KR * f, ky = KY - y * KR * f, fx, fy;
+        if (u < .84){ fx = X0 + (u / .84) * (X1 - X0); fy = Y; } else { var v = (u - .84) / .16; fx = X1 + v * RL; fy = Y - v * RL; }
+        S.push([kx + (fx - kx) * e2, ky + (fy - ky) * e2, z * (1 - e2)]); }
+      cx.setTransform(DPR, 0, 0, DPR, 0, 0); cx.clearRect(0, 0, W, H);
+      var op = 1 - sg(p, .88, .92); if (op <= 0) return; cx.globalAlpha = op;
+      var seg = []; for (i = 0; i < N; i++) seg.push(i);
+      if (e2 < 1) seg.sort(function(a, b){ return (S[a][2] + S[a + 1][2]) - (S[b][2] + S[b + 1][2]); });   /* back to front */
+      cx.lineJoin = 'round';
+      for (var j = 0; j < N; j++){ var a = S[seg[j]], b = S[seg[j] + 1], d = (a[2] + b[2]) * .5, w = lerp(1.3 + 2.2 * clamp01((d + 1.) / 2.), 1.4, e2);
+        if (e2 < .98){ cx.lineCap = 'butt'; cx.strokeStyle = '#0B0B0C'; cx.lineWidth = w + 9 * (1 - e2); cx.beginPath(); cx.moveTo(a[0], a[1]); cx.lineTo(b[0], b[1]); cx.stroke(); }
+        cx.lineCap = 'round'; cx.strokeStyle = '#EBEBEB'; cx.lineWidth = w; cx.beginPath(); cx.moveTo(a[0], a[1]); cx.lineTo(b[0], b[1]); cx.stroke(); }
+      cx.globalAlpha = 1;
+    }
+    var vis = false, raf = 0;
+    function loop(){ raf = 0; if (!vis) return; draw(); raf = requestAnimationFrame(loop); }
+    if ('IntersectionObserver' in window){ var eg = new IntersectionObserver(function(es){ if (!es[0].isIntersecting) return; ims.forEach(function(f){ var im = f.querySelector('img'); if (im) im.loading = 'eager'; }); eg.disconnect(); }, {rootMargin: '200% 0px'}); eg.observe(sec); }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }).observe(stage);
     function update(p){
       var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
-      /* the knot drifts a little while you read; then it straightens into one line that rises at its end */
-      var e = sm(sg(p, .1, .36)), e2 = e * e * (3 - 2 * e), dr = p * 1.6, pts = [];
-      for (var i = 0; i < N; i++){ var u = i / (N - 1);
-        var tx = W * .5 + W * .42 * Math.sin(u * 9.4 + .3 + dr * .25) * Math.cos(u * 3.1) + W * .06 * Math.sin(u * 31 + dr),
-            ty = H * .5 + H * .34 * Math.sin(u * 12.7 + 1.1 + dr * .2) * Math.cos(u * 2.3) + H * .07 * Math.cos(u * 27 + dr);
-        var fx, fy; if (u < .84){ fx = X0 + (u / .84) * (X1 - X0); fy = Y; } else { var v = (u - .84) / .16; fx = X1 + v * RL; fy = Y - v * RL; }
-        pts.push([tx + (fx - tx) * e2, ty + (fy - ty) * e2]); }
-      path.setAttribute('d', cat(pts));
+      P = p; if (!vis) draw();
+      var e = sm(sg(p, .1, .36));
       /* the opening line, over the knot */
-      var k1 = sg(p, 0, .06), ko = sg(p, .3, .38); t1.style.opacity = (Math.min(1, .25 + k1) * (1 - ko)).toFixed(3);
+      var ko = sg(p, .3, .38); t1.style.opacity = (1 - ko).toFixed(3);
       t1.style.transform = 'translateY(-50%) scale(' + (1.1 - .1 * eo(sg(p, 0, .12)) - .08 * ko).toFixed(4) + ')'; t1.style.filter = ko > 0 && !LITE ? 'blur(' + f1(12 * ko) + 'px)' : '';
       t1.style.visibility = ko >= 1 ? 'hidden' : '';
       var k2 = sg(p, .37, .42) * (1 - sg(p, .84, .88)); t2.style.opacity = k2.toFixed(3); t2.style.transform = 'translateY(' + f1((1 - eo(sg(p, .37, .42))) * 18 - 24 * sg(p, .86, .9)) + 'px)';
       /* the six steps: the square walks them; the step's word rises above the line */
       var ok = e > .985, s = sg(p, .42, .82), a = s * 5, k = ok && p < .86 ? Math.round(a) : (p >= .86 ? 5 : -1), r = sg(p, .83, .88);
       nds.forEach(function(n, i){ n.style.opacity = ok ? 1 : 0; n.classList.toggle('on', ok && i <= a + .01); });
-      labs.forEach(function(l, i){ l.style.opacity = ok ? (i <= a + .01 ? 1 : .35) : 0; l.classList.toggle('on', ok && i === k && p < .86); });
-      if (ok){ var x = nx(0) + (nx(5) - nx(0)) * s, y = Y; if (r > 0){ x = nx(5) + (X1 + RL - nx(5)) * r; y = Y - (r * (X1 + RL - nx(5))) * (RL / Math.max(1, X1 + RL - nx(5))) * (x > X1 ? 1 : 0); if (x > X1) y = Y - (x - X1); }
+      labs.forEach(function(l, i){ l.style.opacity = ok ? 1 : 0; l.classList.toggle('on', ok && i === k && p < .86); });
+      if (ok){ var x = nx(0) + (nx(5) - nx(0)) * s, y = Y; if (r > 0){ x = nx(5) + (X1 + RL - nx(5)) * r; y = x > X1 ? Y - (x - X1) : Y; }
         sq.style.opacity = 1; sq.style.transform = 'translate3d(' + f1(x) + 'px,' + f1(y) + 'px,0)'; } else sq.style.opacity = 0;
-      /* the real home in a frame: one photograph per step; at the rise the frame opens onto the finished room */
+      /* the real home, small: one photograph per step in the top-right corner, its caption under it */
       var ki = !ok ? 0 : p >= .86 ? 5 : Math.max(0, k);
-      if (ki !== curI){ var pv = curI; curI = ki; ims.forEach(function(im, i){ im.classList.toggle('on', i === ki); im.classList.toggle('was', i === pv && pv !== ki); }); }
-      var xo = sm(sg(p, .88, .95)), rc = [lerp(FR[0], 0, xo), lerp(FR[1], 0, xo), lerp(FR[2], W, xo), lerp(FR[3], H, xo)], fo = sg(p, .36, .42);
-      fr.style.opacity = fo.toFixed(3); fr.style.transform = 'translate(' + f1(rc[0]) + 'px,' + f1(rc[1]) + 'px)'; fr.style.width = f1(rc[2] - rc[0]) + 'px'; fr.style.height = f1(rc[3] - rc[1]) + 'px';
-      frb.style.opacity = (fo * (1 - sg(p, .88, .91))).toFixed(3); frb.style.transform = 'translate(' + f1(FR[0] - 10) + 'px,' + f1(FR[1] - 10) + 'px)'; frb.style.width = f1(FR[2] - FR[0] + 20) + 'px'; frb.style.height = f1(FR[3] - FR[1] + 20) + 'px';
-      bg.style.opacity = (.24 * (1 - sg(p, .18, .36))).toFixed(3);
+      if (ki !== curI){ var pv = curI; curI = ki; ims.forEach(function(im, i){ im.classList.toggle('on', i === ki); im.classList.toggle('was', i === pv && pv !== ki); }); cap.textContent = CAPS[ki] || ''; }
+      var fo = sg(p, .36, .42); fr.style.opacity = fo.toFixed(3); cap.style.opacity = fo.toFixed(3);
       var lo = 1 - sg(p, .88, .92); svg.style.opacity = lo.toFixed(3); labsBox.style.opacity = lo.toFixed(3); big.style.opacity = lo.toFixed(3); if (lo < 1) sq.style.opacity = lo.toFixed(3);
       var kk = p >= .86 ? -1 : k;
       if (kk !== cur){ var was = cur; cur = kk; bws.forEach(function(b, i){ b.classList.toggle('on', i === kk); b.classList.toggle('was', i === was && kk !== -1 && i !== kk); }); }

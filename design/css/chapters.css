@@ -760,27 +760,28 @@
 .pr4-idx{position:absolute;left:var(--m);top:calc(var(--hdr) + 44px);display:flex;gap:14px;align-items:center;color:#EBEBEB;z-index:4}
 .pr4-idx .ln{width:28px;height:1px;background:currentColor;position:relative}
 .pr4-idx .ln::before{content:"";position:absolute;left:0;top:-2px;width:5px;height:5px;background:#96A9BF}
-.pr4-t1{position:absolute;left:var(--m);right:var(--m);top:50%;margin:0;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;font-weight:400;text-transform:uppercase;font-size:clamp(46px,9.6vw,176px);line-height:.86;letter-spacing:-.045em;mix-blend-mode:difference;color:#fff;will-change:transform,opacity,filter}
+.pr4-t1{position:absolute;left:var(--m);right:var(--m);top:29%;margin:0;z-index:3;display:flex;flex-direction:column;align-items:center;text-align:center;font-weight:400;text-transform:uppercase;font-size:clamp(46px,9.6vw,176px);line-height:.86;letter-spacing:-.045em;mix-blend-mode:difference;color:#fff;will-change:transform,opacity,filter}
 .pr4-t2{position:absolute;left:var(--m);top:calc(var(--hdr) + 92px);z-index:3;max-width:min(44vw,700px);opacity:0}
 .pr4-h{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(26px,3vw,52px);line-height:.94;letter-spacing:-.03em}
 .pr4-lead{margin:16px 0 0;font-size:15px;line-height:1.5;color:#EBEBEB;max-width:44ch}
 .pr4-svg{position:absolute;inset:0;width:100%;height:100%;z-index:2;overflow:visible}
-.pr4-svg .ln{fill:none;stroke:#EBEBEB;stroke-width:1.4;stroke-linejoin:round;stroke-linecap:round}
+.pr4-svg .ln{display:none}
 .pr4-svg .nd{fill:#0B0B0C;stroke:#EBEBEB;stroke-width:1;transition:fill .3s}
 .pr4-svg .nd.on{fill:#EBEBEB}
 .pr4-big{position:absolute;left:var(--m);z-index:3;top:var(--bt,40%);display:grid}
 .pr4-bw{grid-area:1/1}
 .pr4-mk{overflow:hidden;padding-bottom:.04em}
 .pr4-bt{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(46px,6.3vw,118px);line-height:.92;letter-spacing:-.045em;white-space:nowrap;transform:translateY(105%);transition:transform .8s cubic-bezier(.2,.8,.2,1)}
-.pr4-bd{margin:14px 0 0;font-size:15px;line-height:1.45;color:#A9B3BE;max-width:42ch;opacity:0;transform:translateY(10px);transition:opacity .5s,transform .7s cubic-bezier(.2,.8,.2,1)}
+.pr4-bd{margin:14px 0 0;font-size:15px;line-height:1.45;color:#EBEBEB;max-width:42ch;opacity:0;transform:translateY(10px);transition:opacity .5s,transform .7s cubic-bezier(.2,.8,.2,1)}
 .pr4-bw.on .pr4-bt{transform:none}
 .pr4-bw.on .pr4-bd{opacity:1;transform:none;transition-delay:.2s}
 .pr4-bw.was .pr4-bt{transform:translateY(-105%)}
 .pr4-labs{position:absolute;inset:0;z-index:3;pointer-events:none}
 .pr4-lab{position:absolute;display:flex;flex-direction:column;gap:6px;transform:translateX(-4px);opacity:0;color:#EBEBEB;transition:color .4s}
 .pr4-lab .nm{font-weight:400;text-transform:uppercase;font-size:clamp(11px,.95vw,15px);letter-spacing:.12em;color:#EBEBEB;transition:color .4s}
-.pr4-lab.on .nm{color:#fff}
-.pr4-sq{position:absolute;left:0;top:0;width:15px;height:15px;margin:-7.5px 0 0 -7.5px;background:#96A9BF;box-shadow:0 0 30px rgba(150,169,191,.65);z-index:4;opacity:0;will-change:transform}
+.pr4-lab .mono{align-self:flex-start;padding:2px 4px;margin-left:-4px;transition:background-color .4s,color .4s}
+.pr4-lab.on .mono{background:#EBEBEB;color:#0B0B0C}
+.pr4-sq{position:absolute;left:0;top:0;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;background:#EBEBEB;z-index:4;opacity:0;will-change:transform}
 .pr4-end{position:absolute;left:var(--m);top:calc(var(--hdr) + 92px);z-index:3;opacity:0;text-transform:uppercase}
 .pr4-end .r{display:block;font-size:clamp(18px,2.2vw,38px);letter-spacing:.04em;line-height:1}
 .pr4-end b{display:block;margin-top:.3em;font-weight:400;font-size:clamp(40px,5.6vw,100px);letter-spacing:-.04em;line-height:.88;max-width:9em}
@@ -793,20 +794,20 @@
 }
 
 /* v12: the idea at our level — the real home walks the line in a framed photograph; at the rise the frame opens onto the finished room */
-.pr4-bg{position:absolute;inset:0;z-index:0;opacity:0}
-.pr4-bg img{width:100%;height:100%;object-fit:cover;filter:grayscale(1) contrast(1.1) brightness(.55);transform:scale(1.08)}
-.pr4-fr{position:absolute;left:0;top:0;width:10px;height:10px;z-index:1;overflow:hidden;opacity:0;background:#1A1A1C}
+/* 15:20: no big framed photograph — one small 4:5 picture in the top-right corner, no outline; its caption is plain text under it */
+.pr4-fr{position:absolute;left:0;top:0;width:10px;height:10px;z-index:1;overflow:hidden;opacity:0;background:#0B0B0C}
+.pr4-cv{position:absolute;inset:0;width:100%;height:100%;z-index:2;display:block;pointer-events:none}
+.pr4-cap{position:absolute;left:0;top:0;z-index:3;color:#EBEBEB;line-height:1.5;opacity:0}
 .pr4-im{position:absolute;inset:0;margin:0;clip-path:inset(0 0 0 100%);transition:clip-path 1.1s cubic-bezier(.77,0,.18,1)}
 .pr4-im img{width:100%;height:100%;object-fit:cover;display:block;object-position:var(--op,50% 50%)}
 .pr4-im.on{clip-path:inset(0);z-index:2}
 .pr4-im.was{clip-path:inset(0);z-index:1}
 .pr4-im.contain{background:#EBEBEB}
 .pr4-im.contain img{object-fit:contain;box-sizing:border-box;padding:5% 6%}
-.pr4-im figcaption{position:absolute;z-index:3;right:14px;bottom:12px;padding:6px 9px;color:#fff;background:rgba(20,20,22,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);white-space:nowrap;opacity:var(--capo,1)}
-.pr4-frb{position:absolute;z-index:2;pointer-events:none;border:10px solid #EBEBEB;box-shadow:0 30px 80px rgba(0,0,0,.45);opacity:0;box-sizing:border-box}
+.pr4-im figcaption{display:none}
 .pr4-end{padding:clamp(26px,2.6vw,44px) clamp(26px,2.6vw,44px) clamp(26px,2.6vw,44px) clamp(40px,3.6vw,60px);background:#EBEBEB;color:#1D1D1D;top:auto;bottom:calc(var(--m) + 50px);width:min(40vw,640px);box-shadow:0 30px 80px rgba(0,0,0,.3)}
 .pr4-end::before{content:"";position:absolute;left:clamp(22px,1.8vw,30px);top:clamp(26px,2.6vw,44px);bottom:clamp(26px,2.6vw,44px);width:1px;background:rgba(29,29,29,.3)}
-.pr4-ek{display:block;color:#EBEBEB;margin-bottom:20px}
+.pr4-ek{display:block;color:#1D1D1D;margin-bottom:20px}
 .pr4-end b{font-size:clamp(28px,3.4vw,62px)}
 .pr4-end .r{font-size:clamp(14px,1.5vw,24px)}
 @media (max-aspect-ratio: 1/1){ .pr4-end{width:auto;right:var(--m)} }
