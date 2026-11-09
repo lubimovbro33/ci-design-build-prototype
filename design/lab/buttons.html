@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CI — button hover variants</title>
+<meta name="robots" content="noindex">
+<style>
+@font-face{font-family:"TG Ext";src:url(../assets/fonts/tg-ext.woff) format("woff");font-weight:400}
+@font-face{font-family:"TG Ext";src:url(../assets/fonts/tg-ext-bold.woff) format("woff");font-weight:700}
+@property --r{syntax:'<length-percentage>';inherits:false;initial-value:0%}
+:root{--u:calc(100vw / 1920);--light:#D9D9D9;--bright:#EBEBEB;--warm:#F8BD79;--blue:#96A9BF;--e:cubic-bezier(.16,1,.3,1);--io:cubic-bezier(.7,0,.2,1)}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#000;color:var(--bright);font-family:"TG Ext",sans-serif}
+body{padding:calc(48 * var(--u)) calc(64 * var(--u)) 80px}
+h1{font-weight:700;font-size:max(18px, calc(28 * var(--u)));letter-spacing:-.06em;text-transform:uppercase;margin-bottom:8px}
+.lead{font-size:13px;opacity:.6;margin-bottom:40px;letter-spacing:.02em}
+.row{display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:start;padding:36px 0;border-top:1px solid rgba(255,255,255,.1)}
+.row h2{font-weight:700;font-size:44px;letter-spacing:-.06em;line-height:1}
+.row h2 small{display:block;font-size:12px;font-weight:400;letter-spacing:.02em;opacity:.6;margin-top:10px;line-height:1.4;max-width:120px}
+.set{display:flex;gap:calc(48 * var(--u));align-items:flex-start;flex-wrap:wrap}
+.pair{display:flex;gap:max(8px, calc(10 * var(--u)))}
+.hdrset{display:flex;gap:max(8px, calc(12 * var(--u)))}
+/* ---------- the buttons as on the site (Figma 230:8736) */
+.blk{position:relative;display:block;width:max(120px, calc(170 * var(--u)));height:max(172px, calc(244 * var(--u)));color:var(--bright);text-decoration:none;border:2px solid #fff;overflow:hidden}
+.blk.fill{background:var(--light);color:#000;border-color:var(--light)}
+.blk .t{position:absolute;left:calc(max(11px, 11 * var(--u)) - 2px);top:max(10px, calc(10 * var(--u)));font-weight:700;font-size:max(15px, calc(22 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;white-space:nowrap}
+.blk .sq{position:absolute;right:calc(max(11px, 11 * var(--u)) - 2px);bottom:calc(max(11px, 11 * var(--u)) - 2px);width:max(5px, calc(6 * var(--u)));height:max(5px, calc(6 * var(--u)));background:currentColor}
+.blk.fill .sq{background:#000} .blk.line .sq{background:var(--bright)}
+.cta{position:relative;display:block;width:max(210px, calc(295 * var(--u)));height:max(56px, calc(78 * var(--u)));background:var(--light);color:#000;text-decoration:none;overflow:hidden}
+.cta .t{position:absolute;left:max(12px, calc(16 * var(--u)));top:max(11px, calc(16 * var(--u)));font-weight:400;font-size:max(13px, calc(18 * var(--u)));line-height:.93;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap}
+.cta .sq{position:absolute;right:max(6px, calc(8 * var(--u)));top:max(6px, calc(8 * var(--u)));width:max(6px, calc(8 * var(--u)));height:max(6px, calc(8 * var(--u)));background:#000}
+.menu{position:relative;width:max(56px, calc(78 * var(--u)));height:max(56px, calc(78 * var(--u)));border:1px solid rgba(235,235,235,.18);background:none;cursor:pointer;overflow:hidden}
+.menu .m1,.menu .m2{position:absolute;left:28%;width:42%;height:1.5px;background:var(--light)}
+.menu .m1{top:42%} .menu .m2{top:56%}
+/* stacked label lines (each line its own span for the staggered variants) */
+.t .l{display:block;position:relative}
+.t .l span{display:block} .t .l span + span{display:none}
+.A .t .l span + span{display:block}
+
+/* =============== A · FOCUS — the label refocuses: each line slides up into a blur and a sharp copy rises from below,
+   one line after another (the title's focus pull); the square glides up the edge to the top corner */
+.A .t .l{overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.A .t .l span{display:block;transition:transform .7s var(--e),filter .7s var(--e),opacity .7s var(--e);transition-delay:calc(var(--i) * 55ms)}
+.A .t .l span + span{position:absolute;left:0;top:0;transform:translateY(105%);filter:blur(6px);opacity:0}
+.A a:hover .t .l span:first-child{transform:translateY(-105%);filter:blur(6px);opacity:0}
+.A a:hover .t .l span + span{transform:none;filter:blur(0);opacity:1}
+.A .blk .sq{transition:transform .9s var(--io)}
+.A .blk:hover .sq{transform:translateY(calc(-1 * (max(172px, 244 * var(--u)) - 2 * max(11px, 11 * var(--u)) - max(5px, 6 * var(--u)))))}
+.A .cta .sq{transition:transform .9s var(--io)}
+.A .cta:hover .sq{transform:translateX(calc(-1 * (max(210px, 295 * var(--u)) - 2 * max(6px, 8 * var(--u)) - max(6px, 8 * var(--u)))))}
+.A .menu .m1,.A .menu .m2{transition:transform .7s var(--io)}
+.A .menu:hover .m1{transform:translateX(18%)} .A .menu:hover .m2{transform:translateX(-18%)}
+
+/* =============== B · DRAWING — from the square two hairlines draw across the button, like the grid lines of the hero:
+   along the bottom to the left edge and up the right edge to the top; the square sits where they cross */
+.B .ln{position:absolute;background:currentColor;opacity:.9;transition:transform .9s var(--io)}
+.B .blk.fill .ln{background:#000} .B .blk.line .ln{background:var(--bright)}
+.B .blk .h{left:0;right:calc(max(11px, 11 * var(--u)) - 2px);bottom:calc(max(11px, 11 * var(--u)) - 2px + max(5px, 6 * var(--u)) / 2);height:1px;transform:scaleX(0);transform-origin:100% 50%}
+.B .blk .v{top:0;bottom:calc(max(11px, 11 * var(--u)) - 2px);right:calc(max(11px, 11 * var(--u)) - 2px + max(5px, 6 * var(--u)) / 2);width:1px;transform:scaleY(0);transform-origin:50% 100%;transition-delay:.08s}
+.B .blk:hover .ln{transform:none}
+.B .blk .sq{transition:transform .6s var(--io)} .B .blk:hover .sq{transform:rotate(45deg) scale(1.15)}
+.B .blk .t{transition:transform .8s var(--e)} .B .blk:hover .t{transform:translateX(4px)}
+.B .cta .ln{background:#000}
+.B .cta .h{left:0;right:calc(max(6px, 8 * var(--u)) + max(6px, 8 * var(--u)) / 2);top:calc(max(6px, 8 * var(--u)) + max(6px, 8 * var(--u)) / 2);height:1px;transform:scaleX(0);transform-origin:100% 50%}
+.B .cta .v{top:calc(max(6px, 8 * var(--u)) + max(6px, 8 * var(--u)));bottom:0;right:calc(max(6px, 8 * var(--u)) + max(6px, 8 * var(--u)) / 2);width:1px;transform:scaleY(0);transform-origin:50% 0;transition-delay:.08s}
+.B .cta:hover .ln{transform:none}
+.B .cta .sq{transition:transform .6s var(--io)} .B .cta:hover .sq{transform:rotate(45deg)}
+.B .menu .m1,.B .menu .m2{transition:transform .7s var(--io);transform-origin:0 50%}
+.B .menu:hover .m1{transform:scaleX(1.6)} .B .menu:hover .m2{transform:scaleX(.5)}
+
+/* =============== C · GLASS — a band of fluted glass (the brand's reeded texture) passes across the button once,
+   the label bends slightly in it (the slider's glass wave, in miniature) */
+.C .gl{position:absolute;inset:0;pointer-events:none;opacity:0;
+  background:repeating-linear-gradient(90deg,rgba(255,255,255,.0) 0 3px,rgba(255,255,255,.55) 4px,rgba(255,255,255,0) 6px,rgba(0,0,0,.18) 9px,rgba(0,0,0,0) 10px 12px);
+  -webkit-mask:linear-gradient(90deg,transparent 0,#000 30%,#000 70%,transparent 100%) -140% 0/60% 100% no-repeat;mask:linear-gradient(90deg,transparent 0,#000 30%,#000 70%,transparent 100%) -140% 0/60% 100% no-repeat}
+.C .blk.line .gl{background:repeating-linear-gradient(90deg,rgba(255,255,255,0) 0 3px,rgba(255,255,255,.35) 4px,rgba(255,255,255,0) 6px,rgba(150,169,191,.25) 9px,rgba(0,0,0,0) 10px 12px)}
+.C a:hover .gl{animation:glass 1.15s cubic-bezier(.45,0,.25,1) both}
+@keyframes glass{0%{opacity:1;-webkit-mask-position:-140% 0;mask-position:-140% 0}100%{opacity:1;-webkit-mask-position:240% 0;mask-position:240% 0}}
+.C a:hover .t{animation:bend 1.15s cubic-bezier(.45,0,.25,1)}
+@keyframes bend{0%,100%{filter:none;transform:none}45%{filter:blur(1.4px);transform:skewX(-6deg) translateX(3px)}}
+.C .sq{transition:transform .5s var(--io)} .C a:hover .sq{transform:scale(1.5)}
+.C .menu .gl{background:repeating-linear-gradient(90deg,rgba(255,255,255,0) 0 3px,rgba(255,255,255,.3) 4px,rgba(255,255,255,0) 6px)}
+.C .menu:hover .gl{animation:glass 1.15s cubic-bezier(.45,0,.25,1) both}
+
+/* =============== D · SQUARES — the small square multiplies: a grid of brand squares spreads from the corner across the
+   button and fades behind the label, then the corner square doubles */
+.D .grid{position:absolute;inset:0;pointer-events:none;
+  background:conic-gradient(from 270deg at max(5px, 6 * var(--u)) max(5px, 6 * var(--u)),currentColor 25%,transparent 0) 0 0/max(14px, calc(18 * var(--u))) max(14px, calc(18 * var(--u)));
+  -webkit-mask:radial-gradient(circle at 100% 100%,#000 calc(var(--r) - 30%),rgba(0,0,0,.35) var(--r),transparent calc(var(--r) + 12%));mask:radial-gradient(circle at 100% 100%,#000 calc(var(--r) - 30%),rgba(0,0,0,.35) var(--r),transparent calc(var(--r) + 12%));
+  opacity:.0;transition:--r 1s var(--io),opacity .6s}
+.D .blk.fill .grid{color:rgba(0,0,0,.22)} .D .blk.line .grid{color:rgba(235,235,235,.22)} .D .cta .grid{color:rgba(0,0,0,.18)}
+.D .cta .grid{-webkit-mask:radial-gradient(circle at 100% 0,#000 calc(var(--r) - 30%),rgba(0,0,0,.35) var(--r),transparent calc(var(--r) + 12%));mask:radial-gradient(circle at 100% 0,#000 calc(var(--r) - 30%),rgba(0,0,0,.35) var(--r),transparent calc(var(--r) + 12%))}
+.D a:hover .grid{--r:180%;opacity:1}
+.D .sq{transition:transform .6s var(--io)} .D a:hover .sq{transform:scale(2)}
+.D .t{transition:transform .8s var(--e)} .D a:hover .t{transform:translateY(-2px)}
+.D .menu .grid{color:rgba(235,235,235,.18)}
+.D .menu:hover .grid{--r:180%;opacity:1}
+.note{margin-top:40px;font-size:13px;opacity:.55;line-height:1.5}
+</style>
+</head>
+<body>
+<h1>Кнопки · 4 варианта наведения</h1>
+<p class="lead">Наведи мышкой на каждую кнопку. Размеры и шрифты как на сайте. Напиши букву варианта (можно разные для больших кнопок и для кнопок в хедере).</p>
+<main id="rows"></main>
+<p class="note">A — «фокус»: текст перефокусируется через блюр, строка за строкой, квадрат уезжает в верхний угол. B — «чертёж»: из квадрата прорисовываются тонкие линии, как сетка главного экрана. C — «стекло»: по кнопке проходит полоса рифлёного стекла, текст слегка преломляется. D — «квадраты»: квадрат размножается в сетку из фирменных квадратиков.</p>
+<script>
+var V = {A:'Фокус', B:'Чертёж', C:'Стекло', D:'Квадраты'};
+function lab(lines){ return lines.map(function(l, i){ return '<span class="l" style="--i:' + i + '"><span>' + l + '</span><span aria-hidden="true">' + l + '</span></span>'; }).join(''); }
+var html = '';
+Object.keys(V).forEach(function(k){
+  var extra = k === 'B' ? '<i class="ln h"></i><i class="ln v"></i>' : k === 'C' ? '<i class="gl"></i>' : k === 'D' ? '<i class="grid"></i>' : '';
+  html += '<section class="row ' + k + '"><h2>' + k + '<small>' + V[k] + '</small></h2><div class="set">' +
+    '<div class="pair"><a class="blk fill" href="#">' + extra + '<span class="t">' + lab(['Explore','CI']) + '</span><i class="sq"></i></a>' +
+    '<a class="blk line" href="#">' + extra + '<span class="t">' + lab(['Begin','Your','Better','Life']) + '</span><i class="sq"></i></a></div>' +
+    '<div class="hdrset"><a class="cta" href="#">' + extra + '<span class="t">' + lab(['Begin','Your','Better Life']) + '</span><i class="sq"></i></a>' +
+    '<button class="menu" type="button">' + (k === 'C' ? '<i class="gl"></i>' : k === 'D' ? '<i class="grid"></i>' : '') + '<i class="m1"></i><i class="m2"></i></button></div>' +
+    '</div></section>';
+});
+document.getElementById('rows').innerHTML = html;
+document.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', function(e){ e.preventDefault(); }); });
+</script>
+</body>
+</html>

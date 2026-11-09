@@ -966,34 +966,48 @@ html,body{background:#0B0D11}
 .yode{opacity:1}
 .cta .plate2{width:2851px;height:1520px}
 .cta .plate2 img{filter:brightness(1.15)}
-/* ======================================================================= v12 — the user's Figma hero (Page 1 / Frame 6, 1920×1080)
-   black field · logo 91×99 at 24/24 · nav at x 475 (uppercase extended, −6 %) · CTA block 295×78 (#D9D9D9, black 3-line label,
-   6 px black square) + 78×78 outlined menu square with two 32×1 lines · hairline at y 328 and a vertical hairline at x 451 ·
-   title Trade Gothic Bold Extended 109 px, −8 %, 2 lines at 466/353 · two 170×244 blocks at 475/812 (label top-left, 6 px square
-   bottom-right). The project preview bottom-left was removed (user 09.11). */
-:root{ --hm:clamp(14px,1.25vw,24px); --f-col:24.27vw; --f-nav:24.74vw; --f-rule:23.49vw; --bright:#EBEBEB; --light:#D9D9D9; --warm:#A6A39B; }
+/* ======================================================================= v13 — the user's Figma frame (CI file, node 230:8736,
+   1920×1080), user 09.11 09:42: "every pixel as in my frame". Exact at 1920 wide; every size is in --u = 1/1920 of the viewport
+   width, so the frame scales as one picture (small floors keep the labels readable below ~1200 px).
+   Logo: the official PNG at 147.9×168.7 from 15.2/12 (= the mark at 24/24) · no nav · CTA block 295×78 at 1511/24 (#D9D9D9,
+   label 18 px at +16/+13, line-height .93, −5 %, 8 px black square 8 from its top/right) + 78×78 menu square at 1818/24
+   (1 px #EBEBEB at 18 %, two 33×1.5 #D9D9D9 lines at +23/+33 and +23/+44) · hairlines, white at 10 %: vertical x 395, horizontal
+   y 394, bottom y 1079 · title Trade Gothic Bold Extended 111 px, −8 %, line-height 1, at 417/424 · two 170×244 blocks at
+   421/812, 10 apart (label 22 px at +11/+10, 6 px square 11 from the right/bottom; the outlined one has a 2 px white border). */
+:root{ --u:calc(100vw / 1920); --hm:clamp(14px,1.25vw,24px); --f-col:calc(417 * var(--u)); --f-nav:calc(421 * var(--u)); --f-rule:calc(395 * var(--u)); --bright:#EBEBEB; --light:#D9D9D9; --warm:#A6A39B; --trace:#F8BD79; }
+@property --ta{syntax:'<angle>';inherits:false;initial-value:0deg}
 
-/* ---------- header: logo · nav · CTA block + menu square (no bottom border — the hero's own rule sits at 30 %) */
+/* ---------- header: logo · CTA block + menu square */
 .hdr{height:auto}
-.hdr-in{left:var(--hm);right:var(--hm);top:0;height:auto;display:block;border:0}
-.hdr .cell{display:none}
-.hdr .cell.c{display:block;position:absolute;left:0;top:var(--hm);height:auto}
-.hdr .cell{height:auto}
+.hdr-in{left:0;right:0;top:0;height:auto;display:block;border:0}
+.hdr .cell{display:none;height:auto}
 .hdr .cell::before{display:none}
+.hdr .cell.c{display:block;position:absolute;left:calc(15.2 * var(--u));top:calc(12 * var(--u))}
 .hdr .wm{display:block;line-height:0}
-.hdr .wm img{height:clamp(56px,5.16vw,99px);width:auto}
-.hdr .cell:first-child{display:block;position:absolute;left:calc(var(--f-nav) - var(--hm));top:var(--hm)}
-.hdr .nav{gap:clamp(14px,1.25vw,24px)}
-.hdr .nav a,.hdr .nav button{font-family:"TG Ext",sans-serif;font-weight:400;font-size:clamp(11px,.94vw,18px);letter-spacing:-.06em;text-transform:uppercase;opacity:1;color:var(--bright)}
-.hdr .nav .t{padding:0}
-.hdr .cell.r{display:flex;position:absolute;right:0;top:calc(var(--hm) * .5);gap:12px;align-items:stretch}
+.hdr .wm img{height:max(64px, calc(168.67 * var(--u)));width:auto}
+/* the logo (user 09.11): 1 · it shrinks with the first half-screen of scroll to the frame's small state (Figma 289:8827: the mark
+   81×88 at 24/24 = ×0.609 of 133×144) and grows back on the way up — scaled about the mark's top-left corner (js: updateLogo);
+   2 · a warm light runs round it every few seconds, clockwise from the top — the light that runs round the CI window in the intro.
+   Only the official PNG is used: the light is a conic gradient masked by the logo's own shape. */
+.hdr .cell.c{transform-origin:calc(8.8 * var(--u)) calc(12 * var(--u));will-change:transform}
+.hdr .wm{position:relative}
+.hdr .wm-glow{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 0 calc(6 * var(--u)) rgba(248,189,121,.8))}
+.hdr .wm-fx{position:absolute;inset:0;opacity:0;
+  background:conic-gradient(from var(--la) at 50% 43%,transparent 0 62%,rgba(248,189,121,0) 62%,rgba(248,189,121,1) 92%,#fff3e0 98.6%,transparent 99.4%);
+  -webkit-mask:url(../assets/brand/logo-white.png) 0 0/100% 100% no-repeat;mask:url(../assets/brand/logo-white.png) 0 0/100% 100% no-repeat;
+  animation:ci-logo 7.5s cubic-bezier(.45,0,.3,1) 2.2s infinite}
+@property --la{syntax:'<angle>';inherits:false;initial-value:-60deg}
+@keyframes ci-logo{0%{--la:-60deg;opacity:0}5%{opacity:1}36%{opacity:1}42%{--la:300deg;opacity:0}100%{--la:300deg;opacity:0}}
+@media (prefers-reduced-motion:reduce){.hdr .wm-fx{animation:none}}
+.hdr .cell:first-child{display:none}                       /* the nav is not in the frame */
+.hdr .cell.r{display:flex;position:absolute;right:calc(24 * var(--u));top:calc(24 * var(--u));gap:calc(12 * var(--u));align-items:stretch}
 .hdr .loc{display:none!important}
-.hdr .cta-blk{display:flex;position:relative;width:clamp(150px,15.36vw,295px);height:clamp(44px,4.06vw,78px);background:var(--light);color:#000;text-decoration:none}
-.hdr .cta-blk .t{position:absolute;left:12px;top:12px;font-family:"TG Ext",sans-serif;font-weight:400;font-size:clamp(10px,.94vw,18px);line-height:1;letter-spacing:-.06em;text-transform:uppercase;white-space:nowrap}
-.hdr .cta-blk .sqd{position:absolute;right:18px;top:12px;width:6px;height:6px;background:#000}
-.hdr .menu-sq{position:relative;width:clamp(44px,4.06vw,78px);height:clamp(44px,4.06vw,78px);border:1px solid var(--bright);background:transparent;cursor:none;padding:0}
-.hdr .menu-sq i{position:absolute;left:30%;width:41%;height:1px;background:var(--light)}
-.hdr .menu-sq i:first-child{top:42%} .hdr .menu-sq i:last-child{top:56%}
+.hdr .cta-blk{--sq:#000;--fx-fg:var(--light);--ta0:78deg;display:block;position:relative;width:max(150px, calc(295 * var(--u)));height:max(44px, calc(78 * var(--u)));background:var(--light);color:#000;text-decoration:none}
+.hdr .cta-blk .t{position:absolute;left:calc(16 * var(--u));top:calc(16 * var(--u));font-family:"TG Ext",sans-serif;font-weight:400;font-size:max(10px, calc(18 * var(--u)));line-height:.93;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap}
+.hdr .cta-blk .sqd{display:none}
+.hdr .menu-sq{position:relative;width:max(44px, calc(78 * var(--u)));height:max(44px, calc(78 * var(--u)));border:1px solid rgba(235,235,235,.18);background:transparent;cursor:none;padding:0;transition:border-color .6s var(--e-out)}
+.hdr .menu-sq i{position:absolute;left:calc(23 * var(--u) - 1px);width:calc(33 * var(--u));height:max(1px, calc(1.5 * var(--u)));background:var(--light);transition:transform .7s cubic-bezier(.7,0,.2,1)}
+.hdr .menu-sq i:first-child{top:calc(33 * var(--u) - 1px);transform-origin:100% 50%} .hdr .menu-sq i:last-child{top:calc(44 * var(--u) - 1px);transform-origin:0 50%}
 .hdr .pill{display:none}
 .hdr .menu-btn{display:none}
 
@@ -1001,20 +1015,35 @@ html,body{background:#0B0D11}
 .hero-in{display:none}
 .hero-ui{position:absolute;inset:0;z-index:8;color:var(--bright);pointer-events:none}
 .hero-ui a,.hero-ui button{pointer-events:auto}
-.hero-ui .rule-h{position:absolute;left:0;right:0;top:30.37%;height:1px;background:rgba(235,235,235,.5);transform:scaleX(0);transform-origin:0 50%;transition:transform 1.4s var(--e-expo) .15s}
-.hero-ui .rule-v{position:absolute;left:var(--f-rule);top:0;bottom:0;width:1px;background:rgba(235,235,235,.5);transform:scaleY(0);transform-origin:50% 0;transition:transform 1.4s var(--e-expo) .3s}
-.hero.ui .rule-h{transform:scaleX(1)} .hero.ui .rule-v{transform:scaleY(1)}
-.hero-ui .hero-title{position:absolute;left:var(--f-col);top:32.7%;margin:0;max-width:none;font-family:"TG Ext",sans-serif;font-weight:700;font-size:clamp(34px,5.7vw,109.44px);line-height:1;letter-spacing:-.08em;text-transform:uppercase;color:var(--bright);white-space:nowrap}
-.hero-ui .hero-ctas{position:absolute;left:var(--f-nav);bottom:var(--hm);display:flex;gap:10px}
-.blk{position:relative;display:block;width:clamp(96px,8.85vw,170px);height:clamp(138px,12.7vw,244px);text-decoration:none;color:var(--bright);border:2px solid #fff;background:transparent;transition:background .5s var(--e-out),color .5s var(--e-out),border-color .5s}
-.blk .t{position:absolute;left:11px;top:10px;font-family:"TG Ext",sans-serif;font-weight:700;font-size:clamp(12px,1.146vw,22px);line-height:1;letter-spacing:-.08em;text-transform:uppercase;white-space:nowrap}
-.blk .sqd{position:absolute;right:11px;bottom:11px;width:6px;height:6px;background:currentColor}
-.blk.fill{background:var(--light);color:#000;border-color:var(--light)}
-.blk.fill:hover{background:#fff;border-color:#fff}
-.blk.line:hover{background:var(--bright);color:#000;border-color:var(--bright)}
-.hero-ui .hero-ctas .blk{opacity:0;transform:translateY(14px);transition:opacity .9s var(--e-out),transform .9s var(--e-out),background .5s var(--e-out),color .5s var(--e-out),border-color .5s}
+.hero-ui .rule-h{position:absolute;left:0;right:0;top:calc(100% * 394 / 1080);height:1px;background:rgba(255,255,255,.1);transform:scaleX(0);transform-origin:0 50%;transition:transform 1.4s var(--e-expo) .15s}
+.hero-ui .rule-v{position:absolute;left:var(--f-rule);top:0;bottom:0;width:1px;background:rgba(255,255,255,.1);transform:scaleY(0);transform-origin:50% 0;transition:transform 1.4s var(--e-expo) .3s}
+.hero-ui .rule-b{position:absolute;left:0;right:0;bottom:0;height:1px;background:rgba(255,255,255,.1);transform:scaleX(0);transform-origin:0 50%;transition:transform 1.4s var(--e-expo) .45s}
+.hero.ui .rule-h,.hero.ui .rule-b{transform:scaleX(1)} .hero.ui .rule-v{transform:scaleY(1)}
+.hero-ui .hero-title{position:absolute;left:var(--f-col);top:calc(100% * 424 / 1080 - 10 * var(--u));margin:0;max-width:none;font-family:"TG Ext",sans-serif;font-weight:700;font-size:max(34px, calc(111 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;color:var(--bright);white-space:nowrap}
+/* the title comes into focus (user 09.11: "from a blur, smooth, not a PowerPoint effect"): the letters sharpen and light up
+   left → right in one soft wave while each line settles up a little — the same blur the hero leaves with when you scroll */
+.hero-title .tl{display:block;white-space:inherit;transform:translate3d(0,.16em,0);transition:transform 2.1s cubic-bezier(.16,1,.3,1) var(--ld,0s)}
+.hero-title.in .tl{transform:none}
+.hero-title .fc{opacity:0;filter:blur(.26em);transition:opacity 1.3s cubic-bezier(.25,1,.5,1) var(--d,0s),filter 1.7s cubic-bezier(.16,1,.3,1) var(--d,0s)}
+.hero-title.in .fc{opacity:1;filter:blur(0)}
+.hero-title.done .fc{filter:none}
+@media (prefers-reduced-motion:reduce){.hero-title .fc{opacity:1;filter:none;transition:none}.hero-title .tl{transform:none;transition:none}}
+.hero-ui .hero-ctas{position:absolute;left:var(--f-nav);bottom:calc(24 * var(--u));display:flex;gap:calc(10 * var(--u))}
+.blk{position:relative;display:block;width:max(96px, calc(170 * var(--u)));height:max(138px, calc(244 * var(--u)));text-decoration:none;color:var(--bright);border:2px solid #fff;background:transparent}
+.blk .t{position:absolute;left:calc(11 * var(--u) - 2px);top:calc(10 * var(--u));font-family:"TG Ext",sans-serif;font-weight:700;font-size:max(12px, calc(22 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;white-space:nowrap}
+.blk .sqd{display:none}
+.blk.fill{--sq:#000;--fx-fg:var(--light);--ta0:148deg;background:var(--light);color:#000;border-color:var(--light)}
+.blk.line{--sq:var(--bright);--fx-fg:#000;--ta0:148deg;--sqr:calc(10 * var(--u) - 2px)}   /* its square sits 10 from the right in the frame */
+.hero-ui .hero-ctas .blk{opacity:0;transform:translateY(14px);transition:opacity .9s var(--e-out),transform .9s var(--e-out)}
 .hero-ui .hero-ctas .blk:nth-child(2){transition-delay:.1s}
 .hero.ui .hero-ctas .blk{opacity:1;transform:none;transition-delay:.55s} .hero.ui .hero-ctas .blk:nth-child(2){transition-delay:.65s}
+
+/* ---------- the buttons: the corner square is the .fx layer (its clip = the square). The first hover idea (the square opening
+   out to fill the button + a warm light round the edge) was rejected (user 09.11 09:53); the hover is chosen on /lab/buttons.html */
+.blk .fx,.hdr .cta-blk .fx{position:absolute;inset:0;z-index:1;background:var(--sq);color:var(--fx-fg);pointer-events:none}
+.blk .fx{clip-path:inset(calc(100% - 17 * var(--u) + 2px) var(--sqr, calc(11 * var(--u) - 2px)) calc(11 * var(--u) - 2px) calc(100% - var(--sqr, calc(11 * var(--u) - 2px)) - 6 * var(--u)))}
+.hdr .cta-blk .fx{clip-path:inset(calc(8 * var(--u)) calc(8 * var(--u)) calc(100% - 16 * var(--u)) calc(100% - 16 * var(--u)))}
+.blk:focus-visible,.hdr .cta-blk:focus-visible,.hdr .menu-sq:focus-visible{outline:1px solid var(--trace);outline-offset:3px}
 /* reel scrim for the new layout: darken the left column and the title band a touch more */
 .hero .scrim{background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,0) 26%),linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,0) 40%),linear-gradient(to right,rgba(0,0,0,.35),rgba(0,0,0,0) 24%)}
 
@@ -1030,10 +1059,14 @@ html,body{background:#0B0D11}
 /* ---------- mobile */
 @media (max-width:900px){
   .hdr .cell:first-child{display:none}
-  .hdr .cta-blk .t{font-size:10px}
+  .hdr .cta-blk .t{font-size:10px;left:10px;top:9px}
+  .hdr .cell.r{right:var(--hm);top:var(--hm);gap:8px}
+  .hdr .cell.c{left:calc(var(--hm) - 6px);top:calc(var(--hm) - 8px)}
+  .hdr .menu-sq i{left:12px;width:18px} .hdr .menu-sq i:first-child{top:18px} .hdr .menu-sq i:last-child{top:24px}
   .hero-ui .rule-v{display:none}
   .hero-ui .hero-title{left:var(--hm);top:33%;font-size:clamp(28px,8.6vw,54px);white-space:normal;max-width:9ch}
-  .hero-ui .hero-ctas{left:var(--hm)}
+  .hero-ui .hero-ctas{left:var(--hm);bottom:var(--hm);gap:8px}
+  .blk .t{left:9px;top:8px}
 }
 
 /* ---------- random letter reveal (measured on the CI reel DHTxLHau3dW: letters fade in one by one in a random order over ~1.2 s,

@@ -172,6 +172,7 @@
   function uiOn(){
     if (hero.classList.contains('ui')) return;
     hero.classList.add('ui'); document.body.classList.add('ready'); document.body.classList.remove('is-intro'); heroTitle.classList.add('in');
+    setTimeout(function(){ heroTitle.classList.add('done'); }, TITLE_END || 2600);   /* filters off once sharp */
     skip.classList.remove('on'); skip.style.pointerEvents = 'none';
   }
   function finish(){
@@ -546,6 +547,25 @@
     })(el);
   }
   var rrSeed = 3; qsa('.rr').forEach(function(el){ rrSplit(el, rrSeed); rrSeed += 37; });
+  /* the hero title comes into focus (v13, user 09.11): one span per letter (inline, so the kerning stays), one block per line;
+     the delays run left → right, line 2 a beat after line 1 (css: .hero-title .fc / .tl) */
+  var TITLE_END = 0;
+  (function(el){
+    if (!el) return;
+    var lines = el.innerHTML.split(/<br\s*\/?>/i), out = [], last = 0;
+    lines.forEach(function(line, li){
+      var txt = line.replace(/<[^>]*>/g, ''), n = 0, ld = li * .18, html = '';
+      for (var i = 0; i < txt.length; i++) {
+        var ch = txt[i];
+        if (ch === ' ') { html += ' '; continue; }
+        var d = ld + (n++) * .034; last = Math.max(last, d);
+        html += '<span class="fc" style="--d:' + d.toFixed(3) + 's">' + ch + '</span>';
+      }
+      out.push('<span class="tl" aria-hidden="true" style="--ld:' + ld.toFixed(2) + 's">' + html + '</span>');
+    });
+    el.innerHTML = out.join('');
+    TITLE_END = (last + 1.8) * 1000;
+  })($('title'));
   qsa('.chars').forEach(function(el){ splitNode(el, 'chars', {i:0}); });
   qsa('.read').forEach(function(el){ splitNode(el, 'words', {i:0}); });
   var reads = qsa('.read').map(function(el){ return {el: el, w: qsa('.w', el), n: -1}; });
@@ -913,6 +933,16 @@
   function near(k, y, vh){ var r = SEC[k]; return !r || (r.b > y - vh * .6 && r.t < y + vh * 1.6); }
   window.addEventListener('load', function(){ secDirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ secDirty = true; }).observe(document.body);
+  /* the logo shrinks with the first half-screen of scroll to ×0.609 (Figma 289:8827) and grows back at the top; eased on the
+     scroll and followed with a light lag, so even a jump (a nav click) shrinks it smoothly */
+  var wmCell = $('wmCell'), LOGO_S = 81 / 133, logoK = -1;
+  function updateLogo(y, vh){
+    if (!wmCell) return;
+    var p = clamp01(y / (vh * .5)), t = 1 - (1 - LOGO_S) * (p < .5 ? 4 * p * p * p : 1 - Math.pow(-2 * p + 2, 3) / 2);
+    if (logoK < 0) logoK = t; else logoK += (t - logoK) * .2;
+    if (Math.abs(t - logoK) < .0005) logoK = t;
+    var v = logoK.toFixed(4); if (v !== wmCell.__k) { wmCell.__k = v; wmCell.style.transform = 'scale(' + v + ')'; }
+  }
   function loop(now){
     var y = window.scrollY || window.pageYOffset, vh = window.innerHeight;
     // hero parallax after the intro
@@ -927,6 +957,7 @@
     if (near('proc', y, vh)) updateProc(vh); if (near('cta', y, vh)) updateCta(vh); if (near('reads', y, vh)) updateReads(vh);
     if (near('px', y, vh)) updatePx(vh); if (near('yode', y, vh)) updateYode(vh); if (near('glass', y, vh)) updateGlass(vh);
     if (y !== lastY || vh !== lastVH) { updateHdr(); updateChap(y, vh); }
+    updateLogo(y, vh);
     lastY = y; lastVH = vh;
     requestAnimationFrame(loop);
   }

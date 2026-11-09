@@ -461,7 +461,7 @@
 .hdr.ink .nav a,.hdr.ink .nav button{color:#1D1D1D}
 .hdr.ink .hdr-in{border-color:rgba(29,29,29,.16)}
 .hdr.ink .menu-sq{border-color:#1D1D1D} .hdr.ink .menu-sq i{background:#1D1D1D}
-.hdr.ink .cta-blk{background:#1D1D1D;color:#EBEBEB} .hdr.ink .cta-blk .sqd{background:#EBEBEB}
+.hdr.ink .cta-blk{background:#1D1D1D;color:#EBEBEB;--sq:#EBEBEB;--fx-fg:#1D1D1D} .hdr.ink .cta-blk .sqd{background:#EBEBEB} .hdr.ink .menu-sq::after{background:#1D1D1D}
 .chap.ink{color:#1D1D1D}
 @media (max-aspect-ratio: 1/1){
   .pj2-title{grid-column:1/-1}
