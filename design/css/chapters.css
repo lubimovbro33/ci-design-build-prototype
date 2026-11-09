@@ -80,6 +80,10 @@
 
 /* ---------------------------------------------------------------- 03 ABOUT */
 .ch-about .ch-pin{height:700vh}
+/* the title, rebuilt (user 15:21: it ran into the centred drawing; the staggered lines read as a template): the face of his Figma
+   headings (Zalando Sans Expanded 400, −8 %, 100 %), flush left, sized to stay inside the text column */
+.ch-about .ab-ttl{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-weight:400;font-size:max(30px, calc(56 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;display:block}
+.ch-about .ab-ttl span{display:inline;margin:0;padding:0}
 .ch-about .ab-draw{position:absolute;inset:0;width:100%;height:100%;overflow:visible}   /* v13: the whole stage; units = 1/1920 of the width (js layout) */
 .ch-about .ab-draw .box{fill:#EBEBEB;fill-opacity:.03;stroke:#EBEBEB;stroke-opacity:.18;opacity:0}
 .ch-about .ab-draw .lt{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:46px;opacity:0;letter-spacing:.1em;fill:#EBEBEB;fill-opacity:.55}
@@ -225,14 +229,15 @@
 
 /* ---------------------------------------------------------------- 07 APPROACH */
 .ch-appr .ch-pin{height:680vh}
-.ch-appr .ap-draw{position:absolute;right:calc(var(--m) - 1vw);top:50%;transform:translateY(-50%);width:min(60vw,1100px);height:min(90vh,860px);overflow:visible}
+.ch-appr .ap-draw{position:absolute;inset:0;width:100%;height:100%;overflow:visible}   /* v13: the drawing is the dominant, centred */
 .ch-appr .ap-life{margin-top:22px}
-.ch-appr .ap-qs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:22px}
-.ch-appr .ap-qs li{display:grid;grid-template-columns:30px 1fr;gap:18px;align-items:center;opacity:0;color:var(--dimc);transition:color .5s}
+.ch-appr .ap-qs{list-style:none;margin:0;padding:0;position:absolute;inset:0;pointer-events:none;z-index:2}
+.ch-appr .ap-qs li{position:absolute;left:0;top:0;width:calc(330 * var(--u));min-width:220px;display:flex;gap:14px;align-items:center;opacity:0;color:var(--dimc);transition:color .5s}
+.ch-appr .ap-qs li.l{flex-direction:row-reverse;text-align:right} .ch-appr .ap-qs li.c{flex-direction:column;text-align:center;gap:10px}
 .ch-appr .ap-qs li.on{color:var(--hl)}
-.ch-appr .ap-qs .bb{width:30px;height:30px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;transition:border-color .5s,color .5s}
+.ch-appr .ap-qs .bb{flex:none;width:26px;height:26px;border:1px solid currentColor;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:12px;transition:border-color .5s,color .5s}
 .ch-appr .ap-qs li.on .bb{border-color:var(--acc);color:var(--acc)}
-.ch-appr .ap-qs .tx{font-weight:400;text-transform:uppercase;font-size:clamp(17px,1.6vw,24px);line-height:1.08;letter-spacing:-.005em;min-height:1.1em}
+.ch-appr .ap-qs .tx{font-weight:400;text-transform:uppercase;font-size:max(14px, calc(19 * var(--u)));line-height:1.1;letter-spacing:-.005em;min-height:1.1em}
 /* typed without touching the text: every letter is there, shown up to --n (a style change, not a DOM text write) */
 .ch-appr .ap-qs .tx i{font-style:normal;opacity:clamp(0, calc(var(--n, 0) - var(--i) + 1), 1)}
 .ch-appr .ap-qs .tx i.ap-c{position:relative}
@@ -248,8 +253,8 @@
 .ch-appr .ap-bub circle{fill:#000;stroke:var(--hl);stroke-opacity:.6}
 .ch-appr .ap-bub text{font-family:var(--mono, monospace);font-size:12px;fill:var(--hl);text-anchor:middle;letter-spacing:0}
 @media (max-aspect-ratio: 1/1){
-  .ch-appr .ap-draw{left:var(--m);right:auto;top:calc(var(--hdr) + 60px);transform:none;width:calc(100% - 2 * var(--m));height:40vh}
-  .ch-appr .ap-qs{gap:12px}
+  .ch-appr .ap-qs{inset:auto var(--m) calc(var(--m) + 48px);display:flex;flex-direction:column;gap:10px}
+  .ch-appr .ap-qs li{position:relative;width:auto;transform:none!important} .ch-appr .ap-qs li.l{flex-direction:row;text-align:left}
 }
 
 /* ---------------------------------------------------------------- 08 PROCESS · v9: many strands → one line */

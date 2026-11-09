@@ -257,7 +257,9 @@
       svg.setAttribute('viewBox', '0 0 ' + VW + ' ' + f1(VH));
       var hs = port ? VW * .7 / 880 : .718, cx = VW / 2, cy = port ? VH * .34 : VH / 2 + 6;
       var m = 24, gap = 22, cols = port ? 3 : 5, cw = (VW - 2 * m - (cols - 1) * gap) / cols, sc = cw / 920, chh = 580 * sc;
-      var top = port ? VH * .58 : VH - 27.8 - chh;
+      /* the row stands 24 above the chapter rule at the bottom (user 15:22: it ran into it on a 16:10 screen) */
+      var chap = document.querySelector('.chap'), navTop = chap && chap.getBoundingClientRect().height ? chap.getBoundingClientRect().top : h - 60;
+      var top = port ? VH * .58 : Math.min(VH - 27.8, (navTop - 24) * VW / w) - chh;
       LY = { house: [cx - 450 * hs, cy - 270 * hs, hs], cards: LAY.map(function(L, i){ var r = Math.floor(i / cols), c = i % cols, x = m + c * (cw + gap), y = top + r * (chh + 52);
         return [x + 10 * sc, y - 50 * sc, sc]; }) };
       gH.setAttribute('transform', 'translate(' + f1(LY.house[0]) + ' ' + f1(LY.house[1]) + ') scale(' + LY.house[2].toFixed(4) + ')');
@@ -562,8 +564,19 @@
       /* the camera: a plan from straight above, then it tips over into a three-quarter view and drifts */
       var tilt = sm(sg(p, .6, .74)), dr = sg(p, .74, 1), narrow = W / H < .9;
       var yaw = lerp(0, -.62, tilt) - .16 * dr, pitch = lerp(Math.PI / 2 - .0001, .5, tilt) - .05 * dr, dist = lerp(20, 24, tilt);
-      var zoom = Math.min(W * (narrow ? .9 : .66) / (5.6 / dist), H * .78 / (4.8 / dist)) * lerp(1, .82, tilt);
-      CX = W / 2; CY = H * lerp(.5, .58, tilt); setCam(yaw, pitch, dist, lerp(0, 1.3, sm(sg(p, .7, .86))), zoom);
+      var zoom = Math.min(W * (narrow ? .9 : .56) / (5.6 / dist), H * (narrow ? .5 : .66) / (4.8 / dist)) * lerp(1, .9, tilt);   /* v13: the full stage, centred */
+      CX = W / 2; CY = narrow ? H * .3 : H * lerp(.52, .56, tilt); setCam(yaw, pitch, dist, lerp(0, 1.3, sm(sg(p, .7, .86))), zoom);
+      /* v13: each question sits at the end of the lettered axis it draws — A and C on the left, B and D on the right — and the fifth
+         under the grid on axis 5; the whole set leaves as the camera tips over */
+      var qo = 1 - sg(p, .58, .62);
+      if (!narrow) rows.forEach(function(r, i){ var u = W / 1920, w = Math.max(220, 330 * u), x, y, side;
+        if (i < 4){ var z = ZS[i], left = i % 2 === 0, e = left ? pr(XS[0] - EXT - .32, 0, z) : pr(XS[4] + EXT, 0, z);
+          x = left ? e[0] - 30 * Math.max(u, .75) - w : e[0] + 26 * Math.max(u, .75); y = e[1]; side = left ? 'l' : 'r'; }
+        else { var b5 = pr(XS[4], 0, ZS[0] - EXT - .32); x = b5[0] + 30 * Math.max(u, .75); y = b5[1]; side = 'r'; }   /* the fifth beside its own bubble, top right */
+        if (r.__s !== side){ r.__s = side; r.classList.toggle('l', side === 'l'); r.classList.toggle('c', side === 'c'); }
+        r.style.transform = 'translate(' + f1(x) + 'px,' + f1(y) + 'px) translateY(-50%)';
+        r.style.opacity = (+r.style.opacity * qo).toFixed(3); });
+      else rows.forEach(function(r){ r.style.opacity = (+r.style.opacity * qo).toFixed(3); });
       /* the grid axes: question i draws axis i+1 and (to D) one lettered axis */
       var xa = XS[0] - EXT, xb = XS[4] + EXT, za = ZS[0] - EXT, zb = ZS[3] + EXT, bs = narrow ? ' scale(.72)' : '', bf = 1 - .55 * sm(sg(p, .86, .94));
       XS.forEach(function(x, i){ var a = Q0 + i * QD, k = eo(sg(p, a + .01, a + QT)); axN[i].setAttribute('d', k > 0 ? part([x, 0, za], [x, 0, zb], k) : '');
