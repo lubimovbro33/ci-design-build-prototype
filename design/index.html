@@ -28,7 +28,7 @@
 <link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:wght@500;600&display=swap">   <!-- the buttons' face in the Figma frame (CTA Medium 500, hero blocks SemiBold 600) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans+Expanded:wght@400;500;600&family=Zalando+Sans+SemiExpanded:wght@400;700&display=swap">   <!-- the buttons' face in the Figma frame (CTA Medium 500, hero blocks SemiBold 600) -->
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/story.css">
 <link rel="stylesheet" href="css/chapters.css">
@@ -210,43 +210,49 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
   </div>
 </section>
 
-<!-- ================================================================== 05 DIFFERENCE · v9 (user 04.11, refs: a photograph ruled into a grid, cards that open in its cells) -->
+<!-- ================================================================== 05 DIFFERENCE · v10 = the user's Figma frame 289:8972 (09.11 14:41), to the pixel:
+     a 4 × 480 grid under a 553 head (hairlines white 10 % at x 480/960/1440, y 553/1033), CI DIFFERENCE 18 / WHAT TURNKEY SHOULD
+     REALLY MEAN 66 (Zalando Sans Expanded, −8 %, centred), six discipline cells (26, −8 %) that open as white cards (number 18,
+     the line 20 in Zalando Sans SemiExpanded −3 % / 110 %, a 48 circle with a plus), and a white 960 × 480 card (36.77 Medium −4 % /
+     105 % + two columns of 20). The photographs (not in the frame yet) stay put behind the grid while it scrolls over them; the
+     section opens out of a window first (refs Alma + Tudor, 12:51). -->
 <section class="df2" id="difference">
-  <div class="df2-pin">
-  <div class="df2-stage">
-    <div class="df2-bg on"><img src="assets/df/d1.webp" srcset="assets/df/d1_m.webp 1200w, assets/df/d1.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d2.webp" srcset="assets/df/d2_m.webp 1200w, assets/df/d2.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d3.webp" srcset="assets/df/d3_m.webp 1200w, assets/df/d3.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d4.webp" srcset="assets/df/d4_m.webp 1200w, assets/df/d4.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d5.webp" srcset="assets/df/d5_m.webp 1200w, assets/df/d5.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-bg"><img src="assets/df/d6.webp" srcset="assets/df/d6_m.webp 1200w, assets/df/d6.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
-    <div class="df2-shade"></div>
-    <svg class="df2-grid" aria-hidden="true"></svg>
-    <div class="df2-head"><span class="mono df2-lab">04 — 07 · THE CI DIFFERENCE</span><h2 class="df2-title">What Turnkey Should Really Mean</h2></div>
-    <div class="df2-cells" id="dfCells">
-      <button class="df2-cell c1 on" type="button" data-i="0"><span class="df2-nm">Architecture + Interior Design</span><span class="df2-card"><span class="mono df2-cn">01 / 06</span><span class="df2-ct">Architecture + Interior Design</span><span class="df2-cd">A unified vision from planning through detailing.</span></span><i class="df2-pm" aria-hidden="true"></i></button>
-      <button class="df2-cell c2" type="button" data-i="1"><span class="df2-nm">Construction + Project Management</span><span class="df2-card"><span class="mono df2-cn">02 / 06</span><span class="df2-ct">Construction + Project Management</span><span class="df2-cd">Executed by a team already fluent in the design.</span></span><i class="df2-pm" aria-hidden="true"></i></button>
-      <button class="df2-cell c3" type="button" data-i="2"><span class="df2-nm">Furnishings + Art</span><span class="df2-card"><span class="mono df2-cn">03 / 06</span><span class="df2-ct">Furnishings + Art</span><span class="df2-cd">The residence completed beyond construction.</span></span><i class="df2-pm" aria-hidden="true"></i></button>
-      <button class="df2-cell c4" type="button" data-i="3"><span class="df2-nm">Wellness + Technology</span><span class="df2-card"><span class="mono df2-cn">04 / 06</span><span class="df2-ct">Wellness + Technology</span><span class="df2-cd">Integrated systems designed around comfort, performance, and quality of life.</span></span><i class="df2-pm" aria-hidden="true"></i></button>
-      <button class="df2-cell c5" type="button" data-i="4"><span class="df2-nm">Move-In + Onboarding</span><span class="df2-card"><span class="mono df2-cn">05 / 06</span><span class="df2-ct">Move-In + Onboarding</span><span class="df2-cd">Delivered as a home — not a construction site.</span></span><i class="df2-pm" aria-hidden="true"></i></button>
-      <button class="df2-cell c6" type="button" data-i="5"><span class="df2-nm">One Team</span><span class="df2-card"><span class="mono df2-cn">06 / 06</span><span class="df2-ct">One Team</span><span class="df2-cd">One coordinated experience, concept through completion.</span></span><i class="df2-pm" aria-hidden="true"></i></button>
+  <div class="df2-bgw" aria-hidden="true">
+    <div class="df2-bgs">
+      <div class="df2-bg"><img src="assets/df/d1.webp" srcset="assets/df/d1_m.webp 1200w, assets/df/d1.webp 2000w" sizes="100vw" alt="" decoding="async"></div>
+      <div class="df2-bg"><img src="assets/df/d2.webp" srcset="assets/df/d2_m.webp 1200w, assets/df/d2.webp 2000w" sizes="100vw" alt="" decoding="async"></div>
+      <div class="df2-bg on"><img src="assets/df/d3.webp" srcset="assets/df/d3_m.webp 1200w, assets/df/d3.webp 2000w" sizes="100vw" alt="" decoding="async"></div>
+      <div class="df2-bg"><img src="assets/df/d4.webp" srcset="assets/df/d4_m.webp 1200w, assets/df/d4.webp 2000w" sizes="100vw" alt="" decoding="async"></div>
+      <div class="df2-bg"><img src="assets/df/d5.webp" srcset="assets/df/d5_m.webp 1200w, assets/df/d5.webp 2000w" sizes="100vw" alt="" decoding="async"></div>
+      <div class="df2-bg"><img src="assets/df/d6.webp" srcset="assets/df/d6_m.webp 1200w, assets/df/d6.webp 2000w" sizes="100vw" alt="" decoding="async"></div>
+      <div class="df2-shade"></div>
     </div>
-    <div class="df2-panel">
-      <p class="df2-big">Turnkey is not a service list. It is a different way of managing the entire project.</p>
-      <div class="df2-small">
-        <p>At CI, the people designing your residence work directly with the people building it. Budgets, materials, engineering, procurement, and field conditions are considered together — <b>never handed off between separate firms.</b></p>
-        <p><b>That connection creates clarity.</b> Fewer gaps. Better decisions. A home that performs as well as it looks.</p>
-      </div>
-    </div>
-    <!-- between Projects and the Difference (user 09.11 12:51–12:53, refs Alma + Tudor): black, one window in the middle with the
-         chapter's first photograph; the scroll opens it to full bleed — the photograph becomes this chapter's background -->
+  </div>
+  <div class="df2-open">
     <div class="df2-nx" aria-hidden="true">
-      <div class="df2-nx-ph"><img src="assets/df/d1.webp" srcset="assets/df/d1_m.webp 1200w, assets/df/d1.webp 2000w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+      <div class="df2-nx-ph"><img src="assets/df/d3.webp" srcset="assets/df/d3_m.webp 1200w, assets/df/d3.webp 2000w" sizes="100vw" alt="" decoding="async"></div>
       <span class="df2-nx-fr"></span>
-      <div class="df2-nx-cap"><span class="df2-nx-rule"></span><span class="lab">Next</span><span class="df2-nx-t">The CI<br>Difference</span><span class="lab df2-nx-n">04 — 07</span></div>
+      <div class="df2-nx-cap"><span class="df2-nx-rule"></span><span class="lab">Next</span><span class="df2-nx-t">The CI<br>Difference</span></div>
       <div class="df2-nx-pc"></div>
     </div>
   </div>
+  <div class="df2-body">
+    <i class="df2-v" style="--x:480" aria-hidden="true"></i><i class="df2-v" style="--x:960" aria-hidden="true"></i><i class="df2-v" style="--x:1440" aria-hidden="true"></i>
+    <i class="df2-h" style="--y:553" aria-hidden="true"></i><i class="df2-h" style="--y:1033" aria-hidden="true"></i>
+    <div class="df2-head"><span class="df2-lab">CI Difference</span><h2 class="df2-title">What Turnkey<br>Should Really<br>Mean</h2></div>
+    <div class="df2-cells" id="dfCells">
+      <button class="df2-cell c1" type="button" data-i="0" aria-expanded="false" aria-label="Architecture + Interior Design"><span class="df2-nm">Architecture<br>+ Interior Design</span><span class="df2-card"><span class="df2-cn">01</span><span class="df2-ct">Architecture<br>+ Interior Design</span><span class="df2-cd">A unified vision from planning through detailing</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
+      <button class="df2-cell c2" type="button" data-i="1" aria-expanded="false" aria-label="Construction + Project Management"><span class="df2-nm">Construction<br>+ Project Management</span><span class="df2-card"><span class="df2-cn">02</span><span class="df2-ct">Construction<br>+ Project Management</span><span class="df2-cd">Executed by a team already fluent in the design</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
+      <button class="df2-cell c3 on" type="button" data-i="2" aria-expanded="true" aria-label="Furnishings + Art"><span class="df2-nm">Furnishings<br>+ Art</span><span class="df2-card"><span class="df2-cn">03</span><span class="df2-ct">Furnishings<br>+ Art</span><span class="df2-cd">The residence completed beyond construction</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
+      <button class="df2-cell c4" type="button" data-i="3" aria-expanded="false" aria-label="Wellness + Technology"><span class="df2-nm">Wellness<br>+ Technology</span><span class="df2-card"><span class="df2-cn">04</span><span class="df2-ct">Wellness<br>+ Technology</span><span class="df2-cd">Integrated systems designed around comfort, performance, and quality of life</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
+      <button class="df2-cell c5" type="button" data-i="4" aria-expanded="false" aria-label="Move-In + Onboarding"><span class="df2-nm">Move-In<br>+ Onboarding</span><span class="df2-card"><span class="df2-cn">05</span><span class="df2-ct">Move-In<br>+ Onboarding</span><span class="df2-cd">Delivered as a home — not a construction site</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
+      <button class="df2-cell c6" type="button" data-i="5" aria-expanded="false" aria-label="One Team"><span class="df2-nm">One Team</span><span class="df2-card"><span class="df2-cn">06</span><span class="df2-ct">One Team</span><span class="df2-cd">One coordinated experience, concept through completion</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
+    </div>
+    <div class="df2-panel">
+      <p class="df2-big">TURNKEY IS NOT<br>A SERVICE LIST.<br>IT IS A DIFFERENT WAY<br>OF MANAGING THE ENTIRE<br>PROJECT.</p>
+      <p class="df2-s1">At CI, the people designing your residence<br> work directly with the people building it.<br> Budgets, materials, engineering,<br> procurement, and field conditions<br> are considered together — <b>never handed<br> off between separate firms.</b></p>
+      <p class="df2-s2"><b>That connection creates clarity.</b><br> Fewer gaps. Better decisions.<br> A home that performs as well as it looks.</p>
+    </div>
   </div>
 </section>
 

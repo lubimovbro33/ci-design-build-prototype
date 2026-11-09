@@ -512,81 +512,84 @@
 }
 @media (max-aspect-ratio: 1/1) and (max-height: 760px), (max-width: 900px) and (max-height: 760px){ .pj4-lead{display:none} }
 
-/* ---------------------------------------------------------------- 05 DIFFERENCE · v9: a photograph ruled into a grid; disciplines open as cards in its cells */
-.df2{position:relative;color:#fff;background:#111}
-.df2-pin{position:relative;height:240vh}
-.df2-stage{position:sticky;top:0;height:100vh;min-height:760px;overflow:hidden;display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:30% 33% 37%}
+/* ---------------------------------------------------------------- 05 DIFFERENCE · v10 = Figma 289:8972 (user 09.11 14:41), in --u
+   (1/1920 of the width). The photographs sit in a viewport-high sticky layer behind the body, so the grid and its cards scroll over
+   a still picture. Before the body, the section opens out of a window (refs Alma + Tudor). */
+.df2{position:relative;color:#EBEBEB;background:#000;--zx:"Zalando Sans Expanded","TG Ext",sans-serif;--zs:"Zalando Sans SemiExpanded","Zalando Sans Expanded","TG Ext",sans-serif}
+.df2-bgw{position:absolute;inset:0;pointer-events:none}
+.df2-bgs{position:sticky;top:0;height:100vh;overflow:hidden}
 .df2-bg{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
-.df2-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.08);transition:transform 8s cubic-bezier(.2,.6,.3,1)}
+.df2-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.01)}
 .df2-bg.on{opacity:1}
-.df2-bg.on img{transform:scale(1.01)}
-.df2-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(0,0,0,.5) 0%,rgba(0,0,0,.2) 30%,rgba(0,0,0,.25) 100%)}
-.df2-grid{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
-.df2-grid line{stroke:#fff;stroke-opacity:.22;stroke-width:1}
-.df2-grid path{fill:none;stroke:#fff;stroke-opacity:.6;stroke-width:1}
-.df2-head{grid-column:1/5;grid-row:1;position:relative;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:18px;padding-top:var(--hdr)}
-.df2-lab{color:rgba(255,255,255,.75)}
-.df2-title{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(30px,3.8vw,64px);line-height:.96;letter-spacing:-.035em;max-width:14em}
+.df2-shade{position:absolute;inset:0;background:rgba(0,0,0,.34)}
+/* the body: the frame's grid */
+.df2-body{position:relative;z-index:1;height:calc(1513 * var(--u));display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:calc(553 * var(--u)) calc(480 * var(--u)) calc(480 * var(--u))}
+.df2-v,.df2-h{position:absolute;z-index:3;pointer-events:none;background:rgba(255,255,255,.1)}
+.df2-v{left:calc(var(--x) * var(--u));top:0;bottom:0;width:1px;margin-left:-.5px}
+.df2-h{top:calc(var(--y) * var(--u));left:0;right:0;height:1px;margin-top:-.5px}
+.df2-head{grid-column:1/5;grid-row:1;position:relative}
+.df2-lab{position:absolute;left:0;right:0;top:calc(164 * var(--u));text-align:center;font-family:var(--zx);font-weight:400;font-size:max(10px, calc(18 * var(--u)));line-height:.93;text-transform:uppercase;color:rgba(255,255,255,.16)}
+.df2-title{position:absolute;left:0;right:0;top:calc(214 * var(--u));margin:0;text-align:center;font-family:var(--zx);font-weight:400;font-size:max(26px, calc(66 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;color:#EBEBEB}
 .df2-cells{display:contents}
-.df2-cell{all:unset;box-sizing:border-box;position:relative;z-index:2;cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;overflow:hidden}
+.df2-cell{all:unset;box-sizing:border-box;position:relative;cursor:pointer;display:block;overflow:hidden}
 .df2-cell.c1{grid-column:1;grid-row:2}.df2-cell.c2{grid-column:2;grid-row:2}.df2-cell.c3{grid-column:3;grid-row:2}.df2-cell.c4{grid-column:4;grid-row:2}.df2-cell.c5{grid-column:3;grid-row:3}.df2-cell.c6{grid-column:4;grid-row:3}
-.df2-nm{font-weight:400;text-transform:uppercase;font-size:clamp(15px,1.35vw,22px);line-height:1.08;letter-spacing:-.005em;max-width:12em;text-shadow:0 1px 14px rgba(0,0,0,.35);transition:opacity .4s,transform .6s cubic-bezier(.2,.8,.2,1)}
-.df2-card{position:absolute;inset:0;background:#EBEBEB;color:#1D1D1D;display:flex;flex-direction:column;justify-content:flex-end;gap:12px;text-align:left;padding:clamp(18px,1.8vw,30px);clip-path:inset(100% 0 0 0);transition:clip-path .8s cubic-bezier(.77,0,.18,1)}
-.df2-cn{color:#636366;position:absolute;left:clamp(18px,1.8vw,30px);top:clamp(16px,1.6vw,26px)}
-.df2-ct{font-weight:400;text-transform:uppercase;font-size:clamp(15px,1.3vw,21px);line-height:1.06;letter-spacing:-.01em}
-.df2-cd{font-size:13px;line-height:1.45;color:#3A3A3C;max-width:30ch;font-family:var(--sans);text-transform:none}
-.df2-pm{position:absolute;right:16px;bottom:16px;width:34px;height:34px;border:1px solid rgba(255,255,255,.65);border-radius:50%;z-index:2;transition:border-color .4s}
-.df2-pm::before,.df2-pm::after{content:"";position:absolute;left:50%;top:50%;width:12px;height:1px;margin-left:-6px;background:#fff;transition:transform .5s cubic-bezier(.2,.8,.2,1),background .4s}
-.df2-pm::after{transform:rotate(90deg)}
-.df2-cell:hover .df2-nm{transform:translateY(-4px)}
+.df2-nm,.df2-ct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--zx);font-weight:400;font-size:max(13px, calc(26 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase}
+.df2-nm{color:#EBEBEB;transition:opacity .4s,transform .6s cubic-bezier(.2,.8,.2,1)}
+.df2-card{position:absolute;inset:0;z-index:1;background:#fff;color:#000;clip-path:inset(100% 0 0 0);transition:clip-path .8s cubic-bezier(.77,0,.175,1)}
+.df2-cn{position:absolute;left:calc(24 * var(--u));top:calc(25 * var(--u));font-family:var(--zx);font-weight:400;font-size:max(10px, calc(18 * var(--u)));line-height:.93}
+.df2-ct{color:#000}
+.df2-cd{position:absolute;left:calc(24 * var(--u));bottom:calc(24 * var(--u));width:calc(248 * var(--u));font-family:var(--zs);font-weight:400;font-size:max(11px, calc(20 * var(--u)));line-height:1.1;letter-spacing:-.03em}
+.df2-pm{position:absolute;z-index:2;right:calc(24 * var(--u));bottom:calc(24 * var(--u));width:calc(48 * var(--u));height:calc(48 * var(--u));min-width:28px;min-height:28px;border-radius:50%;box-sizing:border-box;border:1px solid rgba(255,255,255,.12);transition:border-color .5s}
+.df2-pm i{position:absolute;left:50%;top:50%;width:calc(16 * var(--u));height:max(1px, calc(1.3 * var(--u)));min-width:9px;background:#fff;transform:translate(-50%,-50%);transition:background-color .5s}
+.df2-pm i+i{transform:translate(-50%,-50%) rotate(90deg)}
 .df2-cell.on .df2-nm{opacity:0}
 .df2-cell.on .df2-card{clip-path:inset(0 0 0 0)}
-.df2-cell.on .df2-pm{border-color:rgba(29,29,29,.4)}
-.df2-cell.on .df2-pm::before,.df2-cell.on .df2-pm::after{background:#1D1D1D}
-.df2-cell.on .df2-pm::after{transform:rotate(0)}
-.df2-cell:focus-visible{outline:2px solid #96A9BF;outline-offset:-2px}
-.df2-panel{grid-column:1/3;grid-row:3;position:relative;z-index:2;background:#EBEBEB;color:#1D1D1D;display:grid;grid-template-columns:1fr 1fr;gap:clamp(18px,2vw,36px);padding:clamp(22px,2.4vw,40px)}
-.df2-big{margin:0;font-weight:400;text-transform:uppercase;font-size:clamp(17px,1.55vw,26px);line-height:1.08;letter-spacing:-.015em;border-left:1px solid rgba(29,29,29,.3);padding-left:18px}
-.df2-small{display:flex;flex-direction:column;justify-content:flex-end;gap:12px}
-.df2-small p{margin:0;font-size:13px;line-height:1.5;color:#3A3A3C}
-.df2-small b{color:#1D1D1D}
-@media (max-aspect-ratio: 1/1){
-  .df2-stage{height:auto;min-height:100svh;grid-template-columns:1fr 1fr;grid-template-rows:auto repeat(3,minmax(150px,auto)) auto}
-  .df2-head{grid-column:1/3;padding:calc(var(--hdr) + 40px) var(--m) 30px}
-  .df2-cell.c1{grid-column:1;grid-row:2}.df2-cell.c2{grid-column:2;grid-row:2}.df2-cell.c3{grid-column:1;grid-row:3}.df2-cell.c4{grid-column:2;grid-row:3}.df2-cell.c5{grid-column:1;grid-row:4}.df2-cell.c6{grid-column:2;grid-row:4}
-  .df2-panel{grid-column:1/3;grid-row:5;grid-template-columns:1fr}
-  .df2-grid{display:none}
-  .df2-cell{border-top:1px solid rgba(255,255,255,.2)}
-  .df2-cn{display:none}
-  .df2-card{padding:14px 14px 50px;gap:8px}
-  .df2-cd{font-size:12px}
-  .df2-cell:nth-child(odd){border-right:1px solid rgba(255,255,255,.2)}
-}
-
-/* ---- the opening into 05 (user 09.11 12:51–12:53, refs Alma + Tudor): black, one portrait window (400×540, the CI window) in the
-   middle with the chapter's first photograph and a hairline frame 26 outside it; "Next / The CI Difference" on a hairline at the
-   left; a percentage bottom-right (Tudor's 60 %). The scroll opens the window to full bleed (the photograph settling from ×1.15 to
-   the chapter's ×1.01), the frame and the words go, the count reaches 100 %, then the cover fades and the chapter is there. js: chapters.js nx */
-.df2-nx{position:absolute;inset:0;z-index:20;background:#000;pointer-events:none}
+.df2-cell.on .df2-pm{border-color:rgba(0,0,0,.12)}
+.df2-cell.on .df2-pm i{background:#000}
+@media (hover:hover){ .df2-cell:not(.on):hover .df2-nm{transform:translateY(-4px)} .df2-cell:not(.on):hover .df2-pm{border-color:rgba(255,255,255,.4)} }
+.df2-cell:focus-visible{outline:1px solid #fff;outline-offset:-6px}
+.df2-panel{grid-column:1/3;grid-row:3;position:relative;z-index:2;background:#fff;color:#000}
+.df2-big{position:absolute;left:calc(24 * var(--u));top:calc(24 * var(--u));margin:0;font-family:var(--zx);font-weight:500;font-size:max(18px, calc(36.774 * var(--u)));line-height:1.05;letter-spacing:-.04em}
+.df2-s1,.df2-s2{position:absolute;top:calc(324 * var(--u));margin:0;font-family:var(--zs);font-weight:400;font-size:max(10px, calc(20 * var(--u)));line-height:1.1;letter-spacing:-.03em}
+.df2-s1{left:calc(24 * var(--u));width:calc(421 * var(--u))} .df2-s2{left:calc(504 * var(--u));width:calc(400 * var(--u))}
+.df2-s1 b,.df2-s2 b{font-weight:700}
+.df2-big,.df2-s1,.df2-s2{white-space:nowrap}   /* the frame's own line breaks */
+/* the opening (12:51, refs Alma + Tudor): black, one portrait window 400×540 with the default discipline's photograph, a hairline
+   frame 26 outside it, NEXT / THE CI DIFFERENCE on a hairline, a percentage; the scroll opens the window to full bleed — the
+   photograph is the one the body then scrolls over. js: chapters.js diffOpen */
+.df2-open{position:relative;z-index:2;height:220vh}
+.df2-nx{position:sticky;top:0;height:100vh;overflow:hidden;background:#000;pointer-events:none}
 .df2-nx-ph{position:absolute;inset:0;overflow:hidden;clip-path:inset(calc(50% - 270 * var(--u)) calc(50% - 200 * var(--u)))}
 .df2-nx-ph img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.15)}
+.df2-nx-ph::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,var(--sh,0))}
 .df2-nx-fr{position:absolute;left:calc(50% - 226 * var(--u));top:calc(50% - 296 * var(--u));width:calc(452 * var(--u));height:calc(592 * var(--u));border:1px solid rgba(255,255,255,.26);box-sizing:border-box}
 .df2-nx-cap{position:absolute;left:calc(121 * var(--u));top:50%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-start;gap:calc(22 * var(--u));padding-left:calc(22 * var(--u));color:#EBEBEB}
 .df2-nx-rule{position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,.4)}
-.df2-nx-cap .lab{font-family:"TG Ext",sans-serif;font-size:max(10px, calc(11 * var(--u)));letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.7)}
-.df2-nx-t{font-family:"TG Ext",sans-serif;font-weight:700;font-size:max(28px, calc(64 * var(--u)));line-height:1;letter-spacing:-.07em;text-transform:uppercase;color:#EBEBEB}
-.df2-nx-pc{position:absolute;right:calc(24 * var(--u));bottom:calc(36px + 24 * var(--u));font-family:"TG Ext",sans-serif;font-size:max(24px, calc(56 * var(--u)));letter-spacing:-.05em;line-height:1;color:rgba(235,235,235,.38);counter-reset:pc var(--pc,0)}
+.df2-nx-cap .lab{font-family:var(--zx);font-size:max(10px, calc(18 * var(--u)));line-height:.93;letter-spacing:0;text-transform:uppercase;color:rgba(255,255,255,.4)}
+.df2-nx-t{font-family:var(--zx);font-weight:400;font-size:max(28px, calc(66 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;color:#EBEBEB}
+.df2-nx-pc{position:absolute;right:calc(24 * var(--u));bottom:calc(36px + 24 * var(--u));font-family:var(--zx);font-size:max(24px, calc(66 * var(--u)));letter-spacing:-.08em;line-height:1;color:rgba(235,235,235,.3);counter-reset:pc var(--pc,0)}
 .df2-nx-pc::after{content:counter(pc) "%"}
 @property --pc{syntax:'<integer>';inherits:false;initial-value:0}
-.df2.nx-on .df2-head,.df2.nx-on .df2-panel{opacity:0;transform:translateY(24px);transition:opacity .9s cubic-bezier(.16,1,.3,1),transform 1.1s cubic-bezier(.16,1,.3,1)}
-.df2.nx-on.open .df2-head,.df2.nx-on.open .df2-panel{opacity:1;transform:none}
-.df2.nx-on.open .df2-panel{transition-delay:.15s}
+/* phones / portrait: two columns of square cells, the head and the card at their own height */
 @media (max-aspect-ratio: 1/1), (max-width: 900px){
+  .df2-body{height:auto;grid-template-columns:1fr 1fr;grid-template-rows:auto 50vw 50vw 50vw auto}
+  .df2-v{display:none} .df2-v[style*="960"]{display:block;left:50%}
+  .df2-h{display:none}
+  .df2-head{padding:calc(var(--hdr) + 40px) var(--hm) 48px;display:flex;flex-direction:column;align-items:center;gap:22px}
+  .df2-lab,.df2-title{position:static}
+  .df2-title{font-size:clamp(26px,8vw,40px)}
+  .df2-cell.c1{grid-column:1;grid-row:2}.df2-cell.c2{grid-column:2;grid-row:2}.df2-cell.c3{grid-column:1;grid-row:3}.df2-cell.c4{grid-column:2;grid-row:3}.df2-cell.c5{grid-column:1;grid-row:4}.df2-cell.c6{grid-column:2;grid-row:4}
+  .df2-nm,.df2-ct{font-size:clamp(12px,3.6vw,16px);padding:0 10px}
+  .df2-cn{left:12px;top:12px;font-size:11px} .df2-cd{left:12px;bottom:12px;width:calc(100% - 60px);font-size:11px}
+  .df2-pm{right:10px;bottom:10px}
+  .df2-panel{grid-column:1/3;grid-row:5;padding:20px var(--hm) 24px;display:flex;flex-direction:column;gap:18px}
+  .df2-big,.df2-s1,.df2-s2{position:static;width:auto;white-space:normal}
+  .df2-big{font-size:clamp(20px,6vw,28px)} .df2-s1,.df2-s2{font-size:14px} .df2-s1 br,.df2-s2 br{display:none}
   .df2-nx-cap{left:var(--hm);top:calc(var(--hdr) + 30px);transform:none}
   .df2-nx-ph{clip-path:inset(calc(50% - 34vw) 28vw)}
   .df2-nx-fr{left:calc(28vw - 14px);top:calc(50% - 34vw - 14px);width:calc(44vw + 28px);height:calc(68vw + 28px)}
 }
-@media (prefers-reduced-motion:reduce){.df2-nx{display:none}.df2-pin{height:auto}.df2-stage{position:relative}}
+@media (prefers-reduced-motion:reduce){.df2-open{display:none}}
 
 /* ---------------------------------------------------------------- 09 CLIENT · v9: a card over a large photograph on a deep colour; embossed type; a loose collage */
 .cl2{position:relative;overflow:hidden;color:#EBEBEB;background:linear-gradient(165deg,#17222B 0%,#22323E 45%,#2B4352 100%)}

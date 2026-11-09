@@ -617,24 +617,22 @@
      opens to full bleed with the scroll; the photograph is the chapter's own first background, so when the cover fades nothing moves */
   function diffOpen(){
     var sec = document.getElementById('difference'); if (!sec) return null;
-    var pin = sec.querySelector('.df2-pin'), nx = sec.querySelector('.df2-nx'); if (!pin || !nx) return null;
-    var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), fr = nx.querySelector('.df2-nx-fr'), cap = nx.querySelector('.df2-nx-cap'), pc = nx.querySelector('.df2-nx-pc'), open = -1;
-    sec.classList.add('nx-on');
+    var pin = sec.querySelector('.df2-open'), nx = sec.querySelector('.df2-nx'); if (!pin || !nx) return null;
+    var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), fr = nx.querySelector('.df2-nx-fr'), cap = nx.querySelector('.df2-nx-cap'), pc = nx.querySelector('.df2-nx-pc');
     function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
     function update(p){
       var vw = window.innerWidth, vh = window.innerHeight, u = vw / 1920, port = vw <= 900 || vw / vh <= 1;
       var W = port ? vw * .44 : 400 * u, H = port ? vw * .68 : 540 * u, m = port ? 14 : 26 * u;
-      var e = ease(clamp01((p - .05) / .55)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
+      var e = ease(clamp01((p - .04) / .7)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
       ph.style.clipPath = 'inset(' + T.toFixed(1) + 'px ' + L.toFixed(1) + 'px)';
-      im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')';
+      im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')'; ph.style.setProperty('--sh', (.34 * e).toFixed(3));
       fr.style.transform = 'scale(' + ((W + 2 * m + e * (vw - W)) / (W + 2 * m)).toFixed(4) + ',' + ((H + 2 * m + e * (vh - H)) / (H + 2 * m)).toFixed(4) + ')';
       fr.style.opacity = Math.max(0, 1 - e * 2.4).toFixed(3);
       cap.style.opacity = Math.max(0, 1 - e * 2.6).toFixed(3);
       cap.style.marginLeft = (-60 * u * e).toFixed(1) + 'px';
       pc.style.setProperty('--pc', Math.round(e * 100));
       pc.style.opacity = (e < .92 ? 1 : Math.max(0, 1 - (e - .92) / .08)).toFixed(3);
-      var f = clamp01((p - .62) / .1); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
-      var o = p > .64 ? 1 : 0; if (o !== open){ open = o; sec.classList.toggle('open', !!o); }
+      var f = clamp01((p - .8) / .14); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
     }
     return { sec: sec, pin: pin, update: update };
   }
@@ -878,11 +876,9 @@
 
   /* ================================================================== 05 DIFFERENCE · v9: the photograph ruled into a grid; a discipline opens as a card in its cell, the photograph follows */
   (function(){
-    var st = document.querySelector('.df2-stage'); if (!st) return;
-    var grid = st.querySelector('.df2-grid'), cells = [].slice.call(st.querySelectorAll('.df2-cell')), bgs = [].slice.call(st.querySelectorAll('.df2-bg'));
-    [['25%', 0, '25%', '100%'], ['50%', '30%', '50%', '100%'], ['75%', 0, '75%', '100%'], [0, '30%', '100%', '30%'], [0, '63%', '100%', '63%']].forEach(function(q){ el('line', {x1: q[0], y1: q[1], x2: q[2], y2: q[3]}, grid); });
-    [['25%', '30%'], ['50%', '30%'], ['75%', '30%'], ['25%', '63%'], ['50%', '63%'], ['75%', '63%']].forEach(function(q){ var s = el('svg', {x: q[0], y: q[1], width: 1, height: 1, overflow: 'visible'}, grid); el('path', {d: 'M-7 0H7M0 -7V7'}, s); });
-    var cur = 0, inView = false, hover = false, timer = null;
+    var sec = document.getElementById('difference'), st = sec && sec.querySelector('.df2-body'); if (!st) return;
+    var cells = [].slice.call(st.querySelectorAll('.df2-cell')), bgs = [].slice.call(sec.querySelectorAll('.df2-bg'));
+    var cur = Math.max(0, cells.findIndex(function(c){ return c.classList.contains('on'); })), inView = false, hover = false, timer = null;
     function show(i){ cur = i; cells.forEach(function(c, k){ c.classList.toggle('on', k === i); c.setAttribute('aria-expanded', k === i ? 'true' : 'false'); }); bgs.forEach(function(b, k){ b.classList.toggle('on', k === i); }); plan(); }
     function plan(){ clearTimeout(timer); if (inView && !hover && !reduced) timer = setTimeout(function(){ show((cur + 1) % cells.length); }, 5200); }
     cells.forEach(function(c, i){ c.addEventListener('click', function(){ show(i); });
