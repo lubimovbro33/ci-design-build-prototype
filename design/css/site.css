@@ -1004,7 +1004,6 @@ html,body{background:#0B0D11}
 .hdr .loc{display:none!important}
 .hdr .cta-blk{--sq:#000;--fx-fg:var(--light);--ta0:78deg;display:block;position:relative;width:max(150px, calc(295 * var(--u)));height:max(44px, calc(78 * var(--u)));background:var(--light);color:#000;text-decoration:none}
 .hdr .cta-blk .t{position:absolute;left:calc(16 * var(--u));top:calc(16 * var(--u));font-family:"TG Ext",sans-serif;font-weight:400;font-size:max(10px, calc(18 * var(--u)));line-height:.93;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap}
-.hdr .cta-blk .sqd{display:none}
 .hdr .menu-sq{position:relative;width:max(44px, calc(78 * var(--u)));height:max(44px, calc(78 * var(--u)));border:1px solid rgba(235,235,235,.18);background:transparent;cursor:none;padding:0;transition:border-color .6s var(--e-out)}
 .hdr .menu-sq i{position:absolute;left:calc(23 * var(--u) - 1px);width:calc(33 * var(--u));height:max(1px, calc(1.5 * var(--u)));background:var(--light);transition:transform .7s cubic-bezier(.7,0,.2,1)}
 .hdr .menu-sq i:first-child{top:calc(33 * var(--u) - 1px);transform-origin:100% 50%} .hdr .menu-sq i:last-child{top:calc(44 * var(--u) - 1px);transform-origin:0 50%}
@@ -1030,19 +1029,53 @@ html,body{background:#0B0D11}
 @media (prefers-reduced-motion:reduce){.hero-title .fc{opacity:1;filter:none;transition:none}.hero-title .tl{transform:none;transition:none}}
 .hero-ui .hero-ctas{position:absolute;left:var(--f-nav);bottom:calc(24 * var(--u));display:flex;gap:calc(10 * var(--u))}
 .blk{position:relative;display:block;width:max(96px, calc(170 * var(--u)));height:max(138px, calc(244 * var(--u)));text-decoration:none;color:var(--bright);border:2px solid #fff;background:transparent}
-.blk .t{position:absolute;left:calc(11 * var(--u) - 2px);top:calc(10 * var(--u));font-family:"TG Ext",sans-serif;font-weight:700;font-size:max(12px, calc(22 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;white-space:nowrap}
-.blk .sqd{display:none}
+.blk .t{position:absolute;left:calc(12 * var(--u) - 2px);top:calc(12 * var(--u));font-family:"TG Ext",sans-serif;font-weight:700;font-size:max(12px, calc(20 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;white-space:nowrap}
 .blk.fill{--sq:#000;--fx-fg:var(--light);--ta0:148deg;background:var(--light);color:#000;border-color:var(--light)}
 .blk.line{--sq:var(--bright);--fx-fg:#000;--ta0:148deg;--sqr:calc(10 * var(--u) - 2px)}   /* its square sits 10 from the right in the frame */
 .hero-ui .hero-ctas .blk{opacity:0;transform:translateY(14px);transition:opacity .9s var(--e-out),transform .9s var(--e-out)}
 .hero-ui .hero-ctas .blk:nth-child(2){transition-delay:.1s}
 .hero.ui .hero-ctas .blk{opacity:1;transform:none;transition-delay:.55s} .hero.ui .hero-ctas .blk:nth-child(2){transition-delay:.65s}
 
-/* ---------- the buttons: the corner square is the .fx layer (its clip = the square). The first hover idea (the square opening
-   out to fill the button + a warm light round the edge) was rejected (user 09.11 09:53); the hover is chosen on /lab/buttons.html */
-.blk .fx,.hdr .cta-blk .fx{position:absolute;inset:0;z-index:1;background:var(--sq);color:var(--fx-fg);pointer-events:none}
-.blk .fx{clip-path:inset(calc(100% - 17 * var(--u) + 2px) var(--sqr, calc(11 * var(--u) - 2px)) calc(11 * var(--u) - 2px) calc(100% - var(--sqr, calc(11 * var(--u) - 2px)) - 6 * var(--u)))}
-.hdr .cta-blk .fx{clip-path:inset(calc(8 * var(--u)) calc(8 * var(--u)) calc(100% - 16 * var(--u)) calc(100% - 16 * var(--u)))}
+/* ---------- the buttons, variant B "drawing" (user 09.11 10:06, drawn on the Explore block in the frame): on hover two hairlines
+   draw out of the corner square — 99 up and 66 to the left, through its centre — the square moves into the corner (7 px, 7 from
+   the edges) and spins twice, ending square again. js adds +720° per hover (--rot), so leaving mid-spin finishes the turn forward
+   instead of snapping back. Header CTA: the same lines from its square (66 left, 40 down), the square spins in place. */
+.blk .sqd,.hdr .cta-blk .sqd{position:absolute;display:block;background:var(--sq);rotate:var(--rot, 0deg);
+  transition:rotate 1.3s cubic-bezier(.65,0,.35,1),translate .85s cubic-bezier(.7,0,.2,1),scale .85s cubic-bezier(.7,0,.2,1)}
+.blk .sqd{right:calc(11 * var(--u) - 2px);bottom:calc(11 * var(--u) - 2px);width:calc(6 * var(--u));height:calc(6 * var(--u))}
+.blk.line .sqd{right:calc(10 * var(--u) - 2px)}
+.hdr .cta-blk .sqd{right:calc(8 * var(--u));top:calc(8 * var(--u));width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)))}
+.blk .ln,.hdr .cta-blk .ln{position:absolute;display:block;background:var(--sq);transition:transform .5s cubic-bezier(.7,0,.2,1)}
+.blk .lv{right:calc(10 * var(--u) - 2px);bottom:calc(14 * var(--u) - 2px);width:1px;height:calc(99 * var(--u));transform:scaleY(0);transform-origin:50% 100%}
+.blk .lh{right:calc(14 * var(--u) - 2px);bottom:calc(10 * var(--u) - 2px);height:1px;width:calc(66 * var(--u));transform:scaleX(0);transform-origin:100% 50%}
+.hdr .cta-blk .lh{right:calc(16 * var(--u));top:calc(12 * var(--u));height:1px;width:calc(66 * var(--u));transform:scaleX(0);transform-origin:100% 50%}
+.hdr .cta-blk .lv{right:calc(12 * var(--u));top:calc(16 * var(--u));width:1px;height:calc(40 * var(--u));transform:scaleY(0);transform-origin:50% 0}
+.blk:active,.hdr .cta-blk:active,.hdr .menu-sq:active{transform:scale(.985)}
+@media (hover:hover){
+  .blk:hover .ln,.hdr .cta-blk:hover .ln{transform:none;transition:transform .95s cubic-bezier(.7,0,.2,1) .12s}
+  .blk:hover .lh,.hdr .cta-blk:hover .lh{transition-delay:.2s}
+  .blk.fill:hover .sqd{translate:calc(3.5 * var(--u)) calc(3.5 * var(--u));scale:1.1667}
+  .blk.line:hover .sqd{translate:calc(2.5 * var(--u)) calc(3.5 * var(--u));scale:1.1667}
+  .hdr .menu-sq:hover{border-color:rgba(235,235,235,.5)}
+  .hdr .menu-sq:hover i:first-child{transform:scaleX(1.45)} .hdr .menu-sq:hover i:last-child{transform:scaleX(.5)}
+}
+.hdr .menu-sq i{transform-origin:0 50%!important}
+@media (prefers-reduced-motion:reduce){.blk .sqd,.hdr .cta-blk .sqd,.blk .ln,.hdr .cta-blk .ln{transition:none}}
+/* the label: variant A exactly as on /lab/buttons.html (user 09.11 10:12: "точь-в-точь") — each line slides up into a 6 px blur
+   and fades while a sharp copy rises from below, line after line (55 ms), .7 s cubic-bezier(.16,1,.3,1), whole lines (no letter
+   split, so the tracking is untouched). The one fix: the lab cut the blur off at the line's edge (overflow hidden); here the line
+   is clipped by a mask with .3em of soft fade above and below, so the blur fades out instead of ending in a hard edge. */
+.blk .t,.hdr .cta-blk .t{display:flex;flex-direction:column;align-items:flex-start}   /* flex: the lines' negative margins don't collapse */
+.blk .t .bl,.hdr .cta-blk .t .bl{display:block;position:relative;padding:.3em;margin:-.3em;
+  -webkit-mask:linear-gradient(transparent 0,#000 .3em,#000 calc(100% - .3em),transparent 100%);mask:linear-gradient(transparent 0,#000 .3em,#000 calc(100% - .3em),transparent 100%)}
+.blk .t .bo,.blk .t .bn,.hdr .cta-blk .t .bo,.hdr .cta-blk .t .bn{display:block;white-space:nowrap;
+  transition:transform .7s cubic-bezier(.16,1,.3,1),filter .7s cubic-bezier(.16,1,.3,1),opacity .7s cubic-bezier(.16,1,.3,1);transition-delay:calc(var(--i) * 55ms)}
+.blk .t .bn,.hdr .cta-blk .t .bn{position:absolute;left:.3em;top:.3em;transform:translateY(105%);filter:blur(6px);opacity:0}
+@media (hover:hover){
+  .blk:hover .t .bo,.hdr .cta-blk:hover .t .bo{transform:translateY(-105%);filter:blur(6px);opacity:0}
+  .blk:hover .t .bn,.hdr .cta-blk:hover .t .bn{transform:none;filter:blur(0);opacity:1}
+}
+@media (prefers-reduced-motion:reduce){.blk .t .bo,.blk .t .bn,.hdr .cta-blk .t .bo,.hdr .cta-blk .t .bn{transition:none}}
 .blk:focus-visible,.hdr .cta-blk:focus-visible,.hdr .menu-sq:focus-visible{outline:1px solid var(--trace);outline-offset:3px}
 /* reel scrim for the new layout: darken the left column and the title band a touch more */
 .hero .scrim{background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,0) 26%),linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,0) 40%),linear-gradient(to right,rgba(0,0,0,.35),rgba(0,0,0,0) 24%)}
