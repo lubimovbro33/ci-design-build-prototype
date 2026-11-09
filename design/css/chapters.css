@@ -101,13 +101,15 @@
 .ch-about .ab-time .ms{fill:var(--acc);opacity:0}
 /* v13 time panel (right column): ruler, hatched bars, labels — Bright Gray / grey, no colour */
 .ch-about .ab-time .rl{fill:none;stroke:#EBEBEB;stroke-opacity:.28;stroke-width:1}
-.ch-about .ab-time .tk{font-family:"TG Ext",sans-serif;font-size:9px;letter-spacing:.08em;fill:var(--dimc)}
-.ch-about .ab-time .tl2{font-family:"TG Ext",sans-serif;font-size:10px;letter-spacing:.12em;fill:var(--dimc)}
+.ch-about .ab-time .tk{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:11px;letter-spacing:.04em;fill:var(--dimc)}
+.ch-about .ab-time .tl2{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:12px;letter-spacing:.04em;fill:var(--dimc)}
 .ch-about .ab-time .hi{fill:#EBEBEB}
 .ch-about .ab-time .sav{stroke:#EBEBEB}
-.ch-about .ab-time .ms{fill:#EBEBEB}
-.ch-about .ch-pct{left:auto;right:calc(24 * var(--u));width:calc(360 * var(--u));top:calc(330 * var(--u));bottom:auto}
-.ch-about .ch-pct .v{font-size:max(56px, calc(150 * var(--u)))}
+.ch-about .ab-own{opacity:0}
+.ch-about .ab-own .own{fill:none;stroke:#EBEBEB;stroke-opacity:.35;stroke-width:1;stroke-dasharray:1 1;stroke-dashoffset:1}
+.ch-about .ab-own .ms{fill:#EBEBEB;opacity:0}
+.ch-about .ch-pct{left:calc(760 * var(--u));top:calc(250 * var(--u));bottom:auto}
+.ch-about .ch-pct .v{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:max(64px, calc(200 * var(--u)));letter-spacing:-.08em}
 .ch-about .ch-pct sup{color:#EBEBEB}
 
 @media (max-aspect-ratio: 1/1){

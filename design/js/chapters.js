@@ -229,27 +229,30 @@
       el('rect', {x: d[1] - 3, y: d[2] - 3, width: 6, height: 6, 'class': 'sq'}, g);
       var t = el('text', {x: lx + (d[3] > 0 ? 10 : -10), y: ly + 5, 'class': 'dt', 'text-anchor': d[3] > 0 ? 'start' : 'end'}, g); t.textContent = d[0];
       return g; });
-    /* time (user 15:12): a panel in the right column, in the language of his data refs (Polestar report, ReNAD, Quantro): a ruler
-       with ticks, the traditional model's five hand-offs as hairline-hatched bars in grey, CI's overlapping five in Bright Gray, the
-       fifth that is saved dimensioned at the end, your decisions as squares on CI's line; the 20 % stands above it (html .ch-pct).
-       Screen units, 360 wide, placed by layout(). */
-    [['abStG', '#7B8087'], ['abStW', '#EBEBEB']].forEach(function(q){ var pt = el('pattern', {id: q[0], width: 3, height: 8, patternUnits: 'userSpaceOnUse'}, defs); el('rect', {width: 1, height: 8, fill: q[1]}, pt); });
-    var gT = el('g', {'class': 'ab-time'}, svg), PW = 360;
+    /* v14 (user 15:24: all at once read as too many lines) — three scenes instead of one crowded screen:
+       1 · the house with its disciplines; 2 · the house steps out and time takes the stage: the 20 % above a wide, quiet chart
+       (a ruler, the traditional model's five hand-offs hatched in grey, CI's overlapping five hatched in Bright Gray, the saved fifth
+       dimensioned); 3 · only one line is left — your decisions as five squares, everything in between hatched: ours.
+       Screen units: the chart is 1080 wide (1:1 at 1920), placed by layout(). */
+    [['abStG', '#7B8087'], ['abStW', '#EBEBEB']].forEach(function(q){ var pt = el('pattern', {id: q[0], width: 4, height: 12, patternUnits: 'userSpaceOnUse'}, defs); el('rect', {width: 1, height: 12, fill: q[1]}, pt); });
+    var gT = el('g', {'class': 'ab-time'}, svg), PW = 1080;
     var trad = [[0, .16], [.21, .37], [.42, .66], [.71, .84], [.88, 1]], ci = [[0, .2], [.08, .36], [.18, .66], [.4, .72], [.56, .8]];
-    el('path', {d: seg(0, 22, PW, 22), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
-    [0, .25, .5, .75, 1].forEach(function(t, i){ el('path', {d: seg(t * PW, 18, t * PW, 26), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
+    el('path', {d: seg(0, 26, PW, 26), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
+    [0, .25, .5, .75, 1].forEach(function(t, i){ el('path', {d: seg(t * PW, 21, t * PW, 31), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
       var tt = el('text', {x: t * PW, y: 10, 'class': 'tk', 'text-anchor': i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}, gT); tt.textContent = i === 4 ? '100%' : String(t * 100); });
-    var lab1 = el('text', {x: 0, y: 60, 'class': 'tl2'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
-    var lab2 = el('text', {x: 0, y: 162, 'class': 'tl2 hi'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
+    var lab1 = el('text', {x: 0, y: 76, 'class': 'tl2'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
+    var lab2 = el('text', {x: 0, y: 214, 'class': 'tl2 hi'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
     var bars = [];
-    trad.forEach(function(b, i){ bars.push({e: el('rect', {x: b[0] * PW, y: 72 + i * 15, width: 0, height: 8, fill: 'url(#abStG)', 'class': 'br'}, gT), w: (b[1] - b[0]) * PW, d: i * .08}); });
-    ci.forEach(function(b, i){ bars.push({e: el('rect', {x: b[0] * PW, y: 174 + i * 15, width: 0, height: 8, fill: 'url(#abStW)', 'class': 'br'}, gT), w: (b[1] - b[0]) * PW, d: .3 + i * .06}); });
-    var saved = el('path', {d: seg(PW * .8, 262, PW, 262), 'class': 'sav', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
-    var savT = [el('path', {d: seg(PW * .8, 256, PW * .8, 268), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT), el('path', {d: seg(PW, 256, PW, 268), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT)];
-    var svT = el('text', {x: PW, y: 250, 'class': 'tk hi', 'text-anchor': 'end'}, gT); svT.textContent = '\u221220%'; savT.push(svT);
-    /* your decisions on CI's line; everything in between is ours */
-    var MS = [.0, .2, .36, .56, .8], own = el('path', {d: seg(0, 296, PW * .8, 296), 'class': 'own', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
-    var dots = MS.map(function(m){ return el('rect', {x: m * PW - 3, y: 293, width: 6, height: 6, 'class': 'ms'}, gT); });
+    trad.forEach(function(b, i){ bars.push({e: el('rect', {x: b[0] * PW, y: 90 + i * 22, width: 0, height: 12, fill: 'url(#abStG)', 'class': 'br'}, gT), w: (b[1] - b[0]) * PW, d: i * .08}); });
+    ci.forEach(function(b, i){ bars.push({e: el('rect', {x: b[0] * PW, y: 228 + i * 22, width: 0, height: 12, fill: 'url(#abStW)', 'class': 'br'}, gT), w: (b[1] - b[0]) * PW, d: .3 + i * .06}); });
+    var saved = el('path', {d: seg(PW * .8, 360, PW, 360), 'class': 'sav', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
+    var savT = [el('path', {d: seg(PW * .8, 352, PW * .8, 368), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT), el('path', {d: seg(PW, 352, PW, 368), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT)];
+    var svT = el('text', {x: PW, y: 344, 'class': 'tk hi', 'text-anchor': 'end'}, gT); svT.textContent = '\u221220%'; savT.push(svT);
+    /* scene 3: your decisions (squares) on one line; everything in between, hatched, is ours */
+    var gO = el('g', {'class': 'ab-own'}, svg), MS = [0, .22, .41, .63, 1];
+    var own = el('path', {d: seg(0, 0, PW, 0), 'class': 'own', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gO);
+    var hat = MS.slice(1).map(function(m, i){ var a = MS[i]; return {e: el('rect', {x: a * PW + 14, y: -6, width: 0, height: 12, fill: 'url(#abStW)', 'class': 'br'}, gO), w: (m - a) * PW - 28}; });
+    var dots = MS.map(function(m){ return el('rect', {x: m * PW - 5, y: -5, width: 10, height: 10, 'class': 'ms'}, gO); });
 
     var LY = null, last = -1;
     function layout(){
@@ -263,9 +266,10 @@
       LY = { house: [cx - 450 * hs, cy - 270 * hs, hs], cards: LAY.map(function(L, i){ var r = Math.floor(i / cols), c = i % cols, x = m + c * (cw + gap), y = top + r * (chh + 52);
         return [x + 10 * sc, y - 50 * sc, sc]; }) };
       gH.setAttribute('transform', 'translate(' + f1(LY.house[0]) + ' ' + f1(LY.house[1]) + ') scale(' + LY.house[2].toFixed(4) + ')');
-      /* the time panel: the right column (x 1536…1896, from y 560) on screens; under the house on portrait */
-      var tx0 = port ? m : VW - m - 360, tw = port ? VW - 2 * m : 360, ty0 = port ? VH * .66 : 560;
-      gT.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(ty0) + ') scale(' + (tw / 360).toFixed(4) + ')');
+      /* scene 2's chart and scene 3's line: x 760…1840, the chart from y 540, the line across the middle; full width on portrait */
+      var tx0 = port ? m : 760, tw = port ? VW - 2 * m : 1080, sc2 = tw / 1080, ty0 = port ? VH * .5 : 540;
+      gT.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(ty0) + ') scale(' + sc2.toFixed(4) + ')');
+      gO.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(port ? VH * .62 : VH * .5) + ') scale(' + sc2.toFixed(4) + ')');
     }
     layout(); window.addEventListener('resize', function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });
     function update(p){
@@ -284,15 +288,17 @@
       gRoof.style.setProperty('--k', sg(p, .46, .54).toFixed(3));
       /* the disciplines */
       dis.forEach(function(g, i){ var k = sg(p, .5 + i * .012, .54 + i * .012); g.style.opacity = k.toFixed(3); g.firstChild.style.strokeDashoffset = (1 - k).toFixed(3); });
-      /* the section steps back while time is measured; 20 % */
-      var tk = sm(sg(p, .6, .66));
-      gT.style.opacity = tk.toFixed(3);
+      /* scene 2: the house and its disciplines step out; time takes the stage; scene 3: only the line of decisions */
+      var tk = sm(sg(p, .6, .66)), out3 = sm(sg(p, .79, .83)), ho = (1 - sm(sg(p, .59, .64))).toFixed(3);
+      gSec.style.opacity = ho; gRoof.style.opacity = ho; gDis.style.opacity = ho;
+      gT.style.opacity = (tk * (1 - out3)).toFixed(3);
       bars.forEach(function(b){ var k = sg(p, .63 + b.d * .1, .67 + b.d * .1), w = f1(b.w * eo(k)); if (b.cw !== w){ b.cw = w; b.e.setAttribute('width', w); } });
       var ks = sg(p, .7, .76); saved.style.strokeDashoffset = (1 - ks).toFixed(3); savT.forEach(function(e){ e.style.opacity = ks.toFixed(3); });
-      txt(pctEl, Math.round(20 * eo(ks))); stage.style.setProperty('--pc', sg(p, .69, .72).toFixed(3));
+      txt(pctEl, Math.round(20 * eo(ks))); stage.style.setProperty('--pc', (sg(p, .66, .7) * (1 - out3)).toFixed(3));
       /* your decisions, our everything-in-between */
-      var km = sg(p, .82, .9); own.style.strokeDashoffset = (1 - km).toFixed(3);
-      dots.forEach(function(d, i){ d.style.opacity = sg(p, .8 + i * .012, .82 + i * .012).toFixed(3); });
+      var km = sg(p, .82, .88); gO.style.opacity = sg(p, .81, .84).toFixed(3); own.style.strokeDashoffset = (1 - km).toFixed(3);
+      dots.forEach(function(d, i){ d.style.opacity = sg(p, .83 + i * .014, .85 + i * .014).toFixed(3); });
+      hat.forEach(function(h, i){ var w = f1(h.w * eo(sg(p, .87 + i * .018, .93 + i * .018))); if (h.cw !== w){ h.cw = w; h.e.setAttribute('width', w); } });
     }
     return { sec: sec, pin: pin, update: update };
   }
