@@ -523,10 +523,18 @@
 .df2-bg.on{opacity:1}
 .df2-shade{position:absolute;inset:0;background:rgba(0,0,0,.34)}
 /* the body: the frame's grid */
-.df2-body{position:relative;z-index:1;height:calc(1513 * var(--u));display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:calc(553 * var(--u)) calc(480 * var(--u)) calc(480 * var(--u))}
+/* pinned (14:51): the body sticks at the top for the spacer's 150vh — the window opens over it, then the grid draws itself in —
+   and only then scrolls on to its second row */
+.df2-pinw{position:relative;z-index:1}
+.df2-sp{height:150vh}
+.df2-body{position:sticky;top:0;height:calc(1513 * var(--u));display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:calc(553 * var(--u)) calc(480 * var(--u)) calc(480 * var(--u))}
+/* the hairlines are grid items: the outer two run the full height; the centre one only from the head's rule down, so the title
+   sits in its own cell (480…1440) — user 14:51 */
 .df2-v,.df2-h{position:absolute;z-index:3;pointer-events:none;background:rgba(255,255,255,.1)}
-.df2-v{left:calc(var(--x) * var(--u));top:0;bottom:0;width:1px;margin-left:-.5px}
-.df2-h{top:calc(var(--y) * var(--u));left:0;right:0;height:1px;margin-top:-.5px}
+.df2-v{left:0;top:0;bottom:0;width:1px;margin-left:-.5px;transform-origin:50% 0}
+.df2-v.a{grid-column:2;grid-row:1/-1} .df2-v.b{grid-column:3;grid-row:2/-1} .df2-v.c{grid-column:4;grid-row:1/-1}
+.df2-h{left:0;right:0;top:0;height:1px;margin-top:-.5px;transform-origin:0 50%}
+.df2-h.a{grid-column:1/-1;grid-row:2} .df2-h.b{grid-column:1/-1;grid-row:3}
 .df2-head{grid-column:1/5;grid-row:1;position:relative}
 .df2-lab{position:absolute;left:0;right:0;top:calc(164 * var(--u));text-align:center;font-family:var(--zx);font-weight:400;font-size:max(10px, calc(18 * var(--u)));line-height:.93;text-transform:uppercase;color:rgba(255,255,255,.16)}
 .df2-title{position:absolute;left:0;right:0;top:calc(214 * var(--u));margin:0;text-align:center;font-family:var(--zx);font-weight:400;font-size:max(26px, calc(66 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;color:#EBEBEB}
@@ -543,7 +551,7 @@
 .df2-pm i{position:absolute;left:50%;top:50%;width:calc(16 * var(--u));height:max(1px, calc(1.3 * var(--u)));min-width:9px;background:#fff;transform:translate(-50%,-50%);transition:background-color .5s}
 .df2-pm i+i{transform:translate(-50%,-50%) rotate(90deg)}
 .df2-cell.on .df2-nm{opacity:0}
-.df2-cell.on .df2-card{clip-path:inset(0 0 0 0)}
+.df2.in .df2-cell.on .df2-card{clip-path:inset(0 0 0 0)}
 .df2-cell.on .df2-pm{border-color:rgba(0,0,0,.12)}
 .df2-cell.on .df2-pm i{background:#000}
 @media (hover:hover){ .df2-cell:not(.on):hover .df2-nm{transform:translateY(-4px)} .df2-cell:not(.on):hover .df2-pm{border-color:rgba(255,255,255,.4)} }
@@ -557,8 +565,7 @@
 /* the opening (12:51, refs Alma + Tudor): black, one portrait window 400×540 with the default discipline's photograph, a hairline
    frame 26 outside it, NEXT / THE CI DIFFERENCE on a hairline, a percentage; the scroll opens the window to full bleed — the
    photograph is the one the body then scrolls over. js: chapters.js diffOpen */
-.df2-open{position:relative;z-index:2;height:220vh}
-.df2-nx{position:sticky;top:0;height:100vh;overflow:hidden;background:#000;pointer-events:none}
+.df2-nx{position:absolute;z-index:10;left:0;right:0;top:0;height:100vh;overflow:hidden;background:#000;pointer-events:none}
 .df2-nx-ph{position:absolute;inset:0;overflow:hidden;clip-path:inset(calc(50% - 270 * var(--u)) calc(50% - 200 * var(--u)))}
 .df2-nx-ph img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.15)}
 .df2-nx-ph::after{content:"";position:absolute;inset:0;background:rgba(0,0,0,var(--sh,0))}
@@ -573,8 +580,7 @@
 /* phones / portrait: two columns of square cells, the head and the card at their own height */
 @media (max-aspect-ratio: 1/1), (max-width: 900px){
   .df2-body{height:auto;grid-template-columns:1fr 1fr;grid-template-rows:auto 50vw 50vw 50vw auto}
-  .df2-v{display:none} .df2-v[style*="960"]{display:block;left:50%}
-  .df2-h{display:none}
+  .df2-v.a,.df2-v.c,.df2-h.b{display:none} .df2-v.b{grid-column:2;grid-row:2/5}
   .df2-head{padding:calc(var(--hdr) + 40px) var(--hm) 48px;display:flex;flex-direction:column;align-items:center;gap:22px}
   .df2-lab,.df2-title{position:static}
   .df2-title{font-size:clamp(26px,8vw,40px)}
@@ -589,7 +595,30 @@
   .df2-nx-ph{clip-path:inset(calc(50% - 34vw) 28vw)}
   .df2-nx-fr{left:calc(28vw - 14px);top:calc(50% - 34vw - 14px);width:calc(44vw + 28px);height:calc(68vw + 28px)}
 }
-@media (prefers-reduced-motion:reduce){.df2-open{display:none}}
+/* the entrance (14:51), once the window has opened: the hairlines draw (rules from the left, verticals from the top), the label and
+   the title come into focus letter by letter like the hero's title, then the names, the plus marks, the open card and the white card */
+.df2-v{transform:scaleY(0);transition:transform 1.7s cubic-bezier(.65,0,.15,1) var(--ld,0s)}
+.df2-h{transform:scaleX(0);transition:transform 1.7s cubic-bezier(.65,0,.15,1) var(--ld,0s)}
+.df2-h.a{--ld:0s} .df2-v.a{--ld:.12s} .df2-v.c{--ld:.22s} .df2-v.b{--ld:.42s} .df2-h.b{--ld:.5s}
+.df2.in .df2-v,.df2.in .df2-h{transform:none}
+.df2-lab{opacity:0;filter:blur(8px);transform:translateY(.5em);transition:opacity 1.2s cubic-bezier(.16,1,.3,1) .3s,filter 1.5s cubic-bezier(.16,1,.3,1) .3s,transform 1.8s cubic-bezier(.16,1,.3,1) .3s}
+.df2.in .df2-lab{opacity:1;filter:blur(0);transform:none}
+.df2-title .tl{display:inline-block;transform:translate3d(0,.16em,0);transition:transform 2.1s cubic-bezier(.16,1,.3,1) calc(.45s + var(--ld))}
+.df2-title .fc{opacity:0;filter:blur(.26em);transition:opacity 1.3s cubic-bezier(.16,1,.3,1) calc(.45s + var(--d)),filter 1.7s cubic-bezier(.16,1,.3,1) calc(.45s + var(--d))}
+.df2.in .df2-title .tl{transform:none}
+.df2.in .df2-title .fc{opacity:1;filter:blur(0)}
+.df2.done .df2-title .fc{filter:none}
+.df2:not(.in) .df2-cell .df2-nm{opacity:0;filter:blur(8px);transform:translateY(.4em)}
+.df2:not(.in) .df2-pm{opacity:0;transform:scale(.5)}
+.df2:not(.in) .df2-panel{clip-path:inset(0 0 100% 0)}
+.df2:not(.in) .df2-cell{pointer-events:none}
+.df2-panel{transition:clip-path 1.3s cubic-bezier(.77,0,.175,1)}
+.df2-pm{transition:border-color .5s,opacity .8s,transform 1s cubic-bezier(.16,1,.3,1)}
+.df2.entering .df2-cell .df2-nm{transition:opacity 1.1s cubic-bezier(.16,1,.3,1),filter 1.3s cubic-bezier(.16,1,.3,1),transform 1.4s cubic-bezier(.16,1,.3,1);transition-delay:calc(1s + var(--k) * 90ms)}
+.df2.entering .df2-pm{transition-delay:calc(1.25s + var(--k) * 90ms)}
+.df2.entering .df2-cell.on .df2-card{transition-delay:1.05s}
+.df2.entering .df2-panel{transition-delay:1.2s}
+@media (prefers-reduced-motion:reduce){.df2-nx{display:none}.df2-sp{display:none}.df2-body{position:relative}}
 
 /* ---------------------------------------------------------------- 09 CLIENT · v9: a card over a large photograph on a deep colour; embossed type; a loose collage */
 .cl2{position:relative;overflow:hidden;color:#EBEBEB;background:linear-gradient(165deg,#17222B 0%,#22323E 45%,#2B4352 100%)}

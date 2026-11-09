@@ -617,13 +617,23 @@
      opens to full bleed with the scroll; the photograph is the chapter's own first background, so when the cover fades nothing moves */
   function diffOpen(){
     var sec = document.getElementById('difference'); if (!sec) return null;
-    var pin = sec.querySelector('.df2-open'), nx = sec.querySelector('.df2-nx'); if (!pin || !nx) return null;
+    var pin = sec.querySelector('.df2-pinw'), body = sec.querySelector('.df2-body'), nx = sec.querySelector('.df2-nx'), title = sec.querySelector('.df2-title'); if (!pin || !nx) return null;
+    /* the title, letter by letter (as the hero's): .tl lines, .fc letters with their own delays */
+    if (title && !title.querySelector('.fc')){ var n = 0, raw = title.innerHTML.split(/<br\s*\/?>/i);
+      title.setAttribute('aria-label', title.textContent);
+      title.innerHTML = raw.map(function(l, li){ var t = l.replace(/<[^>]+>/g, ''), ld = li * .16;
+        return '<span class="tl" aria-hidden="true" style="--ld:' + ld.toFixed(2) + 's">' + t.split('').map(function(ch){ if (ch === ' ') return ' '; var d = ld + (n++) * .03; return '<span class="fc" style="--d:' + d.toFixed(3) + 's">' + ch + '</span>'; }).join('') + '</span>'; }).join('<br>'); }
+    var on = false, tA = 0, tB = 0;
+    function enter(v){ if (v === on) return; on = v; clearTimeout(tA); clearTimeout(tB);
+      if (v){ sec.classList.add('in', 'entering'); tA = setTimeout(function(){ sec.classList.remove('entering'); }, 2800); tB = setTimeout(function(){ sec.classList.add('done'); }, 3600); sec.dispatchEvent(new CustomEvent('df2in')); }
+      else { sec.classList.remove('in', 'entering', 'done'); sec.dispatchEvent(new CustomEvent('df2out')); } }
     var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), fr = nx.querySelector('.df2-nx-fr'), cap = nx.querySelector('.df2-nx-cap'), pc = nx.querySelector('.df2-nx-pc');
     function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
     function update(p){
       var vw = window.innerWidth, vh = window.innerHeight, u = vw / 1920, port = vw <= 900 || vw / vh <= 1;
       var W = port ? vw * .44 : 400 * u, H = port ? vw * .68 : 540 * u, m = port ? 14 : 26 * u;
-      var e = ease(clamp01((p - .04) / .7)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
+      var D = Math.max(1, pin.offsetHeight - body.offsetHeight), q = clamp01(p * Math.max(1, pin.offsetHeight - vh) / D);
+      var e = ease(clamp01((q - .03) / .57)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
       ph.style.clipPath = 'inset(' + T.toFixed(1) + 'px ' + L.toFixed(1) + 'px)';
       im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')'; ph.style.setProperty('--sh', (.34 * e).toFixed(3));
       fr.style.transform = 'scale(' + ((W + 2 * m + e * (vw - W)) / (W + 2 * m)).toFixed(4) + ',' + ((H + 2 * m + e * (vh - H)) / (H + 2 * m)).toFixed(4) + ')';
@@ -632,7 +642,8 @@
       cap.style.marginLeft = (-60 * u * e).toFixed(1) + 'px';
       pc.style.setProperty('--pc', Math.round(e * 100));
       pc.style.opacity = (e < .92 ? 1 : Math.max(0, 1 - (e - .92) / .08)).toFixed(3);
-      var f = clamp01((p - .8) / .14); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
+      var f = clamp01((q - .6) / .12); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
+      if (q >= .64) enter(true); else if (q < .45) enter(false);
     }
     return { sec: sec, pin: pin, update: update };
   }
@@ -880,7 +891,9 @@
     var cells = [].slice.call(st.querySelectorAll('.df2-cell')), bgs = [].slice.call(sec.querySelectorAll('.df2-bg'));
     var cur = Math.max(0, cells.findIndex(function(c){ return c.classList.contains('on'); })), inView = false, hover = false, timer = null;
     function show(i){ cur = i; cells.forEach(function(c, k){ c.classList.toggle('on', k === i); c.setAttribute('aria-expanded', k === i ? 'true' : 'false'); }); bgs.forEach(function(b, k){ b.classList.toggle('on', k === i); }); plan(); }
-    function plan(){ clearTimeout(timer); if (inView && !hover && !reduced) timer = setTimeout(function(){ show((cur + 1) % cells.length); }, 5200); }
+    var DEF = cur;
+    function plan(){ clearTimeout(timer); if (inView && !hover && !reduced && sec.classList.contains('in')) timer = setTimeout(function(){ show((cur + 1) % cells.length); }, 5200); }
+    sec.addEventListener('df2in', plan); sec.addEventListener('df2out', function(){ hover = false; if (cur !== DEF) show(DEF); else plan(); });
     cells.forEach(function(c, i){ c.addEventListener('click', function(){ show(i); });
       c.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse'){ hover = true; if (i !== cur) show(i); else plan(); } });
       c.addEventListener('pointerleave', function(){ hover = false; plan(); }); });
