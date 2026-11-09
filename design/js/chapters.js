@@ -621,19 +621,17 @@
     /* the title, letter by letter (as the hero's): .tl lines, .fc letters with their own delays */
     if (title && !title.querySelector('.fc')){ var n = 0, raw = title.innerHTML.split(/<br\s*\/?>/i);
       title.setAttribute('aria-label', title.textContent);
-      title.innerHTML = raw.map(function(l, li){ var t = l.replace(/<[^>]+>/g, ''), ld = li * .16;
-        return '<span class="tl" aria-hidden="true" style="--ld:' + ld.toFixed(2) + 's">' + t.split('').map(function(ch){ if (ch === ' ') return ' '; var d = ld + (n++) * .03; return '<span class="fc" style="--d:' + d.toFixed(3) + 's">' + ch + '</span>'; }).join('') + '</span>'; }).join('<br>'); }
-    var on = false, tA = 0, tB = 0;
-    function enter(v){ if (v === on) return; on = v; clearTimeout(tA); clearTimeout(tB);
-      if (v){ sec.classList.add('in', 'entering'); tA = setTimeout(function(){ sec.classList.remove('entering'); }, 2800); tB = setTimeout(function(){ sec.classList.add('done'); }, 3600); sec.dispatchEvent(new CustomEvent('df2in')); }
-      else { sec.classList.remove('in', 'entering', 'done'); sec.dispatchEvent(new CustomEvent('df2out')); } }
+      title.innerHTML = raw.map(function(l, li){ var t = l.replace(/<[^>]+>/g, '');
+        return '<span class="tl" aria-hidden="true" style="--s:' + (.12 + li * .07).toFixed(3) + '">' + t.split('').map(function(ch){ if (ch === ' ') return ' '; var d = .15 + (n++) * .012; return '<span class="fc" style="--s:' + d.toFixed(3) + '">' + ch + '</span>'; }).join('') + '</span>'; }).join('<br>'); }
+    var ready = false, lastT = -1, lastR = -1, atStart = true;
+    function setReady(v){ if (v === ready) return; ready = v; sec.classList.toggle('ready', v); sec.dispatchEvent(new CustomEvent(v ? 'df2in' : 'df2out')); }
     var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), fr = nx.querySelector('.df2-nx-fr'), cap = nx.querySelector('.df2-nx-cap'), pc = nx.querySelector('.df2-nx-pc');
     function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
     function update(p){
       var vw = window.innerWidth, vh = window.innerHeight, u = vw / 1920, port = vw <= 900 || vw / vh <= 1;
       var W = port ? vw * .44 : 400 * u, H = port ? vw * .68 : 540 * u, m = port ? 14 : 26 * u;
       var D = Math.max(1, pin.offsetHeight - body.offsetHeight), q = clamp01(p * Math.max(1, pin.offsetHeight - vh) / D);
-      var e = ease(clamp01((q - .03) / .57)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
+      var e = ease(clamp01((q - .02) / .3)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
       ph.style.clipPath = 'inset(' + T.toFixed(1) + 'px ' + L.toFixed(1) + 'px)';
       im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')'; ph.style.setProperty('--sh', (.34 * e).toFixed(3));
       fr.style.transform = 'scale(' + ((W + 2 * m + e * (vw - W)) / (W + 2 * m)).toFixed(4) + ',' + ((H + 2 * m + e * (vh - H)) / (H + 2 * m)).toFixed(4) + ')';
@@ -642,8 +640,14 @@
       cap.style.marginLeft = (-60 * u * e).toFixed(1) + 'px';
       pc.style.setProperty('--pc', Math.round(e * 100));
       pc.style.opacity = (e < .92 ? 1 : Math.max(0, 1 - (e - .92) / .08)).toFixed(3);
-      var f = clamp01((q - .6) / .12); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
-      if (q >= .64) enter(true); else if (q < .45) enter(false);
+      var f = clamp01((q - .31) / .07); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
+      /* then the grid: it rises 28vh → 0 (the "scroll a little" of 14:58) while it starts to draw; --t runs the entrance to the end
+         of the pin (.92), and only then is it .ready — hover, autoplay, and the page scrolls on */
+      var r = ease(clamp01((q - .37) / .15)), t = clamp01((q - .4) / .5);
+      var R = +(28 * (1 - r)).toFixed(2); if (R !== lastR){ lastR = R; sec.style.setProperty('--rise', R); }
+      var Tt = +t.toFixed(4); if (Tt !== lastT){ lastT = Tt; sec.style.setProperty('--t', Tt); }
+      setReady(t >= .999);
+      if (q < .3){ if (!atStart){ atStart = true; sec.dispatchEvent(new CustomEvent('df2reset')); } } else atStart = false;
     }
     return { sec: sec, pin: pin, update: update };
   }
@@ -892,8 +896,9 @@
     var cur = Math.max(0, cells.findIndex(function(c){ return c.classList.contains('on'); })), inView = false, hover = false, timer = null;
     function show(i){ cur = i; cells.forEach(function(c, k){ c.classList.toggle('on', k === i); c.setAttribute('aria-expanded', k === i ? 'true' : 'false'); }); bgs.forEach(function(b, k){ b.classList.toggle('on', k === i); }); plan(); }
     var DEF = cur;
-    function plan(){ clearTimeout(timer); if (inView && !hover && !reduced && sec.classList.contains('in')) timer = setTimeout(function(){ show((cur + 1) % cells.length); }, 5200); }
-    sec.addEventListener('df2in', plan); sec.addEventListener('df2out', function(){ hover = false; if (cur !== DEF) show(DEF); else plan(); });
+    function plan(){ clearTimeout(timer); if (inView && !hover && !reduced && sec.classList.contains('ready')) timer = setTimeout(function(){ show((cur + 1) % cells.length); }, 5200); }
+    sec.addEventListener('df2in', plan); sec.addEventListener('df2out', function(){ hover = false; clearTimeout(timer); });
+    sec.addEventListener('df2reset', function(){ if (cur !== DEF) show(DEF); clearTimeout(timer); });
     cells.forEach(function(c, i){ c.addEventListener('click', function(){ show(i); });
       c.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse'){ hover = true; if (i !== cur) show(i); else plan(); } });
       c.addEventListener('pointerleave', function(){ hover = false; plan(); }); });

@@ -523,10 +523,10 @@
 .df2-bg.on{opacity:1}
 .df2-shade{position:absolute;inset:0;background:rgba(0,0,0,.34)}
 /* the body: the frame's grid */
-/* pinned (14:51): the body sticks at the top for the spacer's 150vh — the window opens over it, then the grid draws itself in —
-   and only then scrolls on to its second row */
+/* pinned (14:51 → 14:58): the body sticks at the top for the spacer's 260vh — the window opens over it, the grid rises a little
+   (28vh → 0) and draws itself in, all on the scroll, and only when it is complete does the page scroll on to the second row */
 .df2-pinw{position:relative;z-index:1}
-.df2-sp{height:150vh}
+.df2-sp{height:260vh}
 .df2-body{position:sticky;top:0;height:calc(1513 * var(--u));display:grid;grid-template-columns:repeat(4,1fr);grid-template-rows:calc(553 * var(--u)) calc(480 * var(--u)) calc(480 * var(--u))}
 /* the hairlines are grid items: the outer two run the full height; the centre one only from the head's rule down, so the title
    sits in its own cell (480…1440) — user 14:51 */
@@ -551,7 +551,7 @@
 .df2-pm i{position:absolute;left:50%;top:50%;width:calc(16 * var(--u));height:max(1px, calc(1.3 * var(--u)));min-width:9px;background:#fff;transform:translate(-50%,-50%);transition:background-color .5s}
 .df2-pm i+i{transform:translate(-50%,-50%) rotate(90deg)}
 .df2-cell.on .df2-nm{opacity:0}
-.df2.in .df2-cell.on .df2-card{clip-path:inset(0 0 0 0)}
+.df2.ready .df2-cell.on .df2-card{clip-path:inset(0 0 0 0)}
 .df2-cell.on .df2-pm{border-color:rgba(0,0,0,.12)}
 .df2-cell.on .df2-pm i{background:#000}
 @media (hover:hover){ .df2-cell:not(.on):hover .df2-nm{transform:translateY(-4px)} .df2-cell:not(.on):hover .df2-pm{border-color:rgba(255,255,255,.4)} }
@@ -595,29 +595,30 @@
   .df2-nx-ph{clip-path:inset(calc(50% - 34vw) 28vw)}
   .df2-nx-fr{left:calc(28vw - 14px);top:calc(50% - 34vw - 14px);width:calc(44vw + 28px);height:calc(68vw + 28px)}
 }
-/* the entrance (14:51), once the window has opened: the hairlines draw (rules from the left, verticals from the top), the label and
-   the title come into focus letter by letter like the hero's title, then the names, the plus marks, the open card and the white card */
-.df2-v{transform:scaleY(0);transition:transform 1.7s cubic-bezier(.65,0,.15,1) var(--ld,0s)}
-.df2-h{transform:scaleX(0);transition:transform 1.7s cubic-bezier(.65,0,.15,1) var(--ld,0s)}
-.df2-h.a{--ld:0s} .df2-v.a{--ld:.12s} .df2-v.c{--ld:.22s} .df2-v.b{--ld:.42s} .df2-h.b{--ld:.5s}
-.df2.in .df2-v,.df2.in .df2-h{transform:none}
-.df2-lab{opacity:0;filter:blur(8px);transform:translateY(.5em);transition:opacity 1.2s cubic-bezier(.16,1,.3,1) .3s,filter 1.5s cubic-bezier(.16,1,.3,1) .3s,transform 1.8s cubic-bezier(.16,1,.3,1) .3s}
-.df2.in .df2-lab{opacity:1;filter:blur(0);transform:none}
-.df2-title .tl{display:inline-block;transform:translate3d(0,.16em,0);transition:transform 2.1s cubic-bezier(.16,1,.3,1) calc(.45s + var(--ld))}
-.df2-title .fc{opacity:0;filter:blur(.26em);transition:opacity 1.3s cubic-bezier(.16,1,.3,1) calc(.45s + var(--d)),filter 1.7s cubic-bezier(.16,1,.3,1) calc(.45s + var(--d))}
-.df2.in .df2-title .tl{transform:none}
-.df2.in .df2-title .fc{opacity:1;filter:blur(0)}
-.df2.done .df2-title .fc{filter:none}
-.df2:not(.in) .df2-cell .df2-nm{opacity:0;filter:blur(8px);transform:translateY(.4em)}
-.df2:not(.in) .df2-pm{opacity:0;transform:scale(.5)}
-.df2:not(.in) .df2-panel{clip-path:inset(0 0 100% 0)}
-.df2:not(.in) .df2-cell{pointer-events:none}
-.df2-panel{transition:clip-path 1.3s cubic-bezier(.77,0,.175,1)}
-.df2-pm{transition:border-color .5s,opacity .8s,transform 1s cubic-bezier(.16,1,.3,1)}
-.df2.entering .df2-cell .df2-nm{transition:opacity 1.1s cubic-bezier(.16,1,.3,1),filter 1.3s cubic-bezier(.16,1,.3,1),transform 1.4s cubic-bezier(.16,1,.3,1);transition-delay:calc(1s + var(--k) * 90ms)}
-.df2.entering .df2-pm{transition-delay:calc(1.25s + var(--k) * 90ms)}
-.df2.entering .df2-cell.on .df2-card{transition-delay:1.05s}
-.df2.entering .df2-panel{transition-delay:1.2s}
+/* the entrance (14:58: on the scroll, not on a timer — a half-scrolled state is always a clean one). One number, --t 0→1 on .df2
+   (js), drives everything; each piece has its start (--s) and length (--du) on that line: the rules draw from the left and the
+   verticals from the top, the label and then the title focus in letter by letter (the hero's focus-in: lines rise .16em, letters
+   blur .26em → 0), then the names, the plus marks, the open card and the white card. Hover and autoplay only once it is all in (.ready). */
+.df2{--t:0}
+.df2-v,.df2-h,.df2-head,.df2-cell,.df2-panel{translate:0 calc(var(--rise, 0) * 1vh)}   /* the grid's rise; the cover stays put */
+.df2-v,.df2-h,.df2-lab,.df2-title .tl,.df2-title .fc,.df2-nm,.df2-pm,.df2-panel{--pp:clamp(0, (var(--t) - var(--s, 0)) / var(--du, .3), 1)}
+.df2-v{transform:scaleY(var(--pp))} .df2-h{transform:scaleX(var(--pp))}
+.df2-h.a{--s:0;--du:.34} .df2-v.a{--s:.05;--du:.38} .df2-v.c{--s:.1;--du:.38} .df2-v.b{--s:.18;--du:.36} .df2-h.b{--s:.24;--du:.34}
+.df2-lab{--s:.08;--du:.22;opacity:var(--pp);filter:blur(calc((1 - var(--pp)) * 8px));transform:translateY(calc((1 - var(--pp)) * .5em))}
+.df2-title .tl{display:inline-block;--du:.42;transform:translate3d(0,calc((1 - var(--pp)) * .16em),0)}
+.df2-title .fc{--du:.2;opacity:var(--pp);filter:blur(calc((1 - var(--pp)) * .26em))}
+.df2.ready .df2-title .fc,.df2.ready .df2-lab{filter:none}
+.df2-cell .df2-nm{--s:calc(.5 + var(--k) * .035);--du:.18}
+.df2-pm{--s:calc(.58 + var(--k) * .035);--du:.16}
+.df2-panel{--s:.66;--du:.3}
+.df2-cell.on .df2-card{--pp:clamp(0, (var(--t) - .58) / .26, 1)}
+.df2:not(.ready) .df2-cell .df2-nm{opacity:var(--pp);filter:blur(calc((1 - var(--pp)) * 8px));transform:translateY(calc((1 - var(--pp)) * .4em));transition:none}
+.df2:not(.ready) .df2-pm{opacity:var(--pp);transform:scale(calc(.5 + .5 * var(--pp)));transition:none}
+.df2:not(.ready) .df2-panel{clip-path:inset(0 0 calc((1 - var(--pp)) * 100%) 0);transition:none}
+.df2:not(.ready) .df2-cell.on .df2-card{clip-path:inset(calc((1 - var(--pp)) * 100%) 0 0 0);transition:none}
+.df2:not(.ready) .df2-cell{pointer-events:none}
+.df2:not(.ready) .df2-cell.on .df2-nm{opacity:0}
+.df2-pm{transition:border-color .5s}
 @media (prefers-reduced-motion:reduce){.df2-nx{display:none}.df2-sp{display:none}.df2-body{position:relative}}
 
 /* ---------------------------------------------------------------- 09 CLIENT · v9: a card over a large photograph on a deep colour; embossed type; a loose collage */
