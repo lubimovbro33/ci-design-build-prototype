@@ -260,10 +260,11 @@
       svg.setAttribute('viewBox', '0 0 ' + VW + ' ' + f1(VH));
       /* v15 (user 15:27): bigger, and the walls (y 80…650, not the roof) centred on the screen from the first frame */
       var hs = port ? VW * .76 / 880 : .86, cx = VW / 2, cy = port ? VH * .36 : VH / 2 + 10;
-      var m = 24, gap = 22, cols = port ? 3 : 5, cw = (VW - 2 * m - (cols - 1) * gap) / cols, sc = cw / 920, chh = 580 * sc;
+      var m = port ? 24 : 48 * VW / w, gap = 22, cols = port ? 3 : 5,   /* polish: the row keeps the text margin (48), not the header's 24 */
+       cw = (VW - 2 * m - (cols - 1) * gap) / cols, sc = cw / 920, chh = 580 * sc;
       /* the row stands 24 above the chapter rule at the bottom (user 15:22: it ran into it on a 16:10 screen) */
       var chap = document.querySelector('.chap'), navTop = chap && chap.getBoundingClientRect().height ? chap.getBoundingClientRect().top : h - 60;
-      var top = port ? VH * .58 : Math.min(VH - 27.8, (navTop - 24) * VW / w) - chh;
+      var top = port ? VH * .58 : Math.min(VH - 40, (navTop - 40) * VW / w) - chh;
       /* type pass: the H2 title is wider now — if its longest line would come within 48 of the house's wall, the house steps
          right just enough (at most 6 % of the width), so it stays centred wherever there is room */
       var tt = document.querySelector('.ch-about .ab-ttl');
@@ -578,7 +579,7 @@
       var tilt = sm(sg(p, .6, .74)), dr = sg(p, .74, 1), narrow = W / H < .9;
       var yaw = lerp(0, -.62, tilt) - .16 * dr, pitch = lerp(Math.PI / 2 - .0001, .5, tilt) - .05 * dr, dist = lerp(20, 24, tilt);
       var zoom = Math.min(W * (narrow ? .9 : .56) / (5.6 / dist), H * (narrow ? .5 : .66) / (4.8 / dist)) * lerp(1, .9, tilt);   /* v13: the full stage, centred */
-      CX = W / 2; CY = narrow ? H * .3 : H * lerp(.52, .56, tilt); setCam(yaw, pitch, dist, lerp(0, 1.3, sm(sg(p, .7, .86))), zoom);
+      CX = narrow ? W / 2 : W * lerp(.5, .6, sm(sg(p, .62, .8))); CY = narrow ? H * .3 : H * lerp(.52, .56, tilt);   /* polish: the frame steps right as the closing line comes in, so they never cross */ setCam(yaw, pitch, dist, lerp(0, 1.3, sm(sg(p, .7, .86))), zoom);
       /* v13: each question sits at the end of the lettered axis it draws — A and C on the left, B and D on the right — and the fifth
          under the grid on axis 5; the whole set leaves as the camera tips over */
       var qo = 1 - sg(p, .58, .62);
@@ -591,7 +592,7 @@
         r.style.opacity = (+r.style.opacity * qo).toFixed(3); });
       else rows.forEach(function(r){ r.style.opacity = (+r.style.opacity * qo).toFixed(3); });
       /* the grid axes: question i draws axis i+1 and (to D) one lettered axis */
-      var xa = XS[0] - EXT, xb = XS[4] + EXT, za = ZS[0] - EXT, zb = ZS[3] + EXT, bs = narrow ? ' scale(.72)' : '', bf = 1 - .55 * sm(sg(p, .86, .94));
+      var xa = XS[0] - EXT, xb = XS[4] + EXT, za = ZS[0] - EXT, zb = ZS[3] + EXT, bs = narrow ? ' scale(.72)' : '', bf = 1;   /* polish: the bubble labels are text: they stay full */
       XS.forEach(function(x, i){ var a = Q0 + i * QD, k = eo(sg(p, a + .01, a + QT)); axN[i].setAttribute('d', k > 0 ? part([x, 0, za], [x, 0, zb], k) : '');
         var b = pr(x, 0, za - .32); bN[i].setAttribute('transform', 'translate(' + f1(b[0]) + ' ' + f1(b[1]) + ')' + bs); bN[i].style.opacity = (sg(p, a + QT * .7, a + QT) * bf).toFixed(3); });
       ZS.forEach(function(z, i){ var a = Q0 + i * QD + .02, k = eo(sg(p, a + .01, a + QT)); axL[i].setAttribute('d', k > 0 ? part([xa, 0, z], [xb, 0, z], k) : '');
@@ -742,7 +743,8 @@
       X0 = W * (por ? .07 : .06); X1 = W * (por ? .78 : .8); Y = H * (por ? .84 : .78); RL = Math.min(W * (1 - X1 / W - .05), H * (por ? .1 : .16));
       KR = Math.min(W * (por ? .3 : .16), H * .21) / 2.9; KX = W * .5; KY = H * .63;
       var pw = por ? Math.min(W * .34, 170) : Math.max(190, Math.min(W * .15, 300)), ph = pw * 1.25;
-      FR = [W - m - pw, hd + (por ? 24 : 40), W - m, hd + (por ? 24 : 40) + ph];
+      var ft = hd + (por ? 24 : 92);   /* polish: the photo's top on the same line as the title beside it (.pr4-t2 top = hdr + 92) */
+      FR = [W - m - pw, ft, W - m, ft + ph];
       fr.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[1]) + 'px)'; fr.style.width = f1(pw) + 'px'; fr.style.height = f1(ph) + 'px';
       cap.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[3] + 12) + 'px)'; cap.style.width = f1(pw) + 'px';
       labs.forEach(function(l, k){ l.style.left = f1(nx(k)) + 'px'; l.style.top = f1(Y + 18) + 'px'; });
@@ -790,7 +792,7 @@
         sq.style.opacity = 1; sq.style.transform = 'translate3d(' + f1(x) + 'px,' + f1(y) + 'px,0)'; } else sq.style.opacity = 0;
       /* the real home, small: one photograph per step in the top-right corner, its caption under it */
       var ki = !ok ? 0 : p >= .86 ? 5 : Math.max(0, k);
-      if (ki !== curI){ var pv = curI; curI = ki; ims.forEach(function(im, i){ im.classList.toggle('on', i === ki); im.classList.toggle('was', i === pv && pv !== ki); }); cap.textContent = CAPS[ki] || ''; }
+      if (ki !== curI){ var pv = curI; curI = ki; ims.forEach(function(im, i){ im.classList.toggle('on', i === ki); im.classList.toggle('was', i === pv && pv !== ki); }); cap.textContent = (CAPS[ki] || '').replace(' · ', '\n'); }
       var fo = sg(p, .36, .42); fr.style.opacity = fo.toFixed(3); cap.style.opacity = fo.toFixed(3);
       var lo = 1 - sg(p, .88, .92); svg.style.opacity = lo.toFixed(3); labsBox.style.opacity = lo.toFixed(3); big.style.opacity = lo.toFixed(3); if (lo < 1) sq.style.opacity = lo.toFixed(3);
       var kk = p >= .86 ? -1 : k;

@@ -39,7 +39,7 @@
   display:block!important;padding-left:1em!important;text-indent:-1em!important}
 .ch-about .ab-ttl{display:block!important}
 .cl2-l1 > span + span{padding-left:1em}
-.ch-faq .fq-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+@media (min-aspect-ratio: 1/1){ .ch-faq .fq-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important} }   /* desktop only: phones keep one column */
 
 /* ---------- LEAD · statements and key phrases */
 .ch .ch-h, .ch-phil .ph-h, .ch .ch-big,

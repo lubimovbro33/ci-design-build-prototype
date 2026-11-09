@@ -1,0 +1,53 @@
+/* CI · POLISH PASS (v9, 10.11 night)
+   No restructuring. Only spacing, line breaks, alignment and small composition fixes found by going through every block at 1920 / 1440.
+   Loaded last so every change here is easy to see and to undo. */
+
+/* sense breaks: <br class="bd"> holds only on desktop; on phones the lines wrap by the column */
+@media (max-width:900px){ br.bd{display:none} }
+
+/* one top line for chapter heads that sit under the header (the same as 06's "Your experience…": hdr + 92) */
+:root{ --top-line:calc(var(--hdr) + 92px) }
+
+/* ---------- 02 Philosophy */
+/* the closing statement: two thoughts, each broken by sense, with a real pause between them */
+.ch-phil .ph-h + .ph-h{margin-top:.9em}
+/* the verbs: the light chip keeps clear of its commas and of the line below */
+.ch-phil .ph-verbs .vb{margin:0 .06em 0 .1em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
+.ch-phil .ph-verbs .vb.on{box-shadow:-.1em 0 0 #EBEBEB,.06em 0 0 #EBEBEB}
+
+/* ---------- 05 Difference: the small label above the title is text — full ink, like every other label */
+.df2-lab{color:#EBEBEB}
+
+/* ---------- Solutions: the layer names and the switch label read in full; "included" is marked by the filled square and the blue number */
+.ch-suite .su-num,.ch-suite .su-nm{fill:#EBEBEB}
+.ch-suite .su-sq{fill:transparent;stroke:#EBEBEB;stroke-width:1.5}
+.ch-suite .su-lab.em .su-sq{fill:#EBEBEB}
+.ch-suite .su-layer.add .su-lab.em .su-sq{fill:#96A9BF;stroke:#96A9BF}
+.ch-suite .su-sw,.ch-suite .su-cnt .mono,.ch-suite .su-idx{color:#EBEBEB}
+
+/* ---------- 07 Approach: the questions break by sense (line breaks live in data-t) */
+.ch-appr .ap-qs .tx{white-space:pre-line}
+
+/* ---------- 08 Process */
+/* captions: what it is / where it is, on two lines */
+.pr4-cap{white-space:pre-line}
+/* the closing card hugs its words: "Responsibility." no longer runs out of the card */
+@media (min-aspect-ratio: 1/1){ .pr4-end{width:auto} }
+@media (min-aspect-ratio: 1/1){ .pr4-end b{max-width:none;white-space:nowrap} }
+
+/* ---------- 09 Client: the card is a little wider so the title breaks by sense, and it stands clear of the chapter rail */
+@media (min-aspect-ratio: 1/1){ .cl2-card{width:min(34vw,548px);bottom:calc(4vh + 48px)} }
+
+/* ---------- 10 Reviews: the title below the header, on the same top line as the other heads; the quote card holds its content
+   (bottom-aligned with the play button) instead of a tall empty slab */
+@media (min-aspect-ratio: 1/1){
+  .rv2-head{top:var(--top-line)}
+  .rv2-card{top:auto;min-height:42vh;display:flex;flex-direction:column}
+  .rv2-qs{flex:1}
+}
+
+/* ---------- 11 FAQ: the sticky head keeps the same distance from the header as the other heads */
+@media (min-width:901px){
+  .ch-faq{padding-top:var(--top-line)}
+  .ch-faq .fq-hd{top:var(--top-line)}
+}
