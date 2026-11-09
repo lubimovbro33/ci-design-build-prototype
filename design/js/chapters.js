@@ -613,6 +613,30 @@
     return { sec: sec, pin: pin, update: update };
   }
 
+  /* ================================================================== 04 PROJECTS · v10 (user 09.11 10:58): the scroll turns five projects.
+     p → step s (0..4) and the progress inside it (the index row's hairline fills). A step change swaps classes: the next photograph
+     opens out of a window to full bleed (css), the name rises line by line, the index moves its square. A click on a row scrolls to it. */
+  function projects4(){
+    var sec = document.getElementById('projects'); if (!sec || !sec.classList.contains('pj4')) return null;
+    var pin = sec.querySelector('.ch-pin'), ims = [].slice.call(sec.querySelectorAll('.pj4-im')), cs = [].slice.call(sec.querySelectorAll('.pj4-c')),
+        rs = [].slice.call(sec.querySelectorAll('.pj4-r')), N = rs.length, cur = 0, wasT = 0;
+    function go(s){ var top = pin.getBoundingClientRect().top + (window.scrollY || window.pageYOffset); window.scrollTo({top: top + (s + .5) / N * (pin.offsetHeight - window.innerHeight), behavior: 'smooth'}); }
+    rs.forEach(function(r, i){ r.addEventListener('click', function(){ go(i); }); });
+    function show(s){
+      var prev = cur; cur = s; clearTimeout(wasT);
+      ims.forEach(function(e, k){ e.classList.toggle('on', k === s); e.classList.toggle('was', k === prev); });
+      cs.forEach(function(e, k){ e.classList.toggle('on', k === s); e.classList.toggle('was', k === prev); });
+      rs.forEach(function(e, k){ e.classList.toggle('on', k === s); if (k !== s) e.style.setProperty('--pr', k < s ? 1 : 0); });
+      wasT = setTimeout(function(){ ims.forEach(function(e){ e.classList.remove('was'); }); cs.forEach(function(e){ e.classList.remove('was'); }); }, 1400);
+    }
+    function update(p){
+      var f = p * N, s = Math.max(0, Math.min(N - 1, Math.floor(f)));
+      if (s !== cur) show(s);
+      var k = (Math.min(f, N) - s).toFixed(3); if (rs[s].__pr !== k){ rs[s].__pr = k; rs[s].style.setProperty('--pr', k); }
+    }
+    return { sec: sec, pin: pin, update: update };
+  }
+
   /* ================================================================== 08 PROCESS · v10: one real home (Room To Breathe) through the six steps — the scroll turns the pages, the arrows too */
   function process3(){
     var sec = document.getElementById('process'); if (!sec || !sec.classList.contains('pr3')) return null;
@@ -815,28 +839,6 @@
     io.observe(svg);
   })();
 
-  /* ================================================================== 04 PROJECTS · v9: the photographs are the background; five projects, the key one first and taller */
-  (function(){
-    var st = document.getElementById('pjStage'); if (!st) return;
-    var bgs = [].slice.call(st.querySelectorAll('.pj3-bg')), infos = [].slice.call(st.querySelectorAll('.pj3-info')), tiles = [].slice.call(st.querySelectorAll('.pj3-tile'));
-    var cur = 0, inView = false, hover = false, DUR = 6500, t0 = 0, raf = 0;
-    function show(i){
-      if (i === cur) return; var prev = cur; cur = i;
-      bgs.forEach(function(b, k){ b.classList.toggle('on', k === i); b.classList.toggle('was', k === prev); });
-      infos.forEach(function(e, k){ e.classList.toggle('on', k === i); });
-      tiles.forEach(function(e, k){ e.classList.toggle('on', k === i); e.style.setProperty('--pr', 0); });
-      t0 = performance.now(); loop();
-    }
-    function loop(){ if (raf) return; raf = requestAnimationFrame(function step(now){ raf = 0;
-      if (!inView || hover || reduced){ return; }
-      var k = Math.min(1, (now - t0) / DUR); tiles[cur].style.setProperty('--pr', k.toFixed(3));
-      if (k >= 1) show((cur + 1) % tiles.length); else raf = requestAnimationFrame(step); }); }
-    tiles.forEach(function(e, i){ e.addEventListener('click', function(){ show(i); }); });
-    st.querySelector('.pj3-tiles').addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse'){ hover = true; } });
-    st.querySelector('.pj3-tiles').addEventListener('pointerleave', function(){ hover = false; t0 = performance.now() - DUR * parseFloat(tiles[cur].style.getPropertyValue('--pr') || 0); loop(); });
-    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ var was = inView; inView = es[0].isIntersecting; if (inView && !was){ t0 = performance.now() - DUR * parseFloat(tiles[cur].style.getPropertyValue('--pr') || 0); loop(); } }, {threshold: .5}).observe(st);
-  })();
-
   /* ================================================================== 05 DIFFERENCE · v9: the photograph ruled into a grid; a discipline opens as a card in its cell, the photograph follows */
   (function(){
     var st = document.querySelector('.df2-stage'); if (!st) return;
@@ -886,7 +888,7 @@
   }
 
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
-  var CH = [philosophy(), about(), projects(), difference(), suite(), approach(), process(), process3(), process4(), client(), cta()].filter(Boolean), dirty = true;
+  var CH = [philosophy(), about(), projects(), projects4(), difference(), suite(), approach(), process(), process3(), process4(), client(), cta()].filter(Boolean), dirty = true;
   var SVGS = [].slice.call(document.querySelectorAll('.ch svg'));
   function dashScale(){ SVGS.forEach(function(v){ var m = v.getScreenCTM && v.getScreenCTM(); if (m && m.a) v.style.setProperty('--ds', Math.max(m.a, .05).toFixed(4)); }); }
   function measure(){ dashScale(); var y = window.scrollY || window.pageYOffset; CH.forEach(function(c){ var r = c.pin.getBoundingClientRect(); c.top = r.top + y; c.h = c.pin.offsetHeight; }); dirty = false; }
