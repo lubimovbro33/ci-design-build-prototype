@@ -542,10 +542,8 @@
 .df2-bgw{position:absolute;inset:0;pointer-events:none}
 .df2-bgs{position:sticky;top:0;height:100vh;overflow:hidden}
 .df2-bg{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
-/* 15:31: no black veil on photographs — a light grade instead (contrast up, brightness down); js/dfgl.js draws the same grade in WebGL */
-.df2-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.01);filter:contrast(1.12) brightness(.74)}
-.df2-gl{position:absolute;inset:0;width:100%;height:100%;display:block}
-.df2-bgs.gl .df2-bg{visibility:hidden}
+/* 15:31: no black veil on photographs — a light grade instead. 10.11 00:47: no WebGL here any more (back to the plain cross-fade), and the pictures brighter */
+.df2-bg img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.01);filter:contrast(1.06) brightness(.9)}
 .df2-bg.on{opacity:1}
 /* the body: the frame's grid */
 /* pinned (14:51 → 14:58): the body sticks at the top for the spacer's 260vh — the window opens over it, the grid rises a little

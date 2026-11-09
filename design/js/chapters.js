@@ -685,7 +685,7 @@
       var D = Math.max(1, pin.offsetHeight - body.offsetHeight), q = clamp01(p * Math.max(1, pin.offsetHeight - vh) / D);
       var e = ease(clamp01((q - .02) / .3)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
       ph.style.clipPath = 'inset(' + T.toFixed(1) + 'px ' + L.toFixed(1) + 'px)';
-      im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')'; im.style.filter = 'contrast(' + (1 + .12 * e).toFixed(3) + ') brightness(' + (1 - .26 * e).toFixed(3) + ')';
+      im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')'; im.style.filter = 'contrast(' + (1 + .06 * e).toFixed(3) + ') brightness(' + (1 - .1 * e).toFixed(3) + ')';
       fr.style.transform = 'scale(' + ((W + 2 * m + e * (vw - W)) / (W + 2 * m)).toFixed(4) + ',' + ((H + 2 * m + e * (vh - H)) / (H + 2 * m)).toFixed(4) + ')';
       fr.style.opacity = Math.max(0, 1 - e * 2.4).toFixed(3);
       cap.style.opacity = Math.max(0, 1 - e * 2.6).toFixed(3);
