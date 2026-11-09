@@ -51,3 +51,10 @@
   .ch-faq{padding-top:var(--top-line)}
   .ch-faq .fq-hd{top:var(--top-line)}
 }
+
+/* ---------- chapter rail: the corner tick and the line are one clean "L"; the lit part and the track are one line
+   (10.11 00:52: the white line didn't meet the translucent one, the tick didn't meet the line) */
+.chap a i{display:none}
+.chap a::after{top:0;height:1px;background:linear-gradient(90deg, rgb(var(--c)) 0, rgb(var(--c)) calc(var(--p, 0) * 100%), rgba(var(--c), .3) calc(var(--p, 0) * 100%), rgba(var(--c), .3) 100%)}
+.chap a::before{top:1px;width:1px;height:5px;background:rgba(var(--c), .3)}   /* starts under the line: no doubled corner pixel */
+.chap a.st::before{background:rgb(var(--c))}

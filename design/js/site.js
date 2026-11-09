@@ -630,7 +630,10 @@
     var next = idx + 1 < tops.length ? tops[idx + 1] : document.documentElement.scrollHeight - vh;
     var p = clamp01((y - tops[idx]) / Math.max(1, next - tops[idx]));
     if (idx !== chapOn) { chapOn = idx; chapLinks.forEach(function(a, k){ a.classList.toggle('on', k === idx); }); }
-    chapLinks[idx].querySelector('i').style.transform = 'scaleX(' + p + ')';
+    /* one line per item, drawn by one element (::after, a two-stop gradient), so the lit part and the track can never sit a pixel
+       apart; passed chapters stay lit, the ones ahead stay empty */
+    chapLinks.forEach(function(a, k){ var v = k < idx ? 1 : k > idx ? 0 : p, s = v.toFixed(4);
+      if (a.__p !== s){ a.__p = s; a.style.setProperty('--p', s); a.classList.toggle('st', v > 0); } });
     chap.classList.toggle('light', !!hdrTheme);
   }
 
