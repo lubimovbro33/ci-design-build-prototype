@@ -72,11 +72,11 @@
       <a class="blk fill" href="#about"><span class="t">Explore<br>CI</span><i class="sqd"></i></a>
       <a class="blk line" href="#cta"><span class="t">Begin<br>Your<br>Better<br>Life</span><i class="sqd"></i></a>
     </div>
-    <div class="preview" id="preview" aria-hidden="true">
-      <span class="pv-box"><i class="dot"></i></span>
-      <span class="pv-img"><img src="assets/hero/h1_city_th.jpg" alt="" decoding="async"></span>
-      <span class="pv-img"><img src="assets/hero/h2_kitchen_th.jpg" alt="" decoding="async"></span>
-      <span class="pv-div"></span>
+    <!-- hero slide pagination: one tile per slide in a fixed order; the current slide opens into the framed box,
+         its bottom edge fills while the slide plays; hover pauses, click jumps, ← → on the keyboard (built in js/site.js) -->
+    <div class="preview" id="preview" role="group" aria-label="Hero slides">
+      <span class="pv-n mono" aria-hidden="true"><span class="ln"></span><b id="pvN">01</b> / <span id="pvT">06</span></span>
+      <span class="pv-div" aria-hidden="true"></span>
     </div>
   </div>
   <button class="skip mono" id="skip" type="button"><span class="ln"></span>SKIP</button>
