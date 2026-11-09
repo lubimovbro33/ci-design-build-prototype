@@ -80,9 +80,9 @@
 
 /* ---------------------------------------------------------------- 03 ABOUT */
 .ch-about .ch-pin{height:700vh}
-.ch-about .ab-draw{position:absolute;right:calc(var(--m) - 1vw);top:50%;transform:translateY(-50%);width:min(60vw,1080px);height:min(86vh,800px);overflow:visible}
-.ch-about .ab-draw .box{fill-opacity:.13;stroke-opacity:.7;opacity:0}
-.ch-about .ab-draw .lt{font-size:46px;opacity:0;letter-spacing:.1em}
+.ch-about .ab-draw{position:absolute;inset:0;width:100%;height:100%;overflow:visible}   /* v13: the whole stage; units = 1/1920 of the width (js layout) */
+.ch-about .ab-draw .box{fill:#EBEBEB;fill-opacity:.03;stroke:#EBEBEB;stroke-opacity:.18;opacity:0}
+.ch-about .ab-draw .lt{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:46px;opacity:0;letter-spacing:.1em;fill:#EBEBEB;fill-opacity:.55}
 .ch-about .ab-dis{opacity:0}
 .ch-about .ab-dis .ld{fill:none;stroke:var(--hl);stroke-opacity:.42;stroke-dasharray:1 1}
 .ch-about .ab-dis .sq{fill:var(--acc)}
@@ -100,7 +100,7 @@
   .ch .ch-t{top:auto;bottom:calc(var(--m) + 40px);transform:none;width:auto;right:var(--m)}
   .ch .ch-t > div{align-self:end}
   .ch .ch-pct{display:none}
-  .ch-about .ab-draw{left:var(--m);right:auto;top:calc(var(--hdr) + 70px);transform:none;width:calc(100% - 2 * var(--m));height:46vh}
+
 }
 
 .ch .ch-title.one{display:block;font-size:clamp(26px,3vw,48px)}
@@ -802,7 +802,7 @@
 @media (max-aspect-ratio: 1/1){
   /* the text beats sit on their own soft black ground, so a long beat never runs into the drawing above it */
   .ch-phil .ph-t > div,.ch-about .ch-t > div,.ch-appr .ch-t > div{padding-top:56px;background:linear-gradient(to top,#000 calc(100% - 56px),rgba(0,0,0,0))}
-  .ch-about .ab-draw{height:40vh;top:calc(var(--hdr) + 56px)}
+
   /* the CTA's words always on a darkened ground (the photograph behind them is bright on a phone) */
   .ch-cta .ct-veil{opacity:max(var(--vl,0),.62)}
   .ch-cta .ct-tx{bottom:calc(var(--m) + 48px)}
@@ -810,5 +810,5 @@
 @media (max-aspect-ratio: 1/1) and (max-height: 720px){
   .ch .ch-h,.ch-phil .ph-h{font-size:18px}
   .ch .ch-lead,.ch .ch-p,.ch-phil .ph-lead,.ch-phil .ph-p{font-size:13px;line-height:1.45}
-  .ch-about .ab-draw{height:34vh}
+
 }

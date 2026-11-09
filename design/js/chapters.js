@@ -182,10 +182,12 @@
     var LAY = [
       { k: 'ARCHITECTS', off: [-250, -40, -2.5] }, { k: 'DESIGNERS', off: [-110, 60, 1.6] }, { k: 'CONTRACTORS', off: [40, -70, -1.2] },
       { k: 'VENDORS', off: [170, 50, 2.2] }, { k: 'INSTALLERS', off: [300, -30, -1.8] } ];
-    /* v9 (user 04.11: "some colour here"): five firms, five colours — sand, terracotta, sage, steel blue, lilac; registered under one roof they become one drawing */
-    var COL = [[217, 182, 140], [208, 138, 116], [157, 182, 142], [142, 175, 214], [196, 155, 208]], ONE = [235, 235, 235];
+    /* v13 (user 09.11 15:03, his frames 11/12): no rainbow — the design system's Bright Gray for every firm, hairline card frames;
+       the house sits in the middle of the screen (frame 11: 644…1276 × 273…806 at 1920, ×.718) and comes apart into five cards in one
+       straight row along the bottom (frame 12: 356.8 × 224.9 from x 24, 22 apart, label above, box top 827.3) */
+    var ONE = [235, 235, 235], COL = [ONE, ONE, ONE, ONE, ONE];
     function mix(a, b, t){ return 'rgb(' + Math.round(lerp(a[0], b[0], t)) + ',' + Math.round(lerp(a[1], b[1], t)) + ',' + Math.round(lerp(a[2], b[2], t)) + ')'; }
-    var gSec = el('g', {}, svg);
+    var gSec = el('g', {}, svg), gH = el('g', {}, svg);   /* gSec: the five layers in screen units; gH: house units (roof, disciplines, time) */
     LAY.forEach(function(L, i){ L.g = el('g', {'class': 'dg'}, gSec); L.box = el('path', {d: rectD(-10, 50, 920, 580), 'class': 'box', 'vector-effect': 'non-scaling-stroke'}, L.g);
       L.t = el('text', {x: -10, y: 36, 'class': 'lt'}, L.g); L.t.textContent = L.k; L.c = COL[i];
       L.t.style.fill = mix(L.c, L.c, 0); L.box.style.stroke = mix(L.c, L.c, 0); L.box.style.fill = mix(L.c, L.c, 0); L.g.style.setProperty('--hl', mix(L.c, L.c, 0)); });
@@ -215,12 +217,12 @@
     line(I, rectD(580, 150, 80, 100), 'w2', .36); line(I, rectD(590, 160, 60, 80), 'w3', .38);
     for (var c = 0; c < 4; c++){ line(I, seg(64 + c * 6, 395, 64 + c * 6, 525), 'w3', .4); line(I, seg(836 - c * 6, 145, 836 - c * 6, 275), 'w3', .4); }
     /* the roof: one line over everything */
-    var gRoof = el('g', {'class': 'dg roof'}, svg);
+    var gRoof = el('g', {'class': 'dg roof'}, gH);
     line(gRoof, 'M10 92L450 -110L890 92', 'w1', 0); line(gRoof, 'M40 80L450 -92L860 80', 'w2', .1);
     /* disciplines, each pointing at its part of the house */
     var DIS = [['ARCHITECTURE', 47, 460, -1], ['INTERIOR DESIGN', 765, 240, 1], ['CONSTRUCTION', 640, 460, 1], ['FURNISHINGS', 425, 548, 1], ['ART', 620, 200, 1],
                ['WELLNESS', 605, 300, 1], ['PROCUREMENT', 185, 425, -1], ['INSTALLATION', 195, 476, -1], ['PROJECT MANAGEMENT', 450, -60, 1]];
-    var gDis = el('g', {}, svg), dis = DIS.map(function(d, i){
+    var gDis = el('g', {}, gH), dis = DIS.map(function(d, i){
       var g = el('g', {'class': 'ab-dis'}, gDis), lx = d[3] > 0 ? 960 : -60, ly = 20 + i * 64;
       if (d[0] === 'PROJECT MANAGEMENT') ly = -120;
       el('path', {d: 'M' + d[1] + ' ' + d[2] + 'L' + (d[3] > 0 ? lx - 20 : lx + 20) + ' ' + ly + 'H' + lx, 'class': 'ld', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, g);
@@ -228,12 +230,12 @@
       var t = el('text', {x: lx + (d[3] > 0 ? 10 : -10), y: ly + 5, 'class': 'dt', 'text-anchor': d[3] > 0 ? 'start' : 'end'}, g); t.textContent = d[0];
       return g; });
     /* time: the traditional model hands off five times; CI runs the same work together and finishes a fifth sooner */
-    var gT = el('g', {'class': 'ab-time'}, svg), TY = 760, X0 = 0, X1 = 900;
+    var gT = el('g', {'class': 'ab-time'}, gH), TY = 760, X0 = 0, X1 = 900;
     var trad = [[0, .16], [.21, .37], [.42, .66], [.71, .84], [.88, 1]], ci = [[0, .2], [.08, .36], [.18, .66], [.4, .72], [.56, .8]];
     var lab1 = el('text', {x: X0, y: TY - 22, 'class': 'tl'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
     var lab2 = el('text', {x: X0, y: TY + 118, 'class': 'tl'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
     var bars = [];
-    trad.forEach(function(b, i){ var e = el('path', {d: seg(X0 + b[0] * X1, TY + i * 12, X0 + b[1] * X1, TY + i * 12), 'class': 'bar t', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT); e.style.stroke = mix(COL[i], COL[i], 0); bars.push({e: e, d: i * .08}); });
+    trad.forEach(function(b, i){ var e = el('path', {d: seg(X0 + b[0] * X1, TY + i * 12, X0 + b[1] * X1, TY + i * 12), 'class': 'bar t', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT); bars.push({e: e, d: i * .08}); });
     ci.forEach(function(b, i){ bars.push({e: el('path', {d: seg(X0 + b[0] * X1, TY + 140 + i * 12, X0 + b[1] * X1, TY + 140 + i * 12), 'class': 'bar c', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT), d: .3 + i * .06}); });
     var saved = el('path', {d: seg(X1 * .8, TY + 200, X1, TY + 200), 'class': 'sav', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
     var savT = [el('path', {d: seg(X1 * .8, TY + 192, X1 * .8, TY + 208), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT), el('path', {d: seg(X1, TY + 192, X1, TY + 208), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT)];
@@ -241,15 +243,28 @@
     var MS = [.0, .2, .36, .56, .8], own = el('path', {d: seg(0, TY + 236, X1 * .8, TY + 236), 'class': 'own', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
     var dots = MS.map(function(m){ return el('rect', {x: m * X1 - 4, y: TY + 232, width: 8, height: 8, 'class': 'ms'}, gT); });
 
+    var LY = null, last = -1;
+    function layout(){
+      var w = svg.clientWidth || window.innerWidth, h = svg.clientHeight || window.innerHeight, port = w / h < 1, VW = port ? 1080 : 1920, VH = VW * h / w;
+      svg.setAttribute('viewBox', '0 0 ' + VW + ' ' + f1(VH));
+      var hs = port ? VW * .7 / 880 : .718, cx = VW / 2, cy = port ? VH * .34 : VH / 2 + 6;
+      var m = 24, gap = 22, cols = port ? 3 : 5, cw = (VW - 2 * m - (cols - 1) * gap) / cols, sc = cw / 920, chh = 580 * sc;
+      var top = port ? VH * .58 : VH - 27.8 - chh;
+      LY = { house: [cx - 450 * hs, cy - 270 * hs, hs], cards: LAY.map(function(L, i){ var r = Math.floor(i / cols), c = i % cols, x = m + c * (cw + gap), y = top + r * (chh + 52);
+        return [x + 10 * sc, y - 50 * sc, sc]; }) };
+      gH.setAttribute('transform', 'translate(' + f1(LY.house[0]) + ' ' + f1(LY.house[1]) + ') scale(' + LY.house[2].toFixed(4) + ')');
+    }
+    layout(); window.addEventListener('resize', function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });
     function update(p){
+      if (p === last) return; last = p;
       phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
         e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
       /* the five layers draw, spread apart in their own frames; then they come together and register */
       var kd = sg(p, .02, .16), j = sm(sg(p, .3, .46)), fr = sg(p, .12, .2) * (1 - sg(p, .3, .38));
       LAY.forEach(function(L, i){ L.g.style.setProperty('--k', kd.toFixed(3));
-        /* spread: five small separate drawings in a row, each in its own frame, slightly askew; together: one */
-        var s = sm(sg(p, .1, .24)) * (1 - j), sc = lerp(1, .3, s), tx = lerp(450, -186 + i * 334, s), ty = lerp(340, 330 + L.off[1] * .6, s), r = L.off[2] * s;
-        L.g.setAttribute('transform', 'translate(' + f1(tx) + ' ' + f1(ty) + ') rotate(' + r.toFixed(2) + ') scale(' + sc.toFixed(4) + ') translate(-450 -340)');
+        /* apart: five cards in one straight row along the bottom (frame 12); together: one house in the middle (frame 11) */
+        var s = sm(sg(p, .1, .24)) * (1 - j), H0 = LY.house, C0 = LY.cards[i];
+        L.g.setAttribute('transform', 'translate(' + f1(lerp(H0[0], C0[0], s)) + ' ' + f1(lerp(H0[1], C0[1], s)) + ') scale(' + lerp(H0[2], C0[2], s).toFixed(4) + ')');
         L.box.style.opacity = fr.toFixed(3); L.t.style.opacity = (sg(p, .14, .2) * (1 - sg(p, .3, .36))).toFixed(3);
         if (L.j !== j){ L.j = j; L.g.style.setProperty('--hl', mix(L.c, ONE, j)); } });
       /* one roof */
