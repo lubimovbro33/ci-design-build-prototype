@@ -57,16 +57,17 @@ img{display:block;max-width:100%}
 .chap.light{color:var(--haze)}
 /* the chapter rule (user 15:23: quieter, no doubled lines, finer type): one hairline per chapter at 12 %, its own progress on the very
    same line at 60 %, a 5 px tick where it starts; the words in Zalando Sans Expanded 10, numbers at half strength */
+/* 15:28: louder, and each item inverts on its own — white over dark / photos, #1D1D1D over light cards and panels (chapters.js samples what is under it) */
 .chap{--c:235,235,235}
-.chap.light{--c:29,29,29}
-.chap a{flex:1;display:flex;gap:10px;align-items:center;position:relative;color:rgba(var(--c),.34);transition:flex 1s var(--e-expo),color .5s;white-space:nowrap;overflow:hidden;font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:10px}
-.chap a::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(var(--c),.12)}
-.chap a::before{content:"";position:absolute;left:0;top:0;width:1px;height:5px;background:rgba(var(--c),.3)}
-.chap a i{position:absolute;z-index:1;left:0;top:0;height:1px;width:100%;background:rgba(var(--c),.6);transform:scaleX(0);transform-origin:0 50%}
-.chap a span:first-child{opacity:.55;font-variant-numeric:tabular-nums}
-.chap a.on{flex:3.2;color:rgba(var(--c),.82)}
+.chap a.lt{--c:29,29,29}
+.chap a{flex:1;display:flex;gap:10px;align-items:center;position:relative;color:rgb(var(--c));transition:flex 1s var(--e-expo),color .5s;white-space:nowrap;overflow:hidden;font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:10px}
+.chap a::after{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(var(--c),.22)}
+.chap a::before{content:"";position:absolute;left:0;top:0;width:1px;height:5px;background:rgba(var(--c),.5)}
+.chap a i{position:absolute;z-index:1;left:0;top:0;height:1px;width:100%;background:rgb(var(--c));transform:scaleX(0);transform-origin:0 50%}
+.chap a span:first-child{font-variant-numeric:tabular-nums}
+.chap a.on{flex:3.2;color:rgba(var(--c),1)}
 .chap a .t{text-transform:uppercase;letter-spacing:.06em;font-weight:400}
-.chap a:hover{color:rgba(var(--c),.82)}
+.chap a:hover{color:rgba(var(--c),1)}
 
 /* layout ----------------------------------------------------------------- */
 .sec{position:relative;padding:calc(var(--m) * 2.2) var(--m)}
@@ -206,7 +207,7 @@ body.ready .hdr{opacity:1;transition:opacity 1s var(--e-out) .2s}
 .hdr .wm{font-weight:500;letter-spacing:.14em;font-size:11px;white-space:nowrap}
 .hdr .wm span{opacity:.5}
 .nav{display:flex;gap:28px}
-.nav a,.nav button{text-transform:uppercase;position:relative;display:inline-block;overflow:hidden;line-height:1;padding:4px 0;color:inherit;opacity:.78;transition:opacity .4s var(--e-out)}
+.nav a,.nav button{text-transform:uppercase;position:relative;display:inline-block;overflow:hidden;line-height:1;padding:4px 0;color:inherit;opacity:1;transition:opacity .4s var(--e-out)}
 .nav a:hover,.nav button:hover{opacity:1}
 .nav .t{display:block;transition:transform .8s var(--e-out)} .nav .t+.t{position:absolute;left:0;top:100%;padding-top:4px}
 .nav a:hover .t,.nav button:hover .t{transform:translateY(calc(-100% - 4px))}

@@ -31,9 +31,9 @@ html.hero-only .story{display:none}
 .story .st-tk p{margin:0;font-family:var(--sans);font-weight:400;font-size:clamp(24px,calc(var(--S) * .118),56px);line-height:.98;letter-spacing:-.04em;text-transform:uppercase}
 .story .st-part{position:absolute;box-sizing:border-box;opacity:0;display:flex;gap:14px;align-items:flex-start}
 .story .st-part .n{flex:none;font-family:var(--sans);font-size:11px;letter-spacing:.08em;color:var(--gold);padding-top:.25em}
-.story .st-part p{margin:0;font-size:clamp(13px,1.05vw,17px);line-height:1.5;color:var(--mist);letter-spacing:-.01em}
+.story .st-part p{margin:0;font-size:clamp(13px,1.05vw,17px);line-height:1.5;color:#EBEBEB;letter-spacing:-.01em}
 .story .st-part p b{color:var(--ink);font-weight:600}
-.story .st-slog{position:absolute;left:0;right:0;bottom:calc(var(--m) * .9);text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#636366;opacity:0}
+.story .st-slog{position:absolute;left:0;right:0;bottom:calc(var(--m) * .9);text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#EBEBEB;opacity:0}
 @media (max-width:760px){ .story .st-slog{font-size:9px;padding:0 20px} .story .st-part p{font-size:13px} }
 
 /* the next block (philosophy) in the CI palette too: Eerie Black + Gradient Blue instead of charcoal + amber */

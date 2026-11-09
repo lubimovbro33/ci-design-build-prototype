@@ -224,7 +224,7 @@
                ['WELLNESS', 605, 300, 1], ['PROCUREMENT', 185, 425, -1], ['INSTALLATION', 195, 476, -1], ['PROJECT MANAGEMENT', 450, -60, 1]];
     var gDis = el('g', {}, gH), dis = DIS.map(function(d, i){
       var g = el('g', {'class': 'ab-dis'}, gDis), lx = d[3] > 0 ? 960 : -20, ly = 20 + i * 64;   /* left labels closer in, clear of the text column (v13) */
-      if (d[0] === 'PROJECT MANAGEMENT') ly = -120; if (d[0] === 'ARCHITECTURE') ly = -80;
+      if (d[0] === 'PROJECT MANAGEMENT') ly = -120; if (d[0] === 'ARCHITECTURE') ly = -80; if (d[0] === 'PROCUREMENT') ly = 700; if (d[0] === 'INSTALLATION') ly = 740;
       el('path', {d: 'M' + d[1] + ' ' + d[2] + 'L' + (d[3] > 0 ? lx - 20 : lx + 20) + ' ' + ly + 'H' + lx, 'class': 'ld', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, g);
       el('rect', {x: d[1] - 3, y: d[2] - 3, width: 6, height: 6, 'class': 'sq'}, g);
       var t = el('text', {x: lx + (d[3] > 0 ? 10 : -10), y: ly + 5, 'class': 'dt', 'text-anchor': d[3] > 0 ? 'start' : 'end'}, g); t.textContent = d[0];
@@ -258,12 +258,13 @@
     function layout(){
       var w = svg.clientWidth || window.innerWidth, h = svg.clientHeight || window.innerHeight, port = w / h < 1, VW = port ? 1080 : 1920, VH = VW * h / w;
       svg.setAttribute('viewBox', '0 0 ' + VW + ' ' + f1(VH));
-      var hs = port ? VW * .7 / 880 : .718, cx = VW / 2, cy = port ? VH * .34 : VH / 2 + 6;
+      /* v15 (user 15:27): bigger, and the walls (y 80…650, not the roof) centred on the screen from the first frame */
+      var hs = port ? VW * .76 / 880 : .86, cx = VW / 2, cy = port ? VH * .36 : VH / 2 + 10;
       var m = 24, gap = 22, cols = port ? 3 : 5, cw = (VW - 2 * m - (cols - 1) * gap) / cols, sc = cw / 920, chh = 580 * sc;
       /* the row stands 24 above the chapter rule at the bottom (user 15:22: it ran into it on a 16:10 screen) */
       var chap = document.querySelector('.chap'), navTop = chap && chap.getBoundingClientRect().height ? chap.getBoundingClientRect().top : h - 60;
       var top = port ? VH * .58 : Math.min(VH - 27.8, (navTop - 24) * VW / w) - chh;
-      LY = { house: [cx - 450 * hs, cy - 270 * hs, hs], cards: LAY.map(function(L, i){ var r = Math.floor(i / cols), c = i % cols, x = m + c * (cw + gap), y = top + r * (chh + 52);
+      LY = { house: [cx - 450 * hs, cy - 340 * hs, hs], cards: LAY.map(function(L, i){ var r = Math.floor(i / cols), c = i % cols, x = m + c * (cw + gap), y = top + r * (chh + 52);
         return [x + 10 * sc, y - 50 * sc, sc]; }) };
       gH.setAttribute('transform', 'translate(' + f1(LY.house[0]) + ' ' + f1(LY.house[1]) + ') scale(' + LY.house[2].toFixed(4) + ')');
       /* scene 2's chart and scene 3's line: x 760…1840, the chart from y 540, the line across the middle; full width on portrait */
@@ -277,17 +278,18 @@
       phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
         e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
       /* the five layers draw, spread apart in their own frames; then they come together and register */
-      var kd = sg(p, .02, .16), j = sm(sg(p, .3, .46)), fr = sg(p, .12, .2) * (1 - sg(p, .3, .38));
+      /* draw .00–.10, then it holds, whole, until .18 (user 15:27: let it be complete before it comes apart); apart .18–.30; together .38–.50 */
+      var kd = sg(p, 0, .1), j = sm(sg(p, .38, .5)), fr = sg(p, .24, .3) * (1 - sg(p, .38, .44));
       LAY.forEach(function(L, i){ L.g.style.setProperty('--k', kd.toFixed(3));
         /* apart: five cards in one straight row along the bottom (frame 12); together: one house in the middle (frame 11) */
-        var s = sm(sg(p, .1, .24)) * (1 - j), H0 = LY.house, C0 = LY.cards[i];
+        var s = sm(sg(p, .18, .3)) * (1 - j), H0 = LY.house, C0 = LY.cards[i];
         L.g.setAttribute('transform', 'translate(' + f1(lerp(H0[0], C0[0], s)) + ' ' + f1(lerp(H0[1], C0[1], s)) + ') scale(' + lerp(H0[2], C0[2], s).toFixed(4) + ')');
-        L.box.style.opacity = fr.toFixed(3); L.t.style.opacity = (sg(p, .14, .2) * (1 - sg(p, .3, .36))).toFixed(3);
+        L.box.style.opacity = fr.toFixed(3); L.t.style.opacity = (sg(p, .26, .31) * (1 - sg(p, .38, .42))).toFixed(3);
         if (L.j !== j){ L.j = j; L.g.style.setProperty('--hl', mix(L.c, ONE, j)); } });
       /* one roof */
-      gRoof.style.setProperty('--k', sg(p, .46, .54).toFixed(3));
+      gRoof.style.setProperty('--k', sg(p, .5, .56).toFixed(3));
       /* the disciplines */
-      dis.forEach(function(g, i){ var k = sg(p, .5 + i * .012, .54 + i * .012); g.style.opacity = k.toFixed(3); g.firstChild.style.strokeDashoffset = (1 - k).toFixed(3); });
+      dis.forEach(function(g, i){ var k = sg(p, .53 + i * .008, .56 + i * .008); g.style.opacity = k.toFixed(3); g.firstChild.style.strokeDashoffset = (1 - k).toFixed(3); });
       /* scene 2: the house and its disciplines step out; time takes the stage; scene 3: only the line of decisions */
       var tk = sm(sg(p, .6, .66)), out3 = sm(sg(p, .79, .83)), ho = (1 - sm(sg(p, .59, .64))).toFixed(3);
       gSec.style.opacity = ho; gRoof.style.opacity = ho; gDis.style.opacity = ho;
@@ -677,7 +679,7 @@
       var D = Math.max(1, pin.offsetHeight - body.offsetHeight), q = clamp01(p * Math.max(1, pin.offsetHeight - vh) / D);
       var e = ease(clamp01((q - .02) / .3)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
       ph.style.clipPath = 'inset(' + T.toFixed(1) + 'px ' + L.toFixed(1) + 'px)';
-      im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')'; ph.style.setProperty('--sh', (.34 * e).toFixed(3));
+      im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')'; im.style.filter = 'contrast(' + (1 + .12 * e).toFixed(3) + ') brightness(' + (1 - .26 * e).toFixed(3) + ')';
       fr.style.transform = 'scale(' + ((W + 2 * m + e * (vw - W)) / (W + 2 * m)).toFixed(4) + ',' + ((H + 2 * m + e * (vh - H)) / (H + 2 * m)).toFixed(4) + ')';
       fr.style.opacity = Math.max(0, 1 - e * 2.4).toFixed(3);
       cap.style.opacity = Math.max(0, 1 - e * 2.6).toFixed(3);
@@ -950,16 +952,15 @@
   /* ================================================================== 09 CLIENT · v9: reveals, and the photographs drift at their own depths */
   (function(){
     var sec = document.querySelector('.cl2'); if (!sec) return;
-    var rv = [].slice.call(sec.querySelectorAll('.cl2-rv')), photo = sec.querySelector('.cl2-photo img'), frs = [].slice.call(sec.querySelectorAll('.cl2-fr')), emb = sec.querySelector('.cl2-emb'), on = false;
+    var rv = [].slice.call(sec.querySelectorAll('.cl2-rv')), photo = sec.querySelector('.cl2-photo img'), frs = [].slice.call(sec.querySelectorAll('.cl2-fr')), on = false;
     if (!('IntersectionObserver' in window) || reduced){ rv.forEach(function(e){ e.classList.add('in'); }); return; }
     var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } }); }, {rootMargin: '0px 0px -15% 0px'});
     rv.forEach(function(e){ io.observe(e); });
-    var DEP = [-.16, .1, -.28];
+    var DEP = [-.06, .1, -.16];
     function drift(){ if (!on) return; var vh = window.innerHeight, r = sec.getBoundingClientRect(), k = (r.top + r.height / 2 - vh / 2) / vh;
       var pr = photo.parentNode.getBoundingClientRect(), kp = (pr.top + pr.height / 2 - vh / 2) / vh; photo.style.transform = 'translate3d(0,' + (kp * -9 - 7).toFixed(2) + '%,0)';
       var por = window.innerWidth < window.innerHeight;
       frs.forEach(function(f, i){ if (por){ f.style.transform = ''; return; } var kf = (r.top + f.offsetTop + f.offsetHeight / 2 - vh / 2) / vh; f.style.transform = 'translate3d(0,' + (kf * DEP[i] * vh).toFixed(1) + 'px,0)'; });
-      emb.style.transform = 'rotate(180deg) translate3d(0,' + (k * 120).toFixed(1) + 'px,0)';
       requestAnimationFrame(drift); }
     new IntersectionObserver(function(es){ var was = on; on = es[0].isIntersecting; if (on && !was) requestAnimationFrame(drift); }).observe(sec);
   })();
@@ -980,6 +981,26 @@
     if (c !== inkC){ inkC = c; if (chapEl) chapEl.classList.toggle('ink', c); }
   }
 
+  /* chapter rail: each item reads what is under it — photos and dark fields → white, light cards / panels → #1D1D1D */
+  var CHA = chapEl ? [].slice.call(chapEl.querySelectorAll('a')) : [], curEl = document.getElementById('cur'), chapN = 0;
+  function rgbL(s){ var m = s && s.match(/[\d.]+/g); if (!m || (m.length > 3 && +m[3] < .5)) return -1; return (.2126 * m[0] + .7152 * m[1] + .0722 * m[2]) / 255; }
+  function under(x, y){
+    var st = document.elementsFromPoint(x, y);
+    for (var i = 0; i < st.length; i++){
+      var e = st[i]; if ((chapEl && chapEl.contains(e)) || (curEl && curEl.contains(e))) continue;
+      var cs = getComputedStyle(e); if (cs.visibility === 'hidden' || +cs.opacity < .5) continue;
+      var t = e.tagName; if (t === 'IMG' || t === 'VIDEO' || t === 'CANVAS' || t === 'image') return 0;
+      if (cs.backgroundImage.indexOf('url(') >= 0) return 0;
+      var l = rgbL(cs.backgroundColor); if (l >= 0) return l;
+      if (e instanceof SVGGeometryElement && cs.fill !== 'none' && +cs.fillOpacity > .5){ l = rgbL(cs.fill); if (l >= 0) return l; }
+    }
+    return 0;
+  }
+  function chapInk(){
+    if (!CHA.length || (chapN++ & 3)) return; var y = window.innerHeight - 18;
+    for (var i = 0; i < CHA.length; i++){ var r = CHA[i].getBoundingClientRect(); if (!r.width) continue; var lt = under(r.left + Math.min(r.width / 2, 60), y) > .6; if (lt !== CHA[i]._lt){ CHA[i]._lt = lt; CHA[i].classList.toggle('lt', lt); } }
+  }
+
   /* ================================================================== the loop: only chapters near the screen, cached ranges */
   var CH = [philosophy(), about(), projects(), diffOpen(), difference(), suite(), approach(), process(), process3(), process4(), client(), cta()].filter(Boolean), dirty = true;
   var SVGS = [].slice.call(document.querySelectorAll('.ch svg'));
@@ -988,7 +1009,7 @@
   window.addEventListener('resize', function(){ dirty = true; }); window.addEventListener('load', function(){ dirty = true; });
   if (window.ResizeObserver) new ResizeObserver(function(){ dirty = true; }).observe(document.body);
   function tick(){
-    ink();
+    ink(); chapInk();
     if (dirty) measure();
     var y = window.scrollY || window.pageYOffset, vh = window.innerHeight;
     for (var i = 0; i < CH.length; i++){ var c = CH[i], away = y + vh * 1.5 < c.top || y > c.top + c.h + vh * .5;
