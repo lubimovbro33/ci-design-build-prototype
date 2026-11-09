@@ -412,7 +412,10 @@ async function build(){
   resize();
   window.addEventListener('resize', resize);
   const nf = () => new Promise(r => requestAnimationFrame(r));
-  for (const t of [tSky, tFac, tSide, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep]){ renderer.initTexture(t); await nf(); }   /* one upload per frame */
+  /* all uploads in one go: nothing moves on screen yet (the still poster covers the canvas), so one longer task costs
+     nothing visible, while one upload per frame cost ~12 frames of waiting (user 09.11: the start still waits) */
+  for (const t of [tSky, tFac, tSide, tUD, tUL, tJamb, tRoom, tRoomBg, tLogo, tWin, tWinM, tDep]) renderer.initTexture(t);
+  await nf();
   /* programs compile in the background (KHR_parallel_shader_compile) for where they really draw: the scene into the
      composer's buffer, the lines onto the screen — the still stays smooth while they build */
   try {
@@ -758,7 +761,8 @@ function lateSwap(){
 }
 /* every program and GPU resource the intro will touch, used once while the still covers the canvas */
 async function warm(T){
-  for (const t of [.9, 3.7, 4.7, 5.6, 0]){ render3d(t, T, 0, 0, 0); await new Promise(r => requestAnimationFrame(r)); }
+  for (const t of [.9, 3.7, 4.7, 5.6, 0]) render3d(t, T, 0, 0, 0);   /* back to back under the still, then one frame */
+  await new Promise(r => requestAnimationFrame(r));
   LIFE.t0 = 0;
 }
 function loadSketch(){ return Promise.resolve(); }                /* v7: the raster drawings are retired */
