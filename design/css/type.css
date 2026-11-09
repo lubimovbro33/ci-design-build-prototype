@@ -1,0 +1,91 @@
+/* CI · TYPE SYSTEM (09.11, after the "Дизайн текста" lesson + his Figma frames)
+   Five styles for the whole page, nothing in between:
+     H1    — the cover only (hero title, TG Bold Extended 111u, from his Figma 230:8736; not restyled here)
+     H2    — every chapter title: Zalando Sans Expanded 400, caps, 66u, tight (as his 05 title), stepped lines
+     LEAD  — key phrases / statements next to a drawing: Zalando Sans Expanded 400, caps, 30u
+     TEXT  — all running text: Zalando Sans SemiExpanded 400, 20u (15 px at 1440), 135 %, tracking 0
+     LABEL — small caps for UI and captions: Zalando Sans Expanded 400, 14u (≥ 12 px), +.04em
+   Rules (lesson): nothing is bigger than the cover; big type is set light, in caps, tight; running text is never
+   letter-spaced; one size per role, whole numbers; contrast comes from scale, not from colour or weight.
+   His Figma-built parts keep their own values: hero, header CTA and hero blocks, 05 Difference, buttons (.pill),
+   and the approved intro story. This file only sets font family / size / weight / leading / tracking / case. */
+:root{
+  --fh:"Zalando Sans Expanded","TG Ext",sans-serif;
+  --ft:"Zalando Sans SemiExpanded","Zalando Sans Expanded","TG Ext",sans-serif;
+  --t-h2:max(34px, calc(66 * var(--u)));
+  --t-lead:max(19px, calc(30 * var(--u)));
+  --t-text:max(15px, calc(20 * var(--u)));
+  --t-lab:max(12px, calc(14 * var(--u)));
+}
+
+/* ---------- H2 · chapter titles */
+.ch-phil .ph-title,
+.ch .ch-title, .ch .ch-title.one, .ch-about .ab-ttl,
+.ch-suite .su-title,
+.rv2-title,
+.ch-cta .ct-h,
+.cl2-l1, .cl2-l2,
+.pj4-nm,
+.pr4-t1, .pr4-bt{
+  font-family:var(--fh)!important;font-weight:400!important;font-size:var(--t-h2)!important;
+  line-height:.98!important;letter-spacing:-.07em!important;text-transform:uppercase!important}
+/* lines are broken by sense in the markup (<br>), never by the column: one line = one phrase */
+@media (min-width:901px){
+  .ch-phil .ph-title, .ch .ch-title, .ch-about .ab-ttl, .ch-suite .su-title, .rv2-title, .ch-cta .ct-h, .cl2-l1, .cl2-l2{white-space:nowrap!important}
+}
+/* stepped lines ("обратная втяжка"): the first line starts on the column, every following line one step in.
+   About stays flush: its lines would otherwise reach the house. */
+.ch-phil .ph-title, .ch .ch-title.one, .ch-suite .su-title, .rv2-title, .ch-cta .ct-h{
+  display:block!important;padding-left:1em!important;text-indent:-1em!important}
+.ch-about .ab-ttl{display:block!important}
+.cl2-l1 > span + span{padding-left:1em}
+.ch-faq .fq-in{grid-template-columns:minmax(0,1fr) minmax(0,1fr)!important}
+
+/* ---------- LEAD · statements and key phrases */
+.ch .ch-h, .ch-phil .ph-h, .ch .ch-big,
+.ch-suite .su-wn,
+.ch-faq .qh .t,
+.rv2-q p,
+.pr4-h, .cl2-h, .pj4-ttl{
+  font-family:var(--fh)!important;font-weight:400!important;font-size:var(--t-lead)!important;
+  line-height:1.06!important;letter-spacing:-.03em!important;text-transform:uppercase!important}
+
+/* ---------- TEXT · running text */
+.ch .ch-lead, .ch .ch-p, .ch .ch-lead.sub,
+.ch-phil .ph-lead, .ch-phil .ph-p,
+.ch-suite .su-p,
+.ch-faq .ain .p,
+.pr4-lead, .pr4-bd,
+.cl2-card p, .cl2 .cl2-card p,
+.pj4-pn p,
+.ch-appr .ap-qs .tx,
+.ft-addr, .ft-addr div{
+  font-family:var(--ft)!important;font-weight:400!important;font-size:var(--t-text)!important;
+  line-height:1.35!important;letter-spacing:0!important;text-transform:none!important}
+.ch .ch-lead b, .ch-suite .su-p b, .cl2-card p b{font-weight:700!important}
+
+/* the Projects panel carries running text now set at the Text size: a little wider so it never grows under the header */
+@media (min-width:901px){ .pj4-pn{width:calc(470 * var(--u))!important} }
+
+/* ---------- LABEL · small caps */
+.chap a,
+.ch-suite .su-tab, .ch-suite .su-add, .ch-suite .su-sw, .ch-suite .su-cnt,
+.pj4-k, .pj4-mt, .pj4-pg button, .pj4-r,
+.pr4-lab .nm, .pr4-lab .mono, .pr4-cap, .pr4-ek,
+.ch-phil .ph-tag,
+.ch .ch-pct .mono, .ch-phil .ph-pct .mono,
+.ch-faq .qh .n,
+.rv2-who, .rv2-v,
+.ft-col a, .ft-bot, .ch .mono,
+.hdr .nav a, .hdr .nav button{
+  font-family:var(--fh)!important;font-weight:400!important;font-size:var(--t-lab)!important;
+  line-height:1.3!important;letter-spacing:.04em!important;text-transform:uppercase!important}
+.chap a .t, .chap a span:first-child{font-size:inherit!important;letter-spacing:inherit!important}
+
+/* ---------- figures: big, light, never bigger than the cover */
+.ch .ch-pct .v, .ch-phil .ph-pct .v{
+  font-family:var(--fh)!important;font-weight:400!important;font-size:max(56px, calc(111 * var(--u)))!important;
+  letter-spacing:-.07em!important;line-height:.8!important}
+
+/* ---------- drawings' annotations: one family with the rest */
+.ch svg text{font-family:var(--fh)}

@@ -264,6 +264,10 @@
       /* the row stands 24 above the chapter rule at the bottom (user 15:22: it ran into it on a 16:10 screen) */
       var chap = document.querySelector('.chap'), navTop = chap && chap.getBoundingClientRect().height ? chap.getBoundingClientRect().top : h - 60;
       var top = port ? VH * .58 : Math.min(VH - 27.8, (navTop - 24) * VW / w) - chh;
+      /* type pass: the H2 title is wider now — if its longest line would come within 48 of the house's wall, the house steps
+         right just enough (at most 6 % of the width), so it stays centred wherever there is room */
+      var tt = document.querySelector('.ch-about .ab-ttl');
+      if (tt && !port){ var tr = tt.getBoundingClientRect(); if (tr.width){ var need = tr.right * VW / w + 96 - (cx - 450 * hs + 50 * hs); if (need > 0) cx += Math.min(need, VW * .08); } }
       LY = { house: [cx - 450 * hs, cy - 340 * hs, hs], cards: LAY.map(function(L, i){ var r = Math.floor(i / cols), c = i % cols, x = m + c * (cw + gap), y = top + r * (chh + 52);
         return [x + 10 * sc, y - 50 * sc, sc]; }) };
       gH.setAttribute('transform', 'translate(' + f1(LY.house[0]) + ' ' + f1(LY.house[1]) + ') scale(' + LY.house[2].toFixed(4) + ')');
@@ -273,6 +277,7 @@
       gO.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(port ? VH * .62 : VH * .5) + ') scale(' + sc2.toFixed(4) + ')');
     }
     layout(); window.addEventListener('resize', function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });   /* the title's width needs the real font */
     function update(p){
       if (p === last) return; last = p;
       phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
@@ -742,7 +747,7 @@
       cap.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[3] + 12) + 'px)'; cap.style.width = f1(pw) + 'px';
       labs.forEach(function(l, k){ l.style.left = f1(nx(k)) + 'px'; l.style.top = f1(Y + 18) + 'px'; });
       nds.forEach(function(n, k){ n.setAttribute('x', f1(nx(k) - 4.5)); n.setAttribute('y', f1(Y - 4.5)); });
-      big.style.setProperty('--bt', f1(por ? Y - 200 : Y - 70 - Math.min(W * .063, 118) - 120) + 'px'); }
+      big.style.setProperty('--bt', f1(por ? Y - 200 : Y - 70 - Math.max(34, W * 66 / 1920) - 120) + 'px'); }
     function nx(k){ return X0 + k / 5 * (X1 - X0) * .96; }
     var T0 = performance.now();
     function draw(){
