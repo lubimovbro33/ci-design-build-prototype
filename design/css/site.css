@@ -974,7 +974,7 @@ html,body{background:#0B0D11}
    (1 px #EBEBEB at 18 %, two 33×1.5 #D9D9D9 lines at +23/+33 and +23/+44) · hairlines, white at 10 %: vertical x 395, horizontal
    y 394, bottom y 1079 · title Trade Gothic Bold Extended 111 px, −8 %, line-height 1, at 417/424 · two 170×244 blocks at
    421/812, 10 apart (label 22 px at +11/+10, 6 px square 11 from the right/bottom; the outlined one has a 2 px white border). */
-:root{ --u:calc(100vw / 1920); --hm:clamp(14px,1.25vw,24px); --f-col:calc(417 * var(--u)); --f-nav:calc(421 * var(--u)); --f-rule:calc(395 * var(--u)); --bright:#EBEBEB; --light:#D9D9D9; --warm:#A6A39B; --trace:#F8BD79; }
+:root{ --u:calc(100vw / 1920); --hm:clamp(14px,1.25vw,24px); --f-col:calc(417 * var(--u)); --f-nav:calc(421 * var(--u)); --f-rule:calc(395 * var(--u)); --bright:#EBEBEB; --light:#D9D9D9; --warm:#A6A39B; }
 @property --ta{syntax:'<angle>';inherits:false;initial-value:0deg}
 
 /* ---------- header: logo · CTA block + menu square */
@@ -988,27 +988,20 @@ html,body{background:#0B0D11}
 /* the logo (user 09.11): 1 · it shrinks with the first half-screen of scroll to the frame's small state (Figma 289:8827: the mark
    81×88 at 24/24 = ×0.609 of 133×144) and grows back on the way up — scaled about the mark's top-left corner (js: updateLogo);
    2 · every 10 s it draws itself again, the way it draws in the intro (pre3d.js, frame 15): it erases counter-clockwise to a faint
-   ghost, then a warm pen draws it back clockwise from 3 o'clock, the fresh strokes glowing gold and cooling to white behind it.
-   Only the official PNG is used: the wipe is a conic mask on the image, the pen a conic gradient masked by the logo's own shape. */
+   ghost, then draws back clockwise from 3 o'clock. No light, no colour (user 10:29: the warm gold belongs only to the lit window of
+   the intro/hero photo — it is not in the design system). Only the official PNG is used: the wipe is a conic mask on the image. */
 .hdr .cell.c{transform-origin:calc(8.8 * var(--u)) calc(12 * var(--u));will-change:transform}
 @property --lp{syntax:'<angle>';inherits:true;initial-value:366deg}
 .hdr .wm{position:relative;animation:ci-logo-draw 10s linear 2.6s infinite}
 .hdr .wm img{-webkit-mask:conic-gradient(from 90deg at 50% 42%,#000 calc(var(--lp) - 2deg),rgba(0,0,0,.14) calc(var(--lp) + 2deg));
   mask:conic-gradient(from 90deg at 50% 42%,#000 calc(var(--lp) - 2deg),rgba(0,0,0,.14) calc(var(--lp) + 2deg))}
-.hdr .wm-glow{position:absolute;inset:0;pointer-events:none;filter:drop-shadow(0 0 calc(5 * var(--u)) rgba(248,189,121,.85))}
-.hdr .wm .wm-glow{opacity:1}   /* an old rule dims every span in .wm to 50 % */
-.hdr .wm-fx{position:absolute;inset:0;opacity:0;
-  background:conic-gradient(from 90deg at 50% 42%,transparent 0 calc(var(--lp) - 60deg),rgba(248,189,121,0) calc(var(--lp) - 60deg),rgba(248,189,121,.95) calc(var(--lp) - 6deg),#fff6e8 calc(var(--lp) - .6deg),transparent calc(var(--lp) + .6deg));
-  -webkit-mask:url(../assets/brand/logo-white.png) 0 0/100% 100% no-repeat;mask:url(../assets/brand/logo-white.png) 0 0/100% 100% no-repeat;
-  animation:ci-logo-pen 10s linear 2.6s infinite}
 @keyframes ci-logo-draw{
   0%{--lp:366deg;animation-timing-function:cubic-bezier(.55,0,.65,1)}
   9%{--lp:-6deg}
   13%{--lp:-6deg;animation-timing-function:cubic-bezier(.35,.08,.3,1)}
   39%{--lp:366deg}
   100%{--lp:366deg}}
-@keyframes ci-logo-pen{0%,12.6%{opacity:0}14.2%{opacity:1}35%{opacity:1}40%{opacity:0}100%{opacity:0}}
-@media (prefers-reduced-motion:reduce){.hdr .wm,.hdr .wm-fx{animation:none}}
+@media (prefers-reduced-motion:reduce){.hdr .wm{animation:none}}
 .hdr .cell:first-child{display:none}                       /* the nav is not in the frame */
 .hdr .cell.r{display:flex;position:absolute;right:calc(24 * var(--u));top:calc(24 * var(--u));gap:calc(12 * var(--u));align-items:stretch}
 .hdr .loc{display:none!important}
@@ -1080,15 +1073,15 @@ html,body{background:#0B0D11}
   .blk:hover .lh,.hdr .cta-blk:hover .lh{transform:none;animation:ci-draw-h 1.05s .14s both}
 }
 /* ---------- the menu square (user 09.11 10:20): on hover its 18 % frame is traced round to full white — counter-clockwise from the
-   top-right corner behind a warm head, the light that runs round the CI window in the intro — and the two lines rewrite themselves
+   top-right corner, the way the outline runs round the CI window in the intro (no gold, no glow: user 10:29) — and the two lines rewrite themselves
    (out to the right, back in from the left, one after the other) and turn white. On leave the white frame fades back to 18 %. */
-@property --mp{syntax:'<angle>';inherits:false;initial-value:420deg}
+@property --mp{syntax:'<angle>';inherits:false;initial-value:360deg}
 .hdr .menu-sq{--ms:#fff}
-.hdr .menu-sq .ms-tr{position:absolute;inset:-1px;pointer-events:none;opacity:0;transition:opacity .6s var(--e-out);filter:drop-shadow(0 0 3px rgba(248,189,121,.6))}
+.hdr .menu-sq .ms-tr{position:absolute;inset:-1px;pointer-events:none;opacity:0;transition:opacity .6s var(--e-out)}
 .hdr .menu-sq .ms-tr>span{position:absolute;inset:0;box-sizing:border-box;padding:1px;
-  background:conic-gradient(from 45deg,transparent 0 calc(359.6deg - var(--mp)),#fff3e0 calc(360deg - var(--mp)),#F8BD79 calc(365deg - var(--mp)),var(--ms) calc(410deg - var(--mp)),var(--ms) 360deg);
+  background:conic-gradient(from 45deg,transparent 0 calc(359.4deg - var(--mp)),var(--ms) calc(360deg - var(--mp)) 360deg);
   -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude}
-@keyframes ci-ms-trace{0%{--mp:0deg}100%{--mp:420deg}}
+@keyframes ci-ms-trace{0%{--mp:0deg}100%{--mp:360deg}}
 @keyframes ci-ms-line{
   0%{clip-path:inset(0 0 0 0);animation-timing-function:cubic-bezier(.6,0,.85,.45)}
   44%{clip-path:inset(0 0 0 100%)}
@@ -1096,7 +1089,7 @@ html,body{background:#0B0D11}
   100%{clip-path:inset(0 0 0 0)}}
 @media (hover:hover){
   .hdr .menu-sq:hover .ms-tr{opacity:1;transition:none}
-  .hdr .menu-sq:hover .ms-tr>span{animation:ci-ms-trace 1.2s cubic-bezier(.5,.05,.3,1) both}
+  .hdr .menu-sq:hover .ms-tr>span{animation:ci-ms-trace 1s cubic-bezier(.5,.05,.3,1) both}
   .hdr .menu-sq:hover i{background:var(--ms);animation:ci-ms-line .85s both}
   .hdr .menu-sq:hover i:nth-of-type(2){animation-delay:.09s}
 }
@@ -1117,7 +1110,7 @@ html,body{background:#0B0D11}
   .blk:hover .t .bn,.hdr .cta-blk:hover .t .bn{transform:none;filter:blur(0);opacity:1}
 }
 @media (prefers-reduced-motion:reduce){.blk .t .bo,.blk .t .bn,.hdr .cta-blk .t .bo,.hdr .cta-blk .t .bn{transition:none}}
-.blk:focus-visible,.hdr .cta-blk:focus-visible,.hdr .menu-sq:focus-visible{outline:1px solid var(--trace);outline-offset:3px}
+.blk:focus-visible,.hdr .cta-blk:focus-visible,.hdr .menu-sq:focus-visible{outline:1px solid #fff;outline-offset:3px}
 /* reel scrim for the new layout: darken the left column and the title band a touch more */
 .hero .scrim{background:linear-gradient(to bottom,rgba(0,0,0,.5),rgba(0,0,0,0) 26%),linear-gradient(to top,rgba(0,0,0,.55),rgba(0,0,0,0) 40%),linear-gradient(to right,rgba(0,0,0,.35),rgba(0,0,0,0) 24%)}
 
