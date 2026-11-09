@@ -267,11 +267,32 @@
 
   /* ---------- cursor + mouse */
   var coarse = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
-  var cx = 0, cy = 0, tx = 0, ty = 0, curLab = qs('.cl', cur);
-  window.addEventListener('pointermove', function(e){ tx = e.clientX; ty = e.clientY; mx = (e.clientX / window.innerWidth - .5); my = (e.clientY / window.innerHeight - .5); });
-  if (!coarse) (function curLoop(){ cx += (tx - cx) * .6; cy += (ty - cy) * .6; cur.style.transform = 'translate3d(' + cx + 'px,' + cy + 'px,0)'; requestAnimationFrame(curLoop); })();   /* touch: no cursor, no loop */
-  document.addEventListener('pointerover', function(e){ var t = e.target.closest('a,button,.qh,.tab,.sw'); if (t) cur.classList.add('link'); });
-  document.addEventListener('pointerout', function(e){ var t = e.target.closest('a,button,.qh,.tab,.sw'); if (t) cur.classList.remove('link'); });
+  /* the drafting reticle (09.11 15:13): the point is exact; the corner frame springs after it and, over anything pressable (not huge),
+     frames that thing; the guides and the X/Y readout show while the mouse moves (css counters, no text writes) */
+  var tx = 0, ty = 0, curLab = qs('.cl', cur), cDot = qs('.cd', cur), cRet = qs('.cr', cur), cGx = qs('.cgx', cur), cGy = qs('.cgy', cur), cCo = qs('.cc', cur);
+  var R = {x: 0, y: 0, w: 28, h: 28}, cTgt = null, cDown = false, cIdle = 0, cFirst = true;
+  var PRESS = 'a,button,.qh,.tab,.sw,[data-cursor]';
+  window.addEventListener('pointermove', function(e){ tx = e.clientX; ty = e.clientY; mx = (e.clientX / window.innerWidth - .5); my = (e.clientY / window.innerHeight - .5);
+    if (cFirst){ cFirst = false; R.x = tx - 14; R.y = ty - 14; } cur.classList.add('on', 'moving'); clearTimeout(cIdle); cIdle = setTimeout(function(){ cur.classList.remove('moving'); }, 900); });
+  document.documentElement.addEventListener('mouseleave', function(){ cur.classList.remove('on'); });
+  window.addEventListener('pointerdown', function(){ cDown = true; cur.classList.add('down'); });
+  window.addEventListener('pointerup', function(){ cDown = false; cur.classList.remove('down'); });
+  document.addEventListener('pointerover', function(e){ var t = e.target.closest && e.target.closest(PRESS); if (!t) return; cTgt = t; cur.classList.add('link');
+    var l = t.getAttribute('data-cursor'); if (l){ curLab.textContent = l; cur.classList.add('lab'); } });
+  document.addEventListener('pointerout', function(e){ var t = e.target.closest && e.target.closest(PRESS); if (!t) return; var to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest(PRESS);
+    if (to === t) return; if (cTgt === t) cTgt = null; cur.classList.remove('link', 'lab'); });
+  if (!coarse) (function curLoop(){
+    var vw = window.innerWidth, vh = window.innerHeight, x, y, w, h, snap = false;
+    if (cTgt && cTgt.isConnected){ var r = cTgt.getBoundingClientRect();
+      if (r.width * r.height < vw * vh * .3 && r.width > 0){ snap = true; var pd = 6, pull = .06; w = r.width + 2 * pd; h = r.height + 2 * pd; x = r.left - pd + (tx - (r.left + r.width / 2)) * pull; y = r.top - pd + (ty - (r.top + r.height / 2)) * pull; } }
+    if (!snap){ w = h = cDown ? 20 : 28; x = tx - w / 2; y = ty - h / 2; }
+    var k = snap ? .2 : .24; R.x += (x - R.x) * k; R.y += (y - R.y) * k; R.w += (w - R.w) * .2; R.h += (h - R.h) * .2;
+    cRet.style.transform = 'translate3d(' + R.x.toFixed(1) + 'px,' + R.y.toFixed(1) + 'px,0)'; cRet.style.width = R.w.toFixed(1) + 'px'; cRet.style.height = R.h.toFixed(1) + 'px';
+    cDot.style.left = tx + 'px'; cDot.style.top = ty + 'px';
+    cGx.style.transform = 'translate3d(0,' + ty + 'px,0)'; cGy.style.transform = 'translate3d(' + tx + 'px,0,0)';
+    cCo.style.transform = 'translate3d(' + (R.x + R.w + 10).toFixed(1) + 'px,' + (R.y + R.h + 2).toFixed(1) + 'px,0)';
+    cCo.style.setProperty('--cx', Math.round(tx)); cCo.style.setProperty('--cy', Math.round(ty));
+    requestAnimationFrame(curLoop); })();   /* touch: no cursor, no loop */
   layout();
   window.addEventListener('resize', function(){ layout(); if (gl3()) window.__pre3d.resize(); if (state.done) drawIdle(); else render(state.t); onResize(); });
   render(0);

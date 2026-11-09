@@ -640,7 +640,7 @@
         return '<span class="tl" aria-hidden="true" style="--s:' + (.12 + li * .07).toFixed(3) + '">' + t.split('').map(function(ch){ if (ch === ' ') return ' '; var d = .15 + (n++) * .012; return '<span class="fc" style="--s:' + d.toFixed(3) + '">' + ch + '</span>'; }).join('') + '</span>'; }).join('<br>'); }
     var ready = false, lastT = -1, lastR = -1, atStart = true;
     function setReady(v){ if (v === ready) return; ready = v; sec.classList.toggle('ready', v); sec.dispatchEvent(new CustomEvent(v ? 'df2in' : 'df2out')); }
-    var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), fr = nx.querySelector('.df2-nx-fr'), cap = nx.querySelector('.df2-nx-cap'), pc = nx.querySelector('.df2-nx-pc');
+    var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), fr = nx.querySelector('.df2-nx-fr'), cap = nx.querySelector('.df2-nx-cap');
     function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
     function update(p){
       var vw = window.innerWidth, vh = window.innerHeight, u = vw / 1920, port = vw <= 900 || vw / vh <= 1;
@@ -653,8 +653,6 @@
       fr.style.opacity = Math.max(0, 1 - e * 2.4).toFixed(3);
       cap.style.opacity = Math.max(0, 1 - e * 2.6).toFixed(3);
       cap.style.marginLeft = (-60 * u * e).toFixed(1) + 'px';
-      pc.style.setProperty('--pc', Math.round(e * 100));
-      pc.style.opacity = (e < .92 ? 1 : Math.max(0, 1 - (e - .92) / .08)).toFixed(3);
       var f = clamp01((q - .31) / .07); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
       /* then the grid: it rises 28vh → 0 (the "scroll a little" of 14:58) while it starts to draw; --t runs the entrance to the end
          of the pin (.92), and only then is it .ready — hover, autoplay, and the page scrolls on */

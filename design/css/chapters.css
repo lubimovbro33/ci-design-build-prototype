@@ -574,9 +574,6 @@
 .df2-nx-rule{position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,.4)}
 .df2-nx-cap .lab{font-family:var(--zx);font-size:max(10px, calc(18 * var(--u)));line-height:.93;letter-spacing:0;text-transform:uppercase;color:rgba(255,255,255,.4)}
 .df2-nx-t{font-family:var(--zx);font-weight:400;font-size:max(28px, calc(66 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;color:#EBEBEB}
-.df2-nx-pc{position:absolute;right:calc(24 * var(--u));bottom:calc(36px + 24 * var(--u));font-family:var(--zx);font-size:max(24px, calc(66 * var(--u)));letter-spacing:-.08em;line-height:1;color:rgba(235,235,235,.3);counter-reset:pc var(--pc,0)}
-.df2-nx-pc::after{content:counter(pc) "%"}
-@property --pc{syntax:'<integer>';inherits:false;initial-value:0}
 /* phones / portrait: two columns of square cells, the head and the card at their own height */
 @media (max-aspect-ratio: 1/1), (max-width: 900px){
   .df2-body{height:auto;grid-template-columns:1fr 1fr;grid-template-rows:auto 50vw 50vw 50vw auto}
