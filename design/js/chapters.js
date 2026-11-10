@@ -179,7 +179,7 @@
       /* the 75 %: the at-home hours fill the scale bar */
       var kr = sg(p, .1, .15); gRule.style.setProperty('--k', kr.toFixed(3));
       var kf = eo(sg(p, .13, .22)); fill.style.strokeDashoffset = (1 - kf).toFixed(4);
-      txt(pctEl, Math.round(75 * kf)); stage.style.setProperty('--pc', (sg(p, .11, .15) * (1 - sg(p, .88, .94))).toFixed(3));
+      txt(pctEl, Math.round(75 * kf)); stage.style.setProperty('--pc', (sg(p, .11, .15) * (1 - sg(p, .325, .35))).toFixed(3));
       /* the day: 06:00 → 24:00 while the verbs are read */
       var hr = 5 + 19 * sg(p, .36, .76), th = Math.min(23.99, hr), mm = Math.floor((th % 1) * 6) * 10;   /* the clock ticks in tens of minutes */
       clock(Math.floor(th), mm / 10);
@@ -203,6 +203,8 @@
         t.g.style.opacity = (on * (seen ? 1 : 0) * (1 - .45 * sg(hr, t.v.h + 1.2, t.v.h + 2)) * (1 - sg(p, .9, .97))).toFixed(3);
         var pr = sg(hr, t.v.h, t.v.h + .9); t.ring.setAttribute('r', f1(4 + 26 * eo(pr))); t.ring.style.opacity = (1 - pr).toFixed(3);
         var vb = vbs.filter(function(v){ return v.textContent.trim() === t.v.k; })[0]; if (vb) vb.classList.toggle('on', seen && p < .9); });
+      var curK = null, curH = -1; tags.forEach(function(t){ if (hr >= t.v.h && t.v.h > curH){ curH = t.v.h; curK = t.v.k; } });
+      vbs.forEach(function(v){ v.classList.toggle('cur', p < .9 && v.textContent.trim() === curK); });
       /* the years */
       var ky = sg(p, .74, .84); gYrs.style.setProperty('--k', ky.toFixed(3)); gYrs.style.opacity = (1 - sg(p, .9, .97)).toFixed(3);
       YR.forEach(function(y, i){ y.t2.style.opacity = sg(ky, i * .22 + .1, i * .22 + .3).toFixed(3); }); yrLab.style.opacity = sg(ky, .7, 1).toFixed(3);

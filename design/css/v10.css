@@ -25,16 +25,16 @@
 /* ---------- 4 · statements: the closing thought of a chapter takes the whole stage (desktop) */
 @media (min-aspect-ratio: 1/1){
   /* 02 Philosophy: the plan leaves, the thought stays — two stepped stanzas on a diagonal */
-  .ch-phil .ph-t > .st{position:absolute;left:0;top:50%;transform:translateY(-50%);width:calc(100vw - 2 * var(--m));display:grid;grid-template-columns:56fr 44fr;align-items:start}
-  .ch-phil .ph-t > .st .ph-h{font-size:var(--t-h2)!important;line-height:.98!important;letter-spacing:-.07em!important;padding-left:1em;text-indent:-1em;white-space:nowrap;margin:0}
+  .ch-phil .ph-t > .st{position:absolute;left:0;top:calc(50vh - var(--top-line));transform:translateY(-50%);width:100%;display:grid;grid-template-columns:56fr 44fr;align-items:start}
+  .ch-phil .ph-t > .st .ph-h{font-weight:400!important;font-size:var(--t-h2)!important;line-height:.98!important;letter-spacing:-.07em!important;padding-left:1em;text-indent:-1em;white-space:nowrap;margin:0}
   .ch-phil .ph-t > .st .ph-h + .ph-h{margin-top:3.3em}
   .ch-phil .ch-pin{height:660vh}   /* a little more room so the statement can rest before the chapter leaves */
   .ch-phil .ph-t > .st .ph-h.acc{color:var(--acc)}
   .ch-phil .ch-stage.st-on .ph-plan,.ch-phil .ch-stage.st-on .ph-pct{opacity:calc(1 - min(1, var(--st, 0) * 2.6))!important}   /* the plan is gone before the lines are sharp */
 
   /* 03 About, scene 3: statement on top, the line of decisions across the whole width, the explanation and the button under it */
-  .ch-about .ch-t > .st{position:absolute;left:0;top:calc(50% + 23px);transform:translateY(-50%);width:calc(100vw - 2 * var(--m));height:calc(100vh - var(--top-line) - 110px);display:flex;flex-direction:column;justify-content:space-between}
-  .ch-about .ch-t > .st .ch-h{font-size:var(--t-h2)!important;line-height:.98!important;letter-spacing:-.07em!important;white-space:nowrap;margin:0}
+  .ch-about .ch-t > .st{position:absolute;left:0;top:0;bottom:16px;transform:none;width:100%;display:flex;flex-direction:column;justify-content:space-between}
+  .ch-about .ch-t > .st .ch-h{font-weight:400!important;font-size:var(--t-h2)!important;line-height:.98!important;letter-spacing:-.07em!important;white-space:nowrap;margin:0}
   .ch-about .ch-t > .st .st-h .ch-h:first-child{padding-left:1em;text-indent:-1em}
   .ch-about .ch-t > .st .st-h .ch-h.acc{padding-left:1em}
   .ch-about .ch-t > .st .st-b{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:end;gap:40px}
@@ -95,3 +95,105 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 .ch-ftr .ft-city{margin-top:clamp(12px,1.6vw,32px);height:min(clamp(200px,30vw,420px), 36vh)}   /* the whole footer fits one screen, clear of the header */
 @media (max-aspect-ratio: 1/1){ .ch-ftr .ft-big{font-size:calc((100vw - 2 * var(--m)) / 7.95);white-space:normal} }
 @media (prefers-reduced-motion:reduce){ .ch-ftr .ft-big{opacity:1;filter:none;transform:none;transition:none} }
+
+/* ---------- 7 · his atoms (10.11 02:19: "типографика — это всё… смотри, как я сделал 05 и главный экран").
+   The text everywhere takes the values of his own Figma blocks (05 Difference, hero), so the whole page is one hand:
+   running text 20u / leading 1.1 / tracking −3 % in narrow bricks; small caps 18u / .93 / tracking 0; key phrases as his
+   panel headline — Expanded 500, 36.774u, 1.05, −4 %. */
+.ch .ch-lead, .ch .ch-p, .ch .ch-lead.sub,
+.ch-phil .ph-lead, .ch-phil .ph-p,
+.ch-suite .su-p,
+.ch-faq .ain .p,
+.pr4-lead, .pr4-bd,
+.cl2-card p, .cl2 .cl2-card p,
+.pj4-pn p,
+.ch-appr .ap-qs .tx,
+.ft-addr, .ft-addr div,
+.mn-ft{line-height:1.1!important;letter-spacing:-.03em!important}
+.ch .ch-lead, .ch .ch-p, .ch-phil .ph-lead, .ch-phil .ph-p, .pr4-lead, .pr4-bd{max-width:calc(421 * var(--u))}
+@media (max-aspect-ratio: 1/1){ .ch .ch-lead, .ch .ch-p, .ch-phil .ph-lead, .ch-phil .ph-p, .pr4-lead, .pr4-bd{max-width:none} }
+.ch p + p, .cl2-card p + p, .pj4-pn p + p{margin-top:.7em}
+
+.chap a,
+.ch-suite .su-tab, .ch-suite .su-add, .ch-suite .su-sw, .ch-suite .su-cnt,
+.pj4-k, .pj4-mt, .pj4-pg button, .pj4-r,
+.pr4-lab .nm, .pr4-lab .mono, .pr4-cap, .pr4-ek,
+.ch-phil .ph-tag,
+.ch .ch-pct .mono, .ch-phil .ph-pct .mono,
+.ch-faq .qh .n,
+.rv2-who, .rv2-v,
+.ft-col a, .ft-bot, .ch .mono,
+.hdr .nav a, .hdr .nav button,
+.mn-soc{letter-spacing:0!important;line-height:1!important}
+.ch-phil .ph-tag, .ch .ch-pct .mono, .ch-phil .ph-pct .mono, .pr4-cap, .pr4-ek, .ch-suite .su-cnt .mono, .pj4-k, .pj4-mt{font-size:max(11px, calc(18 * var(--u)))!important;line-height:.93!important}
+
+.ch .ch-h, .ch-phil .ph-h, .pr4-h{font-weight:500!important;font-size:max(19px, calc(36.774 * var(--u)))!important;line-height:1.05!important;letter-spacing:-.04em!important}
+.ch-suite .su-wn, .ch-faq .qh .t, .rv2-q p, .cl2-h, .pj4-ttl{font-weight:500!important;line-height:1.05!important;letter-spacing:-.04em!important}
+
+
+/* ---------- 8 · the stage (10.11 02:33: the ideas stay; "подача, композиция, типографика" are redone).
+   Until now every pinned chapter was "a caption column beside an illustration". Now the text block is the whole stage and each
+   thought takes its own place on it:
+   · the head of a scene sits on the page's top line; numerals and small bricks hold the bottom — the drawing lives between them;
+   · a third voice, the statement (.say): his headline size (36.774u) in the text face, sentence case, tight, first line set in
+     ("обратная втяжка"), the thought in ink and its continuation in Gradient Blue light;
+   · caps key phrases keep his panel-headline style; chapter titles and closing statements stay the only 66u voices. */
+@media (min-aspect-ratio: 1/1){
+  .ch-phil .ph-t, .ch-about .ch-t, .ch-appr .ch-t{left:var(--m);right:var(--m);top:var(--top-line);bottom:calc(var(--m) + 46px);width:auto;transform:none;display:block;pointer-events:none}
+  .ch-phil .ph-t > div, .ch-about .ch-t > div, .ch-appr .ch-t > div{position:absolute;left:0;top:calc(50vh - var(--top-line));transform:translateY(-50%);pointer-events:auto;align-self:auto;justify-self:auto}
+  .ch-phil .ph-t > .at-t, .ch-about .ch-t > .at-t, .ch-appr .ch-t > .at-t{top:0;transform:none}
+  .ch-phil .ph-t > [class*="at-b"], .ch-about .ch-t > [class*="at-b"], .ch-appr .ch-t > [class*="at-b"]{top:auto;bottom:0;transform:none}
+  .ch-phil .ph-t > .at-b2, .ch-about .ch-t > .at-b2, .ch-appr .ch-t > .at-b2{left:calc(480 * var(--u) - var(--m))}
+  .ch-phil .ph-t > .at-b3, .ch-about .ch-t > .at-b3, .ch-appr .ch-t > .at-b3{left:calc(960 * var(--u) - var(--m))}
+
+  .ch p.say{font-family:var(--ft);font-weight:400;font-size:max(20px, calc(36.774 * var(--u)))!important;line-height:1.08!important;letter-spacing:-.04em!important;
+    color:#EBEBEB!important;width:calc(var(--w, 760) * var(--u));max-width:none!important;margin:0;text-indent:var(--ind, 6.5em);text-wrap:balance}
+  .ch p.say .t2{color:#96A9BF}
+  /* 03, the five trades: the statement is three cards wide and its first line starts on the second card */
+  .ch-about{--cw:calc((100vw - 2 * var(--m) - 88 * var(--u)) / 5)}
+  .ch p.say.say-cards{width:calc(3 * var(--cw) + 44 * var(--u));--ind:calc(var(--cw) + 22 * var(--u))}
+
+  .ch .ch-big{font-weight:500!important;font-size:max(19px, calc(36.774 * var(--u)))!important;line-height:1.05!important;letter-spacing:-.04em!important}
+  .ch .at-t .ch-lead.sub{margin-top:calc(20 * var(--u))}
+  .ch .at-b > .ch-p, .ch .at-b > .ch-lead{margin:0}
+  /* a label hung in the first-line indent (only where the label is copy, not decoration) */
+  .ch p.say.say-lb{position:relative;--ind:9em}
+  .ch p.say .lb{position:absolute;left:0;top:.42em;font-family:var(--fh);font-size:max(11px, calc(18 * var(--u)));line-height:.93;letter-spacing:0;text-transform:uppercase;text-indent:0;white-space:nowrap}
+
+  /* 02 · the figure is the loud voice of its scene: 75 as a graphic, bottom-left, the statement above it */
+  .ch-phil .ph-pct{bottom:calc(var(--m) + 46px);gap:calc(18 * var(--u))}
+  .ch-phil .ph-pct .v{font-family:var(--fh)!important;font-size:max(120px, calc(330 * var(--u)))!important;line-height:.74!important;letter-spacing:-.08em!important;margin-left:-.03em}
+  .ch-phil .ph-pct sup{font-size:.2em!important;letter-spacing:0;margin-left:.14em;color:#EBEBEB}
+  /* 02 · the verbs: the sentence's enumeration set as a list — one verb a row; rows already lived are marked, the current one is inverted */
+  .ch-phil .ph-vs{width:calc(760 * var(--u))}
+  .ch-phil .ph-vin{text-indent:0!important;width:auto!important;margin-bottom:calc(14 * var(--u))!important}
+  .ch-phil .ph-vl{margin:0;font-family:var(--fh);font-weight:400;text-transform:uppercase;font-size:min(var(--t-h2), 6.3vh);line-height:1;letter-spacing:-.07em;color:#EBEBEB}
+  .ch-phil .ph-vl .vr{display:flex;align-items:center;justify-content:space-between;padding:.07em .14em .09em 0;border-top:1px solid rgba(235,235,235,.3);transition:background-color .45s, color .45s, padding .6s cubic-bezier(.16,1,.3,1)}
+  .ch-phil .ph-vl .vr:last-child{border-bottom:1px solid rgba(235,235,235,.3)}
+  .ch-phil .ph-vl .vr .vt{flex:0 0 auto;margin-right:auto}
+  .ch-phil .ph-vl .vr .vb{background:none!important;box-shadow:none!important;color:inherit!important;margin:0!important}
+  .ch-phil .ph-vl .vr i{flex:0 0 auto;width:.15em;height:.15em;border:1px solid currentColor;transition:background-color .45s}
+  .ch-phil .ph-vl .vr:has(.vb.on) i{background:currentColor}
+  .ch-phil .ph-vl .vr:has(.vb.cur){background:#EBEBEB;color:#000;padding-left:.22em}
+
+  /* 03 · the figure opens the chart: on the top line, above the ruler */
+  .ch-about .ch-pct{top:var(--top-line);gap:calc(18 * var(--u))}
+  .ch-about .ch-pct .v{font-size:max(96px, calc(300 * var(--u)))!important;line-height:.74!important;margin-left:-.03em}
+  .ch-about .ch-pct sup{font-size:.2em!important;margin-left:.14em}
+  /* 03 · the closing: two small bricks on the first and second quarter, the button at the far end */
+  .ch-about .ch-t > .st .st-b{grid-template-columns:calc(480 * var(--u) - var(--m)) calc(480 * var(--u)) minmax(0,1fr) auto;gap:0}
+  .ch-about .ch-t > .st .st-b .ch-p{max-width:calc(400 * var(--u))}
+  .ch-about .ch-t > .st .st-b .pill{grid-column:4}
+
+  /* 07, the closing: the thought on the top line, the answer at the bottom, the frame grows between them */
+  .ch-appr .ch-t > .fin{top:0;bottom:0;transform:none;display:flex;flex-direction:column;justify-content:space-between}
+  .ch-appr .ch-t > .fin .ch-h{font-weight:400!important;font-size:var(--t-h2)!important;line-height:.98!important;letter-spacing:-.07em!important;margin:0;white-space:nowrap;padding-left:1em;text-indent:-1em}
+}
+@media (max-aspect-ratio: 1/1){
+  .ch .say .t2{color:inherit}
+  /* 07: a head and its text are two phases now; on the phone they stack in one column */
+  .ch-appr .ch-t{grid-template-rows:auto auto}
+  .ch-appr .ch-t > div{grid-row:1 / 3}
+  .ch-appr .ch-t > .row1{grid-row:1}
+  .ch-appr .ch-t > .row2{grid-row:2;align-self:start;padding-top:14px;background:#000}
+}
