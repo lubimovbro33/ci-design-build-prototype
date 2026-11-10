@@ -204,7 +204,7 @@
         var pr = sg(hr, t.v.h, t.v.h + .9); t.ring.setAttribute('r', f1(4 + 26 * eo(pr))); t.ring.style.opacity = (1 - pr).toFixed(3);
         var vb = vbs.filter(function(v){ return v.textContent.trim() === t.v.k; })[0]; if (vb) vb.classList.toggle('on', seen && p < .9); });
       var curK = null, curH = -1; tags.forEach(function(t){ if (hr >= t.v.h && t.v.h > curH){ curH = t.v.h; curK = t.v.k; } });
-      vbs.forEach(function(v){ v.classList.toggle('cur', p < .9 && v.textContent.trim() === curK); });
+      vbs.forEach(function(v){ v.classList.toggle("vcur", p < .9 && v.textContent.trim() === curK); });
       /* the years */
       var ky = sg(p, .74, .84); gYrs.style.setProperty('--k', ky.toFixed(3)); gYrs.style.opacity = (1 - sg(p, .9, .97)).toFixed(3);
       YR.forEach(function(y, i){ y.t2.style.opacity = sg(ky, i * .22 + .1, i * .22 + .3).toFixed(3); }); yrLab.style.opacity = sg(ky, .7, 1).toFixed(3);
@@ -763,8 +763,8 @@
   function process4(){
     var sec = document.getElementById('process'); if (!sec || !sec.classList.contains('pr4')) return null;
     var pin = sec.querySelector('.ch-pin'), stage = sec.querySelector('.pr4-stage'), svg = sec.querySelector('#pr4Svg'), t1 = sec.querySelector('.pr4-t1'), t2 = sec.querySelector('.pr4-t2');
-    var bws = [].slice.call(sec.querySelectorAll('.pr4-bw')), labs = [].slice.call(sec.querySelectorAll('.pr4-lab')), sq = sec.querySelector('.pr4-sq'), end = sec.querySelector('.pr4-end'), big = sec.querySelector('.pr4-big');
-    var fr = sec.querySelector('.pr4-fr'), ims = [].slice.call(sec.querySelectorAll('.pr4-im')), labsBox = sec.querySelector('.pr4-labs'), cap = sec.querySelector('.pr4-cap'), cv = sec.querySelector('.pr4-cv'), FR = [0, 0, 1, 1], curI = -1;
+    var bws = [].slice.call(sec.querySelectorAll('.pr4-bw')), labs = [].slice.call(sec.querySelectorAll('.pr5-lab')), sq = sec.querySelector('.pr4-sq'), end = sec.querySelector('.pr4-end'), big = sec.querySelector('.pr4-big');
+    var fr = sec.querySelector('.pr5-fr'), ims = [].slice.call(sec.querySelectorAll('.pr5-im')), labsBox = sec.querySelector('.pr5-labs'), cap = sec.querySelector('.pr5-cap'), POR = false, cv = sec.querySelector('.pr4-cv'), FR = [0, 0, 1, 1], curI = -1;
     var cx = cv && cv.getContext('2d'); if (!cx) return null;
     var nds = labs.map(function(){ return el('rect', {width: 9, height: 9, 'class': 'nd'}, svg); });
     var CAPS = ims.map(function(f){ var c = f.querySelector('figcaption'); return c ? c.textContent : ''; });
@@ -778,17 +778,20 @@
     function size(){ var r = stage.getBoundingClientRect(), por = r.width < r.height; W = r.width; H = r.height; svg.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H));
       DPR = Math.min(window.devicePixelRatio || 1, 2); cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
       var m = parseFloat(getComputedStyle(stage).getPropertyValue('--m')) || 48, hd = parseFloat(getComputedStyle(stage).getPropertyValue('--hdr')) || 70;
-      X0 = W * (por ? .07 : .06); X1 = W * (por ? .78 : .8); Y = H * (por ? .84 : .78); RL = Math.min(W * (1 - X1 / W - .05), H * (por ? .1 : .16));
+      POR = por;
+      /* v11 (10.11): on desktop the line runs margin to margin and carries six columns — a photograph standing on it, the step under it */
+      X0 = por ? W * .07 : m; X1 = por ? W * .78 : W - m; Y = H * (por ? .84 : .7); RL = por ? Math.min(W * (1 - X1 / W - .05), H * .1) : 0;
       KR = Math.min(W * (por ? .3 : .16), H * .21) / 2.9; KX = W * .5; KY = H * .63;
       var pw = por ? Math.min(W * .34, 170) : Math.max(190, Math.min(W * .15, 300)), ph = pw * 1.25;
       var ft = hd + (por ? 24 : 92);   /* polish: the photo's top on the same line as the title beside it (.pr4-t2 top = hdr + 92) */
       FR = [W - m - pw, ft, W - m, ft + ph];
-      fr.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[1]) + 'px)'; fr.style.width = f1(pw) + 'px'; fr.style.height = f1(ph) + 'px';
-      cap.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[3] + 12) + 'px)'; cap.style.width = f1(pw) + 'px';
+      if (por){ fr.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[1]) + 'px)'; fr.style.width = f1(pw) + 'px'; fr.style.height = f1(ph) + 'px';
+        cap.style.transform = 'translate(' + f1(FR[0]) + 'px,' + f1(FR[3] + 12) + 'px)'; cap.style.width = f1(pw) + 'px'; }
+      else { fr.style.transform = fr.style.width = fr.style.height = cap.style.transform = cap.style.width = ''; fr.style.bottom = f1(H - Y + 16) + 'px'; }
       labs.forEach(function(l, k){ l.style.left = f1(nx(k)) + 'px'; l.style.top = f1(Y + 18) + 'px'; });
       nds.forEach(function(n, k){ n.setAttribute('x', f1(nx(k) - 4.5)); n.setAttribute('y', f1(Y - 4.5)); });
       big.style.setProperty('--bt', f1(por ? Y - 200 : Y - 70 - Math.max(34, W * 66 / 1920) - 120) + 'px'); }
-    function nx(k){ return X0 + k / 5 * (X1 - X0) * .96; }
+    function nx(k){ return POR ? X0 + k / 5 * (X1 - X0) * .96 : X0 + k / 6 * (X1 - X0); }
     var T0 = performance.now();
     function draw(){
       var T = (performance.now() - T0) / 1000, p = P;
@@ -825,12 +828,13 @@
       /* the six steps: the square walks them; the step's word rises above the line */
       var ok = e > .985, s = sg(p, .42, .82), a = s * 5, k = ok && p < .86 ? Math.round(a) : (p >= .86 ? 5 : -1), r = sg(p, .83, .88);
       nds.forEach(function(n, i){ n.style.opacity = ok ? 1 : 0; n.classList.toggle('on', ok && i <= a + .01); });
-      labs.forEach(function(l, i){ l.style.opacity = ok ? 1 : 0; l.classList.toggle('on', ok && i === k && p < .86); });
+      labs.forEach(function(l, i){ l.style.opacity = ok ? 1 : 0; l.classList.toggle('on', ok && i === k && p < .86); l.classList.toggle('got', ok && i <= Math.max(k, p >= .86 ? 5 : 0)); });
       if (ok){ var x = nx(0) + (nx(5) - nx(0)) * s, y = Y; if (r > 0){ x = nx(5) + (X1 + RL - nx(5)) * r; y = x > X1 ? Y - (x - X1) : Y; }
         sq.style.opacity = 1; sq.style.transform = 'translate3d(' + f1(x) + 'px,' + f1(y) + 'px,0)'; } else sq.style.opacity = 0;
       /* the real home, small: one photograph per step in the top-right corner, its caption under it */
       var ki = !ok ? 0 : p >= .86 ? 5 : Math.max(0, k);
-      if (ki !== curI){ var pv = curI; curI = ki; ims.forEach(function(im, i){ im.classList.toggle('on', i === ki); im.classList.toggle('was', i === pv && pv !== ki); }); cap.textContent = (CAPS[ki] || '').replace(' · ', '\n'); }
+      var kj = ok ? ki : -1;
+      if (kj !== curI){ var pv = curI; curI = kj; ims.forEach(function(im, i){ im.classList.toggle('on', i === kj); im.classList.toggle('was', i === pv && pv !== kj); im.classList.toggle('got', i <= kj); }); cap.textContent = (CAPS[ki] || '').replace(' · ', '\n'); }
       var fo = sg(p, .36, .42); fr.style.opacity = fo.toFixed(3); cap.style.opacity = fo.toFixed(3);
       var lo = 1 - sg(p, .88, .92); svg.style.opacity = lo.toFixed(3); labsBox.style.opacity = lo.toFixed(3); big.style.opacity = lo.toFixed(3); if (lo < 1) sq.style.opacity = lo.toFixed(3);
       var kk = p >= .86 ? -1 : k;

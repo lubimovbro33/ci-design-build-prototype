@@ -18,3 +18,39 @@
   /* a link that leads somewhere on this page closes the menu; the pages that are not built yet (href="#") leave it open */
   [].forEach.call(mn.querySelectorAll('a[href^="#"]'), function(a){ a.addEventListener('click', function(){ if (a.getAttribute('href').length > 1) close(); }); });
 })();
+
+/* ---------- v11 (10.11) · the rebuilt blocks: 09 Client (read on the scroll, then the datum line rises), 10 Reviews (two film cards) */
+(function(){
+  'use strict';
+  function c01(x){ return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function sg(p, a, b){ return c01((p - a) / (b - a)); }
+  function sm(x){ return x * x * (3 - 2 * x); }
+  var pins = [], tick = 0;
+  function run(){ tick = 0; var vh = window.innerHeight;
+    pins.forEach(function(o){ var r = o.el.getBoundingClientRect(); if (r.bottom < -vh || r.top > 2 * vh) return;
+      var p = c01(-r.top / Math.max(1, r.height - vh)); if (p !== o.p){ o.p = p; o.fn(p); } }); }
+  function ask(){ if (!tick) tick = requestAnimationFrame(run); }
+  window.addEventListener('scroll', ask, {passive: true}); window.addEventListener('resize', ask);
+
+  /* 09 CLIENT */
+  var cl = document.querySelector('.cl5');
+  if (cl){
+    var say = cl.querySelector('.cl5-say'), stage = cl.querySelector('.cl5-stage'), words = [], lit = 0;
+    say.textContent.split(/\s+/).filter(Boolean).forEach(function(w, i){ if (!i) say.textContent = ''; var s = document.createElement('span'); s.className = 'w'; s.textContent = w; say.appendChild(s); say.appendChild(document.createTextNode(' ')); words.push(s); });
+    pins.push({el: cl, p: -1, fn: function(p){
+      var k = Math.round(sg(p, .03, .4) * words.length);
+      if (k !== lit){ for (var i = Math.min(k, lit); i < Math.max(k, lit); i++) words[i].classList.toggle('lit', i < k); lit = k; }
+      stage.style.setProperty('--f', sg(p, .42, .5).toFixed(3));
+      stage.style.setProperty('--r', sm(sg(p, .48, .82)).toFixed(4));
+      stage.style.setProperty('--o2', sg(p, .84, .92).toFixed(3)); }});
+  }
+
+  /* 10 REVIEWS */
+  var rv = document.querySelector('.rv5');
+  if (rv){
+    var cards = [].slice.call(rv.querySelectorAll('.rv5-c')), qs = [].slice.call(rv.querySelectorAll('.rv5-q'));
+    var act = function(i){ cards.forEach(function(c, j){ c.classList.toggle('on', j === i); }); qs.forEach(function(q, j){ q.classList.toggle('on', j === i); }); };
+    cards.forEach(function(c, i){ c.addEventListener('mouseenter', function(){ act(i); }); c.addEventListener('focus', function(){ act(i); }); c.addEventListener('click', function(){ act(i); }); });
+  }
+  ask();
+})();
