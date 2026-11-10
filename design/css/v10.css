@@ -30,7 +30,7 @@
   .ch-phil .ph-t > .st .ph-h + .ph-h{margin-top:3.3em}
   .ch-phil .ch-pin{height:660vh}   /* a little more room so the statement can rest before the chapter leaves */
   .ch-phil .ph-t > .st .ph-h.acc{color:var(--acc)}
-  .ch-phil .ch-stage.st-on .ph-plan,.ch-phil .ch-stage.st-on .ph-pct{opacity:calc(1 - var(--st, 0))!important}
+  .ch-phil .ch-stage.st-on .ph-plan,.ch-phil .ch-stage.st-on .ph-pct{opacity:calc(1 - min(1, var(--st, 0) * 2.6))!important}   /* the plan is gone before the lines are sharp */
 
   /* 03 About, scene 3: statement on top, the line of decisions across the whole width, the explanation and the button under it */
   .ch-about .ch-t > .st{position:absolute;left:0;top:calc(50% + 23px);transform:translateY(-50%);width:calc(100vw - 2 * var(--m));height:calc(100vh - var(--top-line) - 110px);display:flex;flex-direction:column;justify-content:space-between}
