@@ -19,6 +19,45 @@
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   var LITE = document.documentElement.classList.contains('lite');                 /* phones: no per-frame blur filters */
 
+  /* v10 · text choreography. Every phase of a pinned chapter comes in line by line (the hero's focus-in), on the scroll.
+     Words are wrapped once (.w); each knows its line (--l), the phase knows how many lines it has (--n) and where it is
+     (--kin, --kout); CSS does the rest. A phase marked .st is a statement: it reports its presence to the stage (--st). */
+  var PHASES = [].slice.call(document.querySelectorAll('.ph-t > [data-a], .ch-t > [data-a], .cl-t > [data-a]'));
+  function splitPhase(e){
+    [].forEach.call(e.querySelectorAll('h2,h3,p'), function(b){
+      var tw = document.createTreeWalker(b, NodeFilter.SHOW_TEXT, null), nodes = [], n; while ((n = tw.nextNode())) nodes.push(n);
+      nodes.forEach(function(t){ if (!t.nodeValue.trim()) return;
+        var fr = document.createDocumentFragment();
+        t.nodeValue.split(/([ \n\t]+)/).forEach(function(x){ if (!x) return;
+          if (/^[ \n\t]+$/.test(x)){ fr.appendChild(document.createTextNode(' ')); return; }
+          var w = document.createElement('span'); w.className = 'w'; w.textContent = x; fr.appendChild(w); });
+        t.parentNode.replaceChild(fr, t); }); });
+    [].forEach.call(e.querySelectorAll('.pill, .ph-tag'), function(x){ x.classList.add('wx'); });
+    e.classList.add('sp');
+  }
+  function linesOf(e){
+    var line = -1, top = -1e9;
+    [].forEach.call(e.querySelectorAll('.w, .wx'), function(w){
+      if (w.classList.contains('wx')){ line++; top = -1e9; } else { var t = w.offsetTop; if (Math.abs(t - top) > 3){ line++; top = t; } }
+      w.style.setProperty('--l', line); });
+    e.style.setProperty('--n', Math.max(1, line + 1));
+  }
+  PHASES.forEach(splitPhase);
+  function measurePhases(){ PHASES.forEach(linesOf); }
+  measurePhases(); window.addEventListener('resize', measurePhases);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(measurePhases);
+  function phase(e, p){
+    var a = +e.dataset.a, b = +e.dataset.b, len = Math.min(1, b - a), st8 = e.classList.contains('st'),
+        din = st8 ? .03 : Math.min(.045, len * .4), dout = Math.min(.028, len * .25),   /* short phases keep a moment of rest */
+        kin = sg(p, a, a + din), kout = sg(p, b - dout, b), key = kin.toFixed(3) + '/' + kout.toFixed(3);
+    if (e.__ph === key) return; e.__ph = key;
+    e.style.setProperty('--kin', kin.toFixed(3)); e.style.setProperty('--kout', kout.toFixed(3));
+    e.style.visibility = kin > 0 && kout < 1 ? '' : 'hidden';
+    if (!LITE){ var bl = (1 - kin) * 5 + kout * 4; e.style.filter = bl > .05 ? 'blur(' + bl.toFixed(2) + 'px)' : ''; }
+    if (e.classList.contains('st')){ var st = e.__st || (e.__st = e.closest('.ch-stage')), v = kin * (1 - kout);
+      if (st){ st.style.setProperty('--st', v.toFixed(3)); st.classList.toggle('st-on', v > 0); } }
+  }
+
   /* a hairline that draws itself: pathLength 1, its own delay --d inside its group's progress --k (CSS does the rest) */
   function line(g, d, cls, delay){ var p = el('path', {d: d, pathLength: 1, 'class': 'dw ' + (cls || ''), 'vector-effect': 'non-scaling-stroke'}, g); p.style.setProperty('--d', f1(delay || 0)); return p; }
   function seg(x1, y1, x2, y2){ return 'M' + f1(x1) + ' ' + f1(y1) + 'L' + f1(x2) + ' ' + f1(y2); }
@@ -133,8 +172,7 @@
 
     function update(p){
       /* text: one phase at a time, cross-fading with a small rise */
-      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
-        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      phases.forEach(function(e){ phase(e, p); });
       /* the plan draws itself, then dims a little at the close */
       var kd = sg(p, .0, .12); [gWall, gWin, gDoor, gFur].forEach(function(g){ g.style.setProperty('--k', kd.toFixed(3)); });
       gAll.style.opacity = (1 - .45 * sg(p, .9, 1)).toFixed(3);
@@ -254,7 +292,7 @@
     var hat = MS.slice(1).map(function(m, i){ var a = MS[i]; return {e: el('rect', {x: a * PW + 14, y: -6, width: 0, height: 12, fill: 'url(#abStW)', 'class': 'br'}, gO), w: (m - a) * PW - 28}; });
     var dots = MS.map(function(m){ return el('rect', {x: m * PW - 5, y: -5, width: 10, height: 10, 'class': 'ms'}, gO); });
 
-    var LY = null, last = -1;
+    var LY = null, last = -1, OWN_DS = 1;
     function layout(){
       var w = svg.clientWidth || window.innerWidth, h = svg.clientHeight || window.innerHeight, port = w / h < 1, VW = port ? 1080 : 1920, VH = VW * h / w;
       svg.setAttribute('viewBox', '0 0 ' + VW + ' ' + f1(VH));
@@ -275,14 +313,16 @@
       /* scene 2's chart and scene 3's line: x 760…1840, the chart from y 540, the line across the middle; full width on portrait */
       var tx0 = port ? m : 760, tw = port ? VW - 2 * m : 1080, sc2 = tw / 1080, ty0 = port ? VH * .5 : 540;
       gT.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(ty0) + ') scale(' + sc2.toFixed(4) + ')');
-      gO.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(port ? VH * .62 : VH * .5) + ') scale(' + sc2.toFixed(4) + ')');
+      /* v10: scene 3 is a statement — the line of decisions runs the full width under it */
+      var mU = 48 * VW / w, sc3 = port ? sc2 : (VW - 2 * mU) / 1080;
+      OWN_DS = Math.max(1, sc3); gO.style.setProperty('--ds', OWN_DS.toFixed(3));   /* non-scaling strokes dash in screen units */
+      gO.setAttribute('transform', 'translate(' + f1(port ? tx0 : mU) + ' ' + f1(port ? VH * .62 : VH * .56) + ') scale(' + sc3.toFixed(4) + ')');
     }
     layout(); window.addEventListener('resize', function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });   /* the title's width needs the real font */
     function update(p){
       if (p === last) return; last = p;
-      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
-        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      phases.forEach(function(e){ phase(e, p); });
       /* the five layers draw, spread apart in their own frames; then they come together and register */
       /* draw .00–.10, then it holds, whole, until .18 (user 15:27: let it be complete before it comes apart); apart .18–.30; together .38–.50 */
       var kd = sg(p, 0, .1), j = sm(sg(p, .38, .5)), fr = sg(p, .24, .3) * (1 - sg(p, .38, .44));
@@ -304,7 +344,7 @@
       var ks = sg(p, .7, .76); saved.style.strokeDashoffset = (1 - ks).toFixed(3); savT.forEach(function(e){ e.style.opacity = ks.toFixed(3); });
       txt(pctEl, Math.round(20 * eo(ks))); stage.style.setProperty('--pc', (sg(p, .66, .7) * (1 - out3)).toFixed(3));
       /* your decisions, our everything-in-between */
-      var km = sg(p, .82, .88); gO.style.opacity = sg(p, .81, .84).toFixed(3); own.style.strokeDashoffset = (1 - km).toFixed(3);
+      var km = sg(p, .82, .88); gO.style.opacity = sg(p, .81, .84).toFixed(3); own.style.strokeDashoffset = ((1 - km) * OWN_DS).toFixed(3);
       dots.forEach(function(d, i){ d.style.opacity = sg(p, .83 + i * .014, .85 + i * .014).toFixed(3); });
       hat.forEach(function(h, i){ var w = f1(h.w * eo(sg(p, .87 + i * .018, .93 + i * .018))); if (h.cw !== w){ h.cw = w; h.e.setAttribute('width', w); } });
     }
@@ -343,8 +383,7 @@
       return [ox + (q.x + 5) * k, oy + (q.y + 5) * k, (ww - 10) * k, (wh - 10) * k];
     }
     function update(p){
-      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
-        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      phases.forEach(function(e){ phase(e, p); });
       gF.style.setProperty('--k', sg(p, 0, .12).toFixed(3));
       lit.forEach(function(im, i){ im.setAttribute('opacity', sg(p, .13 + i * .03, .17 + i * .03).toFixed(3)); });
       var kreg = sg(p, .25, .34); gReg.style.setProperty('--k', kreg.toFixed(3)); gReg.style.opacity = (1 - sg(p, .38, .42)).toFixed(3);
@@ -382,8 +421,7 @@
       return { s: s, im: im, g: g };
     });
     function update(p){
-      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
-        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      phases.forEach(function(e){ phase(e, p); });
       var A = .17, D = .135, cur = 0;
       items.forEach(function(it, i){
         var a = A + i * D, on = sg(p, a - .01, a + .01) * (i === items.length - 1 ? 1 : 1 - sg(p, a + D - .01, a + D + .01));
@@ -566,8 +604,7 @@
     var lastSz = '';
     function update(p){
       var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
-      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
-        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      phases.forEach(function(e){ phase(e, p); });
       /* the questions type themselves; the one being asked is bright, the answered ones settle */
       var act = -1;
       rows.forEach(function(r, i){ var a = Q0 + i * QD, t = sg(p, a, a + QT), full = txs[i].dataset.t, n = Math.ceil(full.length * eo(t) - 1e-6);
@@ -632,8 +669,7 @@
       svg.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H)); X0 = m; X1 = W - m; Y0 = H * (W / H < 1 ? .5 : .7); A = H * (W / H < 1 ? .075 : .13); }
     function update(p){
       var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
-      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
-        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      phases.forEach(function(e){ phase(e, p); });
       /* the front: where the work has been brought together */
       var band = (X1 - X0) * .09, fx = X0 + (X1 - X0 + band * .6) * sg(p, .1, .88), kin = sg(p, .0, .08), t = p * 2.2;
       strands.forEach(function(s, j){
@@ -830,8 +866,7 @@
     function draw(e, k){ e.style.strokeDashoffset = (1 - k).toFixed(4); e.style.opacity = k > 0 ? '' : 0; }
     function update(p){
       var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz || !G){ lastSz = sz; layout(); }
-      phases.forEach(function(e){ var a = +e.dataset.a, b = +e.dataset.b, k = Math.min(sg(p, a, a + .03), 1 - sg(p, b - .03, b));
-        e.style.opacity = k.toFixed(3); e.style.transform = 'translateY(' + ((1 - eo(Math.min(1, sg(p, a, a + .05)))) * 18).toFixed(1) + 'px)'; e.style.visibility = k > 0 ? '' : 'hidden'; });
+      phases.forEach(function(e){ phase(e, p); });
       /* i · the portrait's frame: two lines leave one corner and meet, exactly, at the opposite one */
       var out1 = 1 - sm(sg(p, .42, .47)), kf = eo(sg(p, .03, .15));
       draw(fa, kf); draw(fb, kf); fa.style.opacity = fb.style.opacity = kf > 0 ? out1 : 0;

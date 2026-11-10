@@ -34,6 +34,7 @@
 <link rel="stylesheet" href="css/chapters.css">
 <link rel="stylesheet" href="css/type.css">
 <link rel="stylesheet" href="css/polish.css">
+<link rel="stylesheet" href="css/v10.css">
 <script>(function(){var h=location.hostname,q=location.search;if(/^ci-hero|^ci-preloader/.test(h)||/[?&]hero(=|&|$)/.test(q))document.documentElement.classList.add('hero-only');})();</script>
 <script>(function(){var d=document.documentElement,m=window.matchMedia,c=m&&m('(pointer: coarse)').matches,s=Math.max(screen.width||9999,screen.height||9999);if(c||s<1000||/[?&]lite/.test(location.search))d.classList.add('lite');})();</script>
 <script>(function(){if(!window.WebGL2RenderingContext)return;   /* the intro's textures, same picks as js/pre3d.js (hiDPI, room 1k/2k) */
@@ -45,6 +46,26 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
 </head>
 <body class="is-intro">
 <div class="cur" id="cur" aria-hidden="true"><span class="cd"><span class="cl">DRAG</span></span></div>
+
+<!-- ================================================================== MENU (v10): the left half is the list, the right half is a photograph that follows the pointer -->
+<div class="mn" id="mn" aria-hidden="true">
+  <div class="mn-ph" aria-hidden="true">
+    <img class="on" data-src="assets/img2/foyer_w.jpg" alt=""><img data-src="assets/img2/dining_w.jpg" alt=""><img data-src="assets/img2/kitchen_w.jpg" alt=""><img data-src="assets/img2/aerial.jpg" alt=""><img data-src="assets/img2/hall_w.jpg" alt=""><img data-src="assets/img2/shelf_w.jpg" alt="">
+  </div>
+  <nav class="mn-nav" aria-label="Menu">
+    <a href="#about"><i class="sq"></i><span class="t">About Us</span></a>
+    <a href="#projects"><i class="sq"></i><span class="t">Portfolio</span></a>
+    <a href="#suite"><i class="sq"></i><span class="t">Solutions</span></a>
+    <a href="#"><i class="sq"></i><span class="t">Broker Program</span></a>
+    <a href="#"><i class="sq"></i><span class="t">Partnerships</span></a>
+    <a href="#"><i class="sq"></i><span class="t">News</span></a>
+  </nav>
+  <div class="mn-ft">
+    <div>215 W Huron Street<br>Suite 1<br>Chicago, IL 60654</div>
+    <div>312 279 2776<br><span class="ph">[sales@cidesignbuild.com]</span><br><a href="#faq">FAQ</a> · <a href="#cta">Contact</a></div>
+    <div class="mn-soc"><a href="#">Instagram</a><a href="#">LinkedIn</a><a href="#">Pinterest</a><a href="#">Facebook</a></div>
+  </div>
+</div>
 
 <header class="hdr" id="hdr">
   <div class="hdr-in">
@@ -132,8 +153,8 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
         <div data-a=".11" data-b=".25"><p class="ph-lead">The average person spends 75% of their day at home. The quality of that environment shapes everything — your lifestyle, your health, your longevity goals.</p></div>
         <div data-a=".25" data-b=".35"><h3 class="ph-h">We believe the best homes begin with life, not a look.</h3></div>
         <div data-a=".35" data-b=".86"><p class="ph-lead ph-verbs">How you want to <span class="vb">wake up</span>, <span class="vb">entertain</span>, <span class="vb">recharge</span>, <span class="vb">recover</span>, <span class="vb">collect</span>, <span class="vb">gather</span>, how you want light to move through your morning. What you want your life to feel like and be in five, ten, or twenty years from now.</p></div>
-        <div data-a=".86" data-b=".94"><div class="ph-tag mono"><span class="ln"></span>This is part of the CI concierge level service</div><p class="ph-p">Rather than designing around a predetermined aesthetic, we design around your lifestyle. Architecture, materials, lighting, furnishings, technology, art, and wellness become part of one considered environment.</p></div>
-        <div data-a=".94" data-b="9"><h3 class="ph-h">Because good design<br> should change<br> more than the home.</h3><h3 class="ph-h dim">It should change<br> the experience<br> of living in it.</h3></div>
+        <div data-a=".86" data-b=".93"><div class="ph-tag mono"><span class="ln"></span>This is part of the CI concierge level service</div><p class="ph-p">Rather than designing around a predetermined aesthetic, we design around your lifestyle. Architecture, materials, lighting, furnishings, technology, art, and wellness become part of one considered environment.</p></div>
+        <div data-a=".93" data-b="9" class="st"><h3 class="ph-h">Because good design<br> should change<br> more than the home.</h3><h3 class="ph-h acc">It should change<br> the experience<br> of living in it.</h3></div>
       </div>
       <svg class="ph-plan" id="phPlan" viewBox="-150 -175 1300 1010" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
       <div class="ph-pct"><span class="v"><span id="phPct">0</span><sup>%</sup></span><span class="mono">OF THE DAY · AT HOME</span></div>
@@ -152,7 +173,7 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
         <div data-a=".52" data-b=".62"><p class="ch-lead">Every factor/step — architecture, interior design, construction, furnishings, art, wellness, procurement, installation, and project management — under one roof, one team, one curated by the CI process from day one.</p></div>
         <div data-a=".62" data-b=".72"><h3 class="ch-h">Your time is irreplaceable.</h3><p class="ch-lead sub">Our curated CI process is built to protect it.</p></div>
         <div data-a=".72" data-b=".82"><p class="ch-lead">We save our clients an average of 20% of their project time. Time you don't get back — unless you have the right team from the beginning.</p></div>
-        <div data-a=".82" data-b="9"><h3 class="ch-h">You stay involved where your vision matters most.</h3><h3 class="ch-h acc">We own everything<br> in between.</h3><p class="ch-p">The result is what concierge-level service actually looks like — you remain involved where your perspective matters most, while CI handles everything else. The seamless CI process, clear communication, and a home where every detail was considered before you ever had to ask.</p><a class="pill solid ch-pill" href="#"><span class="dot"></span><span class="t lab">Discover CI Design + Build</span></a></div>
+        <div data-a=".82" data-b="9" class="st"><div class="st-h"><h3 class="ch-h">You stay involved<br class="bd"> where your vision matters most.</h3><h3 class="ch-h acc">We own everything<br class="bm"> in between.</h3></div><div class="st-b"><p class="ch-p">The result is what concierge-level service actually looks like — you remain involved where your perspective matters most, while CI handles everything else. The seamless CI process, clear communication, and a home where every detail was considered before you ever had to ask.</p><a class="pill solid ch-pill" href="#"><span class="dot"></span><span class="t lab">Discover CI Design + Build</span></a></div></div>
       </div>
       <svg class="ab-draw" id="abDraw" viewBox="-340 -180 1660 1200" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
       <div class="ch-pct"><span class="v"><span id="abPct">0</span><sup>%</sup></span><span class="mono">PROJECT TIME SAVED · AVERAGE</span></div>
@@ -441,10 +462,12 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
     <nav class="ft-col"><span class="mono lab">Solutions</span><a href="#">All Solutions</a><a href="#">CI Turnkey</a><a href="#">CI Core</a><a href="#">CI Curated</a><a href="#">CI Wellness</a></nav>
     <nav class="ft-col"><span class="mono lab">Social</span><a href="#">Instagram</a><a href="#">LinkedIn</a><a href="#">Pinterest</a><a href="#">Facebook</a></nav>
   </div>
+  <p class="ft-big">Building You<br class="bm"> a Better Life</p>
   <svg class="ft-city" id="ftCity" viewBox="0 0 1600 340" preserveAspectRatio="xMidYMax slice" aria-hidden="true"></svg>
   <div class="ft-bot mono"><span>CI DESIGN + BUILD</span><span>CHICAGO · SOUTH FLORIDA</span></div>
 </footer>
 
+<div class="grain" aria-hidden="true"></div>
 <nav class="chap mono" id="chap" aria-label="Chapters">
   <a href="#hpin" data-ch="hpin"><span>01</span><span class="t">Home</span><i></i></a>
   <a href="#philosophy" data-ch="philosophy"><span>02</span><span class="t">Philosophy</span><i></i></a>
@@ -458,5 +481,6 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
 <script type="module" src="js/pre3d.js"></script>
 <script src="js/site.js"></script>
 <script src="js/chapters.js"></script>
+<script src="js/v10.js"></script>
 </body>
 </html>

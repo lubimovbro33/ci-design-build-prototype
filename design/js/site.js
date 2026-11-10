@@ -625,6 +625,7 @@
     if (!chap) return;
     var ftr = $('footer'), ftop = ftr ? ftr.getBoundingClientRect().top : 1e9;   /* the footer has its own street line: the rail steps aside */
     chap.classList.toggle('show', state.done && y > vh * .7 && ftop > vh * .92);
+    var gr = chap.__gr || (chap.__gr = document.querySelector('.grain')); if (gr) gr.classList.toggle('on', state.done && y > vh * .7);   /* v10: grain from the first drawn chapter on; the hero stays as approved */
     var idx = 0, tops = chapSecs.map(function(s){ return s.getBoundingClientRect().top + y; });
     for (var i = 0; i < tops.length; i++) if (y + vh * .5 >= tops[i]) idx = i;
     var next = idx + 1 < tops.length ? tops[idx + 1] : document.documentElement.scrollHeight - vh;
@@ -644,6 +645,7 @@
     window.addEventListener('wheel', function(e){
       if (!state.done || e.ctrlKey) return;
       e.preventDefault();
+      if (document.documentElement.classList.contains('mn-open')) return;   /* v10: the page holds still under the open menu */
       var d = e.deltaY; if (e.deltaMode === 1) d *= 16; else if (e.deltaMode === 2) d *= window.innerHeight;
       d = Math.max(-140, Math.min(140, d));
       if (!sm.on) { sm.on = true; sm.c = sm.t = window.scrollY; }
