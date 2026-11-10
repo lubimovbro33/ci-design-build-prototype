@@ -397,3 +397,20 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
   .pj4-ctl{left:calc(504 * var(--u))}
   .pj4 .pj4-nm{font-size:max(40px, calc(111 * var(--u)))!important;line-height:.9!important}
 }
+
+/* ---------- 16 · 03 ABOUT, the time scene rebuilt in solid planes (10.11 06:26) */
+.ch-about .ch-pct{display:none!important}
+.ch-about .ab-time .rl{stroke-opacity:.45}
+.ch-about .ab-time .tk, .ch-about .ab-time .tl2, .ch-about .ab-time .nm{font-family:var(--fh);font-size:10.6px;letter-spacing:0;fill:#EBEBEB}
+.ch-about .ab-time .nm{font-size:8.4px}
+.ch-about .ab-time .k{fill:#000}
+.ch-about .ab-time .tb{fill:#636366}
+.ch-about .ab-time .cb{fill:#EBEBEB}
+.ch-about .ab-time .cl{fill:#000}
+.ch-about .ab-time .sb{fill:#96A9BF}
+.ch-about .ab-time .big{font-family:var(--fh);font-size:74px;letter-spacing:-.08em;fill:#000}
+.ch-about .ab-time .big .pc{font-size:22px;letter-spacing:0}
+@media (max-aspect-ratio: 1/1){
+  .ch-about .ab-time .tk, .ch-about .ab-time .tl2{font-size:24px}
+  .ch-about .ab-time .nm{display:none}
+}

@@ -277,17 +277,32 @@
     [['abStG', '#7B8087'], ['abStW', '#EBEBEB']].forEach(function(q){ var pt = el('pattern', {id: q[0], width: 4, height: 12, patternUnits: 'userSpaceOnUse'}, defs); el('rect', {width: 1, height: 12, fill: q[1]}, pt); });
     var gT = el('g', {'class': 'ab-time'}, svg), PW = 1080;
     var trad = [[0, .16], [.21, .37], [.42, .66], [.71, .84], [.88, 1]], ci = [[0, .2], [.08, .36], [.18, .66], [.4, .72], [.56, .8]];
-    el('path', {d: seg(0, 26, PW, 26), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
-    [0, .25, .5, .75, 1].forEach(function(t, i){ el('path', {d: seg(t * PW, 21, t * PW, 31), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
-      var tt = el('text', {x: t * PW, y: 10, 'class': 'tk', 'text-anchor': i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}, gT); tt.textContent = i === 4 ? '100%' : String(t * 100); });
-    var lab1 = el('text', {x: 0, y: 76, 'class': 'tl2'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
-    var lab2 = el('text', {x: 0, y: 214, 'class': 'tl2 hi'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
-    var bars = [];
-    trad.forEach(function(b, i){ bars.push({e: el('rect', {x: b[0] * PW, y: 90 + i * 22, width: 0, height: 12, fill: 'url(#abStG)', 'class': 'br'}, gT), w: (b[1] - b[0]) * PW, d: i * .08}); });
-    ci.forEach(function(b, i){ bars.push({e: el('rect', {x: b[0] * PW, y: 228 + i * 22, width: 0, height: 12, fill: 'url(#abStW)', 'class': 'br'}, gT), w: (b[1] - b[0]) * PW, d: .3 + i * .06}); });
-    var saved = el('path', {d: seg(PW * .8, 360, PW, 360), 'class': 'sav', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gT);
-    var savT = [el('path', {d: seg(PW * .8, 352, PW * .8, 368), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT), el('path', {d: seg(PW, 352, PW, 368), 'class': 'sav', 'vector-effect': 'non-scaling-stroke'}, gT)];
-    var svT = el('text', {x: PW, y: 344, 'class': 'tk hi', 'text-anchor': 'end'}, gT); svT.textContent = '\u221220%'; savT.push(svT);
+    /* v12 (10.11 06:26: "всё контурное, сливается"). The same comparison, in solid planes that read in a second:
+       row 1 — the traditional model: five grey blocks with waiting (hatched) between them, running to 100 %;
+       row 2 — CI: one light plane, the same five works overlapping inside it, finished at 80 %; the fifth that is left is
+       a blue plane carrying the figure — the card of the hero (label top-left, figure bottom-left, square bottom-right). */
+    var TY = 40, TH = 48, CY = 126, CH2 = 100, SX = PW * .8;
+    el('path', {d: seg(0, 0, PW, 0), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
+    [0, .25, .5, .75, 1].forEach(function(t, i){ el('path', {d: seg(t * PW, -4, t * PW, 4), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
+      var tt = el('text', {x: t * PW, y: -12, 'class': 'tk', 'text-anchor': i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}, gT); tt.textContent = i === 4 ? '100%' : String(t * 100); });
+    var lab1 = el('text', {x: 0, y: TY - 9, 'class': 'tl2'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
+    var lab2 = el('text', {x: 0, y: CY - 9, 'class': 'tl2'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
+    var bars = [], fades = [];
+    var TN = ['ARCHITECTS', 'DESIGNERS', 'CONTRACTORS', 'VENDORS', 'INSTALLERS'], CN = ['ARCHITECTURE', 'INTERIOR DESIGN', 'CONSTRUCTION', 'FURNISHINGS', 'INSTALLATION'];
+    trad.forEach(function(b, i){ var d = i * .2;
+      if (i){ var g0 = trad[i - 1][1]; fades.push({e: el('rect', {x: g0 * PW + 3, y: TY, width: (b[0] - g0) * PW - 6, height: TH, fill: 'url(#abStG)', opacity: 0}, gT), d: d - .05}); }
+      bars.push({e: el('rect', {x: b[0] * PW, y: TY, width: 0, height: TH, 'class': 'tb'}, gT), w: (b[1] - b[0]) * PW, d: d});
+      var t = el('text', {x: b[0] * PW + 9, y: TY + 17, 'class': 'nm', opacity: 0}, gT); t.textContent = TN[i]; fades.push({e: t, d: d + .1}); });
+    var ciP = el('rect', {x: 0, y: CY, width: 0, height: CH2, 'class': 'cb'}, gT);
+    ci.forEach(function(b, i){ var y = CY + 17 + i * 18, d = 1.25 + i * .12;
+      var t = el('text', {x: b[0] * PW + 9, y: y, 'class': 'nm k', opacity: 0}, gT); t.textContent = CN[i]; fades.push({e: t, d: d});
+      bars.push({e: el('rect', {x: b[0] * PW + 9, y: y + 4, width: 0, height: 1.6, 'class': 'cl'}, gT), w: (b[1] - b[0]) * PW - 18, d: d}); });
+    var svB = el('rect', {x: SX + 3, y: CY, width: 0, height: CH2, 'class': 'sb'}, gT), SW = PW - SX - 3;
+    var svG = el('g', {opacity: 0}, gT);
+    var s1 = el('text', {x: SX + 13, y: CY + 17, 'class': 'nm k'}, svG); s1.textContent = 'PROJECT TIME SAVED';
+    var s2 = el('text', {x: SX + 13, y: CY + 28, 'class': 'nm k'}, svG); s2.textContent = 'AVERAGE';
+    var svN = el('text', {x: SX + 9, y: CY + CH2 - 11, 'class': 'big'}, svG), svV = el('tspan', {}, svN), svP = el('tspan', {'class': 'pc', dx: 3, dy: -23}, svN); svV.textContent = '0'; svP.textContent = '%';
+    el('rect', {x: PW - 16, y: CY + CH2 - 16, width: 6, height: 6, fill: '#000'}, svG);
     /* scene 3: your decisions (squares) on one line; everything in between, hatched, is ours */
     var gO = el('g', {'class': 'ab-own'}, svg), MS = [0, .22, .41, .63, 1];
     var own = el('path', {d: seg(0, 0, PW, 0), 'class': 'own', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gO);
@@ -313,7 +328,7 @@
         return [x + 10 * sc, y - 50 * sc, sc]; }) };
       gH.setAttribute('transform', 'translate(' + f1(LY.house[0]) + ' ' + f1(LY.house[1]) + ') scale(' + LY.house[2].toFixed(4) + ')');
       /* scene 2's chart and scene 3's line: x 760…1840, the chart from y 540, the line across the middle; full width on portrait */
-      var tx0 = port ? m : 760, tw = port ? VW - 2 * m : 1080, sc2 = tw / 1080, ty0 = port ? VH * .5 : 540;
+      var mT = 48 * VW / w, tx0 = port ? m : mT, tw = port ? VW - 2 * m : VW - 2 * mT, sc2 = tw / 1080, ty0 = port ? VH * .34 : VH / 2 - 106 * sc2;
       gT.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(ty0) + ') scale(' + sc2.toFixed(4) + ')');
       /* v10: scene 3 is a statement — the line of decisions runs the full width under it */
       var mU = 48 * VW / w, sc3 = port ? sc2 : (VW - 2 * mU) / 1080;
@@ -342,9 +357,11 @@
       var tk = sm(sg(p, .6, .66)), out3 = sm(sg(p, .79, .83)), ho = (1 - sm(sg(p, .59, .64))).toFixed(3);
       gSec.style.opacity = ho; gRoof.style.opacity = ho; gDis.style.opacity = ho;
       gT.style.opacity = (tk * (1 - out3)).toFixed(3);
-      bars.forEach(function(b){ var k = sg(p, .63 + b.d * .1, .67 + b.d * .1), w = f1(b.w * eo(k)); if (b.cw !== w){ b.cw = w; b.e.setAttribute('width', w); } });
-      var ks = sg(p, .7, .76); saved.style.strokeDashoffset = (1 - ks).toFixed(3); savT.forEach(function(e){ e.style.opacity = ks.toFixed(3); });
-      txt(pctEl, Math.round(20 * eo(ks))); stage.style.setProperty('--pc', (sg(p, .66, .7) * (1 - out3)).toFixed(3));
+      bars.forEach(function(b){ var k = sg(p, .63 + b.d * .04, .665 + b.d * .04), w = f1(b.w * eo(k)); if (b.cw !== w){ b.cw = w; b.e.setAttribute('width', w); } });
+      fades.forEach(function(f){ var o = sg(p, .64 + f.d * .04, .665 + f.d * .04).toFixed(2); if (f.co !== o){ f.co = o; f.e.setAttribute('opacity', o); } });
+      var kc = f1(SX * eo(sg(p, .665, .7))); if (ciP.__w !== kc){ ciP.__w = kc; ciP.setAttribute('width', kc); }
+      var ks = sg(p, .71, .76), sw = f1(SW * eo(ks)); if (svB.__w !== sw){ svB.__w = sw; svB.setAttribute('width', sw); }
+      svG.setAttribute('opacity', sg(p, .725, .75).toFixed(2)); txt(svV, Math.round(20 * eo(ks))); txt(pctEl, Math.round(20 * eo(ks)));
       /* your decisions, our everything-in-between */
       var km = sg(p, .82, .88); gO.style.opacity = sg(p, .81, .84).toFixed(3); own.style.strokeDashoffset = ((1 - km) * OWN_DS).toFixed(3);
       dots.forEach(function(d, i){ d.style.opacity = sg(p, .83 + i * .014, .85 + i * .014).toFixed(3); });
