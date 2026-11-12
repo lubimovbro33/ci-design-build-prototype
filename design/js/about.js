@@ -23,7 +23,7 @@
   /* ------------------------------------------------------------------ typograph: no hanging short words, the last two words tied */
   (function(){
     var SHORT; try { SHORT = new RegExp('(?<=^|[\\s(“"])(a|an|the|of|to|in|on|at|by|for|and|or|but|is|it|we|our|your|you|with|from|as|so|no|not|one|CI|—|–)\\s+(?=\\S)', 'gi'); } catch (e) { return; }
-    qsa('.a-say, .a-p, .ql-c, .pr .pl').forEach(function(n){
+    qsa('.a-say, .a-p, .a-big, .ql-l, .ql-p, .pr .pl, .tc-b p').forEach(function(n){
       var tw = document.createTreeWalker(n, NodeFilter.SHOW_TEXT), t, last = null;
       while ((t = tw.nextNode())){ t.nodeValue = t.nodeValue.replace(SHORT, function(m, w){ return w + ' '; }).replace(/\s+(—|–)/g, ' $1'); if (/\S/.test(t.nodeValue)) last = t; }
       if (last) last.nodeValue = last.nodeValue.replace(/\s+(\S+\s*)$/, ' $1');
@@ -46,17 +46,10 @@
     return out;
   }
   function Moment(node){
-    var o = {el: node, words: [], kin: -1, kout: -1, blur: node.classList.contains('a-h2'), box: !!node.querySelector('[data-k]') || node.hasAttribute('data-box')};
+    var o = {el: node, words: [], kin: -1, kout: -1, blur: node.classList.contains('a-h2'), box: !!node.querySelector('[data-k]')};
     var k = (node.getAttribute('data-k') || '0 0 2 2').trim().split(/\s+/).map(parseFloat);
     o.a = k[0]; o.b = k[1]; o.c = k[2]; o.d = k[3];
     if (!o.box) o.words = split(node);
-    var cws = o.words.filter(function(w){ var f = w.closest('[data-fx="ch"]'); return f && node.contains(f); });
-    if (cws.length){
-      var sd = 0; [].forEach.call(node.textContent, function(c){ sd = (sd * 31 + c.charCodeAt(0)) % 2147483647; }); sd = sd || 7;
-      o.chars = [];
-      cws.forEach(function(w){ var t = w.textContent; w.textContent = ''; [].forEach.call(t, function(c){ var e = document.createElement('span'); e.className = 'c'; e.textContent = c; w.appendChild(e); sd = (sd * 16807) % 2147483647; o.chars.push({e: e, r: (sd - 1) / 2147483646}); }); });
-      o.words = o.words.filter(function(w){ return cws.indexOf(w) < 0; });
-    }
     return o;
   }
   function setMoment(o, kin, kout){
@@ -73,7 +66,6 @@
     if (kin !== o.kin){
       if (o.box){ if (kout <= 0){ st.opacity = eo(kin).toFixed(3); st.transform = 'translateY(' + ((1 - eo(kin)) * 26).toFixed(1) + 'px)'; } }
       else {
-        if (o.chars) for (var ci = 0; ci < o.chars.length; ci++){ var cc = o.chars[ci], qq = c01(kin * 1.8 - cc.r * .8), v = qq >= 1 ? '' : (qq * qq * (3 - 2 * qq)).toFixed(3); if (cc.v !== v){ cc.v = v; cc.e.style.opacity = v; } }
         var N = o.words.length, S = Math.min(1.4, .25 + N * .035);
         for (var j = 0; j < N; j++){
           var q = c01(kin * (1 + S) - (j / Math.max(1, N - 1)) * S), e = eo(q), w = o.words[j].style;
@@ -188,12 +180,11 @@
   var SC = [];
   function Scene(id, fn, opt){
     var sec = $(id); if (!sec) return null;
-    var o = {sec: sec, fn: fn || function(){}, last: -1, top: 0, h: 0, ms: qsa('.a-stage .m', sec).map(Moment), live: opt && opt.live};
+    var o = {sec: sec, fn: fn || function(){}, last: -1, top: 0, h: 0, ms: qsa('.a-stage .m', sec).map(Moment), live: opt && opt.live, vis: false};
     SC.push(o); return o;
   }
-  function M(){ return parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) || 48; }
 
-  /* ---------- 01 COVER: built on load */
+  /* ---------- 01 COVER: built on load — construction lines, the letters drawn, filled from the ground up; then the words */
   (function(){
     var cv = qs('.a-cover'); if (!cv) return;
     var ms = qsa('.m0', cv).map(function(n){ n.style.opacity = 1; return Moment(n); });
@@ -207,139 +198,199 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ setTimeout(go, 120); }); else setTimeout(go, 300);
   })();
 
-  /* ---------- 02 STORY: the finish board rises beside the statement; then "one" three times at full scale */
+  /* ---------- 02 OUR STORY: many voices (noisy lines) settle into one clear line; the values heard most clearly sit on it */
   (function(){
-    var ph = $('stPh'); if (!ph) return;
-    var rows = qsa('.st-r', $('a-story')).map(Moment);
-    Scene('a-story', function(p){
-      var r = eio(sg(p, .03, .16)), o = sg(p, .27, .33);
-      ph.style.setProperty('--r', ((1 - r) * 100).toFixed(2) + '%'); ph.style.setProperty('--z', r.toFixed(3));
-      ph.style.opacity = (1 - o).toFixed(3);
-      rows.forEach(function(m){ runMoment(m, p); });
-    });
+    var cvs = $('stCv'); if (!cvs) return;
+    var ctx = cvs.getContext('2d'), vals = qsa('#stVals span'), W = 0, H = 0, DPR = 1, P = 0;
+    var seed = 7; function rnd(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
+    var V = []; for (var i = 0; i < 18; i++) V.push({a: .35 + rnd() * .65, f1: 1.2 + rnd() * 3.2, f2: 5 + rnd() * 9, p1: rnd() * 6.3, p2: rnd() * 6.3, s1: .25 + rnd() * .5, s2: .5 + rnd() * .9, off: (rnd() * 2 - 1), al: .18 + rnd() * .3});
+    function size(){ DPR = Math.min(2, window.devicePixelRatio || 1); W = cvs.clientWidth; H = cvs.clientHeight; cvs.width = Math.round(W * DPR); cvs.height = Math.round(H * DPR); }
+    size(); window.addEventListener('resize', size);
+    function draw(now){
+      var t = now / 1000, m = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) || 48, u = U();
+      var n = 1 - eio(sg(P, .3, .56)), y0 = H * .53, x0 = m, x1 = W - m, span = x1 - x0;
+      ctx.setTransform(DPR, 0, 0, DPR, 0, 0); ctx.clearRect(0, 0, W, H);
+      var steps = Math.max(80, Math.round(span / 6));
+      for (var i = 0; i < V.length; i++){
+        var v = V[i], A = (18 + 74 * v.a) * (H / 900) * n, off = v.off * H * .16 * n;
+        ctx.beginPath();
+        for (var s = 0; s <= steps; s++){
+          var fx = s / steps, x = x0 + fx * span, env = Math.pow(Math.sin(Math.PI * fx), .6);
+          var mxp = MX > 0 ? Math.exp(-Math.pow((x - MX) / 120, 2)) * Math.exp(-Math.pow((y0 - MY) / 260, 2)) : 0;
+          var y = y0 + env * (off + A * (.62 * Math.sin(v.f1 * fx * 6.283 + v.p1 + t * v.s1) + .38 * Math.sin(v.f2 * fx * 6.283 + v.p2 - t * v.s2))) + mxp * n * 26 * Math.sin(t * 3 + i);
+          if (s) ctx.lineTo(x, y); else ctx.moveTo(x, y);
+        }
+        ctx.strokeStyle = 'rgba(235,235,235,' + (lerp(v.al, 1, 1 - n)).toFixed(3) + ')'; ctx.lineWidth = n < .02 ? 1.4 : 1; ctx.stroke();
+        if (n < .02) break;   /* settled: they are one line */
+      }
+      var sq = Math.max(7, 12 * u);
+      for (var k = 0; k < 5; k++){
+        var a = sg(P, .58 + k * .028, .62 + k * .028), x = x0 + span * (k + .5) / 5;
+        if (a > 0){ ctx.fillStyle = '#EBEBEB'; var s2 = sq * eo(a); ctx.fillRect(x - s2 / 2, y0 - s2 / 2, s2, s2); }
+        var vs = vals[k].style, o = (a * (1 - sg(P, .82, .88))).toFixed(3), tr = 'translate(' + f1(x) + 'px,' + f1(y0 - 30 * Math.max(.7, u) - (1 - eo(a)) * 14) + 'px) translate(-50%,-100%)';
+        if (vals[k].__o !== o + tr){ vals[k].__o = o + tr; vs.opacity = o; vs.transform = tr; }
+      }
+    }
+    var sc = Scene('a-story', function(p){ P = p; }, {live: draw});
   })();
 
-  /* ---------- 03 WHY CI + THE MODEL: ten loads sag one beam; one central support takes them; the level line then carries each pair */
+  /* ---------- 03 WHY CI EXISTS: ten loads hang from one beam — it sags; one central support rises and the line is level again */
   (function(){
     var svg = $('ldSvg'); if (!svg) return;
     var beam = $('ldBeam'), col = $('ldCol'), sup = $('ldSup'), thg = $('ldTh'), ci = $('ldCi'), lds = qsa('#ldWs .ld'), N = lds.length, P = 0;
-    var pps = qsa('#pw .pp'), rs = qsa('.rs-w .rs').map(Moment), PA = .64, PS = .037;
-    pps.forEach(function(pp){ qsa(':scope > span', pp).forEach(function(s){ s.setAttribute('data-fx', 'ch'); }); });
-    var pm = pps.map(function(pp){ return qsa(':scope > span', pp).map(Moment); });
     var seed = 3; function rnd(){ seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; }
     var L = lds.map(function(_, i){ return {L0: (i % 2 ? 150 : 70) + rnd() * 70, ph: rnd() * 6.3, w: 1.1 + rnd() * .7, th: 0, path: el('path', {}, thg)}; });
     function draw(now){
-      var t = now / 1000, W = svg.clientWidth, H = svg.clientHeight, m = M(), k = H / 900;
-      var x0 = m, x1 = W - m, y0 = H * .4, span = x1 - x0;
-      var fix = eio(sg(P, .24, .33)), drop = 0, ds = [], gone = sg(P, .5, .54);
-      for (var i = 0; i < N; i++){ var a = .05 + i * .014, d = sg(P, a, a + .03); ds.push(d); drop += eo(d); }
+      var t = now / 1000, W = svg.clientWidth, H = svg.clientHeight, m = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) || 48, k = H / 900;
+      var x0 = m, x1 = W - m, y0 = H * .37, span = x1 - x0;
+      var fix = eio(sg(P, .42, .56)), drop = 0, ds = [];
+      for (var i = 0; i < N; i++){ var a = .1 + i * .024, d = sg(P, a, a + .045); ds.push(d); drop += eo(d); }
       var D = H * .15 * (drop / N) * (1 - fix);
       function yb(x){ return y0 + D * Math.sin(Math.PI * c01((x - x0) / span)); }
       var dpath = ''; for (var s = 0; s <= 60; s++){ var x = x0 + span * s / 60; dpath += (s ? 'L' : 'M') + f1(x) + ' ' + f1(yb(x)); }
       beam.setAttribute('d', dpath);
       var tri = 16 * k; sup.setAttribute('d', 'M' + f1(x0 - tri * .7) + ' ' + f1(y0 + tri) + 'L' + f1(x0) + ' ' + f1(y0) + 'L' + f1(x0 + tri * .7) + ' ' + f1(y0 + tri) + 'Z M' + f1(x1 - tri * .7) + ' ' + f1(y0 + tri) + 'L' + f1(x1) + ' ' + f1(y0) + 'L' + f1(x1 + tri * .7) + ' ' + f1(y0 + tri) + 'Z');
-      var cr = eo(sg(P, .22, .3)), xc = x0 + span / 2, yTop = lerp(H, yb(xc), cr);
+      var cr = eo(sg(P, .4, .5)), xc = x0 + span / 2, yTop = lerp(H, yb(xc), cr);
       col.setAttribute('d', cr > 0 ? 'M' + f1(xc) + ' ' + f1(H) + 'V' + f1(yTop) : '');
-      var cis = ci.style; cis.opacity = sg(P, .28, .3).toFixed(3); cis.transform = 'translate(' + f1(xc) + 'px,' + f1(yb(xc)) + 'px) translate(-50%,-50%)';
+      var cis = ci.style, cio = sg(P, .47, .5).toFixed(3); cis.opacity = cio; cis.transform = 'translate(' + f1(xc) + 'px,' + f1(yb(xc)) + 'px) translate(-50%,-50%)';
       var Lf0 = 56 * k, Lf1 = 112 * k;
       for (var j = 0; j < N; j++){
-        var o = L[j], dd = ds[j], xx = x0 + span * (j + .5) / N, ya = yb(xx), len = lerp(o.L0 * k, j % 2 ? Lf1 : Lf0, fix) * (1 - eio(gone));
-        var mx = MX > 0 ? Math.max(-1, Math.min(1, (xx - MX) / 90)) * Math.exp(-Math.pow((xx - MX) / 110, 2)) * Math.exp(-Math.pow((ya + len - MY) / 160, 2)) : 0;
-        var target = ((.05 + .03 * Math.sin(o.ph)) * Math.sin(t * o.w + o.ph) + (1 - eo(dd)) * .5 * Math.sin(t * 5 + o.ph) + mx * .35) * (1 - fix);
+        var o = L[j], d = ds[j], x = x0 + span * (j + .5) / N, ya = yb(x), len = lerp(o.L0 * k, j % 2 ? Lf1 : Lf0, fix);
+        var mx = MX > 0 ? Math.max(-1, Math.min(1, (x - MX) / 90)) * Math.exp(-Math.pow((x - MX) / 110, 2)) * Math.exp(-Math.pow((ya + len - MY) / 160, 2)) : 0;
+        var target = ((.05 + .03 * Math.sin(o.ph)) * Math.sin(t * o.w + o.ph) + (1 - eo(d)) * .5 * Math.sin(t * 5 + o.ph) + mx * .35) * (1 - fix);
         o.th += (target - o.th) * .08;
-        var fall = (1 - eo(dd)) * (H * .14), ex = xx + Math.sin(o.th) * len, ey = ya + Math.cos(o.th) * len - fall;
-        o.path.setAttribute('d', dd > 0 && gone < 1 ? 'M' + f1(xx) + ' ' + f1(ya) + 'L' + f1(ex) + ' ' + f1(Math.max(ya, ey)) : '');
-        var st = lds[j].style; st.opacity = dd > 0 ? (eo(sg(dd, .35, 1)) * (1 - gone)).toFixed(3) : 0;
-        st.transform = 'translate(' + f1(ex) + 'px,' + f1(ey) + 'px) translate(-50%, -2px) rotate(' + (-o.th * 57.3).toFixed(2) + 'deg)';
+        var fall = (1 - eo(d)) * (H * .14), ex = x + Math.sin(o.th) * len, ey = ya + Math.cos(o.th) * len - fall;
+        o.path.setAttribute('d', d > 0 ? 'M' + f1(x) + ' ' + f1(ya - fall * 0) + 'L' + f1(ex) + ' ' + f1(Math.max(ya, ey)) : '');
+        var s = lds[j].style; s.opacity = d > 0 ? eo(sg(d, .35, 1)).toFixed(3) : 0;
+        s.transform = 'translate(' + f1(ex) + 'px,' + f1(ey) + 'px) translate(-50%, -2px) rotate(' + (-o.th * 57.3).toFixed(2) + 'deg)';
       }
-      /* the pairs stand on the level line, one at each support */
-      var gap = 14 * Math.max(.7, U());
-      pps.forEach(function(pp){ qsa(':scope > span', pp).forEach(function(s){ var hh = s.offsetHeight; s.style.top = f1(y0 - hh - gap) + 'px'; }); });
     }
-    Scene('a-why', function(p){
-      P = p;
-      for (var j = 0; j < 6; j++){
-        var a = PA + j * PS, kin = sg(p, a, a + PS * .45), kout = j < 5 ? sg(p, a + PS * .82, a + PS) : sg(p, .855, .875);
-        pm[j].forEach(function(o){ setMoment(o, kin, kout); }); setMoment(rs[j], sg(p, a + .004, a + PS * .5), kout);
-      }
-    }, {live: draw});
+    Scene('a-why', function(p){ P = p; }, {live: draw});
   })();
 
-  /* ---------- 04 STANDARD: drawing → the model in register → the finished room → the room as a sheet with its title block */
+  /* ---------- 04 THE CI MODEL: twelve words round a table; each pair speaks across it, through the same centre */
+  (function(){
+    var rg = $('rg'); if (!rg) return;
+    var ws = qsa('.rw', rg).sort(function(a, b){ return +a.getAttribute('data-k') - +b.getAttribute('data-k'); }), ring = $('rgRing'), chg = $('rgCh'), rs = qsa('.rs-w .rs').map(Moment);
+    var ch = []; for (var j = 0; j < 6; j++) ch.push(el('line', {pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1}, chg));
+    ring.setAttribute('pathLength', 1); ring.setAttribute('stroke-dasharray', '1 1');
+    var G = {};
+    function layout(){
+      var W = rg.clientWidth, H = rg.clientHeight, u = U(), m = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--m')) || 48;
+      G.cx = W * .655; G.cy = H * .53; G.R = Math.min(H * .29, W * .2); G.gap = 16 * Math.max(.7, u);
+      ring.setAttribute('cx', f1(G.cx)); ring.setAttribute('cy', f1(G.cy)); ring.setAttribute('r', f1(G.R));
+      qs('.rg-c', rg).style.left = f1(G.cx) + 'px'; qs('.rg-c', rg).style.top = f1(G.cy) + 'px';
+      ws.forEach(function(w, k){
+        var a = (-90 + k * 30) * Math.PI / 180, cx = Math.cos(a), sy = Math.sin(a), x = G.cx + (G.R + G.gap) * cx, y = G.cy + (G.R + G.gap) * sy;
+        var tx = Math.abs(cx) < .2 ? '-50%' : cx > 0 ? '0%' : '-100%', ty = Math.abs(sy) < .2 ? '-50%' : sy > 0 ? '0%' : '-100%';
+        w.style.transform = 'translate(' + f1(x) + 'px,' + f1(y) + 'px) translate(' + tx + ',' + ty + ')';
+      });
+      for (var j = 0; j < 6; j++){
+        var a1 = (-90 + j * 30) * Math.PI / 180, a2 = a1 + Math.PI;
+        ch[j].setAttribute('x1', f1(G.cx + G.R * Math.cos(a1))); ch[j].setAttribute('y1', f1(G.cy + G.R * Math.sin(a1)));
+        ch[j].setAttribute('x2', f1(G.cx + G.R * Math.cos(a2))); ch[j].setAttribute('y2', f1(G.cy + G.R * Math.sin(a2)));
+      }
+    }
+    layout(); window.addEventListener('resize', layout);
+    var A = .17, STEP = .088;
+    Scene('a-model', function(p){
+      var wi = sg(p, .02, .12), out = sg(p, .9, .96);
+      var cur = -1; for (var j = 0; j < 6; j++){ if (p >= A + j * STEP && p < A + (j + 1) * STEP) cur = j; }
+      ws.forEach(function(w, k){ var j = k % 6, o = (wi * (1 - out * .5)).toFixed(3); if (w.__o !== o){ w.__o = o; w.style.opacity = o; } w.classList.toggle('on', j === cur); });
+      for (j = 0; j < 6; j++){
+        var a = A + j * STEP, d = eio(sg(p, a, a + STEP * .55)), op = j === cur ? 1 : p > a ? .38 : 0;
+        if (p > A + 6 * STEP) op = lerp(.38, 1, sg(p, .7, .76));
+        ch[j].setAttribute('stroke-dashoffset', (1 - d).toFixed(4)); ch[j].style.opacity = op;
+        setMoment(rs[j], sg(p, a + .005, a + .03), sg(p, a + STEP - .012, a + STEP));
+      }
+      rg.classList.toggle('c-on', p > A + STEP * .3);
+      ring.setAttribute('stroke-dashoffset', (1 - eio(sg(p, .7, .8))).toFixed(4));
+      rg.style.opacity = (1 - out * .65).toFixed(3);
+    });
+  })();
+
+  /* ---------- 05 THE STANDARD: the drawing draws itself, the model appears under it in register, the finished room is wiped in */
   (function(){
     var f = $('qlF'), svg = $('qlLn'); if (!f || !svg) return;
     var lines = [], cut = $('qlCut'), clay = qs('.ql-clay', f), P = -1;
     fetch('assets/about/lines.json').then(function(r){ return r.json(); }).then(function(d){
-      d.l.forEach(function(l, i){ lines.push({e: el('line', {x1: l[0], y1: l[1], x2: l[2], y2: l[3], pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1, 'stroke-opacity': (.3 + .6 * l[4]).toFixed(2), 'stroke-width': (.8 + .7 * l[4]).toFixed(2)}, svg), i: i, n: d.l.length, last: -1}); });
+      d.l.forEach(function(l, i){ lines.push({e: el('line', {x1: l[0], y1: l[1], x2: l[2], y2: l[3], pathLength: 1, 'stroke-dasharray': '1 1', 'stroke-dashoffset': 1, 'stroke-opacity': (.35 + .65 * l[4]).toFixed(2), 'stroke-width': (.8 + .7 * l[4]).toFixed(2)}, svg), i: i, n: d.l.length, last: -1}); });
       if (P >= 0) upd(P);
     }).catch(function(){});
     function upd(p){
       P = p;
-      for (var i = 0; i < lines.length; i++){ var o = lines[i], a = .04 + (o.i / o.n) * .2, d = eio(sg(p, a, a + .06)), v = Math.round(d * 1000) / 1000; if (v !== o.last){ o.last = v; o.e.setAttribute('stroke-dashoffset', (1 - v).toFixed(3)); } }
-      clay.style.opacity = (sg(p, .3, .4) * .92).toFixed(3);
-      f.style.setProperty('--x', (eio(sg(p, .42, .64)) * 100).toFixed(2) + '%');
-      cut.style.opacity = (sg(p, .4, .44) * (1 - sg(p, .64, .68))).toFixed(3);
-      svg.style.opacity = (1 - sg(p, .62, .7)).toFixed(3);
-      f.style.setProperty('--cb', (eio(sg(p, .68, .78)) * 34).toFixed(2) + '%');
+      for (var i = 0; i < lines.length; i++){ var o = lines[i], a = .06 + (o.i / o.n) * .22, d = eio(sg(p, a, a + .07)), v = Math.round(d * 1000) / 1000; if (v !== o.last){ o.last = v; o.e.setAttribute('stroke-dashoffset', (1 - v).toFixed(3)); } }
+      clay.style.opacity = (sg(p, .3, .42) * .92).toFixed(3);
+      var x = eio(sg(p, .48, .8)) * 100; f.style.setProperty('--x', x.toFixed(2) + '%');
+      cut.style.opacity = (sg(p, .46, .5) * (1 - sg(p, .8, .84))).toFixed(3);
+      svg.style.opacity = (1 - sg(p, .8, .9) * .85).toFixed(3);
     }
-    var cms = qsa('[data-k]', qs('.ql-tb')).map(Moment);
-    Scene('a-standard', function(p){ upd(p); cms.forEach(function(o){ runMoment(o, p); }); });
+    var card = qs('.ql-card'), cms = qsa('[data-k]', card).map(Moment);
+    Scene('a-standard', function(p){ upd(p); cms.forEach(function(o){ runMoment(o, p); var k = eo(sg(p, o.a, o.b)), h = o.el.__h || (o.el.__h = o.el.scrollHeight); o.el.style.maxHeight = k > 0 ? (k * h + 2).toFixed(1) + 'px' : '0px'; o.el.style.marginBottom = k > 0 ? '' : '0'; }); });
+    window.addEventListener('resize', function(){ cms.forEach(function(o){ o.el.style.maxHeight = ''; o.el.__h = 0; }); });
   })();
 
-  /* ---------- 05 FOR YOU: "your …" rolls through a life until it becomes "yours." */
+  /* ---------- 06 AROUND YOU: "your …" rolls through a life, until it becomes "yours." */
   (function(){
     var sl = $('lfSl'); if (!sl) return;
     var ws = qsa('.sw', sl), ims = qsa('#lfPh img'), ph = $('lfPh'), sx = qs('.lf-s', sl), N = ws.length, on = -1;
     Scene('a-you', function(p){
-      var raw = sg(p, .17, .74) * (N - 1) + sg(p, .755, .8), fl = Math.floor(raw), fr = raw - fl, f = Math.min(N, fl + eio(c01((fr - .55) / .45)));
-      ws.forEach(function(w, j){ var d = j - f, s = w.style, o = c01(1 - Math.abs(d) * 1.4); s.transform = 'translateY(' + (d * 2.1).toFixed(3) + 'em)'; s.opacity = o.toFixed(3); s.visibility = o > 0 ? '' : 'hidden'; });
+      var raw = sg(p, .18, .74) * (N - 1) + sg(p, .755, .8), fl = Math.floor(raw), fr = raw - fl, f = Math.min(N, fl + eio(c01((fr - .55) / .45)));
+      ws.forEach(function(w, j){ var d = j - f, s = w.style, o = c01(1 - Math.abs(d) * 1.4); s.transform = 'translateY(' + (d * 2.05).toFixed(3) + 'em)'; s.opacity = o.toFixed(3); s.visibility = o > 0 ? '' : 'hidden'; });
       var i = Math.max(0, Math.min(N - 1, Math.round(f)));
       if (i !== on){ if (on >= 0) ims[on].classList.remove('on'); on = i; ims[i].classList.add('on'); }
-      sl.style.opacity = sg(p, .13, .18).toFixed(3);
-      ph.style.opacity = (sg(p, .13, .18) * (1 - sg(p, .74, .8))).toFixed(3);
+      sl.style.opacity = sg(p, .14, .2).toFixed(3);
+      ph.style.opacity = (sg(p, .14, .2) * (1 - sg(p, .74, .8))).toFixed(3);
       sx.style.clipPath = 'inset(0 ' + ((1 - eio(sg(p, .76, .82))) * 100).toFixed(1) + '% 0 0)';
-      sl.style.transform = 'translateY(-55%) scale(' + (1 + eio(sg(p, .78, .9)) * .55).toFixed(4) + ')';
+      sl.style.transform = 'translateY(-58%) scale(' + (1 + eio(sg(p, .78, .9)) * .45).toFixed(4) + ')'; sl.style.transformOrigin = '0 50%';
     });
   })();
 
-  /* ---------- 06 TEAM: everything comes in with the section's own position, not a timer */
+  /* ---------- 07 OUR TEAM: the disciplines run as one line under one roof; the cards turn over */
   (function(){
     var sec = $('a-team'); if (!sec) return;
-    var rvs = qsa('.rv', sec).map(Moment), figs = qsa('.tm-ph figure', sec);
+    var run = $('tmRun'), roof = $('tmRoof'), rvs = qsa('.rv', sec).map(Moment);
     rvs.forEach(function(o){ o.el.style.opacity = 1; setMoment(o, 0, 0); o.el.style.visibility = ''; });
+    if ('IntersectionObserver' in window){
+      var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (!e.isIntersecting) return; io.unobserve(e.target); var o = rvs.filter(function(r){ return r.el === e.target; })[0]; if (o) play(o, 0, 1300); }); }, {rootMargin: '0px 0px -12% 0px'});
+      rvs.forEach(function(o){ io.observe(o.el); });
+    } else rvs.forEach(function(o){ setMoment(o, 1, 0); });
+    qsa('.tc', sec).forEach(function(c){ c.addEventListener('click', function(){ if (coarse) c.classList.toggle('flip'); }); });
     SC.push({sec: sec, fn: function(){}, last: -1, ms: [], free: function(vh){
-      var r = sec.getBoundingClientRect(); if (r.bottom < -200 || r.top > vh + 200) return;
-      rvs.forEach(function(o){ var t = o.el.getBoundingClientRect().top; setMoment(o, sg(vh - t, vh * .08, vh * (o.el.classList.contains('tm-wall') ? .62 : .38)), 0); });
-      figs.forEach(function(fg){ var t = fg.getBoundingClientRect(), k = eo(sg(vh - t.top, 0, vh * .8)); fg.style.setProperty('--k', k.toFixed(3)); fg.style.clipPath = 'inset(' + ((1 - eio(sg(vh - t.top, vh * .05, vh * .55))) * 100).toFixed(2) + '% 0 0 0)'; });
+      var r = sec.getBoundingClientRect(); if (r.bottom < -100 || r.top > vh + 100) return;
+      var rr = roof.getBoundingClientRect(), k = (vh - rr.top) / (vh + rr.height), half = run.scrollWidth / 2;
+      run.style.transform = 'translate3d(' + (-(k * .9 + .05) * half).toFixed(1) + 'px,0,0)';
     }});
   })();
 
-  /* ---------- 07 EXPERIENCE + PRINCIPLES: the seam closes until it disappears; the commitments; then the principles, row by row */
+  /* ---------- 08 THE EXPERIENCE: a seam that closes until it disappears; then what that takes, row by row */
   (function(){
     var s = $('sm'); if (!s) return;
-    var hl = $('xpHl'), rows = qsa('#prB .pr');
+    var rows = qsa('#xpL li');
     Scene('a-exp', function(p){
-      var fs = parseFloat(getComputedStyle(s).fontSize), k = eio(sg(p, .02, .18));
+      var fs = parseFloat(getComputedStyle(s).fontSize), k = eio(sg(p, .03, .24));
       s.style.setProperty('--d', ((1 - k) * fs * .42).toFixed(1) + 'px');
-      s.style.setProperty('--so', (1 - sg(p, .15, .2)).toFixed(3));
-      var out = sg(p, .2, .24), inn = sg(p, 0, .02);
+      s.style.setProperty('--so', (1 - sg(p, .2, .26)).toFixed(3));
+      var out = sg(p, .27, .33), inn = sg(p, 0, .03);
       s.style.opacity = (eo(inn) * (1 - out)).toFixed(3); s.style.filter = out > 0 ? 'blur(' + (out * 10).toFixed(1) + 'px)' : '';
-      hl.classList.toggle('on', p >= .37 && p < .46);
-      rows.forEach(function(r, i){ var a = .65 + i * .042, l = sg(p, a, a + .042); r.style.setProperty('--t', eo(sg(l, 0, .6)).toFixed(4)); r.classList.toggle('on', l > 0 && l < 1); });
+      rows.forEach(function(r, i){ var a = .56 + i * .062; r.classList.toggle('on', p >= a && p < a + .062); r.classList.toggle('seen', p >= a + .062); });
     });
   })();
 
-  /* ---------- 08 CTA: the next title is drawn, not built; it fills when you begin */
+  /* ---------- 09 PRINCIPLES: seven floors, from the ground up; the one being built is lit */
   (function(){
-    var sec = $('a-cta'); if (!sec) return;
-    var svg = qs('.ct-h .cv-t', sec), gd = qs('.ct-h .cv-gd', sec), grid = qs('.ct-grid', sec), go = qs('.ct-go', sec);
-    function fill(on){ sec.classList.toggle('fill', on); }
-    if (go){ go.addEventListener('pointerenter', function(){ fill(true); }); go.addEventListener('pointerleave', function(){ fill(false); }); go.addEventListener('focus', function(){ fill(true); }); go.addEventListener('blur', function(){ fill(false); }); }
-    Scene('a-cta', function(p){
-      var g = eio(sg(p, .02, .22)).toFixed(4), k = sg(p, .12, .5).toFixed(4);
-      gd.style.setProperty('--g', g); grid.style.setProperty('--g', g); svg.style.setProperty('--k', k);
-      if (coarse) fill(p > .9);
+    var b = $('prB'); if (!b) return;
+    var rows = qsa('.pr', b).sort(function(x, y){ return +x.getAttribute('data-i') - +y.getAttribute('data-i'); }), top = rows[rows.length - 1];
+    Scene('a-principles', function(p){
+      rows.forEach(function(r, i){ var a = .08 + i * .108, l = sg(p, a, a + .108); r.style.setProperty('--s', eio(sg(l, 0, .45)).toFixed(4)); r.style.setProperty('--t', eo(sg(l, .3, .8)).toFixed(4)); r.classList.toggle('on', l > 0 && l < 1 && p < .84); });
+      top.style.setProperty('--roof', eio(sg(p, .84, .94)).toFixed(4));
     });
+  })();
+
+  /* ---------- 10 CTA: the door opens onto the lit room */
+  (function(){
+    var d = $('dr'); if (!d) return;
+    Scene('a-cta', function(p){ d.style.setProperty('--o', eio(sg(p, .08, .6)).toFixed(4)); });
   })();
 
   /* ================================================================== FOOTER · the homepage's street in hairlines; one window is ours */
