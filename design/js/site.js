@@ -464,7 +464,7 @@
         var e = side < 0 ? ext[i2].l : ext[i2].r, x1 = e[0] + side * 64;
         LD.l.setAttribute('d', 'M' + e[0].toFixed(1) + ' ' + e[1].toFixed(1) + 'H' + x1.toFixed(1));
         LD.q.setAttribute('x', (side < 0 ? x1 - 7 : x1).toFixed(1)); LD.q.setAttribute('y', (e[1] - 3.5).toFixed(1));
-        var uu = vw / 1920, wP = Math.min(300 * uu, side < 0 ? x1 - 7 - 30 * uu - m : vw - m - x1 - 7 - 30 * uu), gp = Math.min(81 * uu, Math.max(24, (side < 0 ? x1 - 7 - m - wP : vw - m - x1 - 7 - wP)));
+        var uu = Math.min(vw / 1920, vh / 1080), wP = Math.min(338 * uu, side < 0 ? x1 - 7 - 30 * uu - m : vw - m - x1 - 7 - 30 * uu), gp = Math.min(81 * uu, Math.max(24, (side < 0 ? x1 - 7 - m - wP : vw - m - x1 - 7 - wP)));
         P.style.width = wP + 'px'; P.style.left = (side < 0 ? x1 - 7 - gp - wP : x1 + 7 + gp) + 'px';
         P.style.top = e[1] + 'px';
         LD.l.style.opacity = ld > 0 ? 1 : 0; LD.l.style.strokeDasharray = Math.max(ld, .0001) + ' 2'; LD.q.style.opacity = ld >= 1 ? 1 : 0;

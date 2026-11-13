@@ -313,20 +313,27 @@
        into two that overlap — "we own everything in between" stands in the overlap — then a smaller circle draws at each end;
        squares mark where the circles meet the line. Units: 1/1920 of the width, origin at the middle of the line. */
     var gC = el('g', {'class': 'ab-circ'}, svg);
-    var cgr = el('linearGradient', {id: 'abCg', x1: 0, y1: 0, x2: 1, y2: 1}, defs); el('stop', {offset: 0, 'stop-color': '#EBEBEB', 'stop-opacity': 1}, cgr); el('stop', {offset: .51, 'stop-color': '#EBEBEB', 'stop-opacity': .43}, cgr); el('stop', {offset: 1, 'stop-color': '#EBEBEB', 'stop-opacity': .43}, cgr);
+    /* her stroke paint (Figma 441:6745…): linear, paint opacity .33, stops 0 → alpha 1, .514 → alpha .43, transform .915 / −.024:
+       33 % at the edge that faces the middle of the screen, falling to 14 % at 59 % of the width, 14 % beyond. The circles are
+       drawn turned by ±90° (so the stroke starts at the top), hence the gradient runs along their local y. */
+    [['abCgA', .0262, 1.1191], ['abCgB', .9738, -.1191]].forEach(function(q){ var g = el('linearGradient', {id: q[0], x1: 0, x2: 0, y1: q[1], y2: q[2]}, defs);
+      el('stop', {offset: 0, 'stop-color': '#EBEBEB', 'stop-opacity': .33}, g); el('stop', {offset: .514, 'stop-color': '#EBEBEB', 'stop-opacity': .142}, g); el('stop', {offset: 1, 'stop-color': '#EBEBEB', 'stop-opacity': .142}, g); });
     var lgr = el('linearGradient', {id: 'abLg', gradientUnits: 'userSpaceOnUse', x1: -1020, y1: 0, x2: 1020, y2: 0}, defs); el('stop', {offset: 0, 'stop-color': '#EBEBEB', 'stop-opacity': .1}, lgr); el('stop', {offset: .5, 'stop-color': '#EBEBEB', 'stop-opacity': .33}, lgr); el('stop', {offset: 1, 'stop-color': '#EBEBEB', 'stop-opacity': .1}, lgr);
     var cLine = el('path', {d: 'M0 0H0', 'class': 'cl'}, gC), R1 = 245, R2 = 129, DX = 169, EX = 781;
     var mkC = function(r){ return el('circle', {r: r, cx: 0, cy: 0, 'class': 'cc', pathLength: 1, transform: 'rotate(-90)'}, gC); };
     var cA = mkC(R1), cB = mkC(R1), cS1 = mkC(R2), cS2 = mkC(R2);
+    cA.style.stroke = 'url(#abCgB)'; [cB, cS1, cS2].forEach(function(c){ c.style.stroke = 'url(#abCgA)'; });   /* each one brighter towards the middle */
     cS1.setAttribute('transform', 'translate(' + (-EX) + ' 0) rotate(90)'); cS2.setAttribute('transform', 'translate(' + EX + ' 0) rotate(-90)');
     var cQ = [-(EX - R2), -(DX + R1), DX + R1, EX - R2].map(function(x){ return el('rect', {x: x - 4, y: -4, width: 8, height: 8, 'class': 'cq', opacity: 0}, gC); });
-    var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .13;
+    var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .13, wsBox = one && one.querySelector('.ws');
+    function oneFit(){ if (!wsBox || oneW < 0 || !ows[oneW]) return; wsBox.style.width = Math.ceil(ows[oneW].getBoundingClientRect().width || ows[oneW].offsetWidth) + 'px'; }
     var LY = null, last = -1, OWN_DS = 1;
     function layout(){
       var w = svg.clientWidth || window.innerWidth, h = svg.clientHeight || window.innerHeight, port = w / h < 1, VW = port ? 1080 : 1920, VH = VW * h / w;
       svg.setAttribute('viewBox', '0 0 ' + VW + ' ' + f1(VH));
       /* v15 (user 15:27): bigger, and the walls (y 80…650, not the roof) centred on the screen from the first frame */
-      var hs = port ? VW * .76 / 880 : .86, cx = VW / 2, cy = port ? VH * .36 : VH / 2 + 10;
+      var k = port ? 1 : Math.min(1, (h / 1080) / (w / 1920));   /* r3: a window lower than 16:9 — the frame is fitted by height */
+      var hs = port ? VW * .76 / 880 : .86 * k, cx = VW / 2, cy = port ? VH * .36 : VH / 2 + 10 * k;
       var m = port ? 24 : 48 * VW / w, gap = 22, cols = port ? 3 : 5,   /* polish: the row keeps the text margin (48), not the header's 24 */
        cw = (VW - 2 * m - (cols - 1) * gap) / cols, sc = cw / 920, chh = 580 * sc;
       /* the row stands 24 above the chapter rule at the bottom (user 15:22: it ran into it on a 16:10 screen) */
@@ -347,16 +354,17 @@
       OWN_DS = Math.max(1, sc3); gO.style.setProperty('--ds', OWN_DS.toFixed(3));   /* non-scaling strokes dash in screen units */
       gO.setAttribute('transform', 'translate(' + f1(port ? tx0 : mU) + ' ' + f1(port ? VH * .62 : VH * .56) + ') scale(' + sc3.toFixed(4) + ')');
       /* r3: the chart hangs from the top (her frames: the ruler at 415 under the title, at 150 once the title has left); the circles sit on the middle */
-      LY.t = [tx0, sc2, port ? VH * .34 : 415, port ? VH * .3 : 150];
-      var cs = port ? VW / 1920 * .9 : 1; gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27) + ') scale(' + cs + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
+      LY.t = [port ? tx0 : (VW - tw * k) / 2, sc2 * k, port ? VH * .34 : 415 * k, port ? VH * .3 : 150 * k];
+      var cs = port ? VW / 1920 * .9 : k; gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27 * k) + ') scale(' + cs.toFixed(4) + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
     }
-    layout(); window.addEventListener('resize', function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });
-    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });   /* the title's width needs the real font */
+    layout(); window.addEventListener('resize', function(){ layout(); oneFit(); if (last >= 0){ var q = last; last = -1; update(q); } });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ layout(); oneFit(); if (last >= 0){ var q = last; last = -1; update(q); } });   /* the title's width needs the real font */
     function update(pi){
       if (pi === last) return; last = pi;
       /* r3: the chapter opens on "One ___": the word changes with the scroll, then the old timeline runs from its start */
       var wi = pi < .045 ? 0 : pi < .09 ? 1 : 2;
-      if (wi !== oneW){ oneW = wi; ows.forEach(function(b, i){ b.classList.toggle('on', i === wi); b.classList.toggle('up', i < wi); }); }
+      if (wi !== oneW){ var first = oneW < 0; oneW = wi; ows.forEach(function(b, i){ b.classList.toggle('on', i === wi); b.classList.toggle('up', i < wi); });
+        if (first && wsBox){ wsBox.style.transition = 'none'; oneFit(); void wsBox.offsetWidth; wsBox.style.transition = ''; } else oneFit(); }
       if (one){ var oo = 1 - sg(pi, .122, .142); one.style.opacity = oo.toFixed(3); one.style.visibility = oo > 0 ? '' : 'hidden'; if (!LITE) one.style.filter = oo < 1 ? 'blur(' + ((1 - oo) * 6).toFixed(1) + 'px)' : ''; }
       var p = sg(pi, IN, 1);
       phases.forEach(function(e){ phase(e, p); });
