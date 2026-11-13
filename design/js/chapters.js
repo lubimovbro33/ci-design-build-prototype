@@ -142,13 +142,13 @@
     });
     /* evening: lamps in the rooms where the evening happens */
     var gLamp = el('g', {}, svg); svg.insertBefore(gLamp, gAll);
-    var lampGrad = el('radialGradient', {id: 'phLamp'}, defs); el('stop', {offset: '0', 'stop-color': '#EBEBEB', 'stop-opacity': '.16'}, lampGrad); el('stop', {offset: '1', 'stop-color': '#EBEBEB', 'stop-opacity': '0'}, lampGrad);
+    var lampGrad = el('radialGradient', {id: 'phLamp'}, defs); el('stop', {offset: '0', 'stop-color': '#FFFFFF', 'stop-opacity': '.16'}, lampGrad); el('stop', {offset: '1', 'stop-color': '#FFFFFF', 'stop-opacity': '0'}, lampGrad);
     var LAMP = [ {x: 175, y: 440, r: 150, a: 19.5, b: 23.4}, {x: 520, y: 480, r: 190, a: 21, b: 23.6}, {x: 900, y: 470, r: 120, a: 22.6, b: 23.9}, {x: 165, y: 118, r: 110, a: 19, b: 22.4} ];
     LAMP.forEach(function(l){ l.e = el('circle', {cx: l.x, cy: l.y, r: l.r, fill: 'url(#phLamp)', opacity: 0}, gLamp); });
     /* sunlight: a shaft through every window the sun can see, travelling with the hour */
     wins.forEach(function(w, i){
       var gr = el('linearGradient', {id: 'phSun' + i, gradientUnits: 'userSpaceOnUse'}, defs);
-      el('stop', {offset: '0', 'stop-color': '#EBEBEB', 'stop-opacity': '.2'}, gr); el('stop', {offset: '.55', 'stop-color': '#EBEBEB', 'stop-opacity': '.07'}, gr); el('stop', {offset: '1', 'stop-color': '#EBEBEB', 'stop-opacity': '0'}, gr);
+      el('stop', {offset: '0', 'stop-color': '#FFFFFF', 'stop-opacity': '.2'}, gr); el('stop', {offset: '.55', 'stop-color': '#FFFFFF', 'stop-opacity': '.07'}, gr); el('stop', {offset: '1', 'stop-color': '#FFFFFF', 'stop-opacity': '0'}, gr);
       w.gr = gr; w.poly = el('polygon', {fill: 'url(#phSun' + i + ')', opacity: 0}, gLight);
     });
     /* the day as a scale bar under the plan (00 … 24); the hours at home fill it — 75 % */
@@ -225,7 +225,7 @@
     /* v13 (user 09.11 15:03, his frames 11/12): no rainbow — the design system's Bright Gray for every firm, hairline card frames;
        the house sits in the middle of the screen (frame 11: 644…1276 × 273…806 at 1920, ×.718) and comes apart into five cards in one
        straight row along the bottom (frame 12: 356.8 × 224.9 from x 24, 22 apart, label above, box top 827.3) */
-    var ONE = [235, 235, 235], COL = [ONE, ONE, ONE, ONE, ONE];
+    var ONE = [255, 255, 255], COL = [ONE, ONE, ONE, ONE, ONE];
     function mix(a, b, t){ return 'rgb(' + Math.round(lerp(a[0], b[0], t)) + ',' + Math.round(lerp(a[1], b[1], t)) + ',' + Math.round(lerp(a[2], b[2], t)) + ')'; }
     var gSec = el('g', {}, svg), gH = el('g', {}, svg);   /* gSec: the five layers in screen units; gH: house units (roof, disciplines, time) */
     LAY.forEach(function(L, i){ L.g = el('g', {'class': 'dg'}, gSec); L.box = el('path', {d: rectD(-10, 50, 920, 580), 'class': 'box', 'vector-effect': 'non-scaling-stroke'}, L.g);
@@ -274,7 +274,7 @@
        (a ruler, the traditional model's five hand-offs hatched in grey, CI's overlapping five hatched in Bright Gray, the saved fifth
        dimensioned); 3 · only one line is left — your decisions as five squares, everything in between hatched: ours.
        Screen units: the chart is 1080 wide (1:1 at 1920), placed by layout(). */
-    [['abStG', '#7B8087'], ['abStW', '#EBEBEB']].forEach(function(q){ var pt = el('pattern', {id: q[0], width: 4, height: 12, patternUnits: 'userSpaceOnUse'}, defs); el('rect', {width: 1, height: 12, fill: q[1]}, pt); });
+    [['abStG', '#7B8087'], ['abStW', '#FFFFFF']].forEach(function(q){ var pt = el('pattern', {id: q[0], width: 4, height: 12, patternUnits: 'userSpaceOnUse'}, defs); el('rect', {width: 1, height: 12, fill: q[1]}, pt); });
     var gT = el('g', {'class': 'ab-time'}, svg), PW = 1080;
     var trad = [[0, .16], [.21, .37], [.42, .66], [.71, .84], [.88, 1]], ci = [[0, .2], [.08, .36], [.18, .66], [.4, .72], [.56, .8]];
     /* v12 (10.11 06:26: "всё контурное, сливается"). The same comparison, in solid planes that read in a second:
@@ -321,8 +321,8 @@
        33 % at the edge that faces the middle of the screen, falling to 14 % at 59 % of the width, 14 % beyond. The circles are
        drawn turned by ±90° (so the stroke starts at the top), hence the gradient runs along their local y. */
     [['abCgA', .0262, 1.1191], ['abCgB', .9738, -.1191]].forEach(function(q){ var g = el('linearGradient', {id: q[0], x1: 0, x2: 0, y1: q[1], y2: q[2]}, defs);
-      el('stop', {offset: 0, 'stop-color': '#EBEBEB', 'stop-opacity': .33}, g); el('stop', {offset: .514, 'stop-color': '#EBEBEB', 'stop-opacity': .142}, g); el('stop', {offset: 1, 'stop-color': '#EBEBEB', 'stop-opacity': .142}, g); });
-    var lgr = el('linearGradient', {id: 'abLg', gradientUnits: 'userSpaceOnUse', x1: -1020, y1: 0, x2: 1020, y2: 0}, defs); el('stop', {offset: 0, 'stop-color': '#EBEBEB', 'stop-opacity': .1}, lgr); el('stop', {offset: .5, 'stop-color': '#EBEBEB', 'stop-opacity': .33}, lgr); el('stop', {offset: 1, 'stop-color': '#EBEBEB', 'stop-opacity': .1}, lgr);
+      el('stop', {offset: 0, 'stop-color': '#FFFFFF', 'stop-opacity': .33}, g); el('stop', {offset: .514, 'stop-color': '#FFFFFF', 'stop-opacity': .142}, g); el('stop', {offset: 1, 'stop-color': '#FFFFFF', 'stop-opacity': .142}, g); });
+    var lgr = el('linearGradient', {id: 'abLg', gradientUnits: 'userSpaceOnUse', x1: -1020, y1: 0, x2: 1020, y2: 0}, defs); el('stop', {offset: 0, 'stop-color': '#FFFFFF', 'stop-opacity': .1}, lgr); el('stop', {offset: .5, 'stop-color': '#FFFFFF', 'stop-opacity': .33}, lgr); el('stop', {offset: 1, 'stop-color': '#FFFFFF', 'stop-opacity': .1}, lgr);
     var cLine = el('path', {d: 'M0 0H0', 'class': 'cl'}, gC), R1 = 245, R2 = 129, DX = 169, EX = 781;
     var mkC = function(r){ return el('circle', {r: r, cx: 0, cy: 0, 'class': 'cc', pathLength: 1, transform: 'rotate(-90)'}, gC); };
     var cA = mkC(R1), cB = mkC(R1), cS1 = mkC(R2), cS2 = mkC(R2);
@@ -972,7 +972,7 @@
       cx.lineJoin = 'round';
       for (var j = 0; j < N; j++){ var a = S[seg[j]], b = S[seg[j] + 1], d = (a[2] + b[2]) * .5, w = lerp(1.3 + 2.2 * clamp01((d + 1.) / 2.), 1.2, e2);
         if (e2 < .98){ cx.lineCap = 'butt'; cx.strokeStyle = '#0B0B0C'; cx.lineWidth = w + 9 * (1 - e2); cx.beginPath(); cx.moveTo(a[0], a[1]); cx.lineTo(b[0], b[1]); cx.stroke(); }
-        cx.lineCap = 'round'; cx.strokeStyle = '#EBEBEB'; cx.lineWidth = w; cx.beginPath(); cx.moveTo(a[0], a[1]); cx.lineTo(b[0], b[1]); cx.stroke(); }
+        cx.lineCap = 'round'; cx.strokeStyle = '#FFFFFF'; cx.lineWidth = w; cx.beginPath(); cx.moveTo(a[0], a[1]); cx.lineTo(b[0], b[1]); cx.stroke(); }
       cx.globalAlpha = 1;
     }
     var vis = false, raf = 0;

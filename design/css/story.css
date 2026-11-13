@@ -6,17 +6,17 @@
 html.hero-only .hpin{height:auto}
 html.hero-only .story{display:none}
 
-.story{--S:380px;--gold:#96A9BF;--ink:#EBEBEB;--mist:#A9B3BE;--indigo:#283E4B;position:absolute;inset:0;z-index:9;pointer-events:none;color:var(--ink);visibility:hidden}
+.story{--S:380px;--gold:#96A9BF;--ink:#FFFFFF;--mist:#A9B3BE;--indigo:#283E4B;position:absolute;inset:0;z-index:9;pointer-events:none;color:var(--ink);visibility:hidden}
 .story.on{visibility:visible}
 .story > :not(.st-bg){translate:var(--px,0px) var(--py,0px)}   /* the layer rides with the CI window in 3D */
 .story .st-bg{position:absolute;inset:0;opacity:0;background:radial-gradient(60% 55% at 50% 48%,rgba(40,62,75,.32),rgba(40,62,75,0) 70%),#000}
 .story .st-svg{position:absolute;left:0;top:0;width:100%;height:100%;overflow:visible}
-.story .sq{fill:none;stroke:rgba(235,235,235,.82);stroke-width:1.2;stroke-linecap:square;opacity:0}
-.story .sq.gold{stroke:#EBEBEB;stroke-width:1}
+.story .sq{fill:none;stroke:rgba(255,255,255,.82);stroke-width:1.2;stroke-linecap:square;opacity:0}
+.story .sq.gold{stroke:#FFFFFF;stroke-width:1}
 .story .hd,.story .ldq{fill:var(--gold);opacity:0}
 .story .ld{fill:none;stroke:rgba(169,179,190,.6);stroke-width:1;opacity:0}
-.story .lay path{fill:url(#layFill);stroke:rgba(235,235,235,.7);stroke-width:1.2;stroke-linejoin:miter}
-.story .lay.top path{stroke:#EBEBEB;stroke-width:1.6;filter:drop-shadow(0 0 8px rgba(150,169,191,.45))}
+.story .lay path{fill:url(#layFill);stroke:rgba(255,255,255,.7);stroke-width:1.2;stroke-linejoin:miter}
+.story .lay.top path{stroke:#FFFFFF;stroke-width:1.6;filter:drop-shadow(0 0 8px rgba(150,169,191,.45))}
 .story .lay text{fill:var(--ink);font-family:var(--sans);letter-spacing:-.02em}
 .story .lay text.n{fill:var(--gold);letter-spacing:.06em}
 
@@ -31,14 +31,14 @@ html.hero-only .story{display:none}
 .story .st-tk p{margin:0;font-family:var(--sans);font-weight:400;font-size:clamp(24px,calc(var(--S) * .118),56px);line-height:.98;letter-spacing:-.04em;text-transform:uppercase}
 .story .st-part{position:absolute;box-sizing:border-box;opacity:0;display:flex;gap:14px;align-items:flex-start}
 .story .st-part .n{flex:none;font-family:var(--sans);font-size:11px;letter-spacing:.08em;color:var(--gold);padding-top:.25em}
-.story .st-part p{margin:0;font-size:clamp(13px,1.05vw,17px);line-height:1.5;color:#EBEBEB;letter-spacing:-.01em}
+.story .st-part p{margin:0;font-size:clamp(13px,1.05vw,17px);line-height:1.5;color:#FFFFFF;letter-spacing:-.01em}
 .story .st-part p b{color:var(--ink);font-weight:600}
-.story .st-slog{position:absolute;left:0;right:0;bottom:calc(var(--m) * .9);text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#EBEBEB;opacity:0}
+.story .st-slog{position:absolute;left:0;right:0;bottom:calc(var(--m) * .9);text-align:center;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#FFFFFF;opacity:0}
 @media (max-width:760px){ .story .st-slog{font-size:9px;padding:0 20px} .story .st-part p{font-size:13px} }
 
 /* the next block (philosophy) in the CI palette too: Eerie Black + Gradient Blue instead of charcoal + amber */
 .phil{--amber:#96A9BF;--haze:#A9B3BE;background:#000}
-.phil .dial .tk{stroke:rgba(235,235,235,.2)}
+.phil .dial .tk{stroke:rgba(255,255,255,.2)}
 
 /* black, not grey (user 03.11 10:07): every grey section, the page and the footer; the Japanese Indigo sections stay */
 html,body{background:#000!important}

@@ -627,7 +627,7 @@ function setSk(k){
    Every segment grows from its end nearer the CI window as the front passes it, and later retracts into the window. */
 const LN = { on: false, mats: [] };
 const LNU = { uLC: FRU.uFC, uLR:{value:-1e5}, uLR2:{value:1e9}, uLW: FRU.uFW, uLN: FRU.uFN, uLSp:{value:1.5}, uLCap:{value:260}, uLMax:{value:1000},
-              uOL:{value:0}, uInk:{value:new THREE.Color(0xEBEBEB)} };
+              uOL:{value:0}, uInk:{value:new THREE.Color(0xFFFFFF)} };
 const LNV = `
   uniform vec2 uLC; uniform float uLR; uniform float uLR2; uniform float uLW; uniform float uLN; uniform float uLSp; uniform float uLCap; uniform float uLMax;
   uniform float uSeq; uniform float uOL;

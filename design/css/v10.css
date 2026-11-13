@@ -45,8 +45,8 @@
 
 /* ---------- 5 · the menu: black, the list set as a title on the left, one photograph on the right; hairlines at the quarters as in 05 */
 .grain{z-index:59}
-.mn{position:fixed;inset:0;z-index:58;background-color:#000;color:#EBEBEB;visibility:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .7s cubic-bezier(.7,0,.3,1),visibility 0s .7s;
-  background-image:linear-gradient(rgba(235,235,235,.12),rgba(235,235,235,.12)),linear-gradient(rgba(235,235,235,.12),rgba(235,235,235,.12));background-size:1px 100%;background-position:25% 0,50% 0;background-repeat:no-repeat}
+.mn{position:fixed;inset:0;z-index:58;background-color:#000;color:#FFFFFF;visibility:hidden;clip-path:inset(0 0 100% 0);transition:clip-path .7s cubic-bezier(.7,0,.3,1),visibility 0s .7s;
+  background-image:linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12)),linear-gradient(rgba(255,255,255,.12),rgba(255,255,255,.12));background-size:1px 100%;background-position:25% 0,50% 0;background-repeat:no-repeat}
 html.mn-open .mn{visibility:visible;clip-path:inset(0 0 0 0);transition:clip-path 1s cubic-bezier(.16,1,.3,1),visibility 0s}
 html.mn-open{overflow:hidden}
 .mn-ph{position:absolute;left:50%;right:0;top:0;bottom:0;overflow:hidden;background:#0B0B0C}
@@ -54,17 +54,17 @@ html.mn-open{overflow:hidden}
 .mn-ph img.on{opacity:1}
 html.mn-open .mn-ph img.on{transform:none}
 .mn-nav{position:absolute;left:var(--m);top:48%;transform:translateY(-50%);display:flex;flex-direction:column;align-items:flex-start}
-.mn-nav a{position:relative;display:flex;align-items:center;font-family:var(--fh);font-weight:400;font-size:var(--t-h2);line-height:1.1;letter-spacing:-.07em;text-transform:uppercase;color:#EBEBEB;text-decoration:none;white-space:nowrap;padding:.03em 0;
+.mn-nav a{position:relative;display:flex;align-items:center;font-family:var(--fh);font-weight:400;font-size:var(--t-h2);line-height:1.1;letter-spacing:-.07em;text-transform:uppercase;color:#FFFFFF;text-decoration:none;white-space:nowrap;padding:.03em 0;
   opacity:0;transform:translateY(.45em);filter:blur(6px);transition:opacity .35s,transform .35s,filter .35s}
 html.mn-open .mn-nav a{opacity:1;transform:none;filter:none;transition:opacity .8s ease calc(.22s + var(--i, 0) * 60ms),transform 1.1s cubic-bezier(.16,1,.3,1) calc(.22s + var(--i, 0) * 60ms),filter .8s ease calc(.22s + var(--i, 0) * 60ms)}
-.mn-nav a .sq{position:absolute;left:0;top:50%;width:.2em;height:.2em;margin-top:-.1em;background:#EBEBEB;transform:scale(0);transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.mn-nav a .sq{position:absolute;left:0;top:50%;width:.2em;height:.2em;margin-top:-.1em;background:#FFFFFF;transform:scale(0);transition:transform .5s cubic-bezier(.16,1,.3,1)}
 .mn-nav a .t{display:block;transition:transform .7s cubic-bezier(.16,1,.3,1)}
 @media (hover:hover){
   .mn-nav a:hover .sq,.mn-nav a:focus-visible .sq{transform:scale(1)}
   .mn-nav a:hover .t,.mn-nav a:focus-visible .t{transform:translateX(.5em)}
 }
-.mn-ft{position:absolute;left:var(--m);bottom:calc(var(--m) + 4px);width:calc(50% - var(--m) * 2);display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;padding-top:22px;border-top:1px solid rgba(235,235,235,.22);
-  font-family:var(--ft);font-size:var(--t-text);line-height:1.35;color:#EBEBEB;opacity:0;transition:opacity .3s}
+.mn-ft{position:absolute;left:var(--m);bottom:calc(var(--m) + 4px);width:calc(50% - var(--m) * 2);display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;padding-top:22px;border-top:1px solid rgba(255,255,255,.22);
+  font-family:var(--ft);font-size:var(--t-text);line-height:1.35;color:#FFFFFF;opacity:0;transition:opacity .3s}
 html.mn-open .mn-ft{opacity:1;transition:opacity .9s ease .6s}
 .mn-ft a{color:inherit;text-decoration:none;position:relative}
 .mn-ft a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:1px;background:currentColor;transform:scaleX(0);transform-origin:0 0;transition:transform .5s cubic-bezier(.2,.8,.2,1)}
@@ -75,7 +75,7 @@ html.mn-open .mn-ft{opacity:1;transition:opacity .9s ease .6s}
 html.mn-open .hdr{color:var(--ivory)!important}
 html.mn-open .hdr .wm img{filter:none!important}
 .hdr .menu-sq i{transition:background-color .45s var(--e-out),transform .7s cubic-bezier(.16,1,.3,1)}
-html.mn-open .hdr .menu-sq i{background:#EBEBEB!important}
+html.mn-open .hdr .menu-sq i{background:#FFFFFF!important}
 html.mn-open .hdr .menu-sq i:nth-of-type(1){transform:translateY(calc(5.5 * var(--u))) rotate(45deg)}
 html.mn-open .hdr .menu-sq i:nth-of-type(2){transform:translateY(calc(-5.5 * var(--u))) rotate(-45deg)}
 html.mn-open .chap{opacity:0!important;pointer-events:none!important}
@@ -88,7 +88,7 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 }
 
 /* ---------- 6 · footer: the page signs off with the line it began with, set at the cover's size, over the skyline */
-.ch-ftr .ft-big{margin:min(clamp(56px,7vw,128px), 9vh) var(--m) 0;font-family:var(--fh);font-weight:400;text-transform:uppercase;letter-spacing:-.07em;line-height:.92;white-space:nowrap;color:#EBEBEB;
+.ch-ftr .ft-big{margin:min(clamp(56px,7vw,128px), 9vh) var(--m) 0;font-family:var(--fh);font-weight:400;text-transform:uppercase;letter-spacing:-.07em;line-height:.92;white-space:nowrap;color:#FFFFFF;
   font-size:min(calc((100vw - 2 * var(--m)) / 15.8), calc(111 * var(--u)));
   opacity:0;filter:blur(10px);transform:translateY(.18em);transition:opacity 1.2s ease .15s,filter 1.2s ease .15s,transform 1.6s cubic-bezier(.16,1,.3,1) .15s}
 .ch-ftr.in .ft-big{opacity:1;filter:none;transform:none}
@@ -147,7 +147,7 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
   .ch-phil .ph-t > .at-b3, .ch-about .ch-t > .at-b3, .ch-appr .ch-t > .at-b3{left:calc(960 * var(--u) - var(--m))}
 
   .ch p.say{font-family:var(--ft);font-weight:400;font-size:max(20px, calc(36.774 * var(--u)))!important;line-height:1.08!important;letter-spacing:-.04em!important;
-    color:#EBEBEB!important;width:calc(var(--w, 760) * var(--u));max-width:none!important;margin:0;text-indent:var(--ind, 6.5em);text-wrap:balance}
+    color:#FFFFFF!important;width:calc(var(--w, 760) * var(--u));max-width:none!important;margin:0;text-indent:var(--ind, 6.5em);text-wrap:balance}
   .ch p.say .t2{color:#96A9BF}
   /* 03, the five trades: the statement is three cards wide and its first line starts on the second card */
   .ch-about{--cw:calc((100vw - 2 * var(--m) - 88 * var(--u)) / 5)}
@@ -163,18 +163,18 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
   /* 02 · the figure is the loud voice of its scene: 75 as a graphic, bottom-left, the statement above it */
   .ch-phil .ph-pct{bottom:calc(var(--m) + 46px);gap:calc(18 * var(--u))}
   .ch-phil .ph-pct .v{font-family:var(--fh)!important;font-size:max(120px, calc(330 * var(--u)))!important;line-height:.74!important;letter-spacing:-.08em!important;margin-left:-.03em}
-  .ch-phil .ph-pct sup{font-size:.2em!important;letter-spacing:0;margin-left:.14em;color:#EBEBEB}
+  .ch-phil .ph-pct sup{font-size:.2em!important;letter-spacing:0;margin-left:.14em;color:#FFFFFF}
   /* 02 · the verbs: the sentence's enumeration set as a list — one verb a row; rows already lived are marked, the current one is inverted */
   .ch-phil .ph-vs{width:calc(760 * var(--u))}
   .ch-phil .ph-vin{text-indent:0!important;width:auto!important;margin-bottom:calc(14 * var(--u))!important}
-  .ch-phil .ph-vl{margin:0;font-family:var(--fh);font-weight:400;text-transform:uppercase;font-size:min(var(--t-h2), 6.3vh);line-height:1;letter-spacing:-.07em;color:#EBEBEB}
-  .ch-phil .ph-vl .vr{display:flex;align-items:center;justify-content:space-between;padding:.07em .14em .09em 0;border-top:1px solid rgba(235,235,235,.3);transition:background-color .45s, color .45s, padding .6s cubic-bezier(.16,1,.3,1)}
-  .ch-phil .ph-vl .vr:last-child{border-bottom:1px solid rgba(235,235,235,.3)}
+  .ch-phil .ph-vl{margin:0;font-family:var(--fh);font-weight:400;text-transform:uppercase;font-size:min(var(--t-h2), 6.3vh);line-height:1;letter-spacing:-.07em;color:#FFFFFF}
+  .ch-phil .ph-vl .vr{display:flex;align-items:center;justify-content:space-between;padding:.07em .14em .09em 0;border-top:1px solid rgba(255,255,255,.3);transition:background-color .45s, color .45s, padding .6s cubic-bezier(.16,1,.3,1)}
+  .ch-phil .ph-vl .vr:last-child{border-bottom:1px solid rgba(255,255,255,.3)}
   .ch-phil .ph-vl .vr .vt{flex:0 0 auto;margin-right:auto}
   .ch-phil .ph-vl .vr .vb{background:none!important;box-shadow:none!important;color:inherit!important;margin:0!important}
   .ch-phil .ph-vl .vr i{flex:0 0 auto;width:.15em;height:.15em;border:1px solid currentColor;transition:background-color .45s}
   .ch-phil .ph-vl .vr:has(.vb.on) i{background:currentColor}
-  .ch-phil .ph-vl .vr:has(.vb.vcur){background:#EBEBEB;color:#000;padding-left:.22em}
+  .ch-phil .ph-vl .vr:has(.vb.vcur){background:#FFFFFF;color:#000;padding-left:.22em}
 
   /* 03 · the figure opens the chart: on the top line, above the ruler */
   .ch-about .ch-pct{top:var(--top-line);gap:calc(18 * var(--u))}
@@ -198,13 +198,13 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
   .ch-appr .ch-t > .row2, .ch-phil .ph-t > .row2{grid-row:2;align-self:start;padding-top:14px;background:#000}
   /* 02 on the phone: the verbs stay a list, smaller; the hung label becomes a line above its text */
   .ch-phil .ph-vin{margin:0 0 8px!important}
-  .ch-phil .ph-vl{margin:0;font-family:var(--fh);font-weight:400;text-transform:uppercase;font-size:23px;line-height:1;letter-spacing:-.06em;color:#EBEBEB}
-  .ch-phil .ph-vl .vr{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 5px 0;border-top:1px solid rgba(235,235,235,.3);transition:background-color .45s, color .45s, padding .5s}
-  .ch-phil .ph-vl .vr:last-child{border-bottom:1px solid rgba(235,235,235,.3)}
+  .ch-phil .ph-vl{margin:0;font-family:var(--fh);font-weight:400;text-transform:uppercase;font-size:23px;line-height:1;letter-spacing:-.06em;color:#FFFFFF}
+  .ch-phil .ph-vl .vr{display:flex;align-items:center;justify-content:space-between;padding:4px 6px 5px 0;border-top:1px solid rgba(255,255,255,.3);transition:background-color .45s, color .45s, padding .5s}
+  .ch-phil .ph-vl .vr:last-child{border-bottom:1px solid rgba(255,255,255,.3)}
   .ch-phil .ph-vl .vr .vb{background:none!important;box-shadow:none!important;color:inherit!important;margin:0!important}
   .ch-phil .ph-vl .vr i{width:6px;height:6px;border:1px solid currentColor}
   .ch-phil .ph-vl .vr:has(.vb.on) i{background:currentColor}
-  .ch-phil .ph-vl .vr:has(.vb.vcur){background:#EBEBEB;color:#000;padding-left:6px}
+  .ch-phil .ph-vl .vr:has(.vb.vcur){background:#FFFFFF;color:#000;padding-left:6px}
   .ch p.say .lb{display:block;margin-bottom:10px;font-family:var(--fh);font-size:11px;line-height:1.05;text-transform:uppercase}
 }
 
@@ -219,13 +219,13 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 .pr5-im.on{opacity:1}
 .pr5-im img{width:100%;height:100%;object-fit:cover;display:block}
 .pr5-im figcaption{display:none}
-.pr5-cap{position:absolute;left:0;top:0;white-space:pre-line;color:#EBEBEB;font-size:11px;line-height:1.1}
+.pr5-cap{position:absolute;left:0;top:0;white-space:pre-line;color:#FFFFFF;font-size:11px;line-height:1.1}
 .pr5-labs{position:absolute;inset:0;pointer-events:none}
-.pr5-lab{position:absolute;display:flex;flex-direction:column;gap:3px;color:#EBEBEB;transition:opacity .5s}
+.pr5-lab{position:absolute;display:flex;flex-direction:column;gap:3px;color:#FFFFFF;transition:opacity .5s}
 .pr5-lab .mono{font-size:11px}
 .pr5-lab .nm{font-family:var(--fh);font-size:11px;text-transform:uppercase}
 .pr5-lab .nm b{font-weight:400}
-.pr5-lab.on .mono{background:#EBEBEB;color:#000;align-self:flex-start;padding:1px 3px}
+.pr5-lab.on .mono{background:#FFFFFF;color:#000;align-self:flex-start;padding:1px 3px}
 .pr5-d{display:none}
 .ch-phil .ph-vl .vb{transition:none!important}
 @media (max-aspect-ratio: 1/1){ .pr5-lab:not(.on) .nm{display:none} }
@@ -243,15 +243,15 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
   .pr5-lab.on .mono{background:none;color:inherit;padding:0}
   .pr5-lab .nm{margin-top:calc(12 * var(--u));font-weight:500;font-size:max(19px, calc(36.774 * var(--u)));line-height:1.05;letter-spacing:-.04em}
   .pr5-lab .nm b{font-weight:500;display:inline-block;padding:0 .12em .02em 0;transition:background-color .45s, color .45s, padding .5s cubic-bezier(.16,1,.3,1)}
-  .pr5-lab.on .nm b{background:#EBEBEB;color:#000;padding:0 .14em .02em .14em}
+  .pr5-lab.on .nm b{background:#FFFFFF;color:#000;padding:0 .14em .02em .14em}
   .pr5-d{display:block;margin:calc(14 * var(--u)) 0 0;font-family:var(--ft);font-size:var(--t-text);line-height:1.1;letter-spacing:-.03em;max-width:calc(270 * var(--u))}
 }
 
 /* 08 · the end: the six photographs stay; the thought is set under them, on the black — no card */
 @media (min-aspect-ratio: 1/1){
-  .pr4 .pr4-end{left:var(--m)!important;right:auto!important;top:calc(70vh + 34 * var(--u))!important;bottom:auto!important;width:auto!important;max-width:none!important;padding:0!important;background:none!important;box-shadow:none!important;border:0!important;color:#EBEBEB!important;display:block!important}
+  .pr4 .pr4-end{left:var(--m)!important;right:auto!important;top:calc(70vh + 34 * var(--u))!important;bottom:auto!important;width:auto!important;max-width:none!important;padding:0!important;background:none!important;box-shadow:none!important;border:0!important;color:#FFFFFF!important;display:block!important}
   .pr4 .pr4-end::before, .pr4 .pr4-end::after, .pr4 .pr4-end .pr4-ek{display:none!important}
-  .pr4 .pr4-end .r, .pr4 .pr4-end b{display:block;font-family:var(--fh)!important;font-weight:400!important;font-size:var(--t-h2)!important;line-height:.98!important;letter-spacing:-.07em!important;text-transform:uppercase;white-space:nowrap;color:#EBEBEB!important;margin:0!important}
+  .pr4 .pr4-end .r, .pr4 .pr4-end b{display:block;font-family:var(--fh)!important;font-weight:400!important;font-size:var(--t-h2)!important;line-height:.98!important;letter-spacing:-.07em!important;text-transform:uppercase;white-space:nowrap;color:#FFFFFF!important;margin:0!important}
   .pr4 .pr4-end b{color:#96A9BF!important;padding-left:1em}
   .pr4 .pr4-end b br{display:none}
 }
@@ -259,7 +259,7 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 /* ---------- 10 · 09 CLIENT, rebuilt. No card, no collage. First the client is described in one large statement that is read
    by the scroll — each word turns to ink as you reach it. Then "They expect a high standard": a datum line (the level mark of
    a section drawing) rises from the bottom of the screen to the top, and what is under it is the finished home. "So do we." */
-.cl5{position:relative;height:330vh;background:#283E4B;color:#EBEBEB}
+.cl5{position:relative;height:330vh;background:#283E4B;color:#FFFFFF}
 .cl5-pin{position:sticky;top:0;height:100vh;overflow:hidden}
 .cl5-stage{position:absolute;inset:0;--f:0;--r:0;--o2:0;--y1:calc(var(--top-line) + 2 * .98 * var(--t-h2) + 22px);--ly:calc(100vh - (100vh - var(--y1)) * var(--r))}
 .cl5-read{position:absolute;inset:0;opacity:calc(1 - var(--f));transform:translateY(calc(var(--f) * -48px))}
@@ -273,8 +273,8 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 .cl5-ph{position:absolute;left:0;right:0;bottom:0;top:var(--ly);overflow:hidden}
 .cl5-ph img{position:absolute;left:0;bottom:0;width:100%;height:calc(100vh - var(--y1));object-fit:cover;filter:contrast(1.04) brightness(.97)}
 .cl5-bar{position:absolute;left:0;right:0;top:0;height:var(--ly);pointer-events:none}
-.cl5-bar::after{content:"";position:absolute;left:var(--m);right:var(--m);bottom:0;height:1px;background:#EBEBEB}
-.cl5-mk{position:absolute;right:var(--m);bottom:-4px;width:9px;height:9px;background:#EBEBEB;z-index:1}
+.cl5-bar::after{content:"";position:absolute;left:var(--m);right:var(--m);bottom:0;height:1px;background:#FFFFFF}
+.cl5-mk{position:absolute;right:var(--m);bottom:-4px;width:9px;height:9px;background:#FFFFFF;z-index:1}
 .cl5-l1, .cl5-l2{position:absolute;bottom:18px}
 .cl5-l1{left:var(--m);opacity:clamp(0, calc(var(--r) * 8), 1)}
 .cl5-l2{left:calc(960 * var(--u));color:#96A9BF;opacity:var(--o2);transform:translateY(calc((1 - var(--o2)) * .3em))}
@@ -293,7 +293,7 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 /* ---------- 11 · 10 REVIEWS, rebuilt. Black. The title on the top line, the client's words in the statement voice at the
    bottom-left, and on the right the films as two tall cards — the cards of his hero (label top-left, the square bottom-right).
    The card you point at opens and comes into colour; its words take the left. */
-.rv5{position:relative;min-height:100vh;background:#000;color:#EBEBEB;overflow:hidden}
+.rv5{position:relative;min-height:100vh;background:#000;color:#FFFFFF;overflow:hidden}
 .rv5-title{position:absolute;left:var(--m);top:var(--top-line);margin:0;font-family:var(--fh);font-weight:400;font-size:var(--t-h2);line-height:.98;letter-spacing:-.07em;text-transform:uppercase;white-space:nowrap;padding-left:1em;text-indent:-1em}
 .rv5-qs{position:absolute;left:var(--m);bottom:calc(var(--m) + 46px);width:calc(820 * var(--u));display:grid}
 .rv5-q{grid-area:1/1;align-self:end;margin:0;opacity:0;visibility:hidden;transform:translateY(14px);transition:opacity .5s, transform .8s cubic-bezier(.16,1,.3,1), visibility 0s .5s}
@@ -301,7 +301,7 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 .rv5-q p{position:relative;margin:0;font-family:var(--ft);font-weight:400;font-size:max(22px, calc(50 * var(--u)));line-height:1.06;letter-spacing:-.04em;text-indent:1.1em}
 .rv5-q p::before{content:"\201C";position:absolute;left:0;top:0;text-indent:0;font-family:var(--fh)}
 .rv5-q footer{margin-top:calc(30 * var(--u));font-family:var(--fh);font-size:max(11px, calc(18 * var(--u)));line-height:.93;text-transform:uppercase}
-.rv5 .ph{background:rgba(235,235,235,.14);padding:0 .12em}
+.rv5 .ph{background:rgba(255,255,255,.14);padding:0 .12em}
 .rv5-cards{position:absolute;right:var(--m);bottom:calc(var(--m) + 46px);height:min(calc(640 * var(--u)), calc(100vh - var(--top-line) - var(--m) - 46px));display:flex;gap:calc(16 * var(--u))}
 .rv5-c{position:relative;height:100%;width:calc(300 * var(--u));padding:0;border:0;background:#111;color:#fff;overflow:hidden;cursor:pointer;text-align:left;transition:width 1s cubic-bezier(.16,1,.3,1)}
 .rv5-c.on{width:calc(560 * var(--u))}
@@ -328,11 +328,11 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 /* ---------- 12 · 11 FAQ, rebuilt as a table across the whole page: number on the first quarter, the question in his headline
    caps from the second, the plus at the far end, a hairline per row from edge to edge. The open row is a light panel
    (the page's only light is cards and panels); its answer is set in two tight bricks on the second and third quarters. */
-.fq5{background:#000;color:#EBEBEB;padding:0 0 calc(120 * var(--u))}
+.fq5{background:#000;color:#FFFFFF;padding:0 0 calc(120 * var(--u))}
 .fq5 .fq-hd{padding:calc(var(--top-line) + 40px) var(--m) calc(110 * var(--u))}
-.fq5 .qa{position:relative;padding:0 var(--m);border-top:1px solid rgba(235,235,235,.3);transition:background-color .55s, color .55s}
-.fq5 .qa:last-child{border-bottom:1px solid rgba(235,235,235,.3)}
-.fq5 .qa.open{background:#EBEBEB;color:#000}
+.fq5 .qa{position:relative;padding:0 var(--m);border-top:1px solid rgba(255,255,255,.3);transition:background-color .55s, color .55s}
+.fq5 .qa:last-child{border-bottom:1px solid rgba(255,255,255,.3)}
+.fq5 .qa.open{background:#FFFFFF;color:#000}
 .fq5 .qh{display:grid;grid-template-columns:calc(480 * var(--u) - var(--m)) minmax(0,1fr) auto;align-items:start;width:100%;padding:calc(26 * var(--u)) 0 calc(28 * var(--u));border:0;background:none;color:inherit;text-align:left;cursor:pointer;font:inherit}
 .fq5 .qh .n{font-family:var(--fh);font-size:max(11px, calc(18 * var(--u)));line-height:.93;letter-spacing:0;padding-top:.62em;display:flex;align-items:center}
 .fq5 .qh .n::before{content:"";width:0;height:9px;margin-right:0;background:currentColor;transition:width .5s cubic-bezier(.16,1,.3,1), margin .5s cubic-bezier(.16,1,.3,1)}
@@ -368,7 +368,7 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
   .ch-cta .ct-side .ct-say{width:calc(700 * var(--u));max-width:none!important;margin:0;font-family:var(--ft);font-size:max(20px, calc(36.774 * var(--u)))!important;line-height:1.08!important;letter-spacing:-.04em!important;text-indent:6.5em;color:#F4F4F4!important}
   .ch-cta .ct-side .ct-say .t2{color:#B9C6D6}
   .ch-cta .ct-side .ch-lead.sub{margin:0;max-width:calc(300 * var(--u))!important;color:#F4F4F4}
-  .ch-cta .ct-side .ch-pill{margin:0;display:block;position:relative;width:calc(300 * var(--u));min-width:190px;height:calc(400 * var(--u));min-height:250px;padding:calc(22 * var(--u)) calc(24 * var(--u));border:0;background:#EBEBEB;color:#000;transition:background-color .4s, transform .9s cubic-bezier(.16,1,.3,1)}
+  .ch-cta .ct-side .ch-pill{margin:0;display:block;position:relative;width:calc(300 * var(--u));min-width:190px;height:calc(400 * var(--u));min-height:250px;padding:calc(22 * var(--u)) calc(24 * var(--u));border:0;background:#FFFFFF;color:#000;transition:background-color .4s, transform .9s cubic-bezier(.16,1,.3,1)}
   .ch-cta .ct-side .ch-pill:hover{background:#fff;transform:translateY(calc(-10 * var(--u)))}
   .ch-cta .ct-side .ch-pill .t{display:block;width:min-content;font-family:"Zalando Sans Expanded",sans-serif;font-weight:700;font-size:max(18px, calc(30 * var(--u)))!important;line-height:.96;letter-spacing:-.06em;text-transform:uppercase;white-space:normal}
   .ch-cta .ct-side .ch-pill .dot{right:calc(22 * var(--u));bottom:calc(22 * var(--u));width:max(7px, calc(10 * var(--u)));height:max(7px, calc(10 * var(--u)));background:#000}
@@ -377,12 +377,12 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 /* ---------- 14 · 06 SOLUTIONS: the three levels are the loud thing — a list of rows in his headline caps; the chosen one is inverted */
 @media (min-aspect-ratio: 1/1){
   .ch-suite .su-title br.b5{display:none}
-  .ch-suite .su-tabs{border-top:1px solid rgba(235,235,235,.3)}
-  .ch-suite .su-tab{grid-template-columns:1fr auto;padding:calc(13 * var(--u)) calc(16 * var(--u)) calc(14 * var(--u)) 0;border-bottom:1px solid rgba(235,235,235,.3);transition:background-color .45s, color .45s, padding .6s cubic-bezier(.16,1,.3,1)}
+  .ch-suite .su-tabs{border-top:1px solid rgba(255,255,255,.3)}
+  .ch-suite .su-tab{grid-template-columns:1fr auto;padding:calc(13 * var(--u)) calc(16 * var(--u)) calc(14 * var(--u)) 0;border-bottom:1px solid rgba(255,255,255,.3);transition:background-color .45s, color .45s, padding .6s cubic-bezier(.16,1,.3,1)}
   .ch-suite .su-tab::before, .ch-suite .su-tab::after{display:none}
   .ch-suite .su-tab .nm{order:1;font-family:var(--fh);font-weight:500;font-size:max(19px, calc(36.774 * var(--u)))!important;line-height:1.05!important;letter-spacing:-.04em!important}
   .ch-suite .su-tab .fl{order:2;align-self:center}
-  .ch-suite .su-tab.on{background:#EBEBEB;color:#000;padding-left:calc(16 * var(--u))}
+  .ch-suite .su-tab.on{background:#FFFFFF;color:#000;padding-left:calc(16 * var(--u))}
   .ch-suite .su-tab:not(.on):hover{padding-left:calc(16 * var(--u))}
   .ch-suite .su-cnt .v{font-family:var(--fh);font-size:max(72px, calc(170 * var(--u)))!important;line-height:.74!important;letter-spacing:-.08em!important}
 }
@@ -401,11 +401,11 @@ html.mn-open .chap{opacity:0!important;pointer-events:none!important}
 /* ---------- 16 · 03 ABOUT, the time scene rebuilt in solid planes (10.11 06:26) */
 .ch-about .ch-pct{display:none!important}
 .ch-about .ab-time .rl{stroke-opacity:.45}
-.ch-about .ab-time .tk, .ch-about .ab-time .tl2, .ch-about .ab-time .nm{font-family:var(--fh);font-size:10.6px;letter-spacing:0;fill:#EBEBEB}
+.ch-about .ab-time .tk, .ch-about .ab-time .tl2, .ch-about .ab-time .nm{font-family:var(--fh);font-size:10.6px;letter-spacing:0;fill:#FFFFFF}
 .ch-about .ab-time .nm{font-size:8.4px}
 .ch-about .ab-time .k{fill:#000}
 .ch-about .ab-time .tb{fill:#636366}
-.ch-about .ab-time .cb{fill:#EBEBEB}
+.ch-about .ab-time .cb{fill:#FFFFFF}
 .ch-about .ab-time .cl{fill:#000}
 .ch-about .ab-time .sb{fill:#96A9BF}
 .ch-about .ab-time .big{font-family:var(--fh);font-size:74px;letter-spacing:-.08em;fill:#000}

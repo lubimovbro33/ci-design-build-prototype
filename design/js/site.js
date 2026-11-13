@@ -424,7 +424,7 @@
     var sideOp = 1 - sg(sL, 6.3, 6.5), tkq = sg(sL, 6.5, 7.0), tkOut = 1 - sg(sL, 7.6, 7.9);
     drawSq(sqC, rc, 1, isoE > 0 ? 0 : cOp);
     var fin = eo(tkq) * tkOut;                                                       /* the same 1 px Bright Gray as the drawing; only the finale glows */
-    sqC.style.stroke = '#EBEBEB'; sqC.style.strokeWidth = 1 + fin * .5;
+    sqC.style.stroke = '#FFFFFF'; sqC.style.strokeWidth = 1 + fin * .5;
     sqC.style.filter = fin > .001 && !LITE ? 'drop-shadow(0 0 ' + (14 * fin).toFixed(1) + 'px rgba(150,169,191,' + (.85 * fin).toFixed(2) + '))' : 'none';
     drawSq(sqL, rl, dl, dl > 0 ? sideOp : 0); drawSq(sqR, rr, dr, dr > 0 ? sideOp : 0);
     var hl = headAt(rl[0], rl[1], rl[2], rl[3], dl), hr = headAt(rr[0], rr[1], rr[2], rr[3], dr);

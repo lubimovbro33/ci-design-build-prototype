@@ -13,17 +13,17 @@
 .ch-phil .ph-h + .ph-h{margin-top:.9em}
 /* the verbs: the light chip keeps clear of its commas and of the line below */
 .ch-phil .ph-verbs .vb{margin:0 .06em 0 .1em;-webkit-box-decoration-break:clone;box-decoration-break:clone}
-.ch-phil .ph-verbs .vb.on{box-shadow:-.1em 0 0 #EBEBEB,.06em 0 0 #EBEBEB}
+.ch-phil .ph-verbs .vb.on{box-shadow:-.1em 0 0 #FFFFFF,.06em 0 0 #FFFFFF}
 
 /* ---------- 05 Difference: the small label above the title is text — full ink, like every other label */
-.df2-lab{color:#EBEBEB}
+.df2-lab{color:#FFFFFF}
 
 /* ---------- Solutions: the layer names and the switch label read in full; "included" is marked by the filled square and the blue number */
-.ch-suite .su-num,.ch-suite .su-nm{fill:#EBEBEB}
-.ch-suite .su-sq{fill:transparent;stroke:#EBEBEB;stroke-width:1.5}
-.ch-suite .su-lab.em .su-sq{fill:#EBEBEB}
+.ch-suite .su-num,.ch-suite .su-nm{fill:#FFFFFF}
+.ch-suite .su-sq{fill:transparent;stroke:#FFFFFF;stroke-width:1.5}
+.ch-suite .su-lab.em .su-sq{fill:#FFFFFF}
 .ch-suite .su-layer.add .su-lab.em .su-sq{fill:#96A9BF;stroke:#96A9BF}
-.ch-suite .su-sw,.ch-suite .su-cnt .mono,.ch-suite .su-idx{color:#EBEBEB}
+.ch-suite .su-sw,.ch-suite .su-cnt .mono,.ch-suite .su-idx{color:#FFFFFF}
 
 /* ---------- 07 Approach: the questions break by sense (line breaks live in data-t) */
 .ch-appr .ap-qs .tx{white-space:pre-line}

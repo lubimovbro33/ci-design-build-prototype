@@ -220,13 +220,13 @@
           var y = y0 + env * (off + A * (.62 * Math.sin(v.f1 * fx * 6.283 + v.p1 + t * v.s1) + .38 * Math.sin(v.f2 * fx * 6.283 + v.p2 - t * v.s2))) + mxp * n * 26 * Math.sin(t * 3 + i);
           if (s) ctx.lineTo(x, y); else ctx.moveTo(x, y);
         }
-        ctx.strokeStyle = 'rgba(235,235,235,' + (lerp(v.al, 1, 1 - n)).toFixed(3) + ')'; ctx.lineWidth = n < .02 ? 1.4 : 1; ctx.stroke();
+        ctx.strokeStyle = 'rgba(255,255,255,' + (lerp(v.al, 1, 1 - n)).toFixed(3) + ')'; ctx.lineWidth = n < .02 ? 1.4 : 1; ctx.stroke();
         if (n < .02) break;   /* settled: they are one line */
       }
       var sq = Math.max(7, 12 * u);
       for (var k = 0; k < 5; k++){
         var a = sg(P, .58 + k * .028, .62 + k * .028), x = x0 + span * (k + .5) / 5;
-        if (a > 0){ ctx.fillStyle = '#EBEBEB'; var s2 = sq * eo(a); ctx.fillRect(x - s2 / 2, y0 - s2 / 2, s2, s2); }
+        if (a > 0){ ctx.fillStyle = '#FFFFFF'; var s2 = sq * eo(a); ctx.fillRect(x - s2 / 2, y0 - s2 / 2, s2, s2); }
         var vs = vals[k].style, o = (a * (1 - sg(P, .82, .88))).toFixed(3), tr = 'translate(' + f1(x) + 'px,' + f1(y0 - 30 * Math.max(.7, u) - (1 - eo(a)) * 14) + 'px) translate(-50%,-100%)';
         if (vals[k].__o !== o + tr){ vals[k].__o = o + tr; vs.opacity = o; vs.transform = tr; }
       }
