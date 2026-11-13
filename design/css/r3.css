@@ -77,6 +77,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   #about .r3own .oa{margin-bottom:auto}
   #about .r3own .oc,#about .r3own .od{margin-top:10px}
   #about .r3own .oe{margin-top:14px}
+  #about .r3own br.r3br{display:none}
   .ab-ob{top:44%!important;transform:translateY(-50%);text-align:center;left:0!important;right:0!important}
   #approach .r3p.r3r{text-align:left}
   .ch .r3p{position:absolute;left:20px;right:20px;bottom:64px;top:auto;margin:0;padding:14px 0 0;background:#000}
@@ -134,8 +135,11 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   #about .ch-t > .r3own{position:absolute!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:100%!important;height:100%;transform:none!important;display:block!important}
   #about .r3own .oa{position:absolute;left:0;right:0;top:calc(50 * var(--u));text-align:center}
   #about .r3own .oc,#about .r3own .od{position:absolute;bottom:max(calc(50 * var(--u)), 58px);margin:0!important}
-  #about .r3own .oc{left:calc(48 * var(--u));width:calc(381 * var(--u))}
-  #about .r3own .od{left:calc(495 * var(--u));width:calc(282 * var(--u))}
+  /* her note 13.11 19:45: both bricks in four lines, the same height — the lines are set in the markup (br.r3br), not left to the box;
+     the right brick never comes closer to the left one than its longest line (the 13 px floor of the text on small windows) */
+  #about .r3own .oc,#about .r3own .od{width:auto;white-space:nowrap}
+  #about .r3own .oc{left:calc(48 * var(--u))}
+  #about .r3own .od{left:max(calc(495 * var(--u)), calc(48 * var(--u) + 22em))}
   #about .r3own .oe{position:absolute;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
   .ab-ob{position:absolute;left:0;right:0;top:calc(50% + 23 * var(--u));z-index:3;text-align:center;pointer-events:none;opacity:var(--ob, 0);
     transform:translateY(calc(-50% + (1 - var(--ob, 0)) * .35em));filter:blur(calc((1 - var(--ob, 0)) * 8px))}

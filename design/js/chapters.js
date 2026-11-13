@@ -672,9 +672,47 @@
       return [CX + F * (d[0] * cam.r[0] + d[1] * cam.r[1] + d[2] * cam.r[2]) / zz, CY - F * (d[0] * cam.u[0] + d[1] * cam.u[1] + d[2] * cam.u[2]) / zz]; }
     function L(a, b){ var p = pr(a[0], a[1], a[2]), q = pr(b[0], b[1], b[2]); return 'M' + f1(p[0]) + ' ' + f1(p[1]) + 'L' + f1(q[0]) + ' ' + f1(q[1]); }
     function part(a, b, k){ return L(a, [lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k)]); }
-    var lastSz = '';
+    var lastSz = '', G = 1;
+    /* r3 (her note 13.11 19:46: "once the plan is drawn the house must not jump, the isometry must not stand at the side — all of it
+       in the centre, neatly"): the drawing keeps the middle of the screen from the first axis to the last floor. It used to step to
+       the right to clear the closing lines; now, where a window is too narrow for both, the drawing is a little smaller
+       from its first line instead (G, found once per size by fit(): every pose from the tilt on is tried against the text blocks). */
+    function pose(p, g){
+      var tilt = sm(sg(p, .6, .74)), dr = sg(p, .74, 1), narrow = W / H < .9;
+      var yaw = lerp(0, -.62, tilt) - .16 * dr, pitch = lerp(Math.PI / 2 - .0001, .5, tilt) - .05 * dr, dist = lerp(20, 24, tilt);
+      var zoom = Math.min(W * (narrow ? .9 : .56) / (5.6 / dist), H * (narrow ? .5 : .66) / (4.8 / dist)) * lerp(1, .9, tilt) * g;
+      CX = W / 2; CY = narrow ? H * .3 : H * lerp(.52, .56, tilt);
+      setCam(yaw, pitch, dist, lerp(0, 1.3, sm(sg(p, .7, .86))), zoom);
+    }
+    function fit(){
+      G = 1; if (W / H < .9) return;
+      var sr = svg.getBoundingClientRect(), u = Math.min(W / 1920, H / 1080), g = Math.max(20, 30 * u);
+      var bx = phases.map(function(e){ var c = e.querySelector('p,h3') || e, r = c.getBoundingClientRect(), ws = [].slice.call(c.querySelectorAll('.w')), l = 1e9, rt = -1e9;
+        ws.forEach(function(w){ var q = w.getBoundingClientRect(); if (q.width){ l = Math.min(l, q.left); rt = Math.max(rt, q.right); } });
+        if (rt < l){ l = r.left; rt = r.right; } return {l: l - sr.left, r: rt - sr.left, t: r.top - sr.top, b: r.bottom - sr.top}; });
+      if (bx.length < 4) return;
+      /* each block only against the poses it is on the screen with: [block, from, to, its corner of the screen] */
+      var BL = [[bx[0], .6, .8, 'tl'], [bx[1], .6, .8, 'bl'], [bx[2], .8, 1.01, 'tl'], [bx[3], .8, 1.01, 'br']];
+      var xa = XS[0] - EXT, xb = XS[4] + EXT, za = ZS[0] - EXT, zb = ZS[3] + EXT, e = .32, need = 1;
+      function edge(a, b, out){ for (var i = 0; i <= 8; i++){ var k = i / 8; out.push([lerp(a[0], b[0], k), lerp(a[1], b[1], k), lerp(a[2], b[2], k), 0]); } }
+      for (var q = .6; q <= 1.0001; q += .02){
+        pose(q, 1); var P = [];
+        /* what is really drawn at q: the axes and their bubbles, the columns as high as they have risen, the slabs that have come */
+        XS.forEach(function(x){ edge([x, 0, za], [x, 0, zb], P); P.push([x, 0, za - .32, 17]); }); ZS.forEach(function(z){ edge([xa, 0, z], [xb, 0, z], P); P.push([xa - .32, 0, z, 17]); });
+        var kc = eo(sg(q + .02, .7, .8));
+        if (kc > 0) XS.forEach(function(x, i){ ZS.forEach(function(z, j){ var h = LV[3] * eo(sg(kc, (i + j) / 16, (i + j) / 16 + .5)); if (h > 0) P.push([x, h, z, 0], [x, h / 2, z, 0]); }); });
+        LV.slice(1).forEach(function(y, l){ if (q + .02 <= .76 + l * .04) return; var c = [[XS[0] - e, ZS[0] - e], [XS[4] + e, ZS[0] - e], [XS[4] + e, ZS[3] + e], [XS[0] - e, ZS[3] + e]];
+          c.forEach(function(a, i){ var b = c[(i + 1) % 4]; edge([a[0], y, a[1]], [b[0], y, b[1]], P); }); });
+        var O = P.map(function(pt){ var o = pr(pt[0], pt[1], pt[2]); return [o[0], o[1], pt[3]]; });
+        BL.forEach(function(B){ if (q < B[1] || q > B[2]) return; var r = B[0], sx = B[3] === 'br' ? 1 : -1, sy = B[3] === 'tl' ? -1 : 1;
+          var ex = sx < 0 ? CX - (r.r + g) : (r.l - g) - CX, ey = sy < 0 ? CY - (r.b + g) : (r.t - g) - CY;   /* the room between the middle and the block */
+          O.forEach(function(o){ var dx = (o[0] + sx * o[2] - CX) * sx, dy = (o[1] + sy * o[2] - CY) * sy; if (dx <= 0 || dy <= 0) return;
+            need = Math.min(need, Math.max(ex / dx, ey / dy)); }); });
+      }
+      G = Math.max(.6, Math.min(1, need));
+    }
     function update(p){
-      var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
+      var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); fit(); }
       /* r3 (13.11, her frames 07 · 1 / 5 / 4): the title stands alone; its halves part, a photograph opens between them and
          grows to the whole screen; on it — "We begin with questions / not about style, but about life"; then the old scene. */
       var pi = p, AI = .26; p = pi < AI ? .1 : .1 + (pi - AI) / (1 - AI) * .9;
@@ -689,10 +727,8 @@
         r.classList.toggle('typing', t > 0 && t < 1); });
       rows.forEach(function(r, i){ r.classList.toggle('on', i === act && p < .6); });
       /* the camera: a plan from straight above, then it tips over into a three-quarter view and drifts */
-      var tilt = sm(sg(p, .6, .74)), dr = sg(p, .74, 1), narrow = W / H < .9;
-      var yaw = lerp(0, -.62, tilt) - .16 * dr, pitch = lerp(Math.PI / 2 - .0001, .5, tilt) - .05 * dr, dist = lerp(20, 24, tilt);
-      var zoom = Math.min(W * (narrow ? .9 : .56) / (5.6 / dist), H * (narrow ? .5 : .66) / (4.8 / dist)) * lerp(1, .9, tilt);   /* v13: the full stage, centred */
-      CX = narrow ? W / 2 : W * lerp(.5, .6, sm(sg(p, .62, .8))); CY = narrow ? H * .3 : H * lerp(.52, .56, tilt);   /* polish: the frame steps right as the closing line comes in, so they never cross */ setCam(yaw, pitch, dist, lerp(0, 1.3, sm(sg(p, .7, .86))), zoom);
+      var narrow = W / H < .9;
+      pose(p, G);   /* r3: centred and at one size all the way */
       /* v13: each question sits at the end of the lettered axis it draws — A and C on the left, B and D on the right — and the fifth
          under the grid on axis 5; the whole set leaves as the camera tips over */
       var qo = 1 - sg(p, .58, .62);
@@ -723,6 +759,7 @@
         slabs[l].setAttribute('d', ds); beams[l].setAttribute('d', db); });
       gGrid.style.opacity = (1 - .45 * sm(sg(p, .78, .9))).toFixed(3);
     }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ lastSz = ''; });
     return { sec: sec, pin: pin, update: update };
   }
 
