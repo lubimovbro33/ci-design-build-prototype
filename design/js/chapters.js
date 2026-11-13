@@ -32,7 +32,7 @@
           if (/^[ \n\t]+$/.test(x)){ fr.appendChild(document.createTextNode(' ')); return; }
           var w = document.createElement('span'); w.className = 'w'; w.textContent = x; fr.appendChild(w); });
         t.parentNode.replaceChild(fr, t); }); });
-    [].forEach.call(e.querySelectorAll('.pill, .ph-tag'), function(x){ x.classList.add('wx'); });
+    [].forEach.call(e.querySelectorAll('.pill, .ph-tag, .r3btn'), function(x){ x.classList.add('wx'); });
     e.classList.add('sp');
   }
   function linesOf(e){
@@ -281,34 +281,46 @@
        row 1 — the traditional model: five grey blocks with waiting (hatched) between them, running to 100 %;
        row 2 — CI: one light plane, the same five works overlapping inside it, finished at 80 %; the fifth that is left is
        a blue plane carrying the figure — the card of the hero (label top-left, figure bottom-left, square bottom-right). */
-    var TY = 40, TH = 48, CY = 126, CH2 = 100, SX = PW * .8;
+    var TY = 89, TH = 50, CY = 217, CH2 = 100, SX = PW * .8;   /* r3: her frame — ruler, label, blocks, label, the CI plane */
     el('path', {d: seg(0, 0, PW, 0), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
     [0, .25, .5, .75, 1].forEach(function(t, i){ el('path', {d: seg(t * PW, -4, t * PW, 4), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
       var tt = el('text', {x: t * PW, y: -12, 'class': 'tk', 'text-anchor': i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}, gT); tt.textContent = i === 4 ? '100%' : String(t * 100); });
-    var lab1 = el('text', {x: 0, y: TY - 9, 'class': 'tl2'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
-    var lab2 = el('text', {x: 0, y: CY - 9, 'class': 'tl2'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
+    var lab1 = el('text', {x: PW / 2, y: TY - 30, 'class': 'tl2', 'text-anchor': 'middle'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
+    var lab2 = el('text', {x: PW / 2, y: CY - 32, 'class': 'tl2', 'text-anchor': 'middle'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
     var bars = [], fades = [];
     var TN = ['ARCHITECTS', 'DESIGNERS', 'CONTRACTORS', 'VENDORS', 'INSTALLERS'], CN = ['ARCHITECTURE', 'INTERIOR DESIGN', 'CONSTRUCTION', 'FURNISHINGS', 'INSTALLATION'];
     trad.forEach(function(b, i){ var d = i * .2;
-      if (i){ var g0 = trad[i - 1][1]; fades.push({e: el('rect', {x: g0 * PW + 3, y: TY, width: (b[0] - g0) * PW - 6, height: TH, fill: 'url(#abStG)', opacity: 0}, gT), d: d - .05}); }
+      if (i){ var g0 = trad[i - 1][1]; fades.push({e: el('rect', {x: g0 * PW + 3, y: TY, width: (b[0] - g0) * PW - 6, height: TH, fill: 'none', opacity: 0}, gT), d: d - .05}); }
       bars.push({e: el('rect', {x: b[0] * PW, y: TY, width: 0, height: TH, 'class': 'tb'}, gT), w: (b[1] - b[0]) * PW, d: d});
-      var t = el('text', {x: b[0] * PW + 9, y: TY + 17, 'class': 'nm', opacity: 0}, gT); t.textContent = TN[i]; fades.push({e: t, d: d + .1}); });
+      var t = el('text', {x: b[0] * PW + 9, y: TY + 15, 'class': 'nm', opacity: 0}, gT); t.textContent = TN[i]; fades.push({e: t, d: d + .1}); });
     var ciP = el('rect', {x: 0, y: CY, width: 0, height: CH2, 'class': 'cb'}, gT);
     ci.forEach(function(b, i){ var y = CY + 17 + i * 18, d = 1.25 + i * .12;
       var t = el('text', {x: b[0] * PW + 9, y: y, 'class': 'nm k', opacity: 0}, gT); t.textContent = CN[i]; fades.push({e: t, d: d});
       bars.push({e: el('rect', {x: b[0] * PW + 9, y: y + 4, width: 0, height: 1.6, 'class': 'cl'}, gT), w: (b[1] - b[0]) * PW - 18, d: d}); });
     var svB = el('rect', {x: SX + 3, y: CY, width: 0, height: CH2, 'class': 'sb'}, gT), SW = PW - SX - 3;
     var svG = el('g', {opacity: 0}, gT);
-    var s1 = el('text', {x: SX + 13, y: CY + 17, 'class': 'nm k'}, svG); s1.textContent = 'PROJECT TIME SAVED';
-    var s2 = el('text', {x: SX + 13, y: CY + 28, 'class': 'nm k'}, svG); s2.textContent = 'AVERAGE';
-    var svN = el('text', {x: SX + 9, y: CY + CH2 - 11, 'class': 'big'}, svG), svV = el('tspan', {}, svN), svP = el('tspan', {'class': 'pc', dx: 3, dy: -23}, svN); svV.textContent = '0'; svP.textContent = '%';
-    el('rect', {x: PW - 16, y: CY + CH2 - 16, width: 6, height: 6, fill: '#000'}, svG);
+    var s1 = el('text', {x: SX + 14, y: CY + 19, 'class': 'sl'}, svG); s1.textContent = 'PROJECT TIME SAVED';
+    var s2 = el('text', {x: SX + 14, y: CY + 28.5, 'class': 'sl'}, svG); s2.textContent = 'AVERAGE';
+    var svN = el('text', {x: SX + 12, y: CY + CH2 - 13, 'class': 'big'}, svG), svV = el('tspan', {}, svN), svP = el('tspan', {'class': 'pc', dx: 7, dy: -27}, svN); svV.textContent = '0'; svP.textContent = '%';
+    el('rect', {x: PW - 17, y: CY + CH2 - 17, width: 6, height: 6, fill: '#000'}, svG);
     /* scene 3: your decisions (squares) on one line; everything in between, hatched, is ours */
     var gO = el('g', {'class': 'ab-own'}, svg), MS = [0, .22, .41, .63, 1];
     var own = el('path', {d: seg(0, 0, PW, 0), 'class': 'own', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gO);
     var hat = MS.slice(1).map(function(m, i){ var a = MS[i]; return {e: el('rect', {x: a * PW + 14, y: -6, width: 0, height: 12, fill: 'url(#abStW)', 'class': 'br'}, gO), w: (m - a) * PW - 28}; });
     var dots = MS.map(function(m){ return el('rect', {x: m * PW - 5, y: -5, width: 10, height: 10, 'class': 'ms'}, gO); });
 
+    /* r3 (13.11, her frame 03 About · 7): no slider. One line across the screen; one circle draws in the middle, comes apart
+       into two that overlap — "we own everything in between" stands in the overlap — then a smaller circle draws at each end;
+       squares mark where the circles meet the line. Units: 1/1920 of the width, origin at the middle of the line. */
+    var gC = el('g', {'class': 'ab-circ'}, svg);
+    var cgr = el('linearGradient', {id: 'abCg', x1: 0, y1: 0, x2: 1, y2: 1}, defs); el('stop', {offset: 0, 'stop-color': '#EBEBEB', 'stop-opacity': 1}, cgr); el('stop', {offset: .51, 'stop-color': '#EBEBEB', 'stop-opacity': .43}, cgr); el('stop', {offset: 1, 'stop-color': '#EBEBEB', 'stop-opacity': .43}, cgr);
+    var lgr = el('linearGradient', {id: 'abLg', gradientUnits: 'userSpaceOnUse', x1: -1020, y1: 0, x2: 1020, y2: 0}, defs); el('stop', {offset: 0, 'stop-color': '#EBEBEB', 'stop-opacity': .1}, lgr); el('stop', {offset: .5, 'stop-color': '#EBEBEB', 'stop-opacity': .33}, lgr); el('stop', {offset: 1, 'stop-color': '#EBEBEB', 'stop-opacity': .1}, lgr);
+    var cLine = el('path', {d: 'M0 0H0', 'class': 'cl'}, gC), R1 = 245, R2 = 129, DX = 169, EX = 781;
+    var mkC = function(r){ return el('circle', {r: r, cx: 0, cy: 0, 'class': 'cc', pathLength: 1, transform: 'rotate(-90)'}, gC); };
+    var cA = mkC(R1), cB = mkC(R1), cS1 = mkC(R2), cS2 = mkC(R2);
+    cS1.setAttribute('transform', 'translate(' + (-EX) + ' 0) rotate(90)'); cS2.setAttribute('transform', 'translate(' + EX + ' 0) rotate(-90)');
+    var cQ = [-(EX - R2), -(DX + R1), DX + R1, EX - R2].map(function(x){ return el('rect', {x: x - 4, y: -4, width: 8, height: 8, 'class': 'cq', opacity: 0}, gC); });
+    var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .13;
     var LY = null, last = -1, OWN_DS = 1;
     function layout(){
       var w = svg.clientWidth || window.innerWidth, h = svg.clientHeight || window.innerHeight, port = w / h < 1, VW = port ? 1080 : 1920, VH = VW * h / w;
@@ -334,11 +346,19 @@
       var mU = 48 * VW / w, sc3 = port ? sc2 : (VW - 2 * mU) / 1080;
       OWN_DS = Math.max(1, sc3); gO.style.setProperty('--ds', OWN_DS.toFixed(3));   /* non-scaling strokes dash in screen units */
       gO.setAttribute('transform', 'translate(' + f1(port ? tx0 : mU) + ' ' + f1(port ? VH * .62 : VH * .56) + ') scale(' + sc3.toFixed(4) + ')');
+      /* r3: the chart hangs from the top (her frames: the ruler at 415 under the title, at 150 once the title has left); the circles sit on the middle */
+      LY.t = [tx0, sc2, port ? VH * .34 : 415, port ? VH * .3 : 150];
+      var cs = port ? VW / 1920 * .9 : 1; gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27) + ') scale(' + cs + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
     }
     layout(); window.addEventListener('resize', function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ layout(); if (last >= 0){ var q = last; last = -1; update(q); } });   /* the title's width needs the real font */
-    function update(p){
-      if (p === last) return; last = p;
+    function update(pi){
+      if (pi === last) return; last = pi;
+      /* r3: the chapter opens on "One ___": the word changes with the scroll, then the old timeline runs from its start */
+      var wi = pi < .045 ? 0 : pi < .09 ? 1 : 2;
+      if (wi !== oneW){ oneW = wi; ows.forEach(function(b, i){ b.classList.toggle('on', i === wi); b.classList.toggle('up', i < wi); }); }
+      if (one){ var oo = 1 - sg(pi, .122, .142); one.style.opacity = oo.toFixed(3); one.style.visibility = oo > 0 ? '' : 'hidden'; if (!LITE) one.style.filter = oo < 1 ? 'blur(' + ((1 - oo) * 6).toFixed(1) + 'px)' : ''; }
+      var p = sg(pi, IN, 1);
       phases.forEach(function(e){ phase(e, p); });
       /* the five layers draw, spread apart in their own frames; then they come together and register */
       /* draw .00–.10, then it holds, whole, until .18 (user 15:27: let it be complete before it comes apart); apart .18–.30; together .38–.50 */
@@ -357,12 +377,23 @@
       var tk = sm(sg(p, .6, .66)), out3 = sm(sg(p, .79, .83)), ho = (1 - sm(sg(p, .59, .64))).toFixed(3);
       gSec.style.opacity = ho; gRoof.style.opacity = ho; gDis.style.opacity = ho;
       gT.style.opacity = (tk * (1 - out3)).toFixed(3);
+      var tyk = sm(sg(p, .705, .735)); gT.setAttribute('transform', 'translate(' + f1(LY.t[0]) + ' ' + f1(lerp(LY.t[2], LY.t[3], tyk)) + ') scale(' + LY.t[1].toFixed(4) + ')');
       bars.forEach(function(b){ var k = sg(p, .63 + b.d * .04, .665 + b.d * .04), w = f1(b.w * eo(k)); if (b.cw !== w){ b.cw = w; b.e.setAttribute('width', w); } });
       fades.forEach(function(f){ var o = sg(p, .64 + f.d * .04, .665 + f.d * .04).toFixed(2); if (f.co !== o){ f.co = o; f.e.setAttribute('opacity', o); } });
       var kc = f1(SX * eo(sg(p, .665, .7))); if (ciP.__w !== kc){ ciP.__w = kc; ciP.setAttribute('width', kc); }
       var ks = sg(p, .71, .76), sw = f1(SW * eo(ks)); if (svB.__w !== sw){ svB.__w = sw; svB.setAttribute('width', sw); }
       svG.setAttribute('opacity', sg(p, .725, .75).toFixed(2)); txt(svV, Math.round(20 * eo(ks))); txt(pctEl, Math.round(20 * eo(ks)));
       /* your decisions, our everything-in-between */
+      /* r3: the closing — the line, one circle, two circles, the blue words, the outer circles */
+      var kl = eo(sg(p, .84, .885)), k0 = eo(sg(p, .86, .9)), ksp = sm(sg(p, .9, .94)), kss = eo(sg(p, .94, .98));
+      gC.style.opacity = sg(p, .835, .845).toFixed(3);
+      cLine.setAttribute('d', 'M' + f1(-1020 * kl) + ' 0H' + f1(1020 * kl));
+      cA.style.strokeDashoffset = cB.style.strokeDashoffset = (1 - k0).toFixed(4);
+      cA.setAttribute('transform', 'translate(' + f1(-DX * ksp) + ' 0) rotate(-90)'); cB.setAttribute('transform', 'translate(' + f1(DX * ksp) + ' 0) rotate(-90)');
+      cB.style.opacity = ksp > 0 ? 1 : 0;
+      cS1.style.strokeDashoffset = cS2.style.strokeDashoffset = (1 - kss).toFixed(4);
+      cQ.forEach(function(q, i){ var inner = i === 1 || i === 2; q.setAttribute('opacity', (inner ? sg(p, .93, .95) : sg(p, .965, .985)).toFixed(2)); });
+      stage.style.setProperty('--ob', eo(sg(p, .915, .95)).toFixed(3));
       var km = sg(p, .82, .88); gO.style.opacity = sg(p, .81, .84).toFixed(3); own.style.strokeDashoffset = ((1 - km) * OWN_DS).toFixed(3);
       dots.forEach(function(d, i){ d.style.opacity = sg(p, .83 + i * .014, .85 + i * .014).toFixed(3); });
       hat.forEach(function(h, i){ var w = f1(h.w * eo(sg(p, .87 + i * .018, .93 + i * .018))); if (h.cw !== w){ h.cw = w; h.e.setAttribute('width', w); } });
@@ -608,7 +639,8 @@
     var foot = mk(gFrame, 'ap-ft'), cols = mk(gFrame, 'ap-col'), slabs = LV.slice(1).map(function(){ return mk(gFrame, 'ap-sl'); }), beams = LV.slice(1).map(function(){ return mk(gFrame, 'ap-bm'); });
     var bub = function(t){ var g = el('g', {'class': 'ap-bub'}, gBub); el('circle', {r: 15, 'vector-effect': 'non-scaling-stroke'}, g); var x = el('text', {y: 5}, g); x.textContent = t; return g; };
     var bN = XS.map(function(_, i){ return bub(String(i + 1)); }), bL = ZS.map(function(_, i){ return bub('ABCD'[i]); });
-    var W = 1, H = 1, CX = 0, CY = 0, F = 1, cam = null;
+    var W = 1, H = 1, CX = 0, CY = 0, F = 1, cam = null, apIn = sec.querySelector('#apIn');
+    function eio(x){ x = clamp01(x); return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
     function size(){ var r = svg.getBoundingClientRect(); W = r.width || 1; H = r.height || 1; svg.setAttribute('viewBox', '0 0 ' + f1(W) + ' ' + f1(H)); }
     function setCam(yaw, pitch, dist, ty, zoom){
       var cp = Math.cos(pitch), C = [dist * Math.sin(yaw) * cp, ty + dist * Math.sin(pitch), dist * Math.cos(yaw) * cp];
@@ -623,6 +655,11 @@
     var lastSz = '';
     function update(p){
       var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
+      /* r3 (13.11, her frames 07 · 1 / 5 / 4): the title stands alone; its halves part, a photograph opens between them and
+         grows to the whole screen; on it — "We begin with questions / not about style, but about life"; then the old scene. */
+      var pi = p, AI = .26; p = pi < AI ? .1 : .1 + (pi - AI) / (1 - AI) * .9;
+      if (apIn){ var out = sg(pi, AI - .035, AI), vals = [eio(sg(pi, .025, .085)), eio(sg(pi, .085, .16)), eo(sg(pi, .16, .19)), sg(pi, .03, .06), out], key = vals.map(function(v){ return v.toFixed(3); }).join('/');
+        if (apIn.__k !== key){ apIn.__k = key; ['--sp', '--gr', '--qk', '--pho', '--out'].forEach(function(n, i){ apIn.style.setProperty(n, vals[i].toFixed(3)); }); apIn.style.visibility = out >= 1 ? 'hidden' : ''; } }
       phases.forEach(function(e){ phase(e, p); });
       /* the questions type themselves; the one being asked is bright, the answered ones settle */
       var act = -1;

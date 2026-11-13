@@ -86,11 +86,11 @@
 .ch-about .ch-t{width:min(27vw,480px)}   /* clear of the bigger, centred house on narrower screens */
 /* the title, rebuilt (user 15:21: it ran into the centred drawing; the staggered lines read as a template): the face of his Figma
    headings (Zalando Sans Expanded 400, −8 %, 100 %), flush left, sized to stay inside the text column */
-.ch-about .ab-ttl{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-weight:400;font-size:max(30px, calc(56 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;display:block}
+.ch-about .ab-ttl{font-family:"Zalando Sans Expanded",sans-serif;font-weight:400;font-size:max(30px, calc(56 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;display:block}
 .ch-about .ab-ttl span{display:inline;margin:0;padding:0}
 .ch-about .ab-draw{position:absolute;inset:0;width:100%;height:100%;overflow:visible}   /* v13: the whole stage; units = 1/1920 of the width (js layout) */
 .ch-about .ab-draw .box{fill:#EBEBEB;fill-opacity:.03;stroke:#EBEBEB;stroke-opacity:.18;opacity:0}
-.ch-about .ab-draw .lt{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:46px;opacity:0;letter-spacing:.1em;fill:#EBEBEB}
+.ch-about .ab-draw .lt{font-family:"Zalando Sans Expanded",sans-serif;font-size:46px;opacity:0;letter-spacing:.1em;fill:#EBEBEB}
 .ch-about .ab-dis{opacity:0}
 .ch-about .ab-dis .ld{fill:none;stroke:var(--hl);stroke-opacity:.42;stroke-dasharray:1 1}
 .ch-about .ab-dis .sq{fill:var(--acc)}
@@ -105,15 +105,15 @@
 .ch-about .ab-time .ms{fill:var(--acc);opacity:0}
 /* v13 time panel (right column): ruler, hatched bars, labels — Bright Gray / grey, no colour */
 .ch-about .ab-time .rl{fill:none;stroke:#EBEBEB;stroke-opacity:.28;stroke-width:1}
-.ch-about .ab-time .tk{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:11px;letter-spacing:.04em;fill:var(--dimc)}
-.ch-about .ab-time .tl2{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:12px;letter-spacing:.04em;fill:var(--dimc)}
+.ch-about .ab-time .tk{font-family:"Zalando Sans Expanded",sans-serif;font-size:11px;letter-spacing:.04em;fill:var(--dimc)}
+.ch-about .ab-time .tl2{font-family:"Zalando Sans Expanded",sans-serif;font-size:12px;letter-spacing:.04em;fill:var(--dimc)}
 .ch-about .ab-time .hi{fill:#EBEBEB}
 .ch-about .ab-time .sav{stroke:#EBEBEB}
 .ch-about .ab-own{opacity:0}
 .ch-about .ab-own .own{fill:none;stroke:#EBEBEB;stroke-opacity:.35;stroke-width:1;stroke-dasharray:1 1;stroke-dashoffset:1}
 .ch-about .ab-own .ms{fill:#EBEBEB;opacity:0}
 .ch-about .ch-pct{left:calc(760 * var(--u));top:calc(250 * var(--u));bottom:auto}
-.ch-about .ch-pct .v{font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-size:max(64px, calc(200 * var(--u)));letter-spacing:-.08em}
+.ch-about .ch-pct .v{font-family:"Zalando Sans Expanded",sans-serif;font-size:max(64px, calc(200 * var(--u)));letter-spacing:-.08em}
 .ch-about .ch-pct sup{color:#EBEBEB}
 
 @media (max-aspect-ratio: 1/1){
@@ -430,7 +430,7 @@
 .pj4{background:#000;color:#EBEBEB;--pb:calc(36px + 24 * var(--u))}
 .pj4-pin,.pj4-stage{position:relative;height:100vh;min-height:680px;overflow:hidden}
 .pj4-stage{touch-action:pan-y}
-.pj4 .lab{font-family:"TG Ext",sans-serif;font-weight:400;font-size:max(10px, calc(11 * var(--u)));letter-spacing:.08em;text-transform:uppercase;line-height:1.2}
+.pj4 .lab{font-family:"Zalando Sans Expanded",sans-serif;font-weight:400;font-size:max(10px, calc(11 * var(--u)));letter-spacing:.08em;text-transform:uppercase;line-height:1.2}
 /* the photograph: natural, full bleed; the next one opens out of a window (the CI window) to full bleed, its picture settling from
    ×1.22 as it opens; then a slow drift. Only two soft shadows: under the header and under the name. */
 .pj4-ph,.pj4-im,.pj4-im .kb{position:absolute;inset:0;margin:0}
@@ -452,7 +452,7 @@
 .pj4-c{grid-area:1/1;display:flex;flex-direction:column;align-items:flex-start;gap:calc(22 * var(--u));pointer-events:none}
 .pj4-k,.pj4-mt{display:flex;gap:calc(28 * var(--u));color:#fff}
 .pj4-k span:first-child{color:#fff}
-.pj4-nm{margin:0;font-family:"TG Ext",sans-serif;font-weight:700;font-size:max(34px, calc(92 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;color:var(--bright);white-space:nowrap}
+.pj4-nm{margin:0;font-family:"Zalando Sans Expanded",sans-serif;font-weight:700;font-size:max(34px, calc(92 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase;color:var(--bright);white-space:nowrap}
 .pj4-nm .l{display:block;overflow:hidden;padding:.06em .12em .06em 0;margin:-.06em -.12em -.06em 0}
 .pj4-nm .l>span{display:block;transform:translateY(112%);transition:transform .55s cubic-bezier(.7,0,.84,0)}
 .pj4-k>span,.pj4-mt>span{display:block;opacity:0;transform:translateY(10px);transition:opacity .35s,transform .45s cubic-bezier(.7,0,.84,0)}
@@ -466,15 +466,15 @@
   background:var(--bright);color:#1D1D1D;display:flex;flex-direction:column}
 .pj4-top{display:flex;justify-content:space-between;align-items:center;padding:calc(20 * var(--u)) calc(24 * var(--u)) 0}
 .pj4-top i{display:inline-block;width:max(5px, calc(6 * var(--u)));height:max(5px, calc(6 * var(--u)));background:#1D1D1D;margin-right:calc(12 * var(--u));vertical-align:1px}
-.pj4-ttl{margin:calc(44 * var(--u)) calc(24 * var(--u)) 0;font-family:"TG Ext",sans-serif;font-weight:400;font-size:max(18px, calc(30 * var(--u)));line-height:.96;letter-spacing:-.035em;text-transform:uppercase}
+.pj4-ttl{margin:calc(44 * var(--u)) calc(24 * var(--u)) 0;font-family:"Zalando Sans Expanded",sans-serif;font-weight:400;font-size:max(18px, calc(30 * var(--u)));line-height:.96;letter-spacing:-.035em;text-transform:uppercase}
 .pj4-lead{margin:calc(22 * var(--u)) calc(24 * var(--u)) 0;display:flex;flex-direction:column;gap:calc(10 * var(--u))}
-.pj4-lead p{margin:0;font-family:"TG Ext",sans-serif;font-size:max(11px, calc(13 * var(--u)));line-height:1.55;letter-spacing:-.01em;color:#1D1D1D}
+.pj4-lead p{margin:0;font-family:"Zalando Sans Expanded",sans-serif;font-size:max(11px, calc(13 * var(--u)));line-height:1.55;letter-spacing:-.01em;color:#1D1D1D}
 .pj4-ix{list-style:none;margin:auto 0 0;padding:0 calc(24 * var(--u)) calc(24 * var(--u))}
 .pj4-r{all:unset;box-sizing:border-box;cursor:pointer;position:relative;width:100%;height:calc(56 * var(--u));min-height:38px;display:grid;
   grid-template-columns:calc(16 * var(--u)) calc(38 * var(--u)) 1fr;align-items:center;border-top:1px solid rgba(29,29,29,.16);color:#1D1D1D;transition:color .5s}
 .pj4-ix li:last-child .pj4-r{border-bottom:1px solid rgba(29,29,29,.16)}
-.pj4-r .n{font-family:"TG Ext",sans-serif;font-size:max(10px, calc(10.5 * var(--u)));letter-spacing:.08em;text-transform:uppercase}
-.pj4-r .nm{font-family:"TG Ext",sans-serif;font-size:max(12px, calc(15 * var(--u)));letter-spacing:-.01em;text-transform:uppercase;white-space:nowrap;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+.pj4-r .n{font-family:"Zalando Sans Expanded",sans-serif;font-size:max(10px, calc(10.5 * var(--u)));letter-spacing:.08em;text-transform:uppercase}
+.pj4-r .nm{font-family:"Zalando Sans Expanded",sans-serif;font-size:max(12px, calc(15 * var(--u)));letter-spacing:-.01em;text-transform:uppercase;white-space:nowrap;transition:transform .7s cubic-bezier(.16,1,.3,1)}
 .pj4-r .sq{width:max(5px, calc(6 * var(--u)));height:max(5px, calc(6 * var(--u)));background:#1D1D1D;transform:scale(0);transition:transform .5s cubic-bezier(.16,1,.3,1)}
 .pj4-r.on{color:#1D1D1D}
 .pj4-r.on .sq{transform:none}
@@ -482,7 +482,7 @@
 .pj4-r:focus-visible{outline:1px solid #1D1D1D;outline-offset:2px}
 /* the portfolio: the panel's dark base, the header CTA's anatomy (label 18/93 %, square 8 at 8/8, lines on hover) */
 .pj4-cta{--sq:#EBEBEB;position:relative;display:block;flex:none;height:max(52px, calc(78 * var(--u)));background:#1D1D1D;color:#EBEBEB;text-decoration:none}
-.pj4-cta .t{position:absolute;left:calc(24 * var(--u));top:calc(13 * var(--u));display:flex;flex-direction:column;align-items:flex-start;font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-weight:500;font-size:max(12px, calc(18 * var(--u)));line-height:.93;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap}
+.pj4-cta .t{position:absolute;left:calc(24 * var(--u));top:calc(13 * var(--u));display:flex;flex-direction:column;align-items:flex-start;font-family:"Zalando Sans Expanded",sans-serif;font-weight:500;font-size:max(12px, calc(18 * var(--u)));line-height:.93;letter-spacing:-.05em;text-transform:uppercase;white-space:nowrap}
 .pj4-cta .sqd{position:absolute;right:calc(8 * var(--u));top:calc(8 * var(--u));width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:var(--sq)}
 .pj4-cta .ln{position:absolute;display:block;background:var(--sq);transition:transform .55s cubic-bezier(.65,0,.35,1)}
 .pj4-cta .lh{right:calc(16 * var(--u));top:calc(12 * var(--u));height:1px;width:calc(66 * var(--u));transform:scaleX(0);transform-origin:100% 50%}
@@ -507,7 +507,7 @@
 .pj4-ar:active{transform:scale(.96)}
 .pj4-ar:focus-visible,.pj4-pg button:focus-visible{outline:1px solid #fff;outline-offset:3px}
 .pj4-pg{list-style:none;margin:0 0 0 calc(28 * var(--u));padding:0;display:flex;gap:calc(22 * var(--u))}
-.pj4-pg button{all:unset;cursor:pointer;display:flex;align-items:center;gap:calc(12 * var(--u));padding:calc(10 * var(--u)) 0;font-family:"TG Ext",sans-serif;font-size:max(10px, calc(11 * var(--u)));letter-spacing:.08em;color:#fff;transition:color .5s}
+.pj4-pg button{all:unset;cursor:pointer;display:flex;align-items:center;gap:calc(12 * var(--u));padding:calc(10 * var(--u)) 0;font-family:"Zalando Sans Expanded",sans-serif;font-size:max(10px, calc(11 * var(--u)));letter-spacing:.08em;color:#fff;transition:color .5s}
 .pj4-pg i{position:relative;display:block;width:calc(64 * var(--u));min-width:28px;height:1px;background:rgba(255,255,255,.3);overflow:hidden}
 .pj4-pg i::after{content:"";position:absolute;inset:0;background:#fff;transform:scaleX(0);transform-origin:0 50%}
 .pj4-pg button.on{color:#fff}
@@ -538,7 +538,7 @@
 /* ---------------------------------------------------------------- 05 DIFFERENCE · v10 = Figma 289:8972 (user 09.11 14:41), in --u
    (1/1920 of the width). The photographs sit in a viewport-high sticky layer behind the body, so the grid and its cards scroll over
    a still picture. Before the body, the section opens out of a window (refs Alma + Tudor). */
-.df2{position:relative;color:#EBEBEB;background:#000;--zx:"Zalando Sans Expanded","TG Ext",sans-serif;--zs:"Zalando Sans SemiExpanded","Zalando Sans Expanded","TG Ext",sans-serif}
+.df2{position:relative;color:#EBEBEB;background:#000;--zx:"Zalando Sans Expanded",sans-serif;--zs:"Zalando Sans SemiExpanded","Zalando Sans Expanded",sans-serif}
 .df2-bgw{position:absolute;inset:0;pointer-events:none}
 .df2-bgs{position:sticky;top:0;height:100vh;overflow:hidden}
 .df2-bg{position:absolute;inset:0;opacity:0;transition:opacity 1.2s ease}
@@ -655,7 +655,7 @@
 .cl2-dot{position:absolute;right:22px;bottom:22px;width:9px;height:9px;border-radius:50%;background:#283E4B}
 .cl2-say{position:relative;height:calc(1340 * var(--u));min-height:760px}
 /* v10 (user 15:25): the face of his Figma headings; photographs frameless on the grid */
-.cl2-l1,.cl2-l2{position:absolute;margin:0;font-family:"Zalando Sans Expanded","TG Ext",sans-serif;font-weight:400;text-transform:uppercase;font-size:max(36px, calc(104 * var(--u)));line-height:1;letter-spacing:-.08em;z-index:2}
+.cl2-l1,.cl2-l2{position:absolute;margin:0;font-family:"Zalando Sans Expanded",sans-serif;font-weight:400;text-transform:uppercase;font-size:max(36px, calc(104 * var(--u)));line-height:1;letter-spacing:-.08em;z-index:2}
 .cl2-l1{left:calc(24 * var(--u));top:calc(90 * var(--u));display:flex;flex-direction:column}
 .cl2-l2{left:calc(421 * var(--u));top:calc(1052 * var(--u));color:#96A9BF}
 .cl2-fr{position:absolute;will-change:transform;overflow:hidden}
@@ -697,7 +697,7 @@
 .rv2-qs{display:grid;height:100%}
 .rv2-q{grid-area:1/1;display:flex;flex-direction:column;gap:16px;opacity:0;visibility:hidden;transform:translateY(12px);transition:opacity .5s,transform .8s cubic-bezier(.2,.8,.2,1),visibility 0s .5s}
 .rv2-q.on{opacity:1;visibility:visible;transform:none;transition:opacity .7s .2s,transform 1s cubic-bezier(.2,.8,.2,1) .2s,visibility 0s}
-.rv2-mk{font-family:"TG Ext",sans-serif;font-size:56px;line-height:.6;color:#283E4B}
+.rv2-mk{font-family:"Zalando Sans Expanded",sans-serif;font-size:56px;line-height:.6;color:#283E4B}
 .rv2-q p{margin:auto 0 0;font-weight:400;text-transform:uppercase;font-size:clamp(20px,1.9vw,30px);line-height:1.08;letter-spacing:-.015em}
 .rv2-who{color:#1D1D1D}
 .rv2-v{margin-top:24px;color:#1D1D1D}
@@ -714,7 +714,7 @@
 .pr3{position:relative;color:#EBEBEB;background:linear-gradient(160deg,#18181A 0%,#232427 50%,#2A3138 100%)}
 .pr3 .ch-pin{height:640vh}
 .pr3-stage{position:sticky;top:0;height:100vh;min-height:640px;overflow:hidden}
-.pr3-emb{position:absolute;left:-1vw;top:2vh;writing-mode:vertical-rl;transform:rotate(180deg);font-family:"TG Ext",sans-serif;text-transform:uppercase;font-size:clamp(90px,13.5vw,240px);line-height:.8;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.07);text-shadow:1px 1px 0 rgba(255,255,255,.03),-1px -1px 0 rgba(0,0,0,.3);pointer-events:none;white-space:nowrap}
+.pr3-emb{position:absolute;left:-1vw;top:2vh;writing-mode:vertical-rl;transform:rotate(180deg);font-family:"Zalando Sans Expanded",sans-serif;text-transform:uppercase;font-size:clamp(90px,13.5vw,240px);line-height:.8;letter-spacing:-.04em;color:transparent;-webkit-text-stroke:1px rgba(235,235,235,.07);text-shadow:1px 1px 0 rgba(255,255,255,.03),-1px -1px 0 rgba(0,0,0,.3);pointer-events:none;white-space:nowrap}
 .pr3-pic{position:absolute;left:27vw;right:0;top:calc(var(--hdr) + 40px);bottom:9vh;overflow:hidden;background:#1A1A1C}
 .pr3-im{position:absolute;inset:0;margin:0;clip-path:inset(0 0 0 100%);transition:clip-path 1.1s cubic-bezier(.77,0,.18,1)}
 .pr3-im img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.1);transition:transform 2.2s cubic-bezier(.2,.8,.2,1)}

@@ -15,7 +15,7 @@ body.about .hdr{opacity:1}
 .about .ph{background:rgba(235,235,235,.12);font-family:inherit;font-size:inherit;padding:0 .2em}
 
 /* ---------- voices (the homepage's five, nothing in between) */
-.about{--q:calc(480 * var(--u));--fh:"Zalando Sans Expanded","TG Ext",sans-serif;--ft:"Zalando Sans SemiExpanded","Zalando Sans Expanded","TG Ext",sans-serif;--blue:#96A9BF}
+.about{--q:calc(480 * var(--u));--fh:"Zalando Sans Expanded",sans-serif;--ft:"Zalando Sans SemiExpanded","Zalando Sans Expanded",sans-serif;--blue:#96A9BF}
 .a-h2{margin:0;font-family:var(--fh);font-weight:400;font-size:max(34px, calc(66 * var(--u)));line-height:.98;letter-spacing:-.07em;text-transform:uppercase;color:#EBEBEB;
   display:block;padding-left:1em;text-indent:-1em}
 .a-h2 .t2, .a-say .t2, .a-big .t2{color:var(--blue)}
