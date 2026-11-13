@@ -302,7 +302,15 @@ html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;f
   .pr4 .pr4-t2{left:calc(48 * var(--u));top:calc(155 * var(--u));max-width:none}
   html body .pr4 .pr4-h,html body .pr4 .pr4-end .r,html body .pr4 .pr4-end b{font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;margin:0!important}
   html body .pr4 .pr4-lead{margin:calc(30 * var(--u)) 0 0!important;width:calc(430 * var(--u));max-width:none!important}
-  .pr4 .pr4-end{left:calc(48 * var(--u))!important;top:calc(155 * var(--u))!important}
+  .pr4 .pr4-end{top:calc(155 * var(--u))!important}   /* its place along the strip is set by js */
+  /* the strip (her note 21:29 → 21:33): each step whole inside its circle — number, name, sentence — centred; sizes in the sentence's em (js sets it) */
+  .pr6-s{position:absolute;left:0;top:0;width:11.5em;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;text-align:center}
+  .pr6-c,.pr6-t{position:static;transform:none}
+  .pr6-c{gap:.55em}
+  .pr6-c .n{font-size:.7em}
+  .pr6-c .nm{font-weight:400;font-size:1.5em;line-height:.97;letter-spacing:-.03em}
+  .pr6-t{margin-top:.75em}
+  html body .pr6-d{font-size:1em}
   .pr4 .pr4-end b{padding-left:0!important;color:var(--blue)!important}
 }
 @media (max-aspect-ratio: 1/1){
