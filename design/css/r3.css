@@ -376,7 +376,8 @@ html body .fq5 .qh .n{font-family:var(--fx)!important;font-weight:400!important;
 html body .fq5 .qh .n::before{display:none}
 html body .fq5 .qh .pl{width:var(--q);min-width:0;margin-top:0}
 @media (min-aspect-ratio: 1/1){
-  html body .fq5 .fq-hd{padding:calc(195 * var(--u)) var(--m) calc(149 * var(--u))}
+  html body .fq5 .fq-hd{padding:calc(150 * var(--u)) var(--m) calc(150 * var(--u))}   /* the spacing system (13.11 23:43): 150 above the title, 150 to the list, 150 under the list */
+  html body .fq5{padding-bottom:calc(150 * var(--u))}
   html body .fq5 .fq-hd .ch-title{margin:0 0 0 calc(421 * var(--u) - var(--m))!important;padding:0!important;text-indent:0!important;font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;white-space:nowrap!important;color:#FFFFFF}
   html body .fq5 .qh{grid-template-columns:calc(421 * var(--u) - var(--m)) minmax(0,1fr) auto;padding:calc(34 * var(--u)) 0}
   html body .fq5 .ain{margin-left:calc(421 * var(--u) - var(--m));padding:calc(12 * var(--u)) 0 calc(34 * var(--u));grid-template-columns:calc(539 * var(--u)) minmax(0,1fr)}
@@ -502,3 +503,10 @@ html body .chap{transition:opacity .6s var(--e-out),transform .6s var(--e-out),c
   .rv6-q footer .ln{display:none}
   html body .rv6 .rv6-all{display:block;margin-top:40px;background:#fff;color:#000;--sq:#000}
 }
+
+/* ================================================================== the spacing system (her words 13.11 23:37: "щоб у нас була система… однакова відстань"; agreed 23:43) — one step of 50,
+   the numbers of her own new frames: the screen's fields 50 on every side (--m in css/site.css, it was 48); the text line 421, a title on it 50 from the
+   top; content ends 50 from the bottom and never under the rail; flowing blocks (FAQ, footer) have 150 above, 150 under and 150 between a title and its
+   content; inside a block 25 / 50 / 100 / 150. Done now: the side field, the FAQ, the footer. The screens whose titles stand at the page margin under
+   the logo (Hero, Philosophy, About, Difference, Suite, Approach, Process, CTA) keep their places until she redraws them. */
+@media (min-aspect-ratio: 1/1) and (min-width: 901px){ html body .ch-ftr{padding-top:calc(150 * var(--u))} }

@@ -3,7 +3,7 @@
   --ivory:#f1efe9; --ivory-2:#e9e6df; --stone:#d9d4cb; --char:#111; --char-2:#171716; --mist:#8a877f; --haze:#b9b5ad; --amber:#c89a5a;
   --line-l:rgba(17,17,17,.16); --line-d:rgba(241,239,233,.16); --line-l2:rgba(17,17,17,.08);
   --sans:"Inter","Helvetica Neue",Arial,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace; --serif:"Instrument Serif",Georgia,serif;
-  --m:48px; --hdr:64px; --gap:16px;
+  --m:50px; --hdr:64px; --gap:16px;
   --e-expo:cubic-bezier(.83,0,.17,1); --e-out:cubic-bezier(.25,1,.5,1);
 }
 *,*::before,*::after{box-sizing:border-box}
