@@ -142,7 +142,7 @@
   function preTick(now){
     if (preDone) return;
     var el = (now - pre0) / 1000;
-    if (GL && !gl3() && (el > 6 || (window.__pre3d && window.__pre3d.state === 'error'))) { window.__ciFb = {el:el, st:window.__pre3d ? window.__pre3d.state : 'не завантажилась'}; GL = false; pickDom(); pre0 = now; el = 0; }
+    if (GL && !gl3() && (el > 6 || (window.__pre3d && window.__pre3d.state === 'error'))) { GL = false; pickDom(); pre0 = now; el = 0; }
     if (GL && gl3()) {                                                              /* the 3D is up: warm it under the still, go next frame */
       preDone = true; var go = function(){ requestAnimationFrame(startIntro); };
       try { if (window.__pre3d.warm) window.__pre3d.warm(T).then(go, go); else go(); } catch (e) { go(); } return;
@@ -227,7 +227,6 @@
   }
   /* WebGL: the slides change through a wave of fluted glass (js/pre3d.js slideFrame); DOM crossfade is the fallback */
   var GLS = false, tr = null, loopOn = false, TR_DUR = 2.6, heroOff = false;
-  window.__ci = {gl:function(){ return GL; }, gls:function(){ return GLS; }, tr:function(){ return tr; }, loop:function(){ return loopOn; }, slide:slide, state:state, st:function(){ return ST; }};   /* read by js/diag.js (?diag) */
   function ease3(u){ u = clamp01(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
   var KB_T = 9.1;
   function kbOf(i, now){ return i === 0 ? 0 : clamp01((now - (slide.start[i] || now)) / (KB_T * 1000)); }
