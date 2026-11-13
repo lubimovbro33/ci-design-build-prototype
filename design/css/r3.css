@@ -404,7 +404,7 @@ html body .ch-cta .ct-side .ct-say{text-indent:0!important}
    Evened: the card runs from the screen's edge to the vertical line (her frame leaves 5 at the left). Nothing stands under the rail: the lead, the
    controls and the button keep 58 px from the bottom, and on a low window the card grows so that its title stays clear of the lead.
    Phones keep their own layout. */
-.pj4-rh,.pj4-rv,.pj4-card,br.pjbr{display:none}
+.pj4-rh,.pj4-rv,.pj4-card,br.pjbr,.pj4-ar .lb{display:none}
 @media (min-aspect-ratio: 1/1) and (min-width: 901px){
   html body .pj4 .pj4-pin,html body .pj4 .pj4-stage{min-height:480px}
   html body .pj4 .pj4-stage{--b:max(calc(24 * var(--u)), 58px);--fl:max(12px, calc(16 * var(--u)));--ft:max(15px, calc(26 * var(--u)));
@@ -435,12 +435,15 @@ html body .ch-cta .ct-side .ct-say{text-indent:0!important}
   /* "View the portfolio" — the header's block, bottom right */
   html body .pj4 .pj4-cta{position:absolute;z-index:6;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:calc(295 * var(--u));min-width:150px;height:calc(78 * var(--u))!important;min-height:42px;background:#fff;color:#000;--sq:#000}
   html body .pj4 .pj4-cta .t{left:calc(12 * var(--u));top:auto;bottom:calc(12 * var(--u) - .09em);font-weight:500;font-size:max(11px, calc(18 * var(--u)));line-height:.889;letter-spacing:-.0556em}
-  /* the two round controls */
-  html body .pj4 .pj4-ctl{left:calc(559 * var(--u));bottom:var(--b);gap:0}
-  html body .pj4 .pj4-ar{width:calc(189 * var(--u));height:calc(189 * var(--u));min-width:84px;min-height:84px;border:1px solid rgba(255,255,255,.33);border-radius:50%;background:none;color:#fff;overflow:visible;transition:border-color .5s}
-  html body .pj4 .pj4-ar + .pj4-ar{margin-left:calc(-32 * var(--u))}
-  html body .pj4 .pj4-ar svg{width:max(18px, calc(26 * var(--u)));height:max(18px, calc(26 * var(--u)));stroke-width:1px;stroke-linecap:butt}
+  /* the two round controls — her frame as changed 13.11 23:16: circles 290 (hairline white 33 %), overlapping by 64, at 559; in each a small arrow and a word
+     (Zalando Sans Expanded Regular 14, caps), the pair centred in the circle: "← Prev" in the left one, "Next →" in the right one (her frame has the two
+     words the other way round — a left arrow called "next"; set by the arrows' sense). Their foot keeps 58 px from the bottom (15 in the frame), over the rail. */
+  html body .pj4 .pj4-ctl{left:calc(559 * var(--u));bottom:max(calc(15 * var(--u)), 58px);gap:0}
+  html body .pj4 .pj4-ar{width:calc(290 * var(--u));height:calc(290 * var(--u));min-width:120px;min-height:120px;display:flex;align-items:center;justify-content:center;gap:max(10px, calc(23 * var(--u)));border:1px solid rgba(255,255,255,.33);border-radius:50%;background:none;color:#fff;overflow:visible;transition:border-color .5s}
+  html body .pj4 .pj4-ar + .pj4-ar{margin-left:calc(-64 * var(--u))}
+  html body .pj4 .pj4-ar svg{flex:none;width:max(15px, calc(24 * var(--u)));height:max(15px, calc(24 * var(--u)));stroke-width:max(1px, calc(1.5 * var(--u)));stroke-linecap:butt}
   html body .pj4 .pj4-ar svg path{vector-effect:non-scaling-stroke}
+  html body .pj4 .pj4-ar .lb{display:block;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(14 * var(--u)));line-height:1.139;letter-spacing:0;text-transform:uppercase;color:#fff}
   html body .pj4 .pj4-ar:focus-visible{outline:1px solid #fff;outline-offset:-6px}
   html body .pj4 .pj4-pg{position:absolute;left:0;bottom:0;width:1px;height:1px;margin:0;overflow:hidden;opacity:0;visibility:hidden;pointer-events:none}
 }
