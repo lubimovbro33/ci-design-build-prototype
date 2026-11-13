@@ -328,7 +328,7 @@ html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;f
 
 /* ================================================================== 09 Client — the first screen as her frame «09 Client · 1» (455:14731, 13.11 20:50):
    the title 60 / 52 at 421 / 50, 670 wide (it breaks into five lines there); the statement Zalando Sans SemiExpanded 50 / 53, −2, at 421, 1225 wide, its foot 65
-   from the bottom, read words #F5F5F5 on #96A8BF; the note in the running text (20 / 115 % / −1, her note 20:56 — not the +1 of the frame's style), 269 wide at 50, its foot 60 from the bottom. The second screen ("They expect a high standard") is not in her frame yet. */
+   from the bottom, read words #F5F5F5 on #96A8BF; the note in the running text (20 / 115 % / −1, her note 20:56 — not the +1 of the frame's style), 269 wide at 50, its foot 60 from the bottom. The second screen is below. */
 @media (min-aspect-ratio: 1/1){
   html body .cl5-title{left:calc(421 * var(--u));top:calc(50 * var(--u));width:calc(670 * var(--u));white-space:normal;padding-left:0;text-indent:0;font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase;color:#EBEBEB}
   html body .cl5-say{left:calc(421 * var(--u));right:auto;width:calc(1225 * var(--u));bottom:max(calc(65 * var(--u)), 58px);text-indent:0;font-family:"Zalando Sans SemiExpanded",var(--fz);font-weight:400;font-size:max(22px, calc(50 * var(--u)));line-height:1.06;letter-spacing:-.04em;color:#96A8BF}
@@ -336,3 +336,26 @@ html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;f
   html body .cl5-p{left:calc(50 * var(--u));bottom:max(calc(60 * var(--u)), 58px);width:calc(269 * var(--u));max-width:none!important;color:#EBEBEB}
 }
 @media (max-aspect-ratio: 1/1){ br.r3br{display:none} }
+
+/* ================================================================== 09 Client — the second screen as her frame «07 Approach · 4» (456:14755, 13.11 22:07):
+   the photograph takes the whole screen under a black veil (75 % × 62 %), two centre hairlines (Bright Gray 33 %, under the veil) cross it; "They expect a high
+   standard" is small and centred — 60 / 52, four lines, its top 157 above the centre; "So do we" is Zalando Sans Expanded Bold 290, −8, centred, its baseline 51
+   from the bottom (never under the rail). The word runs from margin to margin as drawn (63 of 1920), so its size follows the window's width; on a low window it
+   stops growing before it would come nearer than 90 to the title. Scrubbed by the scroll (js/v10.js): --r the photograph rises, --v it dims and the lines and
+   the title come, --o2 the word rises from under its baseline. Metrics of the face: cap .719, ascent .964, descent .250 — a line of .724 puts the cap top on
+   the line's top and the baseline on its foot. */
+html body .cl5{height:380vh}
+html body .cl5-stage{--y1:0px;--v:0;--big:calc(290 * 100vw / 1920)}
+html body .cl5-bar{opacity:clamp(0, calc((1 - var(--r)) * 8), 1)}
+.cl5-rh,.cl5-rv{position:absolute;background:rgba(235,235,235,.33);pointer-events:none}
+.cl5-rh{left:0;right:0;top:50%;height:1px;transform:scaleX(var(--v))}
+.cl5-rv{top:0;bottom:0;left:calc(50% - 1px);width:1px;transform:scaleY(var(--v))}
+.cl5-veil{position:absolute;inset:0;background:#000;opacity:calc(.465 * var(--v));pointer-events:none}
+html body .cl5-l1{left:50%;right:auto;bottom:auto;top:calc(50% - 2.617em);padding:0;text-indent:0;text-align:center;white-space:nowrap;font-family:var(--fx);font-weight:400;font-size:max(24px, calc(60 * var(--u)));line-height:.867;letter-spacing:-.0167em;color:#EBEBEB;
+  opacity:var(--v);transform:translate(-50%, calc((1 - var(--v)) * .4em))}
+html body .cl5-l2{left:0;right:0;bottom:calc(max(calc(51 * var(--u)), 58px) - .04em);padding:.04em 0;overflow:hidden;text-align:center;white-space:nowrap;font-family:var(--fx);font-weight:700;font-size:var(--big);line-height:.724;letter-spacing:-.0276em;color:#EBEBEB;opacity:1;transform:none}
+html body .cl5-l2 span{display:block;transform:translate(-.0138em, calc((1 - var(--o2)) * 115%))}
+@media (min-aspect-ratio: 1/1){
+  html body .cl5-stage{--big:min(calc(290 * 100vw / 1920), calc((50vh - max(calc(51 * var(--u)), 58px) - .851 * max(24px, calc(60 * var(--u))) - calc(90 * var(--u))) / .719))}
+}
+@media (max-aspect-ratio: 1/1){ html body .cl5{height:340vh} }

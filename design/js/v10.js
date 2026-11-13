@@ -38,11 +38,14 @@
     var say = cl.querySelector('.cl5-say'), stage = cl.querySelector('.cl5-stage'), words = [], lit = 0;
     say.textContent.split(/\s+/).filter(Boolean).forEach(function(w, i){ if (!i) say.textContent = ''; var s = document.createElement('span'); s.className = 'w'; s.textContent = w; say.appendChild(s); say.appendChild(document.createTextNode(' ')); words.push(s); });
     pins.push({el: cl, p: -1, fn: function(p){
-      var k = Math.round(sg(p, .03, .4) * words.length);
+      var k = Math.round(sg(p, .03, .34) * words.length);
       if (k !== lit){ for (var i = Math.min(k, lit); i < Math.max(k, lit); i++) words[i].classList.toggle('lit', i < k); lit = k; }
-      stage.style.setProperty('--f', sg(p, .42, .5).toFixed(3));
-      stage.style.setProperty('--r', sm(sg(p, .48, .82)).toFixed(4));
-      stage.style.setProperty('--o2', sg(p, .84, .92).toFixed(3)); }});
+      /* the second screen (her frame 456:14755): the photograph rises to the whole screen, then dims while the two centre hairlines draw and the small title
+         comes in, then "So do we" rises from under its baseline; the last tenth holds */
+      stage.style.setProperty('--f', sg(p, .36, .43).toFixed(3));
+      stage.style.setProperty('--r', sm(sg(p, .42, .66)).toFixed(4));
+      stage.style.setProperty('--v', sm(sg(p, .66, .78)).toFixed(4));
+      stage.style.setProperty('--o2', sm(sg(p, .78, .91)).toFixed(4)); }});
   }
 
   /* 10 REVIEWS */
