@@ -180,7 +180,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   #suite .su-n{display:flex!important;align-items:center;gap:calc(9 * var(--u));margin:0 0 calc(30 * var(--u))!important;font-family:var(--fx)!important;font-size:max(10px, calc(14 * var(--u)))!important;line-height:1.136!important;letter-spacing:0!important;text-transform:uppercase;color:var(--blue)!important}
   #suite .su-desc .su-p{width:calc(515 * var(--u));max-width:none;margin:0!important;font-family:var(--fz)!important;font-size:max(12px, calc(16 * var(--u)))!important;line-height:1.2!important;letter-spacing:-.0625em!important;color:#EBEBEB}
   #suite .su-btn{margin:calc(50 * var(--u)) 0 0 calc(2 * var(--u))}
-  #suite .su-right{position:absolute;left:calc(685 * var(--u));top:calc(50vh - 411 * var(--u));width:calc(1059 * var(--u));height:calc(722 * var(--u))}
+  #suite .su-right{position:absolute;left:calc(666 * var(--u));top:calc(50vh - 455 * var(--u));width:calc(1165 * var(--u));height:calc(794 * var(--u))}   /* the stack at her size: plates 705…1500, labels from 1560 */
   #suite .su-add{position:absolute;left:0;right:0;bottom:0;height:max(calc(129 * var(--u)), 96px);margin:0!important;padding:0!important;display:block!important;border-top:1px solid rgba(235,235,235,.2);background:linear-gradient(180deg,rgba(0,0,0,0),rgba(150,168,191,.28))}
   #suite .su-add > *{position:absolute;top:calc(50% - 8px);transform:translateY(-50%);margin:0!important}   /* 8 px up: clear of the chapter rail that runs along the bottom */
   #suite .su-add-l{left:calc(48 * var(--u));font-family:var(--fx)!important;font-size:max(10px, calc(14 * var(--u)))!important;line-height:1.136!important;letter-spacing:0!important;color:var(--blue)!important;white-space:nowrap}
