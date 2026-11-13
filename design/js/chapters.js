@@ -326,7 +326,7 @@
     cS1.setAttribute('transform', 'translate(' + (-EX) + ' 0) rotate(90)'); cS2.setAttribute('transform', 'translate(' + EX + ' 0) rotate(-90)');
     var cQ = [-(EX - R2), -(DX + R1), DX + R1, EX - R2].map(function(x){ return el('rect', {x: x - 4, y: -4, width: 8, height: 8, 'class': 'cq', opacity: 0}, gC); });
     var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .13, wsBox = one && one.querySelector('.ws');
-    function oneFit(){ if (!wsBox || oneW < 0 || !ows[oneW]) return; wsBox.style.width = Math.ceil(ows[oneW].getBoundingClientRect().width || ows[oneW].offsetWidth) + 'px'; }
+    function oneFit(){}   /* the word sits on its own centred line now: nothing to measure */
     var LY = null, last = -1, OWN_DS = 1;
     function layout(){
       var w = svg.clientWidth || window.innerWidth, h = svg.clientHeight || window.innerHeight, port = w / h < 1, VW = port ? 1080 : 1920, VH = VW * h / w;
@@ -346,6 +346,7 @@
       LY = { house: [cx - 450 * hs, cy - 340 * hs, hs], cards: LAY.map(function(L, i){ var r = Math.floor(i / cols), c = i % cols, x = m + c * (cw + gap), y = top + r * (chh + 52);
         return [x + 10 * sc, y - 50 * sc, sc]; }) };
       gH.setAttribute('transform', 'translate(' + f1(LY.house[0]) + ' ' + f1(LY.house[1]) + ') scale(' + LY.house[2].toFixed(4) + ')');
+      LAY.forEach(function(L){ L.t.setAttribute('y', f1(50 - 20 / sc)); });   /* r3: the trade's name stands 20 above its card's line (her note 13.11 18:47) */
       /* scene 2's chart and scene 3's line: x 760…1840, the chart from y 540, the line across the middle; full width on portrait */
       var mT = 48 * VW / w, tx0 = port ? m : mT, tw = port ? VW - 2 * m : VW - 2 * mT, sc2 = tw / 1080, ty0 = port ? VH * .34 : VH / 2 - 106 * sc2;
       gT.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(ty0) + ') scale(' + sc2.toFixed(4) + ')');

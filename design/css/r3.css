@@ -6,22 +6,22 @@
      t111  Expanded Bold 111 / 95, −8      hero title, 07 title
      t60   Expanded Regular 60 / 52, −1    chapter titles and statements, caps
      t34   Expanded Regular 34 / 33, −1    leads (sentence case) and key phrases (.up)
-     t16   Zalando Sans Regular 18 / 120 %, −1.1  running text (16 in her frame; raised to 18 on her note of 13.11 18:33,
-           every box 1.125 wider, so the lines break as in the frame)
+     t20   Zalando Sans Regular 20 / 120 %, −1.25   running text — 16 in her frame, 20 on her note of 13.11 18:46 ("20 усюди");
+           every box is 1.25 × the frame's, so the lines break as drawn. One style for ALL running text of the page (--t-run).
      lab   Expanded Regular 14 / 15.9      small caps
      btn   Expanded Medium 18 / 16, −1     buttons */
 /* The unit. Her frames are 1920 × 1080. On a window lower than 16:9 (a laptop browser with its bars) a width-only unit makes
    the frame taller than the screen: top-hung and bottom-hung things run into each other. So the unit is the frame fitted
    into the window — by width, or by height when the window is low. */
 @media (min-aspect-ratio: 1/1){ :root{ --u:min(calc(100vw / 1920), calc(100vh / 1080)) } }
-:root{ --fx:"Zalando Sans Expanded",sans-serif; --fz:"Zalando Sans","Zalando Sans SemiExpanded",sans-serif; --fh:"Zalando Sans Expanded",sans-serif; --blue:#96A8BF; --mist:#BAC7D6 }
+:root{ --t-run:max(13px, calc(20 * var(--u))); --fx:"Zalando Sans Expanded",sans-serif; --fz:"Zalando Sans","Zalando Sans SemiExpanded",sans-serif; --fh:"Zalando Sans Expanded",sans-serif; --blue:#96A8BF; --mist:#BAC7D6 }
 
 html body .t111{font-family:var(--fx)!important;font-weight:700!important;font-size:max(38px, calc(111 * var(--u)))!important;line-height:.856!important;letter-spacing:-.072em!important;text-transform:uppercase!important;margin:0;text-indent:0!important;padding:0!important}
 html body .t60{font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;margin:0;color:#EBEBEB;text-indent:0!important;padding:0!important;white-space:normal!important}
 html body .t34{font-family:var(--fx)!important;font-weight:400!important;font-size:max(17px, calc(34 * var(--u)))!important;line-height:.971!important;letter-spacing:-.0294em!important;text-transform:none!important;margin:0;color:#EBEBEB;text-indent:0!important;padding:0!important;max-width:none!important}
 html body .t34.up{text-transform:uppercase!important}
-html body .t16{font-family:var(--fz)!important;font-weight:400!important;font-size:max(12px, calc(18 * var(--u)))!important;line-height:1.2!important;letter-spacing:-.0625em!important;text-transform:none!important;margin:0;color:#EBEBEB;text-indent:0!important;max-width:none!important}
-html body .t16 b{font-weight:700}
+html body .t20{font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.0625em!important;text-transform:none!important;margin:0;color:#EBEBEB;text-indent:0!important;max-width:none!important}
+html body .t20 b{font-weight:700}
 html body .cb, html body .cb .w{color:var(--blue)!important}
 html body .cm, html body .cm .w{color:var(--mist)!important}
 html body [style*="--w:"]{width:calc(var(--w) * var(--u))}
@@ -40,7 +40,6 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 .hero-ui .hero-title{font-family:var(--fx);font-weight:700;line-height:.856;letter-spacing:-.072em}
 @media (min-width:901px){ .hero-ui .hero-title{left:calc(421 * var(--u));top:calc(100% * 420 / 1080)} }
 .blk .t{font-weight:500;font-size:max(11px, calc(18 * var(--u)));line-height:.89;letter-spacing:-.0556em;top:calc(13 * var(--u) - 2px)}
-.hdr .cta-blk{background:#EBEBEB}
 .hdr .cta-blk .t{left:calc(12 * var(--u));top:calc(21 * var(--u));line-height:.89;letter-spacing:-.0556em}
 
 /* ================================================================== 01 · the story: three squares, the panel, the layers */
@@ -51,7 +50,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 .story .st-tk .amber{color:#96A8BF}
 .story .st-part{display:block}
 .story .st-part .n{display:block;padding:0;margin:0 0 calc(12 * var(--u))}
-.story .st-part p{font-family:var(--fz);font-size:max(12px, calc(18 * var(--u)));line-height:1.2;letter-spacing:-.0625em;color:#EBEBEB}
+.story .st-part p{font-family:var(--fz);font-size:var(--t-run);line-height:1.2;letter-spacing:-.0625em;color:#EBEBEB}
 .story .st-part p b{font-weight:700;color:#EBEBEB}
 .story .lay text{font-family:var(--fx)}
 .story .st-slog{display:flex;justify-content:center;align-items:center;gap:calc(9 * var(--u));bottom:max(calc(24 * var(--u)), 58px);font-family:var(--fx);font-size:max(10px, calc(14 * var(--u)));line-height:1.136;letter-spacing:0;text-transform:uppercase;color:#EBEBEB}
@@ -83,7 +82,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   .ch .r3p{position:absolute;left:20px;right:20px;bottom:64px;top:auto;margin:0;padding:14px 0 0;background:#000}
   .ch .r3p.row1{bottom:auto;top:calc(var(--hdr) + 46vh + 80px)}
   .ch [style*="--w:"]{width:auto}
-  html body .t60{font-size:clamp(26px, 8vw, 40px)!important} html body .t34{font-size:clamp(17px, 5vw, 24px)!important} html body .t16{font-size:14px!important;letter-spacing:-.03em!important}
+  html body .t60{font-size:clamp(26px, 8vw, 40px)!important} html body .t34{font-size:clamp(17px, 5vw, 24px)!important} html body .t20{font-size:14px!important;letter-spacing:-.03em!important}
 }
 
 /* ================================================================== 02 · philosophy */
@@ -114,23 +113,23 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 #philosophy .r3fin .fc{position:absolute;left:0;right:0;bottom:max(calc(50 * var(--u)), 58px)}
 .r3-ph{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:var(--st, 0);overflow:hidden;background:#000}
 .r3-ph img{display:block;width:100%;height:100%;object-fit:cover;filter:brightness(.52) contrast(1.05);transform:scale(calc(1.06 - .05 * var(--st, 0)))}
-.r3-ph .rh,.ap-in .rh{position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(235,235,235,.33)}
-.r3-ph .rv,.ap-in .rv{position:absolute;top:0;bottom:0;left:50%;width:1px;margin-left:-1px;background:rgba(235,235,235,.33)}
+.r3-ph .rh,.ap-in .rh{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--ln-photo)}
+.r3-ph .rv,.ap-in .rv{position:absolute;top:0;bottom:0;left:50%;width:1px;margin-left:-1px;background:var(--ln-photo)}
 .r3-ph .rh{transform:scaleX(var(--st, 0))} .r3-ph .rv{transform:scaleY(var(--st, 0))}
 #philosophy .ch-stage.st-on .ph-plan,#philosophy .ch-stage.st-on .ph-pct{opacity:calc(1 - min(1, var(--st, 0) * 2.6))!important}
 
 /* ================================================================== 03 · about */
 #about .ch-pin{height:800vh}
 #about .ch-pct{display:none!important}
-/* "One" stands still; the blue word after it changes: Vision → Team → Turnkey Experience */
-.ab-one{position:absolute;left:50%;top:50%;z-index:3;display:flex;gap:.3em;white-space:nowrap;transform:translate(-50%,-50%);pointer-events:none;   /* the whole phrase is centred */
+/* "One" on the first line, centred; the blue word under it changes (Vision → Team → Turnkey Experience); the pair stands in the middle (her note 13.11 18:46) */
+.ab-one{position:absolute;left:0;right:0;top:50%;z-index:3;display:block;text-align:center;white-space:nowrap;transform:translateY(-50%);pointer-events:none;
   font-family:var(--fx);font-weight:400;font-size:max(24px, calc(60 * var(--u)));line-height:.867;letter-spacing:-.0167em;text-transform:uppercase;color:#EBEBEB}
-.ab-one .ws{position:relative;display:block;height:.867em;width:5.1em;transition:width .9s cubic-bezier(.16,1,.3,1)}   /* its width follows the word (js): "One" glides, never jumps */
-.ab-one .ws b{position:absolute;left:0;top:0;font-weight:400;color:var(--blue);opacity:0;transform:translateY(.55em);filter:blur(8px);transition:opacity .45s ease, transform .8s cubic-bezier(.16,1,.3,1), filter .45s ease}
-.ab-one .ws b.on{opacity:1;transform:none;filter:none}
-.ab-one .ws b.up{transform:translateY(-.55em)}
-@media (max-aspect-ratio: 1/1){ .ab-one{left:20px;top:30%;transform:translateY(-50%);flex-direction:column;gap:.1em} .ab-one .ws{width:auto!important} }
-@media (prefers-reduced-motion:reduce){ .ab-one .ws,.ab-one .ws b{transition:none} }
+.ab-one .o{display:block}
+.ab-one .ws{position:relative;display:block;height:.867em}
+.ab-one .ws b{position:absolute;left:50%;top:0;font-weight:400;color:var(--blue);opacity:0;transform:translate(-50%,.5em);filter:blur(8px);transition:opacity .3s ease, transform .3s ease, filter .3s ease}
+.ab-one .ws b.on{opacity:1;transform:translate(-50%,0);filter:none;transition:opacity .5s ease .12s, transform .85s cubic-bezier(.16,1,.3,1) .12s, filter .5s ease .12s}
+.ab-one .ws b.up{transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){ .ab-one .ws b{transition:none} }
 @media (min-aspect-ratio: 1/1){
   #about .ab-lb{margin-top:calc(11 * var(--u))!important}
   #about .ab-say{position:absolute;left:calc(372 * var(--u));top:0;width:calc(540 * var(--u));margin:0!important;max-width:none!important;font-family:"Zalando Sans SemiExpanded",var(--fz)!important;font-weight:400!important;font-size:max(18px, calc(36.77 * var(--u)))!important;line-height:1.08!important;letter-spacing:-.0408em!important;color:#EBEBEB;text-indent:0!important}
@@ -138,8 +137,8 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   #about .ch-t > .r3own{position:absolute!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:100%!important;height:100%;transform:none!important;display:block!important}
   #about .r3own .oa{position:absolute;left:0;right:0;top:calc(50 * var(--u));text-align:center}
   #about .r3own .oc,#about .r3own .od{position:absolute;bottom:max(calc(50 * var(--u)), 58px);margin:0!important}
-  #about .r3own .oc{left:calc(48 * var(--u));width:calc(346 * var(--u))}
-  #about .r3own .od{left:calc(460 * var(--u));width:calc(256 * var(--u))}
+  #about .r3own .oc{left:calc(48 * var(--u));width:calc(381 * var(--u))}
+  #about .r3own .od{left:calc(495 * var(--u));width:calc(282 * var(--u))}
   #about .r3own .oe{position:absolute;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
   .ab-ob{position:absolute;left:0;right:0;top:calc(50% + 23 * var(--u));z-index:3;text-align:center;pointer-events:none;opacity:var(--ob, 0);
     transform:translateY(calc(-50% + (1 - var(--ob, 0)) * .35em));filter:blur(calc((1 - var(--ob, 0)) * 8px))}
@@ -165,9 +164,9 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   .df2-body{height:max(100vh, calc(1010 * var(--u)))!important;grid-template-rows:minmax(0, 1fr) calc(480 * var(--u)) calc(480 * var(--u))!important}
   .df2-head{display:none!important}
   .df2-nm,.df2-ct{font-size:max(13px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em}
-  .df2-cd{width:calc(196 * var(--u));font-family:var(--fz);font-size:max(11px, calc(18 * var(--u)));line-height:1.2;letter-spacing:-.0625em}
+  .df2-cd{width:calc(212 * var(--u));font-family:var(--fz);font-size:var(--t-run);line-height:1.2;letter-spacing:-.0625em}
   .df2-big{top:calc(25 * var(--u));font-size:max(18px, calc(36.77 * var(--u)));line-height:1.05;letter-spacing:-.0408em}
-  .df2-s1,.df2-s2{top:auto;bottom:max(calc(24 * var(--u)), 58px);font-family:var(--fz);font-size:max(11px, calc(18 * var(--u)));line-height:1.2;letter-spacing:-.0625em}
+  .df2-s1,.df2-s2{top:auto;bottom:max(calc(24 * var(--u)), 58px);font-family:var(--fz);font-size:var(--t-run);line-height:1.2;letter-spacing:-.0625em}
   .df2-s1 b{font-weight:700} .df2-s2 b{font-weight:600}
 }
 
@@ -194,14 +193,14 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   #suite .su-tab:not(.on):hover .nm,#suite .su-tab:not(.on):hover .fl{opacity:.6}
   #suite .su-desc{margin-top:calc(50 * var(--u))}
   #suite .su-n{display:flex!important;align-items:center;gap:calc(9 * var(--u));margin:0 0 calc(30 * var(--u))!important;font-family:var(--fx)!important;font-size:max(10px, calc(14 * var(--u)))!important;line-height:1.136!important;letter-spacing:0!important;text-transform:uppercase;color:var(--blue)!important}
-  #suite .su-desc .su-p{width:calc(534 * var(--u));max-width:none;margin:0!important;font-family:var(--fz)!important;font-size:max(12px, calc(18 * var(--u)))!important;line-height:1.2!important;letter-spacing:-.0625em!important;color:#EBEBEB}
+  #suite .su-desc .su-p{width:calc(534 * var(--u));max-width:none;margin:0!important;font-family:var(--fz)!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.0625em!important;color:#EBEBEB}
   #suite .su-btn{margin:calc(50 * var(--u)) 0 0 calc(2 * var(--u))}
   #suite .su-right{position:absolute;right:calc(89 * var(--u));top:calc(50vh - 455 * var(--u));width:calc(1165 * var(--u));height:calc(794 * var(--u))}   /* the stack at her size: plates 705…1500, labels from 1560 */
   #suite .su-add{position:absolute;left:0;right:0;bottom:0;height:calc(max(129 * var(--u), 84px) + 36px);   /* her 129, plus the rail's 36 under it: the bar's content stays clear of the rail */margin:0!important;padding:0!important;display:block!important;border-top:1px solid rgba(235,235,235,.2);background:linear-gradient(180deg,rgba(0,0,0,0),rgba(150,168,191,.28))}
   #suite .su-add > *{position:absolute;top:calc((100% - 36px) / 2);transform:translateY(-50%);margin:0!important}
   #suite .su-add-l{left:calc(48 * var(--u));font-family:var(--fx)!important;font-size:max(10px, calc(14 * var(--u)))!important;line-height:1.136!important;letter-spacing:0!important;color:var(--blue)!important;white-space:nowrap}
   #suite .su-wn{left:calc(460 * var(--u));font-family:var(--fx)!important;font-weight:400!important;font-size:max(17px, calc(34 * var(--u)))!important;line-height:.971!important;letter-spacing:-.0294em!important;text-transform:uppercase;color:var(--blue)!important;white-space:nowrap}
-  #suite .su-add .su-p{left:calc(830 * var(--u));width:calc(388 * var(--u));font-family:var(--fz)!important;font-size:max(12px, calc(18 * var(--u)))!important;line-height:1.2!important;letter-spacing:-.0625em!important;color:#EBEBEB}
+  #suite .su-add .su-p{left:calc(830 * var(--u));width:calc(430 * var(--u));font-family:var(--fz)!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.0625em!important;color:#EBEBEB}
   #suite .su-add .su-p b{font-weight:400}
   #suite .su-sw{right:calc(402 * var(--u));display:flex;align-items:center;gap:calc(21 * var(--u));white-space:nowrap}
   #suite .su-sw .mono{font-family:var(--fx)!important;font-weight:500!important;font-size:max(10px, calc(18 * var(--u)))!important;line-height:.89!important;letter-spacing:-.0556em!important;color:#EBEBEB}
@@ -253,8 +252,22 @@ html.mn-open .r3-rb,html.mn-open .r3-hb,html.lite .r3-rb,html.lite .r3-hb{displa
 @media (min-aspect-ratio: 1/1){ .pj4{--pb:calc(54px + 10 * var(--u))} }
 @media (min-aspect-ratio: 1/1) and (max-height: 820px){
   .pj4-pn{top:calc(var(--hdr) + 22px)!important;padding-bottom:62px!important}
-  .pj4-pn p{font-size:max(12px, calc(20 * var(--u)))!important}
+  .pj4-pn{--t-run:max(12px, calc(20 * var(--u)))}
   .pj4-ttl{margin-top:calc(30 * var(--u))!important;font-size:max(15px, calc(30 * var(--u)))!important}
   .pj4-r{min-height:28px!important;height:calc(50 * var(--u))!important}
   .pj4-cta{height:max(38px, calc(78 * var(--u)))!important}
 }
+
+/* ================================================================== one running-text style everywhere (her note 13.11 18:46: "20 усюди, щоб ніде не залишилося старого"):
+   Zalando Sans Regular 20 / 120 %, tracking −1/16 em — also in the blocks that are not in her frame yet (process, client, FAQ, projects panel,
+   approach questions, footer, menu). The large statements of those blocks keep their own face. */
+.ch .ch-lead:not(.say), .ch .ch-p:not(.say), .ch-suite .su-p, .ch-faq .ain .p, .fq5 .ain .p, .pr4-lead, .pr4-bd, .pr5-d, .cl2-card p, .cl2 .cl2-card p, .cl5-p,
+.pj4-pn p, .ch-appr .ap-qs .tx, .ft-addr, .ft-addr div, .mn-ft, .df2-cd, .df2-s1, .df2-s2, .story .st-part p{
+  font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.0625em!important;text-transform:none!important}
+.ch .ch-lead b, .ch-suite .su-p b, .cl2-card p b, .df2-s1 b, .story .st-part p b{font-weight:700!important}
+#suite .su-add .su-p b{font-weight:400!important}
+
+/* ================================================================== hairlines over photographs: one muted value everywhere (her note 13.11 18:48).
+   The hero's rules and the 05 grid have always been white 10 % (his Figma); the cross on the 02 closing and on the 07 photograph takes the same value
+   (her frame has 33 %, on 07 under the 46 % veil; on the site that read as too bright). The hero itself is not touched. */
+:root{ --ln-photo:rgba(255,255,255,.1) }
