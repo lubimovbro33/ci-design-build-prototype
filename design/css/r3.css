@@ -464,29 +464,36 @@ html body .chap{transition:opacity .6s var(--e-out),transform .6s var(--e-out),c
    windows are lit, with "Watch the films". The title and the quote stand on the 421 line. Geometry and the scrub: js/v10.js. Placeholders stay in brackets
    until real testimonials arrive. Phones: the title, then each window with its quote, one under another. */
 .rv6{position:relative;background:#000;color:#fff}
-.rv6-svg{display:none}
+.rv6-svg,br.rvbr{display:none}
 .rv6-q{margin:0} .rv6-q p{margin:0} .rv6-w{font:inherit;color:inherit}
+.rv6-q .qm{display:block;fill:#96A8BF} .rv6 .sq{display:block;flex:none}
+/* as her frames «10 Reviews · 1 / 2» changed 13.11 23:51: the title in five lines (471 wide); the quote stands low on the 421 line, its foot level with the
+   tall frame's foot — a slanted quote mark (41 × 24, #96A8BF), the quote in Zalando Sans Expanded Regular 34 / 33, −1 (no brackets), a hairline, then the
+   name, a mist square and the project (14, caps); no counter. In the tall frame: "01 ■ Film" top left (mist square 8), "Play ■" bottom right (Medium 18,
+   white square 9). No button on the last screen. */
 @media (min-aspect-ratio: 1/1) and (min-width: 901px){
   .rv6{height:440vh}
   .rv6-pin{position:sticky;top:0;height:100vh;overflow:hidden}
   .rv6-stage{position:absolute;inset:0}
   .rv6-title{position:absolute;z-index:3;left:calc(421 * var(--u));top:calc(50 * var(--u));margin:0;font-family:var(--fx);font-weight:400;font-size:max(24px, calc(60 * var(--u)));line-height:.867;letter-spacing:-.0167em;text-transform:uppercase;white-space:nowrap;color:#fff}
+  .rv6-title br.rvbr{display:inline}
   .rv6-svg{display:block;position:absolute;inset:0;width:100%;height:100%;overflow:visible;--dr:0;--fo:.16}
   .rv6-svg path{fill:none;stroke:rgba(255,255,255,var(--fo));stroke-width:1px;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--dr))}
   .rv6-svg rect{fill:var(--mist);opacity:var(--dr)}
   .rv6-w{position:absolute;z-index:2;left:0;top:0;width:0;height:0;margin:0;padding:0;border:0;background:#111;overflow:hidden;cursor:pointer;opacity:0;outline:1px solid rgba(255,255,255,.33)}
   .rv6-w img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-  .rv6-w .k{position:absolute;left:calc(18 * var(--u));top:calc(18 * var(--u));font-family:var(--fx);font-size:max(11px, calc(14 * var(--u)));line-height:1.139;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:var(--e, 0)}
-  .rv6-w .sq{position:absolute;right:calc(18 * var(--u));bottom:calc(18 * var(--u));width:9px;height:9px;background:#fff;opacity:var(--e, 0)}
+  .rv6-w .k{position:absolute;left:calc(18 * var(--u));top:calc(17.5 * var(--u));display:flex;align-items:center;gap:calc(8 * var(--u));font-family:var(--fx);font-size:max(11px, calc(14 * var(--u)));line-height:1.139;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:var(--e, 0)}
+  .rv6-w .k .sq{width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:var(--mist)}
+  .rv6-w .pl{position:absolute;right:calc(20.7 * var(--u));bottom:calc(23 * var(--u));display:flex;align-items:center;gap:calc(12.3 * var(--u));font-family:var(--fx);font-weight:500;font-size:max(12px, calc(18 * var(--u)));line-height:.889;letter-spacing:-.0556em;text-transform:uppercase;white-space:nowrap;color:#fff;opacity:var(--e, 0)}
+  .rv6-w .pl .sq{width:max(6px, calc(9 * var(--u)));height:max(6px, calc(9 * var(--u)));background:#fff}
   .rv6-w:focus-visible{outline:1px solid #fff}
-  .rv6-q{position:absolute;z-index:3;left:calc(421 * var(--u));top:54%;width:max(280px, calc(100vw - 1413 * var(--u)));transform:translateY(-50%);opacity:0;visibility:hidden}
-  .rv6-q .n{display:block;margin-bottom:calc(28 * var(--u));font-family:var(--fx);font-size:max(11px, calc(14 * var(--u)));line-height:1.139;text-transform:uppercase;color:#fff}
-  .rv6-q p{font-family:"Zalando Sans SemiExpanded",var(--fz);font-weight:400;font-size:max(20px, calc(40 * var(--u)));line-height:1.1;letter-spacing:-.04em;color:#96A8BF}
+  .rv6-q{position:absolute;z-index:3;left:calc(421 * var(--u));bottom:calc(175 * var(--u));width:max(280px, calc(100vw - 1413 * var(--u)));opacity:0;visibility:hidden}   /* js sets its foot level with the tall frame's foot */
+  .rv6-q .qm{width:max(24px, calc(41 * var(--u)));height:max(14px, calc(24 * var(--u)));margin-bottom:calc(39 * var(--u))}
+  .rv6-q p{font-family:var(--fx);font-weight:400;font-size:max(17px, calc(34 * var(--u)));line-height:.971;letter-spacing:-.0294em;color:#96A8BF}
   .rv6-q p .w{transition:color .45s} .rv6-q p .w.lit{color:#fff}
-  .rv6-q footer{position:relative;margin-top:calc(40 * var(--u));padding-top:calc(18 * var(--u));display:flex;gap:calc(28 * var(--u));font-family:var(--fx);font-size:max(11px, calc(14 * var(--u)));line-height:1.139;text-transform:uppercase;white-space:nowrap;color:#fff}
+  .rv6-q footer{position:relative;margin-top:calc(40 * var(--u));padding-top:calc(18.5 * var(--u));display:flex;align-items:center;gap:calc(11 * var(--u));font-family:var(--fx);font-size:max(11px, calc(14 * var(--u)));line-height:1.139;text-transform:uppercase;white-space:nowrap;color:#fff}
+  .rv6-q footer .sq{width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:var(--mist)}
   .rv6-q footer .ln{position:absolute;left:0;top:0;width:100%;height:1px;background:rgba(255,255,255,.33);transform:scaleX(var(--l, 0));transform-origin:0 50%}
-  html body .rv6 .rv6-all{position:absolute;z-index:3;left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:calc(295 * var(--u));min-width:150px;height:calc(78 * var(--u))!important;min-height:42px;background:#fff;color:#000;--sq:#000;opacity:0;visibility:hidden}
-  html body .rv6 .rv6-all .t{left:calc(12 * var(--u));top:auto;bottom:calc(12 * var(--u) - .09em);font-weight:500;font-size:max(11px, calc(18 * var(--u)));line-height:.889;letter-spacing:-.0556em}
 }
 @media (max-aspect-ratio: 1/1), (max-width: 900px){
   .rv6{padding:64px var(--m) 72px}
@@ -494,14 +501,16 @@ html body .chap{transition:opacity .6s var(--e-out),transform .6s var(--e-out),c
   .rv6-c{margin-top:34px}
   .rv6-w{display:block;position:relative;width:100%;aspect-ratio:4/5;margin:0;padding:0;border:0;background:#111;overflow:hidden}
   .rv6-w img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
-  .rv6-w .k{position:absolute;left:14px;top:14px;font-family:var(--fx);font-size:11px;text-transform:uppercase;color:#fff}
-  .rv6-w .sq{position:absolute;right:14px;bottom:14px;width:8px;height:8px;background:#fff}
-  .rv6-q{margin-top:18px}
-  .rv6-q .n{display:block;margin-bottom:10px;font-family:var(--fx);font-size:11px;text-transform:uppercase}
-  .rv6-q p{font-family:"Zalando Sans SemiExpanded",var(--fz);font-size:20px;line-height:1.12;letter-spacing:-.04em;color:#fff}
-  .rv6-q footer{margin-top:16px;padding-top:12px;border-top:1px solid rgba(255,255,255,.33);display:flex;gap:18px;font-family:var(--fx);font-size:11px;text-transform:uppercase}
+  .rv6-w .k{position:absolute;left:14px;top:14px;display:flex;align-items:center;gap:7px;font-family:var(--fx);font-size:11px;text-transform:uppercase;color:#fff}
+  .rv6-w .k .sq{width:6px;height:6px;background:var(--mist)}
+  .rv6-w .pl{position:absolute;right:14px;bottom:14px;display:flex;align-items:center;gap:9px;font-family:var(--fx);font-weight:500;font-size:13px;letter-spacing:-.05em;text-transform:uppercase;color:#fff}
+  .rv6-w .pl .sq{width:7px;height:7px;background:#fff}
+  .rv6-q{margin-top:22px}
+  .rv6-q .qm{width:28px;height:16px;margin-bottom:14px}
+  .rv6-q p{font-family:var(--fx);font-size:20px;line-height:1.02;letter-spacing:-.03em;color:#fff}
+  .rv6-q footer{margin-top:18px;padding-top:12px;border-top:1px solid rgba(255,255,255,.33);display:flex;align-items:center;gap:9px;font-family:var(--fx);font-size:11px;text-transform:uppercase}
+  .rv6-q footer .sq{width:6px;height:6px;background:var(--mist)}
   .rv6-q footer .ln{display:none}
-  html body .rv6 .rv6-all{display:block;margin-top:40px;background:#fff;color:#000;--sq:#000}
 }
 
 /* ================================================================== the spacing system (her words 13.11 23:37: "щоб у нас була система… однакова відстань"; agreed 23:43) — one step of 50,

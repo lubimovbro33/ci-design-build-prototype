@@ -81,9 +81,10 @@
       rsq(fx - e, fy + fh, Math.max(5, 8 * u)); rsq(fx + fw + e, fy + fh, Math.max(5, 8 * u));
       var bwid = Math.min(560 * u, fw * .7), bh = Math.min(640 * u, fh * .86);
       RG = {cell: CELL.slice(0, RN).map(function(k){ var q = cells[k[1] * C + k[0]]; return [q[2], q[3], ww, wh]; }), big: [fx + (fw - bwid) / 2, fy + (fh - bh) / 2, bwid, bh]};
+      qs.forEach(function(q){ q.style.bottom = f1(H - (RG.big[1] + RG.big[3])) + 'px'; });   /* the quote's foot stands level with the tall frame's foot (her frame) */
     }
     function rclear(){ wins.forEach(function(w){ ['left', 'top', 'width', 'height', 'opacity', 'zIndex'].forEach(function(k){ w.style[k] = ''; }); });
-      qs.forEach(function(q){ q.style.opacity = q.style.visibility = ''; }); if (rall) rall.style.opacity = rall.style.visibility = ''; RG = null; rsz = ''; }
+      qs.forEach(function(q){ q.style.opacity = q.style.visibility = q.style.bottom = ''; }); if (rall) rall.style.opacity = rall.style.visibility = ''; RG = null; rsz = ''; }
     wins.forEach(function(w, i){ w.addEventListener('click', function(){ if (!RG) return; var top = rv.getBoundingClientRect().top + window.pageYOffset, span = rv.offsetHeight - window.innerHeight;
       window.scrollTo({top: top + (.1 + (i + .45) * (.8 / RN)) * span, behavior: 'smooth'}); }); });
     pins.push({el: rv, p: -1, fn: function(p){
