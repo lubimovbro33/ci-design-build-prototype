@@ -12,7 +12,7 @@
      and the last two words of a paragraph to each other. */
   (function(){
     var SHORT; try { SHORT = new RegExp('(?<=^|[\\s(\u201c"])(a|an|the|of|to|in|on|at|by|for|and|or|but|is|it|we|our|your|you|with|from|as|so|no|not|one|CI|\u2014|\u2013)\\s+(?=\\S)', 'gi'); } catch (e) { return; }
-    qsa('.ch .ch-lead, .ch .ch-p, .ph-lead, .ph-p, .su-p, .ch-faq .ain .p, .pr4-lead, .pr4-bd, .cl2-card p, .pj4-pn p, .ap-qs .tx').forEach(function(el){
+    qsa('.ch .ch-lead, .ch .ch-p, .ph-lead, .ph-p, .su-p, .ch-faq .ain .p, .pr4-lead, .pr4-bd, .cl2-card p, .ap-qs .tx').forEach(function(el){
       var tw = document.createTreeWalker(el, NodeFilter.SHOW_TEXT), n, last = null;
       while ((n = tw.nextNode())){ n.nodeValue = n.nodeValue.replace(SHORT, function(m, w){ return w + '\u00a0'; }).replace(/\s+(\u2014|\u2013)/g, '\u00a0$1'); if (/\S/.test(n.nodeValue)) last = n; }
       if (last) last.nodeValue = last.nodeValue.replace(/\s+(\S+\s*)$/, ' $1');
