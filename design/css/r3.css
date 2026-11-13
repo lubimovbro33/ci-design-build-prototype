@@ -404,7 +404,7 @@ html body .ch-cta .ct-side .ct-say{text-indent:0!important}
    Evened: the card runs from the screen's edge to the vertical line (her frame leaves 5 at the left). Nothing stands under the rail: the lead, the
    controls and the button keep 58 px from the bottom, and on a low window the card grows so that its title stays clear of the lead.
    Phones keep their own layout. */
-.pj4-rh,.pj4-rv,.pj4-card{display:none}
+.pj4-rh,.pj4-rv,.pj4-card,br.pjbr{display:none}
 @media (min-aspect-ratio: 1/1) and (min-width: 901px){
   html body .pj4 .pj4-pin,html body .pj4 .pj4-stage{min-height:480px}
   html body .pj4 .pj4-stage{--b:max(calc(24 * var(--u)), 58px);--fl:max(12px, calc(16 * var(--u)));--ft:max(15px, calc(26 * var(--u)));
@@ -428,7 +428,9 @@ html body .ch-cta .ct-side .ct-say{text-indent:0!important}
   .pj4-card{display:block;position:absolute;z-index:6;left:0;bottom:0;width:calc(545 * var(--u));height:var(--ch);background:#fff}   /* an element of its own: the rail reads the colour under it and turns dark over the card */
   html body .pj4 .pj4-ttl{position:absolute;z-index:6;left:0;bottom:calc(var(--ch) / 2);width:calc(545 * var(--u));margin:0!important;transform:translateY(50%);text-align:center;font-family:var(--fx)!important;font-weight:400!important;font-size:var(--ft)!important;line-height:1!important;letter-spacing:-.077em!important;text-transform:uppercase;color:#000}
   html body .pj4 .pj4-lead{position:absolute;z-index:6;left:auto;right:calc(100% - 520 * var(--u));bottom:var(--b);width:auto;margin:0;display:block;font-size:var(--fl)}
-  html body .pj4 .pj4-lead p{width:14.2em;margin:0!important;max-width:none!important;font-family:var(--fz)!important;font-weight:400!important;font-size:var(--fl)!important;line-height:1.2!important;letter-spacing:-.0625em!important;text-align:right;color:#000}
+  /* the lead's three lines are fixed as in her frame (her note 23:11: the bottom text had slipped — it broke by the face's width into four lines with a stray word) */
+  html body .pj4 .pj4-lead br.pjbr{display:inline}
+  html body .pj4 .pj4-lead p{width:auto;white-space:nowrap;margin:0!important;max-width:none!important;font-family:var(--fz)!important;font-weight:400!important;font-size:var(--fl)!important;line-height:1.2!important;letter-spacing:-.0625em!important;text-align:right;color:#000}
   html body .pj4 .pj4-lead p + p,html body .pj4 .pj4-ix{display:none}
   /* "View the portfolio" — the header's block, bottom right */
   html body .pj4 .pj4-cta{position:absolute;z-index:6;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:calc(295 * var(--u));min-width:150px;height:calc(78 * var(--u))!important;min-height:42px;background:#fff;color:#000;--sq:#000}
