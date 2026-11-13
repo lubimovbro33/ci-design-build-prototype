@@ -20,7 +20,7 @@ html body .t111{font-family:var(--fx)!important;font-weight:700!important;font-s
 html body .t60{font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;margin:0;color:#EBEBEB;text-indent:0!important;padding:0!important;white-space:normal!important}
 html body .t34{font-family:var(--fx)!important;font-weight:400!important;font-size:max(17px, calc(34 * var(--u)))!important;line-height:.971!important;letter-spacing:-.0294em!important;text-transform:none!important;margin:0;color:#EBEBEB;text-indent:0!important;padding:0!important;max-width:none!important}
 html body .t34.up{text-transform:uppercase!important}
-html body .t20{font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.0625em!important;text-transform:none!important;margin:0;color:#EBEBEB;text-indent:0!important;max-width:none!important}
+html body .t20{font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.15!important;letter-spacing:-.05em!important;text-transform:none!important;margin:0;color:#EBEBEB;text-indent:0!important;max-width:none!important}
 html body .t20 b{font-weight:700}
 html body .cb, html body .cb .w{color:var(--blue)!important}
 html body .cm, html body .cm .w{color:var(--mist)!important}
@@ -50,7 +50,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 .story .st-tk .amber{color:#96A8BF}
 .story .st-part{display:block}
 .story .st-part .n{display:block;padding:0;margin:0 0 calc(12 * var(--u))}
-.story .st-part p{font-family:var(--fz);font-size:var(--t-run);line-height:1.2;letter-spacing:-.0625em;color:#EBEBEB}
+.story .st-part p{font-family:var(--fz);font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#EBEBEB}
 .story .st-part p b{font-weight:700;color:#EBEBEB}
 .story .lay text{font-family:var(--fx)}
 .story .st-slog{display:flex;justify-content:center;align-items:center;gap:calc(9 * var(--u));bottom:max(calc(24 * var(--u)), 58px);font-family:var(--fx);font-size:max(10px, calc(14 * var(--u)));line-height:1.136;letter-spacing:0;text-transform:uppercase;color:#EBEBEB}
@@ -165,9 +165,9 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   .df2-body{height:max(100vh, calc(1010 * var(--u)))!important;grid-template-rows:minmax(0, 1fr) calc(480 * var(--u)) calc(480 * var(--u))!important}
   .df2-head{display:none!important}
   .df2-nm,.df2-ct{font-size:max(13px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em}
-  .df2-cd{width:calc(212 * var(--u));font-family:var(--fz);font-size:var(--t-run);line-height:1.2;letter-spacing:-.0625em}
+  .df2-cd{width:calc(212 * var(--u));font-family:var(--fz);font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em}
   .df2-big{top:calc(25 * var(--u));font-size:max(18px, calc(36.77 * var(--u)));line-height:1.05;letter-spacing:-.0408em}
-  .df2-s1,.df2-s2{top:auto;bottom:max(calc(24 * var(--u)), 58px);font-family:var(--fz);font-size:var(--t-run);line-height:1.2;letter-spacing:-.0625em}
+  .df2-s1,.df2-s2{top:auto;bottom:max(calc(24 * var(--u)), 58px);font-family:var(--fz);font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em}
   .df2-s1 b{font-weight:700} .df2-s2 b{font-weight:600}
 }
 
@@ -194,14 +194,14 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   #suite .su-tab:not(.on):hover .nm,#suite .su-tab:not(.on):hover .fl{opacity:.6}
   #suite .su-desc{margin-top:calc(50 * var(--u))}
   #suite .su-n{display:flex!important;align-items:center;gap:calc(9 * var(--u));margin:0 0 calc(30 * var(--u))!important;font-family:var(--fx)!important;font-size:max(10px, calc(14 * var(--u)))!important;line-height:1.136!important;letter-spacing:0!important;text-transform:uppercase;color:var(--blue)!important}
-  #suite .su-desc .su-p{width:calc(534 * var(--u));max-width:none;margin:0!important;font-family:var(--fz)!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.0625em!important;color:#EBEBEB}
+  #suite .su-desc .su-p{width:calc(534 * var(--u));max-width:none;margin:0!important;font-family:var(--fz)!important;font-size:var(--t-run)!important;line-height:1.15!important;letter-spacing:-.05em!important;color:#EBEBEB}
   #suite .su-btn{margin:calc(50 * var(--u)) 0 0 calc(2 * var(--u))}
   #suite .su-right{position:absolute;right:calc(89 * var(--u));top:calc(50vh - 455 * var(--u));width:calc(1165 * var(--u));height:calc(794 * var(--u))}   /* the stack at her size: plates 705…1500, labels from 1560 */
   #suite .su-add{position:absolute;left:0;right:0;bottom:0;height:calc(max(129 * var(--u), 84px) + 36px);   /* her 129, plus the rail's 36 under it: the bar's content stays clear of the rail */margin:0!important;padding:0!important;display:block!important;border-top:1px solid rgba(235,235,235,.2);background:linear-gradient(180deg,rgba(0,0,0,0),rgba(150,168,191,.28))}
   #suite .su-add > *{position:absolute;top:calc((100% - 36px) / 2);transform:translateY(-50%);margin:0!important}
   #suite .su-add-l{left:calc(48 * var(--u));font-family:var(--fx)!important;font-size:max(10px, calc(14 * var(--u)))!important;line-height:1.136!important;letter-spacing:0!important;color:var(--blue)!important;white-space:nowrap}
   #suite .su-wn{left:calc(460 * var(--u));font-family:var(--fx)!important;font-weight:400!important;font-size:max(17px, calc(34 * var(--u)))!important;line-height:.971!important;letter-spacing:-.0294em!important;text-transform:uppercase;color:var(--blue)!important;white-space:nowrap}
-  #suite .su-add .su-p{left:calc(830 * var(--u));width:calc(430 * var(--u));font-family:var(--fz)!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.0625em!important;color:#EBEBEB}
+  #suite .su-add .su-p{left:calc(830 * var(--u));width:calc(430 * var(--u));font-family:var(--fz)!important;font-size:var(--t-run)!important;line-height:1.15!important;letter-spacing:-.05em!important;color:#EBEBEB}
   #suite .su-add .su-p b{font-weight:400}
   #suite .su-sw{right:calc(402 * var(--u));display:flex;align-items:center;gap:calc(21 * var(--u));white-space:nowrap}
   #suite .su-sw .mono{font-family:var(--fx)!important;font-weight:500!important;font-size:max(10px, calc(18 * var(--u)))!important;line-height:.89!important;letter-spacing:-.0556em!important;color:#EBEBEB}
@@ -260,11 +260,11 @@ html.mn-open .r3-rb,html.mn-open .r3-hb,html.lite .r3-rb,html.lite .r3-hb{displa
 }
 
 /* ================================================================== one running-text style everywhere (her note 13.11 18:46: "20 усюди, щоб ніде не залишилося старого"):
-   Zalando Sans Regular 20 / 120 %, tracking −1/16 em — also in the blocks that are not in her frame yet (process, client, FAQ, projects panel,
+   Zalando Sans Regular 20 / 115 %, tracking −1 px (−.05 em; her note 13.11 20:56 with the Figma panel) — also in the blocks that are not in her frame yet (process, client, FAQ, projects panel,
    approach questions, footer, menu). The large statements of those blocks keep their own face. */
 .ch .ch-lead:not(.say), .ch .ch-p:not(.say), .ch-suite .su-p, .ch-faq .ain .p, .fq5 .ain .p, .pr4-lead, .pr4-bd, .pr5-d, .cl2-card p, .cl2 .cl2-card p, .cl5-p,
 .pj4-pn p, .ch-appr .ap-qs .tx, .ft-addr, .ft-addr div, .mn-ft, .df2-cd, .df2-s1, .df2-s2, .story .st-part p{
-  font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.0625em!important;text-transform:none!important}
+  font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.15!important;letter-spacing:-.05em!important;text-transform:none!important}
 .ch .ch-lead b, .ch-suite .su-p b, .cl2-card p b, .df2-s1 b, .story .st-part p b{font-weight:700!important}
 #suite .su-add .su-p b{font-weight:400!important}
 
@@ -296,7 +296,7 @@ html.mn-open .r3-rb,html.mn-open .r3-hb,html.lite .r3-rb,html.lite .r3-hb{displa
 .pr6 .nm{display:block;font-family:var(--fx);font-weight:500;font-size:max(11px, calc(18 * var(--u)));line-height:.89;letter-spacing:-.0556em;text-transform:uppercase;color:#EBEBEB}
 .pr6-t{position:absolute;opacity:.26}
 .pr6-t .nm{display:none}
-html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.2;letter-spacing:-.0625em;color:#EBEBEB}
+html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#EBEBEB}
 @media (min-aspect-ratio: 1/1){
   /* the title's block, top left, in her faces; the closing thought takes its place at the end */
   .pr4 .pr4-t2{left:calc(48 * var(--u));top:calc(155 * var(--u));max-width:none}
@@ -317,3 +317,14 @@ html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;f
   .pr4 .pr4-end .r,.pr4 .pr4-end b{display:block;font-family:var(--fx);font-weight:400;font-size:clamp(20px,6vw,30px);line-height:.94;letter-spacing:-.03em;text-transform:uppercase}
   .pr4 .pr4-end b{color:var(--blue);margin-top:.15em} .pr4 .pr4-end b br{display:none}
 }
+
+/* ================================================================== 09 Client — the first screen as her frame «09 Client · 1» (455:14731, 13.11 20:50):
+   the title 60 / 52 at 421 / 50, 670 wide (it breaks into five lines there); the statement Zalando Sans SemiExpanded 50 / 53, −2, at 421, 1225 wide, its foot 65
+   from the bottom, read words #F5F5F5 on #96A8BF; the note in the running text (20 / 115 % / −1, her note 20:56 — not the +1 of the frame's style), 269 wide at 50, its foot 60 from the bottom. The second screen ("They expect a high standard") is not in her frame yet. */
+@media (min-aspect-ratio: 1/1){
+  html body .cl5-title{left:calc(421 * var(--u));top:calc(50 * var(--u));width:calc(670 * var(--u));white-space:normal;padding-left:0;text-indent:0;font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase;color:#EBEBEB}
+  html body .cl5-say{left:calc(421 * var(--u));right:auto;width:calc(1225 * var(--u));bottom:max(calc(65 * var(--u)), 58px);text-indent:0;font-family:"Zalando Sans SemiExpanded",var(--fz);font-weight:400;font-size:max(22px, calc(50 * var(--u)));line-height:1.06;letter-spacing:-.04em;color:#96A8BF}
+  html body .cl5-say .w.lit{color:#F5F5F5}
+  html body .cl5-p{left:calc(50 * var(--u));bottom:max(calc(60 * var(--u)), 58px);width:calc(269 * var(--u));max-width:none!important;color:#EBEBEB}
+}
+@media (max-aspect-ratio: 1/1){ br.r3br{display:none} }
