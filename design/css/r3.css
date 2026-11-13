@@ -279,3 +279,41 @@ html.mn-open .r3-rb,html.mn-open .r3-hb,html.lite .r3-rb,html.lite .r3-hb{displa
 .df2-nx-ttl{position:absolute;left:0;right:0;top:calc(50% - 2.021em);text-align:center;white-space:nowrap;color:#EBEBEB}
 .df2-nx-ph{clip-path:inset(calc(50% - 59 * var(--u)) calc(50% - 164.5 * var(--u)) calc(50% - 348 * var(--u)))}
 @media (max-aspect-ratio: 1/1), (max-width:900px){ html body .df2-nx-ttl.t111{font-size:11vw!important} .df2-nx-ttl{top:calc(50% - .778em - 27.215vw)} }
+
+/* ================================================================== 08 Process — the six steps on one axis (her reference and notes, 13.11 20:33–20:36: lines and
+   circles "as on the black block" — hairlines 1 px, Bright Gray 33 % drawn / 10 % still to come, mist squares at the joints; no photographs; her type: number =
+   label 14, name = Expanded Medium 18 / 16 caps, sentence = the running text). Geometry is set by js (process4), everything in the frame's unit. */
+.pr4 .ch-pin{height:620vh}
+.pr4 .pr4-svg path{fill:none;stroke-width:1}
+.pr4 .pr4-svg .gh path{stroke:rgba(235,235,235,.1)}
+.pr4 .pr4-svg .ink path{stroke:rgba(235,235,235,.33);stroke-dasharray:1 1;stroke-dashoffset:1}
+.pr4 .pr4-svg .ink path.ax{stroke-dasharray:none;stroke-dashoffset:0}
+.pr4 .pr4-svg .nd,.pr4 .pr4-svg .pt{fill:var(--mist);stroke:none}
+.pr4 .pr4-sq{width:max(6px, calc(10 * var(--u)));height:max(6px, calc(10 * var(--u)));margin:calc(max(6px, 10 * var(--u)) / -2) 0 0 calc(max(6px, 10 * var(--u)) / -2);background:#EBEBEB}
+.pr6{position:absolute;inset:0;z-index:3;pointer-events:none}
+.pr6-c{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:calc(12 * var(--u));white-space:nowrap;opacity:.26}
+.pr6-c .n{font-family:var(--fx);font-weight:400;font-size:max(10px, calc(14 * var(--u)));line-height:1.136;letter-spacing:0;color:var(--blue)}
+.pr6 .nm{display:block;font-family:var(--fx);font-weight:500;font-size:max(11px, calc(18 * var(--u)));line-height:.89;letter-spacing:-.0556em;text-transform:uppercase;color:#EBEBEB}
+.pr6-t{position:absolute;opacity:.26}
+.pr6-t .nm{display:none}
+html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.2;letter-spacing:-.0625em;color:#EBEBEB}
+@media (min-aspect-ratio: 1/1){
+  /* the title's block, top left, in her faces; the closing thought takes its place at the end */
+  .pr4 .pr4-t2{left:calc(48 * var(--u));top:calc(155 * var(--u));max-width:none}
+  html body .pr4 .pr4-h,html body .pr4 .pr4-end .r,html body .pr4 .pr4-end b{font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;margin:0!important}
+  html body .pr4 .pr4-lead{margin:calc(30 * var(--u)) 0 0!important;width:calc(430 * var(--u));max-width:none!important}
+  .pr4 .pr4-end{left:calc(48 * var(--u))!important;top:calc(155 * var(--u))!important}
+  .pr4 .pr4-end b{padding-left:0!important;color:var(--blue)!important}
+}
+@media (max-aspect-ratio: 1/1){
+  .pr4 .pr4-t2{top:calc(var(--hdr) + 44px)}
+  .pr6-c .nm{display:none}
+  .pr6-c .n{font-size:11px}
+  .pr6-t{transform:translateY(-50%)}
+  .pr6-t .nm{display:block;margin:0 0 6px;font-size:13px}
+  html body .pr6-d{font-size:13px;letter-spacing:-.03em}
+  .pr4 .pr4-end{left:var(--m);right:var(--m);top:calc(var(--hdr) + 44px);bottom:auto;width:auto;padding:0;background:none;box-shadow:none;color:#EBEBEB}
+  .pr4 .pr4-end::before,.pr4 .pr4-end .pr4-ek{display:none}
+  .pr4 .pr4-end .r,.pr4 .pr4-end b{display:block;font-family:var(--fx);font-weight:400;font-size:clamp(20px,6vw,30px);line-height:.94;letter-spacing:-.03em;text-transform:uppercase}
+  .pr4 .pr4-end b{color:var(--blue);margin-top:.15em} .pr4 .pr4-end b br{display:none}
+}
