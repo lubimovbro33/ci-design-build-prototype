@@ -325,7 +325,7 @@
     cA.style.stroke = 'url(#abCgB)'; [cB, cS1, cS2].forEach(function(c){ c.style.stroke = 'url(#abCgA)'; });   /* each one brighter towards the middle */
     cS1.setAttribute('transform', 'translate(' + (-EX) + ' 0) rotate(90)'); cS2.setAttribute('transform', 'translate(' + EX + ' 0) rotate(-90)');
     var cQ = [-(EX - R2), -(DX + R1), DX + R1, EX - R2].map(function(x){ return el('rect', {x: x - 4, y: -4, width: 8, height: 8, 'class': 'cq', opacity: 0}, gC); });
-    var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .13, wsBox = one && one.querySelector('.ws');
+    var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .2, wsBox = one && one.querySelector('.ws');
     function oneFit(){}   /* the word sits on its own centred line now: nothing to measure */
     var LY = null, last = -1, OWN_DS = 1;
     function layout(){
@@ -363,10 +363,14 @@
     function update(pi){
       if (pi === last) return; last = pi;
       /* r3: the chapter opens on "One ___": the word changes with the scroll, then the old timeline runs from its start */
-      var wi = pi < .045 ? 0 : pi < .09 ? 1 : 2;
-      if (wi !== oneW){ var first = oneW < 0; oneW = wi; ows.forEach(function(b, i){ b.classList.toggle('on', i === wi); b.classList.toggle('up', i < wi); });
-        if (first && wsBox){ wsBox.style.transition = 'none'; oneFit(); void wsBox.offsetWidth; wsBox.style.transition = ''; } else oneFit(); }
-      if (one){ var oo = 1 - sg(pi, .122, .142); one.style.opacity = oo.toFixed(3); one.style.visibility = oo > 0 ? '' : 'hidden'; if (!LITE) one.style.filter = oo < 1 ? 'blur(' + ((1 - oo) * 6).toFixed(1) + 'px)' : ''; }
+      /* r3 (her note 13.11 19:01: the words jumped — they changed on a threshold, by a timer). Now the change is scrubbed by the scroll:
+         under "One" the line is a slot — the old word rolls up out of it while the next rolls in from below; stop the scroll and it stops. */
+      var t = clamp01(pi / IN), D = .13, A = [-1, .25, .56], B = [.25, .56, 9];
+      ows.forEach(function(b, i){ var e = sm(sg(t, A[i], A[i] + D)), x = sm(sg(t, B[i], B[i] + D)), key = e.toFixed(3) + '/' + x.toFixed(3);
+        if (b.__k === key) return; b.__k = key;
+        b.style.transform = 'translate(-50%,' + ((1 - e) * 1.05 - x * 1.05).toFixed(3) + 'em)'; b.style.opacity = (e * (1 - x)).toFixed(3);
+        if (!LITE){ var bl = ((1 - e) + x) * 5; b.style.filter = bl > .05 ? 'blur(' + bl.toFixed(2) + 'px)' : ''; } });
+      if (one){ var oo = 1 - sg(t, .9, 1); one.style.opacity = oo.toFixed(3); one.style.visibility = oo > 0 ? '' : 'hidden'; if (!LITE) one.style.filter = oo < 1 ? 'blur(' + ((1 - oo) * 6).toFixed(1) + 'px)' : ''; }
       var p = sg(pi, IN, 1);
       phases.forEach(function(e){ phase(e, p); });
       /* the five layers draw, spread apart in their own frames; then they come together and register */
