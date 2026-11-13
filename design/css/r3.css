@@ -387,3 +387,8 @@ html body .fq5 .qh .pl{width:var(--q);min-width:0;margin-top:0}
   html body .fq5 .qh{--q:19px;padding:18px 0}
   html body .fq5 .ain{padding:0 0 18px}
 }
+
+/* ================================================================== 12 CTA — her note 13.11 22:41: "вирівняй заголовок («Your next chapter…») і все інше по лівому краю":
+   the title's lines all start on the margin (no stepped second and third line), the statement has no first-line indent. Positions, faces and sizes unchanged. */
+html body .ch-cta .ct-h{padding-left:0!important;text-indent:0!important}
+html body .ch-cta .ct-side .ct-say{text-indent:0!important}
