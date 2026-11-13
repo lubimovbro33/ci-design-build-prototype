@@ -300,9 +300,12 @@ html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;f
 @media (min-aspect-ratio: 1/1){
   /* the title's block, top left, in her faces; the closing thought takes its place at the end */
   .pr4 .pr4-t2{left:calc(48 * var(--u));top:calc(155 * var(--u));max-width:none}
-  html body .pr4 .pr4-h,html body .pr4 .pr4-end .r,html body .pr4 .pr4-end b{font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;margin:0!important}
+  html body .pr4 .pr4-h{font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;margin:0!important}
+  /* the closing thought (her note 13.11 22:09: in the corner it read as forgotten → 22:17 "the one you advise"): after the last pair the line runs on alone,
+     and the thought stands centred above it — three short lines in her 34 face, the last one blue; the walking square stops under it. js places it. */
+  html body .pr4 .pr4-end .r,html body .pr4 .pr4-end b{font-family:var(--fx)!important;font-weight:400!important;font-size:max(17px, calc(34 * var(--u)))!important;line-height:.971!important;letter-spacing:-.0294em!important;text-transform:uppercase!important;margin:0!important;text-align:center;white-space:nowrap}
   html body .pr4 .pr4-lead{margin:calc(30 * var(--u)) 0 0!important;width:calc(430 * var(--u));max-width:none!important}
-  .pr4 .pr4-end{top:calc(155 * var(--u))!important}   /* its place along the strip is set by js */
+  .pr4 .pr4-end{text-align:center}   /* its place — along the strip and above the line — is set by js */
   /* the strip (her note 21:29 → 21:33): each step whole inside its circle — number, name, sentence — centred; sizes in the sentence's em (js sets it) */
   .pr6-s{position:absolute;left:0;top:0;width:11.5em;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;text-align:center}
   .pr6-c,.pr6-t{position:static;transform:none}

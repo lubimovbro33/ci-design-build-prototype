@@ -896,7 +896,8 @@
        The six steps go in pairs, as in her reference: at a node the line parts — one hairline swings up to a circle, one down —
        and both come back to the axis further on; the next pair leaves before the last has returned, so their lines cross once.
        The curves are long and flat. Each circle is large and holds the step whole: number, name, sentence — nothing hangs
-       outside, so no line ever runs through text. The title stands at the head of the strip, the closing thought at its end.
+       outside, so no line ever runs through text. The title stands at the head of the strip; the closing thought stands centred
+       above the line on the last screen, where the line runs on alone.
        The drawing is faint from the start and is inked as the walking square passes; the camera follows the square.
        Strokes as on the About closing (1 px, Bright Gray 33 % / 10 %), mist squares at the joints. No photographs.
        Phones (no frame from her): the axis stands on the left, a small numbered circle by each node, name and sentence beside it. */
@@ -924,9 +925,12 @@
         var u = Math.min(W / 1920, H / 1080), fs = Math.max(13, 20 * u), TL = 140 * u, BL = H - 58 - 16 * u, half = (BL - TL) / 2;
         var k = fs / 20, C = [1320, 2260, 3200], Dk = [215, 245, 215], R = 158, S = 620, fit = Math.min(1, half / ((245 + R) * k)); k *= fit; fs = Math.max(11, fs * fit);
         Y = Y1 = (TL + BL) / 2; X0 = 48 * u; X1 = W + 20; R *= k; S *= k;
-        var m6 = Math.max(4, 6 * u), m8 = Math.max(5, 8 * u), hx = (S - R) * .5, ex = 3560 * k, L = ex + end.offsetWidth + 48 * u, XE = L - 48 * u;
-        G = {fs: fs, R: R, S: S, c: C.map(function(c){ return c * k; }), cy: [], ex: ex, L: Math.max(L, W), XE: Math.max(XE, W - 48 * u), nd: []};
-        axG.setAttribute('d', 'M' + f1(X0) + ' ' + f1(Y) + 'H' + f1(G.XE));
+        /* the end (her note 13.11 22:09 → 22:17): after the last pair the line runs on alone. The last screen starts just past the last circles — the two
+           returning curves come in from its left edge and meet — and the closing thought stands centred above the line; the square stops under it,
+           the line goes on, faint, to the right edge */
+        var m6 = Math.max(4, 6 * u), m8 = Math.max(5, 8 * u), hx = (S - R) * .5, xr = C[2] * k + S, L = C[2] * k + R + 24 * k + W, XE = L - W / 2;
+        G = {fs: fs, R: R, S: S, c: C.map(function(c){ return c * k; }), cy: [], xr: xr, L: L, XE: XE, nd: []};
+        axG.setAttribute('d', 'M' + f1(X0) + ' ' + f1(Y) + 'H' + f1(L + 20));
         steps.forEach(function(e, i){ var j = i >> 1, up = i % 2 === 0, c = G.c[j], cy = up ? Y - Dk[j] * k : Y + Dk[j] * k, xa = c - S, xb = c + S; G.cy[i] = cy;
           paths(i, ['M' + f1(xa) + ' ' + f1(Y) + 'C' + f1(xa + hx) + ' ' + f1(Y) + ' ' + f1(c - R - hx) + ' ' + f1(cy) + ' ' + f1(c - R) + ' ' + f1(cy),
                     'M' + f1(c - R) + ' ' + f1(cy) + 'A' + f1(R) + ' ' + f1(R) + ' 0 0 1 ' + f1(c + R) + ' ' + f1(cy),
@@ -936,7 +940,7 @@
           e.style.left = f1(c) + 'px'; e.style.top = f1(cy) + 'px'; e.style.fontSize = fs.toFixed(2) + 'px'; });
         G.nd = [G.c[0] - S, G.c[1] - S, G.c[0] + S, G.c[2] - S, G.c[1] + S, G.c[2] + S, G.XE];
         nds.forEach(function(n, q){ sqr(n, G.nd[q], Y, m8); });
-        end.style.setProperty('left', f1(ex) + 'px', 'important');
+        end.style.setProperty('left', f1(XE - end.offsetWidth / 2) + 'px', 'important'); end.style.setProperty('top', f1(Y - 34 * u - end.offsetHeight) + 'px', 'important');
       } else {
         var tb = Math.max(t2.offsetTop + t2.offsetHeight, end.offsetTop + end.offsetHeight), k6 = .6; G = null;
         X0 = X1 = 26; Y = tb + 34; Y1 = H - 70; var row = (Y1 - Y) / 6, Rp = Math.min(22, row * .28), cxp = X0 + 30 + Rp, gv = row / 2 - Rp;
@@ -1002,7 +1006,7 @@
           ink(i, sg(px, c - S, c - R), arc, arc, sg(px, c + R, c + S));
           set(pts[i][0], 'opacity', (.26 + .74 * sg(px, c - R - 8, c - R)).toFixed(3)); set(pts[i][1], 'opacity', (.26 + .74 * sg(px, c + R - 8, c + R)).toFixed(3));
           var o = (.26 + .74 * sg(px, c - R * .7, c + R * .1)).toFixed(3); set(cl[i], 'opacity', o); set(tx[i], 'opacity', o); });
-        var ke = ga * (.26 + .74 * sg(px, G.c[2] + R, G.c[2] + S)); set(end, 'opacity', ke.toFixed(3)); set(end, 'visibility', ga > 0 ? '' : 'hidden'); set(end, 'transform', mv);
+        var ke = ga * (.26 + .74 * sg(px, G.xr + .25 * (G.XE - G.xr), G.xr + .8 * (G.XE - G.xr))); set(end, 'opacity', ke.toFixed(3)); set(end, 'visibility', ga > 0 ? '' : 'hidden'); set(end, 'transform', mv);
       } else {
         var s2 = sg(p, .42, .86), t = s2 * 6, qx = X0, qy = Y + s2 * (Y1 - Y);
         gM.removeAttribute('transform'); set(box, 'transform', 'none');
