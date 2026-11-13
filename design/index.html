@@ -5,6 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CI Design + Build — Homepage design</title>
 <meta name="robots" content="noindex">
+<script>(function(){if(!/[?&]diag(=|&|$)/.test(location.search))return;   /* diagnostics panel (js/diag.js), only with ?diag */
+var D=window.__dg={t0:performance.now(),err:[],ev:[]};function str(a){return Array.prototype.map.call(a,function(x){return x&&x.message?x.message:String(x);}).join(' ').slice(0,300);}
+addEventListener('error',function(e){D.err.push(Math.round(performance.now())+' ms · '+(e.message||(e.target&&(e.target.src||e.target.href)?'не завантажилось: '+(e.target.src||e.target.href):'помилка'))+(e.filename?' ('+e.filename.split('/').pop()+':'+e.lineno+')':''));},true);
+addEventListener('unhandledrejection',function(e){D.err.push(Math.round(performance.now())+' ms · promise: '+str([e.reason]));});
+['warn','error'].forEach(function(k){var f=console[k];console[k]=function(){D.err.push(Math.round(performance.now())+' ms · '+k+': '+str(arguments));return f.apply(console,arguments);};});
+var s=document.createElement('script');s.src='js/diag.js?v=1';s.defer=true;document.head.appendChild(s);})();</script>
 <link rel="preload" as="image" href="assets/v15/poster_v2_1920.webp" imagesrcset="assets/v15/poster_v2_1280.webp 1280w, assets/v15/poster_v2_1920.webp 1920w, assets/v15/poster_v2_2560.webp 2560w" imagesizes="100vw" fetchpriority="high">
 <link rel="preload" href="assets/fonts/tg-ext.woff" as="font" type="font/woff" crossorigin>
 <!-- the 3D intro starts sooner (user 09.11 "we still wait half a second or a second"): the import map comes first, the whole
