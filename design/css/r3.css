@@ -61,8 +61,20 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   .ch .r3p.r3r{left:auto!important;right:calc(var(--xr, 50) * var(--u))!important;text-align:right}
   .ch .r3p.r3c{left:0!important;right:0!important;text-align:center}
 }
+#philosophy .ph-t, #about .ch-t, #approach .ch-t{z-index:3}
 /* phones (no frame from her yet): the same phases, stacked on a black ground at the bottom of the stage */
 @media (max-aspect-ratio: 1/1){
+  #philosophy .ph-t, #about .ch-t, #approach .ch-t{position:absolute;inset:0;display:block;pointer-events:none}
+  #philosophy .ph-pct{display:none!important}
+  #philosophy .ph-vs.row1{top:52vh}
+  #about .ab-say{font-family:"Zalando Sans SemiExpanded",var(--fz);font-size:19px;line-height:1.1;letter-spacing:-.03em;color:#EBEBEB;margin:6px 0 0}
+  #about .r3p.r3c{text-align:left}
+  #about .ch-t > .r3own{position:absolute;left:20px;right:20px;top:calc(var(--hdr) + 60px);bottom:60px;background:none;padding:0;display:flex;flex-direction:column;justify-content:space-between}
+  #about .r3own .oa{margin-bottom:auto}
+  #about .r3own .oc,#about .r3own .od{margin-top:10px}
+  #about .r3own .oe{margin-top:14px}
+  .ab-ob{top:44%!important;transform:translateY(-50%);text-align:center;left:0!important;right:0!important}
+  #approach .r3p.r3r{text-align:left}
   .ch .r3p{position:absolute;left:20px;right:20px;bottom:64px;top:auto;margin:0;padding:14px 0 0;background:#000}
   .ch .r3p.row1{bottom:auto;top:calc(var(--hdr) + 46vh + 80px)}
   .ch [style*="--w:"]{width:auto}
@@ -76,26 +88,25 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 #philosophy .ph-pct .v{position:relative;display:flex;align-items:flex-start;font-family:var(--fx)!important;font-weight:500!important;font-size:max(120px, calc(330 * var(--u)))!important;line-height:.74!important;letter-spacing:-.1em!important;margin:0!important;color:#EBEBEB}
 #philosophy .ph-pct .v > span{display:block;min-width:1.2em}
 #philosophy .ph-pct .v sup{position:static;display:block;margin:.02em 0 0 -.082em!important;font-weight:400!important;font-size:.2em!important;line-height:1;letter-spacing:0;color:#EBEBEB;vertical-align:baseline;top:auto}
-@media (min-aspect-ratio: 1/1){
-  /* the verbs: six rows of 64, hairlines at 30 %; the rows wait at 26 %, the one being lived is a Bright Gray bar */
-  #philosophy .ph-vs{width:calc(712 * var(--u))!important}
-  #philosophy .ph-vin{margin:0!important;width:auto!important}
-  #philosophy .ph-vl{margin:calc(101 * var(--u)) 0 0!important;font-family:var(--fx)!important;font-weight:400!important;font-size:max(17px, calc(34 * var(--u)))!important;line-height:1!important;letter-spacing:-.0294em!important;text-transform:uppercase!important;color:#EBEBEB}
-  #philosophy .ph-vl .vr{display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;height:calc(64 * var(--u));padding:0!important;border-top:1px solid rgba(235,235,235,.3);border-bottom:0;background:none;color:#EBEBEB;transition:background-color .45s, color .45s}
-  #philosophy .ph-vl .vr:last-child{border-bottom:1px solid rgba(235,235,235,.3)}
-  #philosophy .ph-vl .vr .vt{flex:0 0 auto;margin:0 auto 0 0;opacity:.26;transition:opacity .45s, transform .7s cubic-bezier(.16,1,.3,1)}
-  #philosophy .ph-vl .vr i{flex:0 0 auto;width:max(6px, calc(10 * var(--u)));height:max(6px, calc(10 * var(--u)));border:0;background:currentColor!important;opacity:.26;transition:opacity .45s, transform .7s cubic-bezier(.16,1,.3,1)}
-  #philosophy .ph-vl .vr:has(.vb.vcur){background:#EBEBEB;color:#000;border-top-color:#EBEBEB}
-  #philosophy .ph-vl .vr:has(.vb.vcur) .vt{opacity:1;transform:translateX(calc(40 * var(--u)))}
-  #philosophy .ph-vl .vr:has(.vb.vcur) i{opacity:1;transform:translateX(calc(-40 * var(--u)))}
-  #philosophy .ph-vl .vb{background:none!important;box-shadow:none!important;color:inherit!important;margin:0!important;padding:0!important}
-
-  /* the closing: the photograph takes the screen, a cross of hairlines through its middle, the thought centred on it */
-  #philosophy .ph-t > .r3fin{position:absolute!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:100%!important;height:100%;transform:none!important;display:block!important;text-align:center;grid-template-columns:none!important}
-  #philosophy .r3fin .fa{position:absolute;left:0;right:0;top:calc(50% - 167 * var(--u))}
-  #philosophy .r3fin .fb{position:absolute;left:0;right:0;top:calc(50% - 118 * var(--u))}
-  #philosophy .r3fin .fc{position:absolute;left:0;right:0;bottom:max(calc(50 * var(--u)), 50px)}
-}
+/* the verbs: six rows (64 in her frame), hairlines at 30 %; the rows wait at 26 %, the one being lived is a Bright Gray bar */
+#philosophy{--vrh:calc(64 * var(--u));--vmt:calc(101 * var(--u));--vin:calc(40 * var(--u))}
+@media (max-aspect-ratio: 1/1){ #philosophy{--vrh:32px;--vmt:14px;--vin:12px} }
+#philosophy .ph-vin{margin:0!important;width:auto!important}
+#philosophy .ph-vl{margin:var(--vmt) 0 0!important;font-family:var(--fx)!important;font-weight:400!important;font-size:max(17px, calc(34 * var(--u)))!important;line-height:1!important;letter-spacing:-.0294em!important;text-transform:uppercase!important;color:#EBEBEB}
+#philosophy .ph-vl .vr{display:flex;align-items:center;justify-content:space-between;box-sizing:border-box;height:var(--vrh);padding:0!important;border-top:1px solid rgba(235,235,235,.3);border-bottom:0;background:none;color:#EBEBEB;transition:background-color .45s, color .45s}
+#philosophy .ph-vl .vr:last-child{border-bottom:1px solid rgba(235,235,235,.3)}
+#philosophy .ph-vl .vr .vt{flex:0 0 auto;margin:0 auto 0 0;opacity:.26;transition:opacity .45s, transform .7s cubic-bezier(.16,1,.3,1)}
+#philosophy .ph-vl .vr i{flex:0 0 auto;width:max(6px, calc(10 * var(--u)));height:max(6px, calc(10 * var(--u)));border:0;background:currentColor!important;opacity:.26;transition:opacity .45s, transform .7s cubic-bezier(.16,1,.3,1)}
+#philosophy .ph-vl .vr:has(.vb.vcur){background:#EBEBEB;color:#000;border-top-color:#EBEBEB}
+#philosophy .ph-vl .vr:has(.vb.vcur) .vt{opacity:1;transform:translateX(var(--vin))}
+#philosophy .ph-vl .vr:has(.vb.vcur) i{opacity:1;transform:translateX(calc(-1 * var(--vin)))}
+#philosophy .ph-vl .vb{background:none!important;box-shadow:none!important;color:inherit!important;margin:0!important;padding:0!important}
+@media (min-aspect-ratio: 1/1){ #philosophy .ph-vs{width:calc(712 * var(--u))!important} }
+/* the closing: the photograph takes the screen, a cross of hairlines through its middle, the thought centred on it */
+#philosophy .ph-t > .r3fin{position:absolute!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:100%!important;height:100%;transform:none!important;display:block!important;text-align:center;grid-template-columns:none!important;background:none!important;padding:0!important}
+#philosophy .r3fin .fa{position:absolute;left:0;right:0;top:calc(50% - max(74px, 167 * var(--u)))}
+#philosophy .r3fin .fb{position:absolute;left:0;right:0;top:calc(50% - max(50px, 118 * var(--u)))}
+#philosophy .r3fin .fc{position:absolute;left:0;right:0;bottom:max(calc(50 * var(--u)), 50px)}
 .r3-ph{position:absolute;inset:0;z-index:2;pointer-events:none;opacity:var(--st, 0);overflow:hidden;background:#000}
 .r3-ph img{display:block;width:100%;height:100%;object-fit:cover;filter:brightness(.52) contrast(1.05);transform:scale(calc(1.06 - .05 * var(--st, 0)))}
 .r3-ph .rh,.ap-in .rh{position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(235,235,235,.33)}
@@ -128,7 +139,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   .ab-ob{position:absolute;left:0;right:0;top:calc(50% + 23 * var(--u));z-index:3;text-align:center;pointer-events:none;opacity:var(--ob, 0);
     transform:translateY(calc(-50% + (1 - var(--ob, 0)) * .35em));filter:blur(calc((1 - var(--ob, 0)) * 8px))}
 }
-@media (max-aspect-ratio: 1/1){ .ab-ob{position:absolute;left:20px;right:20px;top:36%;opacity:var(--ob, 0)} #about .r3own > *{margin-bottom:12px} }
+@media (max-aspect-ratio: 1/1){ .ab-ob{position:absolute;z-index:3;pointer-events:none;opacity:var(--ob, 0)} }
 #about .ab-circ{opacity:0}
 #about .ab-circ .cc{fill:none;stroke:url(#abCg);stroke-width:var(--sw, 1);stroke-dasharray:1 1}
 #about .ab-circ .cl{fill:none;stroke:url(#abLg);stroke-width:var(--sw, 1)}
