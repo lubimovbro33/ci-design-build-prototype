@@ -239,9 +239,9 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 .r3-rb,.r3-hb{position:fixed;z-index:54;pointer-events:none;opacity:0;transition:opacity .6s ease;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
 html.rail-on .r3-rb,html.rail-on .r3-hb{opacity:1}
 .r3-rb{left:0;right:0;bottom:0;height:52px;-webkit-mask-image:linear-gradient(to top,#000 0,#000 70%,transparent 100%);mask-image:linear-gradient(to top,#000 0,#000 70%,transparent 100%)}   /* the rail is 36 high: solid blur under it, gone by 52 */
-.r3-hb{top:0;z-index:57;height:calc(140 * var(--u))}
-.r3-hb.l{left:0;width:calc(150 * var(--u));-webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent 100%),linear-gradient(to right,#000 62%,transparent 100%);mask-image:linear-gradient(to bottom,#000 62%,transparent 100%),linear-gradient(to right,#000 62%,transparent 100%);-webkit-mask-composite:source-in;mask-composite:intersect}
-.r3-hb.r{right:0;width:calc(460 * var(--u));-webkit-mask-image:linear-gradient(to bottom,#000 62%,transparent 100%),linear-gradient(to left,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,#000 62%,transparent 100%),linear-gradient(to left,#000 80%,transparent 100%);-webkit-mask-composite:source-in;mask-composite:intersect}
+.r3-hb{top:0;z-index:57;height:calc(124 * var(--u))}   /* ends above the ruler's figures of 03 About (their caps start at 117): a still label is never softened */
+.r3-hb.l{left:0;width:calc(150 * var(--u));-webkit-mask-image:linear-gradient(to bottom,#000 70%,transparent 100%),linear-gradient(to right,#000 62%,transparent 100%);mask-image:linear-gradient(to bottom,#000 70%,transparent 100%),linear-gradient(to right,#000 62%,transparent 100%);-webkit-mask-composite:source-in;mask-composite:intersect}
+.r3-hb.r{right:0;width:calc(460 * var(--u));-webkit-mask-image:linear-gradient(to bottom,#000 70%,transparent 100%),linear-gradient(to left,#000 80%,transparent 100%);mask-image:linear-gradient(to bottom,#000 70%,transparent 100%),linear-gradient(to left,#000 80%,transparent 100%);-webkit-mask-composite:source-in;mask-composite:intersect}
 html.mn-open .r3-rb,html.mn-open .r3-hb,html.lite .r3-rb,html.lite .r3-hb{display:none}
 
 /* ================================================================== 04 · projects on a low window (not in her frame yet; kept from breaking): the panel's text may get

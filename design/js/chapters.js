@@ -302,7 +302,11 @@
     var s1 = el('text', {x: SX + 14, y: CY + 19, 'class': 'sl'}, svG); s1.textContent = 'PROJECT TIME SAVED';
     var s2 = el('text', {x: SX + 14, y: CY + 28.5, 'class': 'sl'}, svG); s2.textContent = 'AVERAGE';
     var svN = el('text', {x: SX + 12, y: CY + CH2 - 13, 'class': 'big'}, svG), svV = el('tspan', {}, svN), svP = el('tspan', {'class': 'pc', dx: 7, dy: -27}, svN); svV.textContent = '0'; svP.textContent = '%';
-    el('rect', {x: PW - 17, y: CY + CH2 - 17, width: 6, height: 6, fill: '#000'}, svG);
+    var svQ = el('rect', {x: PW - 17, y: CY + CH2 - 17, width: 6, height: 6, fill: '#000'}, svG);
+    /* r3 (her note 13.11 19:23: "why are these blocks not the full container?"): on a window lower than 16:9 the chart keeps the
+       container's full width and only its heights follow the window — the group is scaled by x and y apart, and every text (and
+       the little square) is narrowed back by the same ratio about its own anchor, so the letters stay in proportion */
+    var tFit = [].slice.call(gT.querySelectorAll('text'));
     /* scene 3: your decisions (squares) on one line; everything in between, hatched, is ours */
     var gO = el('g', {'class': 'ab-own'}, svg), MS = [0, .22, .41, .63, 1];
     var own = el('path', {d: seg(0, 0, PW, 0), 'class': 'own', 'vector-effect': 'non-scaling-stroke', pathLength: 1}, gO);
@@ -334,7 +338,7 @@
       /* v15 (user 15:27): bigger, and the walls (y 80…650, not the roof) centred on the screen from the first frame */
       var k = port ? 1 : Math.min(1, (h / 1080) / (w / 1920));   /* r3: a window lower than 16:9 — the frame is fitted by height */
       var hs = port ? VW * .76 / 880 : .86 * k, cx = VW / 2, cy = port ? VH * .36 : VH / 2 + 10 * k;
-      var m = port ? 24 : 48 * VW / w, gap = 22, cols = port ? 3 : 5,   /* polish: the row keeps the text margin (48), not the header's 24 */
+      var m = port ? 24 : 48 * k, gap = 22, cols = port ? 3 : 5,   /* the row keeps the text margin (48 of the frame, as --x:48), not the header's 24 */
        cw = (VW - 2 * m - (cols - 1) * gap) / cols, sc = cw / 920, chh = 580 * sc;
       /* the row stands 24 above the chapter rule at the bottom (user 15:22: it ran into it on a 16:10 screen) */
       var chap = document.querySelector('.chap'), navTop = chap && chap.getBoundingClientRect().height ? chap.getBoundingClientRect().top : h - 60;
@@ -348,15 +352,18 @@
       gH.setAttribute('transform', 'translate(' + f1(LY.house[0]) + ' ' + f1(LY.house[1]) + ') scale(' + LY.house[2].toFixed(4) + ')');
       LAY.forEach(function(L){ L.t.setAttribute('y', f1(50 - 20 / sc)); });   /* r3: the trade's name stands 20 above its card's line (her note 13.11 18:47) */
       /* scene 2's chart and scene 3's line: x 760…1840, the chart from y 540, the line across the middle; full width on portrait */
-      var mT = 48 * VW / w, tx0 = port ? m : mT, tw = port ? VW - 2 * m : VW - 2 * mT, sc2 = tw / 1080, ty0 = port ? VH * .34 : VH / 2 - 106 * sc2;
+      var mT = 48 * k, tx0 = port ? m : mT, tw = port ? VW - 2 * m : VW - 2 * mT, sc2 = tw / 1080, ty0 = port ? VH * .34 : VH / 2 - 106 * sc2;
       gT.setAttribute('transform', 'translate(' + f1(tx0) + ' ' + f1(ty0) + ') scale(' + sc2.toFixed(4) + ')');
       /* v10: scene 3 is a statement — the line of decisions runs the full width under it */
-      var mU = 48 * VW / w, sc3 = port ? sc2 : (VW - 2 * mU) / 1080;
+      var mU = 48 * k, sc3 = port ? sc2 : (VW - 2 * mU) / 1080;
       OWN_DS = Math.max(1, sc3); gO.style.setProperty('--ds', OWN_DS.toFixed(3));   /* non-scaling strokes dash in screen units */
       gO.setAttribute('transform', 'translate(' + f1(port ? tx0 : mU) + ' ' + f1(port ? VH * .62 : VH * .56) + ') scale(' + sc3.toFixed(4) + ')');
       /* r3: the chart hangs from the top (her frames: the ruler at 415 under the title, at 150 once the title has left); the circles sit on the middle */
-      LY.t = [port ? tx0 : (VW - tw * k) / 2, sc2 * k, port ? VH * .34 : 415 * k, port ? VH * .3 : 150 * k];
-      var cs = port ? VW / 1920 * .9 : k; gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27 * k) + ') scale(' + cs.toFixed(4) + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
+      LY.t = [tx0, sc2, port ? VH * .34 : 415 * k, port ? VH * .3 : 150 * k, sc2 * k];   /* x, x-scale, y under the title, y once it has left, y-scale */
+      tFit.forEach(function(t){ var x = +t.getAttribute('x') || 0; if (k < .999) t.setAttribute('transform', 'translate(' + x + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-x) + ' 0)'); else t.removeAttribute('transform'); });
+      if (k < .999) svQ.setAttribute('transform', 'translate(' + f1(PW - 11 * k) + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-(PW - 11)) + ' 0)'); else svQ.removeAttribute('transform');
+      var cs = port ? VW / 1920 * .9 : k; LY.hl = Math.max(1020, VW / 2 / cs + 40); lgr.setAttribute('x1', f1(-LY.hl)); lgr.setAttribute('x2', f1(LY.hl));   /* the line bleeds off both edges, as in her frame */
+      gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27 * k) + ') scale(' + cs.toFixed(4) + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
     }
     layout(); window.addEventListener('resize', function(){ layout(); oneFit(); if (last >= 0){ var q = last; last = -1; update(q); } });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ layout(); oneFit(); if (last >= 0){ var q = last; last = -1; update(q); } });   /* the title's width needs the real font */
@@ -390,7 +397,7 @@
       var tk = sm(sg(p, .6, .66)), out3 = sm(sg(p, .79, .83)), ho = (1 - sm(sg(p, .59, .64))).toFixed(3);
       gSec.style.opacity = ho; gRoof.style.opacity = ho; gDis.style.opacity = ho;
       gT.style.opacity = (tk * (1 - out3)).toFixed(3);
-      var tyk = sm(sg(p, .705, .735)); gT.setAttribute('transform', 'translate(' + f1(LY.t[0]) + ' ' + f1(lerp(LY.t[2], LY.t[3], tyk)) + ') scale(' + LY.t[1].toFixed(4) + ')');
+      var tyk = sm(sg(p, .705, .735)); gT.setAttribute('transform', 'translate(' + f1(LY.t[0]) + ' ' + f1(lerp(LY.t[2], LY.t[3], tyk)) + ') scale(' + LY.t[1].toFixed(4) + ' ' + LY.t[4].toFixed(4) + ')');
       bars.forEach(function(b){ var k = sg(p, .63 + b.d * .04, .665 + b.d * .04), w = f1(b.w * eo(k)); if (b.cw !== w){ b.cw = w; b.e.setAttribute('width', w); } });
       fades.forEach(function(f){ var o = sg(p, .64 + f.d * .04, .665 + f.d * .04).toFixed(2); if (f.co !== o){ f.co = o; f.e.setAttribute('opacity', o); } });
       var kc = f1(SX * eo(sg(p, .665, .7))); if (ciP.__w !== kc){ ciP.__w = kc; ciP.setAttribute('width', kc); }
@@ -400,7 +407,7 @@
       /* r3: the closing — the line, one circle, two circles, the blue words, the outer circles */
       var kl = eo(sg(p, .84, .885)), k0 = eo(sg(p, .86, .9)), ksp = sm(sg(p, .9, .94)), kss = eo(sg(p, .94, .98));
       gC.style.opacity = sg(p, .835, .845).toFixed(3);
-      cLine.setAttribute('d', 'M' + f1(-1020 * kl) + ' 0H' + f1(1020 * kl));
+      cLine.setAttribute('d', 'M' + f1(-LY.hl * kl) + ' 0H' + f1(LY.hl * kl));
       cA.style.strokeDashoffset = cB.style.strokeDashoffset = (1 - k0).toFixed(4);
       cA.setAttribute('transform', 'translate(' + f1(-DX * ksp) + ' 0) rotate(-90)'); cB.setAttribute('transform', 'translate(' + f1(DX * ksp) + ' 0) rotate(-90)');
       cB.style.opacity = ksp > 0 ? 1 : 0;
