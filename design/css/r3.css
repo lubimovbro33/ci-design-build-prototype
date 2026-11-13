@@ -362,3 +362,28 @@ html body .cl5-l2 span{display:block;transform:translate(-.0138em, calc((1 - var
   html body .cl5-stage{--big:min(calc(290 * 100vw / 1920), calc((50vh - max(calc(51 * var(--u)), 58px) - .851 * max(24px, calc(60 * var(--u))) - calc(90 * var(--u))) / .719))}
 }
 @media (max-aspect-ratio: 1/1){ html body .cl5{height:340vh} }
+
+/* ================================================================== 11 FAQ — as her frame «11 FAQ» (456:14780, 13.11 22:19), with even paddings. Her note: "in the white card the
+   distance to the text is different at the top and at the bottom; the next rows are not centred between their lines — do it as in the mockup, only fix the
+   paddings". The title 60 / 52 at 421 / 195, the list from 500. A row is 94 high: the number 14 / 16 at the margin, the question Zalando Sans Expanded Regular
+   26 / 26, −2, at 421, the plus 26 at the right margin — all three on the row's middle (34 above the question's line and 34 under it). The open card keeps
+   the same 34 above the question and has the same 34 under the answer's last line; the answer starts 46 under the question, in two columns at 421 (390 wide)
+   and 960 (426 wide; in em, so the lines break as drawn where the text is on its floor). The rows follow one another with no gap (her frame has 22 of black
+   under the card — left from resizing it). The little square by the number is gone, as in her frame. */
+html body .fq5 .qh{--q:max(15px, calc(26 * var(--u)))}
+html body .fq5 .qh .t{font-family:var(--fx)!important;font-weight:400!important;font-size:var(--q)!important;line-height:1!important;letter-spacing:-.077em!important;text-transform:uppercase}
+html body .fq5 .qh .n{font-family:var(--fx)!important;font-weight:400!important;font-size:max(11px, calc(14 * var(--u)))!important;line-height:1.139!important;letter-spacing:0!important;padding-top:0;margin-top:calc((var(--q) - 1.139em) / 2)}
+html body .fq5 .qh .n::before{display:none}
+html body .fq5 .qh .pl{width:var(--q);min-width:0;margin-top:0}
+@media (min-aspect-ratio: 1/1){
+  html body .fq5 .fq-hd{padding:calc(195 * var(--u)) var(--m) calc(149 * var(--u))}
+  html body .fq5 .fq-hd .ch-title{margin:0 0 0 calc(421 * var(--u) - var(--m))!important;padding:0!important;text-indent:0!important;font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;white-space:nowrap!important;color:#EBEBEB}
+  html body .fq5 .qh{grid-template-columns:calc(421 * var(--u) - var(--m)) minmax(0,1fr) auto;padding:calc(34 * var(--u)) 0}
+  html body .fq5 .ain{margin-left:calc(421 * var(--u) - var(--m));padding:calc(12 * var(--u)) 0 calc(34 * var(--u));grid-template-columns:calc(539 * var(--u)) minmax(0,1fr)}
+  html body .fq5 .ain .p{max-width:19.5em!important}
+  html body .fq5 .ain .p + .p{max-width:21.3em!important}
+}
+@media (max-aspect-ratio: 1/1){
+  html body .fq5 .qh{--q:19px;padding:18px 0}
+  html body .fq5 .ain{padding:0 0 18px}
+}
