@@ -26,7 +26,12 @@
   function sg(p, a, b){ return c01((p - a) / (b - a)); }
   function sm(x){ return x * x * (3 - 2 * x); }
   var pins = [], tick = 0;
-  function run(){ tick = 0; var vh = window.innerHeight;
+  /* 06 Projects (her note 13.11 23:23): the card's lead stands on the card's foot, where the rail would lie over it — while the card is under the rail,
+     the rail starts right of the card (html.rail-pj) */
+  var pjCard = document.querySelector('#projects .pj4-card'), pjMq = window.matchMedia ? window.matchMedia('(min-aspect-ratio: 1/1) and (min-width: 901px)') : null, pjOn = null;
+  function railPj(vh){ if (!pjCard || !pjMq) return; var on = false; if (pjMq.matches){ var r = pjCard.getBoundingClientRect(); on = r.height > 0 && r.top < vh && r.bottom > vh - 36; }
+    if (on !== pjOn){ pjOn = on; document.documentElement.classList.toggle('rail-pj', on); } }
+  function run(){ tick = 0; var vh = window.innerHeight; railPj(vh);
     pins.forEach(function(o){ var r = o.el.getBoundingClientRect(); if (r.bottom < -vh || r.top > 2 * vh) return;
       var p = c01(-r.top / Math.max(1, r.height - vh)); if (p !== o.p){ o.p = p; o.fn(p); } }); }
   function ask(){ if (!tick) tick = requestAnimationFrame(run); }

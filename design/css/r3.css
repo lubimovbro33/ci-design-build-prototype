@@ -407,7 +407,7 @@ html body .ch-cta .ct-side .ct-say{text-indent:0!important}
 .pj4-rh,.pj4-rv,.pj4-card,br.pjbr,.pj4-ar .lb{display:none}
 @media (min-aspect-ratio: 1/1) and (min-width: 901px){
   html body .pj4 .pj4-pin,html body .pj4 .pj4-stage{min-height:480px}
-  html body .pj4 .pj4-stage{--b:max(calc(24 * var(--u)), 58px);--fl:max(12px, calc(16 * var(--u)));--ft:max(15px, calc(26 * var(--u)));
+  html body .pj4 .pj4-stage{--b:calc(24 * var(--u));--fl:max(12px, calc(16 * var(--u)));--ft:max(15px, calc(26 * var(--u)));
     --ch:max(calc(411 * var(--u)), calc(2 * (var(--b) + 3.6 * var(--fl) + 22px) + 3 * var(--ft)))}
   html body .pj4 .pj4-ph,html body .pj4 .pj4-veil{left:0}
   /* the veil as in her frame: the darkening from the top fades over the whole height (the name stands in it), plus the corner under the card */
@@ -427,7 +427,9 @@ html body .ch-cta .ct-side .ct-say{text-indent:0!important}
   html body .pj4 .pj4-pn{position:static!important;width:auto!important;min-width:0;padding:0!important;background:none;display:block}
   .pj4-card{display:block;position:absolute;z-index:6;left:0;bottom:0;width:calc(545 * var(--u));height:var(--ch);background:#fff}   /* an element of its own: the rail reads the colour under it and turns dark over the card */
   html body .pj4 .pj4-ttl{position:absolute;z-index:6;left:0;bottom:calc(var(--ch) / 2);width:calc(545 * var(--u));margin:0!important;transform:translateY(50%);text-align:center;font-family:var(--fx)!important;font-weight:400!important;font-size:var(--ft)!important;line-height:1!important;letter-spacing:-.077em!important;text-transform:uppercase;color:#000}
-  html body .pj4 .pj4-lead{position:absolute;z-index:6;left:auto;right:calc(100% - 520 * var(--u));bottom:var(--b);width:auto;margin:0;display:block;font-size:var(--fl)}
+  /* her note 13.11 23:23: the lead is pinned to the card's foot with the same space under it as to the card's right side (24). The rail would lie over
+     it, so while the card is under the rail, the rail starts right of the card (html.rail-pj, js/v10.js) */
+  html body .pj4 .pj4-lead{position:absolute;z-index:6;left:auto;right:calc(100% - 521 * var(--u));bottom:calc(var(--b) - .1em);width:auto;margin:0;display:block;font-size:var(--fl)}
   /* the lead's three lines are fixed as in her frame (her note 23:11: the bottom text had slipped — it broke by the face's width into four lines with a stray word) */
   html body .pj4 .pj4-lead br.pjbr{display:inline}
   html body .pj4 .pj4-lead p{width:auto;white-space:nowrap;margin:0!important;max-width:none!important;font-family:var(--fz)!important;font-weight:400!important;font-size:var(--fl)!important;line-height:1.2!important;letter-spacing:-.0625em!important;text-align:right;color:#000}
@@ -448,3 +450,8 @@ html body .ch-cta .ct-side .ct-say{text-indent:0!important}
   html body .pj4 .pj4-pg{position:absolute;left:0;bottom:0;width:1px;height:1px;margin:0;overflow:hidden;opacity:0;visibility:hidden;pointer-events:none}
 }
 @media (min-aspect-ratio: 1/1) and (min-width: 901px) and (hover:hover){ html body .pj4 .pj4-ar:hover{border-color:#fff} }
+html body .chap{transition:opacity .6s var(--e-out),transform .6s var(--e-out),color .5s,left .6s cubic-bezier(.16,1,.3,1)}
+@media (min-aspect-ratio: 1/1) and (min-width: 901px){
+  html.rail-pj body .chap{left:calc(545 * var(--u) + 14px)}
+  html.rail-pj body .r3-rb{left:calc(545 * var(--u) + 1px)}
+}
