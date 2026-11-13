@@ -272,3 +272,10 @@ html.mn-open .r3-rb,html.mn-open .r3-hb,html.lite .r3-rb,html.lite .r3-hb{displa
    The hero's rules and the 05 grid have always been white 10 % (his Figma); the cross on the 02 closing and on the 07 photograph takes the same value
    (her frame has 33 %, on 07 under the 46 % veil; on the site that read as too bright). The hero itself is not touched. */
 :root{ --ln-photo:rgba(255,255,255,.1) }
+
+/* ================================================================== 05 Difference — the opening (her frame 03 About · 9 with the photograph over it, 13.11 20:14):
+   THE CI DIFFERENCE in the hero face (111 / 95, −8, Bright Gray), centred, its capitals 323 from the top of the frame; the photograph 329 × 407 at 796 / 481,
+   over the foot of the letters, opens to the whole screen (js). Everything is measured in the title's own size, so it holds where the title is on its floor. */
+.df2-nx-ttl{position:absolute;left:0;right:0;top:calc(50% - 2.021em);text-align:center;white-space:nowrap;color:#EBEBEB}
+.df2-nx-ph{clip-path:inset(calc(50% - 59 * var(--u)) calc(50% - 164.5 * var(--u)) calc(50% - 348 * var(--u)))}
+@media (max-aspect-ratio: 1/1), (max-width:900px){ html body .df2-nx-ttl.t111{font-size:11vw!important} .df2-nx-ttl{top:calc(50% - .778em - 27.215vw)} }

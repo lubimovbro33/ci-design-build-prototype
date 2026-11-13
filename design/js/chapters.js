@@ -826,19 +826,31 @@
         return '<span class="tl" aria-hidden="true" style="--s:' + (.12 + li * .07).toFixed(3) + '">' + t.split('').map(function(ch){ if (ch === ' ') return ' '; var d = .15 + (n++) * .012; return '<span class="fc" style="--s:' + d.toFixed(3) + '">' + ch + '</span>'; }).join('') + '</span>'; }).join('<br>'); }
     var ready = false, lastT = -1, lastR = -1, atStart = true;
     function setReady(v){ if (v === ready) return; ready = v; sec.classList.toggle('ready', v); sec.dispatchEvent(new CustomEvent(v ? 'df2in' : 'df2out')); }
-    var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), fr = nx.querySelector('.df2-nx-fr'), cap = nx.querySelector('.df2-nx-cap');
+    /* r3 (13.11 20:14, her frame): the name of the chapter in the hero face, the photograph under it over the foot of the letters
+       (329 × 407 where the title is 111: the window starts 158 under the top of the capitals). The picture covers its window as it
+       does in her frame and grows with it to the whole screen, over the title. Sizes follow the title's own size. */
+    var ph = nx.querySelector('.df2-nx-ph'), im = ph.querySelector('img'), ttl = nx.querySelector('.df2-nx-ttl'), AR = 2000 / 1419, geo = null, gk = '', lastP = 0;
     function ease(t){ return t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; }
+    function measure(vw, vh, port){
+      var fs = ttl ? parseFloat(getComputedStyle(ttl).fontSize) || 40 : 111 * vw / 1920, W = port ? vw * .44 : fs * 329 / 111, H = W * 407 / 329;
+      var nr = nx.getBoundingClientRect(), tr = ttl ? ttl.getBoundingClientRect() : null;
+      var top = tr && tr.height ? tr.top - nr.top + (.066 + 158 / 111) * fs : (vh - H) / 2;   /* the capitals start .066 em under the line's top */
+      if (im.naturalWidth) AR = im.naturalWidth / im.naturalHeight;
+      /* the picture's own box is the whole picture at the size that covers the screen (not the screen's crop of it), so at the
+         start it can cover its window with its full height, as in her frame, and at the end it is the grid's background exactly */
+      var iw = Math.max(vw, vh * AR), ih = iw / AR, st = im.style;
+      st.position = 'absolute'; st.maxWidth = 'none'; st.width = iw.toFixed(1) + 'px'; st.height = ih.toFixed(1) + 'px'; st.left = ((vw - iw) / 2).toFixed(1) + 'px'; st.top = ((vh - ih) / 2).toFixed(1) + 'px';
+      geo = {W: W, H: H, top: top, s0: Math.max(W / iw, H / ih)};
+    }
     function update(p){
-      var vw = window.innerWidth, vh = window.innerHeight, u = vw / 1920, port = vw <= 900 || vw / vh <= 1;
-      var W = port ? vw * .44 : 400 * u, H = port ? vw * .68 : 540 * u, m = port ? 14 : 26 * u;
+      lastP = p;
+      var vw = window.innerWidth, vh = window.innerHeight, port = vw <= 900 || vw / vh <= 1, k = vw + 'x' + vh + (im.naturalWidth ? 'i' : '');
+      if (k !== gk){ gk = k; measure(vw, vh, port); }
       var D = Math.max(1, pin.offsetHeight - body.offsetHeight), q = clamp01(p * Math.max(1, pin.offsetHeight - vh) / D);
-      var e = ease(clamp01((q - .02) / .3)), T = (1 - e) * (vh - H) / 2, L = (1 - e) * (vw - W) / 2;
-      ph.style.clipPath = 'inset(' + T.toFixed(1) + 'px ' + L.toFixed(1) + 'px)';
-      im.style.transform = 'scale(' + (1.15 - .14 * e).toFixed(4) + ')'; im.style.filter = 'contrast(' + (1 + .06 * e).toFixed(3) + ') brightness(' + (1 - .1 * e).toFixed(3) + ')';
-      fr.style.transform = 'scale(' + ((W + 2 * m + e * (vw - W)) / (W + 2 * m)).toFixed(4) + ',' + ((H + 2 * m + e * (vh - H)) / (H + 2 * m)).toFixed(4) + ')';
-      fr.style.opacity = Math.max(0, 1 - e * 2.4).toFixed(3);
-      cap.style.opacity = Math.max(0, 1 - e * 2.6).toFixed(3);
-      cap.style.marginLeft = (-60 * u * e).toFixed(1) + 'px';
+      var e = ease(clamp01((q - .02) / .3)), o = 1 - e, L = o * (vw - geo.W) / 2;
+      ph.style.clipPath = 'inset(' + (o * geo.top).toFixed(1) + 'px ' + L.toFixed(1) + 'px ' + (o * (vh - geo.top - geo.H)).toFixed(1) + 'px ' + L.toFixed(1) + 'px)';
+      im.style.transform = 'translate(0,' + (o * (geo.top + geo.H / 2 - vh / 2)).toFixed(1) + 'px) scale(' + (geo.s0 + (1.01 - geo.s0) * e).toFixed(4) + ')';
+      im.style.filter = e > 0 ? 'contrast(' + (1 + .06 * e).toFixed(3) + ') brightness(' + (1 - .1 * e).toFixed(3) + ')' : '';
       var f = clamp01((q - .31) / .07); nx.style.opacity = (1 - f).toFixed(3); nx.style.visibility = f >= 1 ? 'hidden' : 'visible';
       /* then the grid: it rises 28vh → 0 (the "scroll a little" of 14:58) while it starts to draw; --t runs the entrance to the end
          of the pin (.92), and only then is it .ready — hover, autoplay, and the page scrolls on */
@@ -848,6 +860,8 @@
       setReady(t >= .999);
       if (q < .3){ if (!atStart){ atStart = true; sec.dispatchEvent(new CustomEvent('df2reset')); } } else atStart = false;
     }
+    window.addEventListener('resize', function(){ gk = ''; update(lastP); });
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ gk = ''; update(lastP); });
     return { sec: sec, pin: pin, update: update };
   }
 
