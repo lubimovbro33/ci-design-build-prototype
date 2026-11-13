@@ -975,6 +975,11 @@
     function loop(){ raf = 0; if (!vis) return; if (P < .42) draw(); raf = requestAnimationFrame(loop); }
     if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }).observe(stage);
     function set(e, k, v){ if (e['__' + k] !== v){ e['__' + k] = v; e.style[k] = v; } }
+    /* the strip's length depends on the width of the closing thought, and the phone's axis on the title's height: both change
+       when the web font arrives after the first layout (her note 13.11 21:54: the closing thought was cut by the screen's edge) */
+    function again(){ lastSz = ''; update(P); }
+    if (window.ResizeObserver){ var ro = new ResizeObserver(again); ro.observe(end); ro.observe(t2); }
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(again);
     function ink(i, a, b, c, d){ var q = br[i].i; set(q[0], 'strokeDashoffset', (1 - a).toFixed(4)); set(q[1], 'strokeDashoffset', (1 - b).toFixed(4)); set(q[2], 'strokeDashoffset', (1 - c).toFixed(4)); set(q[3], 'strokeDashoffset', (1 - d).toFixed(4)); }
     function update(p){
       var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
