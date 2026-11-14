@@ -20,10 +20,8 @@ body.ab3 .hdr{opacity:1}
 .pic img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
 .pic-i{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform}
 /* photographs are graded in the picture itself (no veils): a touch more contrast, a little less light where type stands on them */
-#phCover img{filter:contrast(1.08) brightness(.78) saturate(.94);transform-origin:50% 50%}
-#phYou img{filter:contrast(1.06) brightness(.86) saturate(.94)}
-#phWine img{filter:contrast(1.04) brightness(.96)}
-#phDoor img{filter:contrast(1.05) brightness(.94)}
+#phCover img{filter:contrast(1.05) brightness(.78);transform-origin:100% 62%;object-position:50% 62%;transform:scale(1.1)}   /* stands a tenth larger, hung from the right: the logo falls on the dark painting, not on the sheer curtain */
+#phYou img{filter:brightness(.9)}
 
 .sc{position:absolute;left:0;top:0;width:100%;height:100%;z-index:3;pointer-events:none;visibility:hidden}
 .sc.on{visibility:visible}
@@ -71,7 +69,7 @@ body.ab3 .hdr{opacity:1}
 .cv-hi{display:block;animation:cvIn 1.7s cubic-bezier(.16,1,.3,1) .25s both}
 @keyframes cvIn{ from{opacity:0;filter:blur(14px);transform:translateY(.12em)} to{opacity:1;filter:blur(0);transform:none} }
 #phCover img{animation:cvPh 2.6s cubic-bezier(.16,1,.3,1) both}
-@keyframes cvPh{ from{transform:scale(1.07)} to{transform:scale(1)} }
+@keyframes cvPh{ from{transform:scale(1.17)} to{transform:scale(1.1)} }
 
 /* ---------- 04 the thought inside the circle */
 .sc .p-rgc{right:calc(80 * var(--u));width:calc(800 * var(--u));top:calc(50% - 30 * var(--u));text-align:center}
