@@ -1,0 +1,126 @@
+/* CI · ABOUT (14.11.2026) — "one line". Loaded after r3.css; every text style is the homepage's (t111 / t60 / t34 / t20, the small caps,
+   the button), every position stands on its spacing system: the text line 421, 50 from the top, 50 from the foot (58 px floor over the
+   rail), gaps of 25 / 50 / 100 / 150. The frame is 1920 × 1080 in --u, as on the homepage.
+   The page is one film on one pinned stage (#st): a single white line (canvas #ln, js/about3.js) runs through all ten scenes —
+   "from the first conversation to the finished home" — and becomes each idea in turn. One figure and one text at a time.
+   Everything is scrubbed by the scroll; only the cover's title plays on load. */
+
+html, body.ab3{background:#000}
+body.ab3{color:#FFFFFF;overflow-x:hidden}
+body.ab3 .hdr{opacity:1}
+.ab3 .ph{background:rgba(255,255,255,.12);font-family:inherit;font-size:inherit;padding:0 .2em}
+.ab3 .lab3{font-family:var(--fx);font-weight:400;font-size:max(10px, calc(14 * var(--u)));line-height:1.136;letter-spacing:0;text-transform:uppercase;color:#FFFFFF}
+
+/* ---------- the stage */
+.ab3m{position:relative;display:block}
+.ab3m .mk{position:absolute;left:0;width:1px;height:1px;pointer-events:none}
+.stg3{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000}
+#ln{position:absolute;left:0;top:0;width:100%;height:100%;z-index:2;pointer-events:none}
+.pic{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;visibility:hidden;z-index:1;will-change:clip-path,transform}
+.pic img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
+.pic-i{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform}
+/* photographs are graded in the picture itself (no veils): a touch more contrast, a little less light where type stands on them */
+#phCover img{filter:contrast(1.08) brightness(.78) saturate(.94);transform-origin:50% 50%}
+#phYou img{filter:contrast(1.06) brightness(.86) saturate(.94)}
+#phWine img{filter:contrast(1.04) brightness(.96)}
+#phDoor img{filter:contrast(1.05) brightness(.94)}
+
+.sc{position:absolute;left:0;top:0;width:100%;height:100%;z-index:3;pointer-events:none;visibility:hidden}
+.sc.on{visibility:visible}
+.sc .m{position:absolute;margin:0;visibility:hidden;will-change:opacity,transform}
+.sc .m .w{display:inline-block;will-change:opacity,transform}
+.sc h2.m{white-space:nowrap}
+/* where things stand */
+.sc .p-tl{left:calc(421 * var(--u));top:calc(50 * var(--u))}
+.sc .p-bl{left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+.sc .p-al{left:calc(421 * var(--u));bottom:calc(50% + 50 * var(--u))}
+.sc .p-ul{left:calc(421 * var(--u));top:calc(50% + 50 * var(--u))}
+.sc .p-ac{left:0;right:0;bottom:calc(50% + 50 * var(--u));text-align:center}
+.sc .p-uc{left:0;right:0;top:calc(50% + 50 * var(--u));text-align:center}
+/* on the ground line (150 from the foot): 50 above it */
+.sc .p-blg{left:calc(421 * var(--u));bottom:calc(200 * var(--u))}
+.sc .p-blgb{left:calc(421 * var(--u));bottom:calc(200 * var(--u));pointer-events:auto}
+.sc .p-blg2{left:calc(421 * var(--u));bottom:calc(250 * var(--u) + max(46px, 78 * var(--u)))}
+.sc .nb{white-space:nowrap}
+.sc .p-ur{left:calc(1440 * var(--u));top:calc(50% + 50 * var(--u))}
+.sc .p-um{left:calc(960 * var(--u));top:calc(50% + 50 * var(--u))}
+.sc .p-br{left:calc(960 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+.sc .p-brn{left:calc(1400 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+.sc .t60.cb, .sc .t60.cb .w{color:var(--blue)!important}
+.sc .p-al.t60, .sc .p-um.t60{white-space:nowrap}
+
+/* figure labels: a zero-size anchor the script moves; the text hangs from it */
+.figs{position:absolute;left:0;top:0;width:0;height:0}
+.fl{position:absolute;left:0;top:0;width:0;height:0;visibility:hidden;will-change:transform,opacity}
+.fl > span{position:absolute;white-space:nowrap;display:block}
+.fl.la > span{left:0;bottom:0;text-align:left}
+.fl.lb_ > span{left:0;top:0;text-align:left}
+.fl.lt_ > span{left:0;top:0;text-align:left}
+.ab3 .h5r{font-family:var(--fx);font-weight:400;font-size:max(13px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em;text-transform:uppercase;color:#FFFFFF}
+.fl.ca > span{left:0;bottom:0;transform:translateX(-50%);text-align:center}
+.fl.cb_ > span{left:0;top:0;transform:translateX(-50%);text-align:center}
+.fl.mc > span{left:0;top:0;transform:translate(-50%,-50%);text-align:center}
+.fl.lm > span{left:0;top:0;transform:translateY(-50%);text-align:left}
+.fl.rm > span{right:0;top:0;transform:translateY(-50%);text-align:right}
+/* the active pair on the ring is marked by inversion (no half-visible states) */
+.fl.rg > span{padding:calc(4 * var(--u)) calc(7 * var(--u)) calc(3 * var(--u));transition:background-color .35s, color .35s}
+.fl.rg.on > span{background:#FFFFFF;color:#000}
+
+/* ---------- 01 cover */
+.cv-h{position:absolute;left:calc(421 * var(--u));top:calc(100% * 420 / 1080);color:#FFFFFF;white-space:nowrap;will-change:opacity,transform,filter}
+.cv-hi{display:block;animation:cvIn 1.7s cubic-bezier(.16,1,.3,1) .25s both}
+@keyframes cvIn{ from{opacity:0;filter:blur(14px);transform:translateY(.12em)} to{opacity:1;filter:blur(0);transform:none} }
+#phCover img{animation:cvPh 2.6s cubic-bezier(.16,1,.3,1) both}
+@keyframes cvPh{ from{transform:scale(1.07)} to{transform:scale(1)} }
+
+/* ---------- 04 the thought inside the circle */
+.sc .p-rgc{right:calc(80 * var(--u));width:calc(800 * var(--u));top:calc(50% - 30 * var(--u));text-align:center}
+
+/* ---------- 06 "Yours" on the photograph, where the homepage's hero title stands */
+.sc .p-yours{left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px);color:#FFFFFF}
+
+/* ---------- 07 the people under the roof: portrait cards that turn to their story */
+.tm{position:absolute;left:0;top:0;display:flex;gap:calc(25 * var(--u));visibility:hidden;pointer-events:auto;will-change:transform,opacity}
+.tc{position:relative;flex:none;width:calc(285 * var(--u));height:calc(380 * var(--u));perspective:1400px;outline:none;cursor:none}
+.tc-in{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .9s cubic-bezier(.16,1,.3,1)}
+.tc-f, .tc-b{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;box-sizing:border-box;padding:calc(25 * var(--u))}
+.tc-f{background:#1D1D1D;color:#FFFFFF;display:flex;flex-direction:column;justify-content:flex-end}
+.tc-f .tc-ph{position:absolute;left:0;right:0;top:42%;text-align:center}
+.tc-nm b, .tc-b b{display:block;font-family:var(--fx);font-weight:400;font-size:max(15px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em;text-transform:uppercase}
+.tc-nm .lab3{display:block;margin-top:calc(12 * var(--u))}
+.tc-b{background:#FFFFFF;color:#000;transform:rotateY(180deg)}
+.tc-b p{margin:calc(25 * var(--u)) 0 0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#000}
+.tc-b .ph{background:rgba(0,0,0,.08)}
+.tc-b .sqd{position:absolute;right:calc(8 * var(--u));top:calc(8 * var(--u));width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:#000}
+@media (hover:hover){ .tc:hover .tc-in, .tc:focus-visible .tc-in{transform:rotateY(180deg)} }
+.tc.flip .tc-in{transform:rotateY(180deg)}
+/* the row steps: every second card stands half a step lower (never a row of identical blocks) */
+.tc:nth-child(even){margin-top:calc(50 * var(--u))}
+
+/* ---------- 08 the figure, as the homepage's "40%" */
+.sc .p-x20{left:80%;bottom:calc(50% + 50 * var(--u))}
+.x20 .v{position:relative;display:flex;align-items:flex-start;font-family:var(--fx);font-weight:500;font-size:max(64px, calc(168 * var(--u)));line-height:.74;letter-spacing:-.1em;color:#FFFFFF;margin-left:-.04em}
+.x20 .v sup{position:static;display:block;margin:.02em 0 0 .03em;font-weight:400;font-size:.2em;line-height:1;letter-spacing:0;vertical-align:baseline;top:auto}
+
+/* ---------- 09 seven floors: the one being read is a white bar (the homepage's verbs) */
+.prs{position:absolute;left:0;top:0;width:0;height:0}
+.pr{position:absolute;left:0;top:0;box-sizing:border-box;display:flex;align-items:center;padding:0 calc(25 * var(--u));visibility:hidden;color:#FFFFFF;will-change:opacity,transform}
+.pr .t34{color:inherit!important;white-space:nowrap}
+.pr.on{background:#FFFFFF;color:#000}
+
+/* ---------- 10 the door */
+.dr{position:absolute;left:0;top:0;width:0;height:0;visibility:hidden;perspective:1800px;will-change:transform}
+.dr-leaf{position:absolute;left:0;top:0;width:100%;height:100%;box-sizing:border-box;background:#000;border:1.5px solid #FFFFFF;transform-origin:0 50%;backface-visibility:visible;will-change:transform}
+.dr-leaf .sqd{position:absolute;right:calc(25 * var(--u));top:50%;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:#FFFFFF}
+.sc .p-bl2{left:calc(421 * var(--u));bottom:calc(max(calc(50 * var(--u)), 58px) + max(46px, calc(78 * var(--u))) + 50 * var(--u))}
+.sc .p-blb{left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px);pointer-events:auto}
+
+/* the footer flows in after the film */
+body.ab3 .ch-ftr{position:relative;z-index:5;background:#000}
+
+/* phones: no frame for this page yet — the film runs, the type keeps its floors */
+@media (max-aspect-ratio: 1/1){
+  .sc .p-tl, .sc .p-bl, .sc .p-blg, .sc .p-blgb, .sc .p-blg2, .sc .p-br, .sc .p-brn, .sc .p-ur, .sc .p-um, .sc .p-al, .sc .p-ul, .cv-h, .sc .p-yours, .sc .p-bl2, .sc .p-blb{left:var(--m, 20px)}
+  .sc .m[style*="--w:"]{width:auto!important;right:var(--m, 20px)}
+  .sc h2.m{white-space:normal}
+}
