@@ -164,10 +164,11 @@ def portfolio():
     h1 = 'Homes Made for Unique Lives'
     pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp', lines=['Homes', 'Made', 'for Unique', 'Lives'], place='cc'), 'Portfolio', 'top')
     pg.add(intro(ps))
-    # Signature CI Residences — her grid (frame «04 Signature CI Residences · 2» of the Portfolio export, 15.11 18:29; 18:43–18:44: «заповни сітку всіма
-    # проектами, щоб не було пустих місць», «по всьому контейнеру»): four columns across the whole container (fields 50, gutters 48). A block is one large
-    # card (two columns, two rows) and four small ones beside it; the next block is its mirror. Ten projects: the nine of the library and Modern Deco Home
-    # (the next of the client's portfolio). Where there is no photograph of ours, the picture is the client's own, loaded from their site.
+    # Signature CI Residences — her grid, exactly as her frame «04 Signature CI Residences · 2» (15.11 18:29; 19:28: «на макеті там немає чотирьох
+    # маленьких, тільки дві вгорі. Зроби так, як на макеті»): four columns across the whole container (fields 50, gutters 48); a block is ONE LARGE card
+    # (two columns, 886 : 1112) and TWO SMALL ones (419 : 525) at the top beside it — nothing under the small ones; the next block is its mirror.
+    # All the projects of the library: nine = three blocks (large left, large right, large left). The large cards are the three projects with our own
+    # photographs. Where there is no photograph of ours, the picture is the client's own, loaded from their site.
     EXT = 'https://cidesignbuild.com/portfolio-item/'; UP = 'https://cidesignbuild.com/wp-content/uploads/'
     ch_, us_, rtb_ = PROJ[0], PROJ[1], PROJ[2]; sup_, grant_ = PROJ_MORE[0], PROJ_MORE[1]
     def parts(p): return p['loc'].split(' · ') + [p['bld']]
@@ -175,14 +176,14 @@ def portfolio():
     LIB = [('Collectors Home', 'Streeterville · Chicago', 'One Bennett Park', '5,130 sq ft', 'collectors-home.html', 'chicago ci-turnkey', ph(ch_['set'], ch_['tall'])),
            ('444 W Grant', 'Lincoln Park · Chicago', 'Residence', '', None, 'chicago', grant_['img']),
            ('500 W Superior', 'River North · Chicago', 'Residence', '', None, 'chicago', sup_['img']),
-           ('Room To Breathe', 'Lincoln Park · Chicago', 'Residence', '4,070 sq ft', 'room-to-breathe.html', 'chicago ci-turnkey', ph(rtb_['set'], rtb_['tall'])),
            ('Above the Park', 'Lincoln Park · Chicago', 'Residence', '5,600 sq ft', EXT + 'above-the-park/', 'chicago ci-turnkey', UP + '2026/03/2107-Kenmore-rev_02-copy-1536x1043.jpg'),
            ('Lakeshore Luxury', 'Wilmette · North Shore', 'Residence', '2,200 sq ft', EXT + 'lakeshore-luxury/', 'ci-turnkey', UP + '2024/03/1618-Sheridan_03rev-1-1536x1002.jpg'),
-           ('Contemporary Comfort', 'River North · Chicago', 'Condominium', '3,352 sq ft', EXT + 'contemporary-comfort-condo/', 'chicago ci-turnkey', UP + '2023/10/201-Grand_001-v2-1536x1200.jpg'),
            ('Urban Sanctuary', 'Gold Coast · Chicago', '900 North Michigan', '', 'urban-sanctuary.html', 'chicago', ph(us_['set'], us_['tall'])),
-           ('Sky-High Condo', 'Chicago', 'High-rise condominium', '2,022 sq ft', EXT + 'sky-highcondo/', 'chicago ci-turnkey', UP + '2023/01/401-Wabash_002_v2-1536x1026.jpg'),
-           ('Modern Deco Home', 'Gold Coast · Chicago', 'Condominium', '', EXT + 'deco-home/', 'chicago', UP + '2021/08/Deco-Home-01-1-1536x1098.jpg')]
-    BIG = {'Collectors Home', 'Urban Sanctuary'}
+           ('Room To Breathe', 'Lincoln Park · Chicago', 'Residence', '4,070 sq ft', 'room-to-breathe.html', 'chicago ci-turnkey', ph(rtb_['set'], rtb_['tall'])),
+           ('Contemporary Comfort', 'River North · Chicago', 'Condominium', '3,352 sq ft', EXT + 'contemporary-comfort-condo/', 'chicago ci-turnkey', UP + '2023/10/201-Grand_001-v2-1536x1200.jpg'),
+           ('Sky-High Condo', 'Chicago', 'High-rise condominium', '2,022 sq ft', EXT + 'sky-highcondo/', 'chicago ci-turnkey', UP + '2023/01/401-Wabash_002_v2-1536x1026.jpg')]
+    BIG = {'Collectors Home', 'Urban Sanctuary', 'Room To Breathe'}
+    assert len(LIB) == 9 and [nm in BIG for nm, *_ in LIB] == [True, False, False, False, False, True, True, False, False]
     cards = [pf6_card(nm, lc.split(' · ') + [bd], im, hr, big=nm in BIG, ext=im.startswith('http')) for nm, lc, bd, sz, hr, tg, im in LIB]
     pg.add(bk(h_of(S[1]), '    <div class="pf6">%s</div>' % ''.join(cards), hcls=' l0', lines=['Signature', 'CI Residences']), 'Projects')
     # Every Home Unique — her notes of 15.11: 18:45 («дуже одноманітно: там лінії, там лінії») and 18:59 («не просто забрати лінії… думай метафорично»).
@@ -202,18 +203,18 @@ def portfolio():
            '      <p class="t20 m p-cbr" data-k="-1 -.5 2.85 3.0">%s</p>\n'
            '      <p class="t34 m p-cbr" data-k="3.05 3.35 99 99">The result feels effortless,<br class="bd"> <span class="cb">as if your home could only<br class="bd"> ever have been yours</span></p>\n'
            '      <ol class="vh" data-life>%s</ol>\n    </div>\n  </div>\n</section>' % (lead, ''.join('<li>%s</li>' % esc(x) for x in st6)), 'Approach')
-    # Explore the Work — the library as an index on the same four columns, no rules: two entries to a row, each a name (first and third column) and its
-    # small caps (second and fourth); ten projects stand as five full rows. The filters beside the title
+    # Explore the Work — the library as an index on the same four columns, no rules: the title in the first column; in the other three the filters and,
+    # under them, the nine projects three to a row — a name and its small caps, as under the photographs
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']
     ch = ''.join('<button class="chip%s" type="button" data-f="%s">%s</button>' % (' on' if i == 0 else '', 'all' if i == 0 else slug(c), c) for i, c in enumerate(chips))
-    ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', '500 W Superior', '444 W Grant', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo', 'Modern Deco Home']
-    byn = {x[0]: x for x in LIB}
-    rows_ = ''.join('<a %s data-tags="%s"><span class="nm h5r"><span>%s</span></span><span class="mt">%s</span></a>' % (
+    ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', '500 W Superior', '444 W Grant', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo']
+    byn = {x[0]: x for x in LIB}; assert sorted(ORDER) == sorted(byn)
+    rows_ = ''.join('<a %s data-tags="%s"><span class="nm h5r"><span>%s</span></span>%s</a>' % (
         ('href="%s" target="_blank" rel="noopener"' % hr if hr and hr.startswith('http') else 'href="%s"' % hr) if hr else 'href="#" data-noop', tg, esc(nm), sq_line(lc.split(' · ')) + sq_line([bd, sz]))
         for nm, lc, bd, sz, hr, tg, im in [byn[n] for n in ORDER])
     assert nop(h_of(S[3])) == 'Explore the Work', h_of(S[3])
-    pg.add('<section class="bk" id="@ID@">\n  <div class="hd2 w1">\n    <h2 class="t60 rv">Explore<br>the Work</h2>\n    <div class="chips rv" data-filter="lib">%s</div>\n  </div>\n'
-           '  <div class="ix2 rv" id="lib">%s<p class="none lab3"><span class="ph">[Projects for this filter are to be assigned by CI]</span></p></div>\n</section>' % (ch, rows_), 'Library')
+    pg.add('<section class="bk" id="@ID@">\n  <div class="lib4">\n    <h2 class="t60 rv">Explore<br>the Work</h2>\n    <div class="lib-r">\n      <div class="chips rv" data-filter="lib">%s</div>\n'
+           '      <div class="ix3 rv" id="lib">%s<p class="none lab3"><span class="ph">[Projects for this filter are to be assigned by CI]</span></p></div>\n    </div>\n  </div>\n</section>' % (ch, rows_), 'Library')
     # the closing block as her frame «09 CTA» (15.11 18:42)
     fs = S[4]; fa = get(fs, 'a'); fps = [it[1][0] for it in fs['items'] if it[0] in ('p', 'lead')]
     assert nop(h_of(fs)) == 'Turn Inspiration Into Something Entirely Your Own' and len(fps) == 2, (h_of(fs), fps)

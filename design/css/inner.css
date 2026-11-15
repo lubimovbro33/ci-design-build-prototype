@@ -142,16 +142,17 @@ html body.inr .bk .c3{margin-left:calc(1440 * var(--u))}
 .pf .cd{margin:0}
 .pf .cd .im{aspect-ratio:4 / 3}
 .pf .cd.tall .im{aspect-ratio:4 / 5}
-/* 15.11 18:29–18:45, her frame «04 Signature CI Residences · 2» and notes: the projects stand on a grid of four columns that takes the whole container
-   (fields 50, gutters 48 — the columns are fluid, so nothing is left over on a wide, low window). A block is one large card — two columns, two rows —
-   with four small ones (4 : 5) beside it; the next block is its mirror; no empty cell. The block's title stands on the left field in two lines.
+/* 15.11, her frame «04 Signature CI Residences · 2» (18:29; 19:28 — exactly as drawn): the projects stand on a grid of four columns that takes the
+   whole container (fields 50, gutters 48 — the columns are fluid, so nothing is left over on a wide, low window). A block is ONE LARGE card — two
+   columns, 886 : 1112 — and TWO SMALL ones (419 : 525) at the top beside it; nothing stands under the small ones. The next block is its mirror; blocks
+   are 62 apart, counted from the caption's foot. The block's title stands on the left field in two lines.
    Under a photograph: the name 20 lower, then one line of small caps at half strength, its parts set apart by blue squares (.sqm) */
 html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
-.pf6{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(62 * var(--u));margin:0 calc(50 * var(--u));align-items:stretch}
-.pf6 .cd{margin:0;display:flex;flex-direction:column}
-.pf6 .cd .im{aspect-ratio:419 / 525;flex:none}
-.pf6 .cd.big{grid-column:span 2;grid-row:span 2}
-.pf6 .cd.big .im{aspect-ratio:auto;flex:1 1 auto;min-height:0}
+.pf6{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(62 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
+.pf6 .cd{margin:0}
+.pf6 .cd .im{aspect-ratio:419 / 525}
+.pf6 .cd.big{grid-column:span 2}
+.pf6 .cd.big .im{aspect-ratio:886 / 1112}
 .pf6 .cd .nm{margin-top:calc(20 * var(--u))}
 .pf6 .cd .lc{margin-top:calc(20 * var(--u))}
 .inr .lab3.sqm{--sg:calc(10 * var(--u));--sw:max(5px, calc(8 * var(--u)));--ss:calc(2 * var(--sg) + var(--sw));display:flex;flex-wrap:wrap;row-gap:4px;
@@ -159,24 +160,20 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .sqm > span{position:relative;padding-left:var(--ss)}
 .sqm > span::before{content:"";position:absolute;left:var(--sg);top:50%;margin-top:calc(var(--sw) / -2);width:var(--sw);height:var(--sw);background:var(--blue)}
 
-/* 15.11 18:45 (her note on «Every Home Unique» and «Explore the Work»: no ruled rows, each block in its own manner).
-   .hd2 — a block's head on the four columns: the title on the left half, a short text or the filters on the right half, their feet level */
-.hd2{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));margin:0 calc(50 * var(--u));align-items:end}
-.hd2 > h2{grid-column:1 / span 2;color:#FFFFFF}
-.hd2 > p, .hd2 > .chips{grid-column:3 / span 2}
-.hd2.w1 > h2{grid-column:1} .hd2.w1 > .chips{grid-column:2 / span 3}
-/* the library as an index on the same four columns, no rules: two entries to a row — the name in the first and third column, its small caps in the
-   second and fourth, on one baseline; the name turns to its inverse under the pointer */
-.ix2{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(50 * var(--u));margin:calc(150 * var(--u)) calc(50 * var(--u)) 0}
-.ix2 a{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:calc(48 * var(--u));align-items:baseline;color:#FFFFFF;text-decoration:none}
-.ix2 a[hidden]{display:none}
-.ix2 .nm{display:block}
-.ix2 .nm > span{display:inline-block;padding:calc(6 * var(--u)) calc(8 * var(--u)) calc(4 * var(--u));margin:calc(-6 * var(--u)) calc(-8 * var(--u)) calc(-4 * var(--u));transition:background-color .35s, color .35s}
-.ix2 a:hover .nm > span{background:#FFFFFF;color:#000}
-.ix2 .mt{display:block}
-.ix2 .lc + .lc{margin-top:calc(8 * var(--u))}
-.ix2 .none{display:none;grid-column:1 / -1;margin:0}
-.ix2.empty .none{display:block}
+/* «Explore the Work» (15.11): no ruled rows. The four columns again: the title in the first; in the other three the filters and, under them, the index —
+   three projects to a row, a name and its small caps as under the photographs; the name turns to its inverse under the pointer */
+.lib4{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
+.lib4 > h2{grid-column:1;color:#FFFFFF}
+.lib4 > .lib-r{grid-column:2 / span 3}
+.ix3{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(62 * var(--u));margin-top:calc(100 * var(--u))}
+.ix3 a{display:block;color:#FFFFFF;text-decoration:none}
+.ix3 a[hidden]{display:none}
+.ix3 .nm{display:block}
+.ix3 .nm > span{display:inline-block;padding:calc(6 * var(--u)) calc(8 * var(--u)) calc(4 * var(--u));margin:calc(-6 * var(--u)) calc(-8 * var(--u)) calc(-4 * var(--u));transition:background-color .35s, color .35s}
+.ix3 a:hover .nm > span{background:#FFFFFF;color:#000}
+.ix3 .lc{margin-top:calc(20 * var(--u))} .ix3 .lc + .lc{margin-top:calc(8 * var(--u))}
+.ix3 .none{display:none;grid-column:1 / -1;margin:0}
+.ix3.empty .none{display:block}
 
 /* 15.11 18:42, her frame «09 CTA»: the closing block on the home hero's cross of rules (394 from the top, 395 from the left). The title stands in the
    lower right quarter as a column of its own lines, the button at the foot of the same line, the two thoughts in the running text on the right,
@@ -343,10 +340,10 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .pf{display:block} .pf-c{width:auto;gap:40px} .pf-c + .pf-c{margin-top:40px}
   html body.inr .bk-h.l0{margin-left:var(--m, 20px)}
   .pf6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)}
-  .pf6 .cd.big{grid-row:auto} .pf6 .cd .im, .pf6 .cd.big .im{aspect-ratio:4 / 5;flex:none}
+  .pf6 .cd .im, .pf6 .cd.big .im{aspect-ratio:4 / 5}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
-  .hd2{display:block;margin:0 var(--m, 20px)} html body.inr .hd2 > p, .hd2 > .chips{margin-top:24px}
-  .ix2{column-gap:12px;row-gap:28px;margin:44px var(--m, 20px) 0} .ix2 a{display:block} .ix2 .mt{margin-top:8px} .ix2 .lc + .lc{margin-top:4px}
+  .lib4{display:block;margin:0 var(--m, 20px)} .lib4 .chips{margin-top:24px}
+  .ix3{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:28px;margin-top:44px} .ix3 .lc{margin-top:8px} .ix3 .lc + .lc{margin-top:4px}
   .fin.gr{height:auto;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(var(--hdr, 64px) + 40px) var(--m, 20px) 72px;box-sizing:border-box}
   .fin.gr::before, .fin.gr::after{display:none}
   .fin.gr .fg-h, .fin.gr .fg-t, .fin.gr .fg-b{position:relative;left:auto;top:auto;bottom:auto;height:auto}
