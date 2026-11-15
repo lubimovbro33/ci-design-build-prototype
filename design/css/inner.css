@@ -305,8 +305,8 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .film[data-fig="scene"]:not(.trk) .stg{height:100vh;height:100svh;overflow:hidden}
   .sn-h, .sn-k, .sn-lead{left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
   .sn-h.bl, .sn-k.bl{left:var(--m, 20px)} .sn-h.cc, .sn-k.cc{left:var(--m, 20px);right:var(--m, 20px)}
-  html body .sn-h.cc{font-size:7.9vw!important;white-space:nowrap;top:calc(50% - var(--ln, 3) * .428 * 7.9vw)}   /* phones: the centred title keeps its own lines, set to the width */
-  .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 7.9vw - 14px - 1.136em)}
+  .sn-h.cc{white-space:nowrap}   /* phones: the centred title keeps its own lines */
+  .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 38px - 14px - 1.136em)}
   .sn-col{width:calc(25vw - 6px)!important;left:calc(var(--i) * 25vw + 3px)!important;top:62%;transform:none!important}
   .sn-col .nm{font-size:10px;left:8px;top:8px}
   .sn-full, .sn-strip, .sn-img, .sn-full img, .sn-strip img, .sn-img img{transform:none!important}

@@ -14,6 +14,8 @@ def page_text(f):
     h = open(D + f).read(); a = h.index('<main'); b = h.index('</main>'); m = h[a:b]
     m = re.sub(r'<br[^>]*>', ' ', m); m = re.sub(r'</(p|li|h1|h2|h3|div|span|dt|dd|a|button|label)>', ' ', m); m = re.sub(r'<[^>]+>', '', m)
     return ' ' + norm(m).replace('.', '') + ' '
+# agreed exceptions: (page key, the client's text) → the text that stands on the page instead, and who decided
+EXC = {('portfolio', 'Homes as Unique as the People Who Live in Them'): ('Homes Made for Unique Lives', 'the designer, 15.11.2026: the cover of Portfolio as in her frame')}
 tot = miss = 0
 for k, fs in MAPF.items():
     T = ''.join(page_text(f) for f in fs)
@@ -30,6 +32,9 @@ for k, fs in MAPF.items():
                 for part in ([t] if ' · ' not in t else t.split(' · ')):
                     n = norm(part).replace('.', ''); tot += 1
                     if k == 'project': n = n.replace('[project name]', 'collectors home')
+                    if (k, part) in EXC:
+                        r, why = EXC[(k, part)]; ok = norm(r).replace('.', '') in T
+                        print('%s %-13s s%-2d %-6s «%s» stands for «%s» (%s)' % ('EXCEPTION' if ok else 'MISSING EXCEPTION', k, si, it[0], r, part, why)); miss += 0 if ok else 1; continue
                     if n and n not in T: miss += 1; print('MISSING %-13s s%-2d %-6s %s' % (k, si, it[0], part[:110]))
 # the wellness features
 T = page_text('ci-wellness.html')

@@ -145,7 +145,11 @@ def pf_card(p, tall=False):
 def portfolio():
     S = P['portfolio']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp', lines=['Homes as Unique', 'as the People', 'Who Live in Them'], place='cc'), 'Portfolio', 'top')
+    # THE ONE EXCEPTION to "the client's copy word for word" (her decision, 15.11.2026 18:15: «В цьому випадку одному ми зробимо виключення.
+    # Перепиши текст такий, як у макеті»): the cover's title is the designer's, as in her frame «01 Cover · 1» of the Portfolio export.
+    # The client's title (2nd round) stays in content.json: «Homes as Unique as the People Who Live in Them». verify.py lists it as an exception.
+    h1 = 'Homes Made for Unique Lives'
+    pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp', lines=['Homes', 'Made', 'for Unique', 'Lives'], place='cc'), 'Portfolio', 'top')
     pg.add(intro(ps))
     allp = PROJ + PROJ_MORE
     L = [pf_card(allp[0]), pf_card(allp[2], True), pf_card(allp[4])]; R = [pf_card(allp[1], True), pf_card(allp[3])]
