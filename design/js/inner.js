@@ -174,10 +174,28 @@
   function xl(X){ return X * U; }
   function xr(X){ return W - (1920 - X) * U; }
   function xm(X){ return W / 2 + (X - 960) * U; }
+  /* scenes: every page opens in its own way — the elements of an opening are scrubbed by the scroll.
+     data-s="prop:from>to@q0-q1; …"  props: tx ty (in u), sc, op, br (brightness), ci (clip inset, four %) */
+  function Scrub(el){
+    var tw = (el.getAttribute('data-s') || '').split(';').map(function(x){ var m = x.trim().match(/^(\w+):([^>]+)>([^@]+)(?:@([-\d.]+)-([-\d.]+))?$/); if (!m) return null;
+      return {p: m[1], a: m[2].split(',').map(parseFloat), b: m[3].split(',').map(parseFloat), q0: m[4] == null ? 0 : +m[4], q1: m[5] == null ? 1 : +m[5]}; }).filter(Boolean);
+    return {el: el, tw: tw, mv: tw.some(function(w){ return w.p === 'tx' || w.p === 'ty' || w.p === 'sc'; }), key: ''};
+  }
+  function runScrub(o, q){
+    var tx = 0, ty = 0, sc = 1, st = o.el.style, i, key = '';
+    for (i = 0; i < o.tw.length; i++){ var w = o.tw[i], k = eio(sg(q, w.q0, w.q1)), v0 = w.a[0] + (w.b[0] - w.a[0]) * k;
+      if (w.p === 'tx') tx += v0 * U; else if (w.p === 'ty') ty += v0 * U; else if (w.p === 'sc') sc *= v0;
+      else { var ky = w.p + k.toFixed(4); if (o['_' + i] === ky) continue; o['_' + i] = ky;
+        if (w.p === 'op'){ st.opacity = v0.toFixed(3); st.visibility = v0 <= .001 ? 'hidden' : 'visible'; }
+        else if (w.p === 'br') st.filter = 'contrast(1.04) brightness(' + v0.toFixed(3) + ')';
+        else if (w.p === 'ci') clip(o.el, k >= 1 && w.b.join('') === '0000' ? 'none' : 'inset(' + w.a.map(function(a, j){ return (a + (w.b[j] - a) * k).toFixed(3) + '%'; }).join(' ') + ')'); } }
+    if (o.mv){ key = tx.toFixed(1) + ',' + ty.toFixed(1) + ',' + sc.toFixed(4); if (key !== o.key){ o.key = key; st.transform = 'translate3d(' + tx.toFixed(1) + 'px,' + ty.toFixed(1) + 'px,0) scale(' + sc.toFixed(4) + ')'; } }
+  }
   var FILMS = qsa('.film').map(function(e){
     var cv = qs('.ln', e);
     return {el: e, cv: cv, g: cv.getContext('2d'), fig: e.getAttribute('data-fig'), len: +e.getAttribute('data-len'), ms: qsa('.m', e).map(Moment), pic: qs('.pic', e), h1: qs('.cv-h', e), kick: qs('.cv-k', e),
-            n: +e.getAttribute('data-n') || 0, emb: (e.getAttribute('data-emb') || '').split(','), t0: +e.getAttribute('data-t0') || .9, d: +e.getAttribute('data-d') || .55, q: -9, on: null};
+            n: +e.getAttribute('data-n') || 0, emb: (e.getAttribute('data-emb') || '').split(','), t0: +e.getAttribute('data-t0') || .9, d: +e.getAttribute('data-d') || .55, q: -9, on: null,
+            sc: qsa('[data-s]', e).map(Scrub), trk: qs('[data-track]', e), cur: e.classList.contains('crt'), seg: (function(){ var d = e.getAttribute('data-seg'); return d ? d.split(',').map(Number) : null; })(), ar: +e.getAttribute('data-ar') || 1.42};
   });
   var BANDS = qsa('.bnd').map(function(e){ return {el: e, img: qs('img', e), k: -1}; });
   function layout(){
@@ -255,7 +273,20 @@
     var hx = x0; for (i = 1; i < N; i++) hx += (x1 - x0) / (N - 1) * eio(sg(q, f.t0 + i * f.d - .1, f.t0 + i * f.d + .12));
     sq(hx, MID, sg(q, .6, .85));
   }
-  var FIG = {cover: cover, steps: steps};
+  /* ---------- film: scene — the page's own opening; a track pans sideways, a drawing draws itself */
+  function scene(f, q, t){
+    var i; for (i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
+    if (f.trk){ var tk = (f.trk.getAttribute('data-track') || '0 1').split(' '), k = sg(q, +tk[0], +tk[1]), x = -(f.trk.scrollWidth - W) * k;
+      if (f.trk.__x !== x){ f.trk.__x = x; f.trk.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)'; } }
+    if (f.seg){ var S = f.seg, n = S.length / 4, p = sg(q, .02, 1.05), al = 1 - sg(q, 1.35, 1.9); if (p > 0 && al > 0){
+      var iw = Math.max(W, H * f.ar), ih = iw / f.ar, ox = (W - iw) / 2, oy = (H - ih) / 2, span = n * .22, head = p * (n + span);
+      ink(.9 * al, 1); g.beginPath();
+      for (i = 0; i < n; i++){ var d = c01((head - i) / span); if (d <= 0) break; d = eo(d);
+        var ax = ox + S[i * 4] / 1000 * iw, ay = oy + S[i * 4 + 1] / 1000 * ih, bx = ox + S[i * 4 + 2] / 1000 * iw, by = oy + S[i * 4 + 3] / 1000 * ih;
+        g.moveTo(ax, ay); g.lineTo(ax + (bx - ax) * d, ay + (by - ay) * d); }
+      g.stroke(); } }
+  }
+  var FIG = {cover: cover, steps: steps, scene: scene};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -333,6 +364,7 @@
     var y = window.scrollY, t = now / 1000, i, k;
     for (i = 0; i < FILMS.length; i++){
       var f = FILMS[i], r = f.el.getBoundingClientRect(), vis = r.bottom > -40 && r.top < H + 40, q = -r.top / (SP * H);
+      if (f.cur){ q = y / (SP * H); vis = q < 2.2; }
       if (!vis){ if (f.on !== false){ f.on = false; } continue; }
       f.on = true; f.q = q;
       for (k = 0; k < f.ms.length; k++) runMoment(f.ms[k], q);
@@ -342,8 +374,6 @@
     /* photographs open out of a line as they come up the screen */
     for (i = 0; i < BANDS.length; i++){
       var b = BANDS[i], br = b.el.getBoundingClientRect(); if (br.bottom < -40 || br.top > H + 40) continue;
-      var p = c01(1 - br.top / H), op = eio(sg(p, .2, .92)), kk = Math.round(op * 1000);
-      if (kk !== b.k){ b.k = kk; clip(b.img, op >= 1 ? 'none' : 'inset(' + ((1 - op) * 50).toFixed(3) + '% 0)'); b.el.style.setProperty('--lo', (1 - sg(op, .02, .25)).toFixed(3)); }
       b.img.style.transform = 'translate3d(0,' + ((br.top / H) * -4).toFixed(2) + '%,0)';
     }
     if (y !== lastY || H !== lastVH) updateChap(y, H);

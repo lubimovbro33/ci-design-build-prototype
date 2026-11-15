@@ -14,13 +14,13 @@ LINKS = dict(NAV); LINKS.update({'FAQ': 'faq.html', 'Contact': 'contact.html', '
                                   'CI Curated': 'ci-curated.html', 'CI Wellness': 'ci-wellness.html'})
 MENU_PH = ['assets/ph/of/team3.webp', 'assets/ph/ch/1450-09a.webp', 'assets/ph/ch/1450-15.webp', 'assets/ph/us/1530-04.webp', 'assets/ph/of/materials.webp', 'assets/ph/us/1530-06a.webp']
 PROJ = [
-    dict(slug='collectors-home', name='Collectors Home', loc='Streeterville · Chicago', bld='One Bennett Park', set='ch', cover='1450-20a', card='1450-24', tall='1450-09a', cta='1450-31', g=.7,
+    dict(slug='collectors-home', name='Collectors Home', loc='Streeterville · Chicago', bld='One Bennett Park', facts={'Residence': 'One Bennett Park, 55th floor · Streeterville · Chicago', 'Size': '5,130 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Space reconfiguration / Wine cellar / Primary bathroom / Millwork + stone / Home automation / Furnishings + art'}, set='ch', cover='1450-20a', card='1450-24', tall='1450-09a', cta='1450-31', g=.7,
          gal=[('full', ['1450-24']), ('pair', ['1450-15', '1450-09a']), ('duo', ['1450-02a', '1450-03a']), ('full', ['1450-22']), ('duor', ['1450-10a', '1450-05']), ('pair', ['1450-08a', '1450-16a']),
               ('full', ['1450-32']), ('duo', ['1450-25a', '1450-26']), ('pair', ['1450-12', '1450-11']), ('full', ['1450-34'])]),
     dict(slug='urban-sanctuary', name='Urban Sanctuary', loc='Gold Coast · Chicago', bld='900 North Michigan', set='us', cover='1511-12a', card='1511-07a', tall='1511-09', cta='1511-06a', g=.66,
          gal=[('full', ['1511-07a']), ('pair', ['1511-09', '1511-10']), ('duo', ['1511-01a', '1511-02a']), ('full', ['1511-11a']), ('duor', ['1511-05a', '1511-04a']), ('pair', ['1530-01', '1530-02']),
               ('full', ['1530-03']), ('pair', ['1511-13', '1530-06a']), ('pair', ['1511-08a', '1530-04'])]),
-    dict(slug='room-to-breathe', name='Room To Breathe', loc='Lincoln Park · Chicago', bld='Residence', set='rtb', cover='1430-08a', card='1430-01a', tall='1430-11a', cta='1430-13', top=True, g=.56,
+    dict(slug='room-to-breathe', name='Room To Breathe', loc='Lincoln Park · Chicago', bld='Residence', facts={'Residence': 'Lincoln Park · Chicago', 'Size': '4,070 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Open-plan first floor / Kitchen / Living room / Fireplace wall'}, set='rtb', cover='1430-08a', card='1430-01a', tall='1430-11a', cta='1430-13', top=True, g=.56,
          gal=[('full', ['1430-01a']), ('pair', ['1430-07', '1430-11a']), ('duo', ['1430-04a', '1430-05a']), ('full', ['1430-12a']), ('pair', ['1430-09a', '1430-10a']), ('pair', ['1430-03a', '1430-06']),
               ('full', ['1430-13']), ('pair', ['1430-14', '1430-15'])]),
 ]
@@ -179,12 +179,13 @@ def page(fname, title, body, rail, preload=None):
 <link rel="stylesheet" href="css/v10.css">
 <link rel="stylesheet" href="css/r3.css">
 <link rel="stylesheet" href="css/inner.css">
+<link rel="stylesheet" href="css/form.css">
 <script>(function(){var d=document.documentElement,m=window.matchMedia,c=m&&m('(pointer: coarse)').matches;if(c||/[?&]lite/.test(location.search))d.classList.add('lite');})();</script>
 </head>
 <body class="inr ready">
 ''' % (html.escape(title), '<link rel="preload" as="image" href="%s" fetchpriority="high">\n' % preload if preload else '')
     r = ''.join('  <a href="#%s" data-ch="%s"><span>%02d</span><span class="t">%s</span><i></i></a>\n' % (i, i, k + 1, html.escape(l)) for k, (i, l) in enumerate(rail))
-    out = head + menu(fname) + '\n<main id="main">\n' + body + '</main>\n\n' + footer() + '\n\n<div class="grain on" aria-hidden="true"></div>\n<nav class="chap mono" id="chap" aria-label="Chapters">\n' + r + '</nav>\n\n<script src="js/v10.js"></script>\n<script src="js/inner.js"></script>\n</body>\n</html>\n'
+    out = head + menu(fname) + '\n<main id="main">\n' + body + '</main>\n\n' + footer() + '\n\n<div class="grain on" aria-hidden="true"></div>\n<nav class="chap mono" id="chap" aria-label="Chapters">\n' + r + '</nav>\n\n<script src="js/v10.js"></script>\n<script src="js/inner.js"></script>\n<script src="js/form.js"></script>\n</body>\n</html>\n'
     open(D + fname, 'w').write(out)
     return len(out)
 
@@ -213,6 +214,95 @@ def cover(kick, h1, paras, img, button=None, emb='', pos=None, g=None):
     if button: o.append('      <div class="m p-ul" data-k="1.3 1.6 99 99">%s</div>' % btn(button[0], button[1]))
     o.append('    </div>\n  </div>\n</section>')
     return '\n'.join(o)
+
+# ------------------------------------------------------------------ scenes: every page opens in its own way
+def UU(n): return 'calc(%s * var(--u))' % n
+def sn_open(length, cls='', attrs=''):
+    return '<section class="film%s" data-fig="scene" data-len="%s"%s id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>' % (cls, length, attrs)
+SN_CLOSE = '  </div>\n</section>'
+def sn_title(h1, kick, scrub='', style='', maxc=18, hidden=False):
+    hb = brk(h1, maxc); l = {2: ' l3', 3: ' l4'}.get(hb.count('<br>'), '')
+    sa = (' data-s="%s"' % scrub if scrub else '') + (' style="%s"' % style if style else '')
+    o = '    <%s class="t111 sn-h%s"%s%s><span class="sn-hi">%s</span></%s>' % ('p' if hidden else 'h1', l, sa, ' aria-hidden="true"' if hidden else '', hb, 'p' if hidden else 'h1')
+    if kick and not hidden: o += '\n    <p class="lab3 sn-k%s"%s><span class="sn-hi">%s</span></p>' % (l, sa.replace('top:' + UU(150), 'top:' + UU(100)), esc(kick))
+    return o
+def sc_columns(kick, h1, cols):
+    """Solutions: four strips, one for each way; they rise to the full height under the title"""
+    o = [sn_open(1.5), sn_title(h1, kick, style='top:' + UU(150), maxc=20)]
+    for i, (nm, hr, img) in enumerate(cols):
+        o.append('    <a class="sn-col" href="%s" style="left:%s;--i:%d" data-s="ty:0>-620@%.2f-%.2f"><img src="%s" alt=""><span class="nm h5r">%s</span></a>' % (hr, UU(421 + i * 368.5), i, .05 + i * .14, .7 + i * .14, img, esc(nm)))
+    return '\n'.join(o + [SN_CLOSE])
+def sc_track(kick, h1, parts, statement, imgs):
+    """Turnkey: one track from the first idea to the first night home; it pans sideways"""
+    a, b = parts
+    o = [sn_open(2.9, ' trk'), '    <div class="sn-trk" data-track="0.05 2.75">',
+         '      <div class="tk-t a" style="width:%s"><p class="lab3">%s</p><h1 class="t111" aria-label="%s">%s</h1></div>' % (UU(1280), esc(kick), html.escape(nop(h1)), brk(a, 18)),
+         '      <figure class="tk-i" style="width:%s"><img src="%s" alt=""></figure>' % (UU(900), imgs[0]),
+         '      <div class="tk-t" style="width:%s"><p class="t34" style="--w:620">%s</p></div>' % (UU(920), statement),
+         '      <figure class="tk-i" style="width:%s"><img src="%s" alt=""></figure>' % (UU(640), imgs[1]),
+         '      <div style="width:%s"></div>' % UU(150),
+         '      <figure class="tk-i" style="width:%s"><img src="%s" alt=""></figure>' % (UU(1150), imgs[2]),
+         '      <div class="tk-t" style="width:%s"><p class="t111" aria-hidden="true">%s</p></div>' % (UU(1300), brk(b, 18)),
+         '      <figure class="tk-i" style="width:100vw"><img src="%s" alt="" style="filter:contrast(1.04) brightness(.8)"></figure>' % imgs[3],
+         '    </div>']
+    return '\n'.join(o + [SN_CLOSE])
+def sc_draw(kick, h1, img, seg, ar, g=.66):
+    """Core: the drawing draws itself and becomes the photograph (design + build)"""
+    o = [sn_open(2.0, '', ' data-seg="%s" data-ar="%s"' % (seg, ar)),
+         '    <div class="sn-full" data-s="op:0>1@.95-1.7" style="opacity:0"><img src="%s" alt="" style="filter:contrast(1.04) brightness(%s)"></div>' % (img, g),
+         sn_title(h1, kick)]
+    o[0] = o[0].replace('<canvas class="ln" aria-hidden="true"></canvas>', '<canvas class="ln" aria-hidden="true" style="z-index:3"></canvas>')
+    return '\n'.join(o + [SN_CLOSE])
+def sc_triptych(kick, h1, imgs):
+    """Curated: three tall pictures move at their own speeds — layers"""
+    spec = [(421, 300, -260), (904, 140, -430), (1387, 430, -150)]
+    o = [sn_open(1.4)]
+    for (x, y, d), im in zip(spec, imgs):
+        o.append('    <figure class="sn-img" style="left:%s;top:%s;width:%s;height:%s" data-s="ty:0>%d@0-1.5"><img src="%s" alt="" style="filter:contrast(1.04) brightness(.66)"></figure>' % (UU(x), UU(y), UU(458), UU(1010), d, im))
+    return '\n'.join(o + [sn_title(h1, kick), SN_CLOSE])
+def sc_dawn(kick, h1, img):
+    """Wellness: the picture comes out of the dark into the light"""
+    return '\n'.join([sn_open(1.5), '    <div class="sn-full"><img src="%s" alt="" data-s="br:.1>.8@0-1.25;sc:1.1>1@0-1.25" style="filter:contrast(1.04) brightness(.1)"></div>' % img, sn_title(h1, kick), SN_CLOSE])
+def sc_letters(kick, h1, img):
+    """Portfolio: the photograph is seen through the letters of the title, then whole"""
+    t = sn_title(h1, None).replace('<h1 ', '<h1 style="color:#FFFFFF" ')
+    return '\n'.join([sn_open(1.6), '    <div class="sn-full"><img src="%s" alt="" data-s="sc:1.18>1@0-1.4;br:1>.62@.55-1.35" style="filter:contrast(1.04) brightness(1)"></div>' % img,
+                      '    <div class="sn-mask" data-s="op:1>0@.55-1.35">\n  ' + t + '\n    </div>', sn_title(h1, None, scrub='op:0>1@.75-1.35', style='opacity:0', hidden=True),
+                      '    <p class="lab3 sn-k l3"><span class="sn-hi">%s</span></p>' % esc(kick), SN_CLOSE])
+def sc_curtain(kick, h1, img, g=.72):
+    """a project: the photograph stays, the page comes over it"""
+    return '\n'.join([sn_open(0, ' crt'), '    <div class="sn-full"><img src="%s" alt="" data-s="sc:1>1.1@0-1.6;br:%s>.4@.1-1.4" style="filter:contrast(1.04) brightness(%s)"></div>' % (img, g, g), sn_title(h1, kick), SN_CLOSE])
+def sc_window(kick, h1, img_out, img_in):
+    """Brokers: a window in the tower opens into the finished home"""
+    return '\n'.join([sn_open(1.7), '    <div class="sn-full"><img src="%s" alt="" style="object-position:50%% 40%%"></div>' % img_out,
+                      '    <div class="sn-full" data-s="ci:48.1,2.6,6.5,72.2>0,0,0,0@.15-1.3" style="clip-path:inset(48.1%% 2.6%% 6.5%% 72.2%%)"><img src="%s" alt="" data-s="sc:1.22>1@.15-1.3" style="filter:contrast(1.04) brightness(.9)"></div>' % img_in,
+                      sn_title(h1, kick, scrub='op:1>0@.6-1.0'), SN_CLOSE])
+def sc_strips(kick, h1, img, g=.7):
+    """Partnerships: one photograph in strips that come together"""
+    off = [(-70, -150), (-35, 120), (0, -80), (35, 160), (70, -110)]; o = [sn_open(1.5)]
+    for i, (dx, dy) in enumerate(off):
+        o.append('    <div class="sn-strip" style="clip-path:inset(0 %d%% 0 %d%%)" data-s="tx:%d>0@0-1.15;ty:%d>0@0-1.15"><img src="%s" alt="" style="filter:contrast(1.04) brightness(%s)"></div>' % (80 - i * 20, i * 20, dx, dy, img, g))
+    return '\n'.join(o + [sn_title(h1, kick), SN_CLOSE])
+def sc_split(kick, h1, img, lead):
+    """Contact: the words on the left, the studio on the right"""
+    return '\n'.join([sn_open(.7), '    <figure class="sn-img ct" style="left:%s;right:0;top:0;height:100%%"><img src="%s" alt="" data-s="sc:1.12>1@0-1" style="filter:contrast(1.04) brightness(.8)"></figure>' % (UU(1160), img),
+                      sn_title(h1, kick), '    <p class="t34 sn-lead" style="--w:640">%s</p>' % lead, SN_CLOSE])
+def intro(ps, button=None, statement=True):
+    """after the opening: the page's first thought on the text line, the text in columns, the button"""
+    ps = list(ps); o = []
+    if statement and ps: o.append(lead_p(ps.pop(0), w=1240))
+    b = btn(button[0], button[1]) if button else ''
+    if ps and b: o.append('    <div class="g2">\n      <div class="rv">%s</div>\n      <div class="t20s rv" style="--w:475">%s</div>\n    </div>' % (b, ''.join(para(p) for p in ps)))
+    elif ps: o.append(p20(ps, 'c2'))
+    elif b: o.append('    <div class="rv c1">%s</div>' % b)
+    return '<section class="bk" id="@ID@">\n  <div class="bk-b" style="margin-top:0">\n%s\n  </div>\n</section>' % '\n'.join(o)
+def cells_block(title, intro_, steps, n, note=None):
+    """steps as cells of a grid"""
+    o = []
+    if intro_: o.append(lead_p(intro_[0]))
+    o.append('    <div class="stps" style="--n:%d">%s</div>' % (n, ''.join('<div class="stp rv"><span class="t">%s</span>%s</div>' % (esc(nop(nm)), '<p class="dsc">%s</p>' % esc(nop(ds)) if ds else '') for nm, ds in steps)))
+    if note: o.append(closer(note))
+    return bk(title, '\n'.join(o))
 
 def steps_film(title, steps, intro=None, outro=None, d=.55):
     """a journey on the line: the square walks from mark to mark; one step on the stage at a time"""
@@ -341,7 +431,7 @@ def label(sec):
     l = get(sec, 'label'); return l[0][1] if l else ''
 def h_of(sec, tag='h2'):
     h = get(sec, tag); return h[0][1] if h else ''
-def auto(pg, sec, picks=None, film=True, card_link=None):
+def auto(pg, sec, picks=None, film=True, card_link=None, proc='film', n=4):
     lb = label(sec); r = rail_of(lb); h2 = h_of(sec); items = [it for it in sec['items'] if it[0] not in ('label', 'h2')]
     # a name (h4) with the paragraphs under it is a row
     it2 = []
@@ -360,7 +450,9 @@ def auto(pg, sec, picks=None, film=True, card_link=None):
         i0 = items.index(rows[0]); i1 = items.index(rows[-1])
         intro = [it[1] for it in items[:i0] if it[0] in ('p', 'lead')]; note = [it[1] for it in items[i1 + 1:] if it[0] in ('p', 'strong', 'lead')]
         has_d = any(r_[2] for r_ in rows)
-        if has_d and film and re.search(r'Process|What Happens Next|From Property', lb):
+        if has_d and proc == 'cells' and re.search(r'Process|What Happens Next|From Property', lb):
+            pg.add(cells_block(h2, intro, [(r_[1], ' '.join(' '.join(p) for p in r_[2])) for r_ in rows], n, note[0] if note else None), r); return
+        if has_d and film and proc == 'film' and re.search(r'Process|What Happens Next|From Property', lb):
             st = [(r_[1], ' '.join(' '.join(p) for p in r_[2])) for r_ in rows]
             pg.add(steps_film(h2, st, intro=blue(' '.join(intro[0]), intro[0] if len(intro[0]) > 1 else None) if intro else None,
                               outro='<span class="cb">%s</span>' % esc(nop(' '.join(note[0]))) if note else None), r); return

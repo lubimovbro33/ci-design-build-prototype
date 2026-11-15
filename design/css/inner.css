@@ -119,10 +119,9 @@ html body.inr .bk .c3{margin-left:calc(1440 * var(--u))}
 .dlt dd a{color:inherit;text-decoration:none}
 
 /* ---------- photographs */
-/* a band opens out of a line as it comes to the middle of the screen */
+/* a photograph between blocks: whole, drifting slowly */
 .bnd{position:relative;display:block;height:100vh;overflow:hidden;background:#000}
 .bnd img{position:absolute;left:0;top:-6%;width:100%;height:112%;object-fit:cover;display:block;max-width:none;will-change:transform,clip-path}
-.bnd::after{content:"";position:absolute;left:0;right:0;top:50%;height:1.5px;margin-top:-.75px;background:#FFFFFF;opacity:var(--lo, 1);pointer-events:none}
 /* project cards: three on the 421 / 904 / 1387 lines, every second a step lower */
 .cards{display:grid;grid-template-columns:repeat(3, calc(458 * var(--u)));column-gap:calc(25 * var(--u));margin-left:calc(421 * var(--u));align-items:start}
 .cd{display:block;color:#FFFFFF;text-decoration:none;cursor:none}
@@ -213,6 +212,48 @@ h2.rv, .say.rv{filter:blur(12px)}
 
 body.inr .ch-ftr{position:relative;z-index:5;background:#000}
 
+/* ================================================================== scenes: every page opens in its own way (15.11, her note: one device on every page is predictable) */
+.film[data-fig="scene"] .stg{background:#000}
+.film.crt{position:sticky;top:0;z-index:0}
+.sn-full{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;will-change:clip-path}
+.sn-full img, .sn-img img, .sn-col img, .sn-strip img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;filter:contrast(1.04) brightness(.78);will-change:transform,filter}
+.sn-img{position:absolute;overflow:hidden;background:#111;margin:0;will-change:transform}
+.sn-h{position:absolute;left:calc(421 * var(--u));top:calc(100% * 420 / 1080);z-index:4;color:#FFFFFF;white-space:nowrap}
+.sn-h.l3{top:calc(100% * 372 / 1080)} .sn-h.l4{top:calc(100% * 325 / 1080)}
+.sn-k{position:absolute;left:calc(421 * var(--u));top:calc(100% * 420 / 1080 - 50 * var(--u));z-index:4}
+.sn-k.l3{top:calc(100% * 372 / 1080 - 50 * var(--u))} .sn-k.l4{top:calc(100% * 325 / 1080 - 50 * var(--u))}
+.sn-hi{display:block;animation:cvIn 1.7s cubic-bezier(.16,1,.3,1) .25s both}
+.sn-lead{position:absolute;left:calc(421 * var(--u));bottom:max(calc(100 * var(--u)), 94px);z-index:4}
+/* Solutions: four strips, one for each way; they rise to the full height */
+.sn-col{position:absolute;top:calc(100% * 620 / 1080);height:100%;width:calc(343.5 * var(--u));overflow:hidden;background:#111;color:#FFFFFF;text-decoration:none;cursor:none;z-index:2;will-change:transform}
+.sn-col img{filter:contrast(1.04) brightness(.6);transition:filter .6s}
+.sn-col:hover img{filter:contrast(1.04) brightness(.85)}
+.sn-col .nm{position:absolute;left:calc(25 * var(--u));top:calc(25 * var(--u));z-index:2}
+/* Turnkey: one track from the first idea to the first night home; it pans sideways */
+.sn-trk{position:absolute;left:0;top:0;height:100%;display:flex;align-items:stretch;will-change:transform}
+.sn-trk > *{flex:none;position:relative;height:100%;box-sizing:border-box}
+.tk-t{display:flex;flex-direction:column;justify-content:center;padding:0 calc(150 * var(--u))}
+.tk-t.a{padding-left:calc(421 * var(--u))}
+.tk-t .lab3{margin-bottom:calc(36 * var(--u))}
+.tk-i{margin:0;overflow:hidden}
+.tk-i img{width:100%;height:100%;object-fit:cover;display:block;max-width:none;filter:contrast(1.04) brightness(.86)}
+/* Partnerships: one photograph in strips that come together */
+.sn-strip{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform}
+/* Portfolio: the photograph is seen through the letters, then whole */
+.sn-mask{position:absolute;left:0;top:0;width:100%;height:100%;background:#000;mix-blend-mode:multiply;z-index:3}
+/* steps as cells: a blue square, the name on a hairline, its line under it */
+.stps{display:grid;grid-template-columns:repeat(var(--n, 4), minmax(0,1fr));column-gap:calc(25 * var(--u));row-gap:calc(100 * var(--u));margin-left:calc(421 * var(--u));margin-right:calc(50 * var(--u))}
+.stp{border-top:1px solid rgba(255,255,255,.3);padding-top:calc(25 * var(--u))}
+.stp::before{content:"";display:block;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:var(--blue);margin-bottom:calc(75 * var(--u))}
+.stp .t{display:block;font-family:var(--fx);font-weight:400;font-size:max(15px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em;text-transform:uppercase;color:#FFFFFF;text-wrap:balance}
+.stp .dsc{margin-top:calc(25 * var(--u));font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#FFFFFF;max-width:calc(300 * var(--u));text-wrap:pretty}
+/* rows in the large size (the six verbs of the portfolio) */
+.rw.big{padding:calc(40 * var(--u)) 0}
+.rw.big .t{font-size:max(24px, calc(60 * var(--u)));line-height:.867;letter-spacing:-.0167em}
+.rw.big .n{padding-top:calc((60 * var(--u) * .867 - 1.139em) / 2)}
+.lst a .c + .c + .c{text-align:left}
+.lst.w3 a{grid-template-columns:calc(371 * var(--u)) minmax(0,1fr) calc(330 * var(--u)) calc(230 * var(--u)) calc(170 * var(--u))}
+
 /* phones (a basic layout): the films stand still — every moment in the page's flow, in its order; the columns fold onto one text line */
 @media (max-aspect-ratio: 1/1){
   .film{height:auto!important}
@@ -252,4 +293,25 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .fin .fin-in{left:var(--m, 20px);right:var(--m, 20px)}
   .hd0{padding-top:150px}
   html body.inr .art{margin-left:var(--m, 20px)}
+  .film.crt{position:relative}
+  .film[data-fig="scene"] .stg{min-height:100vh;min-height:100svh}
+  .film[data-fig="scene"]:not(.trk) .stg{height:100vh;height:100svh;overflow:hidden}
+  .sn-h, .sn-k, .sn-lead{left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
+  .sn-col{width:calc(25vw - 6px)!important;left:calc(var(--i) * 25vw + 3px)!important;top:62%;transform:none!important}
+  .sn-col .nm{font-size:10px;left:8px;top:8px}
+  .sn-full, .sn-strip, .sn-img, .sn-full img, .sn-strip img, .sn-img img{transform:none!important}
+  .sn-full{clip-path:none!important} .sn-full[data-s*="ci:"]{display:none}
+  .sn-full img{filter:contrast(1.04) brightness(.7)!important}
+  .sn-mask{display:none} .sn-h[aria-hidden]{opacity:1!important;visibility:visible!important}
+  .sn-img.ct{left:0!important;opacity:.55}
+  .sn-trk{position:relative;display:block;transform:none!important}
+  .sn-trk > *{height:auto;width:auto!important}
+  .tk-t, .tk-t.a{padding:56px var(--m, 20px)}
+  .tk-i{height:62vh}
+  .stps{grid-template-columns:minmax(0,1fr);margin-left:var(--m, 20px);margin-right:var(--m, 20px);row-gap:40px}
+  .stp::before{margin-bottom:24px}
+  .stp .dsc{max-width:none}
+  .sn-img{left:0!important;top:0!important;width:100%!important;height:100%!important}
+  .sn-img ~ .sn-img{display:none}
+  .lst.w3 a{grid-template-columns:40px minmax(0,1fr)}
 }

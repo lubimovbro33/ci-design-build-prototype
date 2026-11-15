@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>News — CI Design + Build</title>
 <meta name="robots" content="noindex">
-<link rel="preload" as="image" href="assets/ph/us/1530-03.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=Zalando+Sans+SemiExpanded:wght@400;700&display=swap">
@@ -16,6 +15,7 @@
 <link rel="stylesheet" href="css/v10.css">
 <link rel="stylesheet" href="css/r3.css">
 <link rel="stylesheet" href="css/inner.css">
+<link rel="stylesheet" href="css/form.css">
 <script>(function(){var d=document.documentElement,m=window.matchMedia,c=m&&m('(pointer: coarse)').matches;if(c||/[?&]lite/.test(location.search))d.classList.add('lite');})();</script>
 </head>
 <body class="inr ready">
@@ -62,16 +62,12 @@
 </header>
 
 <main id="main">
-<section class="film" data-fig="cover" data-len="2.5" data-emb="" id="top">
-  <div class="stg">
-    <div class="pic"><img src="assets/ph/us/1530-03.webp" alt="" style="filter:contrast(1.04) brightness(0.6)"></div>
-    <canvas class="ln" aria-hidden="true"></canvas>
-    <div class="sc">
-      <h1 class="t111 cv-h"><span class="cv-hi">The Latest From CI</span></h1>
-      <p class="lab3 cv-k"><span class="cv-hi">News</span></p>
-      <p class="t34 m p-al" data-k="1.0 1.35 99 99" style="--w:1240">Projects. <span class="cb">Perspectives. Partnerships. Press</span></p>
-      <div class="t20s m p-ur" data-k="1.15 1.5 99 99" style="--w:430"><p>The ideas shaping how we design, build, and live, and how we continue building our clients a better life</p></div>
-    </div>
+<section class="bk hd0" id="top">
+  <p class="lab3 rv c1">News</p>
+  <h1 class="t111 bk-h rv" style="margin-top:calc(50 * var(--u))">The Latest From CI</h1>
+  <div class="bk-b">
+    <p class="t34 rv c1" style="--w:1240">Projects. <span class="cb">Perspectives. Partnerships. Press</span></p>
+    <div class="t20s rv c2" style="--w:475"><p>The ideas shaping how we design, build, and live, and how we continue building our clients a better life</p></div>
   </div>
 </section>
 <section class="bk" id="s2">
@@ -109,5 +105,6 @@
 
 <script src="js/v10.js"></script>
 <script src="js/inner.js"></script>
+<script src="js/form.js"></script>
 </body>
 </html>

@@ -18,20 +18,21 @@ def join_lists(sec):
     sec['items'] = out; return sec
 
 # ================================================================== the four solutions
-def solution(key, fname, name, cov, bnd, band_after, cta_img, picks, emb, cov_pos=None, cta_pos=None, g=None):
+def solution(key, fname, name, scene, bnd, band_after, cta_img, picks, proc='film', st=True, pre=None):
     S = [join_lists(dots_fix(s)) for s in P[key]]; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(cover(label(S[0]), h1, ps, cov, (a[0], 'contact.html') if a else None, emb, cov_pos, g), name.replace('CI ', ''), 'top')
+    pg.add(scene(label(S[0]), h1, ps), name.replace('CI ', ''), 'top')
+    pg.add(intro(ps if st else ps[1:], (a[0], 'contact.html') if a else None, statement=st))
     for sec in S[1:-1]:
         if not sec['items']: continue
         lb = label(sec)
         if key == 'wellness' and lb == 'The Integrated Wellness Process':
-            rows = get(sec, 'row'); intro = [it[1] for it in sec['items'] if it[0] in ('p', 'lead')]
+            rows = get(sec, 'row'); intro_ = [it[1] for it in sec['items'] if it[0] in ('p', 'lead')]
             items = []
             for r in rows:
                 ps_ = [' '.join(p) for p in r[2]]; half = (len(ps_) + 1) // 2
                 items.append((r[1], [''.join('<p>%s</p>' % esc(nop(x)) for x in ps_[:half]), ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_[half:])]))
-            pg.add(acc_block(h_of(sec), blue(' '.join(intro[0]), intro[0]) if intro else None, items), rail_of(lb))
+            pg.add(acc_block(h_of(sec), blue(' '.join(intro_[0]), intro_[0]) if intro_ else None, items), rail_of(lb))
         elif key == 'wellness' and lb == 'Wellness Features + Systems':
             ps_ = [it[1] for it in sec['items'] if it[0] == 'p']; items = []
             for f in P['_feats']:
@@ -40,21 +41,28 @@ def solution(key, fname, name, cov, bnd, band_after, cta_img, picks, emb, cov_po
             h3 = get(sec, 'h3')[0][1]; sp = ps_[2:]
             items.append((h3, ['<p>%s</p>' % esc(nop(' '.join(sp[0]))), ''.join('<p>%s</p>' % esc(nop(' '.join(x))) for x in sp[1:])]))
             pg.add(acc_block(h_of(sec), blue(' '.join(ps_[0] + ps_[1]), [ps_[0][0], ps_[1][0]]), items), rail_of(lb))
-        else: auto(pg, sec, picks)
+        else: auto(pg, sec, picks, proc=proc, n=4)
         if band_after == lb and bnd: pg.add(band(bnd))
-    final_cta(pg, S[-1], cta_img, cta_pos)
-    emit(fname, name, pg, cov)
+    final_cta(pg, S[-1], cta_img)
+    emit(fname, name, pg, pre)
 
-solution('turnkey', 'ci-turnkey.html', 'CI Turnkey', A + 'ch/1450-32.webp', A + 'ch/1450-01a.webp', 'What You Receive', A + 'ch/1450-29a.webp', ['1450-09a', '1511-09', '1430-11a'], 'turnkey')
-solution('core', 'ci-core.html', 'CI Core', A + 'rtb/1430-04a.webp', A + 'of/plans_w.webp', 'What You Receive', A + 'ch/1450-04a.webp', ['1450-03a', '1511-08a', '1430-07'], 'core', g=.62)
-solution('curated', 'ci-curated.html', 'CI Curated', A + 'ch/1450-05.webp', A + 'ch/1450-23.webp', 'What You Receive', A + 'ch/1450-31.webp', ['1450-08a', '1530-06a', '1430-10a'], 'curated')
-solution('wellness', 'ci-wellness.html', 'CI Wellness', A + 'ch/1450-25a.webp', A + 'us/1511-01a.webp', 'Why Wellness Matters to CI', A + 'us/1511-06a.webp', None, 'wellness')
+SEG_CORE = open(os.path.join(HERE, 'seg_core.txt')).read().strip()
+solution('turnkey', 'ci-turnkey.html', 'CI Turnkey',
+         lambda k, h, ps: sc_track(k, h, ('From First Idea', 'to the First Night Home'), blue(' '.join(ps[0]), ps[0]), [A + 'of/plans_w.webp', A + 'of/materials.webp', A + 'ch/1450-01a.webp', A + 'ch/1450-32.webp']),
+         A + 'ch/1450-20a.webp', 'What You Receive', A + 'ch/1450-29a.webp', ['1450-09a', '1511-09', '1430-11a'], proc='film', st=False)
+solution('core', 'ci-core.html', 'CI Core', lambda k, h, ps: sc_draw(k, h, A + 'rtb/1430-04a.webp', SEG_CORE, 1.4214),
+         A + 'of/plans_w.webp', 'What You Receive', A + 'ch/1450-04a.webp', ['1450-03a', '1511-08a', '1430-07'], proc='rows')
+solution('curated', 'ci-curated.html', 'CI Curated', lambda k, h, ps: sc_triptych(k, h, [A + 'ch/1450-08a.webp', A + 'ch/1450-15.webp', A + 'ch/1450-18.webp']),
+         A + 'ch/1450-23.webp', 'What You Receive', A + 'ch/1450-31.webp', ['1450-08a', '1530-06a', '1430-10a'], proc='cells')
+solution('wellness', 'ci-wellness.html', 'CI Wellness', lambda k, h, ps: sc_dawn(k, h, A + 'ch/1450-25a.webp'),
+         A + 'us/1511-01a.webp', 'Why Wellness Matters to CI', A + 'us/1511-06a.webp', None, pre=A + 'ch/1450-25a.webp')
 
 # ================================================================== solutions (overview): the line becomes each of the four in turn
 def solutions():
     S = P['services']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(cover(label(S[0]), h1, ps, A + 'ch/1450-22.webp', pos='50% 0%'), 'Solutions', 'top')
+    pg.add(sc_columns(label(S[0]), h1, [('CI Turnkey', 'ci-turnkey.html', A + 'ch/1450-33.webp'), ('CI Core', 'ci-core.html', A + 'rtb/1430-05a.webp'), ('CI Curated', 'ci-curated.html', A + 'ch/1450-15.webp'), ('CI Wellness', 'ci-wellness.html', A + 'ch/1450-26.webp')]), 'Solutions', 'top')
+    pg.add(intro(ps))
     N = 4; t0 = .3; d = 1.0
     o = ['<section class="film" data-fig="steps" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']
     for i, sec in enumerate(S[1:5]):
@@ -70,17 +78,18 @@ def solutions():
     o.append('    </div>\n  </div>\n</section>')
     pg.add('\n'.join(o), 'Four Ways')
     final_cta(pg, S[5], A + 'ch/1450-02a.webp')
-    emit('solutions.html', 'Solutions', pg, A + 'ch/1450-22.webp')
+    emit('solutions.html', 'Solutions', pg)
 solutions()
 
 # ================================================================== broker program
 def brokers():
     S = [dots_fix(s) for s in P['brokers']]; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(cover(label(S[0]), h1, ps, 'assets/night/tower.jpg', (a[0], 'contact.html'), 'converge', '50% 40%'), 'Brokers', 'top')
+    pg.add(sc_window(label(S[0]), h1, 'assets/night/tower.jpg', A + 'ch/1450-20a.webp'), 'Brokers', 'top')
+    pg.add(intro(ps, (a[0], 'contact.html')))
     for sec in S[1:-1]:
         if not sec['items']: continue
-        auto(pg, sec)
+        auto(pg, sec, proc='cells', n=5)
         if label(sec) == 'From Property to Finished Home': pg.add(band(A + 'us/1511-12a.webp'))
     final_cta(pg, S[-1], A + 'ch/1450-28a.webp', top=True)
     emit('broker-program.html', 'Broker Program', pg, 'assets/night/tower.jpg')
@@ -117,7 +126,8 @@ def partners_block(sec):
 def partnerships():
     S = [join_lists(dots_fix(s)) for s in P['partnerships']]; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(cover(label(S[0]), h1, ps, A + 'us/1511-07a.webp', None, 'converge'), 'Partners', 'top')
+    pg.add(sc_strips(label(S[0]), h1, A + 'us/1511-07a.webp'), 'Partners', 'top')
+    pg.add(intro(ps))
     for sec in S[1:-1]:
         lb = label(sec)
         if lb in ('Partnerships in Practice', 'Strategic + Lifestyle Partners', 'Preferred Vendors + Technology Partners'): pg.add(partners_block(sec), rail_of(lb))
@@ -135,29 +145,43 @@ def pf_card(p, tall=False):
 def portfolio():
     S = P['portfolio']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(cover(label(S[0]), h1, ps, A + 'rtb/1430-12a.webp', g=.66), 'Portfolio', 'top')
+    pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp'), 'Portfolio', 'top')
+    pg.add(intro(ps))
     allp = PROJ + PROJ_MORE
     L = [pf_card(allp[0]), pf_card(allp[2], True), pf_card(allp[4])]; R = [pf_card(allp[1], True), pf_card(allp[3])]
     pg.add(bk(h_of(S[1]), '    <div class="pf"><div class="pf-c">%s</div><div class="pf-c">%s</div></div>' % (''.join(L), ''.join(R))), 'Projects')
     sec = S[2]; rows = get(sec, 'row'); ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; out = get(sec, 'lead')
-    pg.add(steps_film(h_of(sec), [(r[1], '') for r in rows], intro=blue(' '.join(ps_), ps_), outro='<span class="cb">%s</span>' % esc(nop(out[0][1][0])) if out else None, d=.5), 'Approach')
+    big = ''.join('<div class="rw big rv"><span class="n">%02d</span><span class="t">%s</span></div>' % (i + 1, esc(nop(r[1]))) for i, r in enumerate(rows))
+    pg.add(bk(h_of(sec), lead_p(ps_) + '\n    <div class="rws">' + big + '</div>\n' + (closer(out[0][1]) if out else '')), 'Approach')
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']
     ch = ''.join('<button class="chip%s" type="button" data-f="%s">%s</button>' % (' on' if i == 0 else '', 'all' if i == 0 else slug(c), c) for i, c in enumerate(chips))
-    rows_ = ''.join('<a %s data-tags="chicago"><span class="n">%02d</span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span></a>' % (
-        'href="%s.html"' % p['slug'] if 'slug' in p else 'href="#" data-noop', i + 1, p['name'], p['loc'], p['bld']) for i, p in enumerate(allp))
-    lib = '    <div class="chips rv c1" data-filter="lib">%s</div>\n    <div class="lst rv g50" id="lib">%s<p class="none lab3"><span class="ph">[Projects for this filter are to be assigned by CI]</span></p></div>' % (ch, rows_)
+    EXT = 'https://cidesignbuild.com/portfolio-item/'
+    LIB = [('Collectors Home', 'Streeterville · Chicago', 'One Bennett Park', '5,130 sq ft', 'collectors-home.html', 'chicago ci-turnkey'),
+           ('Urban Sanctuary', 'Gold Coast · Chicago', '900 North Michigan', '', 'urban-sanctuary.html', 'chicago'),
+           ('Room To Breathe', 'Lincoln Park · Chicago', 'Residence', '4,070 sq ft', 'room-to-breathe.html', 'chicago ci-turnkey'),
+           ('500 W Superior', 'River North · Chicago', 'Residence', '', None, 'chicago'),
+           ('444 W Grant', 'Lincoln Park · Chicago', 'Residence', '', None, 'chicago'),
+           ('Above the Park', 'Lincoln Park · Chicago', 'Residence', '5,600 sq ft', EXT + 'above-the-park/', 'chicago ci-turnkey'),
+           ('Lakeshore Luxury', 'Wilmette · North Shore', 'Residence', '2,200 sq ft', EXT + 'lakeshore-luxury/', 'ci-turnkey'),
+           ('Contemporary Comfort', 'River North · Chicago', 'Condominium', '3,352 sq ft', EXT + 'contemporary-comfort-condo/', 'chicago ci-turnkey'),
+           ('Sky-High Condo', 'Chicago', 'High-rise condominium', '2,022 sq ft', EXT + 'sky-highcondo/', 'chicago ci-turnkey')]
+    rows_ = ''.join('<a %s data-tags="%s"><span class="n">%02d</span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span><span class="c">%s</span></a>' % (
+        ('href="%s" target="_blank" rel="noopener"' % hr if hr and hr.startswith('http') else 'href="%s"' % hr) if hr else 'href="#" data-noop', tg, i + 1, esc(nm), esc(lc), esc(bd), esc(sz)) for i, (nm, lc, bd, sz, hr, tg) in enumerate(LIB))
+    lib = '    <div class="chips rv c1" data-filter="lib">%s</div>\n    <div class="lst w3 rv g50" id="lib">%s<p class="none lab3"><span class="ph">[Projects for this filter are to be assigned by CI]</span></p></div>' % (ch, rows_)
     pg.add(bk(h_of(S[3]), lib), 'Library')
     final_cta(pg, S[4], A + 'rtb/1430-13.webp', top=True)
-    emit('portfolio.html', 'Portfolio', pg, A + 'rtb/1430-12a.webp')
+    emit('portfolio.html', 'Portfolio', pg, A + 'rtb/1430-08a.webp')
 portfolio()
 
 def project(p, nxt):
     S = P['project']; pg = Pg(); nm = p['name']
     def sub(t): return t.replace('[Project Name]', nm)
     cov = ph(p['set'], p['cover'])
-    pg.add(cover(p['loc'], nm, [get(S[0], 'lead')[0][1]], cov, g=p.get('g')), 'Project', 'top')
+    pg.add(sc_curtain(p['loc'], nm, cov, p.get('g', .72)), 'Project', 'top')
+    pg.add(intro([get(S[0], 'lead')[0][1]]))
     # the brief
-    sec = S[1]; dl = get(sec, 'dl')[0][1]; known = {'Residence': p['bld'] + ' · ' + p['loc']}
+    sec = S[1]; dl = get(sec, 'dl')[0][1]; known = {'Residence': p['bld'] + ' · ' + p['loc']}; known.update(p.get('facts', {}))
+    if 'Size' in known: dl = [dl[0], dl[1], ['Size', ['']]] + dl[2:]
     rows = ''.join('<div class="rv"><dt>%s</dt><dd>%s</dd></div>' % (esc(k), esc(known.get(k, ' '.join(v)))) for k, v in dl)
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
     pg.add(bk(h_of(sec), '    <dl class="dlt">%s</dl>\n    <div class="g2">\n      <p class="t34 rv" style="--w:430">%s</p>\n      <div class="t20s rv" style="--w:475">%s</div>\n    </div>' % (rows, esc(goal), ''.join('<p>%s</p>' % esc(x) for x in gp))), 'Brief')
@@ -183,14 +207,14 @@ for i, p in enumerate(PROJ): project(p, PROJ[(i + 1) % len(PROJ)])
 def news():
     S = P['news']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(cover(label(S[0]), h1, ps, A + 'us/1530-03.webp', g=.6), 'News', 'top')
+    pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1">%s</p>\n  <h1 class="t111 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n%s\n%s\n  </div>\n</section>' % (esc(label(S[0])), brk(h1, 20), lead_p(ps[0], w=1240), p20(ps[1:], 'c2')), 'News', 'top')
     chips = ['All CI News', 'Projects', 'Perspectives', 'Partnerships', 'Press', 'CI News']
     ch = ''.join('<button class="chip%s" type="button" data-f="%s">%s</button>' % (' on' if i == 0 else '', 'all' if i == 0 else slug(c), c) for i, c in enumerate(chips))
     rows = ''.join('<a href="article.html" data-tags=""><span class="n">%02d</span><span class="t"><span class="ph">[Article Headline]</span></span><span class="c"><span class="ph">[Category]</span></span><span class="c"><span class="ph">[Date]</span></span></a>' % (i + 1) for i in range(6))
     sec = S[1]; lead = get(sec, 'lead')[0][1][0]; more = get(sec, 'a')[0][2]
     body = '    <p class="t34 rv c1" style="--w:900">%s</p>\n    <div class="chips rv c1 g50" data-filter="nl">%s</div>\n    <div class="lst rv g50" id="nl">%s<p class="none lab3"><span class="ph">[Articles in this category will appear here]</span></p></div>\n    <div class="rv c1">%s</div>' % (blue(lead), ch, rows, btn(more, '#').replace('href="#"', 'href="#" data-noop'))
     pg.add(bk(h_of(sec), body), 'All News')
-    emit('news.html', 'News', pg, A + 'us/1530-03.webp')
+    emit('news.html', 'News', pg)
 news()
 def article():
     S = P['article']; pg = Pg()
@@ -224,20 +248,11 @@ FORM = [('Name', 'text', 'name', True), ('Email', 'email', 'email', True), ('Pho
 def contact():
     S = P['contact']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(cover(label(S[0]), h1, ps, A + 'of/lounge_w.webp', (a[0], '#inquiry'), 'voice'), 'Contact', 'top')
+    # here the opening does go into the line: the line becomes a voice — every CI home begins with a conversation
+    pg.add(cover(label(S[0]), h1, ps, A + 'of/lounge_w.webp', (a[0], 'contact.html'), 'voice'), 'Contact', 'top')
     sec = S[1]; ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']
-    # check the form against the client's copy
-    fm = get(sec, 'form')[0]; assert [f[0] for f in fm[1]] == [f[0] for f in FORM], [f[0] for f in fm[1]]
-    fr = []
-    for f in FORM:
-        fid = 'f-' + slug(f[0])
-        if isinstance(f[1], list):
-            fr.append('<div class="fr rv"><span class="fl-n">%s</span><div class="chips">%s</div></div>' % (esc(f[0]), ''.join('<label class="chip"><input type="radio" name="%s" value="%s">%s</label>' % (fid, html.escape(o), esc(o)) for o in f[1])))
-        elif f[1] == 'area': fr.append('<div class="fr rv"><label for="%s">%s</label><textarea id="%s" name="%s" rows="5"></textarea></div>' % (fid, esc(f[0]), fid, f[2]))
-        else: fr.append('<div class="fr rv"><label for="%s">%s</label><input id="%s" name="%s" type="%s"%s autocomplete="%s"></div>' % (fid, esc(f[0]), fid, f[2], f[1], ' required' if f[3] else '', {'name': 'name', 'email': 'email', 'phone': 'tel'}.get(f[2], 'off')))
-    form = '<form class="frm" novalidate>%s<div class="sub rv"><button class="r3btn" type="submit"><span class="t">%s</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></button></div><p class="t34 ok" style="--w:900">Thank you. <span class="cb">%s</span></p></form>' % (
-        ''.join(fr), '<br>'.join(esc(x) for x in ['Submit', 'Project Inquiry']), esc(nop(ps_[2])))
-    body = '    <p class="t34 rv c1" style="--w:900">%s</p>\n    <div class="t20s rv c2 g50" style="--w:475"><p>%s</p><p>%s</p></div>\n    %s' % (blue(ps_[0]), esc(nop(ps_[1])), esc(nop(ps_[2])), form)
+    body = '    <p class="t34 rv c1" style="--w:1000">%s</p>\n    <div class="g2">\n      <div class="rv"><a class="r3btn" href="contact.html" data-form><span class="t">%s</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>\n      <div class="t20s rv" style="--w:475"><p>%s</p><p>%s</p></div>\n    </div>' % (
+        blue(ps_[0]), '<br>'.join(esc(x) for x in ['Submit', 'Project Inquiry']), esc(nop(ps_[1])), esc(nop(ps_[2])))
     pg.add(bk(h_of(sec), body), 'Inquiry', 'inquiry')
     dl = get(sec, 'dl')[0][1]; rows = ''
     for k, v in dl:
@@ -247,8 +262,8 @@ def contact():
         rows += '<div class="rv"><dt>%s</dt><dd>%s</dd></div>' % (esc(k), val)
     pg.add(bk(get(sec, 'h3')[0][1], '    <dl class="dlt">%s</dl>' % rows), 'Studio')
     pg.add(band(A + 'of/team.webp', '50% 0%', g=.86))
-    auto(pg, S[2])
-    final_cta(pg, S[3], A + 'ch/1450-24.webp', None, '#inquiry')
+    auto(pg, S[2], proc='cells', n=4)
+    final_cta(pg, S[3], A + 'ch/1450-24.webp', None, 'contact.html')
     emit('contact.html', 'Contact', pg, A + 'of/lounge_w.webp')
 contact()
 
