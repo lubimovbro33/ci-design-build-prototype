@@ -1,5 +1,6 @@
-/* CI · the inquiry form as a pop-up (15.11): the header's button opens it on every page. The left half is ours — the words; the right half is the
-   client's own form, the one their current site uses (monday.com), so an inquiry goes where it goes today. */
+/* CI · the inquiry form as a pop-up (15.11): the header's button opens it on every page.
+   Left — the words, on black. Right — a white sheet that slides in with the form in the site's own type: hairlines, small caps, squares.
+   The form is ours; its fields are the client's (copy, 2nd round). It is to be connected to the client's monday.com board (see js/form.js). */
 .fmo{position:fixed;left:0;top:0;width:100%;height:100%;z-index:9500;display:flex;background:#000;color:#FFFFFF;opacity:0;visibility:hidden;cursor:auto;transition:opacity .5s cubic-bezier(.16,1,.3,1), visibility 0s .5s}
 .fmo *{cursor:auto}
 html.fm-open .fmo{opacity:1;visibility:visible;transition:opacity .5s cubic-bezier(.16,1,.3,1)}
@@ -10,13 +11,40 @@ html.fm-open, html.fm-open body{overflow:hidden}
 .fmo-l .t20 + .t20{margin-top:.9em!important}
 .fmo-d{display:grid;grid-template-columns:1fr 1fr;column-gap:calc(25 * var(--u));border-top:1px solid rgba(255,255,255,.3);padding-top:calc(25 * var(--u));font-family:var(--fx);font-weight:400;font-size:max(10px, calc(14 * var(--u)));line-height:1.3;text-transform:uppercase}
 .fmo-d a{color:#FFFFFF;text-decoration:none}
-.fmo-r{flex:1;position:relative;background:#FFFFFF;transform:translateX(100%);transition:transform .9s cubic-bezier(.16,1,.3,1)}
-html.fm-open .fmo-r{transform:none}
-.fmo-r iframe{position:absolute;left:0;top:0;width:100%;height:100%;border:0;background:#FFFFFF}
 .fmo-x{position:absolute;left:calc(50 * var(--u));top:calc(24 * var(--u));width:max(44px, calc(78 * var(--u)));height:max(44px, calc(78 * var(--u)));background:none;border:1px solid rgba(255,255,255,.3);padding:0;cursor:pointer;transition:background-color .3s}
 .fmo-x i{position:absolute;left:50%;top:50%;width:36%;height:1.5px;margin:-.75px 0 0 -18%;background:#FFFFFF;transform:rotate(45deg);transition:background-color .3s}
 .fmo-x i + i{transform:rotate(-45deg)}
 .fmo-x:hover{background:#FFFFFF} .fmo-x:hover i{background:#000}
+
+/* the sheet */
+.fmo-r{flex:1;position:relative;background:#FFFFFF;color:#000;overflow-y:auto;overscroll-behavior:contain;transform:translateX(100%);transition:transform .9s cubic-bezier(.16,1,.3,1)}
+html.fm-open .fmo-r{transform:none}
+.fmf{box-sizing:border-box;min-height:100%;padding:calc(150 * var(--u)) calc(50 * var(--u)) calc(50 * var(--u));display:flex;flex-direction:column}
+.fmf-2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:calc(25 * var(--u))}
+.fmf-r{position:relative;border-top:1px solid rgba(0,0,0,.3);padding:calc(18 * var(--u)) 0 calc(28 * var(--u));transition:border-color .3s}
+.fmf-r:focus-within, .fmf-r.bad{border-top-color:#000}
+.fmf-r > label, .fmf-r > .fmf-n{display:block;font-family:var(--fx);font-weight:400;font-size:max(10px, calc(14 * var(--u)));line-height:1.136;text-transform:uppercase;color:#000;margin:0 0 calc(18 * var(--u))}
+.fmf-r > label{cursor:text}
+.fmf-r.bad > label::after{content:"";display:inline-block;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:#96A8BF;margin-left:.7em;vertical-align:middle}
+.fmf-r input[type="text"], .fmf-r input[type="email"], .fmf-r input[type="tel"], .fmf-r textarea{display:block;width:100%;box-sizing:border-box;border:0;border-radius:0;background:none;padding:0;margin:0;outline:0;-webkit-appearance:none;appearance:none;font-family:var(--fz);font-weight:400;font-size:max(15px, calc(20 * var(--u)));line-height:1.15;letter-spacing:-.05em;color:#000;caret-color:#000;cursor:text}
+.fmf-r textarea{min-height:calc(110 * var(--u));resize:none}
+.fmf-c{display:flex;flex-wrap:wrap;gap:calc(8 * var(--u))}
+.fmf-c label{position:relative;display:inline-block;border:1px solid rgba(0,0,0,.3);padding:calc(10 * var(--u)) calc(14 * var(--u));font-family:var(--fx);font-weight:400;font-size:max(10px, calc(14 * var(--u)));line-height:1.136;text-transform:uppercase;color:#000;cursor:pointer;transition:background-color .25s, color .25s, border-color .25s;-webkit-user-select:none;user-select:none}
+.fmf-c label *{cursor:pointer}
+.fmf-c input{position:absolute;opacity:0;pointer-events:none;width:0;height:0}
+.fmf-c label:hover{border-color:#000}
+.fmf-c label.on{background:#000;color:#FFFFFF;border-color:#000}
+.fmf-c label:focus-within{border-color:#000}
+.fmf-s{margin-top:auto;border-top:1px solid rgba(0,0,0,.3);padding-top:calc(50 * var(--u))}
+.fmo .fmf-s .r3btn{background:#000;border:0;padding:0;cursor:pointer;text-align:left}
+.fmo .fmf-s .r3btn *{cursor:pointer}
+.fmo .fmf-s .r3btn .t{color:#FFFFFF}
+.fmo .fmf-s .r3btn .sqd, .fmo .fmf-s .r3btn .ln{background:#FFFFFF}
+/* sent */
+.fmf-ok{display:none;box-sizing:border-box;min-height:100%;padding:calc(150 * var(--u)) calc(50 * var(--u)) calc(50 * var(--u))}
+.fmf-ok .t60, .fmf-ok .t20{color:#000!important}
+.fmf-ok .t20{margin-top:calc(50 * var(--u))!important;width:calc(475 * var(--u))}
+.fmo.sent .fmf{display:none} .fmo.sent .fmf-ok{display:block}
 @media (max-aspect-ratio: 1/1){
   .fmo{flex-direction:column}
   .fmo-l{width:auto;padding:84px 20px 20px;display:block}
@@ -24,4 +52,9 @@ html.fm-open .fmo-r{transform:none}
   .fmo-k{margin-bottom:14px}
   .fmo-x{left:auto;right:20px;top:20px}
   .fmo-r{transform:translateY(100%)}
+  .fmf, .fmf-ok{padding:28px 20px 32px}
+  .fmf-2{grid-template-columns:minmax(0,1fr)}
+  .fmf-r{padding:14px 0 20px} .fmf-r > label, .fmf-r > .fmf-n{margin-bottom:12px}
+  .fmf-c{gap:6px} .fmf-c label{padding:9px 11px}
+  .fmf-s{padding-top:28px}
 }
