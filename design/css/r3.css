@@ -284,19 +284,22 @@ html.mn-open .r3-rb,html.mn-open .r3-hb,html.lite .r3-rb,html.lite .r3-hb{displa
    circles "as on the black block" — hairlines 1 px, Bright Gray 33 % drawn / 10 % still to come, mist squares at the joints; no photographs; her type: number =
    label 14, name = Expanded Medium 18 / 16 caps, sentence = the running text). Geometry is set by js (process4), everything in the frame's unit. */
 .pr4 .ch-pin{height:620vh}
-/* 15.11 (her note): the lines of this block in the manner of the About page — white; the line that has been walked is 1.5 px,
-   the drawing ahead of the square is a white hairline; the squares at the joints are white */
-.pr4 .pr4-svg path{fill:none;stroke-width:1}
-.pr4 .pr4-svg .gh path{stroke:rgba(255,255,255,.3)}
-.pr4 .pr4-svg .ink path{stroke:#FFFFFF;stroke-width:1.5;stroke-dasharray:1 1;stroke-dashoffset:1}
+/* 15.11 (her notes 12:36 and 13:16, with a screenshot of the strip): every line of this block in the manner of the About page.
+   One pen — white, 1.5 px, butt ends. The axis is the page's one line and is white from edge to edge at once; the branches and
+   the circles are not laid out pale ahead of the square any more — the line draws them as the square walks, as the figures on
+   About. Nothing on the screen is grey: a step's text and the squares at the joints appear, white, when the line reaches them */
+.pr4 .pr4-svg path{fill:none;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:round}
+.pr4 .pr4-svg .gh path{display:none}
+.pr4 .pr4-svg .gh path.ax{display:inline;stroke:#FFFFFF}
+.pr4 .pr4-svg .ink path{stroke:#FFFFFF;stroke-dasharray:1 1;stroke-dashoffset:1}
 .pr4 .pr4-svg .ink path.ax{stroke-dasharray:none;stroke-dashoffset:0}
 .pr4 .pr4-svg .nd,.pr4 .pr4-svg .pt{fill:#FFFFFF;stroke:none}
 .pr4 .pr4-sq{width:max(6px, calc(10 * var(--u)));height:max(6px, calc(10 * var(--u)));margin:calc(max(6px, 10 * var(--u)) / -2) 0 0 calc(max(6px, 10 * var(--u)) / -2);background:#FFFFFF}
 .pr6{position:absolute;inset:0;z-index:3;pointer-events:none}
-.pr6-c{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:calc(12 * var(--u));white-space:nowrap;opacity:.26}
+.pr6-c{position:absolute;left:0;top:0;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:calc(12 * var(--u));white-space:nowrap;opacity:0}
 .pr6-c .n{font-family:var(--fx);font-weight:400;font-size:max(10px, calc(14 * var(--u)));line-height:1.136;letter-spacing:0;color:var(--blue)}
 .pr6 .nm{display:block;font-family:var(--fx);font-weight:500;font-size:max(11px, calc(18 * var(--u)));line-height:.89;letter-spacing:-.0556em;text-transform:uppercase;color:#FFFFFF}
-.pr6-t{position:absolute;opacity:.26}
+.pr6-t{position:absolute;opacity:0}
 .pr6-t .nm{display:none}
 html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#FFFFFF}
 @media (min-aspect-ratio: 1/1){

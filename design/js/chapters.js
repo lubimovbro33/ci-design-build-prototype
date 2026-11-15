@@ -898,8 +898,9 @@
        The curves are long and flat. Each circle is large and holds the step whole: number, name, sentence — nothing hangs
        outside, so no line ever runs through text. The title stands at the head of the strip; the closing thought stands centred
        above the line on the last screen, where the line runs on alone.
-       The drawing is faint from the start and is inked as the walking square passes; the camera follows the square.
-       Strokes as on the About closing (1 px, Bright Gray 33 % / 10 %), mist squares at the joints. No photographs.
+       15.11 (her notes 12:36, 13:16): the lines as on the About page — one pen, white 1.5 px. The axis is white from edge to edge
+       at once; nothing is laid out pale ahead: the line draws the branches and the circles as the square walks, and a step's text,
+       like the squares at the joints, appears (white) when the line reaches it. The camera follows the square. No photographs.
        Phones (no frame from her): the axis stands on the left, a small numbered circle by each node, name and sentence beside it. */
     var gM = el('g', {}, svg), gG = el('g', {'class': 'gh'}, gM), gI = el('g', {'class': 'ink'}, gM), gN = el('g', {}, gM);
     var axG = el('path', {'class': 'ax'}, gG), axI = el('path', {'class': 'ax'}, gI);
@@ -987,7 +988,8 @@
     function again(){ lastSz = ''; update(P); }
     if (window.ResizeObserver){ var ro = new ResizeObserver(again); ro.observe(end); ro.observe(t2); }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(again);
-    function ink(i, a, b, c, d){ var q = br[i].i; set(q[0], 'strokeDashoffset', (1 - a).toFixed(4)); set(q[1], 'strokeDashoffset', (1 - b).toFixed(4)); set(q[2], 'strokeDashoffset', (1 - c).toFixed(4)); set(q[3], 'strokeDashoffset', (1 - d).toFixed(4)); }
+    /* a path that has not begun is hidden outright: with nothing pale under it, the zero-length dash at its start showed as a speck */
+    function ink(i, a, b, c, d){ var q = br[i].i, v = [a, b, c, d]; for (var j = 0; j < 4; j++){ set(q[j], 'strokeDashoffset', (1 - v[j]).toFixed(4)); set(q[j], 'visibility', v[j] > .0005 ? '' : 'hidden'); } }
     function update(p){
       var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
       P = p; if (!vis || p >= .42) draw();
@@ -1004,23 +1006,23 @@
         axI.setAttribute('d', 'M' + f1(X0) + ' ' + f1(Y) + 'H' + f1(px));
         set(sq, 'opacity', ga.toFixed(3)); set(sq, 'transform', 'translate3d(' + f1(px - off) + 'px,' + f1(Y) + 'px,0)');
         var k2 = sg(p, .37, .42); set(t2, 'opacity', k2.toFixed(3)); set(t2, 'visibility', k2 > 0 ? '' : 'hidden'); set(t2, 'transform', 'translate3d(' + f1(-off) + 'px,' + f1(rise) + 'px,0)');
-        nds.forEach(function(n, q){ set(n, 'opacity', (.26 + .74 * sg(px, G.nd[q] - 10, G.nd[q])).toFixed(3)); });
+        nds.forEach(function(n, q){ set(n, 'opacity', sg(px, G.nd[q] - 10, G.nd[q]).toFixed(3)); });
         steps.forEach(function(_, i){ var c = G.c[i >> 1], f = sg(px, c - R, c + R), arc = Math.acos(1 - 2 * f) / Math.PI;
           ink(i, sg(px, c - S, c - R), arc, arc, sg(px, c + R, c + S));
-          set(pts[i][0], 'opacity', (.26 + .74 * sg(px, c - R - 8, c - R)).toFixed(3)); set(pts[i][1], 'opacity', (.26 + .74 * sg(px, c + R - 8, c + R)).toFixed(3));
-          var o = (.26 + .74 * sg(px, c - R * .7, c + R * .1)).toFixed(3); set(cl[i], 'opacity', o); set(tx[i], 'opacity', o); });
-        var ke = ga * (.26 + .74 * sg(px, G.xr + .25 * (G.XE - G.xr), G.xr + .8 * (G.XE - G.xr))); set(end, 'opacity', ke.toFixed(3)); set(end, 'visibility', ga > 0 ? '' : 'hidden'); set(end, 'transform', mv);
+          set(pts[i][0], 'opacity', sg(px, c - R - 8, c - R).toFixed(3)); set(pts[i][1], 'opacity', sg(px, c + R - 8, c + R).toFixed(3));
+          var o = sm(sg(px, c - R * .2, c + R * .8)).toFixed(3); set(cl[i], 'opacity', o); set(tx[i], 'opacity', o); });
+        var ke = ga * sg(px, G.xr + .25 * (G.XE - G.xr), G.xr + .8 * (G.XE - G.xr)); set(end, 'opacity', ke.toFixed(3)); set(end, 'visibility', ga > 0 ? '' : 'hidden'); set(end, 'transform', mv);
       } else {
         var s2 = sg(p, .42, .86), t = s2 * 6, qx = X0, qy = Y + s2 * (Y1 - Y);
         gM.removeAttribute('transform'); set(box, 'transform', 'none');
         axI.setAttribute('d', 'M' + f1(X0) + ' ' + f1(Y) + 'V' + f1(qy));
         set(sq, 'opacity', ga.toFixed(3)); set(sq, 'transform', 'translate3d(' + f1(qx) + 'px,' + f1(qy) + 'px,0)');
         var k3 = sg(p, .37, .42) * (1 - sg(p, .87, .91)); set(t2, 'opacity', k3.toFixed(3)); set(t2, 'visibility', k3 > 0 ? '' : 'hidden'); set(t2, 'transform', 'translateY(' + f1(rise) + 'px)');
-        nds.forEach(function(n, q){ set(n, 'opacity', (.26 + .74 * sg(t, q - .06, q)).toFixed(3)); });
+        nds.forEach(function(n, q){ set(n, 'opacity', sg(t, q - .06, q).toFixed(3)); });
         steps.forEach(function(_, i){ var l = clamp01(t - i), arc = sg(l, .27, .78);
           ink(i, sm(sg(l, 0, .3)), arc, arc, sm(sg(l, .75, 1)));
-          set(pts[i][0], 'opacity', (.26 + .74 * sg(l, .26, .32)).toFixed(3)); set(pts[i][1], 'opacity', (.26 + .74 * sg(l, .72, .78)).toFixed(3));
-          set(cl[i], 'opacity', (.26 + .74 * sg(l, .3, .6)).toFixed(3)); set(tx[i], 'opacity', (.26 + .74 * sg(l, .36, .66)).toFixed(3)); });
+          set(pts[i][0], 'opacity', sg(l, .26, .32).toFixed(3)); set(pts[i][1], 'opacity', sg(l, .72, .78).toFixed(3));
+          set(cl[i], 'opacity', sg(l, .3, .6).toFixed(3)); set(tx[i], 'opacity', sg(l, .36, .66).toFixed(3)); });
         var ke2 = sg(p, .91, .96); set(end, 'opacity', ke2.toFixed(3)); set(end, 'visibility', ke2 > 0 ? '' : 'hidden'); set(end, 'transform', 'translateY(' + f1((1 - eo(ke2)) * 18) + 'px)');
       }
     }
