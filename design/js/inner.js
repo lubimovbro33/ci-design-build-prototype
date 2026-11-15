@@ -341,7 +341,7 @@
      white, multiplied over the photograph — drawn here, on the film's canvas, glyph by glyph where the page's own title has them.
      Arriving: the site's line draws across the middle (a hair of the photograph), then opens up and down like a blind and the letters are there.
      Scrolling: the picture grows about a point deep in a stroke of the first word (the thickest ink nearest the middle), until that stroke is
-     the whole screen and the photograph stands whole; the white title then comes onto it as before. The photograph drifts a little against the pointer. */
+     the whole screen and the photograph stands whole — and the page scrolls on; the title is not said again. The photograph drifts a little against the pointer. */
   var ZF = {ready: !document.fonts, t0: 0, tx: 0, ty: 0, px: 0, py: 0};
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ ZF.ready = true; dirty = true; });
   setTimeout(function(){ ZF.ready = true; }, 3000);
@@ -383,8 +383,8 @@
     /* the photograph: it settles as the page arrives and gives a little against the pointer */
     if (Z.full && !reduced){ ZF.px += (ZF.tx - ZF.px) * .05; ZF.py += (ZF.ty - ZF.py) * .05; var k = 1 - e, sc = 1.04 + .05 * (1 - eo(sg(tE, 0, 3.2))), pk = (-ZF.px * 30 * U * k).toFixed(1) + ',' + (-ZF.py * 20 * U * k).toFixed(1) + ',' + sc.toFixed(4);
       if (pk !== Z.pk){ Z.pk = pk; var pp = pk.split(','); Z.full.style.transform = 'translate3d(' + pp[0] + 'px,' + pp[1] + 'px,0) scale(' + pp[2] + ')'; } }
-    /* the page's name: it comes after the letters, leaves as the flight begins, and is back with the white title */
-    var ko = Math.max(sg(tE, 1.9, 2.6) * (1 - sg(q, .02, .15)), sg(q, 1.05, 1.45)); ko = Math.round(ko * 1000) / 1000;
+    /* the page's name: it comes after the letters and leaves as the flight begins */
+    var ko = sg(tE, 1.9, 2.6) * (1 - sg(q, .02, .15)); ko = Math.round(ko * 1000) / 1000;
     if (Z.kick && ko !== Z.ko){ Z.ko = ko; Z.kick.style.opacity = ko; }
     if (e >= 1) return;   /* flown through: the photograph whole */
     var full = Z.bh / 2 + 24 * U, hh = lerp(.75, full, eio(sg(tE, .7, 2.1))), hw = W / 2 * eo(sg(tE, .15, .9)), la = 1 - sg(tE, .9, 1.6);
