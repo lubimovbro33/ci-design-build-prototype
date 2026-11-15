@@ -263,20 +263,27 @@ def sc_triptych(kick, h1, imgs):
 def sc_dawn(kick, h1, img):
     """Wellness: the picture comes out of the dark into the light"""
     return '\n'.join([sn_open(1.5), '    <div class="sn-full"><img src="%s" alt="" data-s="br:.1>.8@0-1.25;sc:1.1>1@0-1.25" style="filter:contrast(1.04) brightness(.1)"></div>' % img, sn_title(h1, kick), SN_CLOSE])
-def sc_letters(kick, h1, img, lines=None, place='cc'):
+def sc_letters(kick, h1, img, lines=None, place='cc', zoom=False):
     """Portfolio: the photograph is seen through the letters of the title, then whole.
     lines: the title set in its own lines; place: 'cc' — centred in the middle of the screen, the page's name centred one step above it
-    (her frame «01 Cover · 1» of the Portfolio export, 15.11 17:56); 'bl' — a column in the bottom left corner (her frame of 17:18)"""
+    (her frame «01 Cover · 1» of the Portfolio export, 15.11 17:56); 'bl' — a column in the bottom left corner (her frame of 17:18).
+    zoom (her word of 15.11 20:25, «міняй ефект на першому екрані, той, що ти радив»): the cover is flown through — the letters open out of the
+    site's line when the page arrives, and the scroll flies into a stroke of the first word until the photograph is whole; then the white title
+    stands on it as before. The picture of the letters is drawn on the film's canvas by inner.js (zfDraw); the markup stays the page's own."""
     if lines:
         assert ' '.join(lines) == nop(h1), (lines, h1)
         hb = '<br>'.join(esc(x) for x in lines); n = len(lines)
         t = '    <h1 style="color:#FFFFFF;--ln:%d" class="t111 sn-h %s"><span class="sn-hi">%s</span></h1>' % (n, place, hb)
-        dup = '    <p class="t111 sn-h %s" data-s="op:0>1@.75-1.35" style="opacity:0;--ln:%d" aria-hidden="true"><span class="sn-hi">%s</span></p>' % (place, n, hb)
+        dup = '    <p class="t111 sn-h %s" data-s="op:0>1@%s" style="opacity:0;--ln:%d" aria-hidden="true"><span class="sn-hi">%s</span></p>' % (place, '1.05-1.5' if zoom else '.75-1.35', n, hb)
         kk = '    <p class="lab3 sn-k %s" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (place, n, esc(kick))
     else:
         t = sn_title(h1, None).replace('<h1 ', '<h1 style="color:#FFFFFF" ')
-        dup = sn_title(h1, None, scrub='op:0>1@.75-1.35', style='opacity:0', hidden=True)
+        dup = sn_title(h1, None, scrub='op:0>1@%s' % ('1.05-1.5' if zoom else '.75-1.35'), style='opacity:0', hidden=True)
         kk = '    <p class="lab3 sn-k l3"><span class="sn-hi">%s</span></p>' % esc(kick)
+    if zoom:
+        return '\n'.join(["<script>document.documentElement.className += ' zfjs';</script>", sn_open(2, cls=' zf'),
+                          '    <div class="sn-full"><img src="%s" alt="" data-s="sc:1.18>1@0-1.5;br:1>.62@.95-1.5" style="filter:contrast(1.04) brightness(1)"></div>' % img,
+                          '    <div class="sn-mask">\n  ' + t + '\n    </div>', dup, kk, SN_CLOSE])
     return '\n'.join([sn_open(1.6), '    <div class="sn-full"><img src="%s" alt="" data-s="sc:1.18>1@0-1.4;br:1>.62@.55-1.35" style="filter:contrast(1.04) brightness(1)"></div>' % img,
                       '    <div class="sn-mask" data-s="op:1>0@.55-1.35">\n  ' + t + '\n    </div>', dup, kk, SN_CLOSE])
 def sc_curtain(kick, h1, img, g=.72):

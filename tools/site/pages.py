@@ -162,7 +162,7 @@ def portfolio():
     # Перепиши текст такий, як у макеті»): the cover's title is the designer's, as in her frame «01 Cover · 1» of the Portfolio export.
     # The client's title (2nd round) stays in content.json: «Homes as Unique as the People Who Live in Them». verify.py lists it as an exception.
     h1 = 'Homes Made for Unique Lives'
-    pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp', lines=['Homes', 'Made', 'for Unique', 'Lives'], place='cc'), 'Portfolio', 'top')
+    pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp', lines=['Homes', 'Made', 'for Unique', 'Lives'], place='cc', zoom=True), 'Portfolio', 'top')
     pg.add(intro(ps))
     # Signature CI Residences — her grid, exactly as her frame «04 Signature CI Residences · 2» (15.11 18:29; 19:28: «на макеті там немає чотирьох
     # маленьких, тільки дві вгорі. Зроби так, як на макеті»): four columns across the whole container (fields 50, gutters 48); a block is ONE LARGE card
@@ -191,7 +191,7 @@ def portfolio():
     # One blank — the CI standard; six cuts — the six steps, a name under each; how deep each cut goes is the home's own, no two keys alike. The scene
     # is set on the centre (her word of 15.11 20:11: «давай зробимо центральну виключку. Зроби заголовок і текст оцей по центру екрана»): the title
     # centred at the top, the key in the middle, the text centred at the foot in the running 20; at the end the closing thought takes the text's place.
-    # The title stands in three lines — Every Home / Unique. One / CI Standard — her own break (15.11 20:27); the words are the client's. The steps stand in the page as a list for readers that do not draw (and for the copy check).
+    # The title stands in two lines, by sense (three lines — Every Home / Unique. One / CI Standard — were tried on her word at 20:27 and rejected at 20:32). The steps stand in the page as a list for readers that do not draw (and for the copy check).
     sec = S[2]; rows = get(sec, 'row'); ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; out = get(sec, 'lead')
     assert nop(h_of(sec)) == 'Every Home Unique. One CI Standard', h_of(sec)
     assert nop(ps_[0]) == 'Every residence speaks its own architectural language, because every client lives differently', ps_[0]
@@ -199,7 +199,7 @@ def portfolio():
     st6 = [nop(r[1]) for r in rows]; assert len(st6) == 6 and all(len(x.split(' ')) == 2 for x in st6), st6
     lead = '%s<br class="bd"> %s<br class="bd"> <span class="cb">%s</span>' % (esc('Every residence speaks its own architectural language,'), esc('because every client lives differently.'), esc(nop(ps_[1])))
     pg.add('<section class="film" data-fig="key" data-len="4" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
-           '      <h2 class="t60 m p-ct" data-k="-1 -.5 99 99">Every Home<br>Unique. One<br>CI Standard</h2>\n'
+           '      <h2 class="t60 m p-ct" data-k="-1 -.5 99 99">Every Home Unique.<br>One CI Standard</h2>\n'
            '      <p class="t20 m p-cb" data-k="-1 -.5 2.85 3.0">%s</p>\n'
            '      <p class="t34 m p-cb" data-k="3.05 3.35 99 99">The result feels effortless,<br class="bd"> <span class="cb">as if your home could only<br class="bd"> ever have been yours</span></p>\n'
            '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % (lead, ''.join('<li>%s</li>' % esc(x) for x in st6)), 'Approach')

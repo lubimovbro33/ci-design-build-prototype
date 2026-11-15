@@ -197,13 +197,14 @@
     return {el: e, cv: cv, g: cv.getContext('2d'), fig: e.getAttribute('data-fig'), len: +e.getAttribute('data-len'), ms: qsa('.m', e).map(Moment), pic: qs('.pic', e), h1: qs('.cv-h', e), kick: qs('.cv-k', e),
             n: +e.getAttribute('data-n') || 0, emb: (e.getAttribute('data-emb') || '').split(','), t0: +e.getAttribute('data-t0') || .9, d: +e.getAttribute('data-d') || .55, q: -9, on: null,
             sc: qsa('[data-s]', e).map(Scrub), trk: qs('[data-track]', e), cur: e.classList.contains('crt'), seg: (function(){ var d = e.getAttribute('data-seg'); return d ? d.split(',').map(Number) : null; })(), ar: +e.getAttribute('data-ar') || 1.42,
-            names: qsa('[data-steps] li', e).map(function(li){ var x = li.textContent.trim(), i = x.indexOf(' '); return i < 0 ? [x, ''] : [x.slice(0, i), x.slice(i + 1)]; }), cw: 0, ch: 0, tv: 0};
+            zf: e.classList.contains('zf'), zm: null, names: qsa('[data-steps] li', e).map(function(li){ var x = li.textContent.trim(), i = x.indexOf(' '); return i < 0 ? [x, ''] : [x.slice(0, i), x.slice(i + 1)]; }), cw: 0, ch: 0, tv: 0};
   });
   var BANDS = qsa('.bnd').map(function(e){ return {el: e, img: qs('img', e), k: -1}; });
   function layout(){
     W = window.innerWidth; H = window.innerHeight; U = W >= H ? Math.min(W / 1920, H / 1080) : Math.max(W / 1920, W / 900);
     DPR = Math.min(2, window.devicePixelRatio || 1); MID = Math.round(H / 2) + .5; SQ = Math.max(5, 8 * U);
     FILMS.forEach(function(f){ f.el.style.height = Math.round(f.len * SP * H + H) + 'px'; f.cv.width = Math.round(W * DPR); f.cv.height = Math.round(H * DPR); });
+    FILMS.forEach(function(f){ if (f.zf) f.zm = null; });
     FILMS.forEach(function(f){ if (f.fig !== 'key') return; var flow = getComputedStyle(f.cv).position !== 'absolute'; f.cw = flow ? f.cv.clientWidth : 0; f.ch = flow ? f.cv.clientHeight : 0;
       if (flow){ f.cv.width = Math.round(f.cw * DPR); f.cv.height = Math.round(f.ch * DPR); } });
     dirty = false;
@@ -289,6 +290,7 @@
         var ax = ox + S[i * 4] / 1000 * iw, ay = oy + S[i * 4 + 1] / 1000 * ih, bx = ox + S[i * 4 + 2] / 1000 * iw, by = oy + S[i * 4 + 3] / 1000 * ih;
         g.moveTo(ax, ay); g.lineTo(ax + (bx - ax) * d, ay + (by - ay) * d); }
       g.stroke(); } }
+    if (f.zf) zfDraw(f, q, t);
   }
   /* ---------- film: key — «Every Home Unique. One CI Standard» (Portfolio; her choice of 15.11 20:00 between two sketches, after the list, the large
      type and the abstract contours had all missed: the picture must read at once).
@@ -334,6 +336,65 @@
       if (flow){ var lp = P(c0, hb), lx = lp[0] + 22, ly = lp[1] + px * .36; g.textAlign = 'left'; g.fillStyle = wh; g.fillText(v, lx, ly); g.fillStyle = bl; g.fillText(ad, lx + g.measureText(v + ' ').width, ly); }
       else { var dp = P(c0, hb), ty = mid + (hb + 44) * s + (1 - la) * 6 * U; g.textAlign = 'center'; g.fillStyle = wh; g.fillText(v, dp[0], ty); g.fillStyle = bl; g.fillText(ad, dp[0], ty + px * 1.3); }
     }
+  }
+  /* ---------- the cover flown through (Portfolio; her word of 15.11 20:25). The photograph is seen through the letters of the title: black, the letters
+     white, multiplied over the photograph — drawn here, on the film's canvas, glyph by glyph where the page's own title has them.
+     Arriving: the site's line draws across the middle (a hair of the photograph), then opens up and down like a blind and the letters are there.
+     Scrolling: the picture grows about a point deep in a stroke of the first word (the thickest ink nearest the middle), until that stroke is
+     the whole screen and the photograph stands whole; the white title then comes onto it as before. The photograph drifts a little against the pointer. */
+  var ZF = {ready: !document.fonts, t0: 0, tx: 0, ty: 0, px: 0, py: 0};
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ ZF.ready = true; dirty = true; });
+  setTimeout(function(){ ZF.ready = true; }, 3000);
+  window.addEventListener('pointermove', function(e){ ZF.tx = e.clientX / Math.max(1, W) - .5; ZF.ty = e.clientY / Math.max(1, H) - .5; }, {passive: true});
+  /* the deepest point of a glyph's ink: [dx, dy, r] from its origin on the baseline, in px */
+  function zfInk(ch, font, fpx){
+    var k = 120 / fpx, pad = 6, n = Math.ceil(fpx * 1.5 * k) + pad * 2, cv = document.createElement('canvas'); cv.width = n; cv.height = n;
+    var c = cv.getContext('2d'), by = pad + fpx * 1.1 * k; c.setTransform(k, 0, 0, k, pad, by); c.font = font; c.textBaseline = 'alphabetic'; c.fillStyle = '#000'; c.fillText(ch, 0, 0);
+    var d; try { d = c.getImageData(0, 0, n, n).data; } catch (e) { return null; }
+    function ink(x, y){ return x >= 0 && y >= 0 && x < n && y < n && d[(y * n + x) * 4 + 3] > 127; }
+    var best = null, DIR = 16, x, y, a, r;
+    for (y = pad; y < n - pad; y += 2) for (x = pad; x < n - pad; x += 2){ if (!ink(x, y)) continue; var m = 1e9;
+      for (a = 0; a < DIR && m > (best ? best[2] : 0); a++){ var cx = Math.cos(a * 6.2831853 / DIR), sy = Math.sin(a * 6.2831853 / DIR); for (r = 1; r < m; r++) if (!ink(Math.round(x + cx * r), Math.round(y + sy * r))) break; m = Math.min(m, r); }
+      if (!best || m > best[2]) best = [x, y, m]; }
+    return best ? [(best[0] - pad) / k, (best[1] - by) / k, best[2] / k] : null;
+  }
+  function zfMeasure(f){
+    var stg = qs('.stg', f.el), hi = qs('.sn-mask .sn-hi', f.el); if (!stg || !hi || getComputedStyle(f.cv).display === 'none') return null;
+    var sr = stg.getBoundingClientRect(), cs = getComputedStyle(hi), fpx = parseFloat(cs.fontSize), font = cs.fontStyle + ' ' + cs.fontWeight + ' ' + cs.fontSize + ' ' + cs.fontFamily, up = cs.textTransform === 'uppercase';
+    /* the first line's baseline, from a probe; the other lines stand as far below it as their boxes do */
+    var pr = document.createElement('span'); pr.style.cssText = 'display:inline-block;width:0;height:0'; hi.insertBefore(pr, hi.firstChild); var b1 = pr.getBoundingClientRect().bottom - sr.top; hi.removeChild(pr);
+    var ch = [], tw = document.createTreeWalker(hi, NodeFilter.SHOW_TEXT), nd, rg = document.createRange(), t1 = null, top = 1e9, bot = -1e9, i;
+    while ((nd = tw.nextNode())) for (i = 0; i < nd.nodeValue.length; i++){ var c = nd.nodeValue.charAt(i); if (/\s/.test(c)) continue; rg.setStart(nd, i); rg.setEnd(nd, i + 1); var r = rg.getBoundingClientRect(); if (!r.width) continue;
+      if (t1 === null) t1 = r.top; var y = b1 + (r.top - t1); ch.push({c: up ? c.toUpperCase() : c, x: r.left - sr.left, y: y, l1: Math.abs(r.top - t1) < 2}); top = Math.min(top, y - fpx * .75); bot = Math.max(bot, y); }
+    if (!ch.length) return null;
+    /* where to fly in: the ink of the first word that needs the least growth to fill the screen */
+    var best = null, seen = {};
+    ch.forEach(function(o){ if (!o.l1) return; var k = seen[o.c] || (seen[o.c] = zfInk(o.c, font, fpx)); if (!k) return; var ox = o.x + k[0], oy = o.y + k[1];
+      var far = Math.sqrt(Math.pow(Math.max(ox, W - ox), 2) + Math.pow(Math.max(oy, H - oy), 2)), S = far / Math.max(1, k[2] - .75) * 1.1; if (!best || S < best.S) best = {ox: ox, oy: oy, S: S}; });
+    if (!best) return null;
+    return {ch: ch, font: font, ox: best.ox, oy: best.oy, S: best.S, cy: (top + bot) / 2, bh: bot - top, full: qs('.sn-full', f.el), kick: qs('.sn-k', f.el), mask: qs('.sn-mask', f.el), ko: -1, pk: ''};
+  }
+  function zfDraw(f, q, t){
+    if (!ZF.ready) return;
+    if (!f.zm){ f.zm = zfMeasure(f) || {off: 1, mask: qs('.sn-mask', f.el)}; f.el.classList.toggle('zon', !f.zm.off); f.el.classList.toggle('zx', !!f.zm.off); if (!ZF.t0) ZF.t0 = q > .05 || reduced ? t - 9 : t; }
+    var Z = f.zm, i;
+    if (Z.off){ if (Z.mask){ var mo = (1 - sg(q, .55, 1.35)).toFixed(3); if (Z.mo !== mo){ Z.mo = mo; Z.mask.style.opacity = mo; } } return; }
+    var tE = t - ZF.t0, e = c01((q - .04) / .96), s = Math.exp(Math.log(Z.S) * Math.pow(e, 1.45));
+    /* the photograph: it settles as the page arrives and gives a little against the pointer */
+    if (Z.full && !reduced){ ZF.px += (ZF.tx - ZF.px) * .05; ZF.py += (ZF.ty - ZF.py) * .05; var k = 1 - e, sc = 1.04 + .05 * (1 - eo(sg(tE, 0, 3.2))), pk = (-ZF.px * 30 * U * k).toFixed(1) + ',' + (-ZF.py * 20 * U * k).toFixed(1) + ',' + sc.toFixed(4);
+      if (pk !== Z.pk){ Z.pk = pk; var pp = pk.split(','); Z.full.style.transform = 'translate3d(' + pp[0] + 'px,' + pp[1] + 'px,0) scale(' + pp[2] + ')'; } }
+    /* the page's name: it comes after the letters, leaves as the flight begins, and is back with the white title */
+    var ko = Math.max(sg(tE, 1.9, 2.6) * (1 - sg(q, .02, .15)), sg(q, 1.05, 1.45)); ko = Math.round(ko * 1000) / 1000;
+    if (Z.kick && ko !== Z.ko){ Z.ko = ko; Z.kick.style.opacity = ko; }
+    if (e >= 1) return;   /* flown through: the photograph whole */
+    var full = Z.bh / 2 + 24 * U, hh = lerp(.75, full, eio(sg(tE, .7, 2.1))), hw = W / 2 * eo(sg(tE, .15, .9)), la = 1 - sg(tE, .9, 1.6);
+    g.fillStyle = '#000'; g.fillRect(0, 0, W, H);
+    g.save(); g.translate(Z.ox, Z.oy); g.scale(s, s); g.translate(-Z.ox, -Z.oy);
+    if (hh < full){ g.beginPath(); g.rect(-10, Z.cy - hh, W + 20, hh * 2); g.clip(); }
+    g.fillStyle = '#FFFFFF'; g.font = Z.font; g.textBaseline = 'alphabetic'; g.textAlign = 'left';
+    for (i = 0; i < Z.ch.length; i++) g.fillText(Z.ch[i].c, Z.ch[i].x, Z.ch[i].y);
+    g.restore();
+    if (la > 0 && hw > 0 && e <= 0){ g.fillStyle = 'rgba(255,255,255,' + la.toFixed(3) + ')'; g.fillRect(W / 2 - hw, Math.round(Z.cy) - .75, hw * 2, 1.5); }
   }
   var FIG = {cover: cover, steps: steps, scene: scene, key: key};
 

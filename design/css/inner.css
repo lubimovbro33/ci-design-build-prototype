@@ -296,6 +296,16 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
 .sn-strip{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform}
 /* Portfolio: the photograph is seen through the letters, then whole */
 .sn-mask{position:absolute;left:0;top:0;width:100%;height:100%;background:#000;mix-blend-mode:multiply;z-index:3}
+/* the cover flown through (Portfolio, 15.11 20:25). The picture of the letters — black, the letters white, multiplied over the photograph — is drawn
+   on the film's canvas (inner.js, zfDraw): it opens out of the site's line as the page arrives, and the scroll flies into a stroke of the first
+   word until the photograph is whole. The markup's own mask and title stay for measuring, for readers, and as the fallback (.zx) */
+@media not all and (max-aspect-ratio: 1/1){
+  .film.zf .ln{z-index:3;mix-blend-mode:multiply}
+  .film.zf .sn-mask .sn-hi, .film.zf .sn-k .sn-hi{animation:none}
+  .zfjs .film.zf .sn-mask .sn-h, .zfjs .film.zf .sn-k{opacity:0}
+  .film.zf.zon .sn-mask{visibility:hidden}
+  .film.zf.zx .sn-mask .sn-h, .film.zf.zx .sn-k{opacity:1}
+}
 /* steps as cells: a blue square, the name on a hairline, its line under it */
 .stps{display:grid;grid-template-columns:repeat(var(--n, 4), minmax(0,1fr));column-gap:calc(25 * var(--u));row-gap:calc(100 * var(--u));margin-left:calc(421 * var(--u));margin-right:calc(50 * var(--u))}
 .stp{border-top:1px solid rgba(255,255,255,.3);padding-top:calc(25 * var(--u))}
