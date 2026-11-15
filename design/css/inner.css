@@ -160,10 +160,11 @@ html body.inr .iv-p{margin-top:calc(90 * var(--u));white-space:nowrap}
 .wl-i{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform}
 .wl-i img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
 .wl-sh{position:absolute;left:0;top:0;width:100%;height:100%;background:#000;opacity:.28;pointer-events:none}
+.wl-g{position:absolute;left:0;right:0;bottom:0;height:62%;background:linear-gradient(to bottom, rgba(0,0,0,0), rgba(0,0,0,.94));opacity:0;pointer-events:none}   /* trial «Стіна»: the foot of the photograph goes into the wall before the frame's edge passes the name */
 @keyframes wlWin{ from{clip-path:inset(34% 38% 34% 38%)} to{clip-path:inset(0 0 0 0)} }
 .wl-x{position:absolute;visibility:hidden;pointer-events:none;left:calc(50 * var(--u));top:calc(150 * var(--u));width:calc((100% - 244 * var(--u)) / 2 + 48 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 2 * .856 * max(38px, 111 * var(--u)) + 30 * var(--u) + 1.136 * max(10px, 14 * var(--u)) + 56 * var(--u))}
-.wl-h{position:absolute;left:calc(50 * var(--u));bottom:max(50 * var(--u), 58px);margin:0;color:#FFFFFF;white-space:nowrap;z-index:4;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.6s both}
-.wl-k{position:absolute;left:calc(50 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 2 * .856 * max(38px, 111 * var(--u)) + 30 * var(--u));margin:0;z-index:4;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.6s both}
+.wl-h{position:absolute;left:calc(50 * var(--u));bottom:max(50 * var(--u), 58px);margin:0;color:#FFFFFF;white-space:nowrap;z-index:4;will-change:opacity,transform;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.6s backwards}
+.wl-k{position:absolute;left:calc(50 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 2 * .856 * max(38px, 111 * var(--u)) + 30 * var(--u));margin:0;z-index:4;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.6s backwards}
 html body.inr .wl-s{position:absolute;right:calc(50 * var(--u));bottom:max(50 * var(--u), 58px);margin:0;max-width:calc(431 * var(--u));z-index:4}
 .wl-s > span{display:inline-block;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.8s both}
 .wl-t{position:absolute;z-index:1;left:calc((100% - 244 * var(--u)) / 2 + 146 * var(--u));width:calc((100% - 244 * var(--u)) / 4);top:calc(150 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 2 * .856 * max(38px, 111 * var(--u)) + 30 * var(--u) + 1.136 * max(10px, 14 * var(--u)) + 56 * var(--u));display:flex;flex-direction:column;justify-content:flex-end}

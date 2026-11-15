@@ -293,7 +293,7 @@ def project_collection(p, nxt):
     scope = [x for x in dl if x[0] == 'Scope'][0]; items = known['Scope'].split(' / ') if 'Scope' in known else [' '.join(scope[1])]
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
     pg.add('<section class="film wl" data-fig="wall" data-len="1.7" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
-           '    <div class="wl-p"><div class="wl-i"><img src="%s" alt="%s"></div><i class="wl-sh"></i></div>\n    <i class="wl-x" aria-hidden="true"></i>\n'
+           '    <div class="wl-p"><div class="wl-i"><img src="%s" alt="%s"></div><i class="wl-sh"></i><i class="wl-g"></i></div>\n    <i class="wl-x" aria-hidden="true"></i>\n'
            '    <p class="lab3 wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n'
            '    <div class="wl-t">\n      <p class="lab3 wl-e">%s</p>\n      <h2 class="wl-b">%s</h2>\n      <dl class="wl-dl">%s</dl>\n    </div>\n  </div>\n</section>'
            % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), esc(' '.join(get(S[0], 'lead')[0][1])), esc(label(sec)), esc(nop(h_of(sec))), rows), 'Project', 'top')
