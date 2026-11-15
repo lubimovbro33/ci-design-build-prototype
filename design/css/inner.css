@@ -41,6 +41,10 @@ body.inr .hdr{opacity:1}
 .film .p-ur{left:calc(1440 * var(--u));top:calc(50% + 50 * var(--u))}
 .film .p-bm{left:calc(960 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .film .p-ar{left:calc(1440 * var(--u));bottom:calc(50% + 50 * var(--u))}
+/* a scene with a figure in the middle (her corner principle, 15.11): the title top left, under the logo; the text bottom right */
+.film .p-ctl{left:calc(50 * var(--u));top:calc(155 * var(--u))}
+.film .p-cbr{right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);text-align:left}
+.vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .film .t20.m p + p, .film .t20s.m p + p{margin-top:.9em}
 .film .t20s{font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#FFFFFF}
 /* the cover: the homepage's hero title, on the photograph */
@@ -161,11 +165,6 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .hd2 > h2{grid-column:1 / span 2;color:#FFFFFF}
 .hd2 > p, .hd2 > .chips{grid-column:3 / span 2}
 .hd2.w1 > h2{grid-column:1} .hd2.w1 > .chips{grid-column:2 / span 3}
-/* TEMPORARY (15.11 19:00): the six steps as one quiet sentence, until the block's own figure is drawn */
-html body.inr .mf6{margin:calc(150 * var(--u)) calc(50 * var(--u)) 0 calc(50% + 24 * var(--u) - 2 * calc(14 * var(--u)) - max(5px, calc(8 * var(--u))));color:#FFFFFF}
-.inr .mf6.sqm{--sg:calc(14 * var(--u));display:flex;flex-wrap:wrap;row-gap:calc(10 * var(--u));margin-left:calc(50% + 24 * var(--u) - var(--ss));clip-path:inset(0 0 0 var(--ss))}
-.inr .mf6.sqm{--sw:max(5px, calc(8 * var(--u)));--ss:calc(2 * var(--sg) + var(--sw))}
-html body.inr .mf6-c{margin:calc(100 * var(--u)) calc(50 * var(--u)) 0 calc(50% + 24 * var(--u))}
 /* the library as an index on the same four columns, no rules: two entries to a row — the name in the first and third column, its small caps in the
    second and fourth, on one baseline; the name turns to its inverse under the pointer */
 .ix2{display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(50 * var(--u));margin:calc(150 * var(--u)) calc(50 * var(--u)) 0}
@@ -318,6 +317,12 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .film .pic{position:relative;height:100vh;height:100svh;clip-path:none!important}
   .film .sc{position:relative;height:auto;padding:0 var(--m, 20px) 72px;pointer-events:auto}
   .film[data-fig="steps"] .sc{padding-top:72px}
+  /* the figure "life" stands in the flow and draws itself: the title, the text, the figure, the closing thought */
+  .film[data-fig="life"] .stg{display:flex;flex-direction:column;padding:0 0 72px}
+  .film[data-fig="life"] .sc{display:contents}
+  .film[data-fig="life"] .ln{display:block;position:relative;width:100%;height:96vw;order:3;margin-top:12px}
+  .film[data-fig="life"] .m{margin-left:var(--m, 20px);margin-right:var(--m, 20px)}
+  .film[data-fig="life"] h2.m{order:1} .film[data-fig="life"] .m.t20{order:2;margin-top:24px} .film[data-fig="life"] .m.t34{order:4;margin-top:12px}
   .film .m{position:static!important;visibility:visible!important;opacity:1!important;transform:none!important;filter:none!important;width:auto!important;white-space:normal!important}
   .film .m .w{opacity:1!important;transform:none!important;filter:none!important}
   .film .m{margin-top:20px}
@@ -341,8 +346,6 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .pf6 .cd.big{grid-row:auto} .pf6 .cd .im, .pf6 .cd.big .im{aspect-ratio:4 / 5;flex:none}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
   .hd2{display:block;margin:0 var(--m, 20px)} html body.inr .hd2 > p, .hd2 > .chips{margin-top:24px}
-  html body.inr .mf6.sqm{margin:44px var(--m, 20px) 0 calc(var(--m, 20px) - var(--ss))}
-  html body.inr .mf6-c{margin:40px var(--m, 20px) 0}
   .ix2{column-gap:12px;row-gap:28px;margin:44px var(--m, 20px) 0} .ix2 a{display:block} .ix2 .mt{margin-top:8px} .ix2 .lc + .lc{margin-top:4px}
   .fin.gr{height:auto;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(var(--hdr, 64px) + 40px) var(--m, 20px) 72px;box-sizing:border-box}
   .fin.gr::before, .fin.gr::after{display:none}

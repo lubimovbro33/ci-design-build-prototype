@@ -185,20 +185,23 @@ def portfolio():
     BIG = {'Collectors Home', 'Urban Sanctuary'}
     cards = [pf6_card(nm, lc.split(' · ') + [bd], im, hr, big=nm in BIG, ext=im.startswith('http')) for nm, lc, bd, sz, hr, tg, im in LIB]
     pg.add(bk(h_of(S[1]), '    <div class="pf6">%s</div>' % ''.join(cards), hcls=' l0', lines=['Signature', 'CI Residences']), 'Projects')
-    # Every Home Unique — her note 15.11 18:45 on this block and the next («дуже одноманітно: там лінії, там лінії… цікавіше і акуратніше»): no ruled rows.
-    # The title on the left field, the thought in the running text on the right half; the six steps stand as a poster in the cover's letters (111, bold):
-    # a step to a line, the verb white, its adverb blue — so the block's title (60) and the steps are never two headings of one style; the closing thought
-    # on the right half.
+    # Every Home Unique — her notes of 15.11: 18:45 («дуже одноманітно: там лінії, там лінії») and 18:59 («не просто забрати лінії… думай метафорично»).
+    # The block is a figure, not a list (film "life" in inner.js): at the centre a life — a closed line that is never the same twice; around it six
+    # contours of the one pen, a step of the process each, named on the line itself; the innermost is the life (Discover deeply), the outermost is
+    # the home (Deliver completely). The home changes with the life, the six steps stay — «Every Home Unique. One CI Standard». The scene follows her
+    # corner principle: the figure in the middle, the title top left (under the logo), the text bottom right in the running 20; at the end the closing
+    # thought takes the text's place. The steps stand in the page as a list for readers that do not draw (and for the copy check).
     sec = S[2]; rows = get(sec, 'row'); ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; out = get(sec, 'lead')
-    def step(t):
-        w = nop(t).split(' ', 1); return '<span>%s <span class="cb">%s</span></span>' % (esc(w[0]), esc(w[1]))
-    st6 = [step(r[1]) for r in rows]; assert len(st6) == 6, rows
-    lead = '%s<br class="bd"> %s<br class="bd"> <span class="cb">%s</span>' % (esc('Every residence speaks its own architectural language,'), esc('because every client lives differently.'), esc(nop(ps_[1])))
+    assert nop(h_of(sec)) == 'Every Home Unique. One CI Standard', h_of(sec)
     assert nop(ps_[0]) == 'Every residence speaks its own architectural language, because every client lives differently', ps_[0]
     cl = nop(out[0][1][0]); assert cl == 'The result feels effortless, as if your home could only ever have been yours', cl
-    pg.add('<section class="bk" id="@ID@">\n  <div class="hd2">\n    <h2 class="t60 rv">Every Home Unique.<br>One CI Standard</h2>\n    <p class="t20 rv">%s</p>\n  </div>\n'
-           '  <p class="t34 mf6 sqm rv">%s</p>\n  <p class="t34 mf6-c rv"><span class="cb">The result feels effortless,<br class="bd"> as if your home could only<br class="bd"> ever have been yours</span></p>\n</section>' % (lead, ''.join(st6)), 'Approach')
-    assert nop(h_of(sec)) == 'Every Home Unique. One CI Standard', h_of(sec)
+    st6 = [nop(r[1]) for r in rows]; assert len(st6) == 6 and all(len(x.split(' ')) == 2 for x in st6), st6
+    lead = '%s<br class="bd"> %s<br class="bd"> <span class="cb">%s</span>' % (esc('Every residence speaks its own architectural language,'), esc('because every client lives differently.'), esc(nop(ps_[1])))
+    pg.add('<section class="film" data-fig="life" data-len="4" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
+           '      <h2 class="t60 m p-ctl" data-k="-1 -.5 99 99">Every Home Unique.<br>One CI Standard</h2>\n'
+           '      <p class="t20 m p-cbr" data-k="-1 -.5 2.85 3.0">%s</p>\n'
+           '      <p class="t34 m p-cbr" data-k="3.05 3.35 99 99">The result feels effortless,<br class="bd"> <span class="cb">as if your home could only<br class="bd"> ever have been yours</span></p>\n'
+           '      <ol class="vh" data-life>%s</ol>\n    </div>\n  </div>\n</section>' % (lead, ''.join('<li>%s</li>' % esc(x) for x in st6)), 'Approach')
     # Explore the Work — the library as an index on the same four columns, no rules: two entries to a row, each a name (first and third column) and its
     # small caps (second and fourth); ten projects stand as five full rows. The filters beside the title
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']
