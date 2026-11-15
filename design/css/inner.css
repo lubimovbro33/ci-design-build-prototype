@@ -138,6 +138,22 @@ html body.inr .bk .c3{margin-left:calc(1440 * var(--u))}
 .cd:hover .im img{transform:scale(1.04)}
 .cd .nm{display:block;margin-top:calc(25 * var(--u))}
 .cd .lc{display:block;margin-top:calc(10 * var(--u))}
+/* how a card arrives (15.11 20:37, her word: «топорна анімація на карточці… чи є на головній вже рішення»): the way the homepage's Projects photographs
+   do (.pj4-im) — the photograph opens out of a small window while the picture inside settles from a larger scale, the same curve; the caption comes
+   after it. The card itself neither fades nor rises. Three cards of a row open one after another. (Fill «backwards», so the pointer's own zoom
+   is free once a card has opened.) */
+.cd.rv{opacity:1;transform:none;transition:none}
+.cd.rv:nth-child(3n+2){--cdl:.12s} .cd.rv:nth-child(3n){--cdl:.24s}
+.cd.rv .im{visibility:hidden}
+.cd.rv.in .im{visibility:visible;animation:cdWin 1.3s cubic-bezier(.83,0,.17,1) var(--cdl, 0s) backwards}
+.cd.rv.in .im img{animation:cdImg 1.3s cubic-bezier(.83,0,.17,1) var(--cdl, 0s) backwards}
+.cd.rv .nm, .cd.rv .lc{opacity:0;transform:translateY(calc(14 * var(--u)));transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1)}
+.cd.rv.in .nm{opacity:1;transform:none;transition-delay:calc(var(--cdl, 0s) + .6s)}
+.cd.rv.in .lc{opacity:1;transform:none;transition-delay:calc(var(--cdl, 0s) + .72s)}
+@keyframes cdWin{ from{clip-path:inset(37% 34% 37% 34%)} to{clip-path:inset(0 0 0 0)} }
+@keyframes cdImg{ from{transform:scale(1.22)} to{transform:none} }
+.lite .cd.rv .im{visibility:visible;animation:none} .lite .cd.rv .im img{animation:none} .lite .cd.rv .nm, .lite .cd.rv .lc{opacity:1;transform:none;transition:none}
+@media (prefers-reduced-motion: reduce){ .cd.rv .im{visibility:visible;animation:none!important} .cd.rv .im img{animation:none!important} .cd.rv .nm, .cd.rv .lc{opacity:1;transform:none;transition:none} }
 /* the portfolio: two columns of their own height, the right one a step lower */
 .pf{display:flex;gap:calc(49 * var(--u));margin-left:calc(421 * var(--u));align-items:flex-start}
 .pf-c{width:calc(700 * var(--u));display:flex;flex-direction:column;gap:calc(100 * var(--u))}
