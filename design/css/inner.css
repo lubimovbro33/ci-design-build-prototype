@@ -222,8 +222,11 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
 .sn-h.l3{top:calc(100% * 372 / 1080)} .sn-h.l4{top:calc(100% * 325 / 1080)}
 .sn-k{position:absolute;left:calc(421 * var(--u));top:calc(100% * 420 / 1080 - 50 * var(--u));z-index:4}
 .sn-k.l3{top:calc(100% * 372 / 1080 - 50 * var(--u))} .sn-k.l4{top:calc(100% * 325 / 1080 - 50 * var(--u))}
-/* 15.11 17:18, her frame «01 Cover · 1» of the Portfolio export: the title stands in the bottom left corner as a narrow column of its own lines
-   (one field from the left edge and from the foot), the page's name one step (30) above it */
+/* 15.11 17:56, her frame «01 Cover · 1» of the Portfolio export: the title is centred — in the middle of the screen, its lines centred —
+   and the page's name stands centred one step (30) above it. --ln = the number of the title's lines. (.bl: her frame of 17:18, a column
+   in the bottom left corner — kept for the builder's place='bl') */
+.sn-h.cc{left:0;right:0;text-align:center;top:calc(50% - var(--ln, 3) * .428 * max(38px, 111 * var(--u)))}
+.sn-k.cc{left:0;right:0;text-align:center;top:calc(50% - var(--ln, 3) * .428 * max(38px, 111 * var(--u)) - 30 * var(--u) - 1.136em)}
 .sn-h.bl{left:calc(50 * var(--u));top:auto;bottom:max(calc(50 * var(--u)), 50px)}
 .sn-k.bl{left:calc(50 * var(--u));top:auto;bottom:calc(max(50 * var(--u), 50px) + var(--ln, 6) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
 .sn-hi{display:block;animation:cvIn 1.7s cubic-bezier(.16,1,.3,1) .25s both}
@@ -301,7 +304,9 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .film[data-fig="scene"] .stg{min-height:100vh;min-height:100svh}
   .film[data-fig="scene"]:not(.trk) .stg{height:100vh;height:100svh;overflow:hidden}
   .sn-h, .sn-k, .sn-lead{left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
-  .sn-h.bl, .sn-k.bl{left:var(--m, 20px)}
+  .sn-h.bl, .sn-k.bl{left:var(--m, 20px)} .sn-h.cc, .sn-k.cc{left:var(--m, 20px);right:var(--m, 20px)}
+  html body .sn-h.cc{font-size:7.9vw!important;white-space:nowrap;top:calc(50% - var(--ln, 3) * .428 * 7.9vw)}   /* phones: the centred title keeps its own lines, set to the width */
+  .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 7.9vw - 14px - 1.136em)}
   .sn-col{width:calc(25vw - 6px)!important;left:calc(var(--i) * 25vw + 3px)!important;top:62%;transform:none!important}
   .sn-col .nm{font-size:10px;left:8px;top:8px}
   .sn-full, .sn-strip, .sn-img, .sn-full img, .sn-strip img, .sn-img img{transform:none!important}

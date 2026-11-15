@@ -263,16 +263,16 @@ def sc_triptych(kick, h1, imgs):
 def sc_dawn(kick, h1, img):
     """Wellness: the picture comes out of the dark into the light"""
     return '\n'.join([sn_open(1.5), '    <div class="sn-full"><img src="%s" alt="" data-s="br:.1>.8@0-1.25;sc:1.1>1@0-1.25" style="filter:contrast(1.04) brightness(.1)"></div>' % img, sn_title(h1, kick), SN_CLOSE])
-def sc_letters(kick, h1, img, lines=None):
+def sc_letters(kick, h1, img, lines=None, place='cc'):
     """Portfolio: the photograph is seen through the letters of the title, then whole.
-    lines: the title set in its own lines as a column in the bottom left corner, the page's name one step above it
-    (her frame «01 Cover · 1» of the Portfolio export, 15.11)"""
+    lines: the title set in its own lines; place: 'cc' — centred in the middle of the screen, the page's name centred one step above it
+    (her frame «01 Cover · 1» of the Portfolio export, 15.11 17:56); 'bl' — a column in the bottom left corner (her frame of 17:18)"""
     if lines:
         assert ' '.join(lines) == nop(h1), (lines, h1)
         hb = '<br>'.join(esc(x) for x in lines); n = len(lines)
-        t = '    <h1 style="color:#FFFFFF" class="t111 sn-h bl"><span class="sn-hi">%s</span></h1>' % hb
-        dup = '    <p class="t111 sn-h bl" data-s="op:0>1@.75-1.35" style="opacity:0" aria-hidden="true"><span class="sn-hi">%s</span></p>' % hb
-        kk = '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick))
+        t = '    <h1 style="color:#FFFFFF;--ln:%d" class="t111 sn-h %s"><span class="sn-hi">%s</span></h1>' % (n, place, hb)
+        dup = '    <p class="t111 sn-h %s" data-s="op:0>1@.75-1.35" style="opacity:0;--ln:%d" aria-hidden="true"><span class="sn-hi">%s</span></p>' % (place, n, hb)
+        kk = '    <p class="lab3 sn-k %s" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (place, n, esc(kick))
     else:
         t = sn_title(h1, None).replace('<h1 ', '<h1 style="color:#FFFFFF" ')
         dup = sn_title(h1, None, scrub='op:0>1@.75-1.35', style='opacity:0', hidden=True)
