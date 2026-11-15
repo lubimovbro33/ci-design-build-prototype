@@ -44,6 +44,9 @@ body.inr .hdr{opacity:1}
 /* a scene with a figure in the middle (her corner principle, 15.11): the title top left, under the logo; the text bottom right */
 .film .p-ctl{left:calc(50 * var(--u));top:calc(155 * var(--u))}
 .film .p-cbr{right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);text-align:left}
+/* a scene set on the centre (the key, 15.11 20:11): the title centred at the top, the text centred at the foot */
+.film .p-ct{left:0;right:0;top:calc(155 * var(--u));text-align:center}
+.film .p-cb{left:0;right:0;bottom:max(calc(50 * var(--u)), 58px);text-align:center}
 .vh{position:absolute!important;width:1px;height:1px;margin:-1px;padding:0;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
 .film .t20.m p + p, .film .t20s.m p + p{margin-top:.9em}
 .film .t20s{font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#FFFFFF}
