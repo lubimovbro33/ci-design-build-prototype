@@ -317,18 +317,22 @@
        into two that overlap — "we own everything in between" stands in the overlap — then a smaller circle draws at each end;
        squares mark where the circles meet the line. Units: 1/1920 of the width, origin at the middle of the line. */
     var gC = el('g', {'class': 'ab-circ'}, svg);
-    /* her stroke paint (Figma 441:6745…): linear, paint opacity .33, stops 0 → alpha 1, .514 → alpha .43, transform .915 / −.024:
-       33 % at the edge that faces the middle of the screen, falling to 14 % at 59 % of the width, 14 % beyond. The circles are
-       drawn turned by ±90° (so the stroke starts at the top), hence the gradient runs along their local y. */
-    [['abCgA', .0262, 1.1191], ['abCgB', .9738, -.1191]].forEach(function(q){ var g = el('linearGradient', {id: q[0], x1: 0, x2: 0, y1: q[1], y2: q[2]}, defs);
-      el('stop', {offset: 0, 'stop-color': '#FFFFFF', 'stop-opacity': .33}, g); el('stop', {offset: .514, 'stop-color': '#FFFFFF', 'stop-opacity': .142}, g); el('stop', {offset: 1, 'stop-color': '#FFFFFF', 'stop-opacity': .142}, g); });
-    var lgr = el('linearGradient', {id: 'abLg', gradientUnits: 'userSpaceOnUse', x1: -1020, y1: 0, x2: 1020, y2: 0}, defs); el('stop', {offset: 0, 'stop-color': '#FFFFFF', 'stop-opacity': .1}, lgr); el('stop', {offset: .5, 'stop-color': '#FFFFFF', 'stop-opacity': .33}, lgr); el('stop', {offset: 1, 'stop-color': '#FFFFFF', 'stop-opacity': .1}, lgr);
-    var cLine = el('path', {d: 'M0 0H0', 'class': 'cl'}, gC), R1 = 245, R2 = 129, DX = 169, EX = 781;
-    var mkC = function(r){ return el('circle', {r: r, cx: 0, cy: 0, 'class': 'cc', pathLength: 1, transform: 'rotate(-90)'}, gC); };
-    var cA = mkC(R1), cB = mkC(R1), cS1 = mkC(R2), cS2 = mkC(R2);
-    cA.style.stroke = 'url(#abCgB)'; [cB, cS1, cS2].forEach(function(c){ c.style.stroke = 'url(#abCgA)'; });   /* each one brighter towards the middle */
-    cS1.setAttribute('transform', 'translate(' + (-EX) + ' 0) rotate(90)'); cS2.setAttribute('transform', 'translate(' + EX + ' 0) rotate(-90)');
-    var cQ = [-(EX - R2), -(DX + R1), DX + R1, EX - R2].map(function(x){ return el('rect', {x: x - 4, y: -4, width: 8, height: 8, 'class': 'cq', opacity: 0}, gC); });
+    /* 15.11 13:40 (her note with a screenshot of this scene: the lines here are in another style — one style everywhere, and it must
+       come in softly, not crudely). It was her own paint of 13.11 — a 1 px stroke under a 33 % → 14 % gradient, drawn on by a dash.
+       Now the page's one pen: white, 1.5 px, the line and every circle; white squares. Nothing is revealed by a dash any more — as on
+       About (and in Process) a circle grows out of a point on the line, the square that marks where it meets the line rides its edge.
+       Under the words the lines dissolve softly (a feathered mask that follows the words' opacity), so no line strikes through the type. */
+    var mGr = el('radialGradient', {id: 'abCmG'}, defs); el('stop', {offset: 0, 'stop-color': '#000', 'stop-opacity': 1}, mGr); el('stop', {offset: .6, 'stop-color': '#000', 'stop-opacity': 1}, mGr); el('stop', {offset: 1, 'stop-color': '#000', 'stop-opacity': 0}, mGr);
+    var mGp = el('radialGradient', {id: 'abCmGp'}, defs); el('stop', {offset: 0, 'stop-color': '#000', 'stop-opacity': 1}, mGp); el('stop', {offset: .86, 'stop-color': '#000', 'stop-opacity': 1}, mGp); el('stop', {offset: 1, 'stop-color': '#000', 'stop-opacity': 0}, mGp);   /* phones: a short feather */
+    var mk = el('mask', {id: 'abCm', maskUnits: 'userSpaceOnUse', x: -6000, y: -3000, width: 12000, height: 6000}, defs);
+    el('rect', {x: -6000, y: -3000, width: 12000, height: 6000, fill: '#FFFFFF'}, mk);
+    var mEl = el('ellipse', {cx: 0, cy: 0, rx: 280, ry: 140, fill: 'url(#abCmG)', opacity: 0}, mk);
+    var gCm = el('g', {mask: 'url(#abCm)'}, gC);
+    var cLine = el('path', {d: 'M0 0H0', 'class': 'cl'}, gCm), R1 = 245, R2 = 129, DX = 169, EX = 781;
+    var mkC = function(x){ return el('circle', {r: 0, cx: x, cy: 0, 'class': 'cc'}, gCm); };
+    var cA = mkC(0), cB = mkC(0), cS1 = mkC(-EX), cS2 = mkC(EX);
+    var cQ = [0, 1, 2, 3].map(function(){ return el('rect', {x: -4, y: -4, width: 8, height: 8, 'class': 'cq', opacity: 0}, gC); });
+    var obEl = sec.querySelector('#abOb');
     var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .2, wsBox = one && one.querySelector('.ws');
     function oneFit(){}   /* the word sits on its own centred line now: nothing to measure */
     var LY = null, last = -1, OWN_DS = 1;
@@ -362,8 +366,14 @@
       LY.t = [tx0, sc2, port ? VH * .34 : 415 * k, port ? VH * .3 : 150 * k, sc2 * k];   /* x, x-scale, y under the title, y once it has left, y-scale */
       tFit.forEach(function(t){ var x = +t.getAttribute('x') || 0; if (k < .999) t.setAttribute('transform', 'translate(' + x + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-x) + ' 0)'); else t.removeAttribute('transform'); });
       if (k < .999) svQ.setAttribute('transform', 'translate(' + f1(PW - 11 * k) + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-(PW - 11)) + ' 0)'); else svQ.removeAttribute('transform');
-      var cs = port ? VW / 1920 * .9 : k; LY.hl = Math.max(1020, VW / 2 / cs + 40); lgr.setAttribute('x1', f1(-LY.hl)); lgr.setAttribute('x2', f1(LY.hl));   /* the line bleeds off both edges, as in her frame */
+      var cs = port ? VW / 1920 * .9 : k; LY.hl = Math.max(1020, VW / 2 / cs + 40);   /* the line bleeds off both edges, as in her frame */
       gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27 * k) + ') scale(' + cs.toFixed(4) + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
+      /* where the lines dissolve: the words' own box (their real width), with air around it; the words stand 4 above the line on a wide screen */
+      if (obEl){ var rg = document.createRange(); rg.selectNodeContents(obEl); var pxu = Math.max(.05, w / VW * cs), tw = rg.getBoundingClientRect().width / pxu, th = obEl.offsetHeight / pxu;
+        /* phones (no frame from her): the words are larger than the two circles, so the whole of their box is cleared — the line and the
+           two outer circles stay on either side of the words */
+        if (tw > 0){ mEl.setAttribute('cy', port ? 0 : -4); mEl.setAttribute('rx', f1(port ? (tw / 2 + 14 / pxu) / .86 : tw / 2 + 90)); mEl.setAttribute('ry', f1(port ? (th / 2 + 10 / pxu) / .86 : th / 2 + 62)); mEl.setAttribute('fill', port ? 'url(#abCmGp)' : 'url(#abCmG)'); } }
+      LY.port = port;
     }
     layout(); window.addEventListener('resize', function(){ layout(); oneFit(); if (last >= 0){ var q = last; last = -1; update(q); } });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ layout(); oneFit(); if (last >= 0){ var q = last; last = -1; update(q); } });   /* the title's width needs the real font */
@@ -405,15 +415,17 @@
       svG.setAttribute('opacity', sg(p, .725, .75).toFixed(2)); txt(svV, Math.round(20 * eo(ks))); txt(pctEl, Math.round(20 * eo(ks)));
       /* your decisions, our everything-in-between */
       /* r3: the closing — the line, one circle, two circles, the blue words, the outer circles */
-      var kl = eo(sg(p, .84, .885)), k0 = eo(sg(p, .86, .9)), ksp = sm(sg(p, .9, .94)), kss = eo(sg(p, .94, .98));
+      var kl = eo(sg(p, .84, .885)), k0 = sm(sg(p, .855, .905)), ksp = sm(sg(p, .9, .94)), kss = sm(sg(p, .935, .985)), kob = eo(sg(p, .915, .95));
       gC.style.opacity = sg(p, .835, .845).toFixed(3);
       cLine.setAttribute('d', 'M' + f1(-LY.hl * kl) + ' 0H' + f1(LY.hl * kl));
-      cA.style.strokeDashoffset = cB.style.strokeDashoffset = (1 - k0).toFixed(4);
-      cA.setAttribute('transform', 'translate(' + f1(-DX * ksp) + ' 0) rotate(-90)'); cB.setAttribute('transform', 'translate(' + f1(DX * ksp) + ' 0) rotate(-90)');
+      var rA = R1 * k0, rS = R2 * kss, dx = DX * ksp;   /* one circle grows from the middle of the line, comes apart into two; then a smaller one grows at each end */
+      cA.setAttribute('r', rA.toFixed(2)); cB.setAttribute('r', rA.toFixed(2)); cA.setAttribute('cx', f1(-dx)); cB.setAttribute('cx', f1(dx));
       cB.style.opacity = ksp > 0 ? 1 : 0;
-      cS1.style.strokeDashoffset = cS2.style.strokeDashoffset = (1 - kss).toFixed(4);
-      cQ.forEach(function(q, i){ var inner = i === 1 || i === 2; q.setAttribute('opacity', (inner ? sg(p, .93, .95) : sg(p, .965, .985)).toFixed(2)); });
-      stage.style.setProperty('--ob', eo(sg(p, .915, .95)).toFixed(3));
+      cS1.setAttribute('r', rS.toFixed(2)); cS2.setAttribute('r', rS.toFixed(2));
+      var qi = LY.port ? sg(k0, .15, .55) * (1 - kob) : sg(k0, .15, .55), qx = [-(EX - rS), -(dx + rA), dx + rA, EX - rS], qo = [sg(kss, .15, .55), qi, qi, sg(kss, .15, .55)];
+      cQ.forEach(function(q, i){ q.setAttribute('x', f1(qx[i] - 4)); q.setAttribute('opacity', qo[i].toFixed(2)); });
+      mEl.setAttribute('opacity', kob.toFixed(3));
+      stage.style.setProperty('--ob', kob.toFixed(3));
       var km = sg(p, .82, .88); gO.style.opacity = sg(p, .81, .84).toFixed(3); own.style.strokeDashoffset = ((1 - km) * OWN_DS).toFixed(3);
       dots.forEach(function(d, i){ d.style.opacity = sg(p, .83 + i * .014, .85 + i * .014).toFixed(3); });
       hat.forEach(function(h, i){ var w = f1(h.w * eo(sg(p, .87 + i * .018, .93 + i * .018))); if (h.cw !== w){ h.cw = w; h.e.setAttribute('width', w); } });
