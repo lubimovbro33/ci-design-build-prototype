@@ -423,6 +423,14 @@ def cta(title, paras, button, img, pos=None, top=False, g=None):
     return '<section class="fin%s" id="@ID@">\n  <img src="%s" alt="" loading="lazy"%s>\n  <div class="fin-in">\n    <h2 class="t60 rv">%s</h2>%s\n    <div class="rv">%s</div>\n  </div>\n</section>' % (
         ' top' if top else '', img, ' style="%s"' % st if st else '', brk(title, 30), t, btn(button[0], button[1]))
 
+def cta_grid(title_lines, paras, button, img, pos=None, g=None):
+    """the closing block on the home hero's cross of rules (her frame «09 CTA» of the Portfolio export, 15.11): the title in a column in the lower
+    right quarter, the button at its foot, the two thoughts in the running text on the right, their foot on the title's foot"""
+    st = ';'.join(x for x in ['object-position:%s' % pos if pos else '', 'filter:contrast(1.04) brightness(%s)' % g if g else ''] if x)
+    ps = ''.join('<p class="t20 rv%s">%s</p>' % (' cb' if i else '', '<br class="bd"> '.join(esc(nop(x)) if j == len(p) - 1 else esc(x) for j, x in enumerate(p))) for i, p in enumerate(paras))
+    return ('<section class="fin gr" id="@ID@">\n  <img src="%s" alt="" loading="lazy"%s>\n  <h2 class="t60 rv fg-h">%s</h2>\n  <div class="fg-t">%s</div>\n  <div class="rv fg-b">%s</div>\n</section>'
+            % (img, ' style="%s"' % st if st else '', '<br>'.join(esc(x) for x in title_lines), ps, btn(button[0], button[1])))
+
 # ------------------------------------------------------------------ generic section → block
 RAIL = {'What You Receive': 'Receive', 'The Turnkey Experience': 'Experience', "What's Included": 'Included', 'Our Responsibility': 'One Team', 'Client Testimonial': None,
         'Build a Better Life': 'Contact', 'Final CTA': 'Contact', 'Final Statement': 'Contact', 'Why Choose CI Curated?': 'Why', 'What CI Wellness Is': 'Idea',
