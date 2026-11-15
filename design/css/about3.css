@@ -92,7 +92,11 @@ body.ab3 .hdr{opacity:1}
 @keyframes cvPh{ from{transform:scale(1.07)} to{transform:scale(1)} }
 
 /* ---------- 04 the thought inside the circle */
-.sc .p-rgc{right:calc(80 * var(--u));width:calc(800 * var(--u));top:calc(50% - 30 * var(--u));text-align:center}
+.sc .p-rgc{left:0;right:0;top:calc(50% - 144 * var(--u));text-align:center}   /* 15.11, her frame 04 · 9: five lines in the middle of the circle (it stands in the middle of the screen now) */
+/* 15.11 · 04, her title card: a block of its own — the indigo gradient of the home page's Solutions, the name in the hero's bold two tones, its second line under it */
+.tcard{position:absolute;left:0;top:0;width:100%;height:100%;visibility:hidden;background:linear-gradient(180deg, #0F1214 0%, #17212B 52%, #293D4A 100%)}
+.sc .p-tc1{left:0;right:0;top:calc(50% - 115.3 * var(--u));text-align:center;color:#EBEBEB}
+.sc .p-tc2{left:0;right:0;top:calc(50% + 41 * var(--u));text-align:center}
 
 /* ---------- 06 "Yours" on the photograph, where the homepage's hero title stands */
 .sc .p-yours{left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px);color:#FFFFFF}
@@ -140,7 +144,9 @@ body.ab3 .ch-ftr{position:relative;z-index:5;background:#000}
 @media (max-aspect-ratio: 1/1){
   .sc .p-tl, .sc .p-bl, .sc .p-blg, .sc .p-blgb, .sc .p-blg2, .sc .p-br, .sc .p-brn, .sc .p-ur, .sc .p-um, .sc .p-al, .sc .p-ul, .cv-h, .sc .p-yours, .sc .p-bl2, .sc .p-blb{left:var(--m, 20px)}
   .sc .m[style*="--w:"]{width:auto!important;right:var(--m, 20px)}
-  .sc .p-bc{left:var(--m, 20px);text-align:left}
+  .sc .p-bc{left:var(--m, 20px);right:var(--m, 20px);text-align:center}
+  .sc .p-tc1{top:calc(50% - 44px)} .sc .p-tc2{top:calc(50% + 12px)}
+  .sc .p-rgc{top:calc(50% - 72 * var(--u) - 2.45em)}
   .sc .p-tla{left:var(--m, 20px);top:auto;bottom:calc(50% + 14px)}
   .sc .p-brr{left:var(--m, 20px);right:var(--m, 20px);text-align:left}
   .sc .p-c1,.sc .p-c2,.sc .p-c3{left:var(--m, 20px)} .sc .p-c2{top:calc(50% + 50 * var(--u) + 1.9em)} .sc .p-c3{top:calc(50% + 50 * var(--u) + 4.8em)}
