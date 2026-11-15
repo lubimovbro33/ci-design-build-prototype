@@ -186,23 +186,22 @@ def portfolio():
     assert len(LIB) == 9 and [nm in BIG for nm, *_ in LIB] == [True, False, False, False, False, True, True, False, False]
     cards = [pf6_card(nm, lc.split(' · ') + [bd], im, hr, big=nm in BIG, ext=im.startswith('http')) for nm, lc, bd, sz, hr, tg, im in LIB]
     pg.add(bk(h_of(S[1]), '    <div class="pf6">%s</div>' % ''.join(cards), hcls=' l0', lines=['Signature', 'CI Residences']), 'Projects')
-    # Every Home Unique — her notes of 15.11: 18:45 («дуже одноманітно: там лінії, там лінії») and 18:59 («не просто забрати лінії… думай метафорично»).
-    # The block is a figure, not a list (film "life" in inner.js): at the centre a life — a closed line that is never the same twice; around it six
-    # contours of the one pen, a step of the process each, named on the line itself; the innermost is the life (Discover deeply), the outermost is
-    # the home (Deliver completely). The home changes with the life, the six steps stay — «Every Home Unique. One CI Standard». The scene follows her
-    # corner principle: the figure in the middle, the title top left (under the logo), the text bottom right in the running 20; at the end the closing
-    # thought takes the text's place. The steps stand in the page as a list for readers that do not draw (and for the copy check).
+    # Every Home Unique — her notes of 15.11: 18:45 («дуже одноманітно: там лінії, там лінії»), 18:59 («не просто забрати лінії… думай метафорично»),
+    # 19:54 (the abstract contours: «я не зрозуміла суть… Перероби»), and her choice at 20:00 between two sketches: THE KEY (film "key" in inner.js).
+    # One blank — the CI standard; six cuts — the six steps, a name under each; how deep each cut goes is the home's own, no two keys alike. The scene
+    # follows her corner principle: the figure in the middle, the title top left (under the logo), the text bottom right in the running 20; at the end
+    # the closing thought takes the text's place. The steps stand in the page as a list for readers that do not draw (and for the copy check).
     sec = S[2]; rows = get(sec, 'row'); ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; out = get(sec, 'lead')
     assert nop(h_of(sec)) == 'Every Home Unique. One CI Standard', h_of(sec)
     assert nop(ps_[0]) == 'Every residence speaks its own architectural language, because every client lives differently', ps_[0]
     cl = nop(out[0][1][0]); assert cl == 'The result feels effortless, as if your home could only ever have been yours', cl
     st6 = [nop(r[1]) for r in rows]; assert len(st6) == 6 and all(len(x.split(' ')) == 2 for x in st6), st6
     lead = '%s<br class="bd"> %s<br class="bd"> <span class="cb">%s</span>' % (esc('Every residence speaks its own architectural language,'), esc('because every client lives differently.'), esc(nop(ps_[1])))
-    pg.add('<section class="film" data-fig="life" data-len="4" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
+    pg.add('<section class="film" data-fig="key" data-len="4" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
            '      <h2 class="t60 m p-ctl" data-k="-1 -.5 99 99">Every Home Unique.<br>One CI Standard</h2>\n'
            '      <p class="t20 m p-cbr" data-k="-1 -.5 2.85 3.0">%s</p>\n'
            '      <p class="t34 m p-cbr" data-k="3.05 3.35 99 99">The result feels effortless,<br class="bd"> <span class="cb">as if your home could only<br class="bd"> ever have been yours</span></p>\n'
-           '      <ol class="vh" data-life>%s</ol>\n    </div>\n  </div>\n</section>' % (lead, ''.join('<li>%s</li>' % esc(x) for x in st6)), 'Approach')
+           '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % (lead, ''.join('<li>%s</li>' % esc(x) for x in st6)), 'Approach')
     # Explore the Work — the library as an index on the same four columns, no rules: the title in the first column; in the other three the filters and,
     # under them, the nine projects three to a row — a name and its small caps, as under the photographs
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']

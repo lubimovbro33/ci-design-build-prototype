@@ -1,7 +1,7 @@
 /* CI · inner pages (15.11.2026). Vanilla, no deps. One script for every page after the homepage and About.
    Films: a pinned stage scrubbed by the scroll (.film[data-fig]) — "cover": the photograph closes into the site's one white line;
    "steps": a journey on the line, the square walks from mark to mark. Times are in "screens" (data-len, data-k="in0 in1 out0 out1").
-   "life": a life at the centre and six contours of the one pen around it — the outer one is the home (Portfolio, 15.11).
+   "key": the line opens into a key — one blank, six cuts, a step each; no two keys are cut alike (Portfolio, 15.11).
    Flow: blocks reveal once as they arrive, photographs open out of a line (.bnd), rows open (.qa), chips filter lists, the form checks itself.
    The shell (cursor, smooth wheel, header logo, chapter rail, footer street) is the homepage's. */
 (function(){
@@ -197,14 +197,14 @@
     return {el: e, cv: cv, g: cv.getContext('2d'), fig: e.getAttribute('data-fig'), len: +e.getAttribute('data-len'), ms: qsa('.m', e).map(Moment), pic: qs('.pic', e), h1: qs('.cv-h', e), kick: qs('.cv-k', e),
             n: +e.getAttribute('data-n') || 0, emb: (e.getAttribute('data-emb') || '').split(','), t0: +e.getAttribute('data-t0') || .9, d: +e.getAttribute('data-d') || .55, q: -9, on: null,
             sc: qsa('[data-s]', e).map(Scrub), trk: qs('[data-track]', e), cur: e.classList.contains('crt'), seg: (function(){ var d = e.getAttribute('data-seg'); return d ? d.split(',').map(Number) : null; })(), ar: +e.getAttribute('data-ar') || 1.42,
-            names: qsa('[data-life] li', e).map(function(li){ var x = li.textContent.trim(), i = x.indexOf(' '); return i < 0 ? [x, ''] : [x.slice(0, i), x.slice(i + 1)]; }), cw: 0, ch: 0, tv: 0};
+            names: qsa('[data-steps] li', e).map(function(li){ var x = li.textContent.trim(), i = x.indexOf(' '); return i < 0 ? [x, ''] : [x.slice(0, i), x.slice(i + 1)]; }), cw: 0, ch: 0, tv: 0};
   });
   var BANDS = qsa('.bnd').map(function(e){ return {el: e, img: qs('img', e), k: -1}; });
   function layout(){
     W = window.innerWidth; H = window.innerHeight; U = W >= H ? Math.min(W / 1920, H / 1080) : Math.max(W / 1920, W / 900);
     DPR = Math.min(2, window.devicePixelRatio || 1); MID = Math.round(H / 2) + .5; SQ = Math.max(5, 8 * U);
     FILMS.forEach(function(f){ f.el.style.height = Math.round(f.len * SP * H + H) + 'px'; f.cv.width = Math.round(W * DPR); f.cv.height = Math.round(H * DPR); });
-    FILMS.forEach(function(f){ if (f.fig !== 'life') return; var flow = getComputedStyle(f.cv).position !== 'absolute'; f.cw = flow ? f.cv.clientWidth : 0; f.ch = flow ? f.cv.clientHeight : 0;
+    FILMS.forEach(function(f){ if (f.fig !== 'key') return; var flow = getComputedStyle(f.cv).position !== 'absolute'; f.cw = flow ? f.cv.clientWidth : 0; f.ch = flow ? f.cv.clientHeight : 0;
       if (flow){ f.cv.width = Math.round(f.cw * DPR); f.cv.height = Math.round(f.ch * DPR); } });
     dirty = false;
     qsa('#ftCity').forEach(function(v){ var mtx = v.getScreenCTM && v.getScreenCTM(); if (mtx && mtx.a) v.style.setProperty('--ds', Math.max(mtx.a, .05).toFixed(4)); });
@@ -290,94 +290,52 @@
         g.moveTo(ax, ay); g.lineTo(ax + (bx - ax) * d, ay + (by - ay) * d); }
       g.stroke(); } }
   }
-  /* ---------- film: life — «Every Home Unique. One CI Standard» (Portfolio, her note of 15.11 18:59: a metaphor, not a list).
-     At the centre a life: a closed line that is never the same twice (the phases start at random and drift). Around it six contours of the one pen,
-     a step of the process each, named the way a map names its contours — the line breaks for the words. The innermost is the life itself
-     (Discover deeply), the outermost is the home (Deliver completely): a plan with right angles that gives way at the corner the life does not
-     reach for. So the home differs with the life, and the six steps stay. The line of the site closes into the life; each contour grows out of
-     the one before it. In the flow (phones) the figure draws itself once, as it comes into view. */
-  var LF = {N: 480, A: [0, 0, .17, .075, .05, .022], w: [0, 0, .09, -.083, .127, -.071], f0: [0, 0, 1.3, 4.1, 2.2, .6].map(function(v){ return reduced ? v : Math.random() * 6.2832; }), T0: .7, D: .42, BLUE: '150,168,191'};
-  function lifeGeo(t, w, h, flow){
-    var a = flow ? .44 * w : 460 * U, b = flow ? Math.min(a * .86, h / 2 - 14) : 272 * U, R0 = flow ? a * .26 : 102 * U, cx = w / 2, cy = flow ? h / 2 : h / 2 + 60 * U, i, j;
-    /* the life lies along the plan (its long side level, leaning a little either way), so its foot is broad enough to carry a name */
-    var f2 = 1.5708 + .6 * Math.sin(LF.f0[2] + t * LF.w[2]);
-    function rc(th){ var s = 1 + LF.A[2] * Math.sin(2 * th + f2), k; for (k = 3; k <= 5; k++) s += LF.A[k] * Math.sin(k * th + LF.f0[k] + t * LF.w[k]); return R0 * s; }
-    var dirs = [-2.3562, -.7854, .7854, 2.3562], m = 0, n = [], v = [], vm = 0;
-    for (i = 0; i < 4; i++) m += rc(dirs[i]) / 4;
-    for (i = 0; i < 4; i++){ v.push((m - rc(dirs[i])) / R0); vm = Math.max(vm, v[i]); }
-    for (i = 0; i < 4; i++){ var k2 = c01((v[i] / Math.max(vm, 1e-6) - .45) / .55) * c01((vm - .02) / .06); k2 = k2 * k2 * (3 - 2 * k2);
-      n.push([k2 * a * (.31 + .15 * Math.sin(t * .05 + i * 1.7)), k2 * b * (.38 + .14 * Math.sin(t * .043 + i * 2.3))]); }
-    var TL = n[0], TR = n[1], BR = n[2], BL = n[3];
-    var P = [[-a + TL[0], -b], [a - TR[0], -b], [a - TR[0], -b + TR[1]], [a, -b + TR[1]], [a, b - BR[1]], [a - BR[0], b - BR[1]], [a - BR[0], b], [-a + BL[0], b], [-a + BL[0], b - BL[1]], [-a, b - BL[1]], [-a, -b + TL[1]], [-a + TL[0], -b + TL[1]]];
-    function rh(th){
-      var c = Math.cos(th), s = Math.sin(th), best = 1e9, d;
-      for (var e = 0; e < P.length; e++){ var p = P[e], q = P[(e + 1) % P.length];
-        if (Math.abs(p[0] - q[0]) < 1e-6){ if (Math.abs(p[1] - q[1]) < 1e-6 || Math.abs(c) < 1e-9) continue; d = p[0] / c; if (d <= 0) continue; var y = d * s; if (y >= Math.min(p[1], q[1]) - 1e-6 && y <= Math.max(p[1], q[1]) + 1e-6 && d < best) best = d; }
-        else { if (Math.abs(s) < 1e-9) continue; d = p[1] / s; if (d <= 0) continue; var x = d * c; if (x >= Math.min(p[0], q[0]) - 1e-6 && x <= Math.max(p[0], q[0]) + 1e-6 && d < best) best = d; } }
-      return best;
-    }
-    /* the rays: evenly round, and one through every corner of the plan — the corners stay corners */
-    var TH = []; for (j = 0; j < LF.N; j++) TH.push(-Math.PI + j * 6.2831853 / LF.N);
-    for (j = 0; j < P.length; j++) TH.push(Math.atan2(P[j][1], P[j][0]));
-    TH.sort(function(x, y){ return x - y; });
-    var RC = [], RH = []; for (j = 0; j < TH.length; j++){ RC.push(rc(TH[j])); RH.push(rh(TH[j])); }
-    return {cx: cx, cy: cy, R0: R0, TH: TH, RC: RC, RH: RH, rc: rc};
+  /* ---------- film: key — «Every Home Unique. One CI Standard» (Portfolio; her choice of 15.11 20:00 between two sketches, after the list, the large
+     type and the abstract contours had all missed: the picture must read at once).
+     One blank — the CI standard. Six cuts — the six steps of the process, a name under each, a blue pin resting in each. How deep each cut goes is
+     the home's own: no two keys are cut alike, and the cuts keep gliding to the next key. The site's line draws in to the key's length and opens
+     into the blank; the cuts are made one after another. In the flow (phones) the key stands upright, its cuts and names to the right, and draws
+     itself once as it comes into view.
+     Key space: a — along the key (0 in its middle, the bow at the minus end), c — across it (plus = the side of the cuts), in u. */
+  var KY = {T0: .7, D: .36, PER: 4.2, seed: reduced ? 7 : Math.floor(Math.random() * 1e6), BLUE: '150,168,191', AB: -510, RB: 126, HB: 64, SH: 11, XT: 636, A0: -248, DA: 150, M: 46, F: 13, sets: {}};
+  function keySet(n){
+    if (KY.sets[n]) return KY.sets[n];
+    var o = [], i, prev = -1; for (i = 0; i < 6; i++){ var x = Math.sin((KY.seed + n * 131.7 + i * 17.3) * 12.9898) * 43758.5453; x -= Math.floor(x); var lv = Math.min(4, Math.floor(x * 5)); if (lv === prev) lv = (lv + 2) % 5; prev = lv; o.push(16 + lv * 5.25); }
+    KY.sets[n] = o; return o;
   }
-  /* one contour: tau 0 — the life, 1 — the home */
-  function lifeRing(G, tau){ var p = [], j; for (j = 0; j < G.TH.length; j++){ var r = G.RC[j] + (G.RH[j] - G.RC[j]) * tau; p.push(G.cx + r * Math.cos(G.TH[j]), G.cy + r * Math.sin(G.TH[j])); } return p; }
-  function angd(a, b){ return Math.atan2(Math.sin(a - b), Math.cos(a - b)); }
-  /* a closed line with its name set into it at its foot; la — how far the name is in */
-  function lifeDraw(p, al, name, G, la){
-    var n = p.length / 2, j, k, cum = [0];
-    for (j = 0; j < n; j++){ k = (j + 1) % n; cum.push(cum[j] + Math.sqrt(Math.pow(p[k * 2] - p[j * 2], 2) + Math.pow(p[k * 2 + 1] - p[j * 2 + 1], 2))); }
-    var L = cum[n];
-    function at(s){ s = ((s % L) + L) % L; var lo = 0, hi = n; while (hi - lo > 1){ var md = (lo + hi) >> 1; if (cum[md] <= s) lo = md; else hi = md; } var k1 = (lo + 1) % n, fr = (s - cum[lo]) / Math.max(1e-6, cum[lo + 1] - cum[lo]);
-      return [p[lo * 2] + (p[k1 * 2] - p[lo * 2]) * fr, p[lo * 2 + 1] + (p[k1 * 2 + 1] - p[lo * 2 + 1]) * fr, Math.atan2(p[k1 * 2 + 1] - p[lo * 2 + 1], p[k1 * 2] - p[lo * 2]), lo]; }
-    ink(al);
-    if (!name || la <= 0){ g.beginPath(); for (j = 0; j < n; j++){ if (j) g.lineTo(p[j * 2], p[j * 2 + 1]); else g.moveTo(p[0], p[1]); } g.closePath(); g.stroke(); return; }
-    /* the foot of the line: a soft lowest point, so the name never jumps as the line changes */
-    var DN = 1.5708, ym = -1e9, sw = 0, sx = 0, sig = Math.max(3, 5 * U), dt;
-    for (j = 0; j < n; j++){ dt = angd(G.TH[j], DN); if (Math.abs(dt) < 1 && p[j * 2 + 1] > ym) ym = p[j * 2 + 1]; }
-    for (j = 0; j < n; j++){ dt = angd(G.TH[j], DN); if (Math.abs(dt) >= 1) continue; var wl = Math.exp((p[j * 2 + 1] - ym) / sig) * Math.abs(angd(G.TH[(j + 1) % n], G.TH[j])) * (1 - Math.abs(dt)); sw += wl; sx += wl * dt; }
-    var tC = DN + sx / Math.max(sw, 1e-9), best = 0, bd = 1e9; for (j = 0; j < n; j++){ dt = Math.abs(angd(G.TH[j], tC)); if (dt < bd){ bd = dt; best = j; } }
-    var sC = cum[best], px = Math.max(10, 14 * U), txt = (name[0] + ' ' + name[1]).toUpperCase(), ws = [], tot = 0;
-    g.font = '400 ' + px.toFixed(2) + 'px "Zalando Sans Expanded", sans-serif'; g.textBaseline = 'middle'; g.textAlign = 'center';
-    for (j = 0; j < txt.length; j++){ var cw = g.measureText(txt[j]).width; ws.push(cw); tot += cw; }
-    var dir = Math.cos(at(sC)[2]) >= 0 ? 1 : -1, half = (tot / 2 + px * .55) * la;
-    /* the line but for the words: from the end of the name round to its beginning, through every point of the line */
-    var s1 = (((sC + half) % L) + L) % L, span = L - 2 * half, a0 = at(s1), run = cum[a0[3] + 1] - s1, idx = (a0[3] + 1) % n;
-    g.beginPath(); g.moveTo(a0[0], a0[1]);
-    while (run < span){ g.lineTo(p[idx * 2], p[idx * 2 + 1]); run += cum[idx + 1] - cum[idx]; idx = (idx + 1) % n; }
-    var e1 = at(s1 + span); g.lineTo(e1[0], e1[1]); g.stroke();
-    var s = sC - dir * tot / 2, nb = name[0].length + 1, aw = (al * la).toFixed(3);
-    for (j = 0; j < txt.length; j++){ var c = at(s + dir * ws[j] / 2);
-      g.save(); g.translate(c[0], c[1]); g.rotate(c[2] + (dir < 0 ? Math.PI : 0)); g.fillStyle = j < nb ? 'rgba(255,255,255,' + aw + ')' : 'rgba(' + LF.BLUE + ',' + aw + ')'; g.fillText(txt[j], 0, px * .06); g.restore(); s += dir * ws[j]; }
-  }
-  function life(f, q, t){
-    var flow = f.cw > 0, w = flow ? f.cw : W, h = flow ? f.ch : H, mid = flow ? Math.round(h / 2) + .5 : MID, i;
+  function key(f, q, t){
+    var flow = f.cw > 0, w = flow ? f.cw : W, h = flow ? f.ch : H, mid = flow ? h / 2 : MID, s = flow ? (h - 32) / 1272 : 1.12 * U, cxp = w * .3, i, j;
     if (flow){ if (!f.tv){ var cr = f.cv.getBoundingClientRect(); if (cr.top < H * .72 && cr.bottom > 0) f.tv = t; } q = reduced ? 9 : f.tv ? .05 + (t - f.tv) * .5 : 0; }
     else if (reduced && q > .05) q = Math.max(q, 9);
-    var G = lifeGeo(reduced ? 0 : t, w, h, flow), per = 6.2831853 * G.R0;
-    var k1 = eio(sg(q, .05, .36)), k2 = eio(sg(q, .3, .62));
-    if (k2 <= 0){ var hw = lerp(w / 2 + 10, per / 2, k1); ink(1); seg(G.cx - hw, mid, G.cx + hw, mid); return; }
-    if (k2 < 1){
-      /* the line closes into the life */
-      var N = 240, th = 6.2831853 * k2, R = per / th, yb = lerp(mid, G.cy + G.R0, k2), m = sg(k2, .5, 1), ccy = yb - R;
-      ink(1); g.beginPath();
-      for (i = 0; i <= N; i++){ var ph = (i / N - .5) * th, x = G.cx + R * Math.sin(ph), y = yb - R * (1 - Math.cos(ph));
-        if (m > 0){ var rr = 1 + m * (G.rc(Math.atan2(y - ccy, x - G.cx)) / G.R0 - 1); x = G.cx + (x - G.cx) * rr; y = ccy + (y - ccy) * rr; }
-        if (i) g.lineTo(x, y); else g.moveTo(x, y); }
-      g.stroke(); return;
-    }
-    /* the six contours: each grows out of the one before it, and takes its name as it settles */
+    var k1 = eio(sg(q, .05, .34)), k = eio(sg(q, .3, .62));
+    function P(a, c){ return flow ? [cxp + c * k * s, mid + a * s] : [w / 2 + a * s, mid + c * k * s]; }
+    ink(1);
+    if (k <= 0){ var hw = flow ? KY.XT * s * k1 : lerp(w / 2 + 10, KY.XT * s, k1); if (hw > 0){ if (flow) seg(cxp, mid - hw, cxp, mid + hw); else seg(w / 2 - hw, mid, w / 2 + hw, mid); } return; }
+    /* this key's cuts: they glide from one key to the next */
+    var tt = reduced ? 0 : t, n = Math.floor(tt / KY.PER), e = eio(sg(tt / KY.PER - n, 0, .28)), A = keySet(n), B = keySet(n + 1), d = [], pr = [];
+    for (i = 0; i < 6; i++){ pr.push(eo(sg(q, KY.T0 + i * KY.D, KY.T0 + i * KY.D + .3))); d.push(lerp(A[i], B[i], e) * pr[i]); }
+    var hb = KY.HB / 2, sh = KY.SH, f0 = Math.asin((hb + sh) / KY.RB), x0 = KY.AB + KY.RB * Math.cos(f0), xt = KY.XT, pts = [], NA = 72;
+    for (j = 0; j <= NA; j++){ var ph = f0 + (6.2831853 - 2 * f0) * j / NA; pts.push([KY.AB + KY.RB * Math.cos(ph), KY.RB * Math.sin(ph)]); }
+    pts.push([x0 + 42, -hb - sh], [x0 + 42, -hb], [xt - 48, -hb], [xt, -2], [xt, 10], [xt - 20, hb]);
+    for (i = 5; i >= 0; i--){ var ca = KY.A0 + i * KY.DA; pts.push([ca + KY.M, hb], [ca + KY.F, hb - d[i]], [ca - KY.F, hb - d[i]], [ca - KY.M, hb]); }
+    pts.push([x0 + 42, hb], [x0 + 42, hb + sh]);
+    g.lineJoin = 'miter'; g.beginPath(); for (j = 0; j < pts.length; j++){ var p = P(pts[j][0], pts[j][1]); if (j) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); } g.closePath(); g.stroke(); g.lineJoin = 'round';
+    /* the hole of the bow and the groove of the blade come as the blank opens */
+    var ga = sg(k, .55, 1);
+    if (ga > 0){ ink(ga); g.beginPath(); for (j = 0; j <= 48; j++){ var hp = P(KY.AB - 50 + 31 * Math.cos(j / 48 * 6.2831853), 31 * Math.sin(j / 48 * 6.2831853)); if (j) g.lineTo(hp[0], hp[1]); else g.moveTo(hp[0], hp[1]); } g.stroke();
+      var g0 = P(x0 + 60, -15), g1 = P(xt - 62, -15); seg(g0[0], g0[1], g1[0], g1[1]); }
+    /* the pins and the names */
+    var px = Math.max(10, 14 * U), s8 = Math.max(5, 8 * U); g.font = '400 ' + px.toFixed(2) + 'px "Zalando Sans Expanded", sans-serif'; g.textBaseline = 'alphabetic';
     for (i = 0; i < 6; i++){
-      var pi = i ? eio(sg(q, LF.T0 + (i - 1) * LF.D, LF.T0 + (i - 1) * LF.D + LF.D * .9)) : 1; if (pi <= 0) break;
-      lifeDraw(lifeRing(G, i ? ((i - 1) + pi) / 5 : 0), i ? sg(pi, 0, .12) : 1, f.names[i], G, i ? sg(pi, .72, 1) : sg(q, .62, .8));
+      var la = sg(q, KY.T0 + i * KY.D + .08, KY.T0 + i * KY.D + .3), pa = sg(pr[i], .3, 1), nm = f.names[i], c0 = KY.A0 + i * KY.DA;
+      if (pa > 0){ var pp = P(c0, hb - d[i] + (flow ? 13 : 11)); g.fillStyle = 'rgba(' + KY.BLUE + ',' + pa.toFixed(3) + ')'; g.fillRect(Math.round(pp[0] - s8 / 2), Math.round(pp[1] - s8 / 2), Math.round(s8), Math.round(s8)); }
+      if (la <= 0 || !nm) continue;
+      var v = nm[0].toUpperCase(), ad = nm[1].toUpperCase(), wh = 'rgba(255,255,255,' + la.toFixed(3) + ')', bl = 'rgba(' + KY.BLUE + ',' + la.toFixed(3) + ')';
+      if (flow){ var lp = P(c0, hb), lx = lp[0] + 22, ly = lp[1] + px * .36; g.textAlign = 'left'; g.fillStyle = wh; g.fillText(v, lx, ly); g.fillStyle = bl; g.fillText(ad, lx + g.measureText(v + ' ').width, ly); }
+      else { var dp = P(c0, hb), ty = mid + (hb + 44) * s + (1 - la) * 6 * U; g.textAlign = 'center'; g.fillStyle = wh; g.fillText(v, dp[0], ty); g.fillStyle = bl; g.fillText(ad, dp[0], ty + px * 1.3); }
     }
-    /* you */
-    var s8 = Math.max(5, 8 * U); g.fillStyle = 'rgba(' + LF.BLUE + ',' + sg(q, .5, .7).toFixed(3) + ')'; g.fillRect(Math.round(G.cx - s8 / 2), Math.round(G.cy - s8 / 2), Math.round(s8), Math.round(s8));
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, life: life};
+  var FIG = {cover: cover, steps: steps, scene: scene, key: key};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

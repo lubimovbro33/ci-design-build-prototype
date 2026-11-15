@@ -314,12 +314,12 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .film .pic{position:relative;height:100vh;height:100svh;clip-path:none!important}
   .film .sc{position:relative;height:auto;padding:0 var(--m, 20px) 72px;pointer-events:auto}
   .film[data-fig="steps"] .sc{padding-top:72px}
-  /* the figure "life" stands in the flow and draws itself: the title, the text, the figure, the closing thought */
-  .film[data-fig="life"] .stg{display:flex;flex-direction:column;padding:0 0 72px}
-  .film[data-fig="life"] .sc{display:contents}
-  .film[data-fig="life"] .ln{display:block;position:relative;width:100%;height:96vw;order:3;margin-top:12px}
-  .film[data-fig="life"] .m{margin-left:var(--m, 20px);margin-right:var(--m, 20px)}
-  .film[data-fig="life"] h2.m{order:1} .film[data-fig="life"] .m.t20{order:2;margin-top:24px} .film[data-fig="life"] .m.t34{order:4;margin-top:12px}
+  /* the figure "key" stands in the flow, upright, and draws itself: the title, the text, the figure, the closing thought */
+  .film[data-fig="key"] .stg{display:flex;flex-direction:column;padding:0 0 72px}
+  .film[data-fig="key"] .sc{display:contents}
+  .film[data-fig="key"] .ln{display:block;position:relative;width:100%;height:132vw;order:3;margin-top:28px}
+  .film[data-fig="key"] .m{margin-left:var(--m, 20px);margin-right:var(--m, 20px)}
+  .film[data-fig="key"] h2.m{order:1} .film[data-fig="key"] .m.t20{order:2;margin-top:24px} .film[data-fig="key"] .m.t34{order:4;margin-top:28px}
   .film .m{position:static!important;visibility:visible!important;opacity:1!important;transform:none!important;filter:none!important;width:auto!important;white-space:normal!important}
   .film .m .w{opacity:1!important;transform:none!important;filter:none!important}
   .film .m{margin-top:20px}
