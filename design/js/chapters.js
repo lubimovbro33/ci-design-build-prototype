@@ -930,14 +930,9 @@
            returning curves come in from its left edge and meet — and the closing thought stands centred above the line; the square stops under it,
            the line goes on, faint, to the right edge */
         var m6 = Math.max(4, 6 * u), m8 = Math.max(5, 8 * u), hx = (S - R) * .5, xr = C[2] * k + S, L = C[2] * k + R + 24 * k + W, XE = L - W / 2;
-        G = {fs: fs, R: R, S: S, c: C.map(function(c){ return c * k; }), cy: [], xr: xr, L: L, XE: XE, nd: []};
+        G = {fs: fs, R: R, S: S, c: C.map(function(c){ return c * k; }), cy: [], xr: xr, L: L, XE: XE, nd: [], m6: m6, h: []};
         axG.setAttribute('d', 'M' + f1(X0) + ' ' + f1(Y) + 'H' + f1(L + 20));
         steps.forEach(function(e, i){ var j = i >> 1, up = i % 2 === 0, c = G.c[j], cy = up ? Y - Dk[j] * k : Y + Dk[j] * k, xa = c - S, xb = c + S; G.cy[i] = cy;
-          paths(i, ['M' + f1(xa) + ' ' + f1(Y) + 'C' + f1(xa + hx) + ' ' + f1(Y) + ' ' + f1(c - R - hx) + ' ' + f1(cy) + ' ' + f1(c - R) + ' ' + f1(cy),
-                    'M' + f1(c - R) + ' ' + f1(cy) + 'A' + f1(R) + ' ' + f1(R) + ' 0 0 1 ' + f1(c + R) + ' ' + f1(cy),
-                    'M' + f1(c - R) + ' ' + f1(cy) + 'A' + f1(R) + ' ' + f1(R) + ' 0 0 0 ' + f1(c + R) + ' ' + f1(cy),
-                    'M' + f1(c + R) + ' ' + f1(cy) + 'C' + f1(c + R + hx) + ' ' + f1(cy) + ' ' + f1(xb - hx) + ' ' + f1(Y) + ' ' + f1(xb) + ' ' + f1(Y)]);
-          sqr(pts[i][0], c - R, cy, m6); sqr(pts[i][1], c + R, cy, m6);
           e.style.left = f1(c) + 'px'; e.style.top = f1(cy) + 'px'; e.style.fontSize = fs.toFixed(2) + 'px'; });
         G.nd = [G.c[0] - S, G.c[1] - S, G.c[0] + S, G.c[2] - S, G.c[1] + S, G.c[2] + S, G.XE];
         nds.forEach(function(n, q){ sqr(n, G.nd[q], Y, m8); });
@@ -956,6 +951,19 @@
           cl[i].style.left = f1(cxp) + 'px'; cl[i].style.top = f1(cy) + 'px';
           var st = tx[i].style; st.left = f1(cxp + Rp + 14) + 'px'; st.width = f1(W - (cxp + Rp + 14) - 20) + 'px'; st.top = f1(cy) + 'px'; });
       }
+    }
+    /* 15.11 13:32 (her note: the lines came in harshly — they were revealed along the square's vertical, a hard wipe that cut a circle in half).
+       As on About, the line is not revealed, it changes shape: at a node it parts, a circle grows out of a point on the axis as it leaves it
+       (always a whole circle), and the two lines follow it out and back. h = 0 lies on the axis, h = 1 is the figure in full */
+    function open(i, h){
+      var q = Math.round(h * 1000) / 1000; if (G.h[i] === q) return; G.h[i] = q;
+      var c = G.c[i >> 1], cy = Y + (G.cy[i] - Y) * q, r = Math.max(.01, G.R * q), xa = c - G.S, xb = c + G.S, hx = (G.S - r) * .5, on = q > 0;
+      if (on) paths(i, ['M' + f1(xa) + ' ' + f1(Y) + 'C' + f1(xa + hx) + ' ' + f1(Y) + ' ' + f1(c - r - hx) + ' ' + f1(cy) + ' ' + f1(c - r) + ' ' + f1(cy),
+                        'M' + f1(c - r) + ' ' + f1(cy) + 'A' + r.toFixed(2) + ' ' + r.toFixed(2) + ' 0 0 1 ' + f1(c + r) + ' ' + f1(cy),
+                        'M' + f1(c - r) + ' ' + f1(cy) + 'A' + r.toFixed(2) + ' ' + r.toFixed(2) + ' 0 0 0 ' + f1(c + r) + ' ' + f1(cy),
+                        'M' + f1(c + r) + ' ' + f1(cy) + 'C' + f1(c + r + hx) + ' ' + f1(cy) + ' ' + f1(xb - hx) + ' ' + f1(Y) + ' ' + f1(xb) + ' ' + f1(Y)]);
+      br[i].i.forEach(function(e){ set(e, 'strokeDashoffset', '0'); set(e, 'visibility', on ? '' : 'hidden'); });
+      sqr(pts[i][0], c - r, cy, G.m6); sqr(pts[i][1], c + r, cy, G.m6);
     }
     var T0 = performance.now();
     function draw(){
@@ -979,18 +987,23 @@
         cx.strokeStyle = '#FFFFFF'; cx.lineWidth = 1.5; cx.beginPath(); cx.moveTo(S[jb][0], S[jb][1]); for (k = jb + 1; k <= j1; k++) cx.lineTo(S[k][0], S[k][1]); cx.stroke(); }
       cx.globalAlpha = 1;
     }
-    var vis = false, raf = 0;
-    function loop(){ raf = 0; if (!vis) return; if (P < .42) draw(); raf = requestAnimationFrame(loop); }
+    /* the drawing follows the scroll with a little inertia (a tenth of a second), so it glides instead of stepping with the wheel */
+    var vis = false, raf = 0, PT = 0, PS = -1, LT = 0;
+    function loop(){ raf = 0; if (!vis) return;
+      var n = performance.now(), dt = Math.min(.05, Math.max(0, (n - LT) / 1000)); LT = n;
+      if (PS !== PT){ PS += (PT - PS) * (1 - Math.exp(-dt / .1)); if (Math.abs(PT - PS) < .00002) PS = PT; render(PS); }
+      if (P < .42) draw(); raf = requestAnimationFrame(loop); }
     if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }).observe(stage);
     function set(e, k, v){ if (e['__' + k] !== v){ e['__' + k] = v; e.style[k] = v; } }
     /* the strip's length depends on the width of the closing thought, and the phone's axis on the title's height: both change
        when the web font arrives after the first layout (her note 13.11 21:54: the closing thought was cut by the screen's edge) */
-    function again(){ lastSz = ''; update(P); }
+    function again(){ lastSz = ''; render(P); }
     if (window.ResizeObserver){ var ro = new ResizeObserver(again); ro.observe(end); ro.observe(t2); }
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(again);
     /* a path that has not begun is hidden outright: with nothing pale under it, the zero-length dash at its start showed as a speck */
     function ink(i, a, b, c, d){ var q = br[i].i, v = [a, b, c, d]; for (var j = 0; j < 4; j++){ set(q[j], 'strokeDashoffset', (1 - v[j]).toFixed(4)); set(q[j], 'visibility', v[j] > .0005 ? '' : 'hidden'); } }
-    function update(p){
+    function update(p){ PT = p; if (!vis || !raf || reduced || PS < 0 || Math.abs(p - PS) > .2){ PS = p; render(p); } }   /* off screen, the first frame, a jump: at once */
+    function render(p){
       var sz = window.innerWidth + 'x' + window.innerHeight; if (sz !== lastSz){ lastSz = sz; size(); }
       P = p; if (!vis || p >= .42) draw();
       /* the opening line, over the knot */
@@ -1006,11 +1019,13 @@
         axI.setAttribute('d', 'M' + f1(X0) + ' ' + f1(Y) + 'H' + f1(px));
         set(sq, 'opacity', ga.toFixed(3)); set(sq, 'transform', 'translate3d(' + f1(px - off) + 'px,' + f1(Y) + 'px,0)');
         var k2 = sg(p, .37, .42); set(t2, 'opacity', k2.toFixed(3)); set(t2, 'visibility', k2 > 0 ? '' : 'hidden'); set(t2, 'transform', 'translate3d(' + f1(-off) + 'px,' + f1(rise) + 'px,0)');
-        nds.forEach(function(n, q){ set(n, 'opacity', sg(px, G.nd[q] - 10, G.nd[q]).toFixed(3)); });
-        steps.forEach(function(_, i){ var c = G.c[i >> 1], f = sg(px, c - R, c + R), arc = Math.acos(1 - 2 * f) / Math.PI;
-          ink(i, sg(px, c - S, c - R), arc, arc, sg(px, c + R, c + S));
-          set(pts[i][0], 'opacity', sg(px, c - R - 8, c - R).toFixed(3)); set(pts[i][1], 'opacity', sg(px, c + R - 8, c + R).toFixed(3));
-          var o = sm(sg(px, c - R * .2, c + R * .8)).toFixed(3); set(cl[i], 'opacity', o); set(tx[i], 'opacity', o); });
+        /* a pair opens while the square walks from its node towards its circles; the text comes as the circle settles */
+        var HP = G.c.map(function(c){ return sm(sg(px, c - S, c - R * .6)); }), RET = {2: 0, 4: 1, 5: 2};
+        nds.forEach(function(n, q){ set(n, 'opacity', (q in RET ? sg(HP[RET[q]], .7, 1) : sg(px, G.nd[q] - 10, G.nd[q])).toFixed(3)); });   /* a node where the lines return is there when they land */
+        steps.forEach(function(_, i){ var c = G.c[i >> 1], h = HP[i >> 1];
+          open(i, h);
+          var po = sg(h, .45, .9).toFixed(3); set(pts[i][0], 'opacity', po); set(pts[i][1], 'opacity', po);
+          var o = sm(sg(px, c - R * 1.25, c - R * .45)).toFixed(3); set(cl[i], 'opacity', o); set(tx[i], 'opacity', o); });
         var ke = ga * sg(px, G.xr + .25 * (G.XE - G.xr), G.xr + .8 * (G.XE - G.xr)); set(end, 'opacity', ke.toFixed(3)); set(end, 'visibility', ga > 0 ? '' : 'hidden'); set(end, 'transform', mv);
       } else {
         var s2 = sg(p, .42, .86), t = s2 * 6, qx = X0, qy = Y + s2 * (Y1 - Y);
