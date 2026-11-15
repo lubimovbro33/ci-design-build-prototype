@@ -124,4 +124,4 @@ body.ab3 .ch-ftr{position:relative;z-index:5;background:#000}
 }
 
 /* the team (15.11): the portraits of the current site, in one tone; the name stands under the picture */
-.tc-img{position:absolute;left:0;top:0;width:100%;height:calc(100% - 104 * var(--u));object-fit:cover;object-position:50% 16%;display:block;filter:grayscale(1) contrast(1.05) brightness(.92)}
+.tc-img{position:absolute;left:0;top:0;width:100%;height:calc(100% - 130 * var(--u));object-fit:cover;object-position:50% 16%;display:block;filter:grayscale(1) contrast(1.05) brightness(.92)}
