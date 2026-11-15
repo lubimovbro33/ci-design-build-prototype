@@ -138,6 +138,19 @@ html body.inr .bk .c3{margin-left:calc(1440 * var(--u))}
 .pf .cd{margin:0}
 .pf .cd .im{aspect-ratio:4 / 3}
 .pf .cd.tall .im{aspect-ratio:4 / 5}
+/* 15.11 18:29, her frame «04 Signature CI Residences · 2»: the projects stand on a grid of four columns (419, gutters 48, fields 50). A row is one large
+   card — two columns wide, 1112 high (two small ones and the row gap) — and two small ones, 525 high; the next row is its mirror. The block's title
+   stands on the left field in two lines. Under a photograph: the name 20 lower, then one line of small caps at half strength, its parts set apart by
+   blue squares */
+html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
+.pf6{display:grid;grid-template-columns:repeat(4, calc(419 * var(--u)));column-gap:calc(48 * var(--u));row-gap:calc(62 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
+.pf6 .cd{margin:0}
+.pf6 .cd.big{grid-column:span 2}
+.pf6 .cd .im{aspect-ratio:auto;height:calc(525 * var(--u))}
+.pf6 .cd.big .im{height:calc(1112 * var(--u))}
+.pf6 .cd .nm{margin-top:calc(20 * var(--u))}
+.pf6 .cd .lc{display:flex;flex-wrap:wrap;align-items:center;column-gap:calc(10 * var(--u));row-gap:4px;margin-top:calc(20 * var(--u));color:rgba(255,255,255,.5)}
+.pf6 .cd .lc .sq{display:block;flex:none;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:var(--blue)}
 /* a project's gallery: wide pictures whole on the text line, tall ones in pairs, a wide one beside a tall one */
 .gal{margin-left:calc(421 * var(--u));margin-right:calc(50 * var(--u))}
 .gr{display:grid;gap:calc(25 * var(--u))}
@@ -287,6 +300,10 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .g2, .g2.r, .g3, .cards{grid-template-columns:minmax(0,1fr);row-gap:32px}
   .cd:nth-child(3n+2){margin-top:0}
   .pf{display:block} .pf-c{width:auto;gap:40px} .pf-c + .pf-c{margin-top:40px}
+  html body.inr .bk-h.l0{margin-left:var(--m, 20px)}
+  .pf6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)}
+  .pf6 .cd .im, .pf6 .cd.big .im{height:auto;aspect-ratio:4 / 5}
+  .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px;column-gap:6px}
   .rws, .dlt, .lst, .frm{margin-left:var(--m, 20px);margin-right:var(--m, 20px)}
   .rw, .rw.d, .qa .qh, .dlt > div, .fr, .lst a{grid-template-columns:40px minmax(0,1fr)}
   .qa .qh{grid-template-columns:40px minmax(0,1fr) auto}

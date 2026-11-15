@@ -331,8 +331,11 @@ def steps_film(title, steps, intro=None, outro=None, d=.55):
     o.append('    </div>\n  </div>\n</section>')
     return '\n'.join(o)
 
-def bk(title, inner, cls='', hcls=''):
-    return '<section class="bk%s" id="@ID@">\n  <h2 class="t60 bk-h rv%s">%s</h2>\n  <div class="bk-b">\n%s\n  </div>\n</section>' % (cls, hcls, brk(title, 32), inner)
+def bk(title, inner, cls='', hcls='', lines=None):
+    """lines: the title in its own lines (they must read as the title)"""
+    if lines: assert ' '.join(lines) == nop(title), (lines, title)
+    hb = '<br>'.join(esc(x) for x in lines) if lines else brk(title, 32)
+    return '<section class="bk%s" id="@ID@">\n  <h2 class="t60 bk-h rv%s">%s</h2>\n  <div class="bk-b">\n%s\n  </div>\n</section>' % (cls, hcls, hb, inner)
 def para(lines):
     return '<p>%s</p>' % '<br>'.join([esc(x) for x in lines[:-1]] + [esc(nop(lines[-1]))])
 def p20(paras, cls='c2', w=475):

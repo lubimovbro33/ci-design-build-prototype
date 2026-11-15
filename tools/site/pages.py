@@ -142,6 +142,16 @@ def pf_card(p, tall=False):
     if 'slug' in p: return '<a class="cd rv%s" href="%s.html"><span class="im"><img src="%s" alt="%s" loading="lazy"></span><span class="nm h5r">%s</span><span class="lc lab3">%s <span style="color:var(--blue)">■</span> %s</span></a>' % (
         ' tall' if tall else '', p['slug'], ph(p['set'], p['tall'] if tall else p['card']), p['name'], p['name'], p['loc'], p['bld'])
     return '<div class="cd rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span><span class="nm h5r">%s</span><span class="lc lab3">%s <span style="color:var(--blue)">■</span> %s</span></div>' % (p['img'], p['name'], p['name'], p['loc'], p['bld'])
+def pf6_card(name, parts, img, href=None, big=False, ext=False, pos=None):
+    """a card of the Signature grid (her frame «04 Signature CI Residences · 2», 15.11): the photograph 4 : 5, the name 20 under it,
+    and one line of small caps under the name — its parts separated by blue squares"""
+    meta = '<i class="sq"></i>'.join('<span>%s</span>' % esc(x) for x in parts)
+    st = ' style="object-position:%s"' % pos if pos else ''
+    inner = '<span class="im"><img src="%s" alt="%s" loading="lazy"%s%s></span><span class="nm h5r">%s</span><span class="lc lab3">%s</span>' % (
+        img, name, st, ' onerror="this.remove()"' if ext else '', esc(name), meta)
+    cls = 'cd rv' + (' big' if big else '')
+    if href: return '<a class="%s" href="%s"%s>%s</a>' % (cls, href, ' target="_blank" rel="noopener"' if href.startswith('http') else '', inner)
+    return '<div class="%s">%s</div>' % (cls, inner)
 def portfolio():
     S = P['portfolio']; pg = Pg()
     h1, ps, a = hero(S[0])
@@ -151,9 +161,19 @@ def portfolio():
     h1 = 'Homes Made for Unique Lives'
     pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp', lines=['Homes', 'Made', 'for Unique', 'Lives'], place='cc'), 'Portfolio', 'top')
     pg.add(intro(ps))
-    allp = PROJ + PROJ_MORE
-    L = [pf_card(allp[0]), pf_card(allp[2], True), pf_card(allp[4])]; R = [pf_card(allp[1], True), pf_card(allp[3])]
-    pg.add(bk(h_of(S[1]), '    <div class="pf"><div class="pf-c">%s</div><div class="pf-c">%s</div></div>' % (''.join(L), ''.join(R))), 'Projects')
+    # Signature CI Residences — her grid (frame «04 Signature CI Residences · 2» of the Portfolio export, 15.11 18:29): four columns of 419, gutters 48,
+    # fields 50; a row is one large card (two columns, 1112 high) and two small ones (525 high), the next row mirrored. Six projects:
+    # the five that stood here and Above the Park (from the client's portfolio; its picture is the client's own, loaded from their site).
+    ch_, us_, rtb_ = PROJ[0], PROJ[1], PROJ[2]; sup_, grant_ = PROJ_MORE[0], PROJ_MORE[1]
+    def parts(p): return p['loc'].split(' · ') + [p['bld']]
+    cards = [pf6_card(ch_['name'], parts(ch_), ph(ch_['set'], ch_['tall']), ch_['slug'] + '.html', big=True),
+             pf6_card(grant_['name'], parts(grant_), grant_['img']),
+             pf6_card(sup_['name'], parts(sup_), sup_['img']),
+             pf6_card(rtb_['name'], parts(rtb_), ph(rtb_['set'], rtb_['tall']), rtb_['slug'] + '.html'),
+             pf6_card('Above the Park', ['Lincoln Park', 'Chicago', 'Residence'], 'https://cidesignbuild.com/wp-content/uploads/2026/03/2107-Kenmore-rev_02-copy-1536x1043.jpg',
+                      'https://cidesignbuild.com/portfolio-item/above-the-park/', ext=True),
+             pf6_card(us_['name'], parts(us_), ph(us_['set'], us_['tall']), us_['slug'] + '.html', big=True)]
+    pg.add(bk(h_of(S[1]), '    <div class="pf6">%s</div>' % ''.join(cards), hcls=' l0', lines=['Signature', 'CI Residences']), 'Projects')
     sec = S[2]; rows = get(sec, 'row'); ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; out = get(sec, 'lead')
     big = ''.join('<div class="rw big rv"><span class="n">%02d</span><span class="t">%s</span></div>' % (i + 1, esc(nop(r[1]))) for i, r in enumerate(rows))
     pg.add(bk(h_of(sec), lead_p(ps_) + '\n    <div class="rws">' + big + '</div>\n' + (closer(out[0][1]) if out else '')), 'Approach')
