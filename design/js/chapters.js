@@ -967,12 +967,15 @@
       for (var i = 0; i <= N; i++){ var k = KN[i], x = k[0] * ca + k[2] * sa, z = -k[0] * sa + k[2] * ca, y = k[1] * cb - z * sb; z = k[1] * sb + z * cb;
         var f = F / (F - z), u = i / N, kx = KX + x * KR * f, ky = KY - y * KR * f, fx = X0 + u * (X1 - X0), fy = Y + u * (Y1 - Y);
         S.push([kx + (fx - kx) * e2, ky + (fy - ky) * e2, z * (1 - e2)]); }
-      var seg = []; for (i = 0; i < N; i++) seg.push(i);
-      if (e2 < 1) seg.sort(function(a, b){ return (S[a][2] + S[a + 1][2]) - (S[b][2] + S[b + 1][2]); });   /* back to front */
-      cx.lineJoin = 'round';
-      for (var j = 0; j < N; j++){ var a = S[seg[j]], b = S[seg[j] + 1], d = (a[2] + b[2]) * .5, w = lerp(1.3 + 2.2 * clamp01((d + 1.) / 2.), 1.2, e2);
-        if (e2 < .98){ cx.lineCap = 'butt'; cx.strokeStyle = '#0B0B0C'; cx.lineWidth = w + 9 * (1 - e2); cx.beginPath(); cx.moveTo(a[0], a[1]); cx.lineTo(b[0], b[1]); cx.stroke(); }
-        cx.lineCap = 'round'; cx.strokeStyle = '#FFFFFF'; cx.lineWidth = w; cx.beginPath(); cx.moveTo(a[0], a[1]); cx.lineTo(b[0], b[1]); cx.stroke(); }
+      /* 15.11 (her note: the lines here as on the About page): one weight, 1.5 px, white, butt ends — no thickening towards the eye, no round caps.
+         Far strands first; each run clears a gap under itself, so a strand passing in front breaks the one behind */
+      var CH = 4, runs = [], k;
+      for (i = 0; i < N; i += CH) runs.push([i, (S[i][2] + S[Math.min(N, i + CH)][2]) / 2]);
+      if (e2 < 1) runs.sort(function(a, b){ return a[1] - b[1]; });
+      cx.lineCap = 'butt'; cx.lineJoin = 'round';
+      for (var j = 0; j < runs.length; j++){ var j0 = runs[j][0], j1 = Math.min(N, j0 + CH), jb = Math.max(0, j0 - 1);
+        if (e2 < .98){ cx.strokeStyle = '#0B0B0C'; cx.lineWidth = 1.5 + 9 * (1 - e2); cx.beginPath(); cx.moveTo(S[j0][0], S[j0][1]); for (k = j0 + 1; k <= j1; k++) cx.lineTo(S[k][0], S[k][1]); cx.stroke(); }
+        cx.strokeStyle = '#FFFFFF'; cx.lineWidth = 1.5; cx.beginPath(); cx.moveTo(S[jb][0], S[jb][1]); for (k = jb + 1; k <= j1; k++) cx.lineTo(S[k][0], S[k][1]); cx.stroke(); }
       cx.globalAlpha = 1;
     }
     var vis = false, raf = 0;
