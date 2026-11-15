@@ -92,6 +92,7 @@ async def main():
             for k in sc['k']:
                 hi = min(k[2], sc['len'] - 0.45); qs.add(round(min(sc['len'] - 0.45, k[1] + min(0.25, max(0.02, (hi - k[1]) / 2))), 2))
             qs.add(round(sc['len'] - 0.45, 2))
+            if sc['id'] == 'a-top': qs.add(0)                   # the cover itself: its title is not a .m moment, so it has no beat of its own
             if sc['id'] == 'a-team': qs.update([4.7, 5.9])      # the team's cards: the strip at its start and at its end
             prev = -9
             for q in sorted(qs):
@@ -115,7 +116,6 @@ async def main():
         for bi, (y, sg) in enumerate(ref):
             si = max(i for i, st in enumerate(starts) if st <= y + 1) if y + 1 >= starts[0] else 0
             cnt[si] = cnt.get(si, 0) + 1
-            if bi == 0: y = 0
             await pg.evaluate(f"window.scrollTo(0,{y})"); await pg.wait_for_timeout(1500)
             key = f'b{si:02d}{chr(96 + cnt[si])}'; sec = ANAMES[IDS[si]]; title = f'{sec} · {cnt[si]}'
             await capture(pg, key, sec, title, 'pin', eid, [0, 0], [0, 0, VW, VH], VW, VH, first)
