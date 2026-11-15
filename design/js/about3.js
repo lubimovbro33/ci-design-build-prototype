@@ -189,11 +189,12 @@
     var ct = $('a-contact'); if (ct) ct.style.top = Math.round((BY['a-cta'].start + 2.3) * SP * H) + 'px';
     main.style.height = Math.round(s * SP * H + H) + 'px';
     mainTop = main.getBoundingClientRect().top + window.scrollY;
-    ringLayout(); tmW = 0; dirty = false;
+    ringLayout(); planLayout(); teamLayout(); tmW = 0; dirty = false;
     var cs = qsa('#ftCity'); cs.forEach(function(v){ var mtx = v.getScreenCTM && v.getScreenCTM(); if (mtx && mtx.a) v.style.setProperty('--ds', Math.max(mtx.a, .05).toFixed(4)); });
   }
   window.addEventListener('resize', function(){ dirty = true; });
   window.addEventListener('load', function(){ dirty = true; });
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ dirty = true; });   /* the plan is measured against the type */
 
   /* anchors: a chapter opens a little into its scene, where its title already stands */
   qsa('a[href^="#"]').forEach(function(a){
@@ -259,14 +260,15 @@
 
   /* ================================================================== 03 WHY CI — the line tangles into a knot of moving parts, and is drawn straight again */
   var KX = new Float32Array(641), KY = new Float32Array(641), KZ = new Float32Array(641);
-  /* 15.11 (her note 14:50): the scene opens with its title alone (it brackets the knot), so everything after the knot has formed stands TW later.
-     The ten moving parts of the sentence ride the tangle as labels; when the line is pulled straight they stand in one row along it */
-  var knL = qsa('#knL .kn'), TW = .6, MQP = window.matchMedia ? window.matchMedia('(max-aspect-ratio: 1/1)') : {matches: false};
+  /* 15.11 15:44 (her frames 03 · 1 / · 2): the knot stands alone in the middle of the screen — the title in the top left corner, the sentence in the
+     bottom right one; nothing is written on the tangle. TW: the knot is held that much longer before it is pulled straight */
+  var TW = .6, MQP = window.matchMedia ? window.matchMedia('(max-aspect-ratio: 1/1)') : {matches: false};
   function why(q, t, act){
     var i;
-    if (!act){ for (i = 0; i < knL.length; i++) vis(knL[i], 0); return; }
+    if (!act) return;
     var a = eio(sg(q, .05, 1.0)) * (1 - eio(sg(q, 1.65 + TW, 2.35 + TW)));
-    var R = 212 * U, ry = .5 * Math.sin(t * .21) + .25, cyr = Math.cos(ry), syr = Math.sin(ry), rx = .3 + .16 * Math.sin(t * .17 + 1), cxr = Math.cos(rx), sxr = Math.sin(rx), cx = W / 2, cy = MID - 24 * U, TA = (-1.5708 - .7) / 3, TL = 6.2832 + 1.0472;
+    var R = 212 * U, room = H - FOOT - 261 * U - (MID - 24 * U), ry = .5 * Math.sin(t * .21) + .25, cyr = Math.cos(ry), syr = Math.sin(ry), rx = .3 + .16 * Math.sin(t * .17 + 1), cxr = Math.cos(rx), sxr = Math.sin(rx), cx = W / 2, cy = MID - 24 * U, TA = (-1.5708 - .7) / 3, TL = 6.2832 + 1.0472;
+    if (!MQP.matches) R = Math.min(R, Math.max(150 * U, room / 1.1));   /* a low window: the tangle keeps clear of the seven lines in the corner under it */
     if (a < .003) flat(1);
     else {
       var N = 640;
@@ -289,20 +291,11 @@
         ink(1, LW); g.beginPath(); var jb = Math.max(0, j0 - 1); g.moveTo(KX[jb], KY[jb]); for (k = jb + 1; k <= j1; k++) g.lineTo(KX[k], KY[k]); g.stroke();
       }
     }
-    /* the parts: each label is tied to a point of the knot; as the knot is pulled straight it comes down to its place in the row (field to field) */
-    var lo = MQP.matches ? 0 : 1 - sg(q, 2.85 + TW, 3.05 + TW), xa = xl(50), xb = xr(1870) - 190 * U, n = knL.length;   /* phones read the list in the sentence: no labels, no marks */
-    for (i = 0; i < n; i++){
-      var la = sg(q, 1.05 + i * .05, 1.2 + i * .05) * lo; vis(knL[i], la); if (la <= 0) continue;
-      var tj = TA + (.1875 + .625 * (i + .5) / n) * TL, jx = 1.25 * Math.sin(3 * tj + .7), jy = .92 * Math.sin(4 * tj + .2), jz = Math.sin(7 * tj + 1.9);
-      var u1 = jx * cyr + jz * syr, w1 = -jx * syr + jz * cyr, v1 = jy * cxr - w1 * sxr, pj = 1 + (jy * sxr + w1 * cxr) * .16;
-      var xj = lerp(xa, xb, i / (n - 1)), px = xj + (cx + R * u1 * pj - xj) * a, py = MID + (cy + R * v1 * pj - MID) * a;
-      sq(px, py, la, SQ * .75); at(knL[i], px + lerp(-3, 9, a) * U, py + lerp(13, -11, a) * U);
-    }
     /* one central team guides the entire journey: the square travels the line */
     var h = sg(q, 3.0 + TW, 3.25 + TW) * (1 - sg(q, 3.85 + TW, 4.0 + TW));
     if (h > 0) sq(lerp(xl(421), xr(1870), eio(sg(q, 3.1 + TW, 3.9 + TW))), MID, h);
     /* the decisions that are yours: three marks; everything between them is ours */
-    var dx = [xl(421), xm(960), xr(1500)];
+    var dx = MQP.matches ? [W * .2, W * .5, W * .8] : [xl(421), xm(960), xr(1500)];
     for (i = 0; i < 3; i++){ var d = eo(sg(q, 4.1 + TW + i * .1, 4.3 + TW + i * .1)) * (1 - sg(q, 4.75 + TW, 4.9 + TW)); if (d > 0) sq(dx[i], MID, d, SQ * (.4 + .6 * d)); }
   }
 
@@ -402,22 +395,38 @@
   }
 
   /* ================================================================== 06 DESIGNED AROUND YOU — a plan whose rooms are named after your life */
-  var rmL = qsa('#rmL .rm'), phY = $('phYou'), YAR = 2560 / 1898;
-  /* the plan, 910 × 640: [x1, y1, x2, y2, room]; door openings are simply left open, each with its swing */
+  var rmL = qsa('#rmL .room'), phY = $('phYou'), YAR = 2560 / 1898;
+  /* the plan, 910 × 640: [x1, y1, x2, y2, room]; door openings are simply left open, each with its swing (no swing under a room's name) */
   var PW = 910, PH = 640;
-  var WALLS = [[310, 0, 310, 240, 0], [0, 240, 120, 240, 0], [166, 240, 310, 240, 0],
-               [640, 0, 640, 240, 1], [310, 240, 440, 240, 1], [486, 240, 640, 240, 1],
+  var WALLS = [[310, 0, 310, 240, 0], [0, 240, 150, 240, 0], [196, 240, 310, 240, 0],
+               [640, 0, 640, 240, 1], [310, 240, 548, 240, 1], [594, 240, 640, 240, 1],
                [640, 240, 740, 240, 2], [786, 240, 910, 240, 2],
                [220, 240, 220, 310, 3], [220, 356, 220, 430, 3], [0, 430, 220, 430, 3],
                [220, 430, 560, 430, 4], [606, 430, 910, 430, 4],
-               [300, 430, 300, 500, 5], [300, 546, 300, 640, 5],
-               [630, 430, 630, 500, 6], [630, 546, 630, 640, 6]];
-  var ARCS = [[120, 240, 46, 0, 90, 0], [440, 240, 46, 0, 90, 1], [740, 240, 46, 0, 90, 2], [220, 310, 46, 90, 180, 3], [560, 430, 46, 270, 360, 4], [300, 500, 46, 90, 180, 5], [630, 500, 46, 0, 90, 6]];
-  var RMC = [[25, 25], [335, 25], [665, 25], [25, 265], [245, 265], [25, 455], [325, 455], [655, 455]];   /* each name hangs in its room's corner */
+               [300, 430, 300, 530, 5], [300, 576, 300, 640, 5],
+               [630, 430, 630, 530, 6], [630, 576, 630, 640, 6]];
+  var ARCS = [[150, 240, 46, 0, 90, 0], [548, 240, 46, 0, 90, 1], [740, 240, 46, 0, 90, 2], [220, 310, 46, 90, 180, 3], [560, 430, 46, 270, 360, 4], [300, 530, 46, 90, 180, 5], [630, 530, 46, 0, 90, 6]];
+  var RMC = [[0, 0], [310, 0], [640, 0], [0, 240], [220, 240], [0, 430], [300, 430], [630, 430]];   /* the corner of each room: its name hangs there */
   var T6 = 1.0, D6 = .28;
+  /* 15.11 15:47 (her note): the plan stands in the middle of the screen, as large as the title (top left corner) and the texts (bottom right corner)
+     let it be — one field (50) from each. 15:51: a name stands the same distance from the wall above it and the wall on its left, measured to the
+     letters themselves (the capitals begin .211 em under the top of their line box) */
+  var PL = {x: 0, y: 0, sc: 1, d: 12, cap: 3}, CAPI = .211;
+  function planLayout(){
+    var scn = BY['a-you'].el, h2 = scn.querySelector('h2'), ps = scn.querySelectorAll('p.p-cbr'), g50 = 50 * U, fpx = Math.max(10, 14 * U), i;
+    var a = PW / 2, b = PH / 2, cx = W / 2, cy = MID, sc = U;
+    if (MQP.matches) sc = Math.min(sc, (W - 40) / PW);
+    else {
+      /* a rectangle may stand beside the plan or above / under it: the plan takes the larger of the two */
+      if (h2){ var tr = h2.offsetLeft + h2.offsetWidth, tb = h2.offsetTop + h2.offsetHeight; sc = Math.min(sc, Math.max((cx - tr - g50) / a, (cy - tb - g50) / b)); }
+      for (i = 0; i < ps.length; i++){ var dl = ps[i].offsetLeft, dt = ps[i].offsetTop; sc = Math.min(sc, Math.max((dl - g50 - cx) / a, (dt - g50 - cy) / b)); }
+    }
+    sc = Math.max(sc, .3 * U);
+    PL.sc = sc; PL.x = Math.round(cx - a * sc); PL.y = cy - b * sc; PL.d = Math.max(8, 16 * U); PL.cap = CAPI * fpx;
+  }
   function you(q, t, act){
-    var px = xl(421), py = ym(218), sc = U, i, out = 1 - sg(q, 4.3, 4.55);
-    for (i = 0; i < 8; i++){ vis(rmL[i], eo(sg(q, T6 + i * D6 + .1, T6 + i * D6 + .3)) * out); at(rmL[i], px + RMC[i][0] * sc, py + RMC[i][1] * sc); }
+    var px = PL.x, py = PL.y, sc = PL.sc, i, out = 1 - sg(q, 4.3, 4.55);
+    for (i = 0; i < 8; i++){ vis(rmL[i], eo(sg(q, T6 + i * D6 + .1, T6 + i * D6 + .3)) * out); at(rmL[i], px + RMC[i][0] * sc + PL.d, py + RMC[i][1] * sc + PL.d - PL.cap); }
     /* "Yours": the plan fills with the room it became, and the room takes the screen */
     var pr = [px, py, PW * sc, PH * sc], full = [0, 0, W, H], imF = coverRect(0, 0, W, H, YAR, .5, .62);
     if (q < 4.3 || q > 6.05) vis(phY, 0);
@@ -455,8 +464,13 @@
   var CSTEP = 145;
   function colX(i){ return xl(421) + i * CSTEP * U; }
   function roofY(x, r){ var ev = ym(500), ap = ym(290), xa = colX(0), xb = colX(9), mdx = (xa + xb) / 2, hw = (xb - xa) / 2, d = Math.abs(x - mdx); return lerp(MID, d >= hw ? ev : lerp(ap, ev, d / hw), r); }
+  /* 15.11 15:57: the descriptions stand in the bottom right corner, under the last columns — on a low window the columns end a little higher,
+     so the names under them keep 40 clear of the tallest description */
+  var TBASE = 0;
+  function teamLayout(){ var ps = BY['a-team'].el.querySelectorAll('p.p-cbr'), h = 0, i; for (i = 0; i < ps.length; i++) h = Math.max(h, ps[i].offsetHeight);
+    TBASE = MQP.matches ? ym(760) : Math.min(ym(760), H - FOOT - h - 147 * U); }
   function team(q, t, act){
-    var r = eio(sg(q, .05, .85)) * (1 - eio(sg(q, 6.2, 6.75))), i, colsOut = 1 - sg(q, 4.0, 4.3), base = ym(760);
+    var r = eio(sg(q, .05, .85)) * (1 - eio(sg(q, 6.2, 6.75))), i, colsOut = 1 - sg(q, 4.0, 4.3), base = TBASE;
     for (i = 0; i < 10; i++){ vis(dcL[i], eo(sg(q, 1.0 + i * .07, 1.25 + i * .07)) * colsOut); at(dcL[i], colX(i) - SQ * .375, base + (i % 2 ? 75 : 25) * U); }
     /* the people: a strip of portraits that travels under the roof */
     var sIn = sg(q, 4.2, 4.5) * (1 - sg(q, 6.0, 6.25));
