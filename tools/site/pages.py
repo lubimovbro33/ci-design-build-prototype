@@ -235,64 +235,97 @@ def portfolio():
     emit('portfolio.html', 'Portfolio', pg, A + 'rtb/1430-08a.webp')
 portfolio()
 
-def project(p, nxt):
-    """A project's page (her word of 15.11 21:29: «нецікава і шаблонна… подумав більше метафорами… сітку як на сторінці проєктів»; sketches shown,
-    built for Collectors Home first). One idea: the home is entered through its name and opened with its own key.
-    - cover: the name's letters are windows onto the home, the scroll flies into one (the Portfolio cover's move);
-    - the client's template lines stand as screens of the Portfolio intro's kind (eyebrow on the left field, the thought from 600);
-    - The Brief: this home's key — as many cuts as its scope has items, a name under each (film "key", still); the facts in a row at the foot;
-    - Inside …: the Portfolio grid — one large + two small, a wide picture, the mirror block; every picture opens out of a small window;
-    - Why the Details Matter: hundreds of strokes become one line (film "many"), the three decisions are the blue ones;
-    - the next project is seen through its own name.
+def project_old(p, nxt):
+    """the project page as it was before 15.11 21:29 (the client's template, plainly): still used by the projects whose own idea is not drawn yet"""
+    S = P['project']; pg = Pg(); nm = p['name']
+    def sub(t): return t.replace('[Project Name]', nm)
+    cov = ph(p['set'], p['cover'])
+    pg.add(sc_curtain(p['loc'], nm, cov, p.get('g', .72)), 'Project', 'top')
+    pg.add(intro([get(S[0], 'lead')[0][1]]))
+    # the brief
+    sec = S[1]; dl = get(sec, 'dl')[0][1]; known = {'Residence': p['bld'] + ' · ' + p['loc']}; known.update(p.get('facts', {}))
+    if 'Size' in known: dl = [dl[0], dl[1], ['Size', ['']]] + dl[2:]
+    rows = ''.join('<div class="rv"><dt>%s</dt><dd>%s</dd></div>' % (esc(k), esc(known.get(k, ' '.join(v)))) for k, v in dl)
+    goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
+    pg.add(bk(h_of(sec), '    <dl class="dlt">%s</dl>\n    <div class="g2">\n      <p class="t34 rv" style="--w:430">%s</p>\n      <div class="t20s rv" style="--w:475">%s</div>\n    </div>' % (rows, esc(goal), ''.join('<p>%s</p>' % esc(x) for x in gp))), 'Brief')
+    # design vision
+    sec = S[2]; ps_ = [it[1] for it in sec['items'] if it[0] in ('p', 'lead')]
+    pg.add(text_block(h_of(sec), [['p', x] for x in ps_]), 'Vision')
+    # gallery: wide pictures whole, tall ones in pairs
+    g = ''.join('<div class="gr %s rv">%s</div>' % (k, ''.join('<figure><img src="%s" alt="%s" loading="lazy"></figure>' % (ph(p['set'], f), nm) for f in fs)) for k, fs in p['gal'])
+    pg.add(bk(sub(h_of(S[3])).replace('[', '').replace(']', ''), '    <div class="gal">%s</div>' % g), 'Gallery')
+    # behind the design: the client's template, its guidance kept as placeholders
+    sec = S[4]; rows = get(sec, 'row'); ld = get(sec, 'lead')
+    r = ''.join('<div class="rw d rv"><span class="n">%02d</span><span class="t">%s</span><div class="dsc"><p><span class="ph">[%s]</span></p></div></div>' % (i + 1, esc(x[1]), esc(' '.join(x[2][0]))) for i, x in enumerate(rows))
+    pg.add(bk(h_of(sec), '    <div class="rws">%s</div>\n%s' % (r, closer(ld[0][1]) if ld else '')), 'Details')
+    q = get(S[5], 'quote'); w = [it for it in S[5]['items'] if it[0] == 'p']
+    pg.add(quote_block(q[0][1][0], w[0][1][0] if w else None))
+    # the next project
+    pg.add('<section class="bk" id="@ID@">\n  <div class="lst rv"><a href="%s.html"><span class="n">Next project</span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span></a></div>\n</section>' % (nxt['slug'], nxt['name'], nxt['loc'], nxt['bld']))
+    final_cta(pg, S[6], ph(p['set'], p['cta']), top=p.get('top', False))
+    emit(p['slug'] + '.html', nm, pg, cov)
+
+def project_collection(p, nxt):
+    """«Collectors Home» — the page's idea comes from the project's own name: a collection (her word of 15.11 21:57, «Роби», after the first draft
+    read as a copy of the Portfolio page — only the grid may come from there).
+    - cover: a collector's display case — the photograph behind glazing bars; the panes light up one after another as the page arrives; the scroll
+      opens the case's two doors (film "vitrine");
+    - behind the doors, two halves on the four columns — each door uncovers one: on the left an exhibit (p['exhibit'] = file, object-position:
+      the home's own display cases), on the right its label — a white card with The Brief's facts and The Goal, set as a museum label, no rules;
+    - Design Vision: the template's lines on the four columns;
+    - Inside …: the collection on the Portfolio grid (one large + two small, a wide one, the mirror), every picture numbered like a catalogue item;
+    - Why the Details Matter: hundreds of strokes become one line (film "many"), title top left, text bottom right;
+    - the next project: its name and its photograph side by side on the grid.
     Nothing is invented: what the client has not written stays their placeholder."""
     S = P['project']; pg = Pg(); nm = p['name']
     def sub(t): return t.replace('[Project Name]', nm)
     cov = ph(p['set'], p['cover'])
-    pg.add(sc_letters(p['loc'], nm, cov, lines=p['lines'], place='cc', zoom=True), 'Project', 'top')
-    # the positioning line: the building is its eyebrow (a fact), the line is the client's to write
-    pg.add('<section class="iv sm" id="@ID@">\n  <div class="iv-c">\n    <p class="iv-k rv">%s</p>\n    <p class="t60s rv">%s</p>\n  </div>\n</section>' % (esc(p['bld']), esc(' '.join(get(S[0], 'lead')[0][1]))))
-    # the brief: the key of this home
     sec = S[1]; dl = get(sec, 'dl')[0][1]; known = {'Residence': p['bld'] + ' · ' + p['loc']}; known.update(p.get('facts', {}))
     if 'Size' in known: dl = [dl[0], dl[1], ['Size', ['']]] + dl[2:]
-    val = lambda k, v: known.get(k, ' '.join(v))
-    scope = [x.strip() for x in val('Scope', dict((k, v) for k, v in dl)['Scope']).strip('[]').split(' / ')]
-    if 'Scope' not in known: scope = ['[%s]' % x for x in scope]
-    facts = ''.join('<div><dt class="lab3">%s</dt><dd class="h5r v">%s</dd></div>' % (esc(k), esc(val(k, v))) for k, v in dl if k != 'Scope')
-    N = len(scope); T = .7 + N * .36
-    pg.add('<section class="film" data-fig="key" data-seed="%d" data-cap="Scope" data-len="%.2f" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
-           '      <h2 class="t60 m p-ct" data-k="-1 -.5 99 99">%s</h2>\n      <dl class="kf m" data-k="%.2f %.2f 99 99">%s</dl>\n'
-           '      <p class="vh">Scope</p><ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % (p['seed'], T + 1.0, esc(nop(h_of(sec))), T + .05, T + .4, facts, ''.join('<li>%s</li>' % html.escape(x, quote=False) for x in scope)), 'Brief')
+    rows = ''.join('<div><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), esc(known.get(k, ' '.join(v)))) for k, v in dl)
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
-    pg.add('<section class="iv sm" id="@ID@">\n  <div class="iv-c">\n    <p class="iv-k rv">%s</p>\n    %s\n  </div>\n</section>' % (esc(goal), ''.join('<p class="t34 rv iv-t">%s</p>' % esc(x) for x in gp)))
-    # design vision: the template's own lines
+    rows += '<div><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(goal), ' '.join(esc(x) for x in gp))
+    leaf = ('<div class="vt-w"><img src="%s" alt="%s"%s><p class="lab3 vt-k">%s</p><%s class="t111 vt-h">%s</%s><p class="t20 vt-s">%s</p></div>'
+            % (cov, '%s', ' style="filter:contrast(1.04) brightness(%s)"' % p.get('g', .72), esc(p['loc']), '%s', '<br>'.join(esc(x) for x in p['lines']), '%s', esc(' '.join(get(S[0], 'lead')[0][1]))))
+    pg.add('<section class="film vt" data-fig="vitrine" data-len="1.9" id="@ID@">\n  <div class="stg">\n'
+           '    <div class="vt-in"><div class="vt-row">\n      <span class="vt-x"><img src="%s" alt="%s"%s></span>\n'
+           '      <div class="vt-card">\n        <div><p class="lab3 vt-e">%s</p><h2 class="t60">%s</h2></div>\n        <dl class="vt-dl">%s</dl>\n      </div>\n    </div></div>\n'
+           '    <div class="vt-d l">%s</div>\n    <div class="vt-d r" aria-hidden="true">%s</div>\n    <canvas class="ln" aria-hidden="true"></canvas>\n  </div>\n</section>'
+           % (ph(p['set'], p['exhibit'][0]), nm, ' style="object-position:%s"' % p['exhibit'][1], esc(label(sec)), esc(nop(h_of(sec))), rows, leaf % (nm, 'h1', 'h1'), leaf % ('', 'p', 'p')), 'Project', 'top')
+    # design vision: the template's own lines on the four columns
     sec = S[2]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] in ('p', 'lead')]
-    pg.add('<section class="iv" id="@ID@">\n  <div class="iv-c">\n    <p class="iv-k rv">%s</p>\n    <h2 class="t60s rv">%s</h2>\n    <div class="iv-2">%s</div>\n  </div>\n</section>'
+    pg.add('<section class="bk" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <div class="g4-b">\n      <h2 class="t34 rv">%s</h2>\n      <div class="g4-3">%s</div>\n    </div>\n  </div>\n</section>'
            % (esc(label(sec)), esc(h_of(sec)), ''.join('<p class="t20 rv">%s</p>' % esc(nop(x)) for x in ps_)), 'Vision')
-    # the gallery on the Portfolio grid
-    def tile(f, big=False): return '<div class="cd rv%s"><span class="im"><img src="%s" alt="%s" loading="lazy"></span></div>' % (' big' if big else '', ph(p['set'], f), nm)
+    # the collection: the Portfolio grid, every picture a numbered item
+    total = sum(len(fs) for k, fs in p['gal2']); n = [0]
+    def num(): n[0] += 1; return '<span class="lc lab3 nn">%02d <i>/ %02d</i></span>' % (n[0], total)
+    def tile(f, big=False): return '<div class="cd rv%s"><span class="im"><img src="%s" alt="%s" loading="lazy"></span>%s</div>' % (' big' if big else '', ph(p['set'], f), nm, num())
     o = []
     for kind, fs in p['gal2']:
-        if kind == 'full': o.append('    <figure class="gfull rv"><img src="%s" alt="%s" loading="lazy"></figure>' % (ph(p['set'], fs[0]), nm))
+        if kind == 'full': o.append('    <figure class="gfull rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span>%s</figure>' % (ph(p['set'], fs[0]), nm, num()))
         elif kind == 'blk': o.append('    <div class="pf6 g">%s%s%s</div>' % (tile(fs[0], True), tile(fs[1]), tile(fs[2])))
-        else: o.append('    <div class="pf6 g">%s%s%s</div>' % (tile(fs[0]), tile(fs[1]), tile(fs[2], True)))
+        else:
+            a_, b_ = tile(fs[0]), tile(fs[1]); o.append('    <div class="pf6 g">%s%s%s</div>' % (a_, b_, tile(fs[2], True)))
     ttl = sub(h_of(S[3])).replace('[', '').replace(']', '')
     pg.add(bk(ttl, '\n'.join(o), hcls=' l0', lines=['Inside', nm]), 'Gallery')
     # behind the design: hundreds of strokes become one line; the three decisions are the client's placeholders
-    sec = S[4]; rows = get(sec, 'row'); ld = get(sec, 'lead'); q0 = [(.75, .95, 1.35, 1.5), (1.5, 1.65, 1.95, 2.1), (2.1, 2.25, 2.6, 2.75)]
-    assert len(rows) == 3 and ld, rows
-    dec = ''.join('      <p class="t20 m p-cb" data-k="%s %s %s %s">%s<br> %s</p>\n' % (q0[i] + (esc(x[1]), esc('[%s]' % ' '.join(x[2][0])))) for i, x in enumerate(rows))
+    sec = S[4]; rws = get(sec, 'row'); ld = get(sec, 'lead'); q0 = [(.75, .95, 1.35, 1.5), (1.5, 1.65, 1.95, 2.1), (2.1, 2.25, 2.6, 2.75)]
+    assert len(rws) == 3 and ld, rws
+    dec = ''.join('      <p class="t20 m p-cbr" data-k="%s %s %s %s">%s<br> %s</p>\n' % (q0[i] + (esc(x[1]), esc('[%s]' % ' '.join(x[2][0])))) for i, x in enumerate(rws))
     lead = [nop(x) for x in ld[0][1]]
     pg.add('<section class="film" data-fig="many" data-len="3.8" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
-           '      <h2 class="t60 m p-ct" data-k="-1 -.5 99 99">%s</h2>\n%s      <p class="t34 m p-cb" data-k="3.0 3.3 99 99">%s<br class="bd"> <span class="cb">%s</span></p>\n'
-           '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % (esc(nop(h_of(sec))), dec, esc(lead[0] + ('.' if len(lead) > 1 else '')), esc(' '.join(lead[1:])), ''.join('<li>%s</li>' % html.escape(x[1], quote=False) for x in rows)), 'Details')
+           '      <h2 class="t60 m p-ctl" data-k="-1 -.5 99 99">%s</h2>\n%s      <p class="t34 m p-cbr" data-k="3.0 3.3 99 99">%s<br class="bd"> <span class="cb">%s</span></p>\n'
+           '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % ('Why the Details<br>Matter', dec, esc(lead[0] + ('.' if len(lead) > 1 else '')), '<br class="bd"> '.join(esc(x) for x in ['The success of the home comes', 'from making them feel like one idea']), ''.join('<li>%s</li>' % html.escape(x[1], quote=False) for x in rws)), 'Details')
+    assert nop(h_of(sec)) == 'Why the Details Matter' and ' '.join(lead[1:]) == 'The success of the home comes from making them feel like one idea', (h_of(sec), lead)
     q = get(S[5], 'quote'); w = [it for it in S[5]['items'] if it[0] == 'p']
     pg.add(quote_block(q[0][1][0], w[0][1][0] if w else None))
-    # the next project, seen through its name
-    pg.add('<a class="nx" href="%s.html" id="@ID@">\n  <img src="%s" alt="" loading="lazy">\n  <span class="nx-m"><span class="t111">%s</span></span>\n  <span class="lab3 nx-k">Next project</span>\n</a>'
-           % (nxt['slug'], ph(nxt['set'], nxt['cover']), '<br>'.join(esc(x) for x in nxt['lines'])))
+    # the next project: its name and its photograph side by side on the grid
+    pg.add('<section class="bk" id="@ID@">\n  <a class="g4 nx2" href="%s.html">\n    <span class="nx2-t"><span class="lab3 nx2-k">Next project</span><span class="t60 rv">%s</span>%s</span>\n'
+           '    <span class="nx2-i cd rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span></span>\n  </a>\n</section>'
+           % (nxt['slug'], '<br>'.join(esc(x) for x in nxt['lines']), sq_line(nxt['loc'].split(' · ') + [nxt['bld']]), ph(nxt['set'], nxt['card']), nxt['name']))
     final_cta(pg, S[6], ph(p['set'], p['cta']), top=p.get('top', False))
     emit(p['slug'] + '.html', nm, pg, cov)
-for i, p in enumerate(PROJ): project(p, PROJ[(i + 1) % len(PROJ)])
+for i, p in enumerate(PROJ): (project_collection if p.get('idea') == 'collection' else project_old)(p, PROJ[(i + 1) % len(PROJ)])
 
 # ================================================================== news + article
 def news():

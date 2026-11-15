@@ -3,6 +3,7 @@
    "steps": a journey on the line, the square walks from mark to mark. Times are in "screens" (data-len, data-k="in0 in1 out0 out1").
    "key": the line opens into a key — one blank, six cuts, a step each; no two keys are cut alike (Portfolio, 15.11).
    "many": hundreds of strokes become the one line (a project's «Why the Details Matter», 15.11).
+   "vitrine": a display case — the cover behind glazing bars, its panes light up, the scroll opens its doors («Collectors Home», 15.11).
    Flow: blocks reveal once as they arrive, photographs open out of a line (.bnd), rows open (.qa), chips filter lists, the form checks itself.
    The shell (cursor, smooth wheel, header logo, chapter rail, footer street) is the homepage's. */
 (function(){
@@ -429,7 +430,27 @@
     g.restore();
     if (la > 0 && hw > 0 && e <= 0){ g.fillStyle = 'rgba(255,255,255,' + la.toFixed(3) + ')'; g.fillRect(W / 2 - hw, Math.round(Z.cy) - .75, hw * 2, 1.5); }
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many};
+  /* ---------- film: vitrine — the cover of «Collectors Home» (15.11 22:00; the page's idea comes from the project's name: a collection).
+     A collector's display case: the cover photograph stands behind glazing bars in two door leaves. As the page arrives the panes light up one
+     after another. The scroll opens the doors — each leaf goes its own way with its bars — and behind them stand an exhibit and its label. */
+  var VT = {C: 6, R: 4, t0: 0, ord: null};
+  function vitrine(f, q, t){
+    if (!f.vt) f.vt = {l: qs('.vt-d.l', f.el), r: qs('.vt-d.r', f.el), x: qs('.vt-x img', f.el), k: '', c: ''};
+    if (!VT.t0) VT.t0 = q > .05 || reduced ? t - 9 : t;
+    var C = VT.C, R = VT.R, c, r, i;
+    if (!VT.ord){ var sd = 11, n = C * R, a = []; for (i = 0; i < n; i++) a.push(i); for (i = n - 1; i > 0; i--){ sd = (sd * 16807) % 2147483647; var j = sd % (i + 1), tmp = a[i]; a[i] = a[j]; a[j] = tmp; } VT.ord = []; for (i = 0; i < n; i++) VT.ord[a[i]] = i; }
+    var Z = f.vt, tE = t - VT.t0, op = eio(sg(q, .12, 1.05)), d = op * (W / 2 + 2), pw = W / C, pv = H / R;
+    var key = d.toFixed(1); if (key !== Z.k){ Z.k = key; if (Z.l) Z.l.style.transform = 'translate3d(' + (-d).toFixed(1) + 'px,0,0)'; if (Z.r) Z.r.style.transform = 'translate3d(' + d.toFixed(1) + 'px,0,0)'; }
+    var ck = lerp(1.16, 1, eo(sg(q, .15, 1.1))).toFixed(4); if (Z.x && ck !== Z.c){ Z.c = ck; Z.x.style.transform = 'scale(' + ck + ')'; }   // the exhibit settles as the doors open
+    if (op >= 1) return;
+    for (r = 0; r < R; r++) for (c = 0; c < C; c++){ var lt = .2 + VT.ord[r * C + c] / (C * R) * 1.25, al = 1 - sg(tE, lt, lt + .5); if (al <= 0) continue;
+      g.fillStyle = 'rgba(0,0,0,' + al.toFixed(3) + ')'; g.fillRect(c * pw - 1 + (c < C / 2 ? -d : d), r * pv - 1, pw + 2, pv + 2); }
+    var ba = .33 * sg(tE, 0, .6) * (1 - sg(op, .85, 1)); if (ba <= 0) return; g.fillStyle = 'rgba(255,255,255,' + ba.toFixed(3) + ')';
+    for (c = 1; c < C; c++){ if (c * 2 === C) continue; g.fillRect(Math.round(c * pw + (c < C / 2 ? -d : d)), 0, 1, H); }
+    g.fillRect(Math.round(W / 2 - d) - 1, 0, 1, H); g.fillRect(Math.round(W / 2 + d), 0, 1, H);
+    for (r = 1; r < R; r++){ var y = Math.round(r * pv); g.fillRect(-d, y, W / 2, 1); g.fillRect(W / 2 + d, y, W / 2, 1); }
+  }
+  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, vitrine: vitrine};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
