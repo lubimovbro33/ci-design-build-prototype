@@ -31,6 +31,8 @@ body.ab3 .hdr{opacity:1}
 /* where things stand */
 .sc .p-tl{left:calc(421 * var(--u));top:calc(50 * var(--u))}
 .sc .p-bl{left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+/* 15.11, her frame «01 Cover · 2»: the opening paragraph stands where a title stands (421 / 50), its note at the foot of the same line */
+.sc .p-tla{left:calc(421 * var(--u));top:calc(50 * var(--u))}
 .sc .p-al{left:calc(421 * var(--u));bottom:calc(50% + 50 * var(--u))}
 .sc .p-ul{left:calc(421 * var(--u));top:calc(50% + 50 * var(--u))}
 .sc .p-ac{left:0;right:0;bottom:calc(50% + 50 * var(--u));text-align:center}
@@ -127,6 +129,7 @@ body.ab3 .ch-ftr{position:relative;z-index:5;background:#000}
   .sc .p-tl, .sc .p-bl, .sc .p-blg, .sc .p-blgb, .sc .p-blg2, .sc .p-br, .sc .p-brn, .sc .p-ur, .sc .p-um, .sc .p-al, .sc .p-ul, .cv-h, .sc .p-yours, .sc .p-bl2, .sc .p-blb{left:var(--m, 20px)}
   .sc .m[style*="--w:"]{width:auto!important;right:var(--m, 20px)}
   .sc .p-bc{left:var(--m, 20px);text-align:left}
+  .sc .p-tla{left:var(--m, 20px);top:auto;bottom:calc(50% + 14px)}   /* phones: under the header there is no room — it keeps its place above the line */
   .sc h2.m{white-space:normal}
 }
 
