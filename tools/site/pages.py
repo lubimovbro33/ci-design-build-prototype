@@ -145,7 +145,7 @@ def pf_card(p, tall=False):
 def portfolio():
     S = P['portfolio']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp'), 'Portfolio', 'top')
+    pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp', lines=['Homes', 'as Unique', 'as the', 'People', 'Who Live in', 'Them']), 'Portfolio', 'top')
     pg.add(intro(ps))
     allp = PROJ + PROJ_MORE
     L = [pf_card(allp[0]), pf_card(allp[2], True), pf_card(allp[4])]; R = [pf_card(allp[1], True), pf_card(allp[3])]
