@@ -163,7 +163,17 @@ def portfolio():
     # The client's title (2nd round) stays in content.json: «Homes as Unique as the People Who Live in Them». verify.py lists it as an exception.
     h1 = 'Homes Made for Unique Lives'
     pg.add(sc_letters(label(S[0]), h1, A + 'rtb/1430-08a.webp', lines=['Homes', 'Made', 'for Unique', 'Lives'], place='cc', zoom=True), 'Portfolio', 'top')
-    pg.add(intro(ps))
+    # The page's first thought — her frame of 15.11 21:09 (drawn in a spare frame of her working page, `529:907`): a screen of its own, the content in
+    # the middle of its height. A small line on the left field (an eyebrow), the thought large from 600 — 60 / 52 in sentence case, the first clause
+    # light, the rest blue, in her four lines — and 90 under it the second sentence in the running 20, in her three lines.
+    # THE EYEBROW IS NOT THE CLIENT'S COPY: her frame holds a leftover («The traditional»); until she names one, it reads «A True Reflection» —
+    # the client's own words from the sentence below.
+    tx = [nop(' '.join(x) if isinstance(x, (list, tuple)) else x) for x in ps]
+    assert tx == ['Every CI home begins with you: your routines, your collections, your ambitions, your way of living',
+                  'Explore residences brought to life through one integrated team, each a true reflection of the people who call it home'], tx
+    pg.add('<section class="iv" id="@ID@">\n  <div class="iv-c">\n    <p class="iv-k rv">A True Reflection</p>\n'
+           '    <p class="t60s rv">Every CI home begins<br class="bd"> with you: <span class="cb">your routines, your<br class="bd"> collections, your ambitions,<br class="bd"> your way of living</span></p>\n'
+           '    <p class="t20 rv iv-p">Explore residences brought to life through<br class="bd"> one integrated team, each a true reflection of<br class="bd"> the people who call it home</p>\n  </div>\n</section>')
     # Signature CI Residences — her grid, exactly as her frame «04 Signature CI Residences · 2» (15.11 18:29; 19:28: «на макеті там немає чотирьох
     # маленьких, тільки дві вгорі. Зроби так, як на макеті»): four columns across the whole container (fields 50, gutters 48); a block is ONE LARGE card
     # (two columns, 886 : 1112) and TWO SMALL ones (419 : 525) at the top beside it — nothing under the small ones; the next block is its mirror.

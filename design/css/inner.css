@@ -138,6 +138,16 @@ html body.inr .bk .c3{margin-left:calc(1440 * var(--u))}
 .cd:hover .im img{transform:scale(1.04)}
 .cd .nm{display:block;margin-top:calc(25 * var(--u))}
 .cd .lc{display:block;margin-top:calc(10 * var(--u))}
+/* the page's first thought as a screen of its own (Portfolio, her frame of 15.11 21:09): the content in the middle of the screen's height; an eyebrow on
+   the left field (Zalando Sans 20 / 120 %, +5 %), the thought from 600 — 60 / 52 in sentence case (.t60s), 918 wide in her own lines — and 90 under
+   it the second sentence in the running 20. The block after it begins 50 lower, as her next frame does */
+.iv{position:relative;display:flex;align-items:center;min-height:100vh;background:#000;padding:calc(100 * var(--u)) 0;box-sizing:border-box}
+.iv-c{position:relative;margin-left:calc(600 * var(--u))}
+html body .t60s{font-family:var(--fx);font-weight:400;font-size:max(24px, calc(60 * var(--u)));line-height:.867;letter-spacing:-.0167em;text-transform:none;margin:0;color:#EBEBEB;white-space:nowrap}
+.iv-k{position:absolute;left:calc(-550 * var(--u));top:calc(7 * var(--u));margin:0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.2;letter-spacing:.05em;color:#EBEBEB;white-space:nowrap}
+html body.inr .iv-p{margin-top:calc(90 * var(--u));white-space:nowrap}
+.iv + .bk{padding-top:calc(50 * var(--u))}
+
 /* how a card arrives (15.11 20:37, her word: «топорна анімація на карточці… чи є на головній вже рішення»): the way the homepage's Projects photographs
    do (.pj4-im) — the photograph opens out of a small window while the picture inside settles from a larger scale, the same curve; the caption comes
    after it. The card itself neither fades nor rises. Three cards of a row open one after another. (Fill «backwards», so the pointer's own zoom
@@ -372,6 +382,8 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .pf6 .cd .im, .pf6 .cd.big .im{aspect-ratio:4 / 5}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
   .lib4{display:block;margin:0 var(--m, 20px)} .lib4 .chips{margin-top:24px}
+  .iv{display:block;min-height:0;padding:72px var(--m, 20px) 80px} .iv-c{margin-left:0} .iv-k{position:static;margin-bottom:18px;font-size:13px}
+  html body .t60s{font-size:clamp(21px, 6.4vw, 30px);white-space:normal} html body.inr .iv-p{margin-top:28px;white-space:normal} .iv + .bk{padding-top:0}
   .ix3{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:28px;margin-top:44px} .ix3 .lc{margin-top:8px} .ix3 .lc + .lc{margin-top:4px}
   .fin.gr{height:auto;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(var(--hdr, 64px) + 40px) var(--m, 20px) 72px;box-sizing:border-box}
   .fin.gr::before, .fin.gr::after{display:none}
