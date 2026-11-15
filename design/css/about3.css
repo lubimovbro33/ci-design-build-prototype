@@ -148,7 +148,7 @@ body.ab3 .ch-ftr{position:relative;z-index:5;background:#000}
   .sc .p-tla{left:var(--m, 20px);top:auto;bottom:calc(50% + 14px)}
   .sc .p-ctl{left:var(--m, 20px);top:calc(var(--hdr, 64px) + 20px)} .sc .p-cbl{left:var(--m, 20px);right:var(--m, 20px)}
   .sc[data-id="a-standard"] .p-ctl{top:calc(50% + 22px)}   /* phones, Quality: the photograph is the upper half, the type lives in the lower */
-  .sc .p-tls{left:var(--m, 20px);right:var(--m, 20px);top:auto;bottom:calc(50% + 14px)}   /* phones: the description stands above the line */
+  .sc .p-tls{left:var(--m, 20px);right:calc(20% + 12px);top:auto;bottom:calc(50% + 14px)}   /* phones: the description stands above the line, short of the figure that stands at 80 % */
   .sc .p-tl{top:calc(var(--hdr, 64px) + 20px)}   /* phones: a title on the text line stands under the header too (it stood behind the button) */
   .sc .p-cbr{left:var(--m, 20px);right:var(--m, 20px)}       /* phones: the corner text is a column of the whole width at the foot */
   .sc .p-blgb{bottom:calc(16.67vw + 12px)} .sc .p-blg2{bottom:calc(16.67vw + 72px);right:calc(46.7vw + 14px)}                     /* phones: the closing sentence is a column beside the door (the script draws it 420 / 900 of the width from the right), never across it */
