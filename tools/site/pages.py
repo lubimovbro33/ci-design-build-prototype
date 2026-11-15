@@ -271,7 +271,10 @@ def project_collection(p, nxt):
     - cover and The Brief are one pinned scene (film "wall"; her choice of 15.11 22:17 among three stills, after the display case with doors and
       a white card was refused): the cover photograph opens to the full screen with the name; the scroll makes it smaller until it hangs on the
       black wall as a picture — the home takes its place in the collection; the name stays under it, and beside it, uncovered by the picture as it
-      shrinks, stands the wall text: The Brief's facts and The Goal, plain text, no card, no rules;
+      shrinks, stands its label («Етикетка», her choice of 22:27 after the six rows there read as overloaded): «The Brief» and the four short
+      facts in one narrow column at the picture's lower edge; as the page arrives the photograph lights up pane by pane (her word of 22:27:
+      without it the first screen «нецікаве стало»);
+    - below the scene, on the four columns: Scope as six large lines with rules, then The Goal;
     - Design Vision: the template's lines on the four columns;
     - Inside …: the collection on the Portfolio grid (one large + two small, a wide one, the mirror), every picture numbered like a catalogue item;
     - Why the Details Matter: hundreds of strokes become one line (film "many"), title top left, text bottom right;
@@ -282,14 +285,21 @@ def project_collection(p, nxt):
     cov = ph(p['set'], p['cover'])
     sec = S[1]; dl = get(sec, 'dl')[0][1]; known = {'Residence': p['bld'] + ' · ' + p['loc']}; known.update(p.get('facts', {}))
     if 'Size' in known: dl = [dl[0], dl[1], ['Size', ['']]] + dl[2:]
-    rows = ''.join('<div><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), esc(known.get(k, ' '.join(v)))) for k, v in dl)
+    def fact(k, v):
+        x = known.get(k, ' '.join(v))
+        return '<br>'.join(esc(y) for y in x.split(' · ', 1)) if k == 'Residence' else esc(x)   # the building, then the place: two lines by sense
+    # the label by the picture: the short facts only (her choice of 15.11 22:27, «Етикетка»); Scope and The Goal stand below, on their own
+    rows = ''.join('<div><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), fact(k, v)) for k, v in dl if k != 'Scope')
+    scope = [x for x in dl if x[0] == 'Scope'][0]; items = known['Scope'].split(' / ') if 'Scope' in known else [' '.join(scope[1])]
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
-    rows += '<div><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(goal), ' '.join(esc(x) for x in gp))
-    pg.add('<section class="film wl" data-fig="wall" data-len="1.9" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
+    pg.add('<section class="film wl" data-fig="wall" data-len="1.7" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
            '    <div class="wl-p"><div class="wl-i"><img src="%s" alt="%s"></div><i class="wl-sh"></i></div>\n    <i class="wl-x" aria-hidden="true"></i>\n'
            '    <p class="lab3 wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n'
-           '    <div class="wl-t">\n      <div><p class="lab3 wl-e">%s</p><h2 class="t60">%s</h2></div>\n      <dl class="wl-dl">%s</dl>\n    </div>\n  </div>\n</section>'
+           '    <div class="wl-t">\n      <p class="lab3 wl-e">%s</p>\n      <h2 class="wl-b">%s</h2>\n      <dl class="wl-dl">%s</dl>\n    </div>\n  </div>\n</section>'
            % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), esc(' '.join(get(S[0], 'lead')[0][1])), esc(label(sec)), esc(nop(h_of(sec))), rows), 'Project', 'top')
+    pg.add('<section class="bk" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k g4-ks">%s</p>\n    <ul class="lns g4-b">%s</ul>\n  </div>\n'
+           '  <div class="g4 g4-n">\n    <h3 class="lab3 rv g4-k">%s</h3>\n    <p class="t20 rv g4-p">%s</p>\n  </div>\n</section>'
+           % (esc(scope[0]), ''.join('<li class="rv">%s</li>' % esc(x) for x in items), esc(goal), ' '.join(esc(x) for x in gp)))
     # design vision: the template's own lines on the four columns
     sec = S[2]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] in ('p', 'lead')]
     pg.add('<section class="bk" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <div class="g4-b">\n      <h2 class="t34 rv">%s</h2>\n      <div class="g4-3">%s</div>\n    </div>\n  </div>\n</section>'

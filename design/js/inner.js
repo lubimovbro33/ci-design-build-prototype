@@ -434,10 +434,19 @@
      The cover photograph fills the screen; the scroll makes it smaller until it hangs on the black wall as a picture (the place is the box of
      .wl-x, laid out in CSS on the page's left two columns). The name stays where it stood and ends under the picture; the wall text beside it is
      simply uncovered. Only transforms move: the frame .wl-p scales to the box, the picture inside is scaled back so that it stays in proportion
-     and fills the frame; the cover's shade leaves as the picture hangs. */
+     and fills the frame; the cover's shade leaves as the picture hangs. The film's canvas lies over the photograph for the arrival only. */
+  var WL = {C: 6, R: 4, t0: 0, ord: null};
   function wall(f, q, t){
     if (!f.wl) f.wl = {p: qs('.wl-p', f.el), i: qs('.wl-i', f.el), sh: qs('.wl-sh', f.el), s: qs('.wl-s', f.el), x: qs('.wl-x', f.el), k: '', o: '', w: 0, h: 0, r: null};
     var Z = f.wl; if (!Z.p || !Z.i || !Z.x || !Z.x.offsetWidth) return;
+    /* the arrival: the photograph lights up pane by pane behind thin glazing bars (6 × 4, the site's one pen); the bars leave as the scroll begins */
+    if (!WL.t0) WL.t0 = q > .05 || reduced ? t - 9 : t;
+    var C = WL.C, R = WL.R, c, r, i, tE = t - WL.t0, pw = W / C, pv = H / R;
+    if (!WL.ord){ var sd = 11, n = C * R, a = []; for (i = 0; i < n; i++) a.push(i); for (i = n - 1; i > 0; i--){ sd = (sd * 16807) % 2147483647; var j = sd % (i + 1), tmp = a[i]; a[i] = a[j]; a[j] = tmp; } WL.ord = []; for (i = 0; i < n; i++) WL.ord[a[i]] = i; }
+    if (tE < 2.3) for (r = 0; r < R; r++) for (c = 0; c < C; c++){ var lt = .2 + WL.ord[r * C + c] / (C * R) * 1.25, al = 1 - sg(tE, lt, lt + .5); if (al <= 0) continue;
+      g.fillStyle = 'rgba(0,0,0,' + al.toFixed(3) + ')'; g.fillRect(c * pw - 1, r * pv - 1, pw + 2, pv + 2); }
+    var ba = .33 * sg(tE, 0, .6) * (1 - sg(q, .02, .2));
+    if (ba > 0){ g.fillStyle = 'rgba(255,255,255,' + ba.toFixed(3) + ')'; for (c = 1; c < C; c++) g.fillRect(Math.round(c * pw), 0, 1, H); for (r = 1; r < R; r++) g.fillRect(0, Math.round(r * pv), W, 1); }
     if (!Z.r || Z.w !== W || Z.h !== H){ Z.r = {x: Z.x.offsetLeft, y: Z.x.offsetTop, w: Z.x.offsetWidth, h: Z.x.offsetHeight}; Z.w = W; Z.h = H; Z.k = ''; }
     var e = reduced ? (q > .5 ? 1 : 0) : eio(sg(q, .08, 1.02)), key = e.toFixed(4), o = (1 - sg(q, .03, .28)).toFixed(3);
     if (Z.s && o !== Z.o){ Z.o = o; Z.s.style.opacity = o; Z.s.style.visibility = o === '0.000' ? 'hidden' : 'visible'; }
