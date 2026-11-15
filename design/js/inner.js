@@ -362,12 +362,12 @@
     for (i = 0; i < N; i++){
       var o = S[i], txn = (i + .5) / N, d = c01((fr * 1.47 - txn) / .45 - o.j), k = d * d * (3 - 2 * d), tx = x0 + (i + .5) * L, fl = (1 - k) * 5 * s;
       var x = lerp(tx + o.dx * s + Math.sin(tm * .31 * o.w + o.p) * fl, tx, k), y = lerp(mid + o.dy * s + Math.cos(tm * .27 * o.w + o.p) * fl, mid, k), a = (o.a + Math.sin(tm * .2 * o.w + o.p) * .12) * (1 - k), l = lerp(o.l * s, L + .6, k) / 2;
-      var mi = M ? (i === Math.round((0 + .5) / M * N) ? 0 : -1) : -1, mm; for (mm = 0; mm < M; mm++) if (i === Math.round((mm + .5) / M * N)) mi = mm;
+      var mi = -1, mm; for (mm = 0; mm < M; mm++) if (i === Math.round((mm + .5) / M * N)) mi = mm;
       if (mi >= 0){ g.strokeStyle = 'rgba(' + KY.BLUE + ',' + al.toFixed(3) + ')'; g.lineWidth = 2.5; } else { g.strokeStyle = 'rgba(255,255,255,' + (al * (.55 + .45 * k)).toFixed(3) + ')'; g.lineWidth = LW; }
       g.beginPath(); g.moveTo(x - Math.cos(a) * l, y - Math.sin(a) * l); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
       if (mi >= 0){
         if (k > .6){ var qa = sg(k, .6, 1) * al; g.fillStyle = 'rgba(' + KY.BLUE + ',' + qa.toFixed(3) + ')'; g.fillRect(Math.round(x - s8 / 2), Math.round(mid - s8 / 2), Math.round(s8), Math.round(s8)); }
-        var nm = f.names[mi], lb = ((nm[0] + ' ' + nm[1]).trim()).toUpperCase(), hold = lb.charAt(0) === '['; g.fillStyle = 'rgba(255,255,255,' + (al * (hold ? .6 : 1)).toFixed(3) + ')'; g.fillText(lb, Math.max(px * lb.length * .36, Math.min(w - px * lb.length * .36, x)), lerp(y - 20 * s, mid - 22 * s, k)); }
+        var nm = f.names[mi], lb = ((nm[0] + ' ' + nm[1]).trim()).toUpperCase(), hold = lb.charAt(0) === '['; if (flow) lb = ('0' + (mi + 1)).slice(-2);   /* in the flow there is no room for the names: their numbers */ g.fillStyle = 'rgba(255,255,255,' + (al * (hold ? .6 : 1)).toFixed(3) + ')'; g.fillText(lb, Math.max(px * lb.length * .36, Math.min(w - px * lb.length * .36, x)), lerp(y - 20 * s, mid - 22 * s, k)); }
     }
   }
   /* ---------- the cover flown through (Portfolio; her word of 15.11 20:25). The photograph is seen through the letters of the title: black, the letters

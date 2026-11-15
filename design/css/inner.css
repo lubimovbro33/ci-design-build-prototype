@@ -412,6 +412,7 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .lib4{display:block;margin:0 var(--m, 20px)} .lib4 .chips{margin-top:24px}
   .iv{display:block;min-height:0;padding:72px var(--m, 20px) 80px} .iv-c{margin-left:0} .iv-k{position:static;margin-bottom:18px;font-size:13px}
   .iv.sm{padding:56px var(--m, 20px)} .iv-2{display:block;margin-top:28px} .iv-2 p + p{margin-top:14px}
+  .film .p-ct, .film .p-cb{text-align:left}   /* phones: the scenes set on the centre stand on the left, like the rest of the page */
   .film[data-fig="key"] .kf{order:4;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:22px;margin:28px var(--m, 20px) 0} .kf dd{margin-top:6px}
   .film[data-fig="many"] .stg{display:flex;flex-direction:column;padding:0 0 72px} .film[data-fig="many"] .sc{display:contents}
   .film[data-fig="many"] .ln{display:block;position:relative;width:100%;height:70vw;order:2;margin-top:12px}
