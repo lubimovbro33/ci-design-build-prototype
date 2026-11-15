@@ -368,8 +368,9 @@
       vis(phW, 1); pic(phW, full, imF); clip(phW, r >= WS.R ? 'none' : 'circle(' + r.toFixed(1) + 'px at ' + RG.cx.toFixed(1) + 'px ' + RG.cy.toFixed(1) + 'px)');
       WS.r = full; WS.im = imF; WS.sx = 1; WS.dis = 0; WS.col = 0; return;
     }
-    /* 05: the picture steps back into a window on the right half; dissolves into its drawing; the seam closes the finished room over it */
-    var k = eio(sg(q5, .05, .9)), wx0 = xl(960), wy0 = yt(178), win = [wx0, wy0, W - 50 * U - wx0, H - FOOT - wy0], imW = coverRect(win[0], win[1], win[2], win[3], WAR, .47, .5);
+    /* 05: the picture steps back into the right half of the screen; dissolves into its drawing; the seam closes the finished room over it */
+    /* 15.11 15:28 (her note): the window is exactly the right half of the screen, edge to edge — no fields above, under or beside it (it stood from 178 to the foot, 50 from the right edge) */
+    var k = eio(sg(q5, .05, .9)), wx0 = Math.round(W / 2), win = MQP.matches ? [0, 0, W, Math.round(H / 2)] : [wx0, 0, W - wx0, H], imW = coverRect(win[0], win[1], win[2], win[3], WAR, .47, .5);   /* phones: the upper half */
     var r5 = lerpR(full, win, k), im5 = lerpR(imF, imW, k), col = eio(sg(q5, 5.0, 5.5));
     if (col > 0){ var t0 = lerp(r5[1], MID, col), b0 = lerp(r5[1] + r5[3], MID, col); r5 = [r5[0], t0, r5[2], Math.max(0, b0 - t0)]; }
     var dis = q5 < 2.0 ? eio(sg(q5, 1.0, 1.75)) : 0;

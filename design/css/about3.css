@@ -33,6 +33,10 @@ body.ab3 .hdr{opacity:1}
 .sc .p-bl{left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 /* 15.11, her frame «01 Cover · 2»: the opening paragraph stands where a title stands (421 / 50), its note at the foot of the same line */
 .sc .p-tla{left:calc(421 * var(--u));top:calc(50 * var(--u))}
+/* 15.11 15:28, her note and frame 05 · 1: the title in the top left corner, the text in the bottom left corner, one field (50) from the edges.
+   On the site the logo stands in that corner, so the title stands one field under it (155 from the top, as the titles of the home page) */
+.sc .p-ctl{left:calc(50 * var(--u));top:calc(155 * var(--u))}
+.sc .p-cbl{left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .sc .p-al{left:calc(421 * var(--u));bottom:calc(50% + 50 * var(--u))}
 .sc .p-ul{left:calc(421 * var(--u));top:calc(50% + 50 * var(--u))}
 .sc .p-ac{left:0;right:0;bottom:calc(50% + 50 * var(--u));text-align:center}
@@ -149,6 +153,7 @@ body.ab3 .ch-ftr{position:relative;z-index:5;background:#000}
   .sc .p-rgc{top:calc(50% - 72 * var(--u) - 2.45em)}
   .sc .p-tla{left:var(--m, 20px);top:auto;bottom:calc(50% + 14px)}
   .sc .p-brr{left:var(--m, 20px);right:var(--m, 20px);text-align:left}
+  .sc .p-ctl{left:var(--m, 20px);top:calc(50% + 22px)} .sc .p-cbl{left:var(--m, 20px);right:var(--m, 20px)}   /* phones: the photograph is the upper half, the type lives in the lower */
   .sc .p-c1,.sc .p-c2,.sc .p-c3{left:var(--m, 20px)} .sc .p-c2{top:calc(50% + 50 * var(--u) + 1.9em)} .sc .p-c3{top:calc(50% + 50 * var(--u) + 4.8em)}
   #knL{display:none} .sc .ph-only{display:inline}
   .sc .p-tlk{left:var(--m, 20px);right:var(--m, 20px);top:calc(var(--hdr, 64px) + 20px)}
