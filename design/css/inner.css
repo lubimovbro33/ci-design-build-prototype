@@ -148,6 +148,34 @@ html body .t60s{font-family:var(--fx);font-weight:400;font-size:max(24px, calc(6
 html body.inr .iv-p{margin-top:calc(90 * var(--u));white-space:nowrap}
 .iv + .bk{padding-top:calc(50 * var(--u))}
 
+/* a project's page (15.11 21:29): the template's lines as screens of the same kind as the Portfolio intro, only not screen-high (.iv.sm); the lines
+   wrap by themselves there (the client is still to write them); two short columns of text under a thought (.iv-2) */
+.iv.sm{min-height:0;padding:calc(150 * var(--u)) 0}
+.iv.sm .t60s, .iv h2.t60s{white-space:normal;max-width:calc(918 * var(--u))}
+html body.inr .iv-t{max-width:calc(918 * var(--u));color:#EBEBEB}
+.iv-2{display:grid;grid-template-columns:repeat(2, calc(431 * var(--u)));column-gap:calc(48 * var(--u));row-gap:calc(24 * var(--u));margin-top:calc(90 * var(--u))}
+/* the facts of a project in a row at the foot of its key's scene: the four columns, a small name over each fact, no rules */
+.film .kf{left:calc(50 * var(--u));right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));margin:0}
+.kf dt{margin:0;color:rgba(255,255,255,.5)} .kf dd{margin:calc(12 * var(--u)) 0 0}
+/* the gallery of a project on the Portfolio grid: blocks of one large + two small (.pf6.g) and wide pictures across (.gfull), 62 apart; no captions;
+   every picture opens out of a small window, like the cards */
+.pf6.g .cd{cursor:default}
+.pf6.g + .gfull, .gfull + .pf6.g, .pf6.g + .pf6.g, .gfull + .gfull{margin-top:calc(62 * var(--u))}
+.gfull{position:relative;margin-left:calc(50 * var(--u));margin-right:calc(50 * var(--u));margin-bottom:0;aspect-ratio:1820 / 900;overflow:hidden;background:#1D1D1D}
+.gfull img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
+.gfull.rv{opacity:1;transform:none;transition:none;visibility:hidden}
+.gfull.rv.in{visibility:visible;animation:cdWin 1.3s cubic-bezier(.83,0,.17,1) backwards}
+.gfull.rv.in img{animation:cdImg 1.3s cubic-bezier(.83,0,.17,1) backwards}
+.lite .gfull.rv{visibility:visible;animation:none} .lite .gfull.rv img{animation:none}
+/* the next project, seen through its own name: its photograph under a black sheet with the name cut out; under the pointer the sheet lets a little
+   of the room through */
+.nx{position:relative;display:block;height:78vh;min-height:420px;overflow:hidden;background:#000;color:#FFFFFF;text-decoration:none}
+.nx img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;transition:transform 1.6s cubic-bezier(.16,1,.3,1)}
+.nx-m{position:absolute;left:0;top:0;width:100%;height:100%;background:#000;mix-blend-mode:multiply;display:flex;align-items:center;justify-content:center;text-align:center;transition:background-color .9s}
+.nx-m .t111{color:#FFFFFF}
+.nx-k{position:absolute;left:0;right:0;top:calc(50% - .856 * max(38px, 111 * var(--u)) - 30 * var(--u) - 1.136em);text-align:center;z-index:2}
+@media (hover:hover){ .nx:hover img{transform:scale(1.06)} .nx:hover .nx-m{background:#2E2E2E} }
+
 /* how a card arrives (15.11 20:37, her word: «топорна анімація на карточці… чи є на головній вже рішення»): the way the homepage's Projects photographs
    do (.pj4-im) — the photograph opens out of a small window while the picture inside settles from a larger scale, the same curve; the caption comes
    after it. The card itself neither fades nor rises. Three cards of a row open one after another. (Fill «backwards», so the pointer's own zoom
@@ -383,6 +411,13 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
   .lib4{display:block;margin:0 var(--m, 20px)} .lib4 .chips{margin-top:24px}
   .iv{display:block;min-height:0;padding:72px var(--m, 20px) 80px} .iv-c{margin-left:0} .iv-k{position:static;margin-bottom:18px;font-size:13px}
+  .iv.sm{padding:56px var(--m, 20px)} .iv-2{display:block;margin-top:28px} .iv-2 p + p{margin-top:14px}
+  .film[data-fig="key"] .kf{order:4;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:22px;margin:28px var(--m, 20px) 0} .kf dd{margin-top:6px}
+  .film[data-fig="many"] .stg{display:flex;flex-direction:column;padding:0 0 72px} .film[data-fig="many"] .sc{display:contents}
+  .film[data-fig="many"] .ln{display:block;position:relative;width:100%;height:70vw;order:2;margin-top:12px}
+  .film[data-fig="many"] .m{margin-left:var(--m, 20px);margin-right:var(--m, 20px)} .film[data-fig="many"] h2.m{order:1} .film[data-fig="many"] .m.t20{order:3;margin-top:18px} .film[data-fig="many"] .m.t34{order:4;margin-top:28px}
+  .pf6.g + .gfull, .gfull + .pf6.g, .pf6.g + .pf6.g, .gfull + .gfull{margin-top:32px} .gfull{margin-left:var(--m, 20px);margin-right:var(--m, 20px);aspect-ratio:3 / 2}
+  .nx{height:62vh} .nx-k{top:calc(50% - .856 * 38px - 14px - 1.136em)}
   html body .t60s{font-size:clamp(21px, 6.4vw, 30px);white-space:normal} html body.inr .iv-p{margin-top:28px;white-space:normal} .iv + .bk{padding-top:0}
   .ix3{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:28px;margin-top:44px} .ix3 .lc{margin-top:8px} .ix3 .lc + .lc{margin-top:4px}
   .fin.gr{height:auto;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(var(--hdr, 64px) + 40px) var(--m, 20px) 72px;box-sizing:border-box}
