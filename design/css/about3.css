@@ -52,6 +52,18 @@ body.ab3 .hdr{opacity:1}
 .sc .p-br{left:calc(960 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .sc .p-brn{left:calc(1400 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .sc .t60.cb, .sc .t60.cb .w{color:var(--blue)!important}
+.sc .t34.cb, .sc .t34.cb .w{color:var(--blue)}
+/* 15.11 · 03: compositions of this scene */
+.sc .p-brk{left:0;right:0;top:0;height:100%;text-align:center}                         /* the title brackets the knot: one line above it, one under */
+.sc .p-brk > span{position:absolute;left:0;right:0;display:block}
+.sc .p-brk .k1{top:calc(50% - 376 * var(--u))}
+.sc .p-brk .k2{top:calc(50% + 276 * var(--u))}
+.sc .p-tlk{left:calc(421 * var(--u));top:calc(50 * var(--u))}                                   /* the beginning of that sentence, where a title would stand */
+.sc .p-brr{right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);text-align:right}   /* the end of a sentence, at the right field: a diagonal with its beginning top left */
+.sc .p-c1,.sc .p-c2,.sc .p-c3{top:calc(50% + 50 * var(--u))}                               /* three sentences hang from the three marks on the line */
+.sc .p-c1{left:calc(421 * var(--u))} .sc .p-c2{left:50%} .sc .p-c3{left:calc(100% - 420 * var(--u))}
+.sc .ph-only{display:none}   /* phones read the list in the sentence itself: ten labels do not fit a narrow line */
+.fl.kn > span{left:0;top:0;background:#000;padding:calc(3 * var(--u)) calc(6 * var(--u)) calc(2 * var(--u))}   /* a label on the tangle clears the strands behind it */
 .sc .p-al.t60, .sc .p-um.t60{white-space:nowrap}
 
 /* figure labels: a zero-size anchor the script moves; the text hangs from it */
@@ -129,7 +141,12 @@ body.ab3 .ch-ftr{position:relative;z-index:5;background:#000}
   .sc .p-tl, .sc .p-bl, .sc .p-blg, .sc .p-blgb, .sc .p-blg2, .sc .p-br, .sc .p-brn, .sc .p-ur, .sc .p-um, .sc .p-al, .sc .p-ul, .cv-h, .sc .p-yours, .sc .p-bl2, .sc .p-blb{left:var(--m, 20px)}
   .sc .m[style*="--w:"]{width:auto!important;right:var(--m, 20px)}
   .sc .p-bc{left:var(--m, 20px);text-align:left}
-  .sc .p-tla{left:var(--m, 20px);top:auto;bottom:calc(50% + 14px)}   /* phones: under the header there is no room — it keeps its place above the line */
+  .sc .p-tla{left:var(--m, 20px);top:auto;bottom:calc(50% + 14px)}
+  .sc .p-brr{left:var(--m, 20px);right:var(--m, 20px);text-align:left}
+  .sc .p-c1,.sc .p-c2,.sc .p-c3{left:var(--m, 20px)} .sc .p-c2{top:calc(50% + 50 * var(--u) + 1.9em)} .sc .p-c3{top:calc(50% + 50 * var(--u) + 4.8em)}
+  #knL{display:none} .sc .ph-only{display:inline}
+  .sc .p-tlk{left:var(--m, 20px);right:var(--m, 20px);top:calc(var(--hdr, 64px) + 20px)}
+  .sc .p-brk .k1{top:calc(50% - 118px)} .sc .p-brk .k2{top:calc(50% + 78px)}   /* phones: under the header there is no room — it keeps its place above the line */
   .sc h2.m{white-space:normal}
 }
 

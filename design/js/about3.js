@@ -259,12 +259,17 @@
 
   /* ================================================================== 03 WHY CI — the line tangles into a knot of moving parts, and is drawn straight again */
   var KX = new Float32Array(641), KY = new Float32Array(641), KZ = new Float32Array(641);
+  /* 15.11 (her note 14:50): the scene opens with its title alone (it brackets the knot), so everything after the knot has formed stands TW later.
+     The ten moving parts of the sentence ride the tangle as labels; when the line is pulled straight they stand in one row along it */
+  var knL = qsa('#knL .kn'), TW = .6, MQP = window.matchMedia ? window.matchMedia('(max-aspect-ratio: 1/1)') : {matches: false};
   function why(q, t, act){
-    if (!act) return;
-    var a = eio(sg(q, .05, 1.0)) * (1 - eio(sg(q, 1.65, 2.35))), i;
+    var i;
+    if (!act){ for (i = 0; i < knL.length; i++) vis(knL[i], 0); return; }
+    var a = eio(sg(q, .05, 1.0)) * (1 - eio(sg(q, 1.65 + TW, 2.35 + TW)));
+    var R = 212 * U, ry = .5 * Math.sin(t * .21) + .25, cyr = Math.cos(ry), syr = Math.sin(ry), rx = .3 + .16 * Math.sin(t * .17 + 1), cxr = Math.cos(rx), sxr = Math.sin(rx), cx = W / 2, cy = MID - 24 * U, TA = (-1.5708 - .7) / 3, TL = 6.2832 + 1.0472;
     if (a < .003) flat(1);
     else {
-      var N = 640, R = 212 * U, ry = .5 * Math.sin(t * .21) + .25, cyr = Math.cos(ry), syr = Math.sin(ry), rx = .3 + .16 * Math.sin(t * .17 + 1), cxr = Math.cos(rx), sxr = Math.sin(rx), cx = W / 2, cy = MID - 24 * U, TA = (-1.5708 - .7) / 3, TL = 6.2832 + 1.0472;
+      var N = 640;
       for (i = 0; i <= N; i++){
         var s = i / N, bx = -10 + (W + 20) * s, w = sm(.1, .2, s) * (1 - sm(.8, .9, s)) * a;
         if (w <= 0){ KX[i] = bx; KY[i] = MID; KZ[i] = 0; continue; }
@@ -284,12 +289,21 @@
         ink(1, LW); g.beginPath(); var jb = Math.max(0, j0 - 1); g.moveTo(KX[jb], KY[jb]); for (k = jb + 1; k <= j1; k++) g.lineTo(KX[k], KY[k]); g.stroke();
       }
     }
+    /* the parts: each label is tied to a point of the knot; as the knot is pulled straight it comes down to its place in the row (field to field) */
+    var lo = MQP.matches ? 0 : 1 - sg(q, 2.85 + TW, 3.05 + TW), xa = xl(50), xb = xr(1870) - 190 * U, n = knL.length;   /* phones read the list in the sentence: no labels, no marks */
+    for (i = 0; i < n; i++){
+      var la = sg(q, 1.05 + i * .05, 1.2 + i * .05) * lo; vis(knL[i], la); if (la <= 0) continue;
+      var tj = TA + (.1875 + .625 * (i + .5) / n) * TL, jx = 1.25 * Math.sin(3 * tj + .7), jy = .92 * Math.sin(4 * tj + .2), jz = Math.sin(7 * tj + 1.9);
+      var u1 = jx * cyr + jz * syr, w1 = -jx * syr + jz * cyr, v1 = jy * cxr - w1 * sxr, pj = 1 + (jy * sxr + w1 * cxr) * .16;
+      var xj = lerp(xa, xb, i / (n - 1)), px = xj + (cx + R * u1 * pj - xj) * a, py = MID + (cy + R * v1 * pj - MID) * a;
+      sq(px, py, la, SQ * .75); at(knL[i], px + lerp(-3, 9, a) * U, py + lerp(13, -11, a) * U);
+    }
     /* one central team guides the entire journey: the square travels the line */
-    var h = sg(q, 3.0, 3.25) * (1 - sg(q, 3.85, 4.0));
-    if (h > 0) sq(lerp(xl(421), xr(1870), eio(sg(q, 3.1, 3.9))), MID, h);
+    var h = sg(q, 3.0 + TW, 3.25 + TW) * (1 - sg(q, 3.85 + TW, 4.0 + TW));
+    if (h > 0) sq(lerp(xl(421), xr(1870), eio(sg(q, 3.1 + TW, 3.9 + TW))), MID, h);
     /* the decisions that are yours: three marks; everything between them is ours */
     var dx = [xl(421), xm(960), xr(1500)];
-    for (i = 0; i < 3; i++){ var d = eo(sg(q, 4.1 + i * .1, 4.3 + i * .1)) * (1 - sg(q, 4.75, 4.9)); if (d > 0) sq(dx[i], MID, d, SQ * (.4 + .6 * d)); }
+    for (i = 0; i < 3; i++){ var d = eo(sg(q, 4.1 + TW + i * .1, 4.3 + TW + i * .1)) * (1 - sg(q, 4.75 + TW, 4.9 + TW)); if (d > 0) sq(dx[i], MID, d, SQ * (.4 + .6 * d)); }
   }
 
   /* ================================================================== 04 THE CI MODEL — the line closes into a full circle; every pair speaks through one centre */
