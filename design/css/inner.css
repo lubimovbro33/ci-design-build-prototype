@@ -148,33 +148,32 @@ html body .t60s{font-family:var(--fx);font-weight:400;font-size:max(24px, calc(6
 html body.inr .iv-p{margin-top:calc(90 * var(--u));white-space:nowrap}
 .iv + .bk{padding-top:calc(50 * var(--u))}
 
-/* «Collectors Home» — the page as a collection (15.11 22:00; her «Роби» after the first draft had read as a copy of Portfolio).
-   The display case (film "vitrine"): the cover photograph in two door leaves (.vt-d, each showing its half of one full-width picture), the glazing
-   bars and the panes' light on the film's canvas above them; behind the doors two halves on the page's four columns (.vt-row), one behind each door:
-   an exhibit (886:600) and its label — a white card set as a museum label: the block's small name, the title, then a small name and its fact,
-   row under row, no rules. The name stands bottom left on the left leaf, the positioning line bottom right. */
-.film.vt .ln{z-index:4}
-.vt-in{position:absolute;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;background:#000;z-index:1}
-.vt-row{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));width:100%;box-sizing:border-box;padding:calc(40 * var(--u)) calc(50 * var(--u)) 0;align-items:stretch}
-.inr .vt-e{margin:0 0 calc(22 * var(--u));color:rgba(0,0,0,.55)}
-.vt-x{grid-column:1 / span 2;align-self:start;display:block;position:relative;aspect-ratio:886 / 600;overflow:hidden;background:#1D1D1D}
-.vt-x img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;will-change:transform}
-.vt-d{position:absolute;top:0;bottom:0;width:50%;overflow:hidden;z-index:3;will-change:transform;background:#000}
-.vt-d.l{left:0} .vt-d.r{left:50%}
-.vt-w{position:absolute;top:0;bottom:0;left:0;width:100vw} .vt-d.r .vt-w{left:-50vw}
-.vt-w img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
-.vt-w > p, .vt-w > h1{animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.6s both}
-.vt-h{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;color:#FFFFFF;white-space:nowrap}
-.vt-k{position:absolute;left:calc(50 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 2 * .856 * max(38px, 111 * var(--u)) + 30 * var(--u));margin:0}
-html body.inr .vt-s{position:absolute;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;max-width:calc(431 * var(--u))}
-.vt-card{grid-column:3 / span 2;display:flex;flex-direction:column;justify-content:space-between;box-sizing:border-box;padding:calc(44 * var(--u)) calc(48 * var(--u));background:#FFFFFF;color:#000}
-html body .vt-card .t60{color:#000}
-.vt-dl{margin:calc(40 * var(--u)) 0 0}
-.vt-dl > div{display:grid;grid-template-columns:calc(200 * var(--u)) minmax(0, 1fr);column-gap:calc(20 * var(--u))}
-.vt-dl > div + div{margin-top:calc(18 * var(--u))}
-.inr .vt-dl dt{margin:0;padding-top:.2em;color:rgba(0,0,0,.55)}
-.vt-dl dd{margin:0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#000}
-.inr .vt-card .ph{background:rgba(0,0,0,.08)}
+/* «Collectors Home» — the page as a collection (15.11; the idea comes from the project's own name — from Portfolio only the gallery grid).
+   Cover and The Brief are one pinned scene (film "wall", her choice of 22:17 after the display case with doors and a white card was refused):
+   the cover photograph (.wl-p) opens to the full screen, the scroll makes it smaller until it hangs on the wall in the box of .wl-x — the page's
+   left two columns, from 150 down to 56 above the location line; the name (.wl-h) stays bottom left and ends under the picture; on the right two
+   columns the wall text (.wl-t) lies under the photograph and is uncovered by it: the block's small name, the title, then a small name and its
+   fact, row under row — plain text on the wall, no card, no rules. */
+.film.wl .ln{display:none}
+.wl-p{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;z-index:2;transform-origin:0 0;will-change:transform;background:#1D1D1D;animation:wlWin 1.3s cubic-bezier(.83,0,.17,1) .15s backwards}
+.wl-i{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform}
+.wl-i img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;animation:cdImg 1.3s cubic-bezier(.83,0,.17,1) .15s backwards}
+.wl-sh{position:absolute;left:0;top:0;width:100%;height:100%;background:#000;opacity:.28;pointer-events:none}
+@keyframes wlWin{ from{clip-path:inset(34% 38% 34% 38%)} to{clip-path:inset(0 0 0 0)} }
+@keyframes wlOn{ from{visibility:hidden} to{visibility:visible} }
+.wl-x{position:absolute;visibility:hidden;pointer-events:none;left:calc(50 * var(--u));top:calc(150 * var(--u));width:calc((100% - 244 * var(--u)) / 2 + 48 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 2 * .856 * max(38px, 111 * var(--u)) + 30 * var(--u) + 1.136 * max(10px, 14 * var(--u)) + 56 * var(--u))}
+.wl-h{position:absolute;left:calc(50 * var(--u));bottom:max(50 * var(--u), 58px);margin:0;color:#FFFFFF;white-space:nowrap;z-index:3;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.25s both}
+.wl-k{position:absolute;left:calc(50 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 2 * .856 * max(38px, 111 * var(--u)) + 30 * var(--u));margin:0;z-index:3;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.25s both}
+html body.inr .wl-s{position:absolute;right:calc(50 * var(--u));bottom:max(50 * var(--u), 58px);margin:0;max-width:calc(431 * var(--u));z-index:3}
+.wl-s > span{display:inline-block;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.45s both}
+.wl-t{position:absolute;z-index:1;left:calc((100% - 244 * var(--u)) / 2 + 146 * var(--u));right:calc(50 * var(--u));top:calc(150 * var(--u));bottom:max(50 * var(--u), 58px);display:flex;flex-direction:column;justify-content:space-between;animation:wlOn .01s linear 1.5s backwards}
+.inr .wl-e{margin:0 0 calc(22 * var(--u));color:rgba(255,255,255,.55)}
+.wl-dl{margin:0}
+.wl-dl > div{display:grid;grid-template-columns:calc(200 * var(--u)) minmax(0, 1fr);column-gap:calc(20 * var(--u))}
+.wl-dl > div + div{margin-top:calc(18 * var(--u))}
+.inr .wl-dl dt{margin:0;padding-top:.2em;color:rgba(255,255,255,.55)}
+.wl-dl dd{margin:0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#FFFFFF}
+@media (prefers-reduced-motion: reduce){ .wl-p, .wl-i img, .wl-h, .wl-k, .wl-s > span, .wl-t{animation:none} }
 .film[data-fig="many"] .t20.p-cbr{width:calc(566 * var(--u))}   /* the decisions: a short text block, its left edge on the page's third column's text line */
 /* a block on the four columns: a small name in the first, the matter in the other three (.g4); three short texts side by side (.g4-3) */
 .g4{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
@@ -436,11 +435,11 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .lib4{display:block;margin:0 var(--m, 20px)} .lib4 .chips{margin-top:24px}
   .iv{display:block;min-height:0;padding:72px var(--m, 20px) 80px} .iv-c{margin-left:0} .iv-k{position:static;margin-bottom:18px;font-size:13px}
   .film .p-ct, .film .p-cb, .film .p-cbr{text-align:left}   /* phones: the scenes stand on the left, like the rest of the page */
-  .film.vt .stg{display:flex;flex-direction:column} .film.vt .vt-d.r{display:none}
-  .film.vt .vt-d.l{position:relative;width:100%;height:100vh;height:100svh;transform:none!important;order:1} .film.vt .vt-w{width:100%}
-  .film.vt .vt-in{position:relative;height:auto;display:block;order:2;padding:40px var(--m, 20px)} .vt-row{display:block;padding:0} .vt-x{margin:14px 0 20px} .vt-x img{transform:none!important} .vt-card{display:block;padding:26px 20px}
-  .vt-dl{margin-top:24px} .vt-dl > div{grid-template-columns:minmax(0, 1fr);row-gap:4px} .vt-dl > div + div{margin-top:16px}
-  .vt-h{left:var(--m, 20px);bottom:96px} .vt-k{left:var(--m, 20px);bottom:calc(96px + 2 * .856 * 38px + 14px)} html body.inr .vt-s{left:var(--m, 20px);right:var(--m, 20px);bottom:40px;max-width:none}
+  .wl-p{position:relative;height:100vh;height:100svh;transform:none!important} .wl-i{transform:none!important} .wl-sh{opacity:.28!important} .wl-x{display:none}
+  .wl-h{left:var(--m, 20px);bottom:auto;top:calc(100svh - 96px - 2 * .856 * 38px)} .wl-k{left:var(--m, 20px);bottom:auto;top:calc(100svh - 96px - 2 * .856 * 38px - 14px - 1.2em)}
+  html body.inr .wl-s{left:var(--m, 20px);right:var(--m, 20px);bottom:auto;top:calc(100svh - 76px);max-width:none;opacity:1!important;visibility:visible!important}
+  .wl-t{position:relative;left:auto;right:auto;top:auto;bottom:auto;display:block;padding:44px var(--m, 20px) 8px;animation:none}
+  .wl-dl{margin-top:24px} .wl-dl > div{grid-template-columns:minmax(0, 1fr);row-gap:4px} .wl-dl > div + div{margin-top:16px}
   .g4{display:block;margin:0 var(--m, 20px)} .g4-b{margin-top:14px} .g4-3{display:block;margin-top:24px} .g4-3 p + p{margin-top:14px}
   a.nx2{display:block} .nx2-i{display:block;margin-top:28px} .inr .nx2-k{margin-bottom:14px} .nx2-t .lc{margin-top:14px} .inr .nn{margin-top:8px}
   .film[data-fig="many"] .stg{display:flex;flex-direction:column;padding:0 0 72px} .film[data-fig="many"] .sc{display:contents}

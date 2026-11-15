@@ -268,10 +268,10 @@ def project_old(p, nxt):
 def project_collection(p, nxt):
     """«Collectors Home» — the page's idea comes from the project's own name: a collection (her word of 15.11 21:57, «Роби», after the first draft
     read as a copy of the Portfolio page — only the grid may come from there).
-    - cover: a collector's display case — the photograph behind glazing bars; the panes light up one after another as the page arrives; the scroll
-      opens the case's two doors (film "vitrine");
-    - behind the doors, two halves on the four columns — each door uncovers one: on the left an exhibit (p['exhibit'] = file, object-position:
-      the home's own display cases), on the right its label — a white card with The Brief's facts and The Goal, set as a museum label, no rules;
+    - cover and The Brief are one pinned scene (film "wall"; her choice of 15.11 22:17 among three stills, after the display case with doors and
+      a white card was refused): the cover photograph opens to the full screen with the name; the scroll makes it smaller until it hangs on the
+      black wall as a picture — the home takes its place in the collection; the name stays under it, and beside it, uncovered by the picture as it
+      shrinks, stands the wall text: The Brief's facts and The Goal, plain text, no card, no rules;
     - Design Vision: the template's lines on the four columns;
     - Inside …: the collection on the Portfolio grid (one large + two small, a wide one, the mirror), every picture numbered like a catalogue item;
     - Why the Details Matter: hundreds of strokes become one line (film "many"), title top left, text bottom right;
@@ -285,13 +285,11 @@ def project_collection(p, nxt):
     rows = ''.join('<div><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), esc(known.get(k, ' '.join(v)))) for k, v in dl)
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
     rows += '<div><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(goal), ' '.join(esc(x) for x in gp))
-    leaf = ('<div class="vt-w"><img src="%s" alt="%s"%s><p class="lab3 vt-k">%s</p><%s class="t111 vt-h">%s</%s><p class="t20 vt-s">%s</p></div>'
-            % (cov, '%s', ' style="filter:contrast(1.04) brightness(%s)"' % p.get('g', .72), esc(p['loc']), '%s', '<br>'.join(esc(x) for x in p['lines']), '%s', esc(' '.join(get(S[0], 'lead')[0][1]))))
-    pg.add('<section class="film vt" data-fig="vitrine" data-len="1.9" id="@ID@">\n  <div class="stg">\n'
-           '    <div class="vt-in"><div class="vt-row">\n      <span class="vt-x"><img src="%s" alt="%s"%s></span>\n'
-           '      <div class="vt-card">\n        <div><p class="lab3 vt-e">%s</p><h2 class="t60">%s</h2></div>\n        <dl class="vt-dl">%s</dl>\n      </div>\n    </div></div>\n'
-           '    <div class="vt-d l">%s</div>\n    <div class="vt-d r" aria-hidden="true">%s</div>\n    <canvas class="ln" aria-hidden="true"></canvas>\n  </div>\n</section>'
-           % (ph(p['set'], p['exhibit'][0]), nm, ' style="object-position:%s"' % p['exhibit'][1], esc(label(sec)), esc(nop(h_of(sec))), rows, leaf % (nm, 'h1', 'h1'), leaf % ('', 'p', 'p')), 'Project', 'top')
+    pg.add('<section class="film wl" data-fig="wall" data-len="1.9" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
+           '    <div class="wl-p"><div class="wl-i"><img src="%s" alt="%s"></div><i class="wl-sh"></i></div>\n    <i class="wl-x" aria-hidden="true"></i>\n'
+           '    <p class="lab3 wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n'
+           '    <div class="wl-t">\n      <div><p class="lab3 wl-e">%s</p><h2 class="t60">%s</h2></div>\n      <dl class="wl-dl">%s</dl>\n    </div>\n  </div>\n</section>'
+           % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), esc(' '.join(get(S[0], 'lead')[0][1])), esc(label(sec)), esc(nop(h_of(sec))), rows), 'Project', 'top')
     # design vision: the template's own lines on the four columns
     sec = S[2]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] in ('p', 'lead')]
     pg.add('<section class="bk" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <div class="g4-b">\n      <h2 class="t34 rv">%s</h2>\n      <div class="g4-3">%s</div>\n    </div>\n  </div>\n</section>'
