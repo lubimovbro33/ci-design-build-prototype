@@ -462,50 +462,83 @@ def sc_door(kick, h1, img):
         '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
-def tkd_pairs(kick, h1, lead, ps, lines, closer_):
-    """«Complete Responsibility. Fewer Handoffs.» — the client's six intersections are parallel sentences, so they are set as six lines on six
-    hairlines, three and three. Nothing else on the screen; the words are theirs, untouched."""
-    rows = ''.join('<div class="tkd-x-r rv"><p class="t34">%s</p></div>' % esc(nop(x)) for x in lines)
-    return ('<section class="bk tkd-x" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <div class="tkd-x-i"><p class="t34 rv">%s</p><div class="t20s rv" style="--w:475">%s</div></div>\n'
-            '  <div class="tkd-x-g">%s</div>\n  <p class="t34 rv tkd-x-c">%s</p>\n</section>') % (
+def tk_chain(kick, thought, chain, para_, button):
+    """02 — the machine is named ONCE, as a plain column of lines down the right; the sentence that shuts it behind one team stands large on the
+    left. (16.11 23:42: the nine disciplines run together in a paragraph were one more grey block among many; here they are a mass against a void.)"""
+    return ('<section class="bk tk-ch" id="@ID@">\n  <p class="lab3 rv tk-ch-k">%s</p>\n  <p class="t34 rv tk-ch-l">%s</p>\n'
+            '  <p class="t60s rv tk-ch-h">%s</p>\n  <p class="t20 rv tk-ch-t" style="--w:430">%s</p>\n'
+            '  <div class="rv tk-ch-b">%s</div>\n</section>') % (
+                esc(kick), sqr(chain), thought, esc(nop(para_)), button)
+def tk_fit(kick, h1, lead, rows, img):
+    """03 — the photograph holds the whole left half of the screen to its full height; beside it the seven lines, small and numbered. The heading
+    is deliberately the page's smallest: the picture carries the screen, not the type."""
+    li = ''.join('<div class="tk-ft-r rv"><span class="n lab3">%02d</span><p class="t20">%s</p></div>' % (i + 1, esc(nop(x))) for i, x in enumerate(rows))
+    return ('<section class="tk-ft" id="@ID@">\n  <figure class="tk-ft-ph"><img src="%s" alt="" loading="lazy"></figure>\n'
+            '  <div class="tk-ft-c">\n    <p class="lab3 rv">%s</p>\n    <h2 class="t34 rv tk-ft-h">%s</h2>\n'
+            '    <p class="t20 rv tk-ft-l" style="--w:430">%s</p>\n    <div class="tk-ft-g">%s</div>\n  </div>\n</section>') % (
+                img, esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)), li)
+def tk_pairs(kick, h1, lead, ps, lines, closer_):
+    """04 — the page's one big heading. The client's six intersections are parallel sentences, so they are set as six lines on six hairlines,
+    three and three; nothing else on the screen."""
+    rows = ''
+    for x in lines:                                   # «Design» — «with construction»: the pair is DRAWN, the hairline between its two halves
+        a, b = nop(x).split(' ', 1)
+        rows += '<div class="tk-x-r rv"><span class="t34 a">%s</span><i aria-hidden="true"></i><span class="t34 b">%s</span></div>' % (esc(a), esc(b))
+    return ('<section class="bk tk-x" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <div class="tk-x-i"><p class="t34 rv">%s</p><div class="t20s rv" style="--w:475">%s</div></div>\n'
+            '  <div class="tk-x-g">%s</div>\n  <p class="t34 rv tk-x-c">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)),
                 ''.join('<p>%s</p>' % esc(nop(x)) for x in ps), rows, blue(nop(closer_), None))
-def tkd_list(kick, h1, note, groups):
-    """«The Complete CI Ecosystem» — everything that stands behind the door, as an index: three columns of plain lines, a hairline over them,
-    nothing else. Its weight is the point, so it is set quietly."""
-    cols = ''.join('<ul class="tkd-ix-c rv">%s</ul>' % ''.join('<li>%s</li>' % esc(x) for x in g) for g in groups)
-    return ('<section class="bk tkd-ix" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <p class="lab3 rv tkd-ix-n">%s</p>\n  <div class="tkd-ix-g">%s</div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), cols)
-def tkd_when(kick, h1, lines, closer_):
-    """«One Team. Complete Responsibility.» — the three «When …» sentences are parallel, so they are set as three steps of one stair,
-    each on its own hairline."""
-    rows = ''.join('<div class="tkd-w-r rv"><span class="n lab3">%02d</span><p class="t34">%s</p></div>' % (i + 1, esc(nop(x))) for i, x in enumerate(lines))
-    return ('<section class="bk tkd-w" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <div class="tkd-w-g">%s</div>\n  <p class="t34 rv tkd-w-c">%s</p>\n</section>') % (
+def tk_plate(img, line, pos=None):
+    """05 — one photograph across the screen and a single sentence on it: the size of the thing, before the page answers it"""
+    return ('<section class="tk-pl" id="@ID@">\n  <div class="bnd tk-pl-b"><img src="%s" alt="" loading="lazy"%s></div>\n'
+            '  <p class="t34 rv tk-pl-t">%s</p>\n</section>') % (
+                img, ' style="object-position:%s"' % pos if pos else '', esc(nop(line)))
+def tk_calm(kick, h1, big, lines, closer_):
+    """06 — the answer, in the middle of the air: the long heading centred, the six ways under it in two quiet columns without rules,
+    and the client's own closing thought in blue. The one screen on the page built on the centre line."""
+    run = esc(nop(' '.join(lines)))                   # 16.11 23:58: six lines in a list read as one more list; as prose they read as a way of working
+    return ('<section class="bk tk-cm" id="@ID@">\n  <p class="lab3 rv tk-cm-k">%s</p>\n  <h2 class="t60s rv tk-cm-h">%s</h2>\n'
+            '  <p class="t34 rv tk-cm-b">%s</p>\n  <div class="tk-cm-r rv" aria-hidden="true"></div>\n'
+            '  <p class="t20 rv tk-cm-p" style="--w:475">%s</p>\n  <p class="t34 rv tk-cm-c">%s</p>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 30)), esc(nop(big)), run, blue(nop(closer_), None))
+def tk_when(kick, h1, lines, closer_):
+    """07 — «One Team. Complete Responsibility.»: the «When …» sentences are parallel, so they are a stair, each step on its own hairline,
+    with the heading standing to the right of them"""
+    rows = ''.join('<p class="t34 rv tk-w-s" style="--i:%d">%s</p>' % (i, esc(nop(x))) for i, x in enumerate(lines))
+    return ('<section class="bk tk-w" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <div class="tk-w-g">%s</div>\n  <p class="t34 rv tk-w-c">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), rows, blue(nop(closer_), None))
-def tkd_fit(kick, h1, lead, rows):
-    """«Is CI Turnkey Right for You?» — seven lines, numbered, two columns, no boxes and no marks but the numbers"""
-    li = ''.join('<div class="tkd-f-r rv"><span class="n lab3">%02d</span><p class="t20">%s</p></div>' % (i + 1, esc(nop(x))) for i, x in enumerate(rows))
-    return ('<section class="bk tkd-f" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <p class="t34 rv tkd-f-l">%s</p>\n  <div class="tkd-f-g">%s</div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)), li)
-def tkd_doors(kick, h1, stages, img):
-    """«One Journey From Vision to Home» — the page's own film: eight thresholds drawn in the site's hairlines, one for each stage, standing one
-    behind another. The scroll walks through them; the stage at hand is named beside its own threshold, and the last one opens on the finished home."""
-    d = .46; t0 = .5; n = len(stages)
-    o = ['<section class="film tkd-d" data-fig="doors" data-n="%d" data-t0="%s" data-d="%s" data-len="%.2f" id="@ID@">' % (n, t0, d, t0 + n * d + .7),
-         '  <div class="stg">\n    <img class="tkd-d-ph" src="%s" alt="" data-s="op:0>1@%.2f-%.2f" style="opacity:0">' % (img, t0 + (n - 1) * d + .18, t0 + n * d + .25),
-         '    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">',
-         '      <p class="lab3 m tkd-d-k" data-k="0 .3 99 99">%s</p>' % esc(kick),
-         '      <h2 class="t60 m tkd-d-h" data-k="0 .3 %.2f %.2f">%s</h2>' % (t0 - .25, t0 + .05, '<br>'.join(esc(x) for x in brk_lines(nop(h1), 20)))]
+def tk_index(kick, h1, note, items):
+    """08 — «The Complete CI Ecosystem»: everything that stands behind the door, as an index. Three columns of plain lines under the page's
+    smallest heading: its weight is the point, so it is set quietly."""
+    field = sqr(items)                                # everything behind the door as ONE field of words, set apart by the blue square
+    return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="lab3 rv tk-ix-n">%s</p>\n  <p class="t34 rv tk-ix-f">%s</p>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), field)
+def tk_rooms(kick, h1, stages, imgs):
+    """09 — the page's own film, and the one door opening eight times. Each stage is a photograph that OPENS out of the middle of the screen,
+    the way the cover opened; the number stands at the stage's own size. The first four keep to the left of the frame and the last four cross to
+    the right, so the walk moves across the screen as the work moves from paper to home. The canvas keeps the measure: one hairline with eight
+    marks along the foot."""
+    d = .44; t0 = .5; n = len(stages); assert len(imgs) == n
+    o = ['<section class="film tk-r" data-fig="rooms" data-n="%d" data-t0="%s" data-d="%s" data-len="%.2f" id="@ID@">' % (n, t0, d, t0 + n * d + .55),
+         '  <div class="stg">\n    <div class="tk-r-ph">']
+    for i, im in enumerate(imgs):
+        T = t0 + i * d
+        a, b = (0, .30) if i == 0 else (T - .30, T + .14)   # the first room is already opening as the film is entered: no black screen at its door
+        o.append('      <div class="tk-r-i" data-s="ci:0,50,0,50>0,0,0,0@%.2f-%.2f" style="clip-path:inset(0 50%% 0 50%%)">'
+                 '<img src="%s" alt="" data-s="sc:1.12>1@%.2f-%.2f"></div>' % (a, b, im, a, b + .5))
+    o.append('    </div>\n    <div class="tk-r-vl" aria-hidden="true"></div>')
+    o.append('    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">')
+    o.append('      <p class="lab3 m tk-r-k" data-k="0 .16 %.2f %.2f">%s</p>' % (t0 - .22, t0 + .02, esc(kick)))
+    o.append('      <h2 class="t60 m tk-r-h" data-k="0 .16 %.2f %.2f">%s</h2>' % (t0 - .22, t0 + .02, '<br>'.join(esc(x) for x in brk_lines(nop(h1), 20))))
     for i, (nm, tx) in enumerate(stages):
-        T = t0 + i * d; last = i == n - 1
-        k = '%.2f %.2f %s' % (T, T + .16, '99 99' if last else '%.2f %.2f' % (T + d - .14, T + d + .02))
-        o.append('      <p class="lab3 m tkd-d-n" data-k="%s">%02d</p>' % (k, i + 1))
-        o.append('      <p class="t60 m tkd-d-s" data-k="%s">%s</p>' % (k, esc(nm)))
-        o.append('      <p class="t20 m tkd-d-t" data-k="%s" style="--w:430">%s</p>' % (k, esc(nop(tx))))
+        T = t0 + i * d; last = i == n - 1; side = ' r' if i >= n // 2 else ''
+        k = '%.2f %.2f %s' % (T, T + .15, '99 99' if last else '%.2f %.2f' % (T + d - .13, T + d + .02))
+        o.append('      <p class="t111 m tk-r-n%s" data-k="%s">%02d</p>' % (side, k, i + 1))
+        o.append('      <p class="t34 m tk-r-s%s" data-k="%s">%s</p>' % (side, k, esc(nm)))
+        o.append('      <p class="t20 m tk-r-t%s" data-k="%s" style="--w:430">%s</p>' % (side, k, esc(nop(tx))))
     return '\n'.join(o + ['    </div>\n  </div>\n</section>'])
 
 def sc_track(kick, h1, parts, statement, imgs):

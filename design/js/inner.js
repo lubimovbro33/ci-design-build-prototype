@@ -469,24 +469,22 @@
   /* ---------- film: doors — CI Turnkey (16.11.2026). Their own line: «hand you the keys to the life waiting on the other side». Eight thresholds
      stand one behind another in the site's hairlines; the scroll walks through them, one stage at a time, and the last one opens on the home.
      The thresholds stand on the right half of the screen, so the stage's name and its sentence keep the text line to themselves. */
-  function doors(f, q, t){
-    var N = f.n, cx = xm(1430), cy = MID, c = (q - f.t0) / f.d, i, z, sc, w, h, a;
-    for (i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);   /* the home that waits at the end fades in on its own scrub */
-    for (i = N - 1; i >= 0; i--){
-      z = i - c + 1;
-      if (z <= .36 || z > 4.8) continue;
-      sc = 1 / z; w = 560 * U * sc; h = 840 * U * sc;
-      a = c01((4.8 - z) / 2.4) * c01((z - .36) / .5);
-      if (a <= .004) continue;
-      ink(a * .92, 1);
-      g.strokeRect(Math.round(cx - w / 2) + .5, Math.round(cy - h / 2) + .5, Math.round(w), Math.round(h));
+  /* the CI Turnkey process: eight rooms. The photographs open out of the middle of the screen on their own scrubs (the cover's gesture,
+     eight times over); the canvas keeps the measure — one hairline along the foot with a mark for every stage, and the site's square
+     walking it. 16.11 23:42: eight identical drawn thresholds were the page's monotony; what opens now is the work itself. */
+  function rooms(f, q, t){
+    var i, N = f.n, x0 = xl(421), x1 = xr(1499), y = Math.round(H - 118 * U) + .5, c = (q - f.t0) / f.d, x;
+    for (i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
+    var al = sg(q, f.t0 - .3, f.t0 + .15);
+    if (al <= .002) return;
+    ink(al * .34, 1); seg(x0, y, x1, y);
+    for (i = 0; i < N; i++){
+      x = Math.round(x0 + (x1 - x0) * (i / (N - 1))) + .5;
+      ink(al * (c >= i - .5 ? .8 : .3), 1); seg(x, y - 9 * U, x, y + 9 * U);
     }
-    /* the one we are crossing carries the site's square on its threshold, and the far end of the walk keeps a square of its own */
-    var zc = 1 - (c - Math.floor(c)), zn = Math.max(.42, zc);
-    if (q > f.t0 - .2 && c < N - .2) sq(cx, cy + 420 * U / zn, c01((c + .6) * .8) * .75);
-    sq(cx, cy, sg(q, f.t0 - .3, f.t0 + .2) * .55);
+    sq(x0 + (x1 - x0) * c01(c / (N - 1)), y, al * .95);
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, doors: doors};
+  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, rooms: rooms};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
