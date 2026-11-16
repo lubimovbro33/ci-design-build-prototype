@@ -61,9 +61,14 @@ solution('wellness', 'ci-wellness.html', 'CI Wellness', lambda k, h, ps: sc_dawn
 def solutions():
     S = P['services']; pg = Pg()
     h1, ps, a = hero(S[0])
-    # one photograph on the whole screen and the four ways in one line at its foot; each way has its own picture, and it comes up under the pointer
-    pg.add(sc_four(label(S[0]), h1, [('CI Turnkey', 'ci-turnkey.html', A + 'ch/1450-24.webp'), ('CI Core', 'ci-core.html', A + 'rtb/1430-01a.webp'),
-                                     ('CI Curated', 'ci-curated.html', A + 'ch/1450-34.webp'), ('CI Wellness', 'ci-wellness.html', A + 'us/1511-06a.webp')]), 'Solutions', 'top')
+    # the four ways as panes over one photograph, in the home page's hand: the name in each, and under the pointer the pane fills white while the
+    # photograph behind changes (her word of 22:48). Each way's own line is the client's own lead for it.
+    W4 = [('CI Turnkey', 'ci-turnkey.html', A + 'ch/1450-24.webp', 'From First Idea to the First Night Home'),
+          ('CI Core', 'ci-core.html', A + 'rtb/1430-01a.webp', 'Design + Build, Fully Connected'),
+          ('CI Curated', 'ci-curated.html', A + 'ch/1450-34.webp', 'The Home, Considered Beyond Construction'),
+          ('CI Wellness', 'ci-wellness.html', A + 'us/1511-06a.webp', 'Better Living, Designed In')]
+    assert [nop(get(sec, 'lead')[0][1][0]) for sec in S[1:5]] == [w[3] for w in W4], [nop(get(sec, 'lead')[0][1][0]) for sec in S[1:5]]
+    pg.add(sc_four(label(S[0]), h1, W4), 'Solutions', 'top')
     pg.add(intro(ps))
     N = 4; t0 = .3; d = 1.0
     o = ['<section class="film" data-fig="steps" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']

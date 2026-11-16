@@ -531,12 +531,12 @@
 
   /* ================================================================== Solutions' first screen: the pointer on a way brings its photograph up */
   (function(){
-    var nav = qs('.sf-ways'); if (!nav) return;
-    var ws = qsa('.sf-w', nav), ims = qsa('.sf-ph img');
-    function set(i){ ws.forEach(function(w, k){ w.classList.toggle('on', k === i); }); ims.forEach(function(m, k){ m.classList.toggle('on', k === i); }); }
-    ws.forEach(function(w, i){
-      w.addEventListener('pointerenter', function(){ set(i); });
-      w.addEventListener('focus', function(){ set(i); });
+    var cells = qsa('.sf-cell'); if (!cells.length) return;
+    var ims = qsa('.sf-ph img');
+    function set(i){ cells.forEach(function(c, k){ c.classList.toggle('on', k === i); }); ims.forEach(function(m, k){ m.classList.toggle('on', k === i); }); }
+    cells.forEach(function(c, i){
+      c.addEventListener('pointerenter', function(){ set(i); });
+      c.addEventListener('focus', function(){ set(i); });
     });
   })();
 

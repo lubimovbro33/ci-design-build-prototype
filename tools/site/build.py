@@ -432,18 +432,22 @@ def sn_title(h1, kick, scrub='', style='', maxc=18, hidden=False):
     if kick and not hidden: o += '\n    <p class="lab3 sn-k%s"%s><span class="sn-hi">%s</span></p>' % (l, sa.replace('top:' + UU(150), 'top:' + UU(100)), esc(kick))
     return o
 def sc_four(kick, h1, ways):
-    """Solutions, her choice of 16.11 22:40 among the five sketches offered at 22:37 (the four strips that rose under the title were «дуже якийсь
-    топорний, шаблонний, з отими такими плашками, довгими, неакуратними»): ONE photograph over the whole screen, the title on it, and at its foot
-    ONE LINE — the four ways, set apart by the blue square, as the site sets apart the parts of any line. The pointer on a name brings that way's
-    own photograph up behind it (a slow cross-fade) and the site's hairline draws itself under the name; a click opens that way's page.
-    No plates, nothing rises, nothing overlaps the title."""
+    """Solutions, her word of 16.11 22:48: the four ways are shown the way the home page shows the six parts of CI (the «df2» block) — PANES over
+    one photograph, the name set in each in that same hand, and under the pointer the pane fills WHITE while the photograph behind changes to that
+    way's own. (22:45: the line of four names at the foot read as a filter — «якось воно дуже шаблонно».)
+    The pane's white card carries what the home page's carries: the number, the name again in black, and the way's own one line."""
     o = [sn_open(1.2), '    <div class="sn-full sf-ph" data-s="sc:1>1.06@0-1.2">']
-    for i, (nm, hr, img) in enumerate(ways):
-        o.append('      <img class="sf-i%s" data-i="%d" src="%s" alt="" style="filter:contrast(1.04) brightness(.52)">' % (' on' if i == 0 else '', i, img))
+    for i, w in enumerate(ways):
+        o.append('      <img class="sf-i%s" data-i="%d" src="%s" alt="" style="filter:contrast(1.04) brightness(.52)">' % (' on' if i == 0 else '', i, w[2]))
     o.append('    </div>')
-    o.append(sn_title(h1, kick, maxc=20))
-    o.append('    <nav class="sf-ways h5r" aria-label="The four ways">%s</nav>'
-             % sqr(['<a class="sf-w%s" href="%s" data-i="%d">%s</a>' % (' on' if i == 0 else '', hr, i, esc(nm)) for i, (nm, hr, img) in enumerate(ways)], raw=True))
+    o.append('    <p class="lab3 sf-k">%s</p>' % esc(kick))
+    o.append('    <h1 class="t60 sf-h">%s</h1>' % brk(h1, 20))
+    o.append('    <div class="sf-cells">')
+    for i, w in enumerate(ways):
+        o.append('      <a class="sf-cell" href="%s" data-i="%d"><span class="sf-nm">%s</span>'
+                 '<span class="sf-card"><span class="sf-cn">%02d</span><span class="sf-ct">%s</span><span class="sf-cd">%s</span></span>'
+                 '<span class="sf-pm" aria-hidden="true"><i></i><i></i></span></a>' % (w[1], i, esc(w[0]), i + 1, esc(w[0]), esc(w[3])))
+    o.append('    </div>')
     return '\n'.join(o + [SN_CLOSE])
 def sc_track(kick, h1, parts, statement, imgs):
     """Turnkey: one track from the first idea to the first night home; it pans sideways"""

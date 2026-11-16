@@ -444,15 +444,30 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
 .sn-hi{display:block;animation:cvIn 1.7s cubic-bezier(.16,1,.3,1) .25s both}
 .sn-lead{position:absolute;left:calc(421 * var(--u));bottom:max(calc(100 * var(--u)), 94px);z-index:4}
 /* Solutions: four strips, one for each way; they rise to the full height */
-/* Solutions' first screen (16.11, her choice): one photograph over the screen, the title on it, and the four ways in one line at its foot.
-   The pointer on a name brings that way's photograph up behind it and draws the site's hairline under the name. */
+/* Solutions' first screen (16.11 22:48, her word): the four ways are shown as the home page shows the six parts of CI — panes over one
+   photograph, the name set in each in that same hand (26 of the frame, Expanded, caps, tight), and under the pointer the pane fills WHITE from
+   its foot while the photograph behind changes to that way's own. The white pane carries the number, the name in black and the way's one line. */
 .sf-ph img{opacity:0;transition:opacity .9s cubic-bezier(.16,1,.3,1)}
 .sf-ph img.on{opacity:1}
-.sf-ways{position:absolute;left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px);z-index:4;color:#FFFFFF}
-.sf-ways .sqr{row-gap:calc(18 * var(--u))}
-.sf-w{position:relative;display:inline-block;color:#FFFFFF;text-decoration:none;cursor:none}
-.sf-w::after{content:"";position:absolute;left:0;right:0;bottom:calc(-14 * var(--u));height:1px;background:#FFFFFF;transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1)}
-.sf-w.on::after{transform:scaleX(1)}
+.sf-k{position:absolute;left:0;right:0;top:calc(165 * var(--u));text-align:center;z-index:4;color:rgba(255,255,255,.55)}
+html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));text-align:center;z-index:4;color:#FFFFFF}
+.sf-cells{position:absolute;left:0;right:0;top:calc(560 * var(--u));bottom:0;display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));z-index:3}
+.sf-cells::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(255,255,255,.22);z-index:4;pointer-events:none}
+.sf-cell{position:relative;display:block;overflow:hidden;color:#FFFFFF;text-decoration:none;cursor:none}
+.sf-cell + .sf-cell::after{content:"";position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,.22);z-index:4;pointer-events:none}
+.sf-nm, .sf-ct{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;font-family:var(--fx);font-weight:400;font-size:max(13px, calc(26 * var(--u)));line-height:1;letter-spacing:-.08em;text-transform:uppercase}
+.sf-nm{color:#FFFFFF;transition:opacity .4s, transform .6s cubic-bezier(.2,.8,.2,1)}
+.sf-card{position:absolute;inset:0;z-index:1;background:#FFFFFF;color:#000;clip-path:inset(100% 0 0 0);transition:clip-path .8s cubic-bezier(.77,0,.175,1)}
+.sf-cn{position:absolute;left:calc(24 * var(--u));top:calc(25 * var(--u));font-family:var(--fx);font-weight:400;font-size:max(10px, calc(18 * var(--u)));line-height:.93}
+.sf-ct{color:#000}
+.sf-cd{position:absolute;left:calc(24 * var(--u));bottom:calc(24 * var(--u));width:calc(248 * var(--u));font-family:var(--fz);font-weight:400;font-size:max(11px, calc(20 * var(--u)));line-height:1.1;letter-spacing:-.03em}
+.sf-pm{position:absolute;z-index:2;right:calc(24 * var(--u));bottom:calc(24 * var(--u));width:calc(48 * var(--u));height:calc(48 * var(--u));min-width:28px;min-height:28px;border-radius:50%;box-sizing:border-box;border:1px solid rgba(255,255,255,.12);transition:border-color .5s}
+.sf-pm i{position:absolute;left:50%;top:50%;width:calc(16 * var(--u));height:max(1px, calc(1.3 * var(--u)));min-width:9px;background:#FFFFFF;transform:translate(-50%,-50%);transition:background-color .5s}
+.sf-pm i + i{transform:translate(-50%,-50%) rotate(90deg)}
+.sf-cell.on .sf-nm{opacity:0}
+.sf-cell.on .sf-card{clip-path:inset(0 0 0 0)}
+.sf-cell.on .sf-pm{border-color:rgba(0,0,0,.12)} .sf-cell.on .sf-pm i{background:#000}
+@media (hover:hover){ .sf-cell:not(.on):hover .sf-nm{transform:translateY(calc(-4 * var(--u)))} .sf-cell:not(.on):hover .sf-pm{border-color:rgba(255,255,255,.4)} }
 /* Turnkey: one track from the first idea to the first night home; it pans sideways */
 .sn-trk{position:absolute;left:0;top:0;height:100%;display:flex;align-items:stretch;will-change:transform}
 .sn-trk > *{flex:none;position:relative;height:100%;box-sizing:border-box}
@@ -578,7 +593,13 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .sn-h.bl, .sn-k.bl{left:var(--m, 20px)} .sn-h.cc, .sn-k.cc{left:var(--m, 20px);right:var(--m, 20px)}
   .sn-h.cc{white-space:nowrap}   /* phones: the centred title keeps its own lines */
   .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 38px - 14px - 1.136em)}
-  .sf-ways{left:var(--m, 20px);right:var(--m, 20px);bottom:max(50 * var(--u), 58px)}
+  /* phones: the four panes stand two by two under the title */
+  .sf-cells{top:auto;height:calc(100svh - 56vw);grid-template-columns:repeat(2, minmax(0, 1fr));grid-template-rows:repeat(2, minmax(0, 1fr))}
+  .sf-cell + .sf-cell::after{display:none}
+  .sf-cell:nth-child(2n)::after{content:"";display:block;position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(255,255,255,.22)}
+  .sf-cell:nth-child(n+3)::before{content:"";position:absolute;left:0;right:0;top:0;height:1px;background:rgba(255,255,255,.22);z-index:4}
+  html body.inr .sf-h{top:18vh;font-size:clamp(22px, 7vw, 34px)!important} .sf-k{top:13vh}
+  .sf-cd{display:none} .sf-pm{right:10px;bottom:10px}
   .sn-full, .sn-strip, .sn-img, .sn-full img, .sn-strip img, .sn-img img{transform:none!important}
   .sn-full{clip-path:none!important} .sn-full[data-s*="ci:"]{display:none}
   .sn-full img{filter:contrast(1.04) brightness(.7)!important}
