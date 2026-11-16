@@ -93,11 +93,14 @@ def solutions():
         k = '%.2f %.2f %s' % (T, T + .14, '99 99' if last else '%.2f %.2f' % (T + d - .12, T + d))
         k2 = '%.2f %.2f %s' % (T + .08, T + .26, '99 99' if last else '%.2f %.2f' % (T + d - .12, T + d))
         tag = label(sec); nm = h_of(sec); lead = get(sec, 'lead')[0][1][0]; ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; a_ = get(sec, 'a')[0]
-        o.append('      <p class="lab3 m p-tl" data-k="%s">%s</p>' % (k, esc(tag)))
+        # 16.11 23:09: «текст розкиданий повністю: заголовок там, другий заголовок там, опис там, кнопка там». One composition now, read in order:
+        # the small name and the big one stand on the text line over the line itself; under the line the lead on the same text line, the description
+        # beside it at 1040, and the button at the foot of the same column
+        o.append('      <p class="lab3 m p-al2" data-k="%s">%s</p>' % (k, esc(tag)))
         o.append('      <p class="t60 m p-al nb" data-k="%s">%s</p>' % (k, brk(nm, 22)))
-        o.append('      <p class="t34 m p-um" data-k="%s" style="--w:430">%s</p>' % (k, esc(lead)))
-        o.append('      <div class="t20s m p-ur" data-k="%s" style="--w:430">%s</div>' % (k2, ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_)))
-        o.append('      <div class="m p-bm" data-k="%s">%s</div>' % (k2, btn(a_[2], href(a_[1]))))
+        o.append('      <p class="t34 m p-ul" data-k="%s" style="--w:520">%s</p>' % (k, esc(lead)))
+        o.append('      <div class="t20s m p-um2" data-k="%s" style="--w:620">%s</div>' % (k2, ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_)))
+        o.append('      <div class="m p-bl" data-k="%s">%s</div>' % (k2, btn(a_[2], href(a_[1]))))
     o.append('    </div>\n  </div>\n</section>')
     pg.add('\n'.join(o), 'Four Ways')
     final_cta(pg, S[5], A + 'ch/1450-02a.webp')

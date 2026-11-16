@@ -40,6 +40,9 @@ body.inr .hdr{opacity:1}
 .film .p-ul{left:calc(421 * var(--u));top:calc(50% + 50 * var(--u))}
 .film .p-um{left:calc(960 * var(--u));top:calc(50% + 50 * var(--u))}
 .film .p-ur{left:calc(1440 * var(--u));top:calc(50% + 50 * var(--u))}
+/* Solutions' four ways (16.11 23:09): everything on two columns — the name over the line, the lead under it at the text line,
+   the description beside it, the button at the foot of the same column */
+.film .p-um2{left:calc(1040 * var(--u));top:calc(50% + 50 * var(--u))}
 .film .p-bm{left:calc(960 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .film .p-ar{left:calc(1440 * var(--u));bottom:calc(50% + 50 * var(--u))}
 /* a scene with a figure in the middle (her corner principle, 15.11): the title top left, under the logo; the text bottom right */
@@ -451,7 +454,10 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
 /* Solutions' first screen (16.11 22:48, her word): the four ways are shown as the home page shows the six parts of CI — panes over one
    photograph, the name set in each in that same hand (26 of the frame, Expanded, caps, tight), and under the pointer the pane fills WHITE from
    its foot while the photograph behind changes to that way's own. The white pane carries the number, the name in black and the way's one line. */
-.sf-ph img{opacity:0;transition:opacity .9s cubic-bezier(.16,1,.3,1)}
+/* the grade is put on the group, not on each of the four pictures: four full-screen layers each carrying a filter made the zoom stutter
+   on the scroll (16.11 23:08 «неприємний щелочок… наїзд фотографії»); now one layer is graded and the pictures only cross-fade */
+.sf-ph{filter:contrast(1.04) brightness(.52);will-change:transform}
+.sf-ph img{opacity:0;filter:none!important;will-change:opacity;backface-visibility:hidden;transition:opacity 1.1s cubic-bezier(.16,1,.3,1)}
 .sf-ph img.on{opacity:1}
 .sf-k{position:absolute;left:0;right:0;top:calc(165 * var(--u));text-align:center;z-index:4;color:rgba(255,255,255,.55)}
 html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));text-align:center;z-index:4;color:#FFFFFF}

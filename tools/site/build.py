@@ -438,7 +438,7 @@ def sc_four(kick, h1, ways):
     The pane's white card carries what the home page's carries: the number, the name again in black, and the way's own one line."""
     o = [sn_open(1.2), '    <div class="sn-full sf-ph" data-s="sc:1>1.06@0-1.2">']
     for i, w in enumerate(ways):
-        o.append('      <img class="sf-i%s" data-i="%d" src="%s" alt="" style="filter:contrast(1.04) brightness(.52)">' % (' on' if i == 0 else '', i, w[2]))
+        o.append('      <img class="sf-i%s" data-i="%d" src="%s" alt="">' % (' on' if i == 0 else '', i, w[2]))
     o.append('    </div>')
     o.append('    <p class="lab3 sf-k">%s</p>' % esc(kick))
     o.append('    <h1 class="t60 sf-h">%s</h1>' % brk(h1, 20))

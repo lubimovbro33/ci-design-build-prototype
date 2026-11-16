@@ -274,12 +274,20 @@
   /* ---------- film: steps — a journey on the line; the square walks from mark to mark */
   function steps(f, q, t){
     var N = f.n, x0 = xl(421), x1 = W - 50 * U, i, E = {};
-    for (i = 0; i < N; i++){ var nm = f.emb[i]; if (!nm) continue; var a = eio(sg(q, f.t0 + i * f.d - .12, f.t0 + i * f.d + .2)) * (i < N - 1 ? 1 - eio(sg(q, f.t0 + (i + 1) * f.d - .12, f.t0 + (i + 1) * f.d + .2)) : 1); if (a > 0) E[nm] = Math.max(E[nm] || 0, a); }
+    /* 16.11 23:09 («дуже якась рвана, топорна анімація тієї лінії. Хочеться легкості і плавності»): each way's own shape holds while its step is
+       in hand and gives way over the whole gap to the next, so one turns into the other instead of snapping */
+    for (i = 0; i < N; i++){
+      var nm = f.emb[i]; if (!nm) continue;
+      var c = f.t0 + i * f.d, dd = Math.abs(q - c) / f.d, a = sm(0, 1, 1 - c01(dd / .45));   /* full at the middle of a step, gone before the next: between two ways the line is simply straight */
+      if ((i === 0 && q < c) || (i === N - 1 && q > c)) a = 1;
+      if (a > 0) E[nm] = Math.max(E[nm] || 0, a);
+    }
     theLine(1, E, t);
     var ta = sg(q, .45, .75);
     if (ta > 0){ ink(ta, 1); for (i = 0; i < N; i++){ var x = lerp(x0, x1, N > 1 ? i / (N - 1) : 0); seg(x, MID - 9 * U, x, MID + 9 * U); } }
-    var hx = x0; for (i = 1; i < N; i++) hx += (x1 - x0) / (N - 1) * eio(sg(q, f.t0 + i * f.d - .1, f.t0 + i * f.d + .12));
-    sq(hx, MID, sg(q, .6, .85));
+    /* the square walks the line with the scroll and only eases as it comes to rest on a mark — no hop from one to the next */
+    var p = c01((q - f.t0) / ((N - 1) * f.d)) * (N - 1), k = Math.min(N - 2, Math.floor(p)), fr = N > 1 ? c01(p - k) : 0;
+    sq(lerp(x0, x1, N > 1 ? (k + sm(0, 1, fr)) / (N - 1) : 0), MID, sg(q, .6, .85));
   }
   /* ---------- film: scene — the page's own opening; a track pans sideways, a drawing draws itself */
   function scene(f, q, t){
