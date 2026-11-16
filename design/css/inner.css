@@ -115,9 +115,8 @@ html body.inr .bk .c3{margin-left:calc(1440 * var(--u))}
 /* a key thought */
 .say{font-family:var(--fx);font-weight:400;font-size:max(24px, calc(60 * var(--u)));line-height:.867;letter-spacing:-.0167em;text-transform:uppercase;color:#FFFFFF}
 /* words on one line, a square between them (the homepage's "OF THE DAY ■ AT HOME") */
-.dots{display:flex;flex-wrap:wrap;gap:calc(16 * var(--u)) calc(25 * var(--u));align-items:center;margin-right:calc(50 * var(--u))}
+.dots{display:block;margin-right:calc(50 * var(--u))} .dots .sqr{row-gap:calc(16 * var(--u))}   /* 16.11: the one separator of the site (.sqr in r3.css) — 10 either side of the square, it was 25 */
 .dots span{font-family:var(--fx);font-weight:400;font-size:max(15px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em;text-transform:uppercase}
-.dots i{flex:none;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:var(--blue)}
 /* a definition table */
 .dlt{margin-left:calc(50 * var(--u));margin-right:calc(50 * var(--u))}
 .dlt > div{display:grid;grid-template-columns:calc(371 * var(--u)) minmax(0,1fr);padding:calc(25 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.3)}

@@ -139,9 +139,9 @@ partnerships()
 
 # ================================================================== portfolio + projects
 def pf_card(p, tall=False):
-    if 'slug' in p: return '<a class="cd rv%s" href="%s.html"><span class="im"><img src="%s" alt="%s" loading="lazy"></span><span class="nm h5r">%s</span><span class="lc lab3">%s <span style="color:var(--blue)">■</span> %s</span></a>' % (
-        ' tall' if tall else '', p['slug'], ph(p['set'], p['tall'] if tall else p['card']), p['name'], p['name'], p['loc'], p['bld'])
-    return '<div class="cd rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span><span class="nm h5r">%s</span><span class="lc lab3">%s <span style="color:var(--blue)">■</span> %s</span></div>' % (p['img'], p['name'], p['name'], p['loc'], p['bld'])
+    if 'slug' in p: return '<a class="cd rv%s" href="%s.html"><span class="im"><img src="%s" alt="%s" loading="lazy"></span><span class="nm h5r">%s</span><span class="lc lab3">%s</span></a>' % (
+        ' tall' if tall else '', p['slug'], ph(p['set'], p['tall'] if tall else p['card']), p['name'], p['name'], sqr(p['loc'].split(' · ') + [p['bld']]))
+    return '<div class="cd rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span><span class="nm h5r">%s</span><span class="lc lab3">%s</span></div>' % (p['img'], p['name'], p['name'], sqr(p['loc'].split(' · ') + [p['bld']]))
 def sq_line(parts):
     """one line of small caps, its parts set apart by blue squares (her caption of 15.11). The square is drawn before each part and the line's left
     edge is clipped by its width, so a line never begins or ends with a square, however it wraps"""
@@ -376,14 +376,14 @@ news()
 def article():
     S = P['article']; pg = Pg()
     sec = S[1]; ks = [it[1][0] for it in sec['items'] if it[0] == 'k']
-    head = '<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1 mt3"><a href="news.html">← News</a><span style="color:var(--blue)">■</span><span class="ph">[Category]</span><span style="color:var(--blue)">■</span><span class="ph">[Date]</span></p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <p class="t34 rv c1" style="--w:900;margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (esc(h_of(S[0], 'h1')), esc(get(S[0], 'lead')[0][1][0]))
+    head = '<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1 mt3"><span class="sqr"><span><a href="news.html">← News</a></span><span><span class="ph">[Category]</span></span><span><span class="ph">[Date]</span></span></span></p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <p class="t34 rv c1" style="--w:900;margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (esc(h_of(S[0], 'h1')), esc(get(S[0], 'lead')[0][1][0]))
     pg.add(head, 'Article', 'top')
     body = []
     for it in sec['items']:
         if it[0] == 'p': body.append('<div class="t20s rv"><p>%s</p></div>' % esc(it[1][0]))
         elif it[0] == 'h3': body.append('<p class="h5r rv" style="margin-top:calc(100 * var(--u))">%s</p>' % esc(it[1]))
         elif it[0] == 'lead': body.append('<p class="t34 rv">%s</p>' % esc(it[1][0]))
-    meta = '<p class="lab3 rv mt3">%s</p>' % '<span style="color:var(--blue)">■</span>'.join('<span>%s</span>' % esc(x) for x in ks[:3])
+    meta = '<p class="lab3 rv mt3">%s</p>' % sqr(ks[:3])
     share = ks[3].split(' · ')
     sh = '<p class="lab3 rv mt3" style="margin-top:calc(100 * var(--u))"><span>%s</span>%s</p>' % (esc(share[0]), ''.join('<a href="#" data-noop>%s</a>' % esc(x) for x in share[1:]))
     pg.add('<section class="bk" id="@ID@">\n  <div class="art">%s%s%s</div>\n</section>' % (meta, ''.join(body), sh))
@@ -413,7 +413,7 @@ def contact():
     pg.add(bk(h_of(sec), body), 'Inquiry', 'inquiry')
     dl = get(sec, 'dl')[0][1]; rows = ''
     for k, v in dl:
-        if k == 'Social': val = ' <span style="color:var(--blue)">■</span> '.join('<a href="#" data-noop>%s</a>' % esc(x) for x in v[0].split(' · '))
+        if k == 'Social': val = sqr(['<a href="#" data-noop>%s</a>' % esc(x) for x in v[0].split(' · ')], raw=True)
         elif k == 'Phone': val = '<a href="tel:+1%s">%s</a>' % (re.sub(r'\D', '', v[0]), esc(v[0]))
         else: val = '<br>'.join(esc(x) for x in v)
         rows += '<div class="rv"><dt>%s</dt><dd>%s</dd></div>' % (esc(k), val)

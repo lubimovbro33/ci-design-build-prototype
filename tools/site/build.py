@@ -65,6 +65,23 @@ def esc(t):
     t = re.sub(r"(?<=\w)'(?=\w)", '’', t).replace("'", '’')
     t = t.replace('—', '—')
     return re.sub(r'\[[^\]]+\]', lambda m: '<span class="ph">%s</span>' % m.group(0), t)
+def sqr(parts, raw=False):
+    """one row of items set apart by the blue square (.sqr in css/r3.css). 16.11, the designer: items of a line are never set apart by a small dot —
+    a square 8 x 8 of the blue, 10 from the word before it and 10 before the next. `raw`: the parts are markup already"""
+    return '<span class="sqr">%s</span>' % ''.join('<span>%s</span>' % (x if raw else esc(x)) for x in parts if x)
+SQ_SPLIT = re.compile('\\s*[\u00b7\u2022\u2219\u22c5]\\s*')
+def squares(out, fname):
+    """the last gate before a page is written: a text "A · B" (the client's documents and our own data use the dot as a plain-text separator)
+    becomes a .sqr row; a dot standing alone between two elements cannot be set that way — the template has to be written with sqr()"""
+    parts = re.split(r'(<!--.*?-->|<script\b.*?</script>|<style\b.*?</style>|<title>.*?</title>|<[^>]+>)', out, flags=re.S)
+    for i in range(0, len(parts), 2):
+        t = parts[i]
+        if not SQ_SPLIT.search(t): continue
+        items = SQ_SPLIT.split(t)
+        if any(not x.strip() for x in items): raise SystemExit('%s: a dot between two elements — write that line with sqr(): %r' % (fname, t[:80]))
+        lead = t[:len(t) - len(t.lstrip())]; trail = t[len(t.rstrip()):]
+        parts[i] = lead + sqr([x.strip() for x in items], raw=True) + trail
+    return ''.join(parts)
 def nop(t):
     t = t.strip()
     if t.endswith('.') and not t.endswith('..') and not re.search(r'\[[^\]]*\.\]$', t): t = t[:-1]
@@ -160,7 +177,7 @@ def menu(cur):
 %s  </nav>
   <div class="mn-ft">
     <div>215 W Huron Street<br>Suite 1<br>Chicago, IL 60654</div>
-    <div>312 279 2776<br><span class="ph">[sales@cidesignbuild.com]</span><br><a href="faq.html">FAQ</a> · <a href="contact.html">Contact</a></div>
+    <div>312 279 2776<br><span class="ph">[sales@cidesignbuild.com]</span><br><span class="sqr"><span><a href="faq.html">FAQ</a></span><span><a href="contact.html">Contact</a></span></span></div>
     <div class="mn-soc"><a href="#" data-noop>Instagram</a><a href="#" data-noop>LinkedIn</a><a href="#" data-noop>Pinterest</a><a href="#" data-noop>Facebook</a></div>
   </div>
 </div>
@@ -218,6 +235,7 @@ def page(fname, title, body, rail, preload=None):
 ''' % (html.escape(title), '<link rel="preload" as="image" href="%s" fetchpriority="high">\n' % preload if preload else '')
     r = ''.join('  <a href="#%s" data-ch="%s"><span>%02d</span><span class="t">%s</span><i></i></a>\n' % (i, i, k + 1, html.escape(l)) for k, (i, l) in enumerate(rail))
     out = head + menu(fname) + '\n<main id="main">\n' + body + '</main>\n\n' + footer() + '\n\n<div class="grain on" aria-hidden="true"></div>\n<nav class="chap mono" id="chap" aria-label="Chapters">\n' + r + '</nav>\n\n<script src="js/v10.js"></script>\n<script src="js/inner.js"></script>\n<script src="js/form.js"></script>\n</body>\n</html>\n'
+    out = squares(out, fname)
     open(D + fname, 'w').write(out)
     return len(out)
 
@@ -387,7 +405,7 @@ def lead_p(lines, cls='c1', w=1000):
 def closer(lines, cls='c1'):
     return '    <p class="t34 rv %s" style="--w:1000">%s</p>' % (cls, blue(' '.join(lines), lines) if len(lines) > 1 else '<span class="cb">%s</span>' % esc(nop(lines[0])))
 def dots_row(words, cls='c1'):
-    return '    <div class="dots rv %s">%s</div>' % (cls, '<i></i>'.join('<span>%s</span>' % esc(x) for x in words))
+    return '    <div class="dots rv %s">%s</div>' % (cls, sqr(words))
 def text_block(title, items, lead_first=True):
     """the first short thought on the text line; small text and parallel lines in columns; the closing thought under them"""
     its = [it for it in items]; lead = None
@@ -449,7 +467,7 @@ def proj_cards(title, picks, link=None):
     if link: o.append('    <div class="rv c1">%s</div>' % btn(link[0], link[1]))
     return bk(title, '\n'.join(o))
 def quote_block(text, who=None):
-    w = '<span class="ph">[Client name]</span> <span style="color:var(--blue)">■</span> <span class="ph">[Project]</span>' if who is None else esc(who)
+    w = sqr(['<span class="ph">[Client name]</span>', '<span class="ph">[Project]</span>'], raw=True) if who is None else esc(who)
     return '<section class="bk" id="@ID@">\n  <p class="t34 rv c1" style="--w:1000">%s</p>\n  <p class="lab3 rv c1" style="margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (esc(text), w)
 def band(img, pos=None, g=None):
     st = ';'.join(x for x in ['object-position:%s' % pos if pos else '', 'filter:contrast(1.04) brightness(%s)' % g if g else ''] if x)
