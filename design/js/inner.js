@@ -539,7 +539,7 @@
         cur = qs('.gl-cur', sec), tot = qs('.gl-tot', sec), chips = qsa('[data-gal] .chip', sec),
         STEP = .55, vis = items.slice(), cen = [], x = 0, tx = 0, idx = -1, span = 0, mob = false, ready = false, lastY = -1, idle = 0, settled = false;
     function two(n){ return n < 10 ? '0' + n : '' + n; }
-    function ar(it, w, h){ if (!w || !h) return; qs('.gl-im', it).style.setProperty('--ar', Math.max(.72, Math.min(1.62, w / h)).toFixed(4)); dirty = true; }
+    function ar(it, w, h){ if (!w || !h) return; qs('.gl-im', it).style.setProperty('--ar', Math.max(.72, Math.min(1.70, w / h)).toFixed(4)); dirty = true; }
     /* the proportions are needed before the rail is laid out, and the pictures stand off the screen: they are fetched once the section is a screen away */
     (function(){
       function load(){ if (ready) return; ready = true;

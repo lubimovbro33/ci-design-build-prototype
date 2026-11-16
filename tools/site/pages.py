@@ -232,7 +232,7 @@ def portfolio():
     items = ''.join('<a class="gl-it" href="%s" data-tags="%s" data-cursor="View"><span class="gl-tx"><span class="gl-nm">%s</span>%s%s</span>'
                     '<span class="gl-im"><img src="%s" alt="%s" loading="lazy"%s><span class="gl-go lab3">View project</span></span></a>' % (
                         hr, tg, esc(nm), sq_line(lc.split(' · ')).replace('sqm"', 'sqm sqc"'), sq_line([bd, sz]).replace('sqm"', 'sqm sqc"'),
-                        gim[nm], esc(nm), ' crossorigin="anonymous"' if gim[nm].startswith('http') else '')
+                        gim[nm], esc(nm), '')
                     for nm, lc, bd, sz, hr, tg, im in [byn[n] for n in ORDER])
     thumbs = ''.join('<button class="gl-th" type="button" data-tags="%s" data-i="%d"><img src="%s" alt="%s" loading="lazy"><span class="vh">%s</span></button>' % (
         byn[n][5], i, gim[n], esc(n), esc(n)) for i, n in enumerate(ORDER))

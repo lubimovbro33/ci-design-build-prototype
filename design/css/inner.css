@@ -316,7 +316,7 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .gl-stg{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000}
 .gl-h{position:absolute;left:calc(50 * var(--u));top:calc(120 * var(--u));z-index:4;color:#FFFFFF}
 .gl-vp{position:absolute;left:0;top:0;width:100%;height:100%;z-index:2}
-.gl-rail{position:absolute;left:0;top:calc(250 * var(--u));height:calc(500 * var(--u));display:flex;align-items:center;will-change:transform}
+.gl-rail{position:absolute;left:0;top:calc(150 * var(--u));bottom:calc(330 * var(--u));display:flex;align-items:center;will-change:transform}
 .gl-it{position:relative;flex:none;display:flex;align-items:center;color:#FFFFFF;text-decoration:none}
 .gl-it[hidden]{display:none}
 .gl-tx{flex:none;width:calc(660 * var(--u));display:block;text-align:center;opacity:.32;transition:opacity .55s}
@@ -334,8 +334,8 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .gl-it.on:hover .gl-im::after{opacity:1}
 .gl-go{position:absolute;left:calc(25 * var(--u));bottom:calc(22 * var(--u));opacity:0;transform:translateY(calc(8 * var(--u)));transition:opacity .45s, transform .45s;z-index:2}
 .gl-it.on:hover .gl-go{opacity:1;transform:none}
-.gl-none{position:absolute;left:0;right:0;top:calc(500 * var(--u));transform:translateY(-50%);text-align:center;display:none;z-index:3;color:rgba(255,255,255,.6)}
-.glx.empty .gl-none{display:block}
+.gl-none{position:absolute;left:0;right:0;top:calc(150 * var(--u));bottom:calc(330 * var(--u));display:none;align-items:center;justify-content:center;text-align:center;z-index:3;color:rgba(255,255,255,.6)}
+.glx.empty .gl-none{display:flex}
 .glx.empty .gl-bar .gl-ct{opacity:.3}
 /* the foot: the filters and the counter on one line, the strip of all the work under them */
 .gl-bar{position:absolute;left:calc(50 * var(--u));right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);z-index:4}
@@ -351,7 +351,7 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .gl-th.on{opacity:1} .gl-th.on img{filter:contrast(1.04)}
 .gl-th.on::after{content:"";position:absolute;inset:0;border:1px solid #FFFFFF}
 /* the two fields that step a project; they stand beside the photograph, never over it */
-.gl-nav{position:absolute;top:calc(250 * var(--u));height:calc(500 * var(--u));width:calc(370 * var(--u));padding:0;border:0;background:none;cursor:none;z-index:3}
+.gl-nav{position:absolute;top:calc(150 * var(--u));bottom:calc(330 * var(--u));width:calc(370 * var(--u));padding:0;border:0;background:none;cursor:none;z-index:3}
 .gl-prev{left:0} .gl-next{right:0}
 .glx.empty .gl-nav{display:none}
 .chip.off{opacity:.3;pointer-events:none}
