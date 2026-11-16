@@ -214,11 +214,11 @@ def portfolio():
            '      <p class="t20 m p-cb" data-k="-1 -.5 2.85 3.0">%s</p>\n'
            '      <p class="t34 m p-cb" data-k="3.05 3.35 99 99">The result feels effortless,<br class="bd"> <span class="cb">as if your home could only<br class="bd"> ever have been yours</span></p>\n'
            '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % (lead, ''.join('<li>%s</li>' % esc(x) for x in st6)), 'Approach')
-    # Explore the Work — the gallery. Her third reference, of 16.11 22:14 (htarchitecte.com/en): a grid of the work, airy, with no names on it —
-    # «зроби, щоб назва появлялась тільки при наведенні». Hers skips that site's opening photograph: «в нас зразу буде сітка з цих проектів».
-    # What that site's grid does, and what is kept: the pictures stand in loose columns in two formats only (its own 600 × 685 and 600 × 425, so
-    # 0.876 and 1.41), with a great deal of air between them; a photograph under the pointer comes up to full strength and its name appears under it,
-    # while every other photograph falls back. Ours is that on black, in our type.
+    # Explore the Work — the gallery. Her reference htarchitecte.com/en as it really stands (16.11 22:23: «Там все відбувається в межах одного екрану.
+    # Горизонтальний скрол» — the grid I had built was that site's other view, reached by its own toggle). Measured off her screenshot:
+    # the photographs stand along the FOOT of one screen, all of the same height (0.54 of it), each its own width, 0.056 of the height between them;
+    # above them the screen is empty but for the mark and the menu; the row is walked sideways. No names on the row — a name appears only under the
+    # pointer (22:14), and every other photograph falls back to grey. Ours: the title and the filters stand in that empty upper half.
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']
     ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', 'Modern Deco Home', '444 W Grant', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo']
     byn = {x[0]: x for x in LIB}; assert sorted(ORDER) == sorted(byn)
@@ -230,16 +230,13 @@ def portfolio():
     ch = ''.join('<button class="chip%s" type="button" data-f="%s"%s>%s</button>' % (
         ' on' if i == 0 else (' off' if cnt('all' if i == 0 else slug(c)) == 0 else ''), 'all' if i == 0 else slug(c),
         ' disabled aria-disabled="true" title="No projects under this filter yet"' if i and cnt(slug(c)) == 0 else '', c) for i, c in enumerate(chips))
-    # the two formats of the reference, one after the other, so the columns never fall into rows
-    FMT = ['.876', '1.41', '.876', '1.41', '.876', '1.41', '.876', '1.41', '.876']
-    items = ''.join('<a class="gl-it" href="%s" data-tags="%s" style="--ar:%s"><span class="gl-im"><img src="%s" alt="%s" loading="lazy"></span>'
-                    '<span class="gl-nm lab3">%s</span></a>' % (hr, tg, FMT[i], gim[nm], esc(nm), esc(nm))
-                    for i, (nm, lc, bd, sz, hr, tg, im) in enumerate([byn[n] for n in ORDER]))
+    items = ''.join('<a class="gl-it" href="%s" data-tags="%s"><span class="gl-nm lab3">%s</span><span class="gl-im"><img src="%s" alt="%s" loading="lazy"></span></a>' % (
+        hr, tg, esc(nm), gim[nm], esc(nm)) for nm, lc, bd, sz, hr, tg, im in [byn[n] for n in ORDER])
     assert nop(h_of(S[3])) == 'Explore the Work', h_of(S[3])
-    pg.add('<section class="bk glx" id="@ID@">\n'
-           '    <div class="gl-hd">\n      <h2 class="t60 gl-h">Explore<br>the Work</h2>\n      <div class="chips" data-filter="glib">%s</div>\n    </div>\n'
-           '    <div class="glg rv" id="glib">%s<p class="none lab3"><span class="wc">No projects under this filter yet</span></p></div>\n'
-           '</section>' % (ch, items), 'Library')
+    pg.add('<section class="glx" id="@ID@">\n  <div class="gl-stg">\n'
+           '    <div class="gl-hd">\n      <h2 class="t60 gl-h">Explore<br>the Work</h2>\n      <div class="chips" data-gal="gl">%s</div>\n    </div>\n'
+           '    <div class="gl-vp"><div class="gl-rail">%s</div></div>\n'
+           '    <p class="gl-none lab3"><span class="wc">No projects under this filter yet</span></p>\n  </div>\n</section>' % (ch, items), 'Library')
     # the closing block: one composition for the whole site now (cta() in build.py); the words and her title column are hers
     fs = S[4]; fa = get(fs, 'a'); fps = [it[1][0] for it in fs['items'] if it[0] in ('p', 'lead')]
     assert nop(h_of(fs)) == 'Turn Inspiration Into Something Entirely Your Own' and len(fps) == 2, (h_of(fs), fps)

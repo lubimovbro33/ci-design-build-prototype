@@ -210,6 +210,7 @@
     FILMS.forEach(function(f){ if (f.fig !== 'key' && f.fig !== 'many') return; var flow = getComputedStyle(f.cv).position !== 'absolute'; f.cw = flow ? f.cv.clientWidth : 0; f.ch = flow ? f.cv.clientHeight : 0;
       if (flow){ f.cv.width = Math.round(f.cw * DPR); f.cv.height = Math.round(f.ch * DPR); } });
     dirty = false;
+    if (GL) GL.layout();
     qsa('#ftCity').forEach(function(v){ var mtx = v.getScreenCTM && v.getScreenCTM(); if (mtx && mtx.a) v.style.setProperty('--ds', Math.max(mtx.a, .05).toFixed(4)); });
   }
   window.addEventListener('resize', function(){ dirty = true; });
@@ -529,30 +530,54 @@
 
 
   /* ================================================================== the gallery: «Explore the Work» (16.11, her reference htarchitecte.com/en)
-     The grid of the work. The browser's own column balancing leaves a column empty when the pictures are tall, so the columns are filled here:
-     each photograph goes to the column that is shortest at that moment. Run again when the window changes and when a filter is chosen. */
-  (function(){
-    var box = qs('.glg'); if (!box) return;
-    var items = qsa('.gl-it', box), GAP = 160, ROW = 140;   /* the frame's units */
-    function place(){
-      var one = !!(mm && mm('(max-aspect-ratio: 1/1)').matches);
-      if (one){ box.style.height = ''; items.forEach(function(it){ it.style.width = ''; it.style.transform = ''; }); return; }
-      var n = 4, g = GAP * U, r = ROW * U, w = box.clientWidth, cw = (w - (n - 1) * g) / n, hs = [0, 0, 0, 0], i, k, m;
-      items.forEach(function(it){
-        if (it.hidden){ it.style.transform = ''; return; }
-        it.style.width = cw.toFixed(1) + 'px';
-        k = 0; m = hs[0]; for (i = 1; i < n; i++) if (hs[i] < m - .5){ m = hs[i]; k = i; }
-        it.style.transform = 'translate3d(' + (k * (cw + g)).toFixed(1) + 'px,' + hs[k].toFixed(1) + 'px,0)';
-        hs[k] += it.offsetHeight + r;
-      });
-      m = 0; for (i = 0; i < n; i++) if (hs[i] > m) m = hs[i];
-      box.style.height = Math.max(0, Math.round(m - r)) + 'px';
+     One screen; the photographs stand along its foot, all of one height, each its own width. The scroll walks the row sideways, one pixel of the
+     row to one pixel of the page, and the row follows with a lag — the inertia. The filters rebuild it. */
+  var GL = (function(){
+    var sec = qs('.glx'); if (!sec) return null;
+    var rail = qs('.gl-rail', sec), items = qsa('.gl-it', sec), chips = qsa('[data-gal] .chip', sec),
+        FIELD = 50, vis = items.slice(), x = 0, tx = 0, span = 0, mob = false, ready = false;
+    function ar(it, w, h){ if (!w || !h) return; qs('.gl-im', it).style.setProperty('--ar', Math.max(.72, Math.min(1.70, w / h)).toFixed(4)); dirty = true; }
+    /* the proportions decide the widths, and the pictures stand off the screen: they are fetched once the section is a screen away */
+    (function(){
+      function load(){ if (ready) return; ready = true;
+        items.forEach(function(it){ var img = qs('img', it); if (!img) return; img.loading = 'eager';
+          if (img.complete && img.naturalWidth) return ar(it, img.naturalWidth, img.naturalHeight);
+          var pre = new Image(); pre.onload = function(){ ar(it, pre.naturalWidth, pre.naturalHeight); }; pre.src = img.src; }); }
+      if (!('IntersectionObserver' in window)) return load();
+      var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ load(); io.disconnect(); } }, {rootMargin: '120% 0px'});
+      io.observe(sec);
+    })();
+    function layout(){
+      mob = !!(mm && mm('(max-aspect-ratio: 1/1)').matches);
+      vis = items.filter(function(it){ return !it.hidden; });
+      sec.classList.toggle('empty', vis.length === 0);
+      if (mob || !vis.length){ sec.style.height = ''; rail.style.transform = ''; return; }
+      var last = vis[vis.length - 1], railW = last.offsetLeft + last.offsetWidth + FIELD * U;
+      span = Math.max(0, Math.round(railW - W));            /* one pixel of the row to one pixel of the scroll */
+      sec.style.height = Math.round(span + H) + 'px';
     }
-    qsa('[data-filter] .chip', box.parentNode).forEach(function(c){ c.addEventListener('click', function(){ place(); }); });
-    window.addEventListener('resize', function(){ place(); });
-    window.addEventListener('load', function(){ place(); });
-    if (document.readyState === 'complete') place(); else setTimeout(place, 0);
-    window.__glg = place;
+    function frame(){
+      if (mob || !vis.length) return;
+      var r = sec.getBoundingClientRect(); if (r.bottom < -200 || r.top > H + 200) return;
+      tx = -(span > 0 ? c01(-r.top / span) : 0) * span;
+      x += (tx - x) * .14;                                   /* the lag that makes the glide */
+      if (Math.abs(tx - x) < .3) x = tx;
+      rail.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
+    }
+    chips.forEach(function(c){ c.addEventListener('click', function(){
+      if (c.disabled) return;
+      chips.forEach(function(o){ o.classList.toggle('on', o === c); });
+      var fv = c.getAttribute('data-f');
+      items.forEach(function(it){ var ok = fv === 'all' || (' ' + it.getAttribute('data-tags') + ' ').indexOf(' ' + fv + ' ') >= 0; it.hidden = !ok; });
+      layout(); x = tx = 0; rail.style.transform = 'translate3d(0,0,0)';
+      var t0 = sec.getBoundingClientRect().top + window.scrollY; if (window.scrollY > t0) smoothTo(t0 + 2);
+    }); });
+    window.addEventListener('keydown', function(e){
+      if (mob || !vis.length || span <= 0) return; var r = sec.getBoundingClientRect(); if (r.top > 4 || r.bottom < H - 4) return;
+      if (e.key === 'ArrowRight'){ e.preventDefault(); smoothTo(window.scrollY + Math.min(640, span)); }
+      else if (e.key === 'ArrowLeft'){ e.preventDefault(); smoothTo(window.scrollY - Math.min(640, span)); }
+    });
+    return {layout: layout, frame: frame};
   })();
 
   /* ================================================================== the loop */
@@ -575,6 +600,7 @@
       var b = BANDS[i], br = b.el.getBoundingClientRect(); if (br.bottom < -40 || br.top > H + 40) continue;
       b.img.style.transform = 'translate3d(0,' + ((br.top / H) * -4).toFixed(2) + '%,0)';
     }
+    if (GL) GL.frame();
     if (y !== lastY || H !== lastVH) updateChap(y, H);
     chapInk(); updateLogo(y, H);
     lastY = y; lastVH = H;
