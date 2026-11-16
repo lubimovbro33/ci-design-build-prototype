@@ -381,7 +381,7 @@
       g.beginPath(); g.moveTo(x - Math.cos(a) * l, y - Math.sin(a) * l); g.lineTo(x + Math.cos(a) * l, y + Math.sin(a) * l); g.stroke();
       if (mi >= 0){
         if (k > .6){ var qa = sg(k, .6, 1) * al; g.fillStyle = 'rgba(' + KY.BLUE + ',' + qa.toFixed(3) + ')'; g.fillRect(Math.round(x - s8 / 2), Math.round(mid - s8 / 2), Math.round(s8), Math.round(s8)); }
-        var nm = f.names[mi], lb = ((nm[0] + ' ' + nm[1]).trim()).toUpperCase(), hold = lb.charAt(0) === '['; if (flow) lb = ('0' + (mi + 1)).slice(-2);   /* in the flow there is no room for the names: their numbers */ g.fillStyle = 'rgba(255,255,255,' + (al * (hold ? .6 : 1)).toFixed(3) + ')'; g.fillText(lb, Math.max(px * lb.length * .36, Math.min(w - px * lb.length * .36, x)), lerp(y - 20 * s, mid - 22 * s, k)); }
+        var nm = f.names[mi], lb = ((nm[0] + ' ' + nm[1]).trim()).toUpperCase(), hold = lb.charAt(0) === '['; if (hold) lb = lb.replace(/^\[|\]$/g, ''); if (flow) lb = ('0' + (mi + 1)).slice(-2);   /* in the flow there is no room for the names: their numbers */ g.fillStyle = 'rgba(255,255,255,' + (al * (hold ? .6 : 1)).toFixed(3) + ')'; g.fillText(lb, Math.max(px * lb.length * .36, Math.min(w - px * lb.length * .36, x)), lerp(y - 20 * s, mid - 22 * s, k)); }
     }
   }
   /* ---------- the cover flown through (Portfolio; her word of 15.11 20:25). The photograph is seen through the letters of the title: black, the letters

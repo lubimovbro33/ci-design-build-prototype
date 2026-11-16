@@ -292,6 +292,10 @@ def project_collection(p, nxt):
     Nothing is invented: what the client has not written stays their placeholder. The Goal stands above The Brief (in the template it is below)."""
     S = P['project']; pg = Pg(); nm = p['name']
     def sub(t): return t.replace('[Project Name]', nm)
+    # a field the client has not filled yet: on this page it is set quietly — dim, without the tinted box and without the square brackets
+    # (her word of 16.11 13:19: «квадратні дужки на наші заголовки… напівпрозорий прямокутник… у нас немає такої стилістики»); the brackets stay in
+    # the text for the copy check, only hidden
+    _add = pg.add; pg.add = lambda h, *a, **k: _add(h.replace('<span class="ph">[', '<span class="ph q"><i>[</i>').replace(']</span>', '<i>]</i></span>'), *a, **k)
     cov = ph(p['set'], p['cover'])
     pg.add('<section class="film wl" data-fig="wall" data-len="0" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
            '    <div class="wl-p"><img src="%s" alt="%s"><i class="wl-sh"></i></div>\n'

@@ -9,6 +9,7 @@ html, body.inr{background:#000}
 body.inr{color:#FFFFFF;overflow-x:hidden}
 body.inr .hdr{opacity:1}
 .inr .ph{background:rgba(255,255,255,.12);font-family:inherit;font-size:inherit;padding:0 .2em}
+.inr .ph.q{background:none;padding:0;color:rgba(255,255,255,.42)} .ph.q > i{display:none}   /* the quiet form (Collectors Home, 16.11): dim, no box, the brackets hidden */
 .inr .lab3{font-family:var(--fx);font-weight:400;font-size:max(10px, calc(14 * var(--u)));line-height:1.136;letter-spacing:0;text-transform:uppercase;color:#FFFFFF}
 .inr .h5r{font-family:var(--fx);font-weight:400;font-size:max(15px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em;text-transform:uppercase;color:#FFFFFF}
 .inr main{display:block;position:relative}
