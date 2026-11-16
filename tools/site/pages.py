@@ -146,13 +146,13 @@ def sq_line(parts):
     """one line of small caps, its parts set apart by blue squares (her caption of 15.11). The square is drawn before each part and the line's left
     edge is clipped by its width, so a line never begins or ends with a square, however it wraps"""
     return '<span class="lc lab3 sqm">%s</span>' % ''.join('<span>%s</span>' % esc(x) for x in parts if x)
-def pf6_card(name, parts, img, href=None, big=False, ext=False, pos=None):
+def pf6_card(name, parts, img, href=None, big=False, ext=False, pos=None, cell=None):
     """a card of the Signature grid (her frame «04 Signature CI Residences · 2», 15.11): the photograph, the name 20 under it,
     and one line of small caps under the name — its parts separated by blue squares"""
     st = ' style="object-position:%s"' % pos if pos else ''
     inner = '<span class="im"><img src="%s" alt="%s" loading="lazy"%s%s></span><span class="nm h5r">%s</span>%s' % (
         img, name, st, ' onerror="this.remove()"' if ext else '', esc(name), sq_line(parts))
-    cls = 'cd rv' + (' big' if big else '')
+    cls = 'cd rv' + (' big' if big else '') + ('" style="--c:%d;--r:%d' % cell if cell else '')   # cell = (column, row) on the reference grid (.pf7)
     if href: return '<a class="%s" href="%s"%s>%s</a>' % (cls, href, ' target="_blank" rel="noopener"' if href.startswith('http') else '', inner)
     return '<div class="%s">%s</div>' % (cls, inner)
 def portfolio():
@@ -192,10 +192,20 @@ def portfolio():
            ('Room To Breathe', 'Lincoln Park · Chicago', 'Residence', '4,070 sq ft', 'room-to-breathe.html', 'chicago ci-turnkey', ph(rtb_['set'], rtb_['tall'])),
            ('Contemporary Comfort', 'River North · Chicago', 'Condominium', '3,352 sq ft', EXT + 'contemporary-comfort-condo/', 'chicago ci-turnkey', UP + '2023/10/201-Grand_001-v2-1536x1200.jpg'),
            ('Sky-High Condo', 'Chicago', 'High-rise condominium', '2,022 sq ft', EXT + 'sky-highcondo/', 'chicago ci-turnkey', UP + '2023/01/401-Wabash_002_v2-1536x1026.jpg')]
-    BIG = {'Collectors Home', 'Urban Sanctuary', 'Room To Breathe'}
-    assert len(LIB) == 9 and [nm in BIG for nm, *_ in LIB] == [True, False, False, False, False, True, True, False, False]
-    cards = [pf6_card(nm, lc.split(' · ') + [bd], im, hr, big=nm in BIG, ext=im.startswith('http')) for nm, lc, bd, sz, hr, tg, im in LIB]
-    pg.add(bk(h_of(S[1]), '    <div class="pf6">%s</div>' % ''.join(cards), hcls=' l0', lines=['Signature', 'CI Residences']), 'Projects')
+    # The grid after her reference of 16.11 12:42 (a studio's «Our projects» page; «взяти точно таку сітку»): four columns, near-square tiles one
+    # column wide, a large landscape tile two columns wide, and cells left empty on purpose —
+    #   row 1:  S  ·  [ B ]        row 2:  S  S  ·  S        row 3:  ·  ·  S  S
+    # The reference shows seven tiles; we have nine, so a fourth row repeats the first one mirrored:  [ B ]  ·  S.
+    # CELL = name → (column, row, large). The order below is the order on phones (the lead project first).
+    CELL = [('Collectors Home', 3, 1, True), ('444 W Grant', 1, 1, False), ('500 W Superior', 1, 2, False), ('Above the Park', 2, 2, False), ('Urban Sanctuary', 4, 2, False),
+            ('Lakeshore Luxury', 3, 3, False), ('Contemporary Comfort', 4, 3, False), ('Room To Breathe', 1, 4, True), ('Sky-High Condo', 4, 4, False)]
+    by = dict((x[0], x) for x in LIB); wide = {'Collectors Home': ph(ch_['set'], ch_['card']), 'Room To Breathe': ph(rtb_['set'], rtb_['card'])}   # a large tile is landscape
+    assert len(LIB) == 9 and sorted(by) == sorted(c[0] for c in CELL)
+    cards = []
+    for nm, c, r, big in CELL:
+        _, lc, bd, sz, hr, tg, im = by[nm]; im = wide.get(nm, im) if big else im
+        cards.append(pf6_card(nm, lc.split(' · ') + [bd], im, hr, big=big, ext=im.startswith('http'), cell=(c, r)))
+    pg.add(bk(h_of(S[1]), '    <div class="pf7">%s</div>' % ''.join(cards), hcls=' l0', lines=['Signature', 'CI Residences']), 'Projects')
     # Every Home Unique — her notes of 15.11: 18:45 («дуже одноманітно: там лінії, там лінії»), 18:59 («не просто забрати лінії… думай метафорично»),
     # 19:54 (the abstract contours: «я не зрозуміла суть… Перероби»), and her choice at 20:00 between two sketches: THE KEY (film "key" in inner.js).
     # One blank — the CI standard; six cuts — the six steps, a name under each; how deep each cut goes is the home's own, no two keys alike. The scene
