@@ -11,6 +11,19 @@ MENU_PH = ['assets/ph/of/team3.webp', 'assets/ph/ch/1450-09a.webp', 'assets/ph/c
 def text(x): return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', x)).strip()
 # the team as the client's current site names it (cidesignbuild.com/team, read 15.11); the portraits are that site's own files
 TP = 'https://cidesignbuild.com/wp-content/uploads/2026/02/'
+# 16.11 19:50, her rule again: a field the client has not filled carries working copy, never a bracket. These lines say what the
+# ROLE does at CI (nothing personal is invented about a real person); they are marked <span class="wc"> for replacement.
+BIO = {
+    'Michael Miller': 'Leads CI from the first conversation to the final walkthrough, and holds design and construction to one standard.',
+    'Kelly Adamczyk': 'Carries a residence from the concept through the documentation, keeping plan, materials and light in one language.',
+    'Daniel Bapst': 'Works the interiors and their details, from millwork and stone to the furnishings that finish the rooms.',
+    'Elena Pellegrino': 'Develops drawings, schedules and selections, and keeps the design file in step with the build.',
+    'Greg Horen, AIA': 'Runs the project day to day: budget, schedule, trades, and the decisions each stage needs.',
+    'Adam Ury': 'Keeps submittals, deliveries and the site moving, so the schedule holds.',
+    'Anthony Aiello': 'Coordinates trades and inspections on site, and tracks what each room needs next.',
+    'Pepe Telles': 'Builds and supervises in the field, where the drawings meet the house.',
+    'Veronica Velez': 'Keeps the numbers of every project clear: budgets, invoices, and what has been committed.',
+}
 TEAM = [('Michael Miller', 'Founder · Principal', 'photo-65-scaled-512x768.jpg'), ('Kelly Adamczyk', 'Senior Designer', 'photo-29-683x1024.jpg'), ('Daniel Bapst', 'Senior Designer', 'photo-24-683x1024.jpg'),
         ('Elena Pellegrino', 'Design Associate', 'photo-42-1-683x1024.jpg'), ('Greg Horen, AIA', 'Project Manager', 'photo-47-683x1024.jpg'), ('Adam Ury', 'Assistant Project Manager', 'photo-11-683x1024.jpg'),
         ('Anthony Aiello', 'Assistant Project Manager', 'photo-14-683x1024.jpg'), ('Pepe Telles', 'Superintendent / Senior Carpenter', 'photo-9-683x1024.jpg'), ('Veronica Velez', 'Controller', 'photo-22-683x1024.jpg')]
@@ -24,7 +37,7 @@ def nodots(h, f):
         if i % 2 == 0 and re.search('[\u00b7\u2022\u2219\u22c5]', t): raise SystemExit('%s: a dot between items — set it as a .sqr row: %r' % (f, t.strip()[:80]))
 def team(h):
     a = h.index('<div class="tm" id="tm">'); b = h.index('</div>\n', h.rindex('</article>', a, h.index('<!-- 08', a)))
-    cards = ''.join('<article class="tc" tabindex="0" data-cursor="Flip"><div class="tc-in"><div class="tc-f"><span class="tc-ph lab3">Portrait</span><img class="tc-img" src="%s" alt="%s" loading="lazy" onerror="this.remove()"><div class="tc-nm"><b>%s</b><span class="lab3">%s</span></div></div><div class="tc-b"><b>%s</b><p><span class="ph">[Two or three lines about this person, from the client.]</span></p><i class="sqd"></i></div></div></article>' % (TP + im, nm, nm, sq(tt), nm) for nm, tt, im in TEAM)
+    cards = ''.join('<article class="tc" tabindex="0" data-cursor="Flip"><div class="tc-in"><div class="tc-f"><span class="tc-ph lab3">Portrait</span><img class="tc-img" src="%s" alt="%s" loading="lazy" onerror="this.remove()"><div class="tc-nm"><b>%s</b><span class="lab3">%s</span></div></div><div class="tc-b"><b>%s</b><p><span class="wc">%s</span></p><i class="sqd"></i></div></div></article>' % (TP + im, nm, nm, sq(tt), nm, BIO[nm]) for nm, tt, im in TEAM)
     new = '<div class="tm" id="tm">' + cards
     return (h[:a] + new + h[b:], 1) if h[a:b] != new else (h, 0)
 def wire(f, extra):

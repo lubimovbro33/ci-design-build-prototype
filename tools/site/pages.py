@@ -225,7 +225,7 @@ def portfolio():
         for nm, lc, bd, sz, hr, tg, im in [byn[n] for n in ORDER])
     assert nop(h_of(S[3])) == 'Explore the Work', h_of(S[3])
     pg.add('<section class="bk" id="@ID@">\n  <div class="lib4">\n    <h2 class="t60 rv">Explore<br>the Work</h2>\n    <div class="lib-r">\n      <div class="chips rv" data-filter="lib">%s</div>\n'
-           '      <div class="ix3 rv" id="lib">%s<p class="none lab3"><span class="ph">[Projects for this filter are to be assigned by CI]</span></p></div>\n    </div>\n  </div>\n</section>' % (ch, rows_), 'Library')
+           '      <div class="ix3 rv" id="lib">%s<p class="none lab3"><span class="wc">No projects under this filter yet</span></p></div>\n    </div>\n  </div>\n</section>' % (ch, rows_), 'Library')
     # the closing block: one composition for the whole site now (cta() in build.py); the words and her title column are hers
     fs = S[4]; fa = get(fs, 'a'); fps = [it[1][0] for it in fs['items'] if it[0] in ('p', 'lead')]
     assert nop(h_of(fs)) == 'Turn Inspiration Into Something Entirely Your Own' and len(fps) == 2, (h_of(fs), fps)
@@ -281,14 +281,14 @@ def project_collection(p, nxt):
     S = P['project']; pg = Pg(); nm = p['name']
     def sub(t): return t.replace('[Project Name]', nm)
     # the client's template has unfilled fields; on this page they carry working copy (PROJ[0]['draft'], see build.py — NOT the client's text),
-    # each wrapped in <span class="dr"> so that it can be found and replaced (her word of 16.11 13:24: no brackets, no dimming — a stand-in text)
+    # each wrapped in <span class="wc"> so that it can be found and replaced (her word of 16.11 13:24: no brackets, no dimming — a stand-in text)
     D = p.get('draft', {})
-    def dr(key, tpl): return '<span class="dr">%s</span>' % esc(D[key]) if key in D else esc(tpl)
+    def wc(key, tpl): return '<span class="wc">%s</span>' % esc(D[key]) if key in D else esc(tpl)
     cov = ph(p['set'], p['cover'])
     pg.add('<section class="film wl" data-fig="wall" data-len="0" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
            '    <div class="wl-p"><img src="%s" alt="%s"><i class="wl-sh"></i></div>\n'
            '    <p class="lab3 wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n  </div>\n</section>'
-           % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), dr('lead', ' '.join(get(S[0], 'lead')[0][1]))), 'Project', 'top')
+           % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), wc('lead', ' '.join(get(S[0], 'lead')[0][1]))), 'Project', 'top')
     # the pictures of the page, numbered through (the collection)
     PL = p['gal3']; total = sum(len(fs) for k, fs in PL) + (1 if p.get('quote') else 0); n = [0]   # + the testimonial's photograph, when there is a testimonial
     def fig(f, cls):
@@ -310,18 +310,18 @@ def project_collection(p, nxt):
     if 'Size' in known: dl = [dl[0], dl[1], ['Size', ['']]] + dl[2:]
     dl = [(k, v) for k, v in dl if k in known or (k == 'Client' and 'client' in D) or not ' '.join(v).strip().startswith('[')]   # 16.11: no bracketed row — a fact we do not have is not shown at all
     def val(k, v):
-        if k == 'Client' and 'client' in D: return dr('client', '')
+        if k == 'Client' and 'client' in D: return wc('client', '')
         x = known.get(k, ' '.join(v))
         return '<br>'.join(esc(y) for y in x.split(' / ')) if k == 'Scope' and k in known else esc(x)   # the scope: an item a line
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
     pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <div class="g4-b pj-st rv"><h3 class="lab3 pj-in">%s</h3><p class="t60s">%s</p></div>\n  </div>\n'
            '  <div class="g4 pj-2">\n    <h2 class="lab3 rv g4-k">%s</h2>\n    <dl class="g4-b pj-tb">%s</dl>\n  </div>\n</section>'
-           % (esc(label(sec)), esc(goal), dr('goal', ' '.join(gp)), esc(nop(h_of(sec))), ''.join('<div class="rv"><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), val(k, v)) for k, v in dl)))
+           % (esc(label(sec)), esc(goal), wc('goal', ' '.join(gp)), esc(nop(h_of(sec))), ''.join('<div class="rv"><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), val(k, v)) for k, v in dl)))
     # design vision: the concept at the spine, its paragraphs small in the fourth column; then the first staggered pair
     sec = S[2]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] in ('p', 'lead')]; assert len(ps_) == 3 and ps_[0].startswith('The design began with [') and ps_[2].startswith('['), ps_
-    pv = [dr('began', nop(ps_[0])), esc(nop(ps_[1])), dr('narrative', nop(ps_[2]))]
+    pv = [wc('began', nop(ps_[0])), esc(nop(ps_[1])), wc('narrative', nop(ps_[2]))]
     pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">%s</h2>\n    <div class="pj-tx">%s</div>\n  </div>\n%s\n</section>'
-           % (esc(label(sec)), dr('concept', h_of(sec)), ''.join('<p class="t20 rv">%s</p>' % x for x in pv), rows(PL[:1])), 'Vision')
+           % (esc(label(sec)), wc('concept', h_of(sec)), ''.join('<p class="t20 rv">%s</p>' % x for x in pv), rows(PL[:1])), 'Vision')
     # the gallery: staggered on the column lines
     ttl = sub(h_of(S[3])).replace('[', '').replace(']', ''); assert ttl == 'Inside ' + nm, ttl
     pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">Inside<br>%s</h2>\n  </div>\n%s\n</section>'
@@ -330,7 +330,7 @@ def project_collection(p, nxt):
     sec = S[4]; rws = get(sec, 'row'); ld = get(sec, 'lead'); q0 = [(.75, .95, 1.35, 1.5), (1.5, 1.65, 1.95, 2.1), (2.1, 2.25, 2.6, 2.75)]
     assert len(rws) == 3 and ld, rws
     dd = D.get('dec'); names = [d_[0] for d_ in dd] if dd else [x[1] for x in rws]
-    dec = ''.join('      <p class="t20 m p-cbr" data-k="%s %s %s %s">%s</p>\n' % (q0[i] + (('<span class="dr"><span class="dn">%s</span><br> %s</span>' % (esc(dd[i][0]), '<br class="bd"> '.join(esc(y) for y in dd[i][1].split(' / ')))) if dd else '%s<br> %s' % (esc(x[1]), esc('[%s]' % ' '.join(x[2][0]))),)) for i, x in enumerate(rws))
+    dec = ''.join('      <p class="t20 m p-cbr" data-k="%s %s %s %s">%s</p>\n' % (q0[i] + (('<span class="wc"><span class="dn">%s</span><br> %s</span>' % (esc(dd[i][0]), '<br class="bd"> '.join(esc(y) for y in dd[i][1].split(' / ')))) if dd else '%s<br> %s' % (esc(x[1]), esc('[%s]' % ' '.join(x[2][0]))),)) for i, x in enumerate(rws))
     lead = [nop(x) for x in ld[0][1]]
     pg.add('<section class="film" data-fig="many" data-len="3.8" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
            '      <h2 class="t60 m p-ctl" data-k="-1 -.5 99 99">%s</h2>\n%s      <p class="t34 m p-cbr" data-k="3.0 3.3 99 99">%s<br class="bd"> <span class="cb">%s</span></p>\n'
@@ -352,6 +352,28 @@ def project_collection(p, nxt):
     emit(p['slug'] + '.html', nm, pg, cov)
 for i, p in enumerate(PROJ): (project_collection if p.get('idea') == 'collection' else project_old)(p, PROJ[(i + 1) % len(PROJ)])
 
+# 16.11 19:50 (her rule of 13:24, now for the whole site): where the client has not sent text, we write a stand-in ourselves —
+# never a bracketed template field. The six entries below, the article and its three «More» rows are OURS, built on what CI itself
+# says it does (their own copy and their own site); every one of them is marked <span class="wc"> so it can be found and replaced.
+# The months are stand-ins too: no event, no claim is made beyond what the client has already published.
+NEWS_ROWS = [('Why One Team Changes the Outcome', 'Perspectives', 'November 2026'),
+             ('Collectors Home: a residence on the fifty-fifth floor', 'Projects', 'October 2026'),
+             ('What Wellness Looks Like When It Is Built In', 'Perspectives', 'October 2026'),
+             ('Working With Brokers: how a property becomes a home', 'Partnerships', 'September 2026'),
+             ('Procurement Is a Design Decision', 'Perspectives', 'September 2026'),
+             ('Room To Breathe: an open first floor in Lincoln Park', 'Projects', 'August 2026')]
+ART = {'head': 'Why One Team Changes the Outcome', 'cat': 'Perspectives', 'date': 'November 2026',
+       'lead': 'When the people who design a home are the people who build it, the decisions stop being handed over and start adding up.',
+       'ps': ['A renovation of any size is a long sequence of decisions, and most of them depend on a decision made earlier. '
+              'Where design, construction and procurement sit in different firms, each of those dependencies becomes a handoff, and every handoff is a place where the intent can thin out.',
+              'Under one roof the same team carries the drawing into the field. A material is chosen knowing what it costs to install, '
+              'a lighting plan is drawn knowing where the millwork lands, and a delivery date is set by the people who will be standing in the room when it arrives.',
+              'That is also why the schedule holds: nothing waits for a translation between firms. CI puts the saving at about a fifth of the project time, '
+              'and the clients who notice it most are the ones who never had to chase it.'],
+       'sub': 'What it looks like in the home',
+       'quote': 'The test of an integrated team is not the first drawing. It is the hundredth decision.',
+       'close': 'A home finished this way reads as one idea rather than a set of good parts: the proportions, the materials and the light belong to each other, '
+                'because the same people were responsible for all three.'}
 # ================================================================== news + article
 def news():
     S = P['news']; pg = Pg()
@@ -359,28 +381,35 @@ def news():
     pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1">%s</p>\n  <h1 class="t111 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n%s\n%s\n  </div>\n</section>' % (esc(label(S[0])), brk(h1, 20), lead_p(ps[0], w=1240), p20(ps[1:], 'c2')), 'News', 'top')
     chips = ['All CI News', 'Projects', 'Perspectives', 'Partnerships', 'Press', 'CI News']
     ch = ''.join('<button class="chip%s" type="button" data-f="%s">%s</button>' % (' on' if i == 0 else '', 'all' if i == 0 else slug(c), c) for i, c in enumerate(chips))
-    rows = ''.join('<a href="article.html" data-tags=""><span class="n">%02d</span><span class="t"><span class="ph">[Article Headline]</span></span><span class="c"><span class="ph">[Category]</span></span><span class="c"><span class="ph">[Date]</span></span></a>' % (i + 1) for i in range(6))
+    rows = ''.join('<a href="article.html" data-tags="%s"><span class="n">%02d</span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span></a>'
+                   % (slug(c), i + 1, drw(h), drw(c), drw(d)) for i, (h, c, d) in enumerate(NEWS_ROWS))
     sec = S[1]; lead = get(sec, 'lead')[0][1][0]; more = get(sec, 'a')[0][2]
-    body = '    <p class="t34 rv c1" style="--w:900">%s</p>\n    <div class="chips rv c1 g50" data-filter="nl">%s</div>\n    <div class="lst rv g50" id="nl">%s<p class="none lab3"><span class="ph">[Articles in this category will appear here]</span></p></div>\n    <div class="rv c1">%s</div>' % (blue(lead), ch, rows, btn(more, '#').replace('href="#"', 'href="#" data-noop'))
+    body = '    <p class="t34 rv c1" style="--w:900">%s</p>\n    <div class="chips rv c1 g50" data-filter="nl">%s</div>\n    <div class="lst rv g50" id="nl">%s<p class="none lab3"><span class="wc">No articles under this filter yet</span></p></div>\n    <div class="rv c1">%s</div>' % (blue(lead), ch, rows, btn(more, '#').replace('href="#"', 'href="#" data-noop'))
     pg.add(bk(h_of(sec), body), 'All News')
     emit('news.html', 'News', pg)
 news()
 def article():
     S = P['article']; pg = Pg()
     sec = S[1]; ks = [it[1][0] for it in sec['items'] if it[0] == 'k']
-    head = '<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1 mt3"><span class="sqr"><span><a href="news.html">← News</a></span><span><span class="ph">[Category]</span></span><span><span class="ph">[Date]</span></span></span></p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <p class="t34 rv c1" style="--w:900;margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (esc(h_of(S[0], 'h1')), esc(get(S[0], 'lead')[0][1][0]))
+    head = '<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1 mt3"><span class="sqr"><span><a href="news.html">← News</a></span><span>%s</span><span>%s</span></span></p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <p class="t34 rv c1" style="--w:900;margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (drw(ART['cat']), drw(ART['date']), drw(ART['head']), drw(ART['lead']))
     pg.add(head, 'Article', 'top')
-    body = []
+    body = []; ps_ = list(ART['ps'])
+    def fill(t, kind):
+        if not t.strip().strip('“”"').startswith('['): return esc(t)      # the client's own text stays as it is
+        if kind == 'h3': return drw(ART['sub'])
+        if kind == 'lead': return drw(ART['quote'])
+        return drw(ps_.pop(0) if ps_ else ART['close'])
     for it in sec['items']:
-        if it[0] == 'p': body.append('<div class="t20s rv"><p>%s</p></div>' % esc(it[1][0]))
-        elif it[0] == 'h3': body.append('<p class="h5r rv" style="margin-top:calc(100 * var(--u))">%s</p>' % esc(it[1]))
-        elif it[0] == 'lead': body.append('<p class="t34 rv">%s</p>' % esc(it[1][0]))
-    meta = '<p class="lab3 rv mt3">%s</p>' % sqr(ks[:3])
+        if it[0] == 'p': body.append('<div class="t20s rv"><p>%s</p></div>' % fill(it[1][0], 'p'))
+        elif it[0] == 'h3': body.append('<p class="h5r rv" style="margin-top:calc(100 * var(--u))">%s</p>' % fill(it[1], 'h3'))
+        elif it[0] == 'lead': body.append('<p class="t34 rv">%s</p>' % fill(it[1][0], 'lead'))
+    meta = '<p class="lab3 rv mt3">%s</p>' % sqr([ART['date'], ART['cat'], ks[2]])
     share = ks[3].split(' · ')
     sh = '<p class="lab3 rv mt3" style="margin-top:calc(100 * var(--u))"><span>%s</span>%s</p>' % (esc(share[0]), ''.join('<a href="#" data-noop>%s</a>' % esc(x) for x in share[1:]))
     pg.add('<section class="bk" id="@ID@">\n  <div class="art">%s%s%s</div>\n</section>' % (meta, ''.join(body), sh))
     sec = S[3]; a = get(sec, 'a')[0]
-    rows = ''.join('<a href="article.html"><span class="n">%02d</span><span class="t"><span class="ph">[Article Headline]</span></span><span class="c"><span class="ph">[Category]</span></span><span class="c"><span class="ph">[Date]</span></span></a>' % (i + 1) for i in range(3))
+    rows = ''.join('<a href="article.html"><span class="n">%02d</span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span></a>'
+                   % (i + 1, drw(h), drw(c), drw(d)) for i, (h, c, d) in enumerate(NEWS_ROWS[1:4]))
     pg.add(bk(h_of(sec), '    <div class="lst rv">%s</div>\n    <div class="rv c1">%s</div>' % (rows, btn(a[2], 'news.html'))), 'More')
     final_cta(pg, S[4], A + 'ch/1450-32.webp', g=.55)
     emit('article.html', 'Article', pg)

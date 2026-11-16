@@ -36,7 +36,7 @@ PROJ = [
 # millwork; bespoke millwork and stone through the public spaces; home automation customized with Digital Living (lighting, window treatments, speakers,
 # media); Porter Teleo hand-painted wallpaper and a Nicholas Hernandez sculpture in the dining room; a bespoke E Studio Furnishings sectional; an Erden
 # rug; CI curated and installed all furnishings, art and accessories. The wording is ours (their page is not copied); nothing beyond those facts is
-# claimed. On the page each line is wrapped in <span class="dr"> so that it can be found and replaced when the client sends the final text.
+# claimed. On the page each line is wrapped in <span class="wc"> so that it can be found and replaced when the client sends the final text.
 # The testimonial is NOT written: a client's words cannot be made up, and their page has none — its block stays off the page until a real, approved
 # one exists (put it in PROJ[0]['quote'] = (text, who)).
 DRAFT_CH = {
@@ -63,7 +63,7 @@ PROJ[2].update(lines=['Room To', 'Breathe'], seed=1430, gal2=[('blk', ['1430-11a
 # Six projects had no page of their own: their tiles opened the client's current site or did not open at all. Each now has its own page,
 # built like Collectors Home. Their photographs are still the client's own files, loaded from cidesignbuild.com (as the Portfolio tiles
 # already did) until CI sends us the originals; the copy is WORKING COPY in our words, built only on what their page says about that
-# project (read 16.11.2026), marked <span class="dr"> so it can be found and replaced. Nothing is claimed beyond their facts.
+# project (read 16.11.2026), marked <span class="wc"> so it can be found and replaced. Nothing is claimed beyond their facts.
 U21 = 'https://cidesignbuild.com/wp-content/uploads/2021/08/'; U23 = 'https://cidesignbuild.com/wp-content/uploads/2023/'
 U24 = 'https://cidesignbuild.com/wp-content/uploads/2024/'; U26 = 'https://cidesignbuild.com/wp-content/uploads/2026/03/'
 PIX = {
@@ -199,11 +199,13 @@ PROJ_MORE = [dict(name='500 W Superior', loc='River North · Chicago', bld='Resi
 def ph(set_, name): return name if name.startswith('http') else 'assets/ph/%s/%s.webp' % (set_, name)   # 16.11: a project whose photographs are still on the client's site carries their URLs
 
 # ------------------------------------------------------------------ text
+FILL = {'[sales@cidesignbuild.com]': 'info@cidesignbuild.com'}   # the address the client's own site gives
 def esc(t):
     t = html.escape(t, quote=False)
     t = re.sub(r"(?<=\w)'(?=\w)", '’', t).replace("'", '’')
     t = t.replace('—', '—')
-    return re.sub(r'\[[^\]]+\]', lambda m: '<span class="ph">%s</span>' % m.group(0), t)
+    # 16.11: a template field we have working copy for is filled with it (marked .dr), never shown as a bracket
+    return re.sub(r'\[[^\]]+\]', lambda m: ('<span class="wc">%s</span>' % FILL[m.group(0)]) if m.group(0) in FILL else ('<span class="ph">%s</span>' % m.group(0)), t)
 def sqr(parts, raw=False):
     """one row of items set apart by the blue square (.sqr in css/r3.css). 16.11, the designer: items of a line are never set apart by a small dot —
     a square 8 x 8 of the blue, 10 from the word before it and 10 before the next. `raw`: the parts are markup already"""
@@ -221,6 +223,10 @@ def squares(out, fname):
         lead = t[:len(t) - len(t.lstrip())]; trail = t[len(t.rstrip()):]
         parts[i] = lead + sqr([x.strip() for x in items], raw=True) + trail
     return ''.join(parts)
+def drw(t):
+    """working copy: our own stand-in where the client has not sent text yet (her rule of 16.11 13:24 — never a bracketed template
+    field). Marked so it can be found and replaced; see WORKING COPY below"""
+    return '<span class="wc">%s</span>' % esc(t)
 def nop(t):
     t = t.strip()
     if t.endswith('.') and not t.endswith('..') and not re.search(r'\[[^\]]*\.\]$', t): t = t[:-1]
@@ -316,7 +322,7 @@ def menu(cur):
 %s  </nav>
   <div class="mn-ft">
     <div>215 W Huron Street<br>Suite 1<br>Chicago, IL 60654</div>
-    <div>312 279 2776<br><span class="ph">[sales@cidesignbuild.com]</span><br><span class="sqr"><span><a href="faq.html">FAQ</a></span><span><a href="contact.html">Contact</a></span></span></div>
+    <div>312 279 2776<br><span class="wc">info@cidesignbuild.com</span><br><span class="sqr"><span><a href="faq.html">FAQ</a></span><span><a href="contact.html">Contact</a></span></span></div>
     <div class="mn-soc"><a href="#" data-noop>Instagram</a><a href="#" data-noop>LinkedIn</a><a href="#" data-noop>Pinterest</a><a href="#" data-noop>Facebook</a></div>
   </div>
 </div>
@@ -606,7 +612,9 @@ def proj_cards(title, picks, link=None):
     if link: o.append('    <div class="rv c1">%s</div>' % btn(link[0], link[1]))
     return bk(title, '\n'.join(o))
 def quote_block(text, who=None):
-    w = sqr(['<span class="ph">[Client name]</span>', '<span class="ph">[Project]</span>'], raw=True) if who is None else esc(who)
+    # 16.11: a client's words are never made up, so a quotation the client has not approved is not shown at all (as on the project pages)
+    if text.strip().strip('“”"').startswith('['): return ''
+    w = esc(who) if who else ''
     return '<section class="bk" id="@ID@">\n  <p class="t34 rv c1" style="--w:1000">%s</p>\n  <p class="lab3 rv c1" style="margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (esc(text), w)
 def band(img, pos=None, g=None):
     st = ';'.join(x for x in ['object-position:%s' % pos if pos else '', 'filter:contrast(1.04) brightness(%s)' % g if g else ''] if x)
