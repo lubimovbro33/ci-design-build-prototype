@@ -179,25 +179,15 @@ def portfolio():
     # (two columns, 886 : 1112) and TWO SMALL ones (419 : 525) at the top beside it — nothing under the small ones; the next block is its mirror.
     # All the projects of the library: nine = three blocks (large left, large right, large left). The large cards are the three projects with our own
     # photographs. Where there is no photograph of ours, the picture is the client's own, loaded from their site.
-    EXT = 'https://cidesignbuild.com/portfolio-item/'; UP = 'https://cidesignbuild.com/wp-content/uploads/'
-    ch_, us_, rtb_ = PROJ[0], PROJ[1], PROJ[2]; sup_, grant_ = PROJ_MORE[0], PROJ_MORE[1]
+    # 16.11 19:33 («тобі треба зробити всі проєкти»): every project of the library has its own page now — nothing opens the client's
+    # current site any more, and no tile is dead. 500 W Superior had one photograph and no text anywhere, so its place in her grid is
+    # taken by the next project of the client's own portfolio, Modern Deco Home; when CI sends the Superior material it comes back.
+    ch_, us_, rtb_ = PROJ[0], PROJ[1], PROJ[2]
     def parts(p): return p['loc'].split(' · ') + [p['bld']]
     # name, location, building, size, link, tags, picture
-    LIB = [('Collectors Home', 'Streeterville · Chicago', 'One Bennett Park', '5,130 sq ft', 'collectors-home.html', 'chicago ci-turnkey', ph(ch_['set'], ch_['tall'])),
-           ('444 W Grant', 'Lincoln Park · Chicago', 'Residence', '', None, 'chicago', grant_['img']),
-           ('500 W Superior', 'River North · Chicago', 'Residence', '', None, 'chicago', sup_['img']),
-           ('Above the Park', 'Lincoln Park · Chicago', 'Residence', '5,600 sq ft', EXT + 'above-the-park/', 'chicago ci-turnkey', UP + '2026/03/2107-Kenmore-rev_02-copy-1536x1043.jpg'),
-           ('Lakeshore Luxury', 'Wilmette · North Shore', 'Residence', '2,200 sq ft', EXT + 'lakeshore-luxury/', 'ci-turnkey', UP + '2024/03/1618-Sheridan_03rev-1-1536x1002.jpg'),
-           ('Urban Sanctuary', 'Gold Coast · Chicago', '900 North Michigan', '', 'urban-sanctuary.html', 'chicago', ph(us_['set'], us_['tall'])),
-           ('Room To Breathe', 'Lincoln Park · Chicago', 'Residence', '4,070 sq ft', 'room-to-breathe.html', 'chicago ci-turnkey', ph(rtb_['set'], rtb_['tall'])),
-           ('Contemporary Comfort', 'River North · Chicago', 'Condominium', '3,352 sq ft', EXT + 'contemporary-comfort-condo/', 'chicago ci-turnkey', UP + '2023/10/201-Grand_001-v2-1536x1200.jpg'),
-           ('Sky-High Condo', 'Chicago', 'High-rise condominium', '2,022 sq ft', EXT + 'sky-highcondo/', 'chicago ci-turnkey', UP + '2023/01/401-Wabash_002_v2-1536x1026.jpg')]
-    # The grid after her reference of 16.11 12:42 (a studio's «Our projects» page; «взяти точно таку сітку»): four columns, near-square tiles one
-    # column wide, a large landscape tile two columns wide, and cells left empty on purpose —
-    #   row 1:  S  ·  [ B ]        row 2:  S  S  ·  S        row 3:  ·  ·  S  S
-    # The reference shows seven tiles; we have nine, so a fourth row repeats the first one mirrored:  [ B ]  ·  S.
-    # CELL = name → (column, row, large). The order below is the order on phones (the lead project first).
-    CELL = [('Collectors Home', 3, 1, True), ('444 W Grant', 1, 1, False), ('500 W Superior', 1, 2, False), ('Above the Park', 2, 2, False), ('Urban Sanctuary', 4, 2, False),
+    LIB = [(q['name'], q['loc'], q['bld'], q.get('facts', {}).get('Size', ''), q['slug'] + '.html', q.get('tags', 'chicago ci-turnkey'),
+            ph(q['set'], q['tall'])) for q in PROJ]
+    CELL = [('Collectors Home', 3, 1, True), ('444 W Grant', 1, 1, False), ('Modern Deco Home', 1, 2, False), ('Above the Park', 2, 2, False), ('Urban Sanctuary', 4, 2, False),
             ('Lakeshore Luxury', 3, 3, False), ('Contemporary Comfort', 4, 3, False), ('Room To Breathe', 1, 4, True), ('Sky-High Condo', 4, 4, False)]
     by = dict((x[0], x) for x in LIB); wide = {'Collectors Home': ph(ch_['set'], ch_['card']), 'Room To Breathe': ph(rtb_['set'], rtb_['card'])}   # a large tile is landscape
     assert len(LIB) == 9 and sorted(by) == sorted(c[0] for c in CELL)
@@ -228,7 +218,7 @@ def portfolio():
     # under them, the nine projects three to a row — a name and its small caps, as under the photographs
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']
     ch = ''.join('<button class="chip%s" type="button" data-f="%s">%s</button>' % (' on' if i == 0 else '', 'all' if i == 0 else slug(c), c) for i, c in enumerate(chips))
-    ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', '500 W Superior', '444 W Grant', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo']
+    ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', 'Modern Deco Home', '444 W Grant', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo']
     byn = {x[0]: x for x in LIB}; assert sorted(ORDER) == sorted(byn)
     rows_ = ''.join('<a %s data-tags="%s"><span class="nm h5r"><span>%s</span></span>%s</a>' % (
         ('href="%s" target="_blank" rel="noopener"' % hr if hr and hr.startswith('http') else 'href="%s"' % hr) if hr else 'href="#" data-noop', tg, esc(nm), sq_line(lc.split(' · ')) + sq_line([bd, sz]))
@@ -318,6 +308,7 @@ def project_collection(p, nxt):
     # overview: The Goal large, The Brief as a table
     sec = S[1]; dl = get(sec, 'dl')[0][1]; known = {'Residence': p['bld'] + ' · ' + p['loc']}; known.update(p.get('facts', {}))
     if 'Size' in known: dl = [dl[0], dl[1], ['Size', ['']]] + dl[2:]
+    dl = [(k, v) for k, v in dl if k in known or (k == 'Client' and 'client' in D) or not ' '.join(v).strip().startswith('[')]   # 16.11: no bracketed row — a fact we do not have is not shown at all
     def val(k, v):
         if k == 'Client' and 'client' in D: return dr('client', '')
         x = known.get(k, ' '.join(v))

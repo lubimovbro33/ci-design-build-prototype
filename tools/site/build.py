@@ -59,8 +59,144 @@ PROJ[1].update(lines=['Urban', 'Sanctuary'], seed=1511, gal2=[('blk', ['1511-09'
     ('blk', ['1530-04', '1530-05', '1511-14a']), ('full', ['1530-03']), ('blkr', ['1530-01', '1530-02', '1511-05a']), ('full', ['1511-11a']), ('full', ['1511-04a'])])
 PROJ[2].update(lines=['Room To', 'Breathe'], seed=1430, gal2=[('blk', ['1430-11a', '1430-03a', '1430-05a']), ('full', ['1430-01a']), ('blkr', ['1430-06', '1430-07', '1430-10a']), ('full', ['1430-04a']),
     ('blk', ['1430-14', '1430-15', '1430-09a']), ('full', ['1430-12a'])])
+# ------------------------------------------------------------------ the rest of the portfolio (16.11 19:33, her word: «тобі треба зробити всі проєкти»)
+# Six projects had no page of their own: their tiles opened the client's current site or did not open at all. Each now has its own page,
+# built like Collectors Home. Their photographs are still the client's own files, loaded from cidesignbuild.com (as the Portfolio tiles
+# already did) until CI sends us the originals; the copy is WORKING COPY in our words, built only on what their page says about that
+# project (read 16.11.2026), marked <span class="dr"> so it can be found and replaced. Nothing is claimed beyond their facts.
+U21 = 'https://cidesignbuild.com/wp-content/uploads/2021/08/'; U23 = 'https://cidesignbuild.com/wp-content/uploads/2023/'
+U24 = 'https://cidesignbuild.com/wp-content/uploads/2024/'; U26 = 'https://cidesignbuild.com/wp-content/uploads/2026/03/'
+PIX = {
+    'grant': [U21 + x for x in ('444-Grant_001-1.jpg', '444-Grant_004-scaled.jpg', '444-Grant_006.jpg', '444-Grant_008.jpg', '444-Grant_009.jpg', '444-Grant_012.jpg',
+                                '444-Grant_013.jpg', '444-Grant_017.jpg', '444-Grant_019.jpg', '444-Grant_021.jpg', '444-Grant_022.jpg', '444-Grant_023.jpg')],
+    'deco': [U21 + x for x in ('Deco-Home-01-1.jpg', 'Deco_0004_Photo-1.jpg', 'Deco_0000_5703_011.jpg', 'Deco_0003_Photo-2.jpg', 'Deco_0001_5703_04.jpg',
+                               'Deco_0008_5703_014.jpg', 'Deco_0002_5703_01.jpg', 'Deco_0006_5703_019.jpg', 'Deco_0005_5703_021.jpg')],
+    'park': [U26 + x for x in ('2107-Kenmore-rev_02-copy-scaled.jpg', '2107-Kenmore-rev_04-copy-scaled.jpg', '2107-Kenmore-rev_03-copy-scaled.jpg', '2107-Kenmore-rev_01-copy-scaled.jpg',
+                               '2107-Kenmore-rev_07v2-copy-scaled.jpg', '2107-Kenmore-rev_10-copy-scaled.jpg', '2107-Kenmore-rev_09-copy-scaled.jpg', '2107-Kenmore-rev_06-copy-scaled.jpg',
+                               '2107-Kenmore-rev_05-copy-scaled.jpg')],
+    'lake': [U24 + x for x in ('02/1618-Sheridan_08rev-scaled.jpg', '02/1618-Sheridan_07rev-scaled.jpg', '03/1618-Sheridan_03rev-1-scaled.jpg', '02/1618-Sheridan_04-scaled.jpg',
+                               '02/1618-Sheridan_06rev-scaled.jpg', '02/1618-Sheridan_02rev-scaled.jpg', '02/1618-Sheridan_01v2rev-scaled.jpg', '02/1618-Sheridan_05rev-scaled.jpg')],
+    'grand': [U23 + x for x in ('10/201-Grand_001-v2-scaled.jpg', '10/201-Grand_002-scaled.jpg', '10/201-Grand_003-scaled.jpg', '10/201-Grand_004-scaled.jpg', '10/201-Grand_006-v2-scaled.jpg',
+                                '10/201-Grand_008-scaled.jpg', '10/201-Grand_009-scaled.jpg', '10/201-Grand_010-scaled.jpg', '10/201-Grand_011-v2-scaled.jpg', '10/201-Grand_012-scaled.jpg',
+                                '10/201-Grand_013-scaled.jpg', '10/201-Grand_015-scaled.jpg', '10/201-Grand_016-scaled.jpg', '10/201-Grand_014-1-scaled.jpg', '08/201-Grand_005-scaled.jpg')],
+    'wabash': [U23 + '01/' + x for x in ('401-Wabash_002_v2-scaled.jpg', '401-Wabash_001_v2-scaled.jpg', '401-Wabash_003-scaled.jpg', 'table-and-bar-scaled.jpg',
+                                         '401-Wabash_010-v2-scaled.jpg', '401-Wabash_008-scaled.jpg', 'vanity-and-powder-scaled.jpg', '401-Wabash_012-scaled.jpg')],
+}
+KINDS = [('m1', 2), ('rb', 2), ('sw', 1), ('lb', 2), ('m1', 2), ('full', 1), ('lp', 2), ('sw', 1), ('m1', 2), ('rb', 2), ('sw', 1), ('lb', 2)]
+def plan_of(pics):
+    """the staggered gallery of 16.11 (kinds in order), taking as many photographs as the project has"""
+    out = []; i = 0; k = 0
+    while i < len(pics):
+        kind, n = KINDS[k % len(KINDS)]; k += 1
+        if len(pics) - i < n: kind, n = ('sw', 1)
+        out.append((kind, pics[i:i + n])); i += n
+    return out
+def extp(slug, name, lines, loc, bld, facts, draft, pics, tags, seed):
+    return dict(slug=slug, name=name, lines=lines, loc=loc, bld=bld, facts=facts, draft=draft, idea='collection', tags=tags, seed=seed,
+                set=None, cover=pics[0], card=pics[0], tall=pics[1], cta=pics[-1], gal3=plan_of(pics), gal=[('full', [x]) for x in pics])
+
+PROJ += [
+    extp('444-w-grant', '444 W Grant', ['444 W', 'Grant'], 'Lincoln Park · Chicago', 'Residence',
+         {'Residence': 'East Lincoln Park · Chicago', 'Size': '12,500 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Space planning / Interior architecture / Full-scope design / Coach house'},
+         {'lead': 'A house of 12,500 square feet on a double lot in East Lincoln Park',
+          'client': 'Private clients',
+          'goal': 'An eight-bedroom house for the next chapter of a family that likes to host, built behind the brick façade the street already knew',
+          'concept': 'Symmetry and Sightlines',
+          'began': 'The plan was set around symmetry and around the sightlines that end in the private courtyard',
+          'narrative': 'The original brick façade was kept, the kitchen was built around a fourteen-foot island with the butler’s pantry beside it, the primary suite was given its own closets and a dual vanity, and the mechanical systems and the whole-home automation were concealed throughout',
+          'dec': [('The Courtyard', 'Three sliding door systems open / the main level onto a private courtyard, / so the house looks into itself / rather than onto the street'),
+                  ('Kitchen + Pantry', 'A fourteen-foot island with an integrated butcher block / stands at the centre; the butler’s pantry beside it / holds glassware columns and illuminated shelves'),
+                  ('The Primary Suite', 'His-and-hers closets, a dual floating vanity / and a steam shower; a coach house on the same lot / was added as a retreat for family')]},
+         PIX['grant'], 'chicago ci-turnkey', 1444),
+    extp('modern-deco-home', 'Modern Deco Home', ['Modern', 'Deco Home'], 'Gold Coast · Chicago', 'Condominium',
+         {'Residence': 'Gold Coast · Chicago', 'Size': '3,380 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Development / Design / Construction / Furnishings'},
+         {'lead': 'A high-floor Gold Coast residence of 3,380 square feet, designed, built and furnished to be ready at closing',
+          'client': 'CI Design + Build',
+          'goal': 'A home delivered complete: designed, built and furnished so that it was ready to live in on the day it changed hands',
+          'concept': 'Modern Deco',
+          'began': 'The design set modern lines against deco contrast: a burnished black fireplace on white wall panels',
+          'narrative': 'Custom detail runs through the entry and the powder room, the casings, the wood doors and the stone counter profiles, and integrated lighting is set to the art CI curated for the rooms',
+          'dec': [('The Fireplace Wall', 'A burnished black fireplace stands / against white wall panels: / the contrast the rest of the home is tuned to'),
+                  ('Entry + Powder Room', 'A custom wall covering, custom casings / and wood doors give the first rooms / their own character'),
+                  ('Art + Lighting', 'Lighting is integrated into the architecture / and set to the works CI curated, / so the art is lit as part of the room')]},
+         PIX['deco'], 'chicago ci-turnkey', 5703),
+    extp('above-the-park', 'Above the Park', ['Above', 'the Park'], 'Lincoln Park · Chicago', 'Residence',
+         {'Residence': 'Lincoln Park · Chicago', 'Size': '5,600 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Living room / Great room / Theater room / Den / Terrace + rooftop'},
+         {'lead': 'A turnkey renovation of 5,600 square feet where the rooms open onto the park',
+          'client': 'Private clients',
+          'goal': 'A partial renovation that ties the living spaces to the terrace and the rooftop, until the boundary between inside and out falls away',
+          'concept': 'Living Above the Park',
+          'began': 'The work began indoors, in the living room, the great room, the theater room and the den, and carried the same hand outside',
+          'narrative': 'The terrace and the rooftop deck were made into furnished rooms with lighting, planted borders, privacy screening and built-in seating, an outdoor kitchen under stone counters and a custom pergola, all of it looking over the park and the city',
+          'dec': [('The Terrace', 'Lighting, planted borders and privacy screening / turn the terrace into a room: / built-in seating, and the park beyond it'),
+                  ('The Rooftop', 'An outdoor kitchen with stone counters / and a custom pergola stand on the roof, / where the city stands in for the walls'),
+                  ('Inside', 'The living room, the great room, the theater room / and the den were renovated together, / so one language runs from the inside out')]},
+         PIX['park'], 'chicago ci-turnkey', 2107),
+    extp('lakeshore-luxury', 'Lakeshore Luxury', ['Lakeshore', 'Luxury'], 'Wilmette · North Shore', 'Residence',
+         {'Residence': 'Wilmette · North Shore', 'Size': '2,200 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Open living + kitchen + dining / Primary suite / Home office / Library'},
+         {'lead': 'A turnkey renovation and furnishing of 2,200 square feet near the lake',
+          'client': 'Private clients',
+          'goal': 'A home that takes its colour from the water and from the owners’ travels, and a plan that is easy to live in',
+          'concept': 'Warm Materials, Lake Light',
+          'began': 'The building’s existing infrastructure was kept, and the plan was tuned around it',
+          'narrative': 'Warm, textured natural materials with touches of blue run through the open living, kitchen and dining space, where lighting and seating mark each zone; the kitchen was built in walnut with decorative hardware, and the owners moved into a home whose furniture already stood in place',
+          'dec': [('The Open Plan', 'Living, kitchen and dining share one space; / lighting and seating mark each zone / without a wall between them'),
+                  ('The Kitchen', 'Walnut cabinetry with decorative hardware / and a suite of built-in appliances, / set into the plan that was already there'),
+                  ('Furnishings', 'The furniture was selected, procured and placed / before the owners arrived: / they moved into a finished home')]},
+         PIX['lake'], 'ci-turnkey', 1618),
+    extp('contemporary-comfort', 'Contemporary Comfort', ['Contemporary', 'Comfort'], 'River North · Chicago', 'Condominium',
+         {'Residence': 'River North · Chicago', 'Size': '3,352 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Two units merged / Primary suite / Home office / Built-in storage'},
+         {'lead': 'Two units in a River North high-rise made into one home of 3,352 square feet',
+          'client': 'Private clients',
+          'goal': 'A warm home of natural materials set against the industrial character of the building',
+          'concept': 'Two Units, One Home',
+          'began': 'The two adjoining units were merged and replanned as three bedrooms and three bathrooms',
+          'narrative': 'The primary suite was given a spa-like bathroom, a generous walk-in closet and a small morning nook; a home office and custom built-in storage run through the plan; and the kitchen turns on an oversized island under a light fixture made for it',
+          'dec': [('The Merge', 'Two adjoining units became one residence: / three bedrooms, three bathrooms, / and a plan that reads as one home'),
+                  ('The Island', 'An oversized island under a custom fixture / carries both the weekday meal / and the evening the owners host'),
+                  ('The Primary Suite', 'A spa-like bathroom, a generous walk-in closet / and a morning nook, set apart / from the rooms that hold guests')]},
+         PIX['grand'], 'chicago ci-turnkey', 201),
+    extp('sky-high-condo', 'Sky-High Condo', ['Sky-High', 'Condo'], 'Chicago', 'High-rise condominium',
+         {'Residence': 'High-rise condominium · Chicago', 'Size': '2,022 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Living room / Kitchen + bar / Primary bedroom / En suite'},
+         {'lead': 'A full renovation and furnishing of 2,022 square feet above the Chicago River',
+          'client': 'Private clients',
+          'goal': 'A two-bedroom residence rebuilt around the way its owners host, with the river in every main room',
+          'concept': 'Statement Surfaces',
+          'began': 'Nearly every surface was replaced, and the main rooms were planned around entertaining',
+          'narrative': 'A geometric media wall of custom millwork boxes and backlit onyx anchors the living room, the kitchen and the bar are cut from blue quartzite with a floor-to-ceiling wine store beside them, and the primary bedroom is quieted by a shagreen headboard wall and its own fireplace',
+          'dec': [('The Media Wall', 'Millwork boxes of varying depth / and backlit onyx slabs / make the living room’s one bold surface'),
+                  ('Kitchen + Bar', 'Blue quartzite runs from the island / through the bar top to the dining table, / with a floor-to-ceiling wine store beside it'),
+                  ('The Primary Suite', 'A shagreen headboard wall and angled millwork / keep the bedroom calm; the en suite / is finished in marble-topped vanities')]},
+         PIX['wabash'], 'chicago ci-turnkey', 401),
+]
+
+# Room To Breathe: the same working copy, from the client's own page for this project (magnolia-house)
+PROJ[2].update(idea='collection', draft={
+    'lead': 'A turnkey transformation of 4,070 square feet in Lincoln Park',
+    'client': 'Private clients',
+    'goal': 'A bold, polished home that is still comfortable to live in, with the art collection given the room it needs',
+    'concept': 'Room to Breathe',
+    'began': 'A heavy, closed staircase divided the main level; it was replaced by a plan that runs the length of the first floor',
+    'narrative': 'Millwork and architectural detail do the work of art, plain surfaces leave the collection the spotlight, and sightlines and furnishings mark the zones of one open level',
+    'dec': [('The Open Level', 'The closed staircase that split the main floor / was taken out, and the plan now runs / the length of the first level'),
+            ('The Kitchen', 'Warm tones and built-in appliances, / set where the open plan brings / the family and its guests together'),
+            ('The Living Room', 'A large stone slab above the fireplace, / a statement chandelier and a custom rug / hold the room around the collection')]},
+    gal3=plan_of(['1430-01a', '1430-11a', '1430-07', '1430-04a', '1430-05a', '1430-12a', '1430-09a', '1430-10a', '1430-03a', '1430-06', '1430-13', '1430-14', '1430-15']))
+# Urban Sanctuary: our own photographs, and no page of the client's to build working copy on — the rows we have no fact for are left out
+PROJ[1].update(idea='collection', draft={
+    'lead': 'A turnkey renovation and furnishing in the Gold Coast',
+    'client': 'Private clients',
+    'goal': 'A calm home above the city, designed, built and furnished by one team',
+    'concept': 'Quiet Above the City',
+    'began': 'The rooms were planned around the light and the view that the floor already had',
+    'narrative': 'Architecture, interiors, construction and furnishings were carried by one team, so that the residence was handed over complete',
+    'dec': [('The Living Spaces', 'The main rooms were opened to the light / and furnished as one composition'),
+            ('Materials', 'Warm, quiet materials throughout, / so that the view stays the brightest thing in the room'),
+            ('Furnishings', 'CI selected, procured and installed / every piece in the residence')]},
+    gal3=plan_of(['1511-07a', '1511-09', '1511-10', '1511-01a', '1511-02a', '1511-11a', '1511-05a', '1511-04a', '1530-01', '1530-02', '1530-03', '1511-13', '1530-06a', '1511-08a', '1530-04']))
+
 PROJ_MORE = [dict(name='500 W Superior', loc='River North · Chicago', bld='Residence', img='assets/pj/superior.webp'), dict(name='444 W Grant', loc='Lincoln Park · Chicago', bld='Residence', img='assets/pj/grant.webp')]
-def ph(set_, name): return 'assets/ph/%s/%s.webp' % (set_, name)
+def ph(set_, name): return name if name.startswith('http') else 'assets/ph/%s/%s.webp' % (set_, name)   # 16.11: a project whose photographs are still on the client's site carries their URLs
 
 # ------------------------------------------------------------------ text
 def esc(t):
