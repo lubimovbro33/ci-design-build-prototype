@@ -475,22 +475,54 @@ def quote_block(text, who=None):
 def band(img, pos=None, g=None):
     st = ';'.join(x for x in ['object-position:%s' % pos if pos else '', 'filter:contrast(1.04) brightness(%s)' % g if g else ''] if x)
     return '<div class="bnd"><img src="%s" alt="" loading="lazy"%s></div>' % (img, ' style="%s"' % st if st else '')
+# ------------------------------------------------------------------ the closing block before the footer
+# 16.11 19:05, the designer, pointing at her frame «19 CTA» (567:2702) and at the foot of the Portfolio page: «У нас є стилістика на
+# сторінці портфоліо… Зроби таку саму верстку… Це нехай буде в нас загальна стилістика під CTA-блок, там, перед футером… там є лінії
+# на фото, як розставлений текст, який саме текст». So every page's closing block is now the one she drew for Portfolio («09 CTA»,
+# 15.11): the photograph full bleed with the cross of hairlines on it (394 / 395), the title in a narrow column in the lower left
+# quarter, the page's thoughts in the running text (20) on the right with their foot on the title's foot, the button under the title.
+# Each page keeps its own copy from the client. The lines below are broken for rhythm (16.11 18:27), measured in the real faces.
+CTA_TITLE = {
+    'Turn Inspiration Into Something Entirely Your Own': ['Turn', 'Inspiration', 'Into', 'Something', 'Entirely', 'Your Own'],
+    'Your Home Will Have a Different Story': ['Your Home', 'Will Have', 'a Different', 'Story'],
+    'Your Next Chapter Starts With a Conversation': ['Your Next', 'Chapter Starts', 'With a', 'Conversation'],
+    'Your Time Is Valuable. So Is the Way You Live': ['Your Time Is', 'Valuable.', 'So Is the Way', 'You Live'],
+    'Great Design Needs Great Execution': ['Great', 'Design Needs', 'Great', 'Execution'],
+    'The Final Layers Are Often the Most Personal': ['The Final', 'Layers', 'Are Often', 'the Most', 'Personal'],
+    'What If Your Home Could Support More of What Matters to You?': ['What If Your', 'Home', 'Could Support', 'More of', 'What Matters', 'to You?'],
+    "Let's Build More Than Homes Together": ["Let's Build", 'More', 'Than Homes', 'Together'],
+    'Bring the Right People Together From the Beginning': ['Bring the Right', 'People', 'Together From', 'the Beginning'],
+    'A Better Life Starts With a Better Home': ['A Better', 'Life Starts', 'With a', 'Better Home'],
+}
+CTA_TEXT = {
+    'Inspiration is where it starts. Your life is what shapes it': ['Inspiration is where it starts.', 'Your life is what shapes it'],
+    'Every CI home begins with a conversation about you: how you live, and how you want to live next': ['Every CI home begins with a', 'conversation about you: how you live,', 'and how you want to live next'],
+    'You do not need to know whether you need Core, Curated, or Turnkey before contacting us': ['You do not need to know whether', 'you need Core, Curated,', 'or Turnkey before contacting us'],
+    'Let us manage the complexity required to create something extraordinary': ['Let us manage the complexity required', 'to create something extraordinary'],
+    'Let’s create a home that feels complete because every part belongs': ['Let’s create a home that feels complete', 'because every part belongs'],
+    'Let’s begin with how you want to live, and design from there': ['Let’s begin with how you want to live,', 'and design from there'],
+    'When your client finds a property with potential, bring CI into the conversation': ['When your client finds', 'a property with potential, bring CI', 'into the conversation'],
+    'Together, we’ll turn it into the home they’ve envisioned': ['Together, we’ll turn it into the home', 'they’ve envisioned'],
+    'Whether you’re starting with a property, a design idea, or a new vision for how you want to live, CI builds the team around you':
+        ['Whether you’re starting', 'with a property, a design idea, or a new', 'vision for how you want', 'to live, CI builds the team around you'],
+}
+def _set(d, t):
+    """the client's copy writes an apostrophe both ways (' and ’) — one key finds either"""
+    for k in (t, t.replace('’', "'"), t.replace("'", '’')):
+        if k in d: return d[k]
+    return None
 def cta(title, paras, button, img, pos=None, top=False, g=None):
-    t = ''
-    if paras:
-        fl = [x for p in paras for x in p]
-        t = '\n    <p class="t34 rv">%s</p>' % (blue(' '.join(fl), fl if len(fl) > 1 else None))
+    t = nop(title); lines = _set(CTA_TITLE, t) or brk_lines(t, 22)
+    parts = [nop(x) for p in paras for x in p]
+    if len(parts) == 1:
+        sp = sents(parts[0])
+        if len(sp) == 2: parts = [nop(x) for x in sp]
+    ps = ''.join('<p class="t20 rv%s">%s</p>' % (' cb' if i else '', '<br class="bd"> '.join(esc(y) for y in (_set(CTA_TEXT, x) or [x]))) for i, x in enumerate(parts))
     st = ';'.join(x for x in ['object-position:%s' % pos if pos else '', 'filter:contrast(1.04) brightness(%s)' % g if g else ''] if x)
-    return '<section class="fin%s" id="@ID@">\n  <img src="%s" alt="" loading="lazy"%s>\n  <div class="fin-in">\n    <h2 class="t60 rv">%s</h2>%s\n    <div class="rv">%s</div>\n  </div>\n</section>' % (
-        ' top' if top else '', img, ' style="%s"' % st if st else '', brk(title, 30), t, btn(button[0], button[1]))
-
-def cta_grid(title_lines, paras, button, img, pos=None, g=None):
-    """the closing block on the home hero's cross of rules (her frame «09 CTA» of the Portfolio export, 15.11): the title in a column in the lower
-    right quarter, the button at its foot, the two thoughts in the running text on the right, their foot on the title's foot"""
-    st = ';'.join(x for x in ['object-position:%s' % pos if pos else '', 'filter:contrast(1.04) brightness(%s)' % g if g else ''] if x)
-    ps = ''.join('<p class="t20 rv%s">%s</p>' % (' cb' if i else '', '<br class="bd"> '.join(esc(nop(x)) if j == len(p) - 1 else esc(x) for j, x in enumerate(p))) for i, p in enumerate(paras))
-    return ('<section class="fin gr" id="@ID@">\n  <img src="%s" alt="" loading="lazy"%s>\n  <h2 class="t60 rv fg-h">%s</h2>\n  <div class="fg-t">%s</div>\n  <div class="rv fg-b">%s</div>\n</section>'
-            % (img, ' style="%s"' % st if st else '', '<br>'.join(esc(x) for x in title_lines), ps, btn(button[0], button[1])))
+    return ('<section class="fin gr" id="@ID@" style="--tl:%d">\n  <img src="%s" alt="" loading="lazy"%s>\n  <h2 class="t60 rv fg-h">%s</h2>\n'
+            '%s  <div class="rv fg-b">%s</div>\n</section>'
+            % (len(lines), img, ' style="%s"' % st if st else '', '<br>'.join(esc(x) for x in lines),
+               '  <div class="fg-t">%s</div>\n' % ps if ps else '', btn(button[0], button[1])))
 
 # ------------------------------------------------------------------ generic section → block
 RAIL = {'What You Receive': 'Receive', 'The Turnkey Experience': 'Experience', "What's Included": 'Included', 'Our Responsibility': 'One Team', 'Client Testimonial': None,

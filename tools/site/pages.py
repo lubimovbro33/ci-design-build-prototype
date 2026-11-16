@@ -236,13 +236,10 @@ def portfolio():
     assert nop(h_of(S[3])) == 'Explore the Work', h_of(S[3])
     pg.add('<section class="bk" id="@ID@">\n  <div class="lib4">\n    <h2 class="t60 rv">Explore<br>the Work</h2>\n    <div class="lib-r">\n      <div class="chips rv" data-filter="lib">%s</div>\n'
            '      <div class="ix3 rv" id="lib">%s<p class="none lab3"><span class="ph">[Projects for this filter are to be assigned by CI]</span></p></div>\n    </div>\n  </div>\n</section>' % (ch, rows_), 'Library')
-    # the closing block as her frame «09 CTA» (15.11 18:42)
+    # the closing block: one composition for the whole site now (cta() in build.py); the words and her title column are hers
     fs = S[4]; fa = get(fs, 'a'); fps = [it[1][0] for it in fs['items'] if it[0] in ('p', 'lead')]
     assert nop(h_of(fs)) == 'Turn Inspiration Into Something Entirely Your Own' and len(fps) == 2, (h_of(fs), fps)
-    assert fps[0] == 'Inspiration is where it starts. Your life is what shapes it.' and fps[1] == 'Every CI home begins with a conversation about you: how you live, and how you want to live next.', fps
-    pg.add(cta_grid(['Turn', 'Inspiration', 'Into', 'Something', 'Entirely', 'Your Own'],
-                    [['Inspiration is where it starts.', 'Your life is what shapes it.'], ['Every CI home begins with a', 'conversation about you: how you live,', 'and how you want to live next.']],
-                    (fa[0][2], 'contact.html') if fa else ('Begin Your Better Life', 'contact.html'), A + 'rtb/1430-13.webp'), 'Contact')
+    final_cta(pg, fs, A + 'rtb/1430-13.webp')
     emit('portfolio.html', 'Portfolio', pg, A + 'rtb/1430-08a.webp')
 portfolio()
 

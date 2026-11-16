@@ -329,7 +329,7 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .fin.gr::before{content:"";position:absolute;left:0;right:0;top:calc(394 * var(--u));height:1px;background:rgba(255,255,255,.33);z-index:1}
 .fin.gr::after{content:"";position:absolute;top:0;bottom:0;left:calc(395 * var(--u));width:1px;background:rgba(255,255,255,.33);z-index:1}
 .fin.gr .fg-h{position:absolute;left:calc(421 * var(--u));top:calc(420 * var(--u));white-space:nowrap;z-index:2}
-.fin.gr .fg-t{position:absolute;left:calc(100% - 620 * var(--u));top:calc(420 * var(--u));height:calc(312 * var(--u));display:flex;flex-direction:column;justify-content:flex-end;gap:calc(38 * var(--u));z-index:2}
+.fin.gr .fg-t{position:absolute;left:calc(100% - 620 * var(--u));bottom:calc(100% - (420 + var(--tl, 6) * 52.02) * var(--u));display:flex;flex-direction:column;gap:calc(38 * var(--u));z-index:2}   /* 16.11: the texts' foot stands on the title's foot, however many lines the title has (--tl on the section) */
 .fin.gr .fg-b{position:absolute;left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px);z-index:2}
 /* a project's gallery: wide pictures whole on the text line, tall ones in pairs, a wide one beside a tall one */
 .gal{margin-left:calc(421 * var(--u));margin-right:calc(50 * var(--u))}
