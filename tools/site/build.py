@@ -678,6 +678,11 @@ def _set(d, t):
         if k in d: return d[k]
     return None
 def cta(title, paras, button, img, pos=None, top=False, g=None):
+    """the closing block of every page, her frame «09 CTA» (15.11 18:42) and her word of 16.11 19:05: the photograph on the home hero's cross of
+    rules, THE TITLE in the lower left quarter, THE DESCRIPTION hung on the right with its foot on the title's foot, the button under the title.
+    16.11 22:54: «Чому опис над заголовком? Це повністю по композиції неправильно» — a description NEVER stands above the title; what stands there
+    is only a closing phrase of a few words (her word of 19:33 about «Let's begin with yours»), 20 over the title's capitals and the same 26 from
+    the horizontal rule as from the vertical one."""
     t = nop(title); lines = _set(CTA_TITLE, t) or brk_lines(t, 22)
     parts = [nop(x) for p in paras for x in p]
     if len(parts) == 1:
@@ -685,12 +690,15 @@ def cta(title, paras, button, img, pos=None, top=False, g=None):
         if len(sp) == 2: parts = [nop(x) for x in sp]
     ps = ''.join('<p class="t20 rv%s">%s</p>' % (' cb' if i else '', '<br class="bd"> '.join(esc(y) for y in (_set(CTA_TEXT, x) or [x]))) for i, x in enumerate(parts))
     st = ';'.join(x for x in ['object-position:%s' % pos if pos else '', 'filter:contrast(1.04) brightness(%s)' % g if g else ''] if x)
-    # 16.11 19:33: the description stands above the title, 20 over its letters; the group's first letters keep the same distance
-    # from the horizontal line and from the vertical one (26), so it sits square in the rectangle the cross makes
-    return ('<section class="fin gr" id="@ID@">\n  <img src="%s" alt="" loading="lazy"%s>\n  <div class="fg-in">%s<h2 class="t60 rv fg-h">%s</h2></div>\n'
-            '  <div class="rv fg-b">%s</div>\n</section>'
-            % (img, ' style="%s"' % st if st else '', '<div class="fg-t">%s</div>' % ps if ps else '',
-               '<br>'.join(esc(x) for x in lines), btn(button[0], button[1])))
+    hd = '<h2 class="t60 rv fg-h">%s</h2>' % '<br>'.join(esc(x) for x in lines)
+    short = len(parts) == 1 and len(parts[0]) <= 40           # a closing phrase, not a description
+    if short:
+        return ('<section class="fin gr" id="@ID@">\n  <img src="%s" alt="" loading="lazy"%s>\n  <div class="fg-in"><div class="fg-t">%s</div>%s</div>\n'
+                '  <div class="rv fg-b">%s</div>\n</section>' % (img, ' style="%s"' % st if st else '', ps, hd, btn(button[0], button[1])))
+    return ('<section class="fin gr" id="@ID@" style="--tl:%d">\n  <img src="%s" alt="" loading="lazy"%s>\n  %s\n'
+            '%s  <div class="rv fg-b">%s</div>\n</section>'
+            % (len(lines), img, ' style="%s"' % st if st else '', hd,
+               '  <div class="fg-t fg-r">%s</div>\n' % ps if ps else '', btn(button[0], button[1])))
 
 # ------------------------------------------------------------------ generic section → block
 RAIL = {'What You Receive': 'Receive', 'The Turnkey Experience': 'Experience', "What's Included": 'Included', 'Our Responsibility': 'One Team', 'Client Testimonial': None,
