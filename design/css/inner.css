@@ -236,15 +236,16 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .pf6 .cd.big .im{aspect-ratio:886 / 1112}
 .pf6 .cd .nm{margin-top:calc(20 * var(--u))}
 .pf6 .cd .lc{margin-top:calc(20 * var(--u))}
-/* the Signature grid of Portfolio after her reference of 16.11 12:42 («взяти сітку цих квадратиків») and her word of 12:46 («не залишай
-   пустих квадратиків, заповни все проєктами»): the page's four columns, near-square tiles one column wide (211:224 as in the reference) and one
-   large tile two columns wide and two rows high — its photograph takes whatever height the two rows of small cards give it, so the grid has no
-   hole; every card is put in its cell by --c (column) and --r (row); rows 62 apart. */
-.pf7{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(62 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
+/* the Signature grid of Portfolio after her reference of 16.11 12:42 («взяти точно таку сітку»): the page's four columns, near-square tiles one
+   column wide (211:224 as in the reference), a large landscape tile two columns wide (436:354), cells left empty on purpose; every card is put
+   in its cell by --c (column) and --r (row); rows 100 apart, a small tile stands at the top of its row.
+   (12:46–12:52: a build that filled every cell was refused at once — «на прев'ю зробив добру сітку… поверни назад»: the empty cells are the
+   point of this grid. Her «пусті квадратики» were the grey tiles of a test still whose photographs had not loaded, not the cells.) */
+.pf7{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(100 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
 .pf7 .cd{margin:0;grid-column:var(--c);grid-row:var(--r)}
+.pf7 .cd.big{grid-column:var(--c) / span 2}
 .pf7 .cd .im{aspect-ratio:211 / 224}
-.pf7 .cd.big{grid-column:var(--c) / span 2;grid-row:var(--r) / span 2;align-self:stretch;display:flex;flex-direction:column}
-.pf7 .cd.big .im{flex:1 1 auto;aspect-ratio:auto;min-height:0}
+.pf7 .cd.big .im{aspect-ratio:436 / 354}
 .pf7 .cd .nm{margin-top:calc(20 * var(--u))}
 .pf7 .cd .lc{margin-top:calc(20 * var(--u))}
 .inr .lab3.sqm{--sg:calc(10 * var(--u));--sw:max(5px, calc(8 * var(--u)));--ss:calc(2 * var(--sg) + var(--sw));display:flex;flex-wrap:wrap;row-gap:4px;
@@ -444,8 +445,8 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .pf6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)}
   .pf6 .cd .im, .pf6 .cd.big .im{aspect-ratio:4 / 5}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
-  .pf7{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)} .pf7 .cd{grid-column:auto;grid-row:auto} .pf7 .cd.big{grid-column:span 2;grid-row:auto;display:block}
-  .pf7 .cd .im, .pf7 .cd.big .im{aspect-ratio:1 / 1} .pf7 .cd .nm{margin-top:12px} .pf7 .cd .lc{margin-top:8px}
+  .pf7{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)} .pf7 .cd{grid-column:auto;grid-row:auto} .pf7 .cd.big{grid-column:span 2}
+  .pf7 .cd .im{aspect-ratio:1 / 1} .pf7 .cd.big .im{aspect-ratio:436 / 354} .pf7 .cd .nm{margin-top:12px} .pf7 .cd .lc{margin-top:8px}
   .lib4{display:block;margin:0 var(--m, 20px)} .lib4 .chips{margin-top:24px}
   .iv{display:block;min-height:0;padding:72px var(--m, 20px) 80px} .iv-c{margin-left:0} .iv-k{position:static;margin-bottom:18px;font-size:13px}
   .film .p-ct, .film .p-cb, .film .p-cbr{text-align:left}   /* phones: the scenes stand on the left, like the rest of the page */
