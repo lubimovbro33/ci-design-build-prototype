@@ -217,7 +217,8 @@ def portfolio():
     assert nop(ps_[0]) == 'Every residence speaks its own architectural language, because every client lives differently', ps_[0]
     cl = nop(out[0][1][0]); assert cl == 'The result feels effortless, as if your home could only ever have been yours', cl
     st6 = [nop(r[1]) for r in rows]; assert len(st6) == 6 and all(len(x.split(' ')) == 2 for x in st6), st6
-    lead = '%s<br class="bd"> %s<br class="bd"> <span class="cb">%s</span>' % (esc('Every residence speaks its own architectural language,'), esc('because every client lives differently.'), esc(nop(ps_[1])))
+    # 16.11 18:27: a centred block is broken for rhythm (line lengths alternate: 196 / 329 / 226 / 289 in the real face), not sentence by sentence
+    lead = '<br class="bd"> '.join([esc('Every residence speaks'), esc('its own architectural language, because'), esc('every client lives differently.'), '<span class="cb">%s</span>' % esc(nop(ps_[1]))])
     pg.add('<section class="film" data-fig="key" data-len="4" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
            '      <h2 class="t60 m p-ct" data-k="-1 -.5 99 99">Every Home Unique.<br>One CI Standard</h2>\n'
            '      <p class="t20 m p-cb" data-k="-1 -.5 2.85 3.0">%s</p>\n'
@@ -341,7 +342,7 @@ def project_collection(p, nxt):
     sec = S[4]; rws = get(sec, 'row'); ld = get(sec, 'lead'); q0 = [(.75, .95, 1.35, 1.5), (1.5, 1.65, 1.95, 2.1), (2.1, 2.25, 2.6, 2.75)]
     assert len(rws) == 3 and ld, rws
     dd = D.get('dec'); names = [d_[0] for d_ in dd] if dd else [x[1] for x in rws]
-    dec = ''.join('      <p class="t20 m p-cbr" data-k="%s %s %s %s">%s</p>\n' % (q0[i] + (('<span class="dr"><span class="dn">%s</span><br> %s</span>' % (esc(dd[i][0]), esc(dd[i][1]))) if dd else '%s<br> %s' % (esc(x[1]), esc('[%s]' % ' '.join(x[2][0]))),)) for i, x in enumerate(rws))
+    dec = ''.join('      <p class="t20 m p-cbr" data-k="%s %s %s %s">%s</p>\n' % (q0[i] + (('<span class="dr"><span class="dn">%s</span><br> %s</span>' % (esc(dd[i][0]), '<br class="bd"> '.join(esc(y) for y in dd[i][1].split(' / ')))) if dd else '%s<br> %s' % (esc(x[1]), esc('[%s]' % ' '.join(x[2][0]))),)) for i, x in enumerate(rws))
     lead = [nop(x) for x in ld[0][1]]
     pg.add('<section class="film" data-fig="many" data-len="3.8" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
            '      <h2 class="t60 m p-ctl" data-k="-1 -.5 99 99">%s</h2>\n%s      <p class="t34 m p-cbr" data-k="3.0 3.3 99 99">%s<br class="bd"> <span class="cb">%s</span></p>\n'

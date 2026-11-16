@@ -46,9 +46,10 @@ DRAFT_CH = {
     'concept': 'Cohesion and Quiet Drama',
     'began': 'The design began with millwork and stone: bespoke details that carry warmth and texture from one room to the next',
     'narrative': 'The floor plan was reconfigured to add a custom, climate-controlled wine cellar, the primary bathroom was rebuilt in custom stonework and tailored millwork, and one automation system runs lighting, window treatments, speakers and media',
-    'dec': [('The Wine Cellar', 'The existing floor plan was reconfigured to make room for a custom, climate-controlled wine cellar, so the collection has a place of its own within the home'),
-            ('Millwork + Stone', 'Bespoke millwork and stone details run through the public spaces and the primary bathroom, tying the rooms together with warmth and texture'),
-            ('Art + Furnishings', 'Hand-painted Porter Teleo wallpaper and a sculpture by Nicholas Hernandez set the dining room; a bespoke sectional from E Studio Furnishings anchors the living area. CI curated and installed every piece')]}
+    'dec': [('The Wine Cellar', 'The existing floor plan was reconfigured / to make room for a custom, / climate-controlled wine cellar, so the collection / has a place of its own within the home'),
+            # ' / ' = a line break on wide screens (16.11 18:27: the lines of a block alternate in length; measured in the real face)
+            ('Millwork + Stone', 'Bespoke millwork and stone details / run through the public spaces and the primary bathroom, / tying the rooms together with warmth and texture'),
+            ('Art + Furnishings', 'Hand-painted Porter Teleo wallpaper / and a sculpture by Nicholas Hernandez set the dining room; / a bespoke sectional from E Studio Furnishings / anchors the living area. CI curated and installed every piece')]}
 PROJ[0].update(lines=['Collectors', 'Home'], seed=1450, idea='collection', qphoto='1450-18', draft=DRAFT_CH,
                gal3=[('m1', ['1450-24', '1450-09a']), ('rb', ['1450-14', '1450-15']), ('sw', ['1450-22']), ('lb', ['1450-32', '1450-12']), ('m1', ['1450-25a', '1450-26']), ('full', ['1450-34']),
                      ('lp', ['1450-16a', '1450-08a']), ('sw', ['1450-02a']), ('m1', ['1450-05', '1450-10a'])],   # the staggered plan of 16.11: kind → files (landscape / portrait as the kind needs)

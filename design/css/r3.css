@@ -529,6 +529,11 @@ html body .chap{transition:opacity .6s var(--e-out),transform .6s var(--e-out),c
    the logo (Hero, Philosophy, About, Difference, Suite, Approach, Process, CTA) keep their places until she redraws them. */
 @media (min-aspect-ratio: 1/1) and (min-width: 901px){ html body .ch-ftr{padding-top:calc(150 * var(--u))} }
 
+/* ================================================================== RUNNING TEXT (16.11 18:27, the designer: a block of text has rhythm — no stairs,
+   no rectangle, no tail). Where a paragraph wraps by itself the browser is asked not to leave a word or two alone on the last line;
+   blocks with their own line breaks are set by hand (measured in the real face) */
+p, dd, li, blockquote{text-wrap:pretty}
+
 /* ================================================================== THE SEPARATOR (16.11 17:39, the designer: «ми не робимо ось такі маленькі
    крапочки між різними табами, пунктами»). Items of one line are never set apart by a small dot (·, •). One device for the whole site, as in her
    frame 435:4477 («Of the day ■ At home»): a square 8 × 8 of the blue #96A8BF, 10 after the word before it and 10 before the next one.
