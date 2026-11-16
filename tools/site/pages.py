@@ -292,17 +292,17 @@ def project_collection(p, nxt):
     Nothing is invented: what the client has not written stays their placeholder. The Goal stands above The Brief (in the template it is below)."""
     S = P['project']; pg = Pg(); nm = p['name']
     def sub(t): return t.replace('[Project Name]', nm)
-    # a field the client has not filled yet: on this page it is set quietly — dim, without the tinted box and without the square brackets
-    # (her word of 16.11 13:19: «квадратні дужки на наші заголовки… напівпрозорий прямокутник… у нас немає такої стилістики»); the brackets stay in
-    # the text for the copy check, only hidden
-    _add = pg.add; pg.add = lambda h, *a, **k: _add(h.replace('<span class="ph">[', '<span class="ph q"><i>[</i>').replace(']</span>', '<i>]</i></span>'), *a, **k)
+    # the client's template has unfilled fields; on this page they carry working copy (PROJ[0]['draft'], see build.py — NOT the client's text),
+    # each wrapped in <span class="dr"> so that it can be found and replaced (her word of 16.11 13:24: no brackets, no dimming — a stand-in text)
+    D = p.get('draft', {})
+    def dr(key, tpl): return '<span class="dr">%s</span>' % esc(D[key]) if key in D else esc(tpl)
     cov = ph(p['set'], p['cover'])
     pg.add('<section class="film wl" data-fig="wall" data-len="0" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
            '    <div class="wl-p"><img src="%s" alt="%s"><i class="wl-sh"></i></div>\n'
            '    <p class="lab3 wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n  </div>\n</section>'
-           % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), esc(' '.join(get(S[0], 'lead')[0][1]))), 'Project', 'top')
+           % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), dr('lead', ' '.join(get(S[0], 'lead')[0][1]))), 'Project', 'top')
     # the pictures of the page, numbered through (the collection)
-    PL = p['gal3']; total = sum(len(fs) for k, fs in PL) + 1; n = [0]   # + the testimonial's photograph
+    PL = p['gal3']; total = sum(len(fs) for k, fs in PL) + (1 if p.get('quote') else 0); n = [0]   # + the testimonial's photograph, when there is a testimonial
     def fig(f, cls):
         n[0] += 1
         return '<figure class="gi %s rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span><span class="lc lab3 nn">%02d <i>/ %02d</i></span></figure>' % (cls, ph(p['set'], f), nm, n[0], total)
@@ -321,16 +321,18 @@ def project_collection(p, nxt):
     sec = S[1]; dl = get(sec, 'dl')[0][1]; known = {'Residence': p['bld'] + ' · ' + p['loc']}; known.update(p.get('facts', {}))
     if 'Size' in known: dl = [dl[0], dl[1], ['Size', ['']]] + dl[2:]
     def val(k, v):
+        if k == 'Client' and 'client' in D: return dr('client', '')
         x = known.get(k, ' '.join(v))
         return '<br>'.join(esc(y) for y in x.split(' / ')) if k == 'Scope' and k in known else esc(x)   # the scope: an item a line
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
     pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <div class="g4-b pj-st rv"><h3 class="lab3 pj-in">%s</h3><p class="t60s">%s</p></div>\n  </div>\n'
            '  <div class="g4 pj-2">\n    <h2 class="lab3 rv g4-k">%s</h2>\n    <dl class="g4-b pj-tb">%s</dl>\n  </div>\n</section>'
-           % (esc(label(sec)), esc(goal), ' '.join(esc(x) for x in gp), esc(nop(h_of(sec))), ''.join('<div class="rv"><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), val(k, v)) for k, v in dl)))
+           % (esc(label(sec)), esc(goal), dr('goal', ' '.join(gp)), esc(nop(h_of(sec))), ''.join('<div class="rv"><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), val(k, v)) for k, v in dl)))
     # design vision: the concept at the spine, its paragraphs small in the fourth column; then the first staggered pair
-    sec = S[2]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] in ('p', 'lead')]
+    sec = S[2]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] in ('p', 'lead')]; assert len(ps_) == 3 and ps_[0].startswith('The design began with [') and ps_[2].startswith('['), ps_
+    pv = [dr('began', nop(ps_[0])), esc(nop(ps_[1])), dr('narrative', nop(ps_[2]))]
     pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">%s</h2>\n    <div class="pj-tx">%s</div>\n  </div>\n%s\n</section>'
-           % (esc(label(sec)), esc(h_of(sec)), ''.join('<p class="t20 rv">%s</p>' % esc(nop(x)) for x in ps_), rows(PL[:1])), 'Vision')
+           % (esc(label(sec)), dr('concept', h_of(sec)), ''.join('<p class="t20 rv">%s</p>' % x for x in pv), rows(PL[:1])), 'Vision')
     # the gallery: staggered on the column lines
     ttl = sub(h_of(S[3])).replace('[', '').replace(']', ''); assert ttl == 'Inside ' + nm, ttl
     pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">Inside<br>%s</h2>\n  </div>\n%s\n</section>'
@@ -338,16 +340,17 @@ def project_collection(p, nxt):
     # behind the design: hundreds of strokes become one line; the three decisions are the client's placeholders
     sec = S[4]; rws = get(sec, 'row'); ld = get(sec, 'lead'); q0 = [(.75, .95, 1.35, 1.5), (1.5, 1.65, 1.95, 2.1), (2.1, 2.25, 2.6, 2.75)]
     assert len(rws) == 3 and ld, rws
-    dec = ''.join('      <p class="t20 m p-cbr" data-k="%s %s %s %s">%s<br> %s</p>\n' % (q0[i] + (esc(x[1]), esc('[%s]' % ' '.join(x[2][0])))) for i, x in enumerate(rws))
+    dd = D.get('dec'); names = [d_[0] for d_ in dd] if dd else [x[1] for x in rws]
+    dec = ''.join('      <p class="t20 m p-cbr" data-k="%s %s %s %s">%s</p>\n' % (q0[i] + (('<span class="dr"><span class="dn">%s</span><br> %s</span>' % (esc(dd[i][0]), esc(dd[i][1]))) if dd else '%s<br> %s' % (esc(x[1]), esc('[%s]' % ' '.join(x[2][0]))),)) for i, x in enumerate(rws))
     lead = [nop(x) for x in ld[0][1]]
     pg.add('<section class="film" data-fig="many" data-len="3.8" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">\n'
            '      <h2 class="t60 m p-ctl" data-k="-1 -.5 99 99">%s</h2>\n%s      <p class="t34 m p-cbr" data-k="3.0 3.3 99 99">%s<br class="bd"> <span class="cb">%s</span></p>\n'
-           '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % ('Why the Details<br>Matter', dec, esc(lead[0] + ('.' if len(lead) > 1 else '')), '<br class="bd"> '.join(esc(x) for x in ['The success of the home comes', 'from making them feel like one idea']), ''.join('<li>%s</li>' % html.escape(x[1], quote=False) for x in rws)), 'Details')
+           '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % ('Why the Details<br>Matter', dec, esc(lead[0] + ('.' if len(lead) > 1 else '')), '<br class="bd"> '.join(esc(x) for x in ['The success of the home comes', 'from making them feel like one idea']), ''.join('<li>%s</li>' % html.escape(x, quote=False) for x in names)), 'Details')
     assert nop(h_of(sec)) == 'Why the Details Matter' and ' '.join(lead[1:]) == 'The success of the home comes from making them feel like one idea', (h_of(sec), lead)
-    # testimonial: the quotation large on the left, a tall photograph to the right edge
-    q = get(S[5], 'quote'); w = [it for it in S[5]['items'] if it[0] == 'p']
-    who = esc(w[0][1][0]) if w else '<span class="ph">[Client name]</span> <span style="color:var(--blue)">■</span> <span class="ph">[Project]</span>'
-    pg.add('<section class="bk" id="@ID@">\n  <div class="pq">\n    <div class="pq-t"><p class="t60s rv">%s</p><p class="lab3 rv pq-w">%s</p></div>\n    %s\n  </div>\n</section>' % (esc(q[0][1][0]), who, fig(p['qphoto'], 'pq-i')))
+    # testimonial: the quotation large on the left, a tall photograph to the right edge — ONLY when a real, approved one exists (p['quote'] =
+    # (text, who)); a client's words are never made up, so until then the block is not on the page
+    if p.get('quote'):
+        pg.add('<section class="bk" id="@ID@">\n  <div class="pq">\n    <div class="pq-t"><p class="t60s rv">%s</p><p class="lab3 rv pq-w">%s</p></div>\n    %s\n  </div>\n</section>' % (esc(p['quote'][0]), esc(p['quote'][1]), fig(p['qphoto'], 'pq-i')))
     assert n[0] == total, (n[0], total)
     # the next project: its name and its photograph side by side on the grid
     pg.add('<section class="bk" id="@ID@">\n  <a class="g4 nx2" href="%s.html">\n    <span class="nx2-t"><span class="lab3 nx2-k">Next project</span><span class="t60 rv">%s</span>%s</span>\n'

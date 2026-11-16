@@ -9,7 +9,7 @@ html, body.inr{background:#000}
 body.inr{color:#FFFFFF;overflow-x:hidden}
 body.inr .hdr{opacity:1}
 .inr .ph{background:rgba(255,255,255,.12);font-family:inherit;font-size:inherit;padding:0 .2em}
-.inr .ph.q{background:none;padding:0;color:rgba(255,255,255,.42)} .ph.q > i{display:none}   /* the quiet form (Collectors Home, 16.11): dim, no box, the brackets hidden */
+.dn{font-weight:400;display:inline-block;margin-bottom:.5em;font-family:var(--fx);font-size:max(10px, calc(14 * var(--u)));line-height:1.136;letter-spacing:0;text-transform:uppercase}   /* a design decision's name over its text (Collectors Home) */
 .inr .lab3{font-family:var(--fx);font-weight:400;font-size:max(10px, calc(14 * var(--u)));line-height:1.136;letter-spacing:0;text-transform:uppercase;color:#FFFFFF}
 .inr .h5r{font-family:var(--fx);font-weight:400;font-size:max(15px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em;text-transform:uppercase;color:#FFFFFF}
 .inr main{display:block;position:relative}
@@ -159,7 +159,7 @@ html body.inr .iv-p{margin-top:calc(90 * var(--u));white-space:nowrap}
 @keyframes wlWin{ from{clip-path:inset(34% 38% 34% 38%)} to{clip-path:inset(0 0 0 0)} }
 .wl-h{position:absolute;left:calc(50 * var(--u));bottom:max(50 * var(--u), 58px);margin:0;color:#FFFFFF;white-space:nowrap;z-index:4;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.6s backwards}
 .wl-k{position:absolute;left:calc(50 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 2 * .856 * max(38px, 111 * var(--u)) + 30 * var(--u));margin:0;z-index:4;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.6s backwards}
-html body.inr .wl-s{position:absolute;right:calc(50 * var(--u));bottom:max(50 * var(--u), 58px);margin:0;max-width:calc(431 * var(--u));z-index:4}
+html body.inr .wl-s{position:absolute;right:calc(50 * var(--u));bottom:max(50 * var(--u), 58px);margin:0;width:calc(431 * var(--u));z-index:4}
 .wl-s > span{display:inline-block;animation:cvIn 1.4s cubic-bezier(.16,1,.3,1) 1.8s both}
 @media (prefers-reduced-motion: reduce){ .wl-h, .wl-k, .wl-s > span{animation:none} }
 /* «Collectors Home» — the page's composition after her reference of 16.11 13:04 (a developer's project page: «як приклад по композиції, по сітці,
@@ -214,6 +214,7 @@ html body .pq .t60s{white-space:normal}
 .inr .pq-w{margin:calc(50 * var(--u)) 0 0}
 .gi.pq-i{flex:none;width:calc(100% - var(--c3))} .gi.pq-i .im{aspect-ratio:4 / 5}
 @media (prefers-reduced-motion: reduce){ .gi.rv .im img{animation:none!important;transform:none!important} }
+.film[data-fig="many"] .t20.p-cbr{width:calc(566 * var(--u))}   /* the decisions: a short text block bottom right */
 /* a block on the four columns: a small name in the first, the matter in the other three (.g4) */
 .g4{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
 .g4-k{grid-column:1;margin:0;padding-top:.6em} .g4-b{grid-column:2 / span 3}
@@ -488,7 +489,7 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .film .p-ct, .film .p-cb, .film .p-cbr{text-align:left}   /* phones: the scenes stand on the left, like the rest of the page */
   .wl-p{position:relative;height:100vh;height:100svh;animation:wlWin 1.3s cubic-bezier(.83,0,.17,1) .15s backwards} .wl-p img{animation:cdImg 1.3s cubic-bezier(.83,0,.17,1) .15s backwards}
   .wl-h{left:var(--m, 20px);bottom:auto;top:calc(100svh - 96px - 2 * .856 * 38px)} .wl-k{left:var(--m, 20px);bottom:auto;top:calc(100svh - 96px - 2 * .856 * 38px - 14px - 1.2em)}
-  html body.inr .wl-s{left:var(--m, 20px);right:var(--m, 20px);bottom:auto;top:calc(100svh - 76px);max-width:none}
+  html body.inr .wl-s{left:var(--m, 20px);right:var(--m, 20px);bottom:auto;top:calc(100svh - 84px);width:auto}
   .g4{display:block;margin:0 var(--m, 20px)} .g4-b{margin-top:14px}
   .pj::before{display:none} .inr .pj-in{position:static;display:block;margin:0 0 10px} html body .pj-st .t60s{text-indent:0} .g4.pj-2{margin-top:44px}
   .pj-tb > div{display:block;margin-left:0;padding:12px 0} .inr .pj-tb dt{margin-bottom:4px;padding-top:0} .pj-h{margin-top:14px} .pj-tx{margin-top:20px;padding-top:0} .pj-tx p + p{margin-top:12px}

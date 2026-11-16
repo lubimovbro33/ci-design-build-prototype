@@ -26,7 +26,28 @@ PROJ = [
 ]
 # the project pages of 15.11 (her word of 21:29): the name's own lines for the cover that is flown through, a seed for the home's own key, and the gallery
 # on the Portfolio grid — 'blk' = one large + two small (portrait pictures), 'blkr' = its mirror (small, small, large), 'full' = a wide picture across
-PROJ[0].update(lines=['Collectors', 'Home'], seed=1450, idea='collection', qphoto='1450-18',
+# WORKING COPY for the unfilled fields of the client's project template on «Collectors Home» — NOT text the client has approved for this page.
+# Her words of 16.11: 13:24 «Давай напишемо поки що текст, якийсь заглушку… Ми не можемо давати ось так шаблонно», 13:28 «Можеш взяти інформацію з їхнього
+# теперішнього сайту?» — so every line below is built on what the client's CURRENT site says about this project
+# (https://cidesignbuild.com/portfolio-item/collectors-home/, read 16.11.2026): the 55th floor of One Bennett Park, 5,130 sq ft, a turnkey renovation and
+# furnishing; the floor plan reconfigured for a custom, climate-controlled wine cellar; the primary bathroom redone in custom stonework and tailored
+# millwork; bespoke millwork and stone through the public spaces; home automation customized with Digital Living (lighting, window treatments, speakers,
+# media); Porter Teleo hand-painted wallpaper and a Nicholas Hernandez sculpture in the dining room; a bespoke E Studio Furnishings sectional; an Erden
+# rug; CI curated and installed all furnishings, art and accessories. The wording is ours (their page is not copied); nothing beyond those facts is
+# claimed. On the page each line is wrapped in <span class="dr"> so that it can be found and replaced when the client sends the final text.
+# The testimonial is NOT written: a client's words cannot be made up, and their page has none — its block stays off the page until a real, approved
+# one exists (put it in PROJ[0]['quote'] = (text, who)).
+DRAFT_CH = {
+    'lead': 'A turnkey renovation and furnishing on the 55th floor of One Bennett Park',
+    'client': 'Private collectors',
+    'goal': 'A full transformation of the residence, made to reflect both the elegance of the building and the taste of its owners',
+    'concept': 'Cohesion and Quiet Drama',
+    'began': 'The design began with millwork and stone: bespoke details that carry warmth and texture from one room to the next',
+    'narrative': 'The floor plan was reconfigured to add a custom, climate-controlled wine cellar, the primary bathroom was rebuilt in custom stonework and tailored millwork, and one automation system runs lighting, window treatments, speakers and media',
+    'dec': [('The Wine Cellar', 'The existing floor plan was reconfigured to make room for a custom, climate-controlled wine cellar, so the collection has a place of its own within the home'),
+            ('Millwork + Stone', 'Bespoke millwork and stone details run through the public spaces and the primary bathroom, tying the rooms together with warmth and texture'),
+            ('Art + Furnishings', 'Hand-painted Porter Teleo wallpaper and a sculpture by Nicholas Hernandez set the dining room; a bespoke sectional from E Studio Furnishings anchors the living area. CI curated and installed every piece')]}
+PROJ[0].update(lines=['Collectors', 'Home'], seed=1450, idea='collection', qphoto='1450-18', draft=DRAFT_CH,
                gal3=[('m1', ['1450-24', '1450-09a']), ('rb', ['1450-14', '1450-15']), ('sw', ['1450-22']), ('lb', ['1450-32', '1450-12']), ('m1', ['1450-25a', '1450-26']), ('full', ['1450-34']),
                      ('lp', ['1450-16a', '1450-08a']), ('sw', ['1450-02a']), ('m1', ['1450-05', '1450-10a'])],   # the staggered plan of 16.11: kind → files (landscape / portrait as the kind needs)
                gal2=[('blk', ['1450-09a', '1450-15', '1450-14']), ('full', ['1450-24']), ('blkr', ['1450-12', '1450-26', '1450-16a']), ('full', ['1450-22']),
