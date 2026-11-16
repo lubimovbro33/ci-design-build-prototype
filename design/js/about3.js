@@ -172,6 +172,7 @@
   /* ================================================================== the stage */
   var main = $('ab3'), stg = $('st'), cv = $('ln'), g = cv.getContext('2d');
   var W = 0, H = 0, U = 1, DPR = 1, MID = 0, SQ = 8, FOOT = 58, SP = .8, mainTop = 0;
+  var MQP = window.matchMedia ? window.matchMedia('(max-aspect-ratio: 1/1)') : {matches: false};
   var SC = qsa('.sc', stg).map(function(e){ return {el: e, id: e.getAttribute('data-id'), len: +e.getAttribute('data-len'), start: 0, ms: qsa('.m', e).map(Moment), on: null}; });
   var BY = {}; SC.forEach(function(c){ BY[c.id] = c; });
   function xl(X){ return X * U; }                      /* hung from the left field */
@@ -202,9 +203,19 @@
       var y = t.getBoundingClientRect().top + window.scrollY; if (BY[id] && id !== 'a-top') y += .75 * SP * H; smoothTo(y); });
   });
 
+  /* 16.11 18:07 (her frames «02 Built by Listening · 5 / · 6»): a scene's title and its description stand together in the middle of the top, and
+     the figure stands lower so that they never meet. The figure is built on the page's line, so it is the line that is lowered: while the head of
+     a scene stands, the line is LO px under the middle of the screen — it glides there as the title comes and back as the head leaves (the scenes
+     begin and end on the flat line, so the line never jumps between them). HEAD: [title in from, to, head out from, to, how far in frame units].
+     Everything drawn on the canvas is drawn under that shift, at() adds it to what the script places, and the stage carries it as --lo for what
+     the stylesheet hangs from the line. Phones keep the line in the middle */
+  var LO = 0, HEAD = {'a-story': [.15, .5, 3.85, 4.1, 100], 'a-why': [.15, .45, 5.3, 5.55, 170], 'a-you': [.3, .6, 4.56, 4.6, 190], 'a-team': [.5, .8, 6.1, 6.6, 90], 'a-exp': [.2, .5, 4.5, 4.9, 100]};
+  function headOff(id, q){ var h = HEAD[id]; if (!h || MQP.matches) return 0; var v = h.px != null ? h.px : h[4] * U; if (h.alt) v = lerp(v, h.alt[2], eio(sg(q, h.alt[0], h.alt[1])));   /* alt: another height for a later part of the scene */
+    return Math.round(v * eio(sg(q, h[0], h[1])) * (1 - eio(sg(q, h[2], h[3])))); }
+
   /* small helpers for things the script places */
   function vis(e, a){ a = a <= .001 ? 0 : a >= .999 ? 1 : Math.round(a * 1000) / 1000; if (e.__a === a) return; e.__a = a; e.style.visibility = a > 0 ? 'visible' : 'hidden'; e.style.opacity = a; }
-  function at(e, x, y){ var k = x.toFixed(1) + ',' + y.toFixed(1); if (e.__p === k) return; e.__p = k; e.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)'; }
+  function at(e, x, y){ y += LO; var k = x.toFixed(1) + ',' + y.toFixed(1); if (e.__p === k) return; e.__p = k; e.style.transform = 'translate3d(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px,0)'; }
   function box(e, x, y, w, h){ var k = x.toFixed(1) + ',' + y.toFixed(1) + ',' + w.toFixed(1) + ',' + h.toFixed(1); if (e.__b === k) return; e.__b = k; var s = e.style; s.left = x.toFixed(1) + 'px'; s.top = y.toFixed(1) + 'px'; s.width = w.toFixed(1) + 'px'; s.height = h.toFixed(1) + 'px'; }
   function clip(e, v){ if (e.__c === v) return; e.__c = v; e.style.clipPath = v; e.style.webkitClipPath = v; }
   /* a photograph: the outer box is its window, the inner box is where the whole picture would stand on the screen */
@@ -262,13 +273,13 @@
   var KX = new Float32Array(641), KY = new Float32Array(641), KZ = new Float32Array(641);
   /* 15.11 15:44 (her frames 03 · 1 / · 2): the knot stands alone in the middle of the screen — the title in the top left corner, the sentence in the
      bottom right one; nothing is written on the tangle. TW: the knot is held that much longer before it is pulled straight */
-  var TW = .6, MQP = window.matchMedia ? window.matchMedia('(max-aspect-ratio: 1/1)') : {matches: false};
+  var TW = .6;
   function why(q, t, act){
     var i;
     if (!act) return;
     var a = eio(sg(q, .05, 1.0)) * (1 - eio(sg(q, 1.65 + TW, 2.35 + TW)));
-    var R = 212 * U, room = H - FOOT - 261 * U - (MID - 24 * U), ry = .5 * Math.sin(t * .21) + .25, cyr = Math.cos(ry), syr = Math.sin(ry), rx = .3 + .16 * Math.sin(t * .17 + 1), cxr = Math.cos(rx), sxr = Math.sin(rx), cx = W / 2, cy = MID - 24 * U, TA = (-1.5708 - .7) / 3, TL = 6.2832 + 1.0472;
-    if (!MQP.matches) R = Math.min(R, Math.max(150 * U, room / 1.1));   /* a low window: the tangle keeps clear of the seven lines in the corner under it */
+    var R = 212 * U, room = H - FOOT - (MID - 24 * U + LO), ry = .5 * Math.sin(t * .21) + .25, cyr = Math.cos(ry), syr = Math.sin(ry), rx = .3 + .16 * Math.sin(t * .17 + 1), cxr = Math.cos(rx), sxr = Math.sin(rx), cx = W / 2, cy = MID - 24 * U, TA = (-1.5708 - .7) / 3, TL = 6.2832 + 1.0472;
+    if (!MQP.matches) R = Math.min(R, Math.max(150 * U, room / 1.1));   /* a low window: the tangle keeps clear of the foot */
     if (a < .003) flat(1);
     else {
       var N = 640;
@@ -411,24 +422,29 @@
   /* 15.11 15:47 (her note): the plan stands in the middle of the screen, as large as the title (top left corner) and the texts (bottom right corner)
      let it be — one field (50) from each. 15:51: a name stands the same distance from the wall above it and the wall on its left, measured to the
      letters themselves (the capitals begin .211 em under the top of their line box) */
-  var PL = {x: 0, y: 0, sc: 1, d: 12, cap: 3}, CAPI = .211;
+  var PL = {x: 0, y: 0, sc: 1, d: 12, cap: 3, lo: 0}, CAPI = .211;
   function planLayout(){
-    var scn = BY['a-you'].el, h2 = scn.querySelector('h2'), ps = scn.querySelectorAll('p.p-cbr'), g50 = 50 * U, fpx = Math.max(10, 14 * U), i;
+    var scn = BY['a-you'].el, ds = scn.querySelectorAll('.p-tcs'), fpx = Math.max(10, 14 * U), i;
     var a = PW / 2, b = PH / 2, cx = W / 2, cy = MID, sc = U;
+    HEAD['a-you'].px = 0;
     if (MQP.matches) sc = Math.min(sc, (W - 40) / PW);
     else {
-      /* a rectangle may stand beside the plan or above / under it: the plan takes the larger of the two */
-      if (h2){ var tr = h2.offsetLeft + h2.offsetWidth, tb = h2.offsetTop + h2.offsetHeight; sc = Math.min(sc, Math.max((cx - tr - g50) / a, (cy - tb - g50) / b)); }
-      for (i = 0; i < ps.length; i++){ var dl = ps[i].offsetLeft, dt = ps[i].offsetTop; sc = Math.min(sc, Math.max((dl - g50 - cx) / a, (dt - g50 - cy) / b)); }
+      /* 16.11 18:07: the head stands in the middle of the top, so the plan has the room under it: it begins 100 under the longest description
+         and ends one field above the foot (its lower wall runs along the chapter rail — at the foot itself the two lines would stand 14 px apart),
+         as large as that lets it be (never larger than drawn), and the line is lowered to its middle */
+      var hb = 0; for (i = 0; i < ds.length; i++) hb = Math.max(hb, ds[i].offsetTop + ds[i].offsetHeight);
+      var top = hb + 100 * U, bot = H - FOOT - 50 * U;
+      sc = Math.min(sc, (bot - top) / PH);
+      HEAD['a-you'].px = Math.max(0, Math.round(bot - b * Math.max(sc, .3 * U) - cy));
     }
     sc = Math.max(sc, .3 * U);
-    PL.sc = sc; PL.x = Math.round(cx - a * sc); PL.y = cy - b * sc; PL.d = Math.max(8, 16 * U); PL.cap = CAPI * fpx;
+    PL.sc = sc; PL.x = Math.round(cx - a * sc); PL.y = cy - b * sc; PL.d = Math.max(8, 16 * U); PL.cap = CAPI * fpx; PL.lo = HEAD['a-you'].px;
   }
   function you(q, t, act){
     var px = PL.x, py = PL.y, sc = PL.sc, i, out = 1 - sg(q, 4.3, 4.55);
     for (i = 0; i < 8; i++){ vis(rmL[i], eo(sg(q, T6 + i * D6 + .1, T6 + i * D6 + .3)) * out); at(rmL[i], px + RMC[i][0] * sc + PL.d, py + RMC[i][1] * sc + PL.d - PL.cap); }
     /* "Yours": the plan fills with the room it became, and the room takes the screen */
-    var pr = [px, py, PW * sc, PH * sc], full = [0, 0, W, H], imF = coverRect(0, 0, W, H, YAR, .5, .62);
+    var pr = [px, py + PL.lo, PW * sc, PH * sc], full = [0, 0, W, H], imF = coverRect(0, 0, W, H, YAR, .5, .62);   /* the photograph opens from the plan where it stands — under the head */
     if (q < 4.3 || q > 6.05) vis(phY, 0);
     else {
       var k = eio(sg(q, 4.55, 5.1)), r = lerpR(pr, full, k), col = eio(sg(q, 5.55, 6.0));
@@ -462,20 +478,22 @@
   /* ================================================================== 07 OUR TEAM — one roof over ten disciplines; the people stand under it */
   var dcL = qsa('#dcL .dc'), tm = $('tm'), tmW = 0;
   var CSTEP = 145;
-  function colX(i){ return xl(421) + i * CSTEP * U; }
-  function roofY(x, r){ var ev = ym(500), ap = ym(290), xa = colX(0), xb = colX(9), mdx = (xa + xb) / 2, hw = (xb - xa) / 2, d = Math.abs(x - mdx); return lerp(MID, d >= hw ? ev : lerp(ap, ev, d / hw), r); }
+  function colX(i){ return (MQP.matches ? xl(421) : xm(960 - 4.5 * CSTEP)) + i * CSTEP * U; }   /* 16.11 18:07: under a centred head the roof is centred too (phones: from the left field, as it was) */
+  function roofY(x, r){ var ev = ym(500), ap = ym(MQP.matches ? 290 : 330), xa = colX(0), xb = colX(9), mdx = (xa + xb) / 2, hw = (xb - xa) / 2, d = Math.abs(x - mdx); return lerp(MID, d >= hw ? ev : lerp(ap, ev, d / hw), r); }
   /* 15.11 15:57: the descriptions stand in the bottom right corner, under the last columns — on a low window the columns end a little higher,
      so the names under them keep 40 clear of the tallest description */
   var TBASE = 0;
-  function teamLayout(){ var ps = BY['a-team'].el.querySelectorAll('p.p-cbr'), h = 0, i; for (i = 0; i < ps.length; i++) h = Math.max(h, ps[i].offsetHeight);
-    TBASE = MQP.matches ? ym(760) : Math.min(ym(760), H - FOOT - h - 147 * U); }
+  function teamLayout(){ TBASE = ym(760);
+    /* the people: the strip of portraits is taller than the columns were, and only the title stands over it by then — the line rises as much as
+       the strip needs to end at the foot (4.0–4.4, as the columns leave and the portraits come) */
+    HEAD['a-team'].alt = [4.0, 4.4, Math.max(0, Math.min(90 * U, H - FOOT - (tm ? tm.offsetHeight : 0) - 10 * U - H / 2))]; }
   function team(q, t, act){
     var r = eio(sg(q, .05, .85)) * (1 - eio(sg(q, 6.2, 6.75))), i, colsOut = 1 - sg(q, 4.0, 4.3), base = TBASE;
     for (i = 0; i < 10; i++){ vis(dcL[i], eo(sg(q, 1.0 + i * .07, 1.25 + i * .07)) * colsOut); at(dcL[i], colX(i) - SQ * .375, base + (i % 2 ? 75 : 25) * U); }
     /* the people: a strip of portraits that travels under the roof */
     var sIn = sg(q, 4.2, 4.5) * (1 - sg(q, 6.0, 6.25));
     if (sIn <= 0) vis(tm, 0);
-    else { if (!tmW) tmW = tm.scrollWidth; vis(tm, sIn); at(tm, lerp(xl(421) + 260 * U * (1 - eo(sg(q, 4.2, 4.6))), W - 50 * U - tmW, eio(sg(q, 4.5, 5.95))), ym(550)); }
+    else { if (!tmW) tmW = tm.scrollWidth; vis(tm, sIn); at(tm, lerp(colX(0) + 260 * U * (1 - eo(sg(q, 4.2, 4.6))), W - 50 * U - tmW, eio(sg(q, 4.5, 5.95))), ym(550)); }
     if (!act) return;
     var xs = [-10, colX(0), (colX(0) + colX(9)) / 2, colX(9), W + 10], p = [];
     for (i = 0; i < xs.length; i++) p.push(xs[i], roofY(xs[i], r));
@@ -506,10 +524,13 @@
   }
 
   /* ================================================================== 09 OUR PRINCIPLES — seven floors on one ground line, from "Listen First" up */
-  var prs = qsa('#prs .pr'), T9 = .95, D9 = .55, FH = 84;
+  var prs = qsa('#prs .pr'), T9 = .95, D9 = .55;
+  /* 16.11 18:07: under a centred head the tower is centred (it stood on the right half), its floors 80 high so that the seventh keeps clear of
+     the description; phones keep the tower they had. The door of the last scene grows out of this outline, so both read it here */
+  function towerBox(){ return MQP.matches ? [xr(960), xr(1870), 84] : [xm(505), xm(1415), 80]; }
   function tower(q){ var f = 0, i; for (i = 0; i < 7; i++) f += eo(sg(q, T9 + i * D9, T9 + i * D9 + .3)); return f; }
   function princ(q, t, act){
-    var gy = lerp(MID, yb(930), eio(sg(q, .05, .75))), x0 = xr(960), x1 = xr(1870), f = q < 0 ? 0 : tower(q), i;
+    var gy = lerp(MID, yb(930), eio(sg(q, .05, .75))), tw = towerBox(), x0 = tw[0], x1 = tw[1], FH = tw[2], f = q < 0 ? 0 : tower(q), i;
     var on = q >= T9 && q < 5.1 ? Math.min(6, Math.floor((q - T9) / D9)) : -1, out = 1 - sg(q, 5.3, 5.6);
     for (i = 0; i < 7; i++){
       var a = sg(f, i + .35, i + .95) * out, e = prs[i]; vis(e, a);
@@ -526,7 +547,7 @@
   /* ================================================================== 10 CTA — the line stands up as a door; it opens onto the finished home */
   var dr = $('dr'), leaf = $('drLeaf'), phD = $('phDoor'), DAR = 2560 / 1920;
   function cta(q, t, act){
-    var gy = yb(930), e = eio(sg(q, .02, .85)), x0 = lerp(xr(960), xr(1500), e), x1 = xr(1870), top = lerp(gy - FH * U * 7, gy - 690 * U, e);
+    var gy = yb(930), e = eio(sg(q, .02, .85)), tw = towerBox(), x0 = lerp(tw[0], xr(1500), e), x1 = lerp(tw[1], xr(1870), e), top = lerp(gy - tw[2] * U * 7, gy - 690 * U, e);
     var o = eio(sg(q, 1.0, 2.1));
     if (q < .8){ vis(phD, 0); vis(dr, 0); }
     else {
@@ -582,6 +603,9 @@
     for (i = 0; i < SC.length; i++) if (s >= SC[i].start) act = i;
     g.setTransform(DPR, 0, 0, DPR, 0, 0); g.clearRect(0, 0, W, H); g.lineCap = 'butt'; g.lineJoin = 'round'; g.setLineDash([]);
     wine(s);
+    var lo = headOff(SC[act].id, s - SC[act].start);
+    if (lo !== LO){ LO = lo; stg.style.setProperty('--lo', lo + 'px'); }
+    if (LO) g.translate(0, LO);
     for (i = 0; i < SC.length; i++){
       var c = SC[i], q = s - c.start, near = q > -.3 && q < c.len + (i === SC.length - 1 ? 1.7 : .3);   /* the last scene stays while the stage scrolls away */
       if (near !== c.on){ c.on = near; c.el.classList.toggle('on', near); }

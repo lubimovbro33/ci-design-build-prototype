@@ -39,14 +39,23 @@ body.ab3 .hdr{opacity:1}
 .sc .p-cbl{left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 /* 15.11 16:07, her frames «08 · 1 / · 2»: a description right under a two-line title on the text line — one field (50) under it */
 .sc .p-tls{left:calc(421 * var(--u));top:calc(205 * var(--u))}
-.sc .p-al{left:calc(421 * var(--u));bottom:calc(50% + 50 * var(--u))}
-.sc .p-ul{left:calc(421 * var(--u));top:calc(50% + 50 * var(--u))}
-.sc .p-ac{left:0;right:0;bottom:calc(50% + 50 * var(--u));text-align:center}
-.sc .p-uc{left:0;right:0;top:calc(50% + 50 * var(--u));text-align:center}
+/* 16.11 18:07, her frames «02 Built by Listening · 5 / · 6» («заголовок, розмір заголовка, розмір опису… все по центру, по центральній
+   виключці, одне біля одного… а візуал трошки пустимо вниз, щоб не налазило одне на одне»): THE HEAD OF A SCENE. The title stands in the middle
+   of the top, 50 from the edge (between the logo and the button, so not under the logo); its description is the running text (20), centred,
+   60 under a two-line title; lines broken by sense. The figure stands lower: the script lowers the page's line while a head stands (--lo, px;
+   HEAD in js/about3.js), and everything hung from the line follows. Scenes 02, 03, 06, 07, 08, 09. One heading at a time: a statement in the
+   title's style takes the title's place (03, 08). Not for the scenes with a photograph (05), the title card and the circle (04), the door (10) */
+.sc .p-tc{left:0;right:0;top:calc(50 * var(--u));text-align:center}
+.sc .p-tcs{left:0;right:0;top:calc(215 * var(--u));text-align:center}
+.sc .p-tcs.l3{top:calc(267 * var(--u))}   /* under a three-line title (07: its third line would run under the header's button if it were set in two) */
+.sc .p-al{left:calc(421 * var(--u));bottom:calc(50% - var(--lo, 0px) + 50 * var(--u))}
+.sc .p-ul{left:calc(421 * var(--u));top:calc(50% + var(--lo, 0px) + 50 * var(--u))}
+.sc .p-ac{left:0;right:0;bottom:calc(50% - var(--lo, 0px) + 50 * var(--u));text-align:center}
+.sc .p-uc{left:0;right:0;top:calc(50% + var(--lo, 0px) + 50 * var(--u));text-align:center}
 /* 15.11, her frame «02 · 4»: two statements of three lines stand further from the line (she drew 84 above and 73 under; evened to 75),
    and the small note stands centred at the foot */
-.sc .p-ac.far{bottom:calc(50% + 75 * var(--u))}
-.sc .p-uc.far{top:calc(50% + 75 * var(--u))}
+.sc .p-ac.far{bottom:calc(50% - var(--lo, 0px) + 75 * var(--u))}
+.sc .p-uc.far{top:calc(50% + var(--lo, 0px) + 75 * var(--u))}
 .sc .p-bc{left:0;right:0;margin-left:auto;margin-right:auto;bottom:max(calc(50 * var(--u)), 58px);text-align:center}
 /* on the ground line (150 from the foot): 50 above it */
 .sc .p-blg{left:calc(421 * var(--u));bottom:calc(200 * var(--u))}
@@ -55,8 +64,8 @@ body.ab3 .hdr{opacity:1}
 .sc .p-blg2{left:calc(50 * var(--u));bottom:calc(250 * var(--u) + max(46px, 78 * var(--u)))}
 .sc .t111.p-ctl{color:#EBEBEB}
 .sc .nb{white-space:nowrap}
-.sc .p-ur{left:calc(1440 * var(--u));top:calc(50% + 50 * var(--u))}
-.sc .p-um{left:calc(960 * var(--u));top:calc(50% + 50 * var(--u))}
+.sc .p-ur{left:calc(1440 * var(--u));top:calc(50% + var(--lo, 0px) + 50 * var(--u))}
+.sc .p-um{left:calc(960 * var(--u));top:calc(50% + var(--lo, 0px) + 50 * var(--u))}
 .sc .p-br{left:calc(960 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .sc .t60.cb, .sc .t60.cb .w{color:var(--blue)!important}
 .sc .t34.cb, .sc .t34.cb .w{color:var(--blue)}
@@ -118,7 +127,7 @@ body.ab3 .hdr{opacity:1}
 .tc:nth-child(even){margin-top:calc(50 * var(--u))}
 
 /* ---------- 08 the figure, as the homepage's "40%" */
-.sc .p-x20{left:80%;bottom:calc(50% + 50 * var(--u))}
+.sc .p-x20{left:80%;bottom:calc(50% - var(--lo, 0px) + 50 * var(--u))}
 .x20 .v{position:relative;display:flex;align-items:flex-start;font-family:var(--fx);font-weight:500;font-size:max(64px, calc(168 * var(--u)));line-height:.74;letter-spacing:-.1em;color:#FFFFFF;margin-left:-.04em}
 .x20 .v sup{position:static;display:block;margin:.02em 0 0 .03em;font-weight:400;font-size:.2em;line-height:1;letter-spacing:0;vertical-align:baseline;top:auto}
 
@@ -153,6 +162,11 @@ body.ab3 .ch-ftr{position:relative;z-index:5;background:#000}
   .sc .p-cbr{left:var(--m, 20px);right:var(--m, 20px)}       /* phones: the corner text is a column of the whole width at the foot */
   .sc .p-blgb{bottom:calc(16.67vw + 12px)} .sc .p-blg2{bottom:calc(16.67vw + 72px);right:calc(46.7vw + 14px)}                     /* phones: the closing sentence is a column beside the door (the script draws it 420 / 900 of the width from the right), never across it */
   .sc h2.m{white-space:normal}
+  /* the centred head is for wide screens; a phone keeps what it had: the title under the header, the description a column at the foot */
+  .sc .p-tc{left:var(--m, 20px);right:var(--m, 20px);top:calc(var(--hdr, 64px) + 20px);text-align:left}
+  .sc .p-tcs, .sc .p-tcs.l3{left:var(--m, 20px);right:var(--m, 20px);top:auto;bottom:max(calc(50 * var(--u)), 58px);text-align:left}
+  .sc[data-id="a-exp"] .p-tcs{right:calc(20% + 12px);bottom:calc(50% + 14px)}       /* above the line, short of the figure that stands at 80 % */
+  .sc[data-id="a-principles"] .p-tcs{top:calc(var(--hdr, 64px) + 20px + 17.4vw);bottom:auto}   /* 09: under the two lines of the title — the foot belongs to the tower */
 }
 
 /* the team (15.11): the portraits of the current site, in one tone; the name stands under the picture */
