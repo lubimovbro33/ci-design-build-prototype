@@ -357,11 +357,11 @@ for i, p in enumerate(PROJ): (project_collection if p.get('idea') == 'collection
 # says it does (their own copy and their own site); every one of them is marked <span class="wc"> so it can be found and replaced.
 # The months are stand-ins too: no event, no claim is made beyond what the client has already published.
 NEWS_ROWS = [('Why One Team Changes the Outcome', 'Perspectives', 'November 2026'),
-             ('Collectors Home: a residence on the fifty-fifth floor', 'Projects', 'October 2026'),
+             ('Collectors Home on the Fifty-Fifth Floor', 'Projects', 'October 2026'),
              ('What Wellness Looks Like When It Is Built In', 'Perspectives', 'October 2026'),
-             ('Working With Brokers: how a property becomes a home', 'Partnerships', 'September 2026'),
+             ('How a Property Becomes a Home', 'Partnerships', 'September 2026'),
              ('Procurement Is a Design Decision', 'Perspectives', 'September 2026'),
-             ('Room To Breathe: an open first floor in Lincoln Park', 'Projects', 'August 2026')]
+             ('An Open First Floor in Lincoln Park', 'Projects', 'August 2026')]
 ART = {'head': 'Why One Team Changes the Outcome', 'cat': 'Perspectives', 'date': 'November 2026',
        'lead': 'When the people who design a home are the people who build it, the decisions stop being handed over and start adding up.',
        'ps': ['A renovation of any size is a long sequence of decisions, and most of them depend on a decision made earlier. '
