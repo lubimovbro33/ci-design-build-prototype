@@ -40,9 +40,12 @@ body.inr .hdr{opacity:1}
 .film .p-ul{left:calc(421 * var(--u));top:calc(50% + 50 * var(--u))}
 .film .p-um{left:calc(960 * var(--u));top:calc(50% + 50 * var(--u))}
 .film .p-ur{left:calc(1440 * var(--u));top:calc(50% + 50 * var(--u))}
-/* Solutions' four ways (16.11 23:09): everything on two columns — the name over the line, the lead under it at the text line,
-   the description beside it, the button at the foot of the same column */
-.film .p-um2{left:calc(1040 * var(--u));top:calc(50% + 50 * var(--u))}
+/* Solutions' four ways (16.11 23:09): everything on two columns — the name over the line, the lead under it at the text line, the description
+   beside it, the button at the foot of the same column. 23:14: nothing clings to the line — 140 of air over it and 130 under it */
+.film .sw-k{left:calc(421 * var(--u));bottom:calc(50% + 270 * var(--u))}
+.film .sw-h{left:calc(421 * var(--u));bottom:calc(50% + 140 * var(--u))}
+.film .sw-l{left:calc(421 * var(--u));top:calc(50% + 130 * var(--u))}
+.film .sw-t{left:calc(1040 * var(--u));top:calc(50% + 130 * var(--u))}
 .film .p-bm{left:calc(960 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .film .p-ar{left:calc(1440 * var(--u));bottom:calc(50% + 50 * var(--u))}
 /* a scene with a figure in the middle (her corner principle, 15.11): the title top left, under the logo; the text bottom right */
