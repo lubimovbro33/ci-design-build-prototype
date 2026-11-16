@@ -4,7 +4,9 @@
 import json, re, html, os, sys
 HERE = os.path.dirname(os.path.abspath(globals().get('__file__', 'tools/site/build.py')))
 D = os.path.normpath(os.path.join(HERE, '..', '..', 'design')) + '/'
-P = json.load(open(os.path.join(HERE, 'content.json')))
+RAW = open(os.path.join(HERE, 'content.json'), encoding='utf-8').read()
+for _a, _b in json.load(open(os.path.join(HERE, 'dashes.json'), encoding='utf-8'))['pairs']: RAW = RAW.replace(_a, _b)   # 16.11: the agreed changes of punctuation (no dashes where the grammar lets them go)
+P = json.loads(RAW)
 
 FILE = {'home': 'index.html', 'about': 'about.html', 'services': 'solutions.html', 'turnkey': 'ci-turnkey.html', 'core': 'ci-core.html', 'curated': 'ci-curated.html',
         'wellness': 'ci-wellness.html', 'portfolio': 'portfolio.html', 'brokers': 'broker-program.html', 'partnerships': 'partnerships.html', 'news': 'news.html',

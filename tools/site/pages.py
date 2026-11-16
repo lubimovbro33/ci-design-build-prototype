@@ -353,9 +353,12 @@ def project_collection(p, nxt):
         pg.add('<section class="bk" id="@ID@">\n  <div class="pq">\n    <div class="pq-t"><p class="t60s rv">%s</p><p class="lab3 rv pq-w">%s</p></div>\n    %s\n  </div>\n</section>' % (esc(p['quote'][0]), esc(p['quote'][1]), fig(p['qphoto'], 'pq-i')))
     assert n[0] == total, (n[0], total)
     # the next project: its name and its photograph side by side on the grid
-    pg.add('<section class="bk" id="@ID@">\n  <a class="g4 nx2" href="%s.html">\n    <span class="nx2-t"><span class="lab3 nx2-k">Next project</span><span class="t60 rv">%s</span>%s</span>\n'
-           '    <span class="nx2-i cd rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span></span>\n  </a>\n</section>'
-           % (nxt['slug'], '<br>'.join(esc(x) for x in nxt['lines']), sq_line(nxt['loc'].split(' · ') + [nxt['bld']]), ph(nxt['set'], nxt['card']), nxt['name']))
+    # 16.11 18:33, her frame «18 Next project» (567:2689): a whole screen — the label in the top left corner, the name and its line of
+    # places on the left field in the middle of the height, the button «Explore» in the bottom left corner, the photograph on the right
+    # half of the screen from edge to edge
+    pg.add('<section class="nx3" id="@ID@">\n  <p class="lab3 nx3-k">Next project</p>\n  <div class="nx3-m"><h2 class="t60 rv"><a href="%s.html">%s</a></h2><p class="lab3 nx3-l rv">%s</p></div>\n'
+           '  <div class="nx3-b rv">%s</div>\n  <a class="nx3-i cd rv" href="%s.html" tabindex="-1" aria-hidden="true"><span class="im"><img src="%s" alt="" loading="lazy"></span></a>\n</section>'
+           % (nxt['slug'], '<br>'.join(esc(x) for x in nxt['lines']), sqr(nxt['loc'].split(' · ') + [nxt['bld']]), btn('Explore', nxt['slug'] + '.html'), nxt['slug'], ph(nxt['set'], nxt['card'])))
     final_cta(pg, S[6], ph(p['set'], p['cta']), top=p.get('top', False))
     emit(p['slug'] + '.html', nm, pg, cov)
 for i, p in enumerate(PROJ): (project_collection if p.get('idea') == 'collection' else project_old)(p, PROJ[(i + 1) % len(PROJ)])

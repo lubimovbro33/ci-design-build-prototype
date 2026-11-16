@@ -229,6 +229,25 @@ html body .pq .t60s{white-space:normal}
 .lite .gfull.rv .im img{animation:none;transform:none}
 .inr .nn{display:block;margin-top:calc(14 * var(--u));color:rgba(255,255,255,.75)} .nn i{font-style:normal;opacity:.5}
 /* the next project: its name and its photograph side by side on the four columns */
+/* 16.11 18:33, her frame «18 Next project» (567:2689): the next project is a whole screen. The label in the top left corner (on the site one
+   field under the logo, as every corner title: 155), the name on the left field 85 above the middle of the height with its line of places
+   50 under it (white, the square separator), the button «Explore» in the bottom left corner, the photograph on the right half of the
+   screen from edge to edge */
+.nx3{position:relative;height:100vh;min-height:520px;background:#000;overflow:hidden}
+.inr .nx3-k{position:absolute;left:calc(50 * var(--u));top:calc(155 * var(--u));margin:0}
+.nx3-m{position:absolute;left:calc(50 * var(--u));top:calc(50% - 85 * var(--u));width:calc(50% - 100 * var(--u))}
+.inr .nx3-m .t60{margin:0} .nx3-m .t60 a{color:#FFFFFF;text-decoration:none}
+.inr .nx3-l{margin:calc(50 * var(--u)) 0 0}
+.nx3-b{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+.nx3-i{position:absolute;left:50%;top:0;width:50%;height:100%;display:block}
+.nx3 .nx3-i .im{position:absolute;left:0;top:0;width:100%;height:100%;aspect-ratio:auto;display:block;overflow:hidden} .nx3 .nx3-i .im img{display:block;width:100%;height:100%;object-fit:cover}
+@media (hover:hover){ .nx3:hover .nx3-i .im img{transform:scale(1.03)} }
+@media (max-aspect-ratio: 1/1){
+  .nx3{height:auto;min-height:0;padding:calc(var(--hdr, 64px) + 24px) 0 0;overflow:visible}
+  .inr .nx3-k, .nx3-m, .nx3-b{position:static;margin-left:var(--m, 20px);margin-right:var(--m, 20px);width:auto}
+  .nx3-m{margin-top:18px} .inr .nx3-l{margin-top:14px} .nx3-b{margin-top:28px}
+  .nx3-i{position:relative;left:0;width:100%;height:auto;margin-top:28px} .nx3 .nx3-i .im{position:relative;aspect-ratio:4 / 3;height:auto}
+}
 a.nx2{color:#FFFFFF;text-decoration:none;align-items:end}
 .nx2-t{grid-column:1 / span 2;display:block} .nx2-t .t60{display:block}
 .inr .nx2-k{display:block;margin-bottom:calc(30 * var(--u));color:rgba(255,255,255,.5)}

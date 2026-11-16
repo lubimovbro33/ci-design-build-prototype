@@ -1,0 +1,57 @@
+{
+ "_": "16.11.2026, the designer: no dashes where the grammar lets a comma, a colon or a full stop stand instead. The client's copy (content.json) stays as it came; these changes of punctuation are applied when it is read (build.py, verify.py). Words are never changed here.",
+ "pairs": [
+  [
+   "integrated model—created for clients",
+   "integrated model, created for clients"
+  ],
+  [
+   "final styling independently—or already have",
+   "final styling independently, or already have"
+  ],
+  [
+   "personal, and complete—not decorated",
+   "personal, and complete, not decorated"
+  ],
+  [
+   "the home finished—not simply",
+   "the home finished, not simply"
+  ],
+  [
+   "completed as a home—not handed over",
+   "completed as a home, not handed over"
+  ],
+  [
+   "understanding the individual—not by starting",
+   "understanding the individual, not by starting"
+  ],
+  [
+   "inform design thinking—not provide",
+   "inform design thinking, not provide"
+  ],
+  [
+   "part of the residence—not equipment",
+   "part of the residence, not equipment"
+  ],
+  [
+   "how you want to live—and design from there",
+   "how you want to live, and design from there"
+  ],
+  [
+   "turnkey means exactly that — we handle everything",
+   "turnkey means exactly that: we handle everything"
+  ],
+  [
+   "as decisions are finalized — realistic timelines",
+   "as decisions are finalized: realistic timelines"
+  ],
+  [
+   "Yes — however, items",
+   "Yes. However, items"
+  ],
+  [
+   "— [Client]",
+   "[Client]"
+  ]
+ ]
+}
