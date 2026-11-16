@@ -466,7 +466,27 @@
     var ba = .33 * sg(tE, 0, .6) * (1 - sg(q, .05, .5));
     if (ba > 0){ g.fillStyle = 'rgba(255,255,255,' + ba.toFixed(3) + ')'; for (c = 1; c < C; c++) g.fillRect(Math.round(c * pw), 0, 1, H); for (r = 1; r < R; r++) g.fillRect(0, Math.round(r * pv), W, 1); }
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall};
+  /* ---------- film: doors — CI Turnkey (16.11.2026). Their own line: «hand you the keys to the life waiting on the other side». Eight thresholds
+     stand one behind another in the site's hairlines; the scroll walks through them, one stage at a time, and the last one opens on the home.
+     The thresholds stand on the right half of the screen, so the stage's name and its sentence keep the text line to themselves. */
+  function doors(f, q, t){
+    var N = f.n, cx = xm(1430), cy = MID, c = (q - f.t0) / f.d, i, z, sc, w, h, a;
+    for (i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);   /* the home that waits at the end fades in on its own scrub */
+    for (i = N - 1; i >= 0; i--){
+      z = i - c + 1;
+      if (z <= .36 || z > 4.8) continue;
+      sc = 1 / z; w = 560 * U * sc; h = 840 * U * sc;
+      a = c01((4.8 - z) / 2.4) * c01((z - .36) / .5);
+      if (a <= .004) continue;
+      ink(a * .92, 1);
+      g.strokeRect(Math.round(cx - w / 2) + .5, Math.round(cy - h / 2) + .5, Math.round(w), Math.round(h));
+    }
+    /* the one we are crossing carries the site's square on its threshold, and the far end of the walk keeps a square of its own */
+    var zc = 1 - (c - Math.floor(c)), zn = Math.max(.42, zc);
+    if (q > f.t0 - .2 && c < N - .2) sq(cx, cy + 420 * U / zn, c01((c + .6) * .8) * .75);
+    sq(cx, cy, sg(q, f.t0 - .3, f.t0 + .2) * .55);
+  }
+  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, doors: doors};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

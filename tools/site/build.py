@@ -449,6 +449,65 @@ def sc_four(kick, h1, ways):
                  '<span class="sf-pm" aria-hidden="true"><i></i><i></i></span></a>' % (w[1], i, esc(w[0]), i + 1, esc(w[0]), esc(w[3])))
     o.append('    </div>')
     return '\n'.join(o + [SN_CLOSE])
+# ------------------------------------------------------------------ CI Turnkey (16.11.2026): one door
+# Her brief of 23:14 and 23:28: every page its own idea, unpredictable, and all of it in our language. CI Turnkey's idea is ONE DOOR — their own
+# line, «hand you the keys to the life waiting on the other side». The machinery is named once and shut behind it; the page is what is on the
+# other side; the process is eight thresholds walked through, one after another.
+def sc_door(kick, h1, img):
+    """the cover: the screen is dark but for a slit of light down the middle; the scroll opens it until the finished room fills the frame.
+    The title and the page's name stand on the lower left and stay as the room opens."""
+    hb = brk(h1, 18); n = hb.count('<br>') + 1
+    return '\n'.join([sn_open(1.7),
+        '    <div class="sn-full tkd-ph" data-s="ci:0,49.3,0,49.3>0,0,0,0@.04-1.3"><img src="%s" alt="" data-s="sc:1.16>1@.04-1.45" style="filter:contrast(1.04) brightness(.74)"></div>' % img,
+        '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
+        '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
+        SN_CLOSE])
+def tkd_pairs(kick, h1, lead, ps, lines, closer_):
+    """«Complete Responsibility. Fewer Handoffs.» — the client's six intersections are parallel sentences, so they are set as six lines on six
+    hairlines, three and three. Nothing else on the screen; the words are theirs, untouched."""
+    rows = ''.join('<div class="tkd-x-r rv"><p class="t34">%s</p></div>' % esc(nop(x)) for x in lines)
+    return ('<section class="bk tkd-x" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <div class="tkd-x-i"><p class="t34 rv">%s</p><div class="t20s rv" style="--w:475">%s</div></div>\n'
+            '  <div class="tkd-x-g">%s</div>\n  <p class="t34 rv tkd-x-c">%s</p>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)),
+                ''.join('<p>%s</p>' % esc(nop(x)) for x in ps), rows, blue(nop(closer_), None))
+def tkd_list(kick, h1, note, groups):
+    """«The Complete CI Ecosystem» — everything that stands behind the door, as an index: three columns of plain lines, a hairline over them,
+    nothing else. Its weight is the point, so it is set quietly."""
+    cols = ''.join('<ul class="tkd-ix-c rv">%s</ul>' % ''.join('<li>%s</li>' % esc(x) for x in g) for g in groups)
+    return ('<section class="bk tkd-ix" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="lab3 rv tkd-ix-n">%s</p>\n  <div class="tkd-ix-g">%s</div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), cols)
+def tkd_when(kick, h1, lines, closer_):
+    """«One Team. Complete Responsibility.» — the three «When …» sentences are parallel, so they are set as three steps of one stair,
+    each on its own hairline."""
+    rows = ''.join('<div class="tkd-w-r rv"><span class="n lab3">%02d</span><p class="t34">%s</p></div>' % (i + 1, esc(nop(x))) for i, x in enumerate(lines))
+    return ('<section class="bk tkd-w" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <div class="tkd-w-g">%s</div>\n  <p class="t34 rv tkd-w-c">%s</p>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), rows, blue(nop(closer_), None))
+def tkd_fit(kick, h1, lead, rows):
+    """«Is CI Turnkey Right for You?» — seven lines, numbered, two columns, no boxes and no marks but the numbers"""
+    li = ''.join('<div class="tkd-f-r rv"><span class="n lab3">%02d</span><p class="t20">%s</p></div>' % (i + 1, esc(nop(x))) for i, x in enumerate(rows))
+    return ('<section class="bk tkd-f" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t34 rv tkd-f-l">%s</p>\n  <div class="tkd-f-g">%s</div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)), li)
+def tkd_doors(kick, h1, stages, img):
+    """«One Journey From Vision to Home» — the page's own film: eight thresholds drawn in the site's hairlines, one for each stage, standing one
+    behind another. The scroll walks through them; the stage at hand is named beside its own threshold, and the last one opens on the finished home."""
+    d = .46; t0 = .5; n = len(stages)
+    o = ['<section class="film tkd-d" data-fig="doors" data-n="%d" data-t0="%s" data-d="%s" data-len="%.2f" id="@ID@">' % (n, t0, d, t0 + n * d + .7),
+         '  <div class="stg">\n    <img class="tkd-d-ph" src="%s" alt="" data-s="op:0>1@%.2f-%.2f" style="opacity:0">' % (img, t0 + (n - 1) * d + .18, t0 + n * d + .25),
+         '    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">',
+         '      <p class="lab3 m tkd-d-k" data-k="0 .3 99 99">%s</p>' % esc(kick),
+         '      <h2 class="t60 m tkd-d-h" data-k="0 .3 %.2f %.2f">%s</h2>' % (t0 - .25, t0 + .05, '<br>'.join(esc(x) for x in brk_lines(nop(h1), 20)))]
+    for i, (nm, tx) in enumerate(stages):
+        T = t0 + i * d; last = i == n - 1
+        k = '%.2f %.2f %s' % (T, T + .16, '99 99' if last else '%.2f %.2f' % (T + d - .14, T + d + .02))
+        o.append('      <p class="lab3 m tkd-d-n" data-k="%s">%02d</p>' % (k, i + 1))
+        o.append('      <p class="t60 m tkd-d-s" data-k="%s">%s</p>' % (k, esc(nm)))
+        o.append('      <p class="t20 m tkd-d-t" data-k="%s" style="--w:430">%s</p>' % (k, esc(nop(tx))))
+    return '\n'.join(o + ['    </div>\n  </div>\n</section>'])
+
 def sc_track(kick, h1, parts, statement, imgs):
     """Turnkey: one track from the first idea to the first night home; it pans sideways"""
     a, b = parts

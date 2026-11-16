@@ -629,3 +629,64 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
   .sn-img ~ .sn-img{display:none}
   .lst.w3 a{grid-template-columns:40px minmax(0,1fr)}
 }
+
+/* ================================================================== CI TURNKEY — one door (16.11.2026)
+   Her brief: every page its own idea, unpredictable, in our language, and the headings must vary in size AND in place, never the same twice.
+   So on this page: no heading at all on the opening thought; the whole screen's width for «Fewer Handoffs»; the smallest heading over the
+   heaviest block (the ecosystem); the heading on the right column over the left-hand list; and the film's heading centred. */
+.tkd-o{padding:calc(170 * var(--u)) 0 calc(150 * var(--u))}
+html body.inr .tkd-o-h{margin:0 0 0 calc(421 * var(--u));white-space:nowrap}
+.tkd-o-t{margin:calc(80 * var(--u)) calc(50 * var(--u)) 0 calc(1040 * var(--u))}
+.tkd-o-t p + p{margin-top:.9em}
+.tkd-o-b{margin:calc(70 * var(--u)) 0 0 calc(1040 * var(--u))}
+/* 03 — is it you: the heading on the left field, the lead on the middle column, the seven lines in two columns */
+.tkd-f-l{margin:calc(100 * var(--u)) 0 0 calc(960 * var(--u));width:calc(430 * var(--u))}
+.tkd-f-g{margin:calc(90 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:calc(100 * var(--u))}
+.tkd-f-r{display:flex;gap:calc(30 * var(--u));padding:calc(22 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
+.tkd-f-r .n{flex:none;color:rgba(255,255,255,.45);padding-top:.25em}
+.tkd-f-r p{margin:0}
+/* 04 — fewer handoffs: the page's one large heading, the six intersections under it on their own hairlines */
+html body.inr .tkd-x .bk-h h2{font-size:max(28px, calc(111 * var(--u)))!important;line-height:.9!important;letter-spacing:-.03em!important}
+.tkd-x-i{margin:calc(90 * var(--u)) calc(50 * var(--u)) 0 calc(960 * var(--u));display:grid;grid-template-columns:minmax(0, 1fr);row-gap:calc(40 * var(--u))}
+.tkd-x-g{margin:calc(110 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));column-gap:calc(100 * var(--u))}
+.tkd-x-r{padding:calc(26 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
+.tkd-x-r p{margin:0}
+.tkd-x-c{margin:calc(110 * var(--u)) 0 0 calc(421 * var(--u));width:calc(900 * var(--u))}
+/* 05 — the expert: the heading on the right, the text on the left */
+.tkd-e{padding:calc(150 * var(--u)) 0}
+html body.inr .tkd-e .bk-h{margin-left:calc(960 * var(--u));margin-right:calc(50 * var(--u))}
+.tkd-e2{padding:0 0 calc(150 * var(--u))}
+.tkd-e2 p{margin-left:calc(421 * var(--u));width:calc(1000 * var(--u))}
+/* 06 — the ecosystem: the smallest heading over the heaviest block */
+html body.inr .tkd-ix .bk-h h2{font-size:max(17px, calc(34 * var(--u)))!important;line-height:.97!important;letter-spacing:-.0294em!important}
+.tkd-ix-n{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u));color:rgba(255,255,255,.5)}
+.tkd-ix-g{margin:calc(40 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:calc(100 * var(--u));border-top:1px solid rgba(255,255,255,.18);padding-top:calc(50 * var(--u))}
+.tkd-ix-c{margin:0;padding:0;list-style:none}
+.tkd-ix-c li{font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.9;letter-spacing:-.05em;color:#FFFFFF}
+/* 07 — one team: the heading on the middle column, the stair on the left */
+html body.inr .tkd-w .bk-h{margin-left:calc(960 * var(--u));margin-right:calc(50 * var(--u))}
+.tkd-w-g{margin:calc(100 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tkd-w-r{display:flex;gap:calc(40 * var(--u));padding:calc(34 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
+.tkd-w-r .n{flex:none;color:rgba(255,255,255,.45);padding-top:.5em}
+.tkd-w-r p{margin:0;width:calc(900 * var(--u))}
+.tkd-w-c{margin:calc(100 * var(--u)) 0 0 calc(421 * var(--u))}
+/* 08 — the eight thresholds: the film's own screen */
+.tkd-d .stg{background:#000}
+.tkd-d-ph{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;z-index:1;filter:contrast(1.04) brightness(.72)}
+.film .tkd-d-k{left:0;right:0;top:calc(120 * var(--u));text-align:center}
+.film .tkd-d-h{left:0;right:0;top:calc(170 * var(--u));text-align:center}
+.film .tkd-d-n{left:calc(421 * var(--u));top:calc(50% - 150 * var(--u));color:rgba(255,255,255,.55)}
+.film .tkd-d-s{left:calc(421 * var(--u));top:calc(50% - 100 * var(--u))}
+.film .tkd-d-t{left:calc(421 * var(--u));top:calc(50% + 20 * var(--u))}
+@media (max-aspect-ratio: 1/1){
+  .tkd-o{padding:72px 0} html body.inr .tkd-o-h{margin:0 var(--m, 20px);white-space:normal}
+  .tkd-o-t{margin:28px var(--m, 20px) 0}
+  .tkd-f-l{margin:28px var(--m, 20px) 0;width:auto}
+  .tkd-f-g, .tkd-x-g, .tkd-ix-g{display:block;margin:28px var(--m, 20px) 0}
+  .tkd-f-r, .tkd-w-r{gap:14px;padding:16px 0} .tkd-f-r p, .tkd-w-r p{width:auto}
+  .tkd-x-i, .tkd-x-c, .tkd-ix-n, .tkd-w-g, .tkd-w-c, .tkd-e2 p{margin:28px var(--m, 20px) 0;width:auto}
+  html body.inr .tkd-x .bk-h h2{font-size:clamp(26px, 8vw, 40px)!important}
+  html body.inr .tkd-e .bk-h, html body.inr .tkd-w .bk-h{margin-left:var(--m, 20px);margin-right:var(--m, 20px)}
+  .tkd-ix-c li{line-height:1.7}
+  .film .tkd-d-n, .film .tkd-d-s, .film .tkd-d-t{left:var(--m, 20px);right:var(--m, 20px)}
+}

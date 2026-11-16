@@ -47,9 +47,64 @@ def solution(key, fname, name, scene, bnd, band_after, cta_img, picks, proc='fil
     emit(fname, name, pg, pre)
 
 SEG_CORE = open(os.path.join(HERE, 'seg_core.txt')).read().strip()
-solution('turnkey', 'ci-turnkey.html', 'CI Turnkey',
-         lambda k, h, ps: sc_track(k, h, ('From First Idea', 'to the First Night Home'), blue(' '.join(ps[0]), ps[0]), [A + 'of/plans_w.webp', A + 'of/materials.webp', A + 'ch/1450-01a.webp', A + 'ch/1450-32.webp']),
-         A + 'ch/1450-20a.webp', 'What You Receive', A + 'ch/1450-29a.webp', ['1450-09a', '1511-09', '1430-11a'], proc='film', st=False)
+# ---------------------------------------------------------------- CI Turnkey: one door (16.11.2026, her brief of 23:14 / 23:28)
+def turnkey_page():
+    S = [join_lists(dots_fix(x)) for x in P['turnkey']]; pg = Pg()
+    h1, ps, a = hero(S[0])
+    # 01 the door opens
+    pg.add(sc_door(label(S[0]), h1, A + 'ch/1450-32.webp'), 'Turnkey', 'top')
+    # 02 what is on the other side: the thought large, the two paragraphs in one narrow column beside it
+    assert nop(ps[0][0]) == 'CI Turnkey is the most complete expression of the CI model', ps[0]
+    # the thought in two lines, the second blue; the two paragraphs and the client's own button beside it
+    thought = esc('CI Turnkey is the most complete') + '<br class="bd"> <span class="cb">' + esc('expression of the CI model') + '</span>'
+    pg.add('<section class="bk tkd-o" id="@ID@">\n  <p class="t60s rv tkd-o-h">%s</p>\n  <div class="t20s rv tkd-o-t" style="--w:475">%s</div>\n'
+           '  <div class="rv tkd-o-b">%s</div>\n</section>' % (
+               thought, ''.join('<p>%s</p>' % esc(nop(' '.join(x))) for x in ps[1:]), btn(a[0], 'contact.html')), 'Idea')
+    # 03 is it you? seven numbered lines
+    sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
+    pg.add(tkd_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0] if get(sec, 'lead') else '', rows), 'Fit')
+    # 04 fewer handoffs: the six intersections
+    sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
+    inter = [x for x in pit if len(x) == 6][0]          # the six intersections stand as six lines in the client's own paragraph
+    short = [x[0] for x in pit if len(x) == 1]
+    st = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(tkd_pairs(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], short, inter, st), 'Receive')
+    # 05 you shouldn't have to become an expert
+    sec = S[3]; ps_ = [it[1] for it in sec['items'] if it[0] == 'p']
+    st = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(text_block(h_of(sec), [['p', x] for x in ps_], lead_first=True).replace('<section class="bk"', '<section class="bk tkd-e"')
+           + '\n<section class="bk tkd-e2" id="@ID@b">\n  <p class="t34 rv">%s</p>\n</section>' % blue(nop(st if isinstance(st, str) else ' '.join(st)), None), 'Experience')
+    # 06 the ecosystem: everything behind the door
+    sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
+    note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
+    items = []
+    for g in ks[1:]:
+        items += [x for x in (g if isinstance(g, (list, tuple)) else [g])]
+    items = [x for x in items if x]
+    third = (len(items) + 2) // 3
+    pg.add(tkd_list(label(sec), h_of(sec), note, [items[:third], items[third:2 * third], items[2 * third:]]), 'Included')
+    # 07 one team: the three «When …» sentences
+    sec = S[5]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
+    whens = max(pit, key=len)                            # the «When …» sentences, as the client set them, one to a line
+    one = [x[0] for x in pit if len(x) == 1]
+    st = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(tkd_when(label(sec), h_of(sec), [one[0]] + list(whens) + [one[1]], st), 'One Team')
+    # 08 the eight thresholds
+    sec = S[6]; st4 = []
+    names = [x[1] for x in sec['items'] if x[0] == 'h4']; txts = [x[1][0] for x in sec['items'] if x[0] == 'p']
+    assert len(names) == len(txts) == 8, (len(names), len(txts))
+    for nm, tx in zip(names, txts): st4.append((nm if isinstance(nm, str) else ' '.join(nm), tx if isinstance(tx, str) else ' '.join(tx)))
+    pg.add(tkd_doors(label(sec), h_of(sec), st4, A + 'ch/1450-24.webp'), 'Process')
+    # 09 projects
+    sec = S[7]
+    cards = ''.join(pf6_card(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html')
+                    for q in PROJ[:3])
+    pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
+    pg.add(bk(h_of(sec), '    <div class="pf6">%s</div>\n    <div class="rv c1 g50">%s</div>' % (
+        cards, btn(pbt[0][2] if pbt else 'View the Portfolio', 'portfolio.html')), hcls=' l0'), 'Projects')
+    final_cta(pg, S[9], A + 'ch/1450-29a.webp')
+    emit('ci-turnkey.html', 'CI Turnkey', pg, A + 'ch/1450-32.webp')
+
 solution('core', 'ci-core.html', 'CI Core', lambda k, h, ps: sc_draw(k, h, A + 'rtb/1430-04a.webp', SEG_CORE, 1.4214),
          A + 'of/plans_w.webp', 'What You Receive', A + 'ch/1450-04a.webp', ['1450-03a', '1511-08a', '1430-07'], proc='rows')
 solution('curated', 'ci-curated.html', 'CI Curated', lambda k, h, ps: sc_triptych(k, h, [A + 'ch/1450-08a.webp', A + 'ch/1450-15.webp', A + 'ch/1450-18.webp']),
@@ -500,6 +555,7 @@ def faq():
     pg.add(cta('Your Next Chapter Starts With a Conversation', [], ('Begin Your Better Life', 'contact.html'), A + 'ch/1450-29a.webp'), 'Contact')
     emit('faq.html', 'FAQ', pg)
     return len(items)
+turnkey_page()   # called here: it uses the project cards defined with the Portfolio page
 nq = faq()
 
 print('\n'.join('%-24s %6d bytes' % (k, v) for k, v in OUT.items())); print('faq items', nq)
