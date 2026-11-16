@@ -98,8 +98,8 @@ def solutions():
         # beside it at 1040, and the button at the foot of the same column
         o.append('      <p class="lab3 m sw-k" data-k="%s">%s</p>' % (k, esc(tag)))
         o.append('      <p class="t60 m sw-h nb" data-k="%s">%s</p>' % (k, brk(nm, 22)))
-        o.append('      <p class="t34 m sw-l" data-k="%s" style="--w:520">%s</p>' % (k, esc(lead)))
-        o.append('      <div class="t20s m sw-t" data-k="%s" style="--w:620">%s</div>' % (k2, ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_)))
+        o.append('      <p class="t34 m sw-l" data-k="%s" style="--w:430">%s</p>' % (k, esc(lead)))
+        o.append('      <div class="t20s m sw-t" data-k="%s" style="--w:475">%s</div>' % (k2, ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_)))
         o.append('      <div class="m p-bl" data-k="%s">%s</div>' % (k2, btn(a_[2], href(a_[1]))))
     o.append('    </div>\n  </div>\n</section>')
     pg.add('\n'.join(o), 'Four Ways')
