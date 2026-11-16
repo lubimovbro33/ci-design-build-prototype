@@ -192,18 +192,21 @@ def portfolio():
            ('Room To Breathe', 'Lincoln Park · Chicago', 'Residence', '4,070 sq ft', 'room-to-breathe.html', 'chicago ci-turnkey', ph(rtb_['set'], rtb_['tall'])),
            ('Contemporary Comfort', 'River North · Chicago', 'Condominium', '3,352 sq ft', EXT + 'contemporary-comfort-condo/', 'chicago ci-turnkey', UP + '2023/10/201-Grand_001-v2-1536x1200.jpg'),
            ('Sky-High Condo', 'Chicago', 'High-rise condominium', '2,022 sq ft', EXT + 'sky-highcondo/', 'chicago ci-turnkey', UP + '2023/01/401-Wabash_002_v2-1536x1026.jpg')]
-    # The grid after her reference of 16.11 12:42 (a studio's «Our projects» page; «взяти точно таку сітку»): four columns, near-square tiles one
-    # column wide, a large landscape tile two columns wide, and cells left empty on purpose —
-    #   row 1:  S  ·  [ B ]        row 2:  S  S  ·  S        row 3:  ·  ·  S  S
-    # The reference shows seven tiles; we have nine, so a fourth row repeats the first one mirrored:  [ B ]  ·  S.
+    # The grid after her reference of 16.11 12:42 (a studio's «Our projects» page; «взяти сітку цих квадратиків»): the page's four columns,
+    # near-square tiles one column wide and one large tile. The reference leaves cells empty on purpose; her word four minutes later:
+    # «не залишай пустих квадратиків, заповни все проєктами» — so every cell holds a project. Nine projects fill four columns without a hole
+    # in one way only: one large tile (two columns × two rows) and eight small ones — three rows:
+    #   S  S  [ B ]
+    #   S  S  [ B ]
+    #   S  S  S  S
     # CELL = name → (column, row, large). The order below is the order on phones (the lead project first).
-    CELL = [('Collectors Home', 3, 1, True), ('444 W Grant', 1, 1, False), ('500 W Superior', 1, 2, False), ('Above the Park', 2, 2, False), ('Urban Sanctuary', 4, 2, False),
-            ('Lakeshore Luxury', 3, 3, False), ('Contemporary Comfort', 4, 3, False), ('Room To Breathe', 1, 4, True), ('Sky-High Condo', 4, 4, False)]
-    by = dict((x[0], x) for x in LIB); wide = {'Collectors Home': ph(ch_['set'], ch_['card']), 'Room To Breathe': ph(rtb_['set'], rtb_['card'])}   # a large tile is landscape
-    assert len(LIB) == 9 and sorted(by) == sorted(c[0] for c in CELL)
+    CELL = [('Collectors Home', 3, 1, True), ('444 W Grant', 1, 1, False), ('500 W Superior', 2, 1, False), ('Above the Park', 1, 2, False), ('Urban Sanctuary', 2, 2, False),
+            ('Lakeshore Luxury', 1, 3, False), ('Room To Breathe', 2, 3, False), ('Contemporary Comfort', 3, 3, False), ('Sky-High Condo', 4, 3, False)]
+    by = dict((x[0], x) for x in LIB)
+    assert len(LIB) == 9 and sorted(by) == sorted(c[0] for c in CELL) and sum(4 if c[3] else 1 for c in CELL) == 12
     cards = []
     for nm, c, r, big in CELL:
-        _, lc, bd, sz, hr, tg, im = by[nm]; im = wide.get(nm, im) if big else im
+        _, lc, bd, sz, hr, tg, im = by[nm]
         cards.append(pf6_card(nm, lc.split(' · ') + [bd], im, hr, big=big, ext=im.startswith('http'), cell=(c, r)))
     pg.add(bk(h_of(S[1]), '    <div class="pf7">%s</div>' % ''.join(cards), hcls=' l0', lines=['Signature', 'CI Residences']), 'Projects')
     # Every Home Unique — her notes of 15.11: 18:45 («дуже одноманітно: там лінії, там лінії»), 18:59 («не просто забрати лінії… думай метафорично»),

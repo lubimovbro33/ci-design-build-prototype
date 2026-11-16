@@ -182,16 +182,15 @@ html body .wl-b{font-family:var(--fx);font-weight:400;font-size:max(17px, calc(3
 .g4-ks{padding-top:calc(33 * var(--u))} .g4 .lns{margin:0;padding:0;list-style:none} .g4-n{margin-top:calc(100 * var(--u))} .g4-n .g4-k{padding-top:.25em} .g4-p{grid-column:2 / span 2;margin:0}
 .g4-3{display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));column-gap:calc(48 * var(--u));margin-top:calc(50 * var(--u))}
 /* the collection: the gallery of a project on the Portfolio grid — blocks of one large + two small (.pf6.g) and wide pictures across (.gfull),
-   62 apart; under every picture its number in the collection; every picture opens out of a small window, like the cards */
+   62 apart; under every picture its number in the collection; every picture stands at its size and only settles inside as it comes into view, like the cards */
 .pf6.g .cd{cursor:default}
 .pf6.g + .gfull, .gfull + .pf6.g, .pf6.g + .pf6.g, .gfull + .gfull{margin-top:calc(62 * var(--u))}
 .gfull{margin-left:calc(50 * var(--u));margin-right:calc(50 * var(--u));margin-bottom:0}
 .gfull .im{display:block;position:relative;aspect-ratio:1820 / 900;overflow:hidden;background:#1D1D1D}
 .gfull .im img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
-.gfull.rv{opacity:1;transform:none;transition:none} .gfull.rv .im{visibility:hidden}
-.gfull.rv.in .im{visibility:visible;animation:cdWin 1.3s cubic-bezier(.83,0,.17,1) backwards}
-.gfull.rv.in .im img{animation:cdImg 1.3s cubic-bezier(.83,0,.17,1) backwards}
-.lite .gfull.rv .im{visibility:visible;animation:none} .lite .gfull.rv .im img{animation:none}
+.gfull.rv{opacity:1;transform:none;transition:none} .gfull.rv:not(.in) .im img{transform:scale(1.1)}
+.gfull.rv.in .im img{animation:cdZoom 1.8s cubic-bezier(.16,1,.3,1) backwards}
+.lite .gfull.rv .im img{animation:none;transform:none}
 .inr .nn{display:block;margin-top:calc(14 * var(--u));color:rgba(255,255,255,.75)} .nn i{font-style:normal;opacity:.5}
 /* the next project: its name and its photograph side by side on the four columns */
 a.nx2{color:#FFFFFF;text-decoration:none;align-items:end}
@@ -201,22 +200,22 @@ a.nx2{color:#FFFFFF;text-decoration:none;align-items:end}
 .nx2-i{grid-column:3 / span 2} .nx2-i .im{aspect-ratio:886 / 525}
 @media (hover:hover){ .nx2:hover .im img{transform:scale(1.04)} }
 
-/* how a card arrives (15.11 20:37, her word: «топорна анімація на карточці… чи є на головній вже рішення»): the way the homepage's Projects photographs
-   do (.pj4-im) — the photograph opens out of a small window while the picture inside settles from a larger scale, the same curve; the caption comes
-   after it. The card itself neither fades nor rises. Three cards of a row open one after another. (Fill «backwards», so the pointer's own zoom
-   is free once a card has opened.) */
+/* how a card arrives (16.11 12:46, her word: «вони малі, а потім збільшуються… так ламається сітка. Нехай вони будуть свого розміру, як є.
+   Просто дай… на появу легкий зум фотографії, а не самої карточки»): the tile stands at its own size from the start; as it comes into view only
+   the photograph inside moves — it settles from 1.1 to 1; the caption rises after it. Cards of a row follow one another by --cdl. (The opening out
+   of a small window, taken from the homepage on 15.11, is gone from the cards and from the wide gallery pictures; the homepage keeps its own.)
+   The pre-state is tied to :not(.in), so the pointer's own zoom is free once a card has arrived. */
 .cd.rv{opacity:1;transform:none;transition:none}
 .cd.rv:nth-child(3n+2){--cdl:.12s} .cd.rv:nth-child(3n){--cdl:.24s}
-.cd.rv .im{visibility:hidden}
-.cd.rv.in .im{visibility:visible;animation:cdWin 1.3s cubic-bezier(.83,0,.17,1) var(--cdl, 0s) backwards}
-.cd.rv.in .im img{animation:cdImg 1.3s cubic-bezier(.83,0,.17,1) var(--cdl, 0s) backwards}
+.cd.rv:not(.in) .im img{transform:scale(1.1)}
+.cd.rv.in .im img{animation:cdZoom 1.8s cubic-bezier(.16,1,.3,1) var(--cdl, 0s) backwards}
 .cd.rv .nm, .cd.rv .lc{opacity:0;transform:translateY(calc(14 * var(--u)));transition:opacity .9s cubic-bezier(.16,1,.3,1), transform .9s cubic-bezier(.16,1,.3,1)}
-.cd.rv.in .nm{opacity:1;transform:none;transition-delay:calc(var(--cdl, 0s) + .6s)}
-.cd.rv.in .lc{opacity:1;transform:none;transition-delay:calc(var(--cdl, 0s) + .72s)}
-@keyframes cdWin{ from{clip-path:inset(37% 34% 37% 34%)} to{clip-path:inset(0 0 0 0)} }
+.cd.rv.in .nm{opacity:1;transform:none;transition-delay:calc(var(--cdl, 0s) + .15s)}
+.cd.rv.in .lc{opacity:1;transform:none;transition-delay:calc(var(--cdl, 0s) + .27s)}
+@keyframes cdZoom{ from{transform:scale(1.1)} to{transform:none} }
 @keyframes cdImg{ from{transform:scale(1.22)} to{transform:none} }
-.lite .cd.rv .im{visibility:visible;animation:none} .lite .cd.rv .im img{animation:none} .lite .cd.rv .nm, .lite .cd.rv .lc{opacity:1;transform:none;transition:none}
-@media (prefers-reduced-motion: reduce){ .cd.rv .im{visibility:visible;animation:none!important} .cd.rv .im img{animation:none!important} .cd.rv .nm, .cd.rv .lc{opacity:1;transform:none;transition:none} }
+.lite .cd.rv .im img{animation:none;transform:none} .lite .cd.rv .nm, .lite .cd.rv .lc{opacity:1;transform:none;transition:none}
+@media (prefers-reduced-motion: reduce){ .cd.rv .im img{animation:none!important;transform:none!important} .cd.rv .nm, .cd.rv .lc{opacity:1;transform:none;transition:none} }
 /* the portfolio: two columns of their own height, the right one a step lower */
 .pf{display:flex;gap:calc(49 * var(--u));margin-left:calc(421 * var(--u));align-items:flex-start}
 .pf-c{width:calc(700 * var(--u));display:flex;flex-direction:column;gap:calc(100 * var(--u))}
@@ -237,14 +236,15 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .pf6 .cd.big .im{aspect-ratio:886 / 1112}
 .pf6 .cd .nm{margin-top:calc(20 * var(--u))}
 .pf6 .cd .lc{margin-top:calc(20 * var(--u))}
-/* the Signature grid of Portfolio after her reference of 16.11 12:42 («взяти точно таку сітку»): the page's four columns, near-square tiles one
-   column wide (211:224 as in the reference), a large landscape tile two columns wide (436:354), cells left empty on purpose; every card is put
-   in its cell by --c (column) and --r (row); rows 100 apart, a small tile stands at the top of its row. */
-.pf7{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(100 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
+/* the Signature grid of Portfolio after her reference of 16.11 12:42 («взяти сітку цих квадратиків») and her word of 12:46 («не залишай
+   пустих квадратиків, заповни все проєктами»): the page's four columns, near-square tiles one column wide (211:224 as in the reference) and one
+   large tile two columns wide and two rows high — its photograph takes whatever height the two rows of small cards give it, so the grid has no
+   hole; every card is put in its cell by --c (column) and --r (row); rows 62 apart. */
+.pf7{display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(48 * var(--u));row-gap:calc(62 * var(--u));margin:0 calc(50 * var(--u));align-items:start}
 .pf7 .cd{margin:0;grid-column:var(--c);grid-row:var(--r)}
-.pf7 .cd.big{grid-column:var(--c) / span 2}
 .pf7 .cd .im{aspect-ratio:211 / 224}
-.pf7 .cd.big .im{aspect-ratio:436 / 354}
+.pf7 .cd.big{grid-column:var(--c) / span 2;grid-row:var(--r) / span 2;align-self:stretch;display:flex;flex-direction:column}
+.pf7 .cd.big .im{flex:1 1 auto;aspect-ratio:auto;min-height:0}
 .pf7 .cd .nm{margin-top:calc(20 * var(--u))}
 .pf7 .cd .lc{margin-top:calc(20 * var(--u))}
 .inr .lab3.sqm{--sg:calc(10 * var(--u));--sw:max(5px, calc(8 * var(--u)));--ss:calc(2 * var(--sg) + var(--sw));display:flex;flex-wrap:wrap;row-gap:4px;
@@ -444,8 +444,8 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .pf6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)}
   .pf6 .cd .im, .pf6 .cd.big .im{aspect-ratio:4 / 5}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
-  .pf7{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)} .pf7 .cd{grid-column:auto;grid-row:auto} .pf7 .cd.big{grid-column:span 2}
-  .pf7 .cd .im{aspect-ratio:1 / 1} .pf7 .cd.big .im{aspect-ratio:436 / 354} .pf7 .cd .nm{margin-top:12px} .pf7 .cd .lc{margin-top:8px}
+  .pf7{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)} .pf7 .cd{grid-column:auto;grid-row:auto} .pf7 .cd.big{grid-column:span 2;grid-row:auto;display:block}
+  .pf7 .cd .im, .pf7 .cd.big .im{aspect-ratio:1 / 1} .pf7 .cd .nm{margin-top:12px} .pf7 .cd .lc{margin-top:8px}
   .lib4{display:block;margin:0 var(--m, 20px)} .lib4 .chips{margin-top:24px}
   .iv{display:block;min-height:0;padding:72px var(--m, 20px) 80px} .iv-c{margin-left:0} .iv-k{position:static;margin-bottom:18px;font-size:13px}
   .film .p-ct, .film .p-cb, .film .p-cbr{text-align:left}   /* phones: the scenes stand on the left, like the rest of the page */
