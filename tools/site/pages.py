@@ -61,7 +61,9 @@ solution('wellness', 'ci-wellness.html', 'CI Wellness', lambda k, h, ps: sc_dawn
 def solutions():
     S = P['services']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(sc_columns(label(S[0]), h1, [('CI Turnkey', 'ci-turnkey.html', A + 'ch/1450-33.webp'), ('CI Core', 'ci-core.html', A + 'rtb/1430-05a.webp'), ('CI Curated', 'ci-curated.html', A + 'ch/1450-15.webp'), ('CI Wellness', 'ci-wellness.html', A + 'ch/1450-26.webp')]), 'Solutions', 'top')
+    # one photograph on the whole screen and the four ways in one line at its foot; each way has its own picture, and it comes up under the pointer
+    pg.add(sc_four(label(S[0]), h1, [('CI Turnkey', 'ci-turnkey.html', A + 'ch/1450-24.webp'), ('CI Core', 'ci-core.html', A + 'rtb/1430-01a.webp'),
+                                     ('CI Curated', 'ci-curated.html', A + 'ch/1450-34.webp'), ('CI Wellness', 'ci-wellness.html', A + 'us/1511-06a.webp')]), 'Solutions', 'top')
     pg.add(intro(ps))
     N = 4; t0 = .3; d = 1.0
     o = ['<section class="film" data-fig="steps" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']

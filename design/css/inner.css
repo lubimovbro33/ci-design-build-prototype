@@ -444,10 +444,15 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
 .sn-hi{display:block;animation:cvIn 1.7s cubic-bezier(.16,1,.3,1) .25s both}
 .sn-lead{position:absolute;left:calc(421 * var(--u));bottom:max(calc(100 * var(--u)), 94px);z-index:4}
 /* Solutions: four strips, one for each way; they rise to the full height */
-.sn-col{position:absolute;top:calc(100% * 620 / 1080);height:100%;width:calc(343.5 * var(--u));overflow:hidden;background:#111;color:#FFFFFF;text-decoration:none;cursor:none;z-index:2;will-change:transform}
-.sn-col img{filter:contrast(1.04) brightness(.6);transition:filter .6s}
-.sn-col:hover img{filter:contrast(1.04) brightness(.85)}
-.sn-col .nm{position:absolute;left:calc(25 * var(--u));top:calc(25 * var(--u));z-index:2}
+/* Solutions' first screen (16.11, her choice): one photograph over the screen, the title on it, and the four ways in one line at its foot.
+   The pointer on a name brings that way's photograph up behind it and draws the site's hairline under the name. */
+.sf-ph img{opacity:0;transition:opacity .9s cubic-bezier(.16,1,.3,1)}
+.sf-ph img.on{opacity:1}
+.sf-ways{position:absolute;left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px);z-index:4;color:#FFFFFF}
+.sf-ways .sqr{row-gap:calc(18 * var(--u))}
+.sf-w{position:relative;display:inline-block;color:#FFFFFF;text-decoration:none;cursor:none}
+.sf-w::after{content:"";position:absolute;left:0;right:0;bottom:calc(-14 * var(--u));height:1px;background:#FFFFFF;transform:scaleX(0);transform-origin:left;transition:transform .5s cubic-bezier(.16,1,.3,1)}
+.sf-w.on::after{transform:scaleX(1)}
 /* Turnkey: one track from the first idea to the first night home; it pans sideways */
 .sn-trk{position:absolute;left:0;top:0;height:100%;display:flex;align-items:stretch;will-change:transform}
 .sn-trk > *{flex:none;position:relative;height:100%;box-sizing:border-box}
@@ -573,8 +578,7 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .sn-h.bl, .sn-k.bl{left:var(--m, 20px)} .sn-h.cc, .sn-k.cc{left:var(--m, 20px);right:var(--m, 20px)}
   .sn-h.cc{white-space:nowrap}   /* phones: the centred title keeps its own lines */
   .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 38px - 14px - 1.136em)}
-  .sn-col{width:calc(25vw - 6px)!important;left:calc(var(--i) * 25vw + 3px)!important;top:62%;transform:none!important}
-  .sn-col .nm{font-size:10px;left:8px;top:8px}
+  .sf-ways{left:var(--m, 20px);right:var(--m, 20px);bottom:max(50 * var(--u), 58px)}
   .sn-full, .sn-strip, .sn-img, .sn-full img, .sn-strip img, .sn-img img{transform:none!important}
   .sn-full{clip-path:none!important} .sn-full[data-s*="ci:"]{display:none}
   .sn-full img{filter:contrast(1.04) brightness(.7)!important}

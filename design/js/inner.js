@@ -529,6 +529,17 @@
 
 
 
+  /* ================================================================== Solutions' first screen: the pointer on a way brings its photograph up */
+  (function(){
+    var nav = qs('.sf-ways'); if (!nav) return;
+    var ws = qsa('.sf-w', nav), ims = qsa('.sf-ph img');
+    function set(i){ ws.forEach(function(w, k){ w.classList.toggle('on', k === i); }); ims.forEach(function(m, k){ m.classList.toggle('on', k === i); }); }
+    ws.forEach(function(w, i){
+      w.addEventListener('pointerenter', function(){ set(i); });
+      w.addEventListener('focus', function(){ set(i); });
+    });
+  })();
+
   /* ================================================================== the gallery: «Explore the Work» (16.11, her reference htarchitecte.com/en)
      One screen; the photographs stand along its foot, all of one height, each its own width. The scroll walks the row sideways, one pixel of the
      row to one pixel of the page, and the row follows with a lag — the inertia. The filters rebuild it. */
