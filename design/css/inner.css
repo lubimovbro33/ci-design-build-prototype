@@ -308,14 +308,11 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .sqm > span{position:relative;padding-left:var(--ss)}
 .sqm > span::before{content:"";position:absolute;left:var(--sg);top:50%;margin-top:calc(var(--sw) / -2);width:var(--sw);height:var(--sw);background:var(--blue)}
 
-/* «Explore the Work» — THE GALLERY (16.11, her reference onok.es/projects, measured off her screenshot). Every photograph stands in a window of
-   the SAME HEIGHT; what changes is the width. The one at the left field is open — 1.414 of the height, as on her reference (625 × 442) — and the
-   ones waiting are narrow, 0.724 of it (320 × 442); the gap between them is 0.036 of the height (16). As the row is scrolled each window opens in
-   its turn and the one before it closes again: the picture inside does not move, the window widens over it. The name and the place stand small
-   above each window; both lines are steady, because the height never changes. */
-.glx{position:relative;display:block}
-.gl-stg{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000;--gh:calc(580 * var(--u));--gw:calc(var(--gh) * 1.414);--gs:calc(var(--gh) * .724)}
-.gl-hd{position:absolute;left:calc(50 * var(--u));right:calc(50 * var(--u));top:calc(120 * var(--u));display:flex;align-items:flex-end;justify-content:space-between;gap:calc(50 * var(--u));z-index:4}
+/* «Explore the Work» — THE GALLERY (16.11, her reference htarchitecte.com/en). No pinned screen and no opening photograph: the grid of the work
+   stands there at once. The pictures run in loose columns in the reference's two formats only (0.876 and 1.41), with a great deal of air between
+   them, and they carry no names. Under the pointer one photograph comes up to full strength, its name appears beneath it, and every other one
+   falls back — so the eye is led by the work, not by a list. */
+.glx .gl-hd{display:flex;align-items:flex-end;justify-content:space-between;gap:calc(50 * var(--u));margin:0 calc(50 * var(--u))}
 .gl-h{color:#FFFFFF}
 /* the filters: no boxes — a line of words at the right field, and the site's own hairline draws itself under the one in hand (and under the
    one the pointer is on). A filter the client has no work under stands back until the work comes. */
@@ -324,18 +321,19 @@ html body.inr .gl-hd .chip{position:relative;border:0;padding:0;background:none;
 .gl-hd .chip::after{content:"";position:absolute;left:0;right:0;bottom:calc(-10 * var(--u));height:1px;background:#FFFFFF;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.16,1,.3,1)}
 .gl-hd .chip.on::after, .gl-hd .chip:hover::after{transform:scaleX(1)}
 .gl-hd .chip.off{opacity:.28} .gl-hd .chip.off::after{display:none}
-.gl-vp{position:absolute;left:0;right:0;top:calc(282 * var(--u));height:calc(678 * var(--u));z-index:2}
-.gl-rail{position:relative;height:100%}
-.gl-it{position:absolute;left:0;top:0;display:block;color:#FFFFFF;text-decoration:none;will-change:transform}
+.glg{position:relative;margin:calc(150 * var(--u)) calc(50 * var(--u)) 0}
+.gl-it{position:absolute;left:0;top:0;display:block;width:calc(25% - 120 * var(--u));color:#FFFFFF;text-decoration:none}
 .gl-it[hidden]{display:none}
-.gl-tx{width:var(--gs);height:calc(74 * var(--u));margin-bottom:calc(24 * var(--u));display:flex;flex-direction:column;justify-content:flex-end}
-.gl-tx .gl-nm{font-size:max(14px, calc(22 * var(--u)))}
-.gl-tx .lc{margin-top:calc(12 * var(--u))}
-.gl-im{position:relative;display:block;height:var(--gh);width:var(--gs);overflow:hidden;background:#0A0A0A}
-.gl-im img{position:absolute;left:50%;top:0;width:var(--gw);max-width:none;height:100%;object-fit:cover;display:block;transform:translateX(-50%);filter:contrast(1.04) brightness(.9);transition:filter .6s}
-.gl-it:hover .gl-im img{filter:contrast(1.04) brightness(1)}
-.gl-none{position:absolute;left:calc(50 * var(--u));top:calc(400 * var(--u));display:none;z-index:3;color:rgba(255,255,255,.6)}
-.glx.empty .gl-none{display:block}
+.gl-im{display:block;width:100%;aspect-ratio:var(--ar, 1.41);overflow:hidden;background:#0A0A0A}
+.gl-im img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.04) brightness(.92);transition:filter .55s, transform 1s cubic-bezier(.16,1,.3,1)}
+.gl-nm{display:block;margin-top:calc(16 * var(--u));opacity:0;transform:translateY(calc(-5 * var(--u)));transition:opacity .4s, transform .4s}
+.gl-it:hover .gl-nm{opacity:1;transform:none}
+.gl-it:hover .gl-im img{filter:contrast(1.04) brightness(1);transform:scale(1.03)}
+.glg:has(.gl-it:hover) .gl-it:not(:hover) .gl-im img{filter:grayscale(.9) brightness(.45)}
+.glg .none{display:none;margin:0}
+.glg.empty{height:auto!important}
+.glg.empty .none{display:block}
+@media (hover: none){ .gl-nm{opacity:1;transform:none} }
 .chip.off{opacity:.3;pointer-events:none}
 
 /* 15.11 18:42, her frame «09 CTA»: the closing block on the home hero's cross of rules (394 from the top, 395 from the left). The title stands in the
@@ -522,19 +520,13 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
   .pf7{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)} .pf7 .cd{grid-column:auto;grid-row:auto} .pf7 .cd.big{grid-column:span 2}
   .pf7 .cd .im{aspect-ratio:1 / 1} .pf7 .cd.big .im{aspect-ratio:436 / 354} .pf7 .cd .nm{margin-top:12px} .pf7 .cd .lc{margin-top:8px}
-  /* phones: the row lies down — the filters, then name, place, photograph, one project after another; every window open */
-  .glx{height:auto!important} .gl-stg{position:static;height:auto;padding:72px 0 0;display:flex;flex-direction:column}
-  .gl-hd{position:static;display:block;order:1} html body.inr .gl-h{margin:0 var(--m, 20px) 22px}
-  .gl-hd .chips{justify-content:flex-start;margin:0 var(--m, 20px) 30px;gap:18px}
-  .gl-vp{position:static;height:auto;order:2} .gl-none{order:3}
-  .gl-rail{height:auto;transform:none!important;padding:0 var(--m, 20px)}
-  .gl-it{position:static;transform:none!important}
-  .gl-it + .gl-it{margin-top:36px}
-  .gl-tx{display:block;width:auto!important;height:auto!important;margin-bottom:12px} .gl-tx .lc{margin-top:8px}
-  .gl-tx .gl-nm{font-size:18px}
-  .gl-im{width:auto!important;height:auto!important;aspect-ratio:1.414}
-  .gl-im img{position:static;transform:none;width:100%;height:100%;filter:contrast(1.04)!important}
-  .gl-none{position:static;margin:0 var(--m, 20px)}
+  /* phones: one column, and the names stand on their own — there is nothing to hover */
+  .glx .gl-hd{display:block;margin:0 var(--m, 20px)} html body.inr .gl-h{margin:0 0 22px}
+  .gl-hd .chips{justify-content:flex-start;margin:0 0 30px;gap:18px}
+  .glg{height:auto!important;margin:34px var(--m, 20px) 0}
+  .gl-it{position:static;width:auto!important;transform:none!important;margin-bottom:34px}
+  .gl-nm{margin-top:12px;opacity:1;transform:none}
+  .gl-im img{filter:contrast(1.04)!important;transform:none!important}
   .iv{display:block;min-height:0;padding:72px var(--m, 20px) 80px} .iv-c{margin-left:0} .iv-k{position:static;margin-bottom:18px;font-size:13px}
   .film .p-ct, .film .p-cb, .film .p-cbr{text-align:left}   /* phones: the scenes stand on the left, like the rest of the page */
   .wl-p{position:relative;height:100vh;height:100svh;animation:wlWin 1.3s cubic-bezier(.83,0,.17,1) .15s backwards} .wl-p img{animation:cdImg 1.3s cubic-bezier(.83,0,.17,1) .15s backwards}

@@ -210,7 +210,6 @@
     FILMS.forEach(function(f){ if (f.fig !== 'key' && f.fig !== 'many') return; var flow = getComputedStyle(f.cv).position !== 'absolute'; f.cw = flow ? f.cv.clientWidth : 0; f.ch = flow ? f.cv.clientHeight : 0;
       if (flow){ f.cv.width = Math.round(f.cw * DPR); f.cv.height = Math.round(f.ch * DPR); } });
     dirty = false;
-    if (GL) GL.layout();
     qsa('#ftCity').forEach(function(v){ var mtx = v.getScreenCTM && v.getScreenCTM(); if (mtx && mtx.a) v.style.setProperty('--ds', Math.max(mtx.a, .05).toFixed(4)); });
   }
   window.addEventListener('resize', function(){ dirty = true; });
@@ -529,79 +528,31 @@
 
 
 
-  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference onok.es/projects,
-     measured off her screenshot: 625 × 442 open, 320 × 442 closed, 16 between — one height, the width is what changes).
-     One row on a pinned screen. The window at the left field is open; the rest wait narrow; as the row is scrolled each one opens in its turn and
-     the one before it closes again. The picture inside never moves — the window widens over it. The row is laid out from the project the scroll has
-     reached, so the opening never fights the movement, and it follows the scroll with a lag: the inertia. */
-  var GL = (function(){
-    var sec = qs('.glx'); if (!sec) return null;
-    var stg = qs('.gl-stg', sec), rail = qs('.gl-rail', sec), items = qsa('.gl-it', sec), chips = qsa('[data-gal] .chip', sec),
-        FIELD = 50, GH = 580, OPEN = 1.414, SHUT = .724, GAP = .036, STEP = .5,   /* her reference's own proportions, in the frame's units */
-        vis = items.slice(), f = 0, tf = 0, fEnd = 0, span = 0, mob = false, ready = false, put = [];
-    (function(){   /* the pictures stand off the screen: they are fetched once the section is a screen away */
-      function load(){ if (ready) return; ready = true; items.forEach(function(it){ var img = qs('img', it); if (img) img.loading = 'eager'; }); }
-      if (!('IntersectionObserver' in window)) return load();
-      var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ load(); io.disconnect(); } }, {rootMargin: '120% 0px'});
-      io.observe(sec);
-    })();
-    /* the row at a given place in it: the window at f is open, its neighbour opens as f moves on, everything else is shut.
-       The widths add up to the same total whatever f is, so the row moves evenly. */
-    function lay(fv){
-      var h = GH * U, wo = h * OPEN, ws = h * SHUT, g = h * GAP, fx = FIELD * U,
-          n = vis.length, k = Math.max(0, Math.min(n - 1, Math.floor(fv))), fr = fv - k, out = new Array(n), i, w = [];
-      for (i = 0; i < n; i++) w.push(ws + (wo - ws) * sm(0, 1, c01(1 - Math.abs(i - fv))));
-      out[k] = {x: fx - fr * (w[k] + g), w: w[k]};
-      for (i = k + 1; i < n; i++) out[i] = {x: out[i - 1].x + out[i - 1].w + g, w: w[i]};
-      for (i = k - 1; i >= 0; i--) out[i] = {x: out[i + 1].x - w[i] - g, w: w[i]};
-      /* the row is never pulled past its end: once it has begun to move it is held against the right field, and the windows there open in place */
-      if (out[0].x < fx - .5){ var sh = (W - fx) - (out[n - 1].x + out[n - 1].w); if (sh > 0) for (i = 0; i < n; i++) out[i].x += sh; }
-      return out;
+  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference htarchitecte.com/en)
+     The grid of the work. The browser's own column balancing leaves a column empty when the pictures are tall, so the columns are filled here:
+     each photograph goes to the column that is shortest at that moment. Run again when the window changes and when a filter is chosen. */
+  (function(){
+    var box = qs('.glg'); if (!box) return;
+    var items = qsa('.gl-it', box), GAP = 160, ROW = 140;   /* the frame's units */
+    function place(){
+      var one = !!(mm && mm('(max-aspect-ratio: 1/1)').matches);
+      if (one){ box.style.height = ''; items.forEach(function(it){ it.style.width = ''; it.style.transform = ''; }); return; }
+      var n = 4, g = GAP * U, r = ROW * U, w = box.clientWidth, cw = (w - (n - 1) * g) / n, hs = [0, 0, 0, 0], i, k, m;
+      items.forEach(function(it){
+        if (it.hidden){ it.style.transform = ''; return; }
+        it.style.width = cw.toFixed(1) + 'px';
+        k = 0; m = hs[0]; for (i = 1; i < n; i++) if (hs[i] < m - .5){ m = hs[i]; k = i; }
+        it.style.transform = 'translate3d(' + (k * (cw + g)).toFixed(1) + 'px,' + hs[k].toFixed(1) + 'px,0)';
+        hs[k] += it.offsetHeight + r;
+      });
+      m = 0; for (i = 0; i < n; i++) if (hs[i] > m) m = hs[i];
+      box.style.height = Math.max(0, Math.round(m - r)) + 'px';
     }
-    function layout(){
-      mob = !!(mm && mm('(max-aspect-ratio: 1/1)').matches);
-      vis = items.filter(function(it){ return !it.hidden; });
-      sec.classList.toggle('empty', vis.length === 0);
-      if (mob || !vis.length){
-        sec.style.height = '';
-        items.forEach(function(it){ it.style.transform = ''; qs('.gl-im', it).style.width = ''; });
-        put = []; return;
-      }
-      var o = lay(0), last = o[vis.length - 1];
-      fEnd = last.x + last.w <= W - FIELD * U ? 0 : vis.length - 1;   /* everything on the screen already: the row does not move */
-      span = Math.round(fEnd * STEP * H);
-      sec.style.height = Math.round(span + H) + 'px';
-      put = [];
-    }
-    function frame(){
-      if (mob || !vis.length) return;
-      var r = sec.getBoundingClientRect(); if (r.bottom < -200 || r.top > H + 200) return;
-      tf = (span > 0 ? c01(-r.top / span) : 0) * fEnd;
-      f += (tf - f) * .14;                                  /* the lag that makes the glide */
-      if (Math.abs(tf - f) < .0015) f = tf;
-      var o = lay(f), i, a2, b2;
-      for (i = 0; i < vis.length; i++){
-        a2 = o[i]; b2 = put[i];
-        if (b2 && Math.abs(b2.x - a2.x) < .4 && Math.abs(b2.w - a2.w) < .4) continue;
-        vis[i].style.transform = 'translate3d(' + a2.x.toFixed(1) + 'px,0,0)';
-        qs('.gl-im', vis[i]).style.width = a2.w.toFixed(1) + 'px';
-        put[i] = a2;
-      }
-    }
-    chips.forEach(function(c){ c.addEventListener('click', function(){
-      if (c.disabled) return;
-      chips.forEach(function(o){ o.classList.toggle('on', o === c); });
-      var fv = c.getAttribute('data-f');
-      items.forEach(function(it){ var ok = fv === 'all' || (' ' + it.getAttribute('data-tags') + ' ').indexOf(' ' + fv + ' ') >= 0; it.hidden = !ok; });
-      f = tf = 0; layout(); frame();
-      var t0 = sec.getBoundingClientRect().top + window.scrollY; if (window.scrollY > t0) smoothTo(t0 + 2);
-    }); });
-    window.addEventListener('keydown', function(e){
-      if (mob || !vis.length || span <= 0) return; var r = sec.getBoundingClientRect(); if (r.top > 4 || r.bottom < H - 4) return;
-      if (e.key === 'ArrowRight'){ e.preventDefault(); smoothTo(window.scrollY + STEP * H); }
-      else if (e.key === 'ArrowLeft'){ e.preventDefault(); smoothTo(window.scrollY - STEP * H); }
-    });
-    return {layout: layout, frame: frame};
+    qsa('[data-filter] .chip', box.parentNode).forEach(function(c){ c.addEventListener('click', function(){ place(); }); });
+    window.addEventListener('resize', function(){ place(); });
+    window.addEventListener('load', function(){ place(); });
+    if (document.readyState === 'complete') place(); else setTimeout(place, 0);
+    window.__glg = place;
   })();
 
   /* ================================================================== the loop */
@@ -624,7 +575,6 @@
       var b = BANDS[i], br = b.el.getBoundingClientRect(); if (br.bottom < -40 || br.top > H + 40) continue;
       b.img.style.transform = 'translate3d(0,' + ((br.top / H) * -4).toFixed(2) + '%,0)';
     }
-    if (GL) GL.frame();
     if (y !== lastY || H !== lastVH) updateChap(y, H);
     chapInk(); updateLogo(y, H);
     lastY = y; lastVH = H;
