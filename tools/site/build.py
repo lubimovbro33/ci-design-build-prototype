@@ -519,10 +519,12 @@ def cta(title, paras, button, img, pos=None, top=False, g=None):
         if len(sp) == 2: parts = [nop(x) for x in sp]
     ps = ''.join('<p class="t20 rv%s">%s</p>' % (' cb' if i else '', '<br class="bd"> '.join(esc(y) for y in (_set(CTA_TEXT, x) or [x]))) for i, x in enumerate(parts))
     st = ';'.join(x for x in ['object-position:%s' % pos if pos else '', 'filter:contrast(1.04) brightness(%s)' % g if g else ''] if x)
-    return ('<section class="fin gr" id="@ID@" style="--tl:%d">\n  <img src="%s" alt="" loading="lazy"%s>\n  <h2 class="t60 rv fg-h">%s</h2>\n'
-            '%s  <div class="rv fg-b">%s</div>\n</section>'
-            % (len(lines), img, ' style="%s"' % st if st else '', '<br>'.join(esc(x) for x in lines),
-               '  <div class="fg-t">%s</div>\n' % ps if ps else '', btn(button[0], button[1])))
+    # 16.11 19:33: the description stands above the title, 20 over its letters; the group's first letters keep the same distance
+    # from the horizontal line and from the vertical one (26), so it sits square in the rectangle the cross makes
+    return ('<section class="fin gr" id="@ID@">\n  <img src="%s" alt="" loading="lazy"%s>\n  <div class="fg-in">%s<h2 class="t60 rv fg-h">%s</h2></div>\n'
+            '  <div class="rv fg-b">%s</div>\n</section>'
+            % (img, ' style="%s"' % st if st else '', '<div class="fg-t">%s</div>' % ps if ps else '',
+               '<br>'.join(esc(x) for x in lines), btn(button[0], button[1])))
 
 # ------------------------------------------------------------------ generic section → block
 RAIL = {'What You Receive': 'Receive', 'The Turnkey Experience': 'Experience', "What's Included": 'Included', 'Our Responsibility': 'One Team', 'Client Testimonial': None,

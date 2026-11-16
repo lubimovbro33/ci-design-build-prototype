@@ -328,8 +328,13 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
    their foot level with the title's */
 .fin.gr::before{content:"";position:absolute;left:0;right:0;top:calc(394 * var(--u));height:1px;background:rgba(255,255,255,.33);z-index:1}
 .fin.gr::after{content:"";position:absolute;top:0;bottom:0;left:calc(395 * var(--u));width:1px;background:rgba(255,255,255,.33);z-index:1}
-.fin.gr .fg-h{position:absolute;left:calc(421 * var(--u));top:calc(420 * var(--u));white-space:nowrap;z-index:2}
-.fin.gr .fg-t{position:absolute;left:calc(100% - 620 * var(--u));bottom:calc(100% - (420 + var(--tl, 6) * 52.02) * var(--u));display:flex;flex-direction:column;gap:calc(38 * var(--u));z-index:2}   /* 16.11: the texts' foot stands on the title's foot, however many lines the title has (--tl on the section) */
+/* 16.11 19:33: the description stands above the title, 20 between its letters and the title's capitals; the group hangs in the
+   rectangle the cross makes — its first letters 26 under the horizontal line and 26 right of the vertical one, the same distance
+   either way (the capitals of the running text start 4.2 under its line box, the title's 4.65 under its own: hence 415.8 and 10.85) */
+.fin.gr .fg-in{position:absolute;left:calc(421 * var(--u));top:calc(415.8 * var(--u));z-index:2}
+.fin.gr .fg-t{display:flex;flex-direction:column;gap:calc(38 * var(--u))}
+.fin.gr .fg-t p{margin:0}
+html body.inr .fin.gr .fg-h{margin:calc(10.85 * var(--u)) 0 0;white-space:nowrap}
 .fin.gr .fg-b{position:absolute;left:calc(421 * var(--u));bottom:max(calc(50 * var(--u)), 58px);z-index:2}
 /* a project's gallery: wide pictures whole on the text line, tall ones in pairs, a wide one beside a tall one */
 .gal{margin-left:calc(421 * var(--u));margin-right:calc(50 * var(--u))}
@@ -523,8 +528,8 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .ix3{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:28px;margin-top:44px} .ix3 .lc{margin-top:8px} .ix3 .lc + .lc{margin-top:4px}
   .fin.gr{height:auto;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(var(--hdr, 64px) + 40px) var(--m, 20px) 72px;box-sizing:border-box}
   .fin.gr::before, .fin.gr::after{display:none}
-  .fin.gr .fg-h, .fin.gr .fg-t, .fin.gr .fg-b{position:relative;left:auto;top:auto;bottom:auto;height:auto}
-  .fin.gr .fg-t{margin-top:28px;gap:14px} .fin.gr .fg-b{margin-top:32px}
+  .fin.gr .fg-in, .fin.gr .fg-h, .fin.gr .fg-t, .fin.gr .fg-b{position:relative;left:auto;top:auto;bottom:auto;height:auto}
+  .fin.gr .fg-t{gap:14px} html body.inr .fin.gr .fg-h{margin-top:14px} .fin.gr .fg-b{margin-top:32px}
   .rws, .dlt, .lst, .frm{margin-left:var(--m, 20px);margin-right:var(--m, 20px)}
   .rw, .rw.d, .qa .qh, .dlt > div, .fr, .lst a{grid-template-columns:40px minmax(0,1fr)}
   .qa .qh{grid-template-columns:40px minmax(0,1fr) auto}
