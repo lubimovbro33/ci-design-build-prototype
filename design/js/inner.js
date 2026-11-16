@@ -529,18 +529,16 @@
 
 
 
-  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference makhnostudio.com/studio/team)
-     A rail of photographs on a pinned screen. The scroll walks it sideways; each photograph keeps its own proportions (--ar, read from the file),
-     so one height and many widths. The name before a photograph belongs to it, which puts the next project's name at the right edge of the screen.
-     The left and right fields step one project, a thumbnail jumps to one, the filters rebuild the rail. */
+  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference onok.es/projects)
+     One row of photographs of the same height, each with its name above it, walking sideways across a pinned screen while the page is scrolled:
+     one pixel of the row to one pixel of the scroll. Each photograph keeps its own proportions (--ar, read from the file).
+     The filters rebuild the row. */
   var GL = (function(){
     var sec = qs('.glx'); if (!sec) return null;
-    var rail = qs('.gl-rail', sec), items = qsa('.gl-it', sec), thumbs = qsa('.gl-th', sec), strip = qs('.gl-strip', sec), track = qs('.gl-track', sec),
-        cur = qs('.gl-cur', sec), tot = qs('.gl-tot', sec), chips = qsa('[data-gal] .chip', sec),
-        STEP = .55, vis = items.slice(), cen = [], x = 0, tx = 0, idx = -1, span = 0, mob = false, ready = false, lastY = -1, idle = 0, settled = false;
-    function two(n){ return n < 10 ? '0' + n : '' + n; }
+    var rail = qs('.gl-rail', sec), items = qsa('.gl-it', sec), chips = qsa('[data-gal] .chip', sec),
+        vis = items.slice(), x = 0, tx = 0, span = 0, railW = 0, mob = false, ready = false;
     function ar(it, w, h){ if (!w || !h) return; qs('.gl-im', it).style.setProperty('--ar', Math.max(.72, Math.min(1.70, w / h)).toFixed(4)); dirty = true; }
-    /* the proportions are needed before the rail is laid out, and the pictures stand off the screen: they are fetched once the section is a screen away */
+    /* the proportions are needed before the row is laid out, and the pictures stand off the screen: they are fetched once the section is a screen away */
     (function(){
       function load(){ if (ready) return; ready = true;
         items.forEach(function(it){ var img = qs('img', it); if (!img) return; img.loading = 'eager';
@@ -550,68 +548,36 @@
       var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ load(); io.disconnect(); } }, {rootMargin: '120% 0px'});
       io.observe(sec);
     })();
-    function top(){ return sec.getBoundingClientRect().top + window.scrollY; }
-    function mark(i){
-      idx = i;
-      items.forEach(function(it){ it.classList.remove('on'); });
-      if (!vis[i]) return;
-      vis[i].classList.add('on');
-      var k = items.indexOf(vis[i]), th = thumbs[k];
-      thumbs.forEach(function(t){ t.classList.remove('on'); });
-      if (th) th.classList.add('on');
-      if (cur) cur.textContent = two(i + 1);
-      if (th && track && strip){ var tw = track.scrollWidth, sw = strip.clientWidth, sx = 0;
-        if (tw > sw) sx = Math.max(sw - tw, Math.min(0, sw / 2 - (th.offsetLeft + th.offsetWidth / 2)));
-        track.style.transform = 'translate3d(' + sx.toFixed(1) + 'px,0,0)'; }
-    }
     function layout(){
       mob = !!(mm && mm('(max-aspect-ratio: 1/1)').matches);
       vis = items.filter(function(it){ return !it.hidden; });
-      if (tot) tot.textContent = two(vis.length);
       sec.classList.toggle('empty', vis.length === 0);
-      if (mob){ sec.style.height = ''; rail.style.transform = ''; if (track) track.style.transform = '';
-        items.forEach(function(it){ qs('.gl-tx', it).style.width = ''; }); return; }
-      /* the slot a name stands in is half of what the narrower of its two photographs — its own and the one before it — leaves of the screen:
-         so when a photograph stands in the middle, neither its neighbour on the left nor the one on the right shows an edge */
-      var ws = vis.map(function(it){ return qs('.gl-im', it).offsetWidth; });
-      vis.forEach(function(it, i){ var m = i ? Math.min(ws[i], ws[i - 1]) : ws[i];
-        qs('.gl-tx', it).style.width = Math.max(240, Math.round((W - m) / 2) + 4) + 'px'; });   /* 4 over, so no edge of a neighbour is left on the screen */
-      cen = vis.map(function(it){ var im = qs('.gl-im', it); return it.offsetLeft + im.offsetLeft + im.offsetWidth / 2; });
-      span = Math.max(0, vis.length - 1) * STEP * H;
+      if (mob || !vis.length){ sec.style.height = mob ? '' : ''; rail.style.transform = ''; return; }
+      var last = vis[vis.length - 1];
+      railW = last.offsetLeft + last.offsetWidth + 50 * U;   /* the row, with the field at either end */
+      span = Math.max(0, Math.round(railW - W));             /* one pixel of the row to one pixel of the scroll */
       sec.style.height = Math.round(span + H) + 'px';
-      if (idx < 0 || idx >= vis.length) mark(vis.length ? Math.max(0, Math.min(vis.length - 1, idx < 0 ? 0 : vis.length - 1)) : -1);
     }
     function frame(){
       if (mob || !vis.length) return;
       var r = sec.getBoundingClientRect(); if (r.bottom < -200 || r.top > H + 200) return;
-      var p = span > 0 ? c01(-r.top / span) : 0, f = p * (vis.length - 1), i0 = Math.floor(f), i1 = Math.min(vis.length - 1, i0 + 1), k = f - i0;
-      tx = W / 2 - (cen[i0] + (cen[i1] - cen[i0]) * k);
+      var p = span > 0 ? c01(-r.top / span) : 0;
+      tx = -p * span;
       x += (tx - x) * .34; if (Math.abs(tx - x) < .4) x = tx;
       rail.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
-      var ni = Math.round(f); if (ni !== idx) mark(ni);
-      /* when the hand comes off the wheel the rail settles on the nearest project — a gallery stops at a picture, not between two */
-      var y = window.scrollY;
-      if (y !== lastY){ lastY = y; idle = 0; settled = false; } else idle++;
-      if (!settled && idle > 14 && !smw.on && !reduced && !coarse && span > 0 && r.top <= 2 && r.top >= -span - 2){
-        settled = true; if (Math.abs(f - ni) > .02) go(ni);
-      }
     }
-    function go(i){ if (mob || !vis.length) return; i = Math.max(0, Math.min(vis.length - 1, i)); smoothTo(top() + i * STEP * H + 2); }
-    qsa('.gl-prev', sec).forEach(function(b){ b.addEventListener('click', function(){ go(idx - 1); }); });
-    qsa('.gl-next', sec).forEach(function(b){ b.addEventListener('click', function(){ go(idx + 1); }); });
-    thumbs.forEach(function(t, i){ t.addEventListener('click', function(){ var j = vis.indexOf(items[i]); if (j >= 0) go(j); }); });
     chips.forEach(function(c){ c.addEventListener('click', function(){
       if (c.disabled) return;
       chips.forEach(function(o){ o.classList.toggle('on', o === c); });
       var fv = c.getAttribute('data-f');
-      items.forEach(function(it, i){ var ok = fv === 'all' || (' ' + it.getAttribute('data-tags') + ' ').indexOf(' ' + fv + ' ') >= 0;
-        it.hidden = !ok; if (thumbs[i]) thumbs[i].hidden = !ok; });
-      idx = -1; layout(); x = tx = 0;
-      var t0 = top(); if (window.scrollY > t0) smoothTo(t0 + 2);
+      items.forEach(function(it){ var ok = fv === 'all' || (' ' + it.getAttribute('data-tags') + ' ').indexOf(' ' + fv + ' ') >= 0; it.hidden = !ok; });
+      layout(); x = tx = 0; rail.style.transform = 'translate3d(0,0,0)';
+      var t0 = sec.getBoundingClientRect().top + window.scrollY; if (window.scrollY > t0) smoothTo(t0 + 2);
     }); });
     window.addEventListener('keydown', function(e){
-      if (mob || !vis.length) return; var r = sec.getBoundingClientRect(); if (r.top > 4 || r.bottom < H - 4) return;
-      if (e.key === 'ArrowRight'){ e.preventDefault(); go(idx + 1); } else if (e.key === 'ArrowLeft'){ e.preventDefault(); go(idx - 1); }
+      if (mob || !vis.length || span <= 0) return; var r = sec.getBoundingClientRect(); if (r.top > 4 || r.bottom < H - 4) return;
+      if (e.key === 'ArrowRight'){ e.preventDefault(); smoothTo(window.scrollY + Math.min(600, span)); }
+      else if (e.key === 'ArrowLeft'){ e.preventDefault(); smoothTo(window.scrollY - Math.min(600, span)); }
     });
     return {layout: layout, frame: frame};
   })();

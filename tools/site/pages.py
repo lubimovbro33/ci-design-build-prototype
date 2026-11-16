@@ -214,39 +214,34 @@ def portfolio():
            '      <p class="t20 m p-cb" data-k="-1 -.5 2.85 3.0">%s</p>\n'
            '      <p class="t34 m p-cb" data-k="3.05 3.35 99 99">The result feels effortless,<br class="bd"> <span class="cb">as if your home could only<br class="bd"> ever have been yours</span></p>\n'
            '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % (lead, ''.join('<li>%s</li>' % esc(x) for x in st6)), 'Approach')
-    # Explore the Work — the gallery. Her reference of 16.11 20:15 (makhnostudio.com/studio/team): a rail that walks sideways; a project's name stands
-    # centred in the slot BEFORE its photograph, so the next project's name is already at the right edge; under it the filters, the counter and a strip
-    # of every project. Adapted: our black, our type, the photographs keep their own proportions — one height, different widths, so nothing is cropped
-    # (the rhythm of a text block, in pictures). The screen is pinned: the scroll walks the rail; a click on the left or the right half steps one
-    # project; a click on the photograph opens it. The text index it replaces was her note of 20:09: «воно взагалі не виглядає як галерея».
+    # Explore the Work — the gallery. Her second reference, of 16.11 21:38 (onok.es/projects; the first one, Makhno's rail with the name in the slot
+    # before the photograph, she called a bad choice at 21:38: «Давай поспробуємо таку мінімалістичну, чисту, акуратну галерею»). What that page does:
+    # the title large at the top left, a great deal of air under it, then ONE ROW of photographs of the same height, each with its name and its place
+    # set small ABOVE it at its left edge, small even gaps, and the row walks sideways. Ours is that on black, in our type, with our square between the
+    # parts of a line.
+    # photographs keep their own proportions, so nothing is cropped. The filters stand on the title's line at the right field, as a line of words.
+    # Nothing else on the screen: no counter, no strip, no overlay, and no second rule above the chapter rail.
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']
     ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', 'Modern Deco Home', '444 W Grant', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo']
     byn = {x[0]: x for x in LIB}; assert sorted(ORDER) == sorted(byn)
     # the gallery shows a project's own picture, the one its card carries; 444 W Grant's is only 1200 wide on the client's site, so that one
     # takes the next picture of the same project until CI sends the files
     gim = {q['name']: ph(q['set'], q['tall'] if q['name'] == '444 W Grant' else q['card']) for q in PROJ}
-    tags = {byn[n][5] for n in ORDER}
     def cnt(f): return 9 if f == 'all' else sum(1 for n in ORDER if (' ' + byn[n][5] + ' ').find(' ' + f + ' ') >= 0)
     # a filter the client has no project under is shown, but it is dead and says so — it lights up when CI sends work for it
     ch = ''.join('<button class="chip%s" type="button" data-f="%s"%s>%s</button>' % (
         ' on' if i == 0 else (' off' if cnt('all' if i == 0 else slug(c)) == 0 else ''), 'all' if i == 0 else slug(c),
         ' disabled aria-disabled="true" title="No projects under this filter yet"' if i and cnt(slug(c)) == 0 else '', c) for i, c in enumerate(chips))
-    items = ''.join('<a class="gl-it" href="%s" data-tags="%s"><span class="gl-tx"><span class="gl-nm">%s</span>%s%s</span>'
-                    '<span class="gl-im"><img src="%s" alt="%s" loading="lazy"%s><span class="gl-go lab3">View project</span></span></a>' % (
-                        hr, tg, esc(nm), sq_line(lc.split(' · ')).replace('sqm"', 'sqm sqc"'), sq_line([bd, sz]).replace('sqm"', 'sqm sqc"'),
-                        gim[nm], esc(nm), '')
+    items = ''.join('<a class="gl-it" href="%s" data-tags="%s"><span class="gl-tx"><span class="gl-nm h5r">%s</span>%s</span>'
+                    '<span class="gl-im"><img src="%s" alt="%s" loading="lazy"></span></a>' % (
+                        hr, tg, esc(nm), sq_line(lc.split(' · ')), gim[nm], esc(nm))
                     for nm, lc, bd, sz, hr, tg, im in [byn[n] for n in ORDER])
-    thumbs = ''.join('<button class="gl-th" type="button" data-tags="%s" data-i="%d"><img src="%s" alt="%s" loading="lazy"><span class="vh">%s</span></button>' % (
-        byn[n][5], i, gim[n], esc(n), esc(n)) for i, n in enumerate(ORDER))
     assert nop(h_of(S[3])) == 'Explore the Work', h_of(S[3])
-    pg.add('<section class="glx" id="@ID@">\n  <div class="gl-stg">\n    <h2 class="t60 gl-h">Explore<br>the Work</h2>\n'
+    pg.add('<section class="glx" id="@ID@">\n  <div class="gl-stg">\n'
+           '    <div class="gl-hd">\n      <h2 class="t60 gl-h">Explore<br>the Work</h2>\n      <div class="chips" data-gal="gl">%s</div>\n    </div>\n'
            '    <div class="gl-vp"><div class="gl-rail">%s</div></div>\n'
            '    <p class="gl-none lab3"><span class="wc">No projects under this filter yet</span></p>\n'
-           '    <div class="gl-bar">\n      <div class="gl-top">\n        <div class="chips" data-gal="gl">%s</div>\n'
-           '        <p class="gl-ct lab3"><span class="gl-cur">01</span><span class="gl-sl">/</span><span class="gl-tot">09</span></p>\n      </div>\n'
-           '      <div class="gl-strip"><div class="gl-track">%s</div></div>\n    </div>\n'
-           '    <button class="gl-nav gl-prev" type="button" data-cursor="Prev" aria-label="Previous project"></button>\n'
-           '    <button class="gl-nav gl-next" type="button" data-cursor="Next" aria-label="Next project"></button>\n  </div>\n</section>' % (items, ch, thumbs), 'Library')
+           '  </div>\n</section>' % (ch, items), 'Library')
     # the closing block: one composition for the whole site now (cta() in build.py); the words and her title column are hers
     fs = S[4]; fa = get(fs, 'a'); fps = [it[1][0] for it in fs['items'] if it[0] in ('p', 'lead')]
     assert nop(h_of(fs)) == 'Turn Inspiration Into Something Entirely Your Own' and len(fps) == 2, (h_of(fs), fps)
