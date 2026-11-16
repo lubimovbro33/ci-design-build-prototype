@@ -222,14 +222,16 @@ def portfolio():
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']
     ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', 'Modern Deco Home', '444 W Grant', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo']
     byn = {x[0]: x for x in LIB}; assert sorted(ORDER) == sorted(byn)
-    gim = {q['name']: ph(q['set'], q['card']) for q in PROJ}   # the gallery shows a project's own picture, the one its card carries
+    # the gallery shows a project's own picture, the one its card carries; 444 W Grant's is only 1200 wide on the client's site, so that one
+    # takes the next picture of the same project until CI sends the files
+    gim = {q['name']: ph(q['set'], q['tall'] if q['name'] == '444 W Grant' else q['card']) for q in PROJ}
     tags = {byn[n][5] for n in ORDER}
     def cnt(f): return 9 if f == 'all' else sum(1 for n in ORDER if (' ' + byn[n][5] + ' ').find(' ' + f + ' ') >= 0)
     # a filter the client has no project under is shown, but it is dead and says so — it lights up when CI sends work for it
     ch = ''.join('<button class="chip%s" type="button" data-f="%s"%s>%s</button>' % (
         ' on' if i == 0 else (' off' if cnt('all' if i == 0 else slug(c)) == 0 else ''), 'all' if i == 0 else slug(c),
         ' disabled aria-disabled="true" title="No projects under this filter yet"' if i and cnt(slug(c)) == 0 else '', c) for i, c in enumerate(chips))
-    items = ''.join('<a class="gl-it" href="%s" data-tags="%s" data-cursor="View"><span class="gl-tx"><span class="gl-nm">%s</span>%s%s</span>'
+    items = ''.join('<a class="gl-it" href="%s" data-tags="%s"><span class="gl-tx"><span class="gl-nm">%s</span>%s%s</span>'
                     '<span class="gl-im"><img src="%s" alt="%s" loading="lazy"%s><span class="gl-go lab3">View project</span></span></a>' % (
                         hr, tg, esc(nm), sq_line(lc.split(' · ')).replace('sqm"', 'sqm sqc"'), sq_line([bd, sz]).replace('sqm"', 'sqm sqc"'),
                         gim[nm], esc(nm), '')

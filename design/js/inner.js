@@ -569,7 +569,13 @@
       vis = items.filter(function(it){ return !it.hidden; });
       if (tot) tot.textContent = two(vis.length);
       sec.classList.toggle('empty', vis.length === 0);
-      if (mob){ sec.style.height = ''; rail.style.transform = ''; if (track) track.style.transform = ''; return; }
+      if (mob){ sec.style.height = ''; rail.style.transform = ''; if (track) track.style.transform = '';
+        items.forEach(function(it){ qs('.gl-tx', it).style.width = ''; }); return; }
+      /* the slot a name stands in is half of what the narrower of its two photographs — its own and the one before it — leaves of the screen:
+         so when a photograph stands in the middle, neither its neighbour on the left nor the one on the right shows an edge */
+      var ws = vis.map(function(it){ return qs('.gl-im', it).offsetWidth; });
+      vis.forEach(function(it, i){ var m = i ? Math.min(ws[i], ws[i - 1]) : ws[i];
+        qs('.gl-tx', it).style.width = Math.max(240, Math.round((W - m) / 2) + 4) + 'px'; });   /* 4 over, so no edge of a neighbour is left on the screen */
       cen = vis.map(function(it){ var im = qs('.gl-im', it); return it.offsetLeft + im.offsetLeft + im.offsetWidth / 2; });
       span = Math.max(0, vis.length - 1) * STEP * H;
       sec.style.height = Math.round(span + H) + 'px';

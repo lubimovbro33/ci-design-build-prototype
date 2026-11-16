@@ -319,14 +319,17 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .gl-rail{position:absolute;left:0;top:calc(150 * var(--u));bottom:calc(330 * var(--u));display:flex;align-items:center;will-change:transform}
 .gl-it{position:relative;flex:none;display:flex;align-items:center;color:#FFFFFF;text-decoration:none}
 .gl-it[hidden]{display:none}
+/* the slot before a photograph is half of what the photograph leaves of the screen, so when it stands in the middle the one before it is
+   exactly off the edge: one picture at a time, whatever its width (set in js) */
 .gl-tx{flex:none;width:calc(660 * var(--u));display:block;text-align:center;opacity:.32;transition:opacity .55s}
+.gl-nm{overflow-wrap:break-word}
 .gl-it.on .gl-tx{opacity:1}
 .gl-nm{display:block;font-family:var(--fx);font-weight:400;font-size:max(17px, calc(34 * var(--u)));line-height:1;letter-spacing:-.077em;text-transform:uppercase;color:#FFFFFF}
 .gl-mt{margin-top:calc(18 * var(--u));opacity:0;transform:translateY(calc(6 * var(--u)));transition:opacity .55s, transform .55s}
 .gl-mt + .gl-mt{margin-top:calc(8 * var(--u))}
 .gl-it.on .gl-mt{opacity:1;transform:none}
 .sqm.sqc{justify-content:center;margin-left:0;clip-path:inset(0 0 0 var(--ss))}   /* the same square row, centred in the slot */
-.gl-im{position:relative;flex:none;display:block;height:calc(500 * var(--u));width:calc(500 * var(--u) * var(--ar, 1.4));overflow:hidden;background:#0A0A0A}
+.gl-im{position:relative;flex:none;display:block;height:calc(540 * var(--u));width:calc(540 * var(--u) * var(--ar, 1.4));overflow:hidden;background:#0A0A0A}
 .gl-im img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.04) brightness(.72);transition:filter .7s, transform 1.1s cubic-bezier(.16,1,.3,1)}
 .gl-it.on .gl-im img{filter:contrast(1.04) brightness(1)}
 .gl-it.on:hover .gl-im img{transform:scale(1.035)}
