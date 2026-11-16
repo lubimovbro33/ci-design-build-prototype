@@ -304,7 +304,7 @@
      The site's line draws in to the key's length and opens into the blank; the cuts are made one after another, each with its line and its name.
      In the flow (phones) the key stands upright and the names stand in a column to its right, led out the same way; it draws itself once.
      Key space: a — along the key (0 in its middle, the bow at the minus end), c — across it (plus = the side of the cuts), in key units. */
-  var KY = {T0: .7, D: .36, PER: 4.2, seed: reduced ? 7 : Math.floor(Math.random() * 1e6), BLUE: '150,168,191', RB: 100, HB: 68, SH: 12, NS: 30, BL: 300, C0: 52, SP: 38, M: 17, F: 5, sets: {}};
+  var KY = {T0: .7, D: .36, PER: 4.2, seed: reduced ? 7 : Math.floor(Math.random() * 1e6), BLUE: '150,168,191', RB: 100, HB: 68, SH: 12, NS: 30, BL: 300, C0: 34.6, SP: 38, M: 17, F: 5, sets: {}};
   function keySet(n, seed, cnt){
     var id = (seed || 0) + ':' + n + ':' + cnt; if (KY.sets[id]) return KY.sets[id];
     var o = [], i, prev = -1, sd = seed || KY.seed; for (i = 0; i < cnt; i++){ var x = Math.sin((sd + n * 131.7 + i * 17.3) * 12.9898) * 43758.5453; x -= Math.floor(x); var lv = Math.min(4, Math.floor(x * 5)); if (lv === prev) lv = (lv + 2) % 5; prev = lv; o.push(9 + lv * 5.2); }
@@ -314,7 +314,7 @@
     var flow = f.cw > 0, w = flow ? f.cw : W, h = flow ? f.ch : H, i, j, N = Math.max(1, f.names.length || 6);
     var hb = KY.HB / 2, sh = KY.SH, f0 = Math.asin((hb + sh) / KY.RB), L = KY.RB * (1 + Math.cos(f0)) + KY.NS + KY.BL, AB = -L / 2 + KY.RB, x0 = AB + KY.RB * Math.cos(f0), xt = x0 + KY.NS + KY.BL;
     var sp = N > 1 ? Math.min(KY.SP, (KY.BL - KY.C0 - 58) / (N - 1)) : 0, cmid = x0 + KY.NS + KY.C0 + sp * (N - 1) / 2;
-    var s = flow ? Math.min(h - 36, 300) / L : U, kx = flow ? Math.round(Math.max(KY.RB * s + 14, w * .2)) + .5 : w / 2 - cmid * s, ky = flow ? h / 2 : MID - Math.round(40 * U);
+    var s = flow ? Math.min(h - 36, 300) / L : U, kx = flow ? Math.round(Math.max(KY.RB * s + 14, w * .2)) + .5 : w / 2, ky = flow ? h / 2 : MID - Math.round(40 * U);
     if (flow){ if (!f.tv){ var cr = f.cv.getBoundingClientRect(); if (cr.top < H * .72 && cr.bottom > 0) f.tv = t; } q = reduced ? 9 : f.tv ? .05 + (t - f.tv) * .5 : 0; }
     else if (reduced && q > .05) q = Math.max(q, 9);
     var k1 = eio(sg(q, .05, .34)), k = eio(sg(q, .3, .62));
@@ -347,7 +347,8 @@
       if (lp <= 0 || !nm) continue;
       var c0 = P(ca[i], hb), lx, ly, pth;
       if (flow){ ly = Math.round(ky + cmid * s + (i - (N - 1) / 2) * LS) + .5; var cy0 = Math.round(c0[1]) + .5, xa = c0[0] + 5; lx = xa + 84; pth = [[xa, cy0], [xa + 14, cy0], [xa + 66, ly], [lx - 6, ly]]; }
-      else { lx = Math.round(w / 2 + (i - (N - 1) / 2) * LS) + .5; var cx0 = Math.round(c0[0]) + .5, y1 = ky + 125 * U, y2 = ky + 199 * U; ly = y2 + 48 * U; pth = [[cx0, c0[1] + 6 * U], [cx0, y1], [lx, y2], [lx, y2 + 20 * U]]; }
+      else { lx = Math.round(w / 2 + (i - (N - 1) / 2) * LS) + .5; var cx0 = Math.round(c0[0]) + .5, yl = Math.round(ky + (122 + 17 * (lx < cx0 ? i : N - 1 - i)) * U) + .5; ly = ky + 247 * U; if (Math.abs(lx - cx0) < 1.5) cx0 = lx;
+        pth = cx0 === lx ? [[lx, c0[1] + 6 * U], [lx, ky + 219 * U]] : /[?&#]ko=1/.test(location.search + location.hash) ? [[cx0, c0[1] + 6 * U], [cx0, yl], [lx, yl], [lx, ky + 219 * U]] : [[cx0, c0[1] + 6 * U], [cx0, ky + 125 * U], [lx, ky + 199 * U], [lx, ky + 219 * U]]; }
       ink(.33, 1); poly(pth, lp);
       if (la <= 0) continue;
       var hold = nm[0].charAt(0) === '[', v = nm[0].toUpperCase(), ad = nm[1].toUpperCase(), wh = 'rgba(255,255,255,' + (la * (hold ? .5 : 1)).toFixed(3) + ')', bl = hold ? wh : 'rgba(' + KY.BLUE + ',' + la.toFixed(3) + ')';
