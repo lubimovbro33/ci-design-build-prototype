@@ -529,54 +529,46 @@
 
 
 
-  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference onok.es/projects
-     and her note of 21:47: «перша фотографія велика, потім інші менші. Коли ми скролимо, ці ті стають великими… з інерцією»).
-     One row on a pinned screen. The photograph at the left field stands at full height; the ones waiting to its right stand smaller, and each one
-     grows into that place as it arrives. The row is laid out from the project the scroll has reached (f, with the fraction of the one arriving),
-     so the growing never fights the movement; where the row stops is found once, by halving. The row follows the scroll with a lag: the inertia. */
+  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference onok.es/projects,
+     measured off her screenshot: 625 × 442 open, 320 × 442 closed, 16 between — one height, the width is what changes).
+     One row on a pinned screen. The window at the left field is open; the rest wait narrow; as the row is scrolled each one opens in its turn and
+     the one before it closes again. The picture inside never moves — the window widens over it. The row is laid out from the project the scroll has
+     reached, so the opening never fights the movement, and it follows the scroll with a lag: the inertia. */
   var GL = (function(){
     var sec = qs('.glx'); if (!sec) return null;
-    var rail = qs('.gl-rail', sec), items = qsa('.gl-it', sec), chips = qsa('[data-gal] .chip', sec),
-        FIELD = 50, HB = 540, SMALL = .68, GAP = 25, STEP = .5,   /* in the frame's units; STEP: screens of scroll one project takes */
-        vis = items.slice(), ars = [], f = 0, tf = 0, fEnd = 0, span = 0, mob = false, ready = false, put = [];
-    function ar(it, w, h){ if (!w || !h) return; qs('.gl-im', it).style.setProperty('--ar', Math.max(.72, Math.min(1.70, w / h)).toFixed(4)); dirty = true; }
-    /* the proportions are needed before the row is laid out, and the pictures stand off the screen: they are fetched once the section is a screen away */
-    (function(){
-      function load(){ if (ready) return; ready = true;
-        items.forEach(function(it){ var img = qs('img', it); if (!img) return; img.loading = 'eager';
-          if (img.complete && img.naturalWidth) return ar(it, img.naturalWidth, img.naturalHeight);
-          var pre = new Image(); pre.onload = function(){ ar(it, pre.naturalWidth, pre.naturalHeight); }; pre.src = img.src; }); }
+    var stg = qs('.gl-stg', sec), rail = qs('.gl-rail', sec), items = qsa('.gl-it', sec), chips = qsa('[data-gal] .chip', sec),
+        FIELD = 50, GH = 580, OPEN = 1.414, SHUT = .724, GAP = .036, STEP = .5,   /* her reference's own proportions, in the frame's units */
+        vis = items.slice(), f = 0, tf = 0, fEnd = 0, span = 0, mob = false, ready = false, put = [];
+    (function(){   /* the pictures stand off the screen: they are fetched once the section is a screen away */
+      function load(){ if (ready) return; ready = true; items.forEach(function(it){ var img = qs('img', it); if (img) img.loading = 'eager'; }); }
       if (!('IntersectionObserver' in window)) return load();
       var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ load(); io.disconnect(); } }, {rootMargin: '120% 0px'});
       io.observe(sec);
     })();
-    /* the row at a given place in it: everything up to f stands at full height, the one arriving grows into it, the rest wait small;
-       the project at f stands at the left field */
+    /* the row at a given place in it: the window at f is open, its neighbour opens as f moves on, everything else is shut.
+       The widths add up to the same total whatever f is, so the row moves evenly. */
     function lay(fv){
-      var fx = FIELD * U, n = vis.length, k = Math.max(0, Math.min(n - 1, Math.floor(fv))), fr = fv - k,
-          hb = HB * U, g = GAP * U, ss = [], ws = [], out = new Array(n), i, sc;
-      for (i = 0; i < n; i++){ sc = 1 - (1 - SMALL) * sm(0, 1, c01(i - fv)); ss.push(sc); ws.push(hb * sc * (ars[i] || 1.4)); }
-      out[k] = {x: fx - fr * (ws[k] + g), w: ws[k], s: ss[k]};
-      for (i = k + 1; i < n; i++) out[i] = {x: out[i - 1].x + out[i - 1].w + g, w: ws[i], s: ss[i]};
-      for (i = k - 1; i >= 0; i--) out[i] = {x: out[i + 1].x - ws[i] - g, w: ws[i], s: ss[i]};
-      /* the row is never pulled past its end: once it has begun to move it is held against the right field, and the last photographs
-         grow into their full height there instead of trailing a hole behind them */
-      if (out[0].x < fx - .5){ var sh = (W - fx) - right(out); if (sh > 0) for (i = 0; i < n; i++) out[i].x += sh; }
+      var h = GH * U, wo = h * OPEN, ws = h * SHUT, g = h * GAP, fx = FIELD * U,
+          n = vis.length, k = Math.max(0, Math.min(n - 1, Math.floor(fv))), fr = fv - k, out = new Array(n), i, w = [];
+      for (i = 0; i < n; i++) w.push(ws + (wo - ws) * sm(0, 1, c01(1 - Math.abs(i - fv))));
+      out[k] = {x: fx - fr * (w[k] + g), w: w[k]};
+      for (i = k + 1; i < n; i++) out[i] = {x: out[i - 1].x + out[i - 1].w + g, w: w[i]};
+      for (i = k - 1; i >= 0; i--) out[i] = {x: out[i + 1].x - w[i] - g, w: w[i]};
+      /* the row is never pulled past its end: once it has begun to move it is held against the right field, and the windows there open in place */
+      if (out[0].x < fx - .5){ var sh = (W - fx) - (out[n - 1].x + out[n - 1].w); if (sh > 0) for (i = 0; i < n; i++) out[i].x += sh; }
       return out;
     }
-    function right(o){ var L = o[o.length - 1]; return L.x + L.w; }
     function layout(){
       mob = !!(mm && mm('(max-aspect-ratio: 1/1)').matches);
       vis = items.filter(function(it){ return !it.hidden; });
       sec.classList.toggle('empty', vis.length === 0);
       if (mob || !vis.length){
         sec.style.height = '';
-        items.forEach(function(it){ it.style.transform = ''; qs('.gl-im', it).style.transform = ''; });
+        items.forEach(function(it){ it.style.transform = ''; qs('.gl-im', it).style.width = ''; });
         put = []; return;
       }
-      ars = vis.map(function(it){ return +getComputedStyle(qs('.gl-im', it)).getPropertyValue('--ar') || 1.4; });
-      /* the row runs until the last project has taken the big place; if everything is on the screen already it does not move at all */
-      fEnd = right(lay(0)) <= W - FIELD * U ? 0 : vis.length - 1;
+      var o = lay(0), last = o[vis.length - 1];
+      fEnd = last.x + last.w <= W - FIELD * U ? 0 : vis.length - 1;   /* everything on the screen already: the row does not move */
       span = Math.round(fEnd * STEP * H);
       sec.style.height = Math.round(span + H) + 'px';
       put = [];
@@ -587,13 +579,12 @@
       tf = (span > 0 ? c01(-r.top / span) : 0) * fEnd;
       f += (tf - f) * .14;                                  /* the lag that makes the glide */
       if (Math.abs(tf - f) < .0015) f = tf;
-      /* the photograph keeps its full box and is scaled from its top left corner: the browser never has to lay the row out again */
       var o = lay(f), i, a2, b2;
       for (i = 0; i < vis.length; i++){
         a2 = o[i]; b2 = put[i];
-        if (b2 && Math.abs(b2.x - a2.x) < .4 && Math.abs(b2.s - a2.s) < .002) continue;
+        if (b2 && Math.abs(b2.x - a2.x) < .4 && Math.abs(b2.w - a2.w) < .4) continue;
         vis[i].style.transform = 'translate3d(' + a2.x.toFixed(1) + 'px,0,0)';
-        qs('.gl-im', vis[i]).style.transform = 'scale(' + a2.s.toFixed(4) + ')';
+        qs('.gl-im', vis[i]).style.width = a2.w.toFixed(1) + 'px';
         put[i] = a2;
       }
     }
