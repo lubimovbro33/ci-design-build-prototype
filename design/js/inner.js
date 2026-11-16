@@ -210,6 +210,7 @@
     FILMS.forEach(function(f){ if (f.fig !== 'key' && f.fig !== 'many') return; var flow = getComputedStyle(f.cv).position !== 'absolute'; f.cw = flow ? f.cv.clientWidth : 0; f.ch = flow ? f.cv.clientHeight : 0;
       if (flow){ f.cv.width = Math.round(f.cw * DPR); f.cv.height = Math.round(f.ch * DPR); } });
     dirty = false;
+    if (GL) GL.layout();
     qsa('#ftCity').forEach(function(v){ var mtx = v.getScreenCTM && v.getScreenCTM(); if (mtx && mtx.a) v.style.setProperty('--ds', Math.max(mtx.a, .05).toFixed(4)); });
   }
   window.addEventListener('resize', function(){ dirty = true; });
@@ -527,6 +528,88 @@
   })();
 
 
+
+  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference makhnostudio.com/studio/team)
+     A rail of photographs on a pinned screen. The scroll walks it sideways; each photograph keeps its own proportions (--ar, read from the file),
+     so one height and many widths. The name before a photograph belongs to it, which puts the next project's name at the right edge of the screen.
+     The left and right fields step one project, a thumbnail jumps to one, the filters rebuild the rail. */
+  var GL = (function(){
+    var sec = qs('.glx'); if (!sec) return null;
+    var rail = qs('.gl-rail', sec), items = qsa('.gl-it', sec), thumbs = qsa('.gl-th', sec), strip = qs('.gl-strip', sec), track = qs('.gl-track', sec),
+        cur = qs('.gl-cur', sec), tot = qs('.gl-tot', sec), chips = qsa('[data-gal] .chip', sec),
+        STEP = .55, vis = items.slice(), cen = [], x = 0, tx = 0, idx = -1, span = 0, mob = false, ready = false, lastY = -1, idle = 0, settled = false;
+    function two(n){ return n < 10 ? '0' + n : '' + n; }
+    function ar(it, w, h){ if (!w || !h) return; qs('.gl-im', it).style.setProperty('--ar', Math.max(.72, Math.min(1.62, w / h)).toFixed(4)); dirty = true; }
+    /* the proportions are needed before the rail is laid out, and the pictures stand off the screen: they are fetched once the section is a screen away */
+    (function(){
+      function load(){ if (ready) return; ready = true;
+        items.forEach(function(it){ var img = qs('img', it); if (!img) return; img.loading = 'eager';
+          if (img.complete && img.naturalWidth) return ar(it, img.naturalWidth, img.naturalHeight);
+          var pre = new Image(); pre.onload = function(){ ar(it, pre.naturalWidth, pre.naturalHeight); }; pre.src = img.src; }); }
+      if (!('IntersectionObserver' in window)) return load();
+      var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ load(); io.disconnect(); } }, {rootMargin: '120% 0px'});
+      io.observe(sec);
+    })();
+    function top(){ return sec.getBoundingClientRect().top + window.scrollY; }
+    function mark(i){
+      idx = i;
+      items.forEach(function(it){ it.classList.remove('on'); });
+      if (!vis[i]) return;
+      vis[i].classList.add('on');
+      var k = items.indexOf(vis[i]), th = thumbs[k];
+      thumbs.forEach(function(t){ t.classList.remove('on'); });
+      if (th) th.classList.add('on');
+      if (cur) cur.textContent = two(i + 1);
+      if (th && track && strip){ var tw = track.scrollWidth, sw = strip.clientWidth, sx = 0;
+        if (tw > sw) sx = Math.max(sw - tw, Math.min(0, sw / 2 - (th.offsetLeft + th.offsetWidth / 2)));
+        track.style.transform = 'translate3d(' + sx.toFixed(1) + 'px,0,0)'; }
+    }
+    function layout(){
+      mob = !!(mm && mm('(max-aspect-ratio: 1/1)').matches);
+      vis = items.filter(function(it){ return !it.hidden; });
+      if (tot) tot.textContent = two(vis.length);
+      sec.classList.toggle('empty', vis.length === 0);
+      if (mob){ sec.style.height = ''; rail.style.transform = ''; if (track) track.style.transform = ''; return; }
+      cen = vis.map(function(it){ var im = qs('.gl-im', it); return it.offsetLeft + im.offsetLeft + im.offsetWidth / 2; });
+      span = Math.max(0, vis.length - 1) * STEP * H;
+      sec.style.height = Math.round(span + H) + 'px';
+      if (idx < 0 || idx >= vis.length) mark(vis.length ? Math.max(0, Math.min(vis.length - 1, idx < 0 ? 0 : vis.length - 1)) : -1);
+    }
+    function frame(){
+      if (mob || !vis.length) return;
+      var r = sec.getBoundingClientRect(); if (r.bottom < -200 || r.top > H + 200) return;
+      var p = span > 0 ? c01(-r.top / span) : 0, f = p * (vis.length - 1), i0 = Math.floor(f), i1 = Math.min(vis.length - 1, i0 + 1), k = f - i0;
+      tx = W / 2 - (cen[i0] + (cen[i1] - cen[i0]) * k);
+      x += (tx - x) * .34; if (Math.abs(tx - x) < .4) x = tx;
+      rail.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
+      var ni = Math.round(f); if (ni !== idx) mark(ni);
+      /* when the hand comes off the wheel the rail settles on the nearest project — a gallery stops at a picture, not between two */
+      var y = window.scrollY;
+      if (y !== lastY){ lastY = y; idle = 0; settled = false; } else idle++;
+      if (!settled && idle > 14 && !smw.on && !reduced && !coarse && span > 0 && r.top <= 2 && r.top >= -span - 2){
+        settled = true; if (Math.abs(f - ni) > .02) go(ni);
+      }
+    }
+    function go(i){ if (mob || !vis.length) return; i = Math.max(0, Math.min(vis.length - 1, i)); smoothTo(top() + i * STEP * H + 2); }
+    qsa('.gl-prev', sec).forEach(function(b){ b.addEventListener('click', function(){ go(idx - 1); }); });
+    qsa('.gl-next', sec).forEach(function(b){ b.addEventListener('click', function(){ go(idx + 1); }); });
+    thumbs.forEach(function(t, i){ t.addEventListener('click', function(){ var j = vis.indexOf(items[i]); if (j >= 0) go(j); }); });
+    chips.forEach(function(c){ c.addEventListener('click', function(){
+      if (c.disabled) return;
+      chips.forEach(function(o){ o.classList.toggle('on', o === c); });
+      var fv = c.getAttribute('data-f');
+      items.forEach(function(it, i){ var ok = fv === 'all' || (' ' + it.getAttribute('data-tags') + ' ').indexOf(' ' + fv + ' ') >= 0;
+        it.hidden = !ok; if (thumbs[i]) thumbs[i].hidden = !ok; });
+      idx = -1; layout(); x = tx = 0;
+      var t0 = top(); if (window.scrollY > t0) smoothTo(t0 + 2);
+    }); });
+    window.addEventListener('keydown', function(e){
+      if (mob || !vis.length) return; var r = sec.getBoundingClientRect(); if (r.top > 4 || r.bottom < H - 4) return;
+      if (e.key === 'ArrowRight'){ e.preventDefault(); go(idx + 1); } else if (e.key === 'ArrowLeft'){ e.preventDefault(); go(idx - 1); }
+    });
+    return {layout: layout, frame: frame};
+  })();
+
   /* ================================================================== the loop */
   var lastY = -1, lastVH = 0;
   function tick(now){
@@ -547,6 +630,7 @@
       var b = BANDS[i], br = b.el.getBoundingClientRect(); if (br.bottom < -40 || br.top > H + 40) continue;
       b.img.style.transform = 'translate3d(0,' + ((br.top / H) * -4).toFixed(2) + '%,0)';
     }
+    if (GL) GL.frame();
     if (y !== lastY || H !== lastVH) updateChap(y, H);
     chapInk(); updateLogo(y, H);
     lastY = y; lastVH = H;
