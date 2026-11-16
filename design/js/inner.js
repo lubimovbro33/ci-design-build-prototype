@@ -296,51 +296,63 @@
   }
   /* ---------- film: key — «Every Home Unique. One CI Standard» (Portfolio; her choice of 15.11 20:00 between two sketches, after the list, the large
      type and the abstract contours had all missed: the picture must read at once).
-     One blank — the CI standard. The cuts — on Portfolio the six steps of the process, a name under each, a blue pin resting in each; how deep
-     each cut goes is the home's own: no two keys are cut alike, and there the cuts keep gliding to the next key.
-     On a project's page (data-seed) the key is that home's own: its cuts are the items of the project's scope — as many as the scope has —
-     and they stand still. The site's line draws in to the key's length and opens into the blank; the cuts are made one after another.
-     In the flow (phones) the key stands upright, its cuts and names to the right, and draws itself once as it comes into view.
-     Key space: a — along the key (0 in its middle, the bow at the minus end), c — across it (plus = the side of the cuts), in u. */
-  var KY = {T0: .7, D: .36, PER: 4.2, seed: reduced ? 7 : Math.floor(Math.random() * 1e6), BLUE: '150,168,191', AB: -510, RB: 126, HB: 64, SH: 11, XT: 636, A0: -248, A1: 502, M: 46, F: 13, sets: {}};
+     One blank — the CI standard. The cuts — the six steps of the process, a blue pin resting in each; how deep each cut goes is the home's own:
+     no two keys are cut alike, and the cuts keep gliding to the next key (with data-seed they stand still).
+     16.11 12:16, her word: «ключ дуже великий… таких великих ключів немає» — of three stills she took А: the key has a real key's proportions
+     (the blade hardly longer than the bow is wide) and is 519 long instead of 1424; the cuts stand close, so every cut is led out by a thin line
+     to its name, and the names stand in a row under the key, 216 apart, the cuts' middle over the middle of the row.
+     The site's line draws in to the key's length and opens into the blank; the cuts are made one after another, each with its line and its name.
+     In the flow (phones) the key stands upright and the names stand in a column to its right, led out the same way; it draws itself once.
+     Key space: a — along the key (0 in its middle, the bow at the minus end), c — across it (plus = the side of the cuts), in key units. */
+  var KY = {T0: .7, D: .36, PER: 4.2, seed: reduced ? 7 : Math.floor(Math.random() * 1e6), BLUE: '150,168,191', RB: 100, HB: 68, SH: 12, NS: 30, BL: 300, C0: 52, SP: 38, M: 17, F: 5, sets: {}};
   function keySet(n, seed, cnt){
     var id = (seed || 0) + ':' + n + ':' + cnt; if (KY.sets[id]) return KY.sets[id];
-    var o = [], i, prev = -1, sd = seed || KY.seed; for (i = 0; i < cnt; i++){ var x = Math.sin((sd + n * 131.7 + i * 17.3) * 12.9898) * 43758.5453; x -= Math.floor(x); var lv = Math.min(4, Math.floor(x * 5)); if (lv === prev) lv = (lv + 2) % 5; prev = lv; o.push(16 + lv * 5.25); }
+    var o = [], i, prev = -1, sd = seed || KY.seed; for (i = 0; i < cnt; i++){ var x = Math.sin((sd + n * 131.7 + i * 17.3) * 12.9898) * 43758.5453; x -= Math.floor(x); var lv = Math.min(4, Math.floor(x * 5)); if (lv === prev) lv = (lv + 2) % 5; prev = lv; o.push(9 + lv * 5.2); }
     KY.sets[id] = o; return o;
   }
   function key(f, q, t){
-    var flow = f.cw > 0, w = flow ? f.cw : W, h = flow ? f.ch : H, mid = flow ? h / 2 : MID, s = flow ? (h - 32) / 1272 : 1.12 * U, cxp = w * .3, i, j, N = Math.max(1, f.names.length || 6);
+    var flow = f.cw > 0, w = flow ? f.cw : W, h = flow ? f.ch : H, i, j, N = Math.max(1, f.names.length || 6);
+    var hb = KY.HB / 2, sh = KY.SH, f0 = Math.asin((hb + sh) / KY.RB), L = KY.RB * (1 + Math.cos(f0)) + KY.NS + KY.BL, AB = -L / 2 + KY.RB, x0 = AB + KY.RB * Math.cos(f0), xt = x0 + KY.NS + KY.BL;
+    var sp = N > 1 ? Math.min(KY.SP, (KY.BL - KY.C0 - 58) / (N - 1)) : 0, cmid = x0 + KY.NS + KY.C0 + sp * (N - 1) / 2;
+    var s = flow ? Math.min(h - 36, 300) / L : U, kx = flow ? Math.round(Math.max(KY.RB * s + 14, w * .2)) + .5 : w / 2 - cmid * s, ky = flow ? h / 2 : MID - Math.round(40 * U);
     if (flow){ if (!f.tv){ var cr = f.cv.getBoundingClientRect(); if (cr.top < H * .72 && cr.bottom > 0) f.tv = t; } q = reduced ? 9 : f.tv ? .05 + (t - f.tv) * .5 : 0; }
     else if (reduced && q > .05) q = Math.max(q, 9);
     var k1 = eio(sg(q, .05, .34)), k = eio(sg(q, .3, .62));
-    function P(a, c){ return flow ? [cxp + c * k * s, mid + a * s] : [w / 2 + a * s, mid + c * k * s]; }
+    function P(a, c){ return flow ? [kx + c * k * s, ky + a * s] : [kx + a * s, ky + c * k * s]; }
+    function poly(pt, f01){ var tot = 0, ls = [], a; for (a = 1; a < pt.length; a++){ var l = Math.sqrt(Math.pow(pt[a][0] - pt[a - 1][0], 2) + Math.pow(pt[a][1] - pt[a - 1][1], 2)); ls.push(l); tot += l; }
+      var rem = tot * f01; g.beginPath(); g.moveTo(pt[0][0], pt[0][1]); for (a = 1; a < pt.length && rem > 0; a++){ var u = Math.min(1, rem / ls[a - 1]); g.lineTo(lerp(pt[a - 1][0], pt[a][0], u), lerp(pt[a - 1][1], pt[a][1], u)); rem -= ls[a - 1]; } g.stroke(); }
     ink(1);
-    if (k <= 0){ var hw = flow ? KY.XT * s * k1 : lerp(w / 2 + 10, KY.XT * s, k1); if (hw > 0){ if (flow) seg(cxp, mid - hw, cxp, mid + hw); else seg(w / 2 - hw, mid, w / 2 + hw, mid); } return; }
-    /* this key's cuts: a project's own stand still; on Portfolio they glide from one key to the next */
+    if (k <= 0){   /* the site's line draws in to the key's length (and, on a screen, to the key's height) */
+      if (flow){ var hl = L / 2 * s * k1; if (hl > 0) seg(kx, ky - hl, kx, ky + hl); }
+      else { var ya = lerp(MID, ky, k1); seg(lerp(-10, kx - L / 2 * s, k1), ya, lerp(w + 10, kx + L / 2 * s, k1), ya); }
+      return; }
+    /* this key's cuts: with data-seed they stand still; on Portfolio they glide from one key to the next */
     var tt = reduced || f.seed ? 0 : t, n = Math.floor(tt / KY.PER), e = eio(sg(tt / KY.PER - n, 0, .28)), A = keySet(n, f.seed, N), B = keySet(n + 1, f.seed, N), d = [], pr = [], ca = [];
-    for (i = 0; i < N; i++){ pr.push(eo(sg(q, KY.T0 + i * KY.D, KY.T0 + i * KY.D + .3))); d.push(lerp(A[i], B[i], e) * pr[i]); ca.push(N > 1 ? KY.A0 + i * (KY.A1 - KY.A0) / (N - 1) : (KY.A0 + KY.A1) / 2); }
-    var hb = KY.HB / 2, sh = KY.SH, f0 = Math.asin((hb + sh) / KY.RB), x0 = KY.AB + KY.RB * Math.cos(f0), xt = KY.XT, pts = [], NA = 72;
-    for (j = 0; j <= NA; j++){ var ph = f0 + (6.2831853 - 2 * f0) * j / NA; pts.push([KY.AB + KY.RB * Math.cos(ph), KY.RB * Math.sin(ph)]); }
-    pts.push([x0 + 42, -hb - sh], [x0 + 42, -hb], [xt - 48, -hb], [xt, -2], [xt, 10], [xt - 20, hb]);
+    for (i = 0; i < N; i++){ pr.push(eo(sg(q, KY.T0 + i * KY.D, KY.T0 + i * KY.D + .3))); d.push(lerp(A[i], B[i], e) * pr[i]); ca.push(x0 + KY.NS + KY.C0 + i * sp); }
+    var pts = [], NA = 72;
+    for (j = 0; j <= NA; j++){ var ph = f0 + (6.2831853 - 2 * f0) * j / NA; pts.push([AB + KY.RB * Math.cos(ph), KY.RB * Math.sin(ph)]); }
+    pts.push([x0 + KY.NS, -hb - sh], [x0 + KY.NS, -hb], [xt - 38, -hb], [xt, -4], [xt, 8], [xt - 16, hb]);
     for (i = N - 1; i >= 0; i--) pts.push([ca[i] + KY.M, hb], [ca[i] + KY.F, hb - d[i]], [ca[i] - KY.F, hb - d[i]], [ca[i] - KY.M, hb]);
-    pts.push([x0 + 42, hb], [x0 + 42, hb + sh]);
+    pts.push([x0 + KY.NS, hb], [x0 + KY.NS, hb + sh]);
     g.lineJoin = 'miter'; g.beginPath(); for (j = 0; j < pts.length; j++){ var p = P(pts[j][0], pts[j][1]); if (j) g.lineTo(p[0], p[1]); else g.moveTo(p[0], p[1]); } g.closePath(); g.stroke(); g.lineJoin = 'round';
     /* the hole of the bow and the groove of the blade come as the blank opens */
     var ga = sg(k, .55, 1);
-    if (ga > 0){ ink(ga); g.beginPath(); for (j = 0; j <= 48; j++){ var hp = P(KY.AB - 50 + 31 * Math.cos(j / 48 * 6.2831853), 31 * Math.sin(j / 48 * 6.2831853)); if (j) g.lineTo(hp[0], hp[1]); else g.moveTo(hp[0], hp[1]); } g.stroke();
-      var g0 = P(x0 + 60, -15), g1 = P(xt - 62, -15); seg(g0[0], g0[1], g1[0], g1[1]); }
-    /* the pins and the names (a name in square brackets is the client's placeholder: at half strength) */
-    var px = Math.max(10, 14 * U), s8 = Math.max(5, 8 * U); g.font = '400 ' + px.toFixed(2) + 'px "Zalando Sans Expanded", sans-serif'; g.textBaseline = 'alphabetic';
-    /* what the cuts are (a project's «Scope»): a small name under the bow, on the line of the cuts' names */
-    if (f.cap){ var ca0 = sg(q, KY.T0 + .08, KY.T0 + .3); if (ca0 > 0){ g.fillStyle = 'rgba(255,255,255,' + (ca0 * .5).toFixed(3) + ')';
-      if (flow){ var c1 = P(ca[0], hb); g.textAlign = 'left'; g.fillText(f.cap.toUpperCase(), c1[0] + 22, c1[1] - px * 1.9); } else { g.textAlign = 'center'; g.fillText(f.cap.toUpperCase(), P(KY.AB, 0)[0], mid + (hb + 44) * s + (KY.RB - hb - 44 + 40) * s); } } }
+    if (ga > 0){ ink(ga); g.beginPath(); for (j = 0; j <= 48; j++){ var hp = P(AB - 46 + 22 * Math.cos(j / 48 * 6.2831853), 22 * Math.sin(j / 48 * 6.2831853)); if (j) g.lineTo(hp[0], hp[1]); else g.moveTo(hp[0], hp[1]); } g.stroke();
+      var g0 = P(x0 + KY.NS + 14, -11), g1 = P(xt - 48, -11); seg(g0[0], g0[1], g1[0], g1[1]); }
+    /* the pins, the lines that lead each cut out, and the names (a name in square brackets is the client's placeholder: at half strength) */
+    var px = Math.max(10, 14 * U), s6 = Math.max(5, 7 * U), LS = flow ? 30 : 216 * U; g.font = '400 ' + px.toFixed(2) + 'px "Zalando Sans Expanded", sans-serif'; g.textBaseline = 'alphabetic';
     for (i = 0; i < N; i++){
-      var la = sg(q, KY.T0 + i * KY.D + .08, KY.T0 + i * KY.D + .3), pa = sg(pr[i], .3, 1), nm = f.names[i];
-      if (pa > 0){ var pp = P(ca[i], hb - d[i] + (flow ? 13 : 11)); g.fillStyle = 'rgba(' + KY.BLUE + ',' + pa.toFixed(3) + ')'; g.fillRect(Math.round(pp[0] - s8 / 2), Math.round(pp[1] - s8 / 2), Math.round(s8), Math.round(s8)); }
-      if (la <= 0 || !nm) continue;
+      var T = KY.T0 + i * KY.D, pa = sg(pr[i], .3, 1), lp = eio(sg(q, T + .06, T + .34)), la = sg(q, T + .24, T + .42), nm = f.names[i];
+      if (pa > 0){ var pp = P(ca[i], hb - d[i] + 8); g.fillStyle = 'rgba(' + KY.BLUE + ',' + pa.toFixed(3) + ')'; g.fillRect(Math.round(pp[0] - s6 / 2), Math.round(pp[1] - s6 / 2), Math.round(s6), Math.round(s6)); }
+      if (lp <= 0 || !nm) continue;
+      var c0 = P(ca[i], hb), lx, ly, pth;
+      if (flow){ ly = Math.round(ky + cmid * s + (i - (N - 1) / 2) * LS) + .5; var cy0 = Math.round(c0[1]) + .5, xa = c0[0] + 5; lx = xa + 84; pth = [[xa, cy0], [xa + 14, cy0], [xa + 66, ly], [lx - 6, ly]]; }
+      else { lx = Math.round(w / 2 + (i - (N - 1) / 2) * LS) + .5; var cx0 = Math.round(c0[0]) + .5, y1 = ky + 125 * U, y2 = ky + 199 * U; ly = y2 + 48 * U; pth = [[cx0, c0[1] + 6 * U], [cx0, y1], [lx, y2], [lx, y2 + 20 * U]]; }
+      ink(.33, 1); poly(pth, lp);
+      if (la <= 0) continue;
       var hold = nm[0].charAt(0) === '[', v = nm[0].toUpperCase(), ad = nm[1].toUpperCase(), wh = 'rgba(255,255,255,' + (la * (hold ? .5 : 1)).toFixed(3) + ')', bl = hold ? wh : 'rgba(' + KY.BLUE + ',' + la.toFixed(3) + ')';
-      if (flow){ var lp = P(ca[i], hb), lx = lp[0] + 22, ly = lp[1] + px * .36; g.textAlign = 'left'; g.fillStyle = wh; g.fillText(v, lx, ly); g.fillStyle = bl; g.fillText(ad, lx + g.measureText(v + ' ').width, ly); }
-      else { var dp = P(ca[i], hb), ty = mid + (hb + 44) * s + (1 - la) * 6 * U; g.textAlign = 'center'; g.fillStyle = wh; g.fillText(v, dp[0], ty); g.fillStyle = bl; g.fillText(ad, dp[0], ty + px * 1.3); }
+      if (flow){ g.textAlign = 'left'; g.fillStyle = wh; g.fillText(v, lx, ly + px * .36); g.fillStyle = bl; g.fillText(ad, lx + g.measureText(v + ' ').width, ly + px * .36); }
+      else { var ty = ly + (1 - la) * 6 * U; g.textAlign = 'center'; g.fillStyle = wh; g.fillText(v, lx, ty); g.fillStyle = bl; g.fillText(ad, lx, ty + px * 1.3); }
     }
   }
   /* ---------- film: many — «Why the Details Matter» on a project's page (15.11): «Every project contains hundreds of individual decisions. The
