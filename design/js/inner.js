@@ -443,65 +443,19 @@
     g.restore();
     if (la > 0 && hw > 0 && e <= 0){ g.fillStyle = 'rgba(255,255,255,' + la.toFixed(3) + ')'; g.fillRect(W / 2 - hw, Math.round(Z.cy) - .75, hw * 2, 1.5); }
   }
-  /* ---------- film: wall — the cover of «Collectors Home» (15.11 22:17, her choice among three stills; the page's idea is a collection).
-     The cover photograph fills the screen; the scroll makes it smaller until it hangs on the black wall as a picture (the place is the box of
-     .wl-x, laid out in CSS on the page's left two columns). The name stays where it stood and ends under the picture; the wall text beside it is
-     simply uncovered. Only transforms move: the frame .wl-p scales to the box, the picture inside is scaled back so that it stays in proportion
-     and fills the frame; the cover's shade leaves as the picture hangs. The film's canvas lies over the photograph for the arrival only. */
-  /* TRIAL (15.11 22:41): she found the passage from the cover to the picture on the wall clumsy; three other passages can be tried by the address —
-     ?tr=1 / #tr1 «Відхід» (the picture steps back about the centre, then glides to its place; the name leaves and comes back),
-     ?tr=2 / #tr2 «Стіна» (the wall comes in from the right with the label on it, then the frame closes; the picture hardly moves),
-     ?tr=3 / #tr3 «Світло гасне» (the panes go dark one by one, the six lit ones stay as the picture). 0 = the passage as it was.
-     All follow the scroll with a little inertia. Once she has chosen, the others go. */
-  var WL = {C: 6, R: 4, t0: 0, ord: null, off: null, tr: (function(){ var m = (location.search + location.hash).match(/[?&#]tr=?(\d)/); return m ? +m[1] : 0; })()};
+  /* ---------- film: wall — the cover of «Collectors Home». The photograph lights up pane by pane behind thin bars (6 × 4, the site's one pen) —
+     the arrival she kept (15.11 22:27). Nothing else moves: every passage that turned the cover into a small picture was refused (15.11 22:41–
+     22:53), and after her reference of 16.11 the page simply scrolls on; the bars leave as the cover goes. */
+  var WL = {C: 6, R: 4, t0: 0, ord: null};
   function wall(f, q, t){
-    if (!f.wl) f.wl = {p: qs('.wl-p', f.el), i: qs('.wl-i', f.el), sh: qs('.wl-sh', f.el), gr: qs('.wl-g', f.el), s: qs('.wl-s', f.el), x: qs('.wl-x', f.el), hd: qs('.wl-h', f.el), kk: qs('.wl-k', f.el), lb: qs('.wl-t', f.el),
-                       rows: qsa('.wl-t .wl-e, .wl-t .wl-b, .wl-t .wl-dl > div', f.el), k: '', o: '', w: 0, h: 0, r: null, cur: null, t: 0};
-    var Z = f.wl; if (!Z.p || !Z.i || !Z.x || !Z.x.offsetWidth) return;
+    if (getComputedStyle(f.cv).display === 'none') return;
     if (!WL.t0) WL.t0 = q > .05 || reduced ? t - 9 : t;
-    var C = WL.C, R = WL.R, c, r, i, n = C * R, tE = t - WL.t0, pw = W / C, pv = H / R, TR = WL.tr;
-    if (!WL.ord){ var sd = 11, a = []; for (i = 0; i < n; i++) a.push(i); for (i = n - 1; i > 0; i--){ sd = (sd * 16807) % 2147483647; var j = sd % (i + 1), tmp = a[i]; a[i] = a[j]; a[j] = tmp; } WL.ord = []; for (i = 0; i < n; i++) WL.ord[a[i]] = i;
-      WL.off = []; var m = 0; for (i = 0; i < n; i++){ var ix = a[n - 1 - i]; if (ix % C < C / 2 && ix < C * R / 2) continue; WL.off[ix] = m++; } WL.nOff = m; }
-    /* the scroll, followed with a little inertia */
-    var tgt = reduced ? (q > .5 ? 1 : 0) : sg(q, .06, 1), dt = Math.min(.1, Math.max(0, t - (Z.t || t))); Z.t = t;
-    if (Z.cur === null || reduced) Z.cur = tgt; else { Z.cur += (tgt - Z.cur) * (1 - Math.exp(-dt * 9)); if (Math.abs(tgt - Z.cur) < .0004) Z.cur = tgt; }
-    var p = Z.cur;
-    /* the arrival: the photograph lights up pane by pane behind thin glazing bars (6 × 4, the site's one pen) */
+    var C = WL.C, R = WL.R, c, r, i, n = C * R, tE = t - WL.t0, pw = W / C, pv = H / R;
+    if (!WL.ord){ var sd = 11, a = []; for (i = 0; i < n; i++) a.push(i); for (i = n - 1; i > 0; i--){ sd = (sd * 16807) % 2147483647; var j = sd % (i + 1), tmp = a[i]; a[i] = a[j]; a[j] = tmp; } WL.ord = []; for (i = 0; i < n; i++) WL.ord[a[i]] = i; }
     if (tE < 2.3) for (r = 0; r < R; r++) for (c = 0; c < C; c++){ var lt = .2 + WL.ord[r * C + c] / n * 1.25, al = 1 - sg(tE, lt, lt + .5); if (al <= 0) continue;
       g.fillStyle = 'rgba(0,0,0,' + al.toFixed(3) + ')'; g.fillRect(c * pw - 1, r * pv - 1, pw + 2, pv + 2); }
-    if (TR === 3 && p < .6) for (r = 0; r < R; r++) for (c = 0; c < C; c++){ var o3 = WL.off[r * C + c]; if (o3 == null) continue; var a0 = .03 + o3 / WL.nOff * .44, a3 = sg(p, a0, a0 + .13); if (a3 <= 0) continue;
-      g.fillStyle = 'rgba(0,0,0,' + a3.toFixed(3) + ')'; g.fillRect(c * pw - (c ? 0 : 1), r * pv - (r ? 0 : 1), pw + 1, pv + 1); }
-    var ba = .33 * sg(tE, 0, .6) * (1 - (TR === 3 ? sg(p, .46, .6) : sg(p, 0, .14)));
+    var ba = .33 * sg(tE, 0, .6) * (1 - sg(q, .05, .5));
     if (ba > 0){ g.fillStyle = 'rgba(255,255,255,' + ba.toFixed(3) + ')'; for (c = 1; c < C; c++) g.fillRect(Math.round(c * pw), 0, 1, H); for (r = 1; r < R; r++) g.fillRect(0, Math.round(r * pv), W, 1); }
-    if (!Z.r || Z.w !== W || Z.h !== H){ Z.r = {x: Z.x.offsetLeft, y: Z.x.offsetTop, w: Z.x.offsetWidth, h: Z.x.offsetHeight}; Z.w = W; Z.h = H; Z.k = ''; }
-    var o = (1 - sg(p, .0, .22)).toFixed(3);
-    if (Z.s && o !== Z.o){ Z.o = o; Z.s.style.opacity = o; Z.s.style.visibility = o === '0.000' ? 'hidden' : 'visible'; }
-    var key = p.toFixed(4); if (key === Z.k) return; Z.k = key;
-    var B = Z.r, tf = 'none', clip = 'none', io = '50% 50%', it = 'none', sh = .28, tv = 1, lr = 1, ltx = 0, gr = 0, sx, sy, k, e, e1, e2;
-    function fit(X, Y, BW, BH, s, ax, ay){ s = Math.max(s, BW / W, BH / H); return 'translate3d(' + (X - (s * W - BW) * ax).toFixed(2) + 'px,' + (Y - (s * H - BH) * ay).toFixed(2) + 'px,0) scale(' + s.toFixed(5) + ')'; }
-    var sF = Math.min(1, 1.36 * Math.max(B.w / W, B.h / H));
-    if (TR === 1){          /* «Відхід»: back about the centre, then to its place */
-      e1 = eio(sg(p, 0, .72)); e2 = eio(sg(p, .3, 1)); var w = lerp(W, B.w, e1), h = lerp(H, B.h, e1), cx = lerp(W / 2, B.x + B.w / 2, e2), cy = lerp(H / 2, B.y + B.h / 2, e2);
-      sx = w / W; sy = h / H; k = Math.max(sx, sy); tf = 'translate3d(' + (cx - w / 2).toFixed(2) + 'px,' + (cy - h / 2).toFixed(2) + 'px,0) scale(' + sx.toFixed(5) + ',' + sy.toFixed(5) + ')';
-      it = 'scale(' + (k / sx).toFixed(5) + ',' + (k / sy).toFixed(5) + ')'; sh = .28 * (1 - e1); tv = c01(1 - sg(p, .01, .13) + sg(p, .84, 1)); lr = sg(p, .8, 1);
-    } else if (TR === 2){   /* «Стіна»: the wall comes in from the right, then the frame closes */
-      e1 = eio(sg(p, 0, .62)); e2 = eio(sg(p, .36, 1)); var ir = (W - B.x - B.w) * e1, tp = B.y * e2, ib = (H - B.y - B.h) * e2, il = B.x * e2;
-      clip = 'inset(' + tp.toFixed(2) + 'px ' + ir.toFixed(2) + 'px ' + ib.toFixed(2) + 'px ' + il.toFixed(2) + 'px)'; io = '0 0'; e = eio(sg(p, .05, 1));
-      it = fit(il, tp, W - il - ir, H - tp - ib, lerp(1, sF, e), .35 * e, .5 * e); ltx = (W - B.x - B.w) * (1 - e1); sh = .28 * (1 - sg(p, .5, 1)); gr = sg(p, .02, .3) * (1 - sg(p, .62, .95));
-    } else if (TR === 3){   /* «Світло гасне»: the panes go dark, the lit ones stay as the picture and settle in their place */
-      e2 = eio(sg(p, .6, 1)); io = '0 0';
-      if (p >= .585){ var r3 = lerp(W / 2, W - B.x - B.w, e2), b3 = lerp(H / 2, H - B.y - B.h, e2); clip = 'inset(' + (B.y * e2).toFixed(2) + 'px ' + r3.toFixed(2) + 'px ' + b3.toFixed(2) + 'px ' + (B.x * e2).toFixed(2) + 'px)';
-        it = fit(B.x * e2, B.y * e2, W - B.x * e2 - r3, H - B.y * e2 - b3, lerp(1, sF, e2), .35 * e2, .5 * e2); }
-      sh = .28 * (1 - sg(p, .6, 1)); lr = sg(p, .68, .98);
-    } else {                /* as it was: the frame grows smaller towards its place */
-      e = eio(p); sx = lerp(1, B.w / W, e); sy = lerp(1, B.h / H, e); k = Math.max(sx, sy);
-      tf = 'translate3d(' + (B.x * e).toFixed(2) + 'px,' + (B.y * e).toFixed(2) + 'px,0) scale(' + sx.toFixed(5) + ',' + sy.toFixed(5) + ')'; it = 'scale(' + (k / sx).toFixed(5) + ',' + (k / sy).toFixed(5) + ')'; sh = .28 * (1 - e);
-    }
-    var st = Z.p.style; st.transform = tf; st.webkitClipPath = clip; st.clipPath = clip; Z.i.style.transformOrigin = io; Z.i.style.transform = it;
-    if (Z.sh) Z.sh.style.opacity = sh.toFixed(3); if (Z.gr) Z.gr.style.opacity = gr.toFixed(3);
-    [Z.hd, Z.kk].forEach(function(el){ if (!el) return; el.style.opacity = tv.toFixed(3); el.style.filter = tv >= 1 ? 'none' : 'blur(' + ((1 - tv) * 14).toFixed(1) + 'px)'; el.style.transform = tv >= 1 ? 'none' : 'translateY(' + ((1 - tv) * .12).toFixed(3) + 'em)'; });
-    if (Z.lb) Z.lb.style.transform = ltx ? 'translate3d(' + ltx.toFixed(2) + 'px,0,0)' : 'none';
-    for (i = 0; i < Z.rows.length; i++){ var ar = lr >= 1 ? 1 : eo(sg(lr, i * .09, i * .09 + .5)); Z.rows[i].style.opacity = ar.toFixed(3); Z.rows[i].style.transform = ar >= 1 ? 'none' : 'translateY(' + ((1 - ar) * 16).toFixed(1) + 'px)'; }
   }
   var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall};
 

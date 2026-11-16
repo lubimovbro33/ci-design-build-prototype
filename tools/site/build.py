@@ -26,7 +26,10 @@ PROJ = [
 ]
 # the project pages of 15.11 (her word of 21:29): the name's own lines for the cover that is flown through, a seed for the home's own key, and the gallery
 # on the Portfolio grid — 'blk' = one large + two small (portrait pictures), 'blkr' = its mirror (small, small, large), 'full' = a wide picture across
-PROJ[0].update(lines=['Collectors', 'Home'], seed=1450, idea='collection', gal2=[('blk', ['1450-09a', '1450-15', '1450-14']), ('full', ['1450-24']), ('blkr', ['1450-12', '1450-26', '1450-16a']), ('full', ['1450-22']),
+PROJ[0].update(lines=['Collectors', 'Home'], seed=1450, idea='collection', qphoto='1450-18',
+               gal3=[('m1', ['1450-24', '1450-09a']), ('rb', ['1450-14', '1450-15']), ('sw', ['1450-22']), ('lb', ['1450-32', '1450-12']), ('m1', ['1450-25a', '1450-26']), ('full', ['1450-34']),
+                     ('lp', ['1450-16a', '1450-08a']), ('sw', ['1450-02a']), ('m1', ['1450-05', '1450-10a'])],   # the staggered plan of 16.11: kind → files (landscape / portrait as the kind needs)
+               gal2=[('blk', ['1450-09a', '1450-15', '1450-14']), ('full', ['1450-24']), ('blkr', ['1450-12', '1450-26', '1450-16a']), ('full', ['1450-22']),
     ('blk', ['1450-08a', '1450-13', '1450-18']), ('full', ['1450-25a']), ('blkr', ['1450-11', '1450-27', '1450-10a']), ('full', ['1450-32']), ('blk', ['1450-30', '1450-19', '1450-21']), ('full', ['1450-34'])])
 PROJ[1].update(lines=['Urban', 'Sanctuary'], seed=1511, gal2=[('blk', ['1511-09', '1511-08a', '1511-13']), ('full', ['1511-07a']), ('blkr', ['1511-03a', '1511-02a', '1511-10']), ('full', ['1511-01a']),
     ('blk', ['1530-04', '1530-05', '1511-14a']), ('full', ['1530-03']), ('blkr', ['1530-01', '1530-02', '1511-05a']), ('full', ['1511-11a']), ('full', ['1511-04a'])])

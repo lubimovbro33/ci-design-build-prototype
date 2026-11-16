@@ -276,56 +276,61 @@ def project_old(p, nxt):
     emit(p['slug'] + '.html', nm, pg, cov)
 
 def project_collection(p, nxt):
-    """«Collectors Home» — the page's idea comes from the project's own name: a collection (her word of 15.11 21:57, «Роби», after the first draft
-    read as a copy of the Portfolio page — only the grid may come from there).
-    - cover and The Brief are one pinned scene (film "wall"; her choice of 15.11 22:17 among three stills, after the display case with doors and
-      a white card was refused): the cover photograph opens to the full screen with the name; the scroll makes it smaller until it hangs on the
-      black wall as a picture — the home takes its place in the collection; the name stays under it, and beside it, uncovered by the picture as it
-      shrinks, stands its label («Етикетка», her choice of 22:27 after the six rows there read as overloaded): «The Brief» and the four short
-      facts in one narrow column at the picture's lower edge; as the page arrives the photograph lights up pane by pane (her word of 22:27:
-      without it the first screen «нецікаве стало»);
-    - below the scene, on the four columns: Scope as six large lines with rules, then The Goal;
-    - Design Vision: the template's lines on the four columns;
-    - Inside …: the collection on the Portfolio grid (one large + two small, a wide one, the mirror), every picture numbered like a catalogue item;
-    - Why the Details Matter: hundreds of strokes become one line (film "many"), title top left, text bottom right;
-    - the next project: its name and its photograph side by side on the grid.
-    Nothing is invented: what the client has not written stays their placeholder."""
+    """«Collectors Home». The page's composition follows her reference of 16.11 13:04 (a developer's project page: «взяти як приклад по композиції,
+    по сітці, по розстановці контенту… як бреф заповнено… не копіювати»), set on our black ground, in our type and on our four columns:
+    - cover: the photograph lights up pane by pane (kept: she liked it), the name bottom left; NOTHING is transformed — the page simply scrolls on
+      (every passage that turned the cover into a small picture was refused on 15.11);
+    - a thin vertical line — the spine — runs down the page in the gap before the second column; the first column holds only the blocks' small
+      names; everything else hangs to the right of the spine;
+    - overview: The Goal as one large paragraph with its small name set into the first line's indent, then The Brief as a compact table with rules:
+      the fact's name at the spine, its value from the third column;
+    - Design Vision: the concept as a heading at the spine, its paragraphs small in the fourth column;
+    - photographs stand staggered on the column lines, not in a grid: a landscape on the right, a portrait at the spine lower down; a tall one
+      running off the right edge with a small one beside it; a wide one from the spine; a wide one off the left edge; each numbered (the collection);
+    - testimonial: the quotation large on the left, a tall photograph to the right edge;
+    - Why the Details Matter (film "many"), the next project and the call to action are as before.
+    Nothing is invented: what the client has not written stays their placeholder. The Goal stands above The Brief (in the template it is below)."""
     S = P['project']; pg = Pg(); nm = p['name']
     def sub(t): return t.replace('[Project Name]', nm)
     cov = ph(p['set'], p['cover'])
+    pg.add('<section class="film wl" data-fig="wall" data-len="0" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
+           '    <div class="wl-p"><img src="%s" alt="%s"><i class="wl-sh"></i></div>\n'
+           '    <p class="lab3 wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n  </div>\n</section>'
+           % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), esc(' '.join(get(S[0], 'lead')[0][1]))), 'Project', 'top')
+    # the pictures of the page, numbered through (the collection)
+    PL = p['gal3']; total = sum(len(fs) for k, fs in PL) + 1; n = [0]   # + the testimonial's photograph
+    def fig(f, cls):
+        n[0] += 1
+        return '<figure class="gi %s rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span><span class="lc lab3 nn">%02d <i>/ %02d</i></span></figure>' % (cls, ph(p['set'], f), nm, n[0], total)
+    def rows(plan):
+        o = []
+        for kind, fs in plan:
+            if kind == 'm1': o.append('  <div class="pg pg-m1">%s%s</div>' % (fig(fs[0], 'rl'), fig(fs[1], 'sp')))          # landscape right, portrait at the spine below it
+            elif kind == 'rb': o.append('  <div class="pg pg-rb">%s%s</div>' % (fig(fs[0], 'sm'), fig(fs[1], 'rbp')))        # small at the spine, tall off the right edge
+            elif kind == 'sw': o.append('  <div class="pg">%s</div>' % fig(fs[0], 'sw'))                                     # wide from the spine
+            elif kind == 'lb': o.append('  <div class="pg pg-lb">%s%s</div>' % (fig(fs[0], 'lbw'), fig(fs[1], 'sm lo')))     # wide off the left edge, small on the right lower
+            elif kind == 'lp': o.append('  <div class="pg pg-lp">%s%s</div>' % (fig(fs[0], 'lbp'), fig(fs[1], 'sm')))        # tall off the left edge, small on the right
+            elif kind == 'full': o.append('  <div class="pg">%s</div>' % fig(fs[0], 'fu'))                                   # across the fields
+            else: raise ValueError(kind)
+        return '\n'.join(o)
+    # overview: The Goal large, The Brief as a table
     sec = S[1]; dl = get(sec, 'dl')[0][1]; known = {'Residence': p['bld'] + ' · ' + p['loc']}; known.update(p.get('facts', {}))
     if 'Size' in known: dl = [dl[0], dl[1], ['Size', ['']]] + dl[2:]
-    def fact(k, v):
+    def val(k, v):
         x = known.get(k, ' '.join(v))
-        return '<br>'.join(esc(y) for y in x.split(' · ', 1)) if k == 'Residence' else esc(x)   # the building, then the place: two lines by sense
-    # the label by the picture: the short facts only (her choice of 15.11 22:27, «Етикетка»); Scope and The Goal stand below, on their own
-    rows = ''.join('<div><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), fact(k, v)) for k, v in dl if k != 'Scope')
-    scope = [x for x in dl if x[0] == 'Scope'][0]; items = known['Scope'].split(' / ') if 'Scope' in known else [' '.join(scope[1])]
+        return '<br>'.join(esc(y) for y in x.split(' / ')) if k == 'Scope' and k in known else esc(x)   # the scope: an item a line
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
-    pg.add('<section class="film wl" data-fig="wall" data-len="1.7" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
-           '    <div class="wl-p"><div class="wl-i"><img src="%s" alt="%s"></div><i class="wl-sh"></i><i class="wl-g"></i></div>\n    <i class="wl-x" aria-hidden="true"></i>\n'
-           '    <p class="lab3 wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n'
-           '    <div class="wl-t">\n      <p class="lab3 wl-e">%s</p>\n      <h2 class="wl-b">%s</h2>\n      <dl class="wl-dl">%s</dl>\n    </div>\n  </div>\n</section>'
-           % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), esc(' '.join(get(S[0], 'lead')[0][1])), esc(label(sec)), esc(nop(h_of(sec))), rows), 'Project', 'top')
-    pg.add('<section class="bk" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k g4-ks">%s</p>\n    <ul class="lns g4-b">%s</ul>\n  </div>\n'
-           '  <div class="g4 g4-n">\n    <h3 class="lab3 rv g4-k">%s</h3>\n    <p class="t20 rv g4-p">%s</p>\n  </div>\n</section>'
-           % (esc(scope[0]), ''.join('<li class="rv">%s</li>' % esc(x) for x in items), esc(goal), ' '.join(esc(x) for x in gp)))
-    # design vision: the template's own lines on the four columns
+    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <div class="g4-b pj-st rv"><h3 class="lab3 pj-in">%s</h3><p class="t60s">%s</p></div>\n  </div>\n'
+           '  <div class="g4 pj-2">\n    <h2 class="lab3 rv g4-k">%s</h2>\n    <dl class="g4-b pj-tb">%s</dl>\n  </div>\n</section>'
+           % (esc(label(sec)), esc(goal), ' '.join(esc(x) for x in gp), esc(nop(h_of(sec))), ''.join('<div class="rv"><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), val(k, v)) for k, v in dl)))
+    # design vision: the concept at the spine, its paragraphs small in the fourth column; then the first staggered pair
     sec = S[2]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] in ('p', 'lead')]
-    pg.add('<section class="bk" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <div class="g4-b">\n      <h2 class="t34 rv">%s</h2>\n      <div class="g4-3">%s</div>\n    </div>\n  </div>\n</section>'
-           % (esc(label(sec)), esc(h_of(sec)), ''.join('<p class="t20 rv">%s</p>' % esc(nop(x)) for x in ps_)), 'Vision')
-    # the collection: the Portfolio grid, every picture a numbered item
-    total = sum(len(fs) for k, fs in p['gal2']); n = [0]
-    def num(): n[0] += 1; return '<span class="lc lab3 nn">%02d <i>/ %02d</i></span>' % (n[0], total)
-    def tile(f, big=False): return '<div class="cd rv%s"><span class="im"><img src="%s" alt="%s" loading="lazy"></span>%s</div>' % (' big' if big else '', ph(p['set'], f), nm, num())
-    o = []
-    for kind, fs in p['gal2']:
-        if kind == 'full': o.append('    <figure class="gfull rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span>%s</figure>' % (ph(p['set'], fs[0]), nm, num()))
-        elif kind == 'blk': o.append('    <div class="pf6 g">%s%s%s</div>' % (tile(fs[0], True), tile(fs[1]), tile(fs[2])))
-        else:
-            a_, b_ = tile(fs[0]), tile(fs[1]); o.append('    <div class="pf6 g">%s%s%s</div>' % (a_, b_, tile(fs[2], True)))
-    ttl = sub(h_of(S[3])).replace('[', '').replace(']', '')
-    pg.add(bk(ttl, '\n'.join(o), hcls=' l0', lines=['Inside', nm]), 'Gallery')
+    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">%s</h2>\n    <div class="pj-tx">%s</div>\n  </div>\n%s\n</section>'
+           % (esc(label(sec)), esc(h_of(sec)), ''.join('<p class="t20 rv">%s</p>' % esc(nop(x)) for x in ps_), rows(PL[:1])), 'Vision')
+    # the gallery: staggered on the column lines
+    ttl = sub(h_of(S[3])).replace('[', '').replace(']', ''); assert ttl == 'Inside ' + nm, ttl
+    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">Inside<br>%s</h2>\n  </div>\n%s\n</section>'
+           % (esc(label(S[3])), esc(nm), rows(PL[1:])), 'Gallery')
     # behind the design: hundreds of strokes become one line; the three decisions are the client's placeholders
     sec = S[4]; rws = get(sec, 'row'); ld = get(sec, 'lead'); q0 = [(.75, .95, 1.35, 1.5), (1.5, 1.65, 1.95, 2.1), (2.1, 2.25, 2.6, 2.75)]
     assert len(rws) == 3 and ld, rws
@@ -335,8 +340,11 @@ def project_collection(p, nxt):
            '      <h2 class="t60 m p-ctl" data-k="-1 -.5 99 99">%s</h2>\n%s      <p class="t34 m p-cbr" data-k="3.0 3.3 99 99">%s<br class="bd"> <span class="cb">%s</span></p>\n'
            '      <ol class="vh" data-steps>%s</ol>\n    </div>\n  </div>\n</section>' % ('Why the Details<br>Matter', dec, esc(lead[0] + ('.' if len(lead) > 1 else '')), '<br class="bd"> '.join(esc(x) for x in ['The success of the home comes', 'from making them feel like one idea']), ''.join('<li>%s</li>' % html.escape(x[1], quote=False) for x in rws)), 'Details')
     assert nop(h_of(sec)) == 'Why the Details Matter' and ' '.join(lead[1:]) == 'The success of the home comes from making them feel like one idea', (h_of(sec), lead)
+    # testimonial: the quotation large on the left, a tall photograph to the right edge
     q = get(S[5], 'quote'); w = [it for it in S[5]['items'] if it[0] == 'p']
-    pg.add(quote_block(q[0][1][0], w[0][1][0] if w else None))
+    who = esc(w[0][1][0]) if w else '<span class="ph">[Client name]</span> <span style="color:var(--blue)">■</span> <span class="ph">[Project]</span>'
+    pg.add('<section class="bk" id="@ID@">\n  <div class="pq">\n    <div class="pq-t"><p class="t60s rv">%s</p><p class="lab3 rv pq-w">%s</p></div>\n    %s\n  </div>\n</section>' % (esc(q[0][1][0]), who, fig(p['qphoto'], 'pq-i')))
+    assert n[0] == total, (n[0], total)
     # the next project: its name and its photograph side by side on the grid
     pg.add('<section class="bk" id="@ID@">\n  <a class="g4 nx2" href="%s.html">\n    <span class="nx2-t"><span class="lab3 nx2-k">Next project</span><span class="t60 rv">%s</span>%s</span>\n'
            '    <span class="nx2-i cd rv"><span class="im"><img src="%s" alt="%s" loading="lazy"></span></span>\n  </a>\n</section>'
