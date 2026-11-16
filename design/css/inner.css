@@ -308,10 +308,12 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .sqm > span{position:relative;padding-left:var(--ss)}
 .sqm > span::before{content:"";position:absolute;left:var(--sg);top:50%;margin-top:calc(var(--sw) / -2);width:var(--sw);height:var(--sw);background:var(--blue)}
 
-/* «Explore the Work» — THE GALLERY (16.11, her second reference: onok.es/projects). The title large at the top left with air under it, the filters
-   on its line at the right field, then ONE ROW of photographs of the same height — each with its name and its place set small above its left edge —
-   walking sideways across a pinned screen. The photographs keep their own proportions (--ar, read from the file), so none of them is cropped. A
-   hairline at the foot says how far along the row we are. Nothing else on the screen. */
+/* «Explore the Work» — THE GALLERY (16.11, her reference onok.es/projects and her note of 21:47). The title large at the top left with air under
+   it, the filters on its line at the right field. Then the work in one row: the photograph at the left field stands FULL HEIGHT, the ones waiting
+   to its right stand smaller, and as the row is scrolled each one grows into the big place as it arrives and leaves it again. The row glides — it
+   follows the scroll with a lag, it is not dragged pixel by pixel. The names and the tops of the photographs keep two steady lines; the feet of the
+   small ones ride up. Every photograph keeps its own proportions (--ar, read from the file), so none is cropped.
+   Sizes and places are set in js (the width of one photograph decides where the next one stands, so they cannot be written in css). */
 .glx{position:relative;display:block}
 .gl-stg{position:sticky;top:0;height:100vh;width:100%;overflow:hidden;background:#000}
 .gl-hd{position:absolute;left:calc(50 * var(--u));right:calc(50 * var(--u));top:calc(120 * var(--u));display:flex;align-items:flex-end;justify-content:space-between;gap:calc(50 * var(--u));z-index:4}
@@ -323,15 +325,15 @@ html body.inr .gl-hd .chip{position:relative;border:0;padding:0;background:none;
 .gl-hd .chip::after{content:"";position:absolute;left:0;right:0;bottom:calc(-10 * var(--u));height:1px;background:#FFFFFF;transform:scaleX(0);transform-origin:left;transition:transform .45s cubic-bezier(.16,1,.3,1)}
 .gl-hd .chip.on::after, .gl-hd .chip:hover::after{transform:scaleX(1)}
 .gl-hd .chip.off{opacity:.28} .gl-hd .chip.off::after{display:none}
-.gl-vp{position:absolute;left:0;right:0;top:calc(330 * var(--u));z-index:2}
-.gl-rail{position:relative;display:flex;align-items:flex-start;gap:calc(20 * var(--u));padding:0 calc(50 * var(--u));will-change:transform}
-.gl-it{flex:none;display:flex;flex-direction:column;color:#FFFFFF;text-decoration:none}
+.gl-vp{position:absolute;left:0;right:0;top:calc(322 * var(--u));height:calc(640 * var(--u));z-index:2}
+.gl-rail{position:relative;height:100%}
+.gl-it{position:absolute;left:0;top:0;display:block;color:#FFFFFF;text-decoration:none;will-change:transform}
 .gl-it[hidden]{display:none}
 .gl-tx{display:flex;flex-direction:column;justify-content:flex-end;height:calc(74 * var(--u));margin-bottom:calc(24 * var(--u))}
 .gl-tx .lc{margin-top:calc(12 * var(--u))}
-.gl-im{position:relative;display:block;height:calc(520 * var(--u));width:calc(520 * var(--u) * var(--ar, 1.4));overflow:hidden;background:#0A0A0A}
-.gl-im img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.04) brightness(.9);transition:filter .6s, transform 1.1s cubic-bezier(.16,1,.3,1)}
-.gl-it:hover .gl-im img{filter:contrast(1.04) brightness(1);transform:scale(1.025)}
+.gl-im{position:relative;display:block;height:calc(540 * var(--u));width:calc(540 * var(--u) * var(--ar, 1.4));overflow:hidden;background:#0A0A0A;transform-origin:0 0;will-change:transform}
+.gl-im img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.04) brightness(.9);transition:filter .6s}
+.gl-it:hover .gl-im img{filter:contrast(1.04) brightness(1)}
 .gl-none{position:absolute;left:calc(50 * var(--u));top:calc(560 * var(--u));display:none;z-index:3;color:rgba(255,255,255,.6)}
 .glx.empty .gl-none{display:block}
 .chip.off{opacity:.3;pointer-events:none}
@@ -520,15 +522,16 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
   .pf7{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)} .pf7 .cd{grid-column:auto;grid-row:auto} .pf7 .cd.big{grid-column:span 2}
   .pf7 .cd .im{aspect-ratio:1 / 1} .pf7 .cd.big .im{aspect-ratio:436 / 354} .pf7 .cd .nm{margin-top:12px} .pf7 .cd .lc{margin-top:8px}
-  /* phones: the row lies down — the filters, then name, place, photograph, one project after another */
+  /* phones: the row lies down — the filters, then name, place, photograph, one project after another; nothing grows or shrinks */
   .glx{height:auto!important} .gl-stg{position:static;height:auto;padding:72px 0 0;display:flex;flex-direction:column}
   .gl-hd{position:static;display:block;order:1} html body.inr .gl-h{margin:0 var(--m, 20px) 22px}
-  .gl-hd .chips{justify-content:flex-start;margin:0 var(--m, 20px) 30px;gap:8px}
-  .gl-vp{position:static;order:2} .gl-none{order:3}
-  .gl-rail{display:block;transform:none!important;padding:0 var(--m, 20px)}
+  .gl-hd .chips{justify-content:flex-start;margin:0 var(--m, 20px) 30px;gap:18px}
+  .gl-vp{position:static;height:auto;order:2} .gl-none{order:3}
+  .gl-rail{height:auto;transform:none!important;padding:0 var(--m, 20px)}
+  .gl-it{position:static;transform:none!important}
   .gl-it + .gl-it{margin-top:36px}
-  .gl-tx{display:block;height:auto;margin-bottom:12px} .gl-tx .lc{margin-top:8px}
-  .gl-im{width:auto!important;height:auto;aspect-ratio:var(--ar, 1.4)}
+  .gl-tx{display:block;height:auto!important;margin-bottom:12px} .gl-tx .lc{margin-top:8px}
+  .gl-im{width:auto!important;height:auto!important;aspect-ratio:var(--ar, 1.4);transform:none!important}
   .gl-im img{filter:contrast(1.04)!important}
   .gl-none{position:static;margin:0 var(--m, 20px)}
   .iv{display:block;min-height:0;padding:72px var(--m, 20px) 80px} .iv-c{margin-left:0} .iv-k{position:static;margin-bottom:18px;font-size:13px}

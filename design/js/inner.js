@@ -529,14 +529,16 @@
 
 
 
-  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference onok.es/projects)
-     One row of photographs of the same height, each with its name above it, walking sideways across a pinned screen while the page is scrolled:
-     one pixel of the row to one pixel of the scroll. Each photograph keeps its own proportions (--ar, read from the file).
-     The filters rebuild the row. */
+  /* ================================================================== the gallery: «Explore the Work» (16.11, her reference onok.es/projects
+     and her note of 21:47: «перша фотографія велика, потім інші менші. Коли ми скролимо, ці ті стають великими… з інерцією»).
+     One row on a pinned screen. The photograph at the left field stands at full height; the ones waiting to its right stand smaller, and each one
+     grows into that place as it arrives. The row is laid out from the project the scroll has reached (f, with the fraction of the one arriving),
+     so the growing never fights the movement; where the row stops is found once, by halving. The row follows the scroll with a lag: the inertia. */
   var GL = (function(){
     var sec = qs('.glx'); if (!sec) return null;
     var rail = qs('.gl-rail', sec), items = qsa('.gl-it', sec), chips = qsa('[data-gal] .chip', sec),
-        vis = items.slice(), x = 0, tx = 0, span = 0, railW = 0, mob = false, ready = false;
+        FIELD = 50, HB = 540, SMALL = .68, GAP = 25, STEP = .5,   /* in the frame's units; STEP: screens of scroll one project takes */
+        vis = items.slice(), ars = [], f = 0, tf = 0, fEnd = 0, span = 0, mob = false, ready = false, put = [];
     function ar(it, w, h){ if (!w || !h) return; qs('.gl-im', it).style.setProperty('--ar', Math.max(.72, Math.min(1.70, w / h)).toFixed(4)); dirty = true; }
     /* the proportions are needed before the row is laid out, and the pictures stand off the screen: they are fetched once the section is a screen away */
     (function(){
@@ -548,36 +550,65 @@
       var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ load(); io.disconnect(); } }, {rootMargin: '120% 0px'});
       io.observe(sec);
     })();
+    /* the row at a given place in it: everything up to f stands at full height, the one arriving grows into it, the rest wait small;
+       the project at f stands at the left field */
+    function lay(fv){
+      var fx = FIELD * U, n = vis.length, k = Math.max(0, Math.min(n - 1, Math.floor(fv))), fr = fv - k,
+          hb = HB * U, g = GAP * U, ss = [], ws = [], out = new Array(n), i, sc;
+      for (i = 0; i < n; i++){ sc = 1 - (1 - SMALL) * sm(0, 1, c01(i - fv)); ss.push(sc); ws.push(hb * sc * (ars[i] || 1.4)); }
+      out[k] = {x: fx - fr * (ws[k] + g), w: ws[k], s: ss[k]};
+      for (i = k + 1; i < n; i++) out[i] = {x: out[i - 1].x + out[i - 1].w + g, w: ws[i], s: ss[i]};
+      for (i = k - 1; i >= 0; i--) out[i] = {x: out[i + 1].x - ws[i] - g, w: ws[i], s: ss[i]};
+      /* the row is never pulled past its end: once it has begun to move it is held against the right field, and the last photographs
+         grow into their full height there instead of trailing a hole behind them */
+      if (out[0].x < fx - .5){ var sh = (W - fx) - right(out); if (sh > 0) for (i = 0; i < n; i++) out[i].x += sh; }
+      return out;
+    }
+    function right(o){ var L = o[o.length - 1]; return L.x + L.w; }
     function layout(){
       mob = !!(mm && mm('(max-aspect-ratio: 1/1)').matches);
       vis = items.filter(function(it){ return !it.hidden; });
       sec.classList.toggle('empty', vis.length === 0);
-      if (mob || !vis.length){ sec.style.height = mob ? '' : ''; rail.style.transform = ''; return; }
-      var last = vis[vis.length - 1];
-      railW = last.offsetLeft + last.offsetWidth + 50 * U;   /* the row, with the field at either end */
-      span = Math.max(0, Math.round(railW - W));             /* one pixel of the row to one pixel of the scroll */
+      if (mob || !vis.length){
+        sec.style.height = '';
+        items.forEach(function(it){ it.style.transform = ''; qs('.gl-im', it).style.transform = ''; });
+        put = []; return;
+      }
+      ars = vis.map(function(it){ return +getComputedStyle(qs('.gl-im', it)).getPropertyValue('--ar') || 1.4; });
+      /* the row runs until the last project has taken the big place; if everything is on the screen already it does not move at all */
+      fEnd = right(lay(0)) <= W - FIELD * U ? 0 : vis.length - 1;
+      span = Math.round(fEnd * STEP * H);
       sec.style.height = Math.round(span + H) + 'px';
+      put = [];
     }
     function frame(){
       if (mob || !vis.length) return;
       var r = sec.getBoundingClientRect(); if (r.bottom < -200 || r.top > H + 200) return;
-      var p = span > 0 ? c01(-r.top / span) : 0;
-      tx = -p * span;
-      x += (tx - x) * .34; if (Math.abs(tx - x) < .4) x = tx;
-      rail.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
+      tf = (span > 0 ? c01(-r.top / span) : 0) * fEnd;
+      f += (tf - f) * .14;                                  /* the lag that makes the glide */
+      if (Math.abs(tf - f) < .0015) f = tf;
+      /* the photograph keeps its full box and is scaled from its top left corner: the browser never has to lay the row out again */
+      var o = lay(f), i, a2, b2;
+      for (i = 0; i < vis.length; i++){
+        a2 = o[i]; b2 = put[i];
+        if (b2 && Math.abs(b2.x - a2.x) < .4 && Math.abs(b2.s - a2.s) < .002) continue;
+        vis[i].style.transform = 'translate3d(' + a2.x.toFixed(1) + 'px,0,0)';
+        qs('.gl-im', vis[i]).style.transform = 'scale(' + a2.s.toFixed(4) + ')';
+        put[i] = a2;
+      }
     }
     chips.forEach(function(c){ c.addEventListener('click', function(){
       if (c.disabled) return;
       chips.forEach(function(o){ o.classList.toggle('on', o === c); });
       var fv = c.getAttribute('data-f');
       items.forEach(function(it){ var ok = fv === 'all' || (' ' + it.getAttribute('data-tags') + ' ').indexOf(' ' + fv + ' ') >= 0; it.hidden = !ok; });
-      layout(); x = tx = 0; rail.style.transform = 'translate3d(0,0,0)';
+      f = tf = 0; layout(); frame();
       var t0 = sec.getBoundingClientRect().top + window.scrollY; if (window.scrollY > t0) smoothTo(t0 + 2);
     }); });
     window.addEventListener('keydown', function(e){
       if (mob || !vis.length || span <= 0) return; var r = sec.getBoundingClientRect(); if (r.top > 4 || r.bottom < H - 4) return;
-      if (e.key === 'ArrowRight'){ e.preventDefault(); smoothTo(window.scrollY + Math.min(600, span)); }
-      else if (e.key === 'ArrowLeft'){ e.preventDefault(); smoothTo(window.scrollY - Math.min(600, span)); }
+      if (e.key === 'ArrowRight'){ e.preventDefault(); smoothTo(window.scrollY + STEP * H); }
+      else if (e.key === 'ArrowLeft'){ e.preventDefault(); smoothTo(window.scrollY - STEP * H); }
     });
     return {layout: layout, frame: frame};
   })();
