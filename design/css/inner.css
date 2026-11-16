@@ -146,6 +146,7 @@ html body.inr .bk .c3{margin-left:calc(1440 * var(--u))}
 html body .t60s{font-family:var(--fx);font-weight:400;font-size:max(24px, calc(60 * var(--u)));line-height:.867;letter-spacing:-.0167em;text-transform:none;margin:0;color:#EBEBEB;white-space:nowrap}
 .iv-k{position:absolute;left:calc(-550 * var(--u));top:calc(7 * var(--u));margin:0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.2;letter-spacing:.05em;color:#EBEBEB;white-space:nowrap}
 html body.inr .iv-p{margin-top:calc(90 * var(--u));white-space:nowrap}
+html body.inr .iv-p + .iv-p{margin-top:calc(38 * var(--u))}
 .iv + .bk{padding-top:calc(50 * var(--u))}
 
 /* «Collectors Home» — the cover (film "wall"): the photograph lights up pane by pane behind thin bars (the film's canvas, above it — the arrival

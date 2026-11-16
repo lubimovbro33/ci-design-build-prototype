@@ -69,7 +69,21 @@ def solutions():
           ('CI Wellness', 'ci-wellness.html', A + 'us/1511-06a.webp', 'Better Living, Designed In')]
     assert [nop(get(sec, 'lead')[0][1][0]) for sec in S[1:5]] == [w[3] for w in W4], [nop(get(sec, 'lead')[0][1][0]) for sec in S[1:5]]
     pg.add(sc_four(label(S[0]), h1, W4), 'Solutions', 'top')
-    pg.add(intro(ps))
+    # the page's first thought (16.11 22:58: «Якийсь кусок заголовка, кусок тексту… Незрозуміло»). The intro block set the client's two sentences
+    # as a fragment on the text line and another one adrift in the second column. It is now the screen she approved on Portfolio (.iv): the thought
+    # large from 600, in lines that alternate in length, the second clause blue; 90 under it the second sentence in the running 20, in three lines.
+    tx = [nop(' '.join(x) if isinstance(x, (list, tuple)) else x) for x in ps]
+    assert tx == ['Every client, every residence, and every vision is different',
+                  'CI offers three ways to work together, led by CI Turnkey, our complete concierge-level experience. Each carries the same standard of quality'], tx
+    # the eyebrow is not the client's copy: it is their own words from the sentence below it («the same standard»), as on Portfolio
+    pg.add('<section class="iv" id="@ID@">\n  <div class="iv-c">\n'
+           '    <p class="iv-k rv"><span class="wc">The Same Standard</span></p>\n'
+           '    <p class="t60s rv">Every client,<br class="bd"> <span class="cb">every residence, and every vision<br class="bd"> is different</span></p>\n'
+           '    <p class="t20 rv iv-p">CI offers three ways to work together,<br class="bd"> led by CI Turnkey, our complete concierge-level experience.<br class="bd"> Each carries the same standard of quality</p>\n'
+           # 16.11 23:01 («якщо тексту тобі не стає, то допиши, але не треба такі обгризки лишати»): the client's two sentences do not fill the
+           # screen, so a second thought is written here from what their own pages say of the four ways — marked .wc, to be replaced by their text
+           '    <p class="t20 rv iv-p"><span class="wc">Some clients hand us the whole home;<br class="bd"> others bring an architect, or a residence already built.<br class="bd"> The way changes. The standard does not.</span></p>\n'
+           '  </div>\n</section>')
     N = 4; t0 = .3; d = 1.0
     o = ['<section class="film" data-fig="steps" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']
     for i, sec in enumerate(S[1:5]):
