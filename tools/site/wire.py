@@ -9,6 +9,13 @@ MAP = {'About Us': 'about.html', 'Portfolio': 'portfolio.html', 'Solutions': 'so
        'Explore CI Curated': 'ci-curated.html', 'Explore CI Wellness': 'ci-wellness.html', 'View the Portfolio': 'portfolio.html', 'Start a Conversation': 'contact.html'}
 MENU_PH = ['assets/ph/of/team3.webp', 'assets/ph/ch/1450-09a.webp', 'assets/ph/ch/1450-15.webp', 'assets/ph/us/1530-04.webp', 'assets/ph/of/materials.webp', 'assets/ph/us/1530-06a.webp']
 def text(x): return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', x)).strip()
+def _stamp():
+    """the same short number for the state of our css and js that the generated pages carry, so no browser keeps an older copy"""
+    import hashlib, glob
+    h = hashlib.sha1()
+    for f in sorted(glob.glob(D + 'css/*.css') + glob.glob(D + 'js/*.js')): h.update(open(f, 'rb').read())
+    return h.hexdigest()[:8]
+STAMP = _stamp()
 # the team as the client's current site names it (cidesignbuild.com/team, read 15.11); the portraits are that site's own files
 TP = 'https://cidesignbuild.com/wp-content/uploads/2026/02/'
 # 16.11 19:50, her rule again: a field the client has not filled carries working copy, never a bracket. These lines say what the
@@ -61,6 +68,7 @@ def wire(f, extra):
     if 'js/form.js' not in h: h = h.replace('</body>', '<script src="js/form.js"></script>\n</body>', 1); n[0] += 1
     if f == 'about.html': h, k = team(h); n[0] += k
     nodots(h, f)
+    h = re.sub(r'((?:href|src)="(?:css|js)/[^"?]+)(\?v=[a-f0-9]+)?"', lambda m: m.group(1) + '?v=' + STAMP + '"', h)   # the same version on our own files as the generated pages carry
     open(D + f, 'w').write(h); print(f, 'changed', n[0])
 wire('index.html', {})
 wire('about.html', {'FAQ': 'faq.html'})

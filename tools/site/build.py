@@ -197,6 +197,15 @@ PROJ[1].update(idea='collection', draft={
 
 PROJ_MORE = [dict(name='500 W Superior', loc='River North · Chicago', bld='Residence', img='assets/pj/superior.webp'), dict(name='444 W Grant', loc='Lincoln Park · Chicago', bld='Residence', img='assets/pj/grant.webp')]
 def ph(set_, name): return name if name.startswith('http') else 'assets/ph/%s/%s.webp' % (set_, name)   # 16.11: a project whose photographs are still on the client's site carries their URLs
+def _stamp():
+    """one short number for the state of our own css and js, hung on every link to them: a browser that has an older copy fetches the new one
+    instead of showing yesterday's page (16.11 22:20: «я не бачу взагалі змін» — her browser was holding the old files)"""
+    import hashlib, glob as _g
+    h = hashlib.sha1()
+    for f in sorted(_g.glob(D + 'css/*.css') + _g.glob(D + 'js/*.js')): h.update(open(f, 'rb').read())
+    return h.hexdigest()[:8]
+STAMP = _stamp()
+def stamp(out): return re.sub(r'((?:href|src)="(?:css|js)/[^"?]+)"', lambda m: m.group(1) + '?v=' + STAMP + '"', out)
 
 # ------------------------------------------------------------------ text
 FILL = {'[sales@cidesignbuild.com]': 'info@cidesignbuild.com'}   # the address the client's own site gives
@@ -381,6 +390,7 @@ def page(fname, title, body, rail, preload=None):
     r = ''.join('  <a href="#%s" data-ch="%s"><span>%02d</span><span class="t">%s</span><i></i></a>\n' % (i, i, k + 1, html.escape(l)) for k, (i, l) in enumerate(rail))
     out = head + menu(fname) + '\n<main id="main">\n' + body + '</main>\n\n' + footer() + '\n\n<div class="grain on" aria-hidden="true"></div>\n<nav class="chap mono" id="chap" aria-label="Chapters">\n' + r + '</nav>\n\n<script src="js/v10.js"></script>\n<script src="js/inner.js"></script>\n<script src="js/form.js"></script>\n</body>\n</html>\n'
     out = squares(out, fname)
+    out = stamp(out)
     open(D + fname, 'w').write(out)
     return len(out)
 
