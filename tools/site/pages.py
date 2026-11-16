@@ -78,7 +78,9 @@ def solutions():
     # the eyebrow is not the client's copy: it is their own words from the sentence below it («the same standard»), as on Portfolio
     pg.add('<section class="iv" id="@ID@">\n  <div class="iv-c">\n'
            '    <p class="iv-k rv"><span class="wc">The Same Standard</span></p>\n'
-           '    <p class="t60s rv">Every client,<br class="bd"> <span class="cb">every residence, and every vision<br class="bd"> is different</span></p>\n'
+           # measured in the real face: 782 and 533 — the second line is a third shorter than the first (16.11 23:06: three lines of 280 / 773 / 246
+           # were «не ритміка, а палка»; the words of the long line move up into the first)
+           '    <p class="t60s rv">Every client, every residence, and<br class="bd"> <span class="cb">every vision is different</span></p>\n'
            '    <p class="t20 rv iv-p">CI offers three ways to work together,<br class="bd"> led by CI Turnkey, our complete concierge-level experience.<br class="bd"> Each carries the same standard of quality</p>\n'
            # 16.11 23:01 («якщо тексту тобі не стає, то допиши, але не треба такі обгризки лишати»): the client's two sentences do not fill the
            # screen, so a second thought is written here from what their own pages say of the four ways — marked .wc, to be replaced by their text
