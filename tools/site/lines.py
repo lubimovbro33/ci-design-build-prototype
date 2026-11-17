@@ -6,8 +6,8 @@ import os, sys
 from PIL import Image, ImageFilter
 import numpy as np
 SRC = 'design/assets/ph'; OUT = 'design/assets/ln'
-WANT = ['ch/1450-24', 'ch/1450-17', 'us/1511-01a', 'rtb/1430-08a', 'ch/1450-31', 'ch/1450-32']
-WIDE = {'ch/1450-32': 2560}   # CI Turnkey's cover shows its drawing across the whole screen: at the photograph's own width, so the lines stay fine
+WANT = ['ch/1450-24', 'ch/1450-17', 'us/1511-01a', 'rtb/1430-08a', 'ch/1450-31']   # CI Turnkey's cover (ch/1450-32) is drafted by tools/site/sketch.py
+WIDE = {}
 KX = np.array([[-1., 0, 1], [-2, 0, 2], [-1, 0, 1]]); KY = KX.T
 def conv(a, k):
     p = np.pad(a, 1, mode='edge'); o = np.zeros_like(a)

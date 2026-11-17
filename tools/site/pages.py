@@ -225,12 +225,13 @@ def turnkey_page():
     chain = [x.strip(' .') for x in nop(' '.join(ps[1])).split('.')]
     assert len(chain) == 9 and chain[-1] == 'Project management', chain
     # 01 the residence, and the horizon it retreats below
-    # the cover's title is hers (frame 603:742, 17.11 17:12 «бери текст той, який пише на макеті»): the client's «…to the First Night Home»
-    # without its article. The second agreed exception to the client's copy after Portfolio's; the client's wording stays in content.json
-    # and tools/site/verify.py reports it as an EXCEPTION.
-    h1 = 'From First Idea to First Night Home'
-    pg.add(tk_cover('CI Turnkey', h1, A + 'ch/1450-32.webp', L + '1450-32.webp', L + '1450-32-o.png',
-                    [('From First', ''), ('Idea to ', 'First'), ('', 'Night Home')]), 'Turnkey', 'top')
+    # the cover's title is hers. 17.11 17:12 (frame 603:742, «бери текст той, який пише на макеті»): the client's title without its
+    # article. 19:48 (frame 610:99, «текст тут змінений, візьми той, що на макеті у мене»): «From Sketch to First Night Home» — the cover
+    # now shows exactly that, a sketch becoming the home. The agreed exception to the client's copy on this page; the client's wording
+    # stays in content.json and tools/site/verify.py reports it as an EXCEPTION.
+    h1 = 'From Sketch to First Night Home'
+    pg.add(tk_cover('CI Turnkey', h1, A + 'ch/1450-32.webp', L + '1450-32.webp', L + '1450-32-g.png',
+                    [('From Sketch', ''), ('to ', 'First'), ('', 'Night Home')]), 'Turnkey', 'top')
     # 02 the thought, and nothing else on the screen
     assert nop(ps[0][0]) == 'CI Turnkey is the most complete expression of the CI model', ps[0]
     thought = esc('CI Turnkey is the most complete') + '<br class="bd"> <span class="cb">' + esc('expression of the CI model') + '</span>'

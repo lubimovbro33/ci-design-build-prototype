@@ -18,7 +18,7 @@ def page_text(f):
     return ' ' + norm(m).replace('.', '') + ' '
 # agreed exceptions: (page key, the client's text) → the text that stands on the page instead, and who decided
 EXC = {('portfolio', 'Homes as Unique as the People Who Live in Them'): ('Homes Made for Unique Lives', 'the designer, 15.11.2026: the cover of Portfolio as in her frame'),
-       ('turnkey', 'From First Idea to the First Night Home'): ('From First Idea to First Night Home', 'the designer, 17.11.2026: the cover of CI Turnkey as in her frame 603:742')}
+       ('turnkey', 'From First Idea to the First Night Home'): ('From Sketch to First Night Home', 'the designer, 17.11.2026 19:48: the cover of CI Turnkey as in her frame 610:99')}
 tot = miss = 0
 for k, fs in MAPF.items():
     T = ''.join(page_text(f) for f in fs)

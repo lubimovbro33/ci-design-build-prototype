@@ -463,13 +463,14 @@ def sc_door(kick, h1, img):
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
 def tk_cover(kick, h1, img, line, order, lines):
-    """01 — her own frame and scenario (17.11 17:07 `603:742`, 17:12, 17:33, 17:35): the page's name and its title stand in the middle of a
-    black screen, the title in three centred lines of 60, its first half white and «First Night Home» blue. Just under them turns a tangle —
-    the home page's knot: the idea, still chaos — and the site's line leaves it straight down. The scroll follows the line: the words go up
-    and away (they only ever stand on black), the tangle pays out into the line, the line parts in two and the room is drawn between its
-    halves, and the drawing is then filled in with the photograph one thing at a time. `line` = the room's own drawing (tools/site/lines.py),
-    `order` = the moment of every thing in the picture (tools/site/cells.py), `lines` = the title's lines as (white, blue) halves; the figure
-    is `unfold()` in js/inner.js."""
+    """01 — her own frame and scenario (17.11 17:07 `603:742`, 17:12, 17:33, 17:35; re-set by her 19:48 in frame `610:99`): the page's name
+    and its title stand at the HEAD of a black screen — the name at 116, the title in the site's 111 (`.t111`: 111 / 95, −8) in three
+    centred lines from 190, its first half white and «First Night Home» blue. Under them, in the rest of the screen, turns the tangle — the
+    home page's knot, large, and already paying out: the idea, still chaos — and the site's line leaves it straight down. The scroll pulls
+    it straight: the words go up and away (they only ever stand on black), the tangle is one line down the middle of the screen, the room
+    GROWS OUT OF that line stroke by stroke, and then the line parts in two and the home stands between its halves.
+    `line` = the room drafted clean and `order` = the moment the ink reaches each stroke (both tools/site/sketch.py), `lines` = the title's
+    lines as (white, blue) halves; the figure is `unfold()` in js/inner.js."""
     assert nop(' '.join((a + b).strip() for a, b in lines)).lower() == nop(h1).lower(), (lines, h1)
     out = ''; on = False
     for i, (wh, bl) in enumerate(lines):
@@ -482,10 +483,10 @@ def tk_cover(kick, h1, img, line, order, lines):
             out += esc(bl)
     if on: out += '</span>'
     return '\n'.join([
-        '<section class="film tk-cv" data-fig="unfold" data-len="2.2" id="@ID@">', '  <div class="stg">',
+        '<section class="film tk-cv" data-fig="unfold" data-len="2.4" id="@ID@">', '  <div class="stg">',
         '    <div class="tk-cv-ph"><img src="%s" alt=""><img class="tk-cv-ln" src="%s" alt=""><img class="tk-cv-ln" src="%s" alt=""></div>' % (img, line, order),
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-        '      <div class="tk-cv-t"><p class="tk-cv-k rv">%s</p><h1 class="t60 tk-cv-h rv">%s</h1></div>' % (esc(kick), out),
+        '      <div class="tk-cv-t"><p class="tk-cv-k rv">%s</p><h1 class="t111 tk-cv-h rv">%s</h1></div>' % (esc(kick), out),
         '    </div>', '  </div>', '</section>'])
 def tk_horizon(kick, h1, above, note, groups):
     """05 — the page's metaphor as one screen, and the whole ecosystem hanging from it (17.11.2026 15:15). ABOVE the line, large, what stays
@@ -524,8 +525,8 @@ def tk_fit(kick, h1, lead, rows, img, title_lines):
     """04 — the home page's «CI Difference», given to this block on her word (17.11 19:34: «оцей наш нижній блок переробити за принципом
     того, як зроблений дизайн верхнього блоку. А фотографію використай таку, яку ми ще не використовували»). The photograph is ruled
     into the same grid — four columns, a band under the header and two rows of 480 — a condition stands in each cell as a short centred
-    name with the round plus at its corner, and the one in hand opens as a white card: its number, its name, and the client's sentence
-    at the foot. The white panel in the lower left corner carries the block's label, its title and the lead. The markup and the classes
+    name with the site's square at its corner (19:46: not the round plus — «це типа кнопка? куди вона буде переходити?»), and the one
+    in hand opens as a white card: its number, its name, and the client's sentence at the foot. The white panel in the lower left corner carries the block's label, its title and the lead. The markup and the classes
     are the home page's own (`.df2*`, css/chapters.css + css/r3.css); only what differs is in css/inner.css (`.tk-df`): seven cells and
     a panel one column wide, since there are seven conditions and not six.
     `rows` = [(the name's lines, the client's sentence)]: a name is a run of the sentence's OWN words, never anything written by us —
@@ -536,14 +537,14 @@ def tk_fit(kick, h1, lead, rows, img, title_lines):
         n = '<br>'.join(esc(x) for x in nm)
         cells += ('<button style="--k:%d" class="df2-cell c%d%s" type="button" data-i="%d" aria-expanded="%s" aria-label="%s">'
                   '<span class="df2-nm">%s</span><span class="df2-card"><span class="df2-cn">%02d</span><span class="df2-ct">%s</span>'
-                  '<span class="df2-cd">%s</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>') % (
+                  '<span class="df2-cd">%s</span></span><span class="df2-pm" aria-hidden="true"></span></button>') % (
                       i, i + 1, ' on' if i == 3 else '', i, 'true' if i == 3 else 'false', esc(nop(sent)), n, i + 1, n, esc(nop(sent)))
     assert nop(' '.join(title_lines)).lower() == nop(h1).lower(), (title_lines, h1)
     return ('<section class="df2 tk-df" id="@ID@" data-df aria-label="%s">\n'
             '  <div class="df2-bgw" aria-hidden="true"><div class="df2-bgs"><div class="df2-bg on"><img src="%s" alt="" loading="lazy" decoding="async"></div></div></div>\n'
             '  <div class="df2-body">\n'
             '    <i class="df2-v a" aria-hidden="true"></i><i class="df2-v b" aria-hidden="true"></i><i class="df2-v c" aria-hidden="true"></i>'
-            '<i class="df2-h a" aria-hidden="true"></i><i class="df2-h b" aria-hidden="true"></i>\n'
+            '<i class="df2-h a" aria-hidden="true"></i><i class="df2-h b" aria-hidden="true"></i><i class="df2-h c" aria-hidden="true"></i>\n'
             '    <div class="df2-cells">%s</div>\n'
             '    <div class="df2-panel"><p class="tk-df-k">%s</p><h2 class="df2-big">%s</h2><p class="df2-s1"><b>%s</b></p></div>\n'
             '  </div>\n</section>') % (esc(kick), img, cells, esc(kick), '<br>'.join(esc(x) for x in title_lines), esc(nop(lead)))

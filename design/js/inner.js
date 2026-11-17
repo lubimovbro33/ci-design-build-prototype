@@ -435,21 +435,32 @@
     }
   }
   /* ================================================================== CI Turnkey's cover: from the tangle to the home (17.11.2026, her own scenario)
-     17:07, frame `603:742`: the name and the title in the middle of a black screen, the site's line near them; the scroll makes the line
-     draw the picture, and the picture becomes the photograph. 17:12: the words stand on black only. 17:33: «щоб лінія починалася від
-     центру екрану, трошки нижче заголовка, і йшла вниз… можливо, щоб вона була така закручена, як у нас на головній. Ідея — це завжди
-     щось хаотичне, а потім ми вже це структуруємо в якийсь результат». 17:35: the sketch into the photograph by something better than light.
-     So the cover is four states of one line:
-       the idea      a tangle, turning, just under the title — the home page's own knot, a real one, its strand breaking where it passes
-                     behind itself — with the line leaving it straight down to the foot of the screen;
-       the line      the scroll follows the line down: the words leave upward as on any page, the tangle pays out and is a straight line;
-       the sketch    the line parts in two, to the left and to the right, and the client's room is drawn between them — its own lines,
-                     the ink brightest where a line has just been;
-       the home      the drawing is filled in with the photograph one thing at a time, from the ground up — the bed, the pillows, the
-                     folds of the curtains, the city, the sky (GLSH.room, tools/site/cells.py) — and its lines are given up cell by cell.
-     Chaos, a line, a structure, a result: «From First Idea to First Night Home». */
-  var KNOT = (function(){ var N = 320, K = [], i; for (i = 0; i < N; i++){ var a = i / N * Math.PI * 2, r = 2 + .9 * Math.cos(5 * a);
-    K.push([r * Math.cos(2 * a), r * Math.sin(2 * a), -.9 * Math.sin(5 * a)]); } K.push(K[0]); return K; })();
+     17:07, her frame 603:742: «Внизу від того тексту буде йти наша лінія… ми скролимо, і лінія розходиться і промальовує нашу картинку.
+     Потім перехід в реалістичну картинку.» 17:12: the words stand on black only. 17:33: «щоб лінія починалася трошки нижче заголовка і
+     йшла вниз… щоб вона була така закручена, як у нас на головній. Ідея — це завжди щось хаотичне, а потім ми це структуруємо в результат».
+     19:48, her frame 610:99 — the words now stand at the HEAD of the screen, in the site's 111, and say «From Sketch to First Night Home»;
+     «лінію я хочу більш закручену, як у нас на головній… візьми це за референс, трошки її видозмінь… зараз та, що є, якась маленька,
+     скручена, непонятна. Потім щоб видно було, що з цієї лінії виростає наш скетч… Скетч почисти, зроби його професійнішим. І ефект,
+     коли замальовується скетч на фотографію, перевір, чи він підходить нам по ефектах. Все має бути consistent.»
+     So the cover is four states of ONE line, and nothing on it is done by anything but that line:
+       the idea      the home page's knot — a real one, turning, its strand breaking where it passes behind itself — but large, in the
+                     whole of the screen under the words, and already paying out: its last turns loosen and it leaves straight down;
+       the line      the scroll pulls it straight: the words leave upward as on any page and the loose end goes up after them, until the
+                     tangle is one line down the middle of the screen;
+       the sketch    the room grows OUT OF that line. Every stroke of the drawing begins where the ink reaches it and runs along itself
+                     (tools/site/sketch.py gives each point the moment it is reached from the middle column), the pen's tip a little
+                     brighter than the ink behind it — so the drawing branches from the line instead of being uncovered beside it;
+       the home      the line parts in two, to the left and to the right, and the home stands between its halves. One straight front
+                     under a hairline — the way a picture arrives everywhere on this site. (The mosaic of cells it replaces was the
+                     only place where a picture came in pieces: she doubted it, and it did not belong.) Just behind the line the
+                     drawing's ink still lies on the photograph, and is given up within a hand's width.
+     Chaos, a line, a structure, a result: «From Sketch to First Night Home». */
+  var TANG = (function(){ var N = 600, P = [], i, a = .35, ct = Math.cos(1.0), st = Math.sin(1.0);
+    for (i = 0; i <= N; i++){ var s = i / N, b = 1 - sm(.46, 1, s), r = 2 + .9 * Math.cos(5 * a);
+      var x = r * Math.cos(2 * a) / 2.9, y = r * Math.sin(2 * a) / 2.9, z = -.9 * Math.sin(5 * a) / 2.9;
+      P.push([b * x, b * (y * ct - z * st), b * (y * st + z * ct), 1.5 * Math.pow(sg(s, .3, 1), 1.7)]);   /* the knot at the home page's tilt, what is left of it, and how far down the line it has let go */
+      a += Math.PI * 2 * 2.2 / N * (.1 + .9 * b); }                             /* as it loosens it also turns more slowly: no hook where it meets the line */
+    return P; })();
   function unfold(f, q, t){
     if (f.glo === undefined){
       var box = qs('.tk-cv-ph', f.el);
@@ -457,45 +468,47 @@
       f.tx = qs('.tk-cv-t', f.el);
     }
     var o = f.glo, i, k;
-    function room(l, x1, x2, fr){
+    function room(grow, x1, x2, home){
       if (!o || !o.ready) return;
-      o.size(); o.set2('uC', .5, .5); o.set2('uH', .5, .5); o.set2('uB', x1, x2); o.set1('uF', fr); o.set1('uQ', l); o.set1('uTime', (t * 60) | 0); o.draw();
+      o.size(); o.set1('uA', grow); o.set2('uB', x1, x2); o.set1('uQ', home); o.set1('uTime', (t * 60) | 0); o.draw();
     }
-    if (H >= W){ room(1, 2, 2, 0); return; }                                /* phones: the words, the line, then the room — in the flow (css) */
-    /* the tangle and its line come once, when the screen is first seen: a second and a half, by the clock */
-    f.dp = Math.max(Math.min(1, (f.dp || 0) + Math.min(.05, Math.max(0, t - (f.tl || t)) / 1.5)), sg(q, 0, .06)); f.tl = t;
-    var dp = f.dp, sh = Math.min(H * 1.3, q * SP * H * 1.5);                /* the page seems to scroll on: the words and the tangle leave upward */
+    if (H >= W){ room(1, -1, 2, 1); return; }                               /* phones: the words, the line, then the room — in the flow (css) */
+    /* the tangle and its line come once, when the screen is first seen: drawn in one stroke, by the clock */
+    f.dp = Math.max(Math.min(1, (f.dp || 0) + Math.min(.05, Math.max(0, t - (f.tl || t)) / 1.9)), sg(q, 0, .06)); f.tl = t;
+    var dp = f.dp, sh = Math.min(H * 1.3, q * SP * H * 1.5);                /* the page seems to scroll on: the words leave upward */
     if (f.tx){
       var vis = sh < H * .72 ? 1 : 0, tf = 'translate3d(0,' + (-sh).toFixed(1) + 'px,0)';
       if (f.tx.__t !== tf){ f.tx.__t = tf; f.tx.style.transform = tf; }
       if (f.tx.__v !== vis){ f.tx.__v = vis; f.tx.style.visibility = vis ? 'visible' : 'hidden'; }
     }
-    var KR = 27 * U, KX = W / 2, KY = MID + 232 * U - sh, yA = MID + 150 * U - sh, yB = KY + 84 * U;   /* the tangle: about 160 across, 44 under the title */
-    var e = sm(0, 1, sg(q, .07, .42)), e2 = e * e * (3 - 2 * e);
-    var sp = eio(sg(q, .56, 1.22)), dist = sp * (W / 2 + 10), xL = W / 2 - dist, xR = W / 2 + dist, lp = sg(q, 1.28, 2.0);
-    room(lp, sp > 0 ? xL / W : 2, sp > 0 ? xR / W : 2, 1 - sg(sp, .9, 1));
+    /* the tangle fills what the words leave of the screen: from 55 under the title down to the foot (the 58 px floor over the rail),
+       where it has become the line */
+    var top = 530 * U, foot = H - Math.max(58, 50 * U), RK = Math.min(190 * U, (foot - top) / 2.75), KX = W / 2, KY = top + RK, FP = 7.5 / 2.9;
+    var e = sm(0, 1, sg(q, .06, .42)), e2 = e * e * (3 - 2 * e);
+    var grow = sg(q, .46, 1.18), sp = eio(sg(q, 1.28, 2.08)), dist = sp * (W / 2 + 10), xL = W / 2 - dist, xR = W / 2 + dist;
+    room(grow, sp > 0 ? xL / W : 2, sp > 0 ? xR / W : 2, sg(q, 1.28, 2.12));   /* not parted yet: no home at all, not even a hair of it */
     g.lineCap = 'butt'; g.lineJoin = 'round';
     if (sp <= 0){
-      /* the line: out of the middle of the tangle, straight down */
-      var ka = sm(0, 1, sg(dp, 0, .45)), y1 = lerp(KY, yB, e2), y2 = lerp(y1, H + 10, eo(sg(dp, .25, 1)));
-      ink(1, LW); seg(KX, y1, KX, y2);
-      /* the tangle: one strand, turning; where it passes behind itself it breaks. The scroll pays it out into the line */
-      if (e2 < 1 || yA > -4){
-        var N = KNOT.length - 1, ay = t * .38 + q * 5.2, ax = 1.0 + .25 * Math.sin(t * .21 + q * 2), ca = Math.cos(ay), sa = Math.sin(ay), cb = Math.cos(ax), sb = Math.sin(ax), F = 7.5, S = [];
-        for (i = 0; i <= N; i++){ var p = KNOT[i], x = p[0] * ca + p[2] * sa, z = -p[0] * sa + p[2] * ca, y = p[1] * cb - z * sb; z = p[1] * sb + z * cb;
-          var fp = F / (F - z), u = i / N, kx = KX + x * KR * fp, ky = KY - y * KR * fp;
-          S.push([kx + (KX - kx) * e2, ky + (yA + u * (yB - yA) - ky) * e2, z * (1 - e2)]); }
+      var N = TANG.length - 1, yJ = KY + TANG[N][3] * RK, yT = Math.max(-10, 535 * U - sh);   /* where the tangle meets its line, and the loose end, which follows the words up */
+      /* the line the tangle lets go of: straight down, off the foot of the screen */
+      var nd = eo(sg(dp, 0, .8)) * N, tl = eo(sg(dp, .72, 1));
+      if (tl > 0){ ink(1, LW); seg(KX, yJ - 1, KX, lerp(yJ, H + 10, tl)); }
+      if (e2 >= 1){ ink(1, LW); seg(KX, yT, KX, yJ); }
+      else {
+        /* the tangle: one strand, turning; where it passes behind itself it breaks. The scroll pulls it out into the line */
+        var ay = (reduced ? 0 : t * .34) + q * 5.2, wb = reduced ? 0 : .2 * Math.sin(t * .23), ca = Math.cos(ay), sa = Math.sin(ay), cw = Math.cos(wb), sw = Math.sin(wb), S = [];
+        for (i = 0; i <= N; i++){ var p = TANG[i], y = p[1] * cw - p[2] * sw, zz = p[1] * sw + p[2] * cw, x = p[0] * ca + zz * sa, z = -p[0] * sa + zz * ca;
+          var fp = FP / (FP - z), kx = KX + x * RK * fp, ky = KY + (y * fp + p[3]) * RK;
+          S.push([kx + (KX - kx) * e2, ky + (lerp(yT, yJ, i / N) - ky) * e2, z * (1 - e2)]); }
         var CH = 4, runs = [];
-        for (i = 0; i < N; i += CH) runs.push([i, (S[i][2] + S[Math.min(N, i + CH)][2]) / 2]);
-        if (e2 < 1) runs.sort(function(a, b){ return a[1] - b[1]; });
-        g.globalAlpha = ka;
+        for (i = 0; i < N; i += CH) if (i <= nd) runs.push([i, (S[i][2] + S[Math.min(N, i + CH)][2]) / 2]);
+        runs.sort(function(a, b){ return a[1] - b[1]; });
         for (var j = 0; j < runs.length; j++){ var j0 = runs[j][0], j1 = Math.min(N, j0 + CH), jb = Math.max(0, j0 - 1);
-          if (e2 < .98){ g.strokeStyle = '#000000'; g.lineWidth = LW + 7 * U * (1 - e2); g.setLineDash([]); g.beginPath(); g.moveTo(S[j0][0], S[j0][1]); for (k = j0 + 1; k <= j1; k++) g.lineTo(S[k][0], S[k][1]); g.stroke(); }
+          if (e2 < .98){ g.strokeStyle = '#000000'; g.lineWidth = LW + 8 * U * (1 - e2) * (1 - e2); g.setLineDash([]); g.beginPath(); g.moveTo(S[j0][0], S[j0][1]); for (k = j0 + 1; k <= j1; k++) g.lineTo(S[k][0], S[k][1]); g.stroke(); }
           g.strokeStyle = '#FFFFFF'; g.lineWidth = LW; g.beginPath(); g.moveTo(S[jb][0], S[jb][1]); for (k = jb + 1; k <= j1; k++) g.lineTo(S[k][0], S[k][1]); g.stroke(); }
-        g.globalAlpha = 1;
       }
     } else {
-      /* the line, parted: the sketch stands between its two halves */
+      /* the line, parted: the home stands between its two halves, its drawing outside them */
       var la = 1 - sg(sp, .97, 1);
       if (la > .004){ ink(la, LW); seg(xL, -10, xL, H + 10); seg(xR, -10, xR, H + 10); }
     }
@@ -1015,23 +1028,23 @@
     rise: [
       'vec2 uv = (v - 0.5) / mix(1.05, 1.0, smoothstep(0.0, 1.0, uQ)) + 0.5;',
       'vec3 c = grade(texture2D(uT0, cov(uv, uS0)).rgb) * smoothstep(0.0, 0.92, uQ);'].join('\n'),
-    /* CI Turnkey: the room, as a drawing of itself and then as itself. The drawing (uT1, the room's own lines) exists only between the two
-       lines that have parted (uB, their places across the screen) and its ink is brightest where a line has just been (uF). The photograph
-       (uT0) is not faded in: uT2 gives every thing in the picture — a panel, a pane, a fold, a pillow, a building — its own moment, and the
-       drawing is filled in with the photograph one such cell at a time, its lines given up cell by cell (tools/site/cells.py) */
+    /* CI Turnkey: the room, as a drawing of itself and then as itself. The drawing (uT1, the room drafted clean) grows out of the line
+       that stands down the middle of the screen: uT2 is the moment the ink reaches each point along the strokes, uA how far it has got,
+       and the pen's tip is a little brighter than the ink behind it. The home (uT0) stands between the two halves of the line once it
+       has parted (uB, their places across the screen): one straight front. Just behind it the ink still lies on the photograph and is
+       given up within a hand's width (tools/site/sketch.py) */
     room: [
-      'vec2 r = (v - uC) / (2.0 * uH) + 0.5;',
-      'float ins = step(0.0, r.x) * step(r.x, 1.0) * step(0.0, r.y) * step(r.y, 1.0);',
-      'vec2 iu = cov(r, uS0);',
-      'vec3 ph = grade(texture2D(uT0, iu).rgb);',
-      'float ln = smoothstep(0.22, 0.92, texture2D(uT1, cov(r, uS1)).r);',   /* the core of each line, without its halo: a finer pen */
-      'float T = mix(texture2D(uT2, cov(r, uS2)).r, 1.0 - iu.y, 0.3);',     /* the thing's own moment, and each point's own height in it */
-      'float p = uQ * 1.2 - 0.1;',
-      'float m = smoothstep(T - 0.012, T + 0.06, p);',
-      'float held = smoothstep(T + 0.03, T + 0.15, p);',
-      'float band = step(uB.x, v.x) * step(v.x, uB.y);',
-      'float fr = 1.0 + uF * 0.42 * (exp(-(v.x - uB.x) * 9.0) + exp(-(uB.y - v.x) * 9.0));',
-      'vec3 c = (ph * m * mix(0.86, 1.0, smoothstep(0.55, 1.0, uQ)) + vec3(ln) * 0.6 * fr * band * (1.0 - held)) * ins;'].join('\n'),
+      'vec3 ph = grade(texture2D(uT0, cov(v, uS0)).rgb);',
+      'float ln = texture2D(uT1, cov(v, uS1)).r;',
+      'float T = texture2D(uT2, cov(v, uS2)).r;',
+      'float gq = uA * 1.2 - 0.02;',
+      'float on = smoothstep(T - 0.006, T + 0.022, gq);',
+      'float tip = on * (1.0 - smoothstep(T + 0.03, T + 0.17, gq));',
+      'vec3 sk = vec3(ln * on * (0.8 + 0.2 * tip));',
+      'float w = 1.0 / uRes.x;',
+      'float ins = smoothstep(uB.x - w, uB.x + w, v.x) * (1.0 - smoothstep(uB.y - w, uB.y + w, v.x));',
+      'float keep = 1.0 - smoothstep(0.0, 0.085, min(v.x - uB.x, uB.y - v.x));',
+      'vec3 c = mix(sk, ph * mix(0.88, 1.0, smoothstep(0.3, 1.0, uQ)) + sk * keep * 0.9, ins);'].join('\n'),
     /* a photograph, settling */
     still: [
       'float s = mix(1.06, 1.0, smoothstep(0.0, 1.0, uQ));',

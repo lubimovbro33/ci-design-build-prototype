@@ -647,9 +647,10 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
 .tk-cv-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;max-width:none;display:block;
               filter:contrast(1.04) brightness(.93)}
 /* her frame 603:742: the name and the title in the middle of the screen, centred; label 437, title 486–642 of 1080 */
-.film .tk-cv-t{position:absolute;left:0;right:0;top:calc(50% - 103 * var(--u));z-index:3;text-align:center;will-change:transform}
+/* 19:48, her frame 610:99: the words at the head of the screen — the name at 116, the title in the site's 111 (.t111) from 190 */
+.film .tk-cv-t{position:absolute;left:0;right:0;top:calc(116 * var(--u));z-index:3;text-align:center;will-change:transform}
 .tk-cv-k{margin:0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.2;letter-spacing:.05em;color:#EBEBEB}
-html body.inr .tk-cv-h{margin:calc(25 * var(--u)) 0 0!important;color:#EBEBEB;white-space:nowrap!important}
+html body.inr .tk-cv-h{margin:calc(42.4 * var(--u)) 0 0!important;color:#EBEBEB;white-space:nowrap!important}   /* her text box is trimmed to the capitals: their top at 190 */
 /* 02 the thought */
 .tk-ld{padding:calc(170 * var(--u)) 0 calc(160 * var(--u))}
 html body.inr .tk-ld-h{margin:0 0 0 calc(421 * var(--u))}
@@ -1044,9 +1045,22 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
 .tk-df .df2-nm, .tk-df .df2-ct{padding:0 calc(34 * var(--u));box-sizing:border-box}
 .tk-df{--hm:var(--m, 20px);--hdr:64px}
 .tk-df .df2-cd{width:calc(260 * var(--u))}
-/* the lower row stands over the chapter rail: what sits at a cell's foot keeps clear of it (the site's 58 px floor) */
-.tk-df .df2-cell.c5 .df2-cd, .tk-df .df2-cell.c6 .df2-cd, .tk-df .df2-cell.c7 .df2-cd,
-.tk-df .df2-cell.c5 .df2-pm, .tk-df .df2-cell.c6 .df2-pm, .tk-df .df2-cell.c7 .df2-pm{bottom:max(calc(24 * var(--u)), 58px)}
+/* 17.11 19:46, her two notes. «5-й, 6-й, 7-й: там текст не прибитий до нижнього краю» — the lower row had been lifted to the 58 px floor
+   over the chapter rail; a card's sentence stands 24 from the foot of its cell in both rows, as on the home page. «Кнопочка з плюсиком…
+   куди вона буде переходити? Нам же її не потрібно» — a round plus reads as a button that leads somewhere. In its corner stands the
+   site's own mark instead, the square: blue on the photograph, black on the open card (as in the corner of «Begin your better life») */
+.tk-df .df2-pm{width:calc(8 * var(--u));height:calc(8 * var(--u));min-width:6px;min-height:6px;border:0;border-radius:0;background:#96A8BF;transition:background-color .5s}
+.tk-df .df2-cell.on .df2-pm{background:#000000}
+/* and so that «прибитий до нижнього краю» does not put a sentence under the chapter rail: the rail gets a band of its own under the grid.
+   The two rows give it its 36 px between them (18 each, so they stay equal), a third hairline closes the grid above it, and the foot of
+   every cell — and of the white panel — is 24 from that line. Nothing of the grid lies under the rail when the block fills the screen */
+.tk-df .df2-h.c{display:none}
+@media (min-width:901px) and (min-aspect-ratio: 1/1){
+  .tk-df .df2-body{grid-template-rows:minmax(0, 1fr) calc(480 * var(--u) - 18px) calc(480 * var(--u) - 18px) 36px!important}
+  .tk-df .df2-h.c{display:block;grid-column:1/-1;grid-row:4;--s:.3;--du:.34}
+  .tk-df .df2-v.a, .tk-df .df2-v.c{grid-row:1/4} .tk-df .df2-v.b{grid-row:2/4}
+  html body.inr .tk-df .df2-s1{bottom:calc(24 * var(--u))}
+}
 .tk-df-k{position:absolute;left:calc(24 * var(--u));top:calc(25 * var(--u));margin:0;font-family:var(--zx);font-weight:400;
   font-size:max(10px, calc(18 * var(--u)));line-height:.93;text-transform:uppercase;color:#000000}
 html body.inr .tk-df .df2-big{top:calc(72 * var(--u));margin:0;font-weight:500;text-transform:uppercase;color:#000000;white-space:nowrap}
@@ -1060,7 +1074,7 @@ html body.inr .tk-df .df2-s1{width:auto;right:calc(24 * var(--u));white-space:no
   .tk-df .df2-panel{grid-column:1/3;grid-row:5}
   .tk-df .df2-nm, .tk-df .df2-ct{padding:0 12px}
   .tk-df .df2-cd{width:calc(100% - 60px)}
-  .tk-df .df2-cell .df2-cd, .tk-df .df2-cell .df2-pm{bottom:12px!important} .tk-df .df2-cell .df2-pm{bottom:10px!important}
+  .tk-df .df2-cell .df2-cd{bottom:12px} .tk-df .df2-cell .df2-pm{right:12px;bottom:12px}
   .tk-df-k{position:static;font-size:11px}
   html body.inr .tk-df .df2-big{white-space:normal}
   .tk-m-cv{display:none}
