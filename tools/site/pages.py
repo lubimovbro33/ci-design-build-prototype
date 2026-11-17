@@ -323,8 +323,9 @@ def solutions():
         # 16.11 23:09: «текст розкиданий повністю: заголовок там, другий заголовок там, опис там, кнопка там». One composition now, read in order:
         # the small name and the big one stand on the text line over the line itself; under the line the lead on the same text line, the description
         # beside it at 1040, and the button at the foot of the same column
-        o.append('      <p class="lab3 m sw-k" data-k="%s">%s</p>' % (k, esc(tag)))
-        o.append('      <p class="t60 m sw-h nb" data-k="%s">%s</p>' % (k, brk(nm, 22)))
+        # 17.11 12:58: the small word over the name sat on its own anchor, so a name of two lines ate the gap. The two are one block now,
+        # hung from the same foot, and the distance between them is a margin — the same for «CI Core» as for «CI Wellness + In-Home Longevity»
+        o.append('      <div class="m sw-hd" data-k="%s"><p class="lab3 sw-k">%s</p><p class="t60 sw-h nb">%s</p></div>' % (k, esc(tag), brk(nm, 22)))
         o.append('      <p class="t34 m sw-l" data-k="%s" style="--w:430">%s</p>' % (k, esc(lead)))
         o.append('      <div class="t20s m sw-t" data-k="%s" style="--w:475">%s</div>' % (k2, ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_)))
         o.append('      <div class="m p-bl" data-k="%s">%s</div>' % (k2, btn(a_[2], href(a_[1]))))
