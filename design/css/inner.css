@@ -948,6 +948,18 @@ html body.inr .wl-d-f p + p{margin-top:calc(16 * var(--u));color:#EBEBEB}
   .film .yo-k, .film .yo-l, .film .yo-n, .film .yo-t, .film .yo-c{left:var(--m, 20px);right:var(--m, 20px);width:auto}
   .film .yo-t{top:auto;transform:none}
 }
+/* «Is this you?» — one statement at a time, where the four pages each had their longest list (17.11 12:36) */
+.sc-yo .stg{background:#000}
+.film .yo-k{left:calc(421 * var(--u));top:calc(150 * var(--u))}
+.film .yo-l{left:calc(421 * var(--u));top:calc(216 * var(--u));color:#FFFFFF}
+.film .yo-n{left:calc(421 * var(--u));top:calc(50% - 150 * var(--u));color:rgba(255,255,255,.5)}
+.film .yo-n .wc{color:rgba(255,255,255,.3)}
+.film .yo-t{left:calc(421 * var(--u));top:50%;transform:translateY(-50%);color:#FFFFFF;white-space:normal;width:calc(1200 * var(--u))}
+.film .yo-c{left:calc(421 * var(--u));bottom:calc(150 * var(--u));top:auto}
+@media (max-aspect-ratio: 1/1){
+  .film .yo-k, .film .yo-l, .film .yo-n, .film .yo-t, .film .yo-c{left:var(--m, 20px);right:var(--m, 20px);width:auto}
+  .film .yo-t{top:auto;transform:none}
+}
 /* ================================================================== SOLUTIONS — the three ways, and who carries what (17.11.2026) */
 .sl-b{position:relative;padding:calc(150 * var(--u)) 0 calc(160 * var(--u))}
 .sl-b-ph{position:absolute;right:0;top:calc(150 * var(--u));width:calc(880 * var(--u));height:calc(620 * var(--u));margin:0;overflow:hidden}

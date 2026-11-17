@@ -567,18 +567,6 @@
     });
   })();
 
-  /* ================================================================== Solutions: the schedule reads across and down
-     The pointer on a row holds that layer across the three ways; the rest step back. */
-  (function(){
-    qsa('[data-matrix]').forEach(function(g){
-      var rs = qsa('.sl-m-r', g);
-      rs.forEach(function(r){
-        r.addEventListener('pointerenter', function(){ rs.forEach(function(x){ x.classList.toggle('on', x === r); }); g.setAttribute('data-on', '1'); });
-      });
-      g.addEventListener('pointerleave', function(){ rs.forEach(function(x){ x.classList.remove('on'); }); g.removeAttribute('data-on'); });
-    });
-  })();
-
   /* ================================================================== CI Wellness: the invisible, drawn
      The room is a room. The pointer on one of the client's nine draws that one over it in a single stroke and lets it go again — which is the
      page's argument: «Controls can disappear. Infrastructure can remain behind the architecture.» */
