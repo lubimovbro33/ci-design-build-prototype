@@ -272,17 +272,6 @@
     theLine(f.pic ? sg(q, .82, 1.0) : 1, E, t);
   }
   /* ---------- film: steps — a journey on the line; the square walks from mark to mark */
-  /* ================================================================== Solutions: the four ways drawn as one room (17.11.2026 13:10)
-     An axis with a lit stretch said the right thing but said it plainly («поки що воно якось так по-простому»). The thing being sold is a
-     home, so the figure is a home: one room drawn in our hairlines, and each way owns a different amount of it.
-       CI Core      the shell — walls, floor, ceiling, the window, the opening of a door: the permanent environment, and nothing in it.
-       CI Curated   the shell, and the layers that make it a home: sofa, table, rug, lamp, the picture, the plant.
-       CI Turnkey   all of it, and the life in it: the pendant lit, the things on the table, the door standing open.
-       CI Wellness  the same room with what cannot be seen drawn through it: the light from the window, the air along the ceiling, the warmth
-                    across the floor — the three that move while the room stands still.
-     Nothing is added that the client's own copy does not sell, and the room is never rebuilt: parts of the same drawing come and go as the
-     scroll moves from one way to the next. The hairlines stay on the 2d canvas — a line of ours is one crisp pixel, which is the one thing a
-     shader does not do better. */
   function rx(u){ return u <= 960 ? u * U : W - (1920 - u) * U; }
   function ry(v){ return MID + (v - 540) * U; }
   function pth(pts, close){
@@ -309,8 +298,52 @@
     }
     g.stroke();
   }
-  function room(f, q, t){
-    var N = f.n, i, A = [], WG = {sh: [1,1,1,1], ly: [1,0,1,1], lf: [1,0,0,1], fl: [0,0,0,1]};
+  /* ================================================================== Solutions: the four ways own the layers of one plan (17.11.2026 15:10)
+     «На головній стилістика нашого плану була прекрасна… з оцими променями світла воно було дуже красиво. Зараз ти зробив трошки
+     шаблонненько.» She is right, and the fault was the hand, not the idea: a flat elevation with a sofa in it is the language of a furniture
+     catalogue. We already have a home drawn in our own hand — the plan of the philosophy chapter on the home page, walls as double hairlines
+     broken for the glazing, doors with their swing, quiet furniture, and the sun reaching in through every window it can see.
+     So this block draws THAT HOME, the same one, and the four ways own its layers:
+       CI Core      the plan itself — walls, openings, partitions, doors. Drawn, and empty.
+       CI Curated   the same plan with the furniture arriving in every room.
+       CI Turnkey   all of it, with the evening lamps lit and the keys left on the table in the foyer.
+       CI Wellness  the light: a shaft through every window the sun can see, moving with the hour, and the air along the rooms.
+     Same house on both pages, same hand, and the light comes back where it belongs. */
+  var PLN = (function(){
+    var W = 1000, H = 640, T = 14;
+    var WIN = {n: [[590, 730]], s: [[60, 280], [380, 520], [560, 680], [770, 960]],
+               e: [[60, 170], [300, 420], [460, 580]], w: [[50, 190], [330, 560]]};
+    var DRX = {n: [[400, 470]]};
+    var INT = [[0,240,70,240],[270,240,340,240],[540,240,600,240],[660,240,800,240],[860,240,1000,240],
+               [300,0,300,150],[300,210,300,240],[560,0,560,60],[560,120,560,240],[770,0,770,240],
+               [330,240,330,300],[330,560,330,640],[710,240,710,470],[710,530,710,640]];
+    var DRS = [[400,T,400,T+70,470,T,0],[300,150,360,150,300,210,1],[600,240,600,180,660,240,1],
+               [800,240,800,180,860,240,1],[710,470,770,470,710,530,1]];
+    var FUR = [['r',846,392,126,168,6],['l',846,420,972,420],['r',946,400,20,30,3],['r',946,522,20,30,3],['r',820,368,156,216,0],
+               ['r',420,420,220,44,8],['r',420,464,44,110,8],['c',560,520,34],['r',400,400,260,196,0],
+               ['r',686,300,24,140,0],['r',100,380,150,120,60],
+               ['r',90,90,150,56,4],['l',T+26,T,T+26,230],['l',T,T+26,300,T+26],
+               ['r',610,150,110,50,3],['l',574,20,574,200],['l',740,30,760,30],
+               ['c',430,130,30],['l',316,60,316,120],['l',544,140,544,200],['l',470,226,530,226],
+               ['r',880,40,92,52,22],['r',790,150,60,60,0],['l',970,120,970,220]];
+    for (var i = 0; i < 3; i++){ FUR.push(['r',118+i*44,356,26,18,4]); FUR.push(['r',118+i*44,506,26,18,4]); }
+    FUR.push(['r',76,425,18,30,4]); FUR.push(['r',256,425,18,30,4]);
+    for (var k = 0; k < 6; k++) FUR.push(['l',574,30+k*30,594,30+k*30]);
+    var LAMP = [[175,440,150],[520,480,190],[900,470,120],[165,118,110]];
+    var wins = [];
+    WIN.n.forEach(function(r){ wins.push({a:[r[0],0], b:[r[1],0], n:[0,-1]}); });
+    WIN.s.forEach(function(r){ wins.push({a:[r[0],H], b:[r[1],H], n:[0,1]}); });
+    WIN.e.forEach(function(r){ wins.push({a:[W,r[0]], b:[W,r[1]], n:[1,0]}); });
+    WIN.w.forEach(function(r){ wins.push({a:[0,r[0]], b:[0,r[1]], n:[-1,0]}); });
+    function side(key, len){
+      var cuts = (WIN[key] || []).concat(DRX[key] || []).slice().sort(function(a, b){ return a[0] - b[0]; }), out = [], x = 0;
+      cuts.forEach(function(c){ out.push([x, c[0]]); x = c[1]; });
+      out.push([x, len]); return out;
+    }
+    return {W: W, H: H, T: T, WIN: WIN, INT: INT, DRS: DRS, FUR: FUR, LAMP: LAMP, wins: wins, side: side};
+  })();
+  function plan(f, q, t){
+    var N = f.n, i, A = [], WG = {pl: [1,1,1,1], fu: [1,0,1,1], lf: [1,0,0,1], li: [0,0,0,1]};
     for (i = 0; i < N; i++){
       var c = f.t0 + i * f.d, dd = Math.abs(q - c) / f.d, a = sm(0, 1, 1 - c01(dd / .62));
       if ((i === 0 && q < c) || (i === N - 1 && q > c)) a = 1;
@@ -319,60 +352,95 @@
     function al(w){ var m = 0, j; for (j = 0; j < N; j++) m = Math.max(m, A[j] * w[j]); return m; }
     var base = sg(q, f.t0 - .38, f.t0 + .04);
     if (base <= .002) return;
-    var dp = sg(q, f.t0 - .34, f.t0 + .16), sh = base * al(WG.sh), ly = base * al(WG.ly), lf = base * al(WG.lf), fl = base * al(WG.fl);
-    /* the shell: one unbroken contour, drawn in one stroke */
-    ink(sh * .92, LW); pthF([1010, 215, 1860, 215, 1860, 845, 1010, 845, 1010, 215], dp);
-    var s2 = sh * .7 * sg(dp, .45, .95);
-    if (s2 > .002){
-      ink(s2, 1);
-      rct(1120, 300, 1430, 760);                                   /* the window */
-      pth([1275, 300, 1275, 760]); pth([1120, 440, 1430, 440]);
-      pth([1655, 395, 1800, 395, 1800, 845]);                      /* the opening of a door */
-    }
-    /* the layers that make it a home */
-    if (ly > .004){
-      ink(ly * .85, 1);
-      pth([1055, 800, 1620, 800]);                                 /* the rug */
-      pth([1150, 750, 1150, 688, 1480, 688, 1480, 750]);           /* the sofa */
-      pth([1150, 735, 1480, 735]);
-      pth([1168, 750, 1168, 775]); pth([1462, 750, 1462, 775]);
-      pth([1520, 748, 1625, 748]); pth([1534, 748, 1534, 776]); pth([1611, 748, 1611, 776]);   /* the table */
-      pth([1078, 790, 1078, 566]); pth([1052, 566, 1104, 566, 1096, 538, 1060, 538], true);    /* the floor lamp */
-      rct(1468, 330, 1566, 424);                                   /* the picture */
-      pth([1830, 800, 1830, 712]); pth([1830, 740, 1802, 706]); pth([1830, 726, 1855, 698]);   /* the plant */
-    }
-    /* and the life in it */
-    if (lf > .004){
-      ink(lf * .85, 1);
-      pth([1572, 215, 1572, 556]);                                 /* the pendant, over the table — away from the window's own mullion */
-      g.beginPath(); g.arc(rx(1572), ry(571), 15 * U, 0, 6.2832); g.stroke();
-      rct(1575, 730, 1596, 744);                                   /* what is left on the table */
-      g.beginPath(); g.arc(rx(1536), ry(731), 7 * U, 0, 6.2832); g.stroke();   /* and the keys, which is what they hand you */
-      pth([1543, 731, 1566, 731]); pth([1559, 731, 1559, 739]); pth([1566, 731, 1566, 740]);
-    }
-    /* what cannot be seen, and moves while the room stands still */
-    if (fl > .004){
-      var k, x, y;
-      ink(fl * .5, 1);
-      g.save(); g.beginPath();                                     /* the light stays inside the room it comes into */
-      g.rect(rx(1010), ry(215), rx(1860) - rx(1010), ry(845) - ry(215)); g.clip();
-      for (k = 0; k < 3; k++){                                     /* out of the window and across the floor */
-        var sx = 1150 + k * 90, w = .5 + .5 * Math.sin(t * .6 + k * 1.2);
-        ink(fl * (.3 + .3 * w), 1); pth([sx, 320 + k * 20, sx + 330 + k * 70, 843]);
+    var P = PLN, S = 870 / P.W, OX = 1000, OY = 540 - P.H * S / 2;        /* the plan, in the right half of the frame */
+    function X(x){ return rx(OX + x * S); }
+    function Y(y){ return ry(OY + y * S); }
+    function L(x1, y1, x2, y2){ g.beginPath(); g.moveTo(X(x1), Y(y1)); g.lineTo(X(x2), Y(y2)); g.stroke(); }
+    function R(x, y, w, h, r){
+      r = Math.min(r || 0, w / 2, h / 2);
+      g.beginPath();
+      if (!r) g.rect(X(x), Y(y), X(x + w) - X(x), Y(y + h) - Y(y));
+      else {
+        var rr = r * S * U / U * S ? r * (X(x + 1) - X(x)) : 0; rr = r * (X(1) - X(0));
+        g.moveTo(X(x) + rr, Y(y));
+        g.lineTo(X(x + w) - rr, Y(y)); g.quadraticCurveTo(X(x + w), Y(y), X(x + w), Y(y) + rr);
+        g.lineTo(X(x + w), Y(y + h) - rr); g.quadraticCurveTo(X(x + w), Y(y + h), X(x + w) - rr, Y(y + h));
+        g.lineTo(X(x) + rr, Y(y + h)); g.quadraticCurveTo(X(x), Y(y + h), X(x), Y(y + h) - rr);
+        g.lineTo(X(x), Y(y) + rr); g.quadraticCurveTo(X(x), Y(y), X(x) + rr, Y(y));
+        g.closePath();
       }
+      g.stroke();
+    }
+    function C(x, y, r){ g.beginPath(); g.arc(X(x), Y(y), r * (X(1) - X(0)), 0, 6.2832); g.stroke(); }
+    var dp = sg(q, f.t0 - .34, f.t0 + .16), pl = base * al(WG.pl), fu = base * al(WG.fu), lf = base * al(WG.lf), li = base * al(WG.li);
+    /* the light first, under everything the hand drew */
+    if (li > .004){
+      var hr = 11.4 + 4.1 * Math.sin(t * .055), th = (hr - 6) / 12 * Math.PI, sx = -Math.cos(th), sy = -Math.sin(th);
+      var elev = Math.max(0, Math.sin(th)), LEN = (220 + 420 * (1 - elev));
+      g.save();
+      g.beginPath(); g.rect(X(P.T), Y(P.T), X(P.W - P.T) - X(P.T), Y(P.H - P.T) - Y(P.T)); g.clip();
+      P.wins.forEach(function(w){
+        var kk = -(sx * w.n[0] + sy * w.n[1]), a = li * Math.max(0, kk) * (.55 + .45 * elev);
+        if (a < .012) return;
+        var mx = (w.a[0] + w.b[0]) / 2, my = (w.a[1] + w.b[1]) / 2;
+        var gr = g.createLinearGradient(X(mx), Y(my), X(mx + sx * LEN), Y(my + sy * LEN));
+        gr.addColorStop(0, 'rgba(255,255,255,' + (a * .22).toFixed(3) + ')');
+        gr.addColorStop(.55, 'rgba(255,255,255,' + (a * .075).toFixed(3) + ')');
+        gr.addColorStop(1, 'rgba(255,255,255,0)');
+        g.fillStyle = gr; g.beginPath();
+        g.moveTo(X(w.a[0]), Y(w.a[1])); g.lineTo(X(w.b[0]), Y(w.b[1]));
+        g.lineTo(X(w.b[0] + sx * LEN), Y(w.b[1] + sy * LEN)); g.lineTo(X(w.a[0] + sx * LEN), Y(w.a[1] + sy * LEN));
+        g.closePath(); g.fill();
+      });
       g.restore();
-      g.beginPath();                                               /* the air, along the ceiling */
-      for (i = 0; i <= 160; i++){
-        x = 1010 + 850 * i / 160; y = 262 + 11 * Math.sin(i / 11 - t * .55);
-        if (i) g.lineTo(rx(x), ry(y)); else g.moveTo(rx(x), ry(y));
-      }
-      ink(fl * .55, 1); g.stroke();
-      g.beginPath();                                               /* the warmth, across the floor */
-      for (i = 0; i <= 160; i++){
-        x = 1055 + 760 * i / 160; y = 826 + 7 * Math.sin(i / 9 + t * .4);
-        if (i) g.lineTo(rx(x), ry(y)); else g.moveTo(rx(x), ry(y));
-      }
-      ink(fl * .45, 1); g.stroke();
+    }
+    /* the evening lamps of a house that is lived in */
+    if (lf > .004){
+      P.LAMP.forEach(function(l){
+        var r = l[2] * (X(1) - X(0)), gr = g.createRadialGradient(X(l[0]), Y(l[1]), 0, X(l[0]), Y(l[1]), r);
+        gr.addColorStop(0, 'rgba(255,255,255,' + (lf * .12).toFixed(3) + ')'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+        g.fillStyle = gr; g.beginPath(); g.arc(X(l[0]), Y(l[1]), r, 0, 6.2832); g.fill();
+      });
+    }
+    /* the walls: two hairlines with the openings cut out of them */
+    ink(pl * .78 * dp, LW);
+    P.side('n', P.W).forEach(function(r){ L(r[0], 0, r[1], 0); L(Math.max(P.T, r[0]), P.T, Math.min(P.W - P.T, r[1]), P.T); });
+    P.side('s', P.W).forEach(function(r){ L(r[0], P.H, r[1], P.H); L(Math.max(P.T, r[0]), P.H - P.T, Math.min(P.W - P.T, r[1]), P.H - P.T); });
+    P.side('e', P.H).forEach(function(r){ L(P.W, r[0], P.W, r[1]); L(P.W - P.T, Math.max(P.T, r[0]), P.W - P.T, Math.min(P.H - P.T, r[1])); });
+    P.side('w', P.H).forEach(function(r){ L(0, r[0], 0, r[1]); L(P.T, Math.max(P.T, r[0]), P.T, Math.min(P.H - P.T, r[1])); });
+    P.INT.forEach(function(s){ L(s[0], s[1], s[2], s[3]); });
+    /* the glazing in every opening, and the jambs of the entry */
+    var w2 = pl * .5 * sg(dp, .4, .95);
+    if (w2 > .004){
+      ink(w2, 1);
+      P.wins.forEach(function(w){
+        var tx = -w.n[0] * P.T, ty = -w.n[1] * P.T;
+        L(w.a[0], w.a[1], w.a[0] + tx, w.a[1] + ty); L(w.b[0], w.b[1], w.b[0] + tx, w.b[1] + ty);
+        L(w.a[0] + tx * .35, w.a[1] + ty * .35, w.b[0] + tx * .35, w.b[1] + ty * .35);
+        L(w.a[0] + tx * .65, w.a[1] + ty * .65, w.b[0] + tx * .65, w.b[1] + ty * .65);
+      });
+      L(400, 0, 400, P.T); L(470, 0, 470, P.T);
+      /* and the doors, each with its swing */
+      P.DRS.forEach(function(d){
+        L(d[0], d[1], d[2], d[3]);
+        var r = Math.hypot(d[2] - d[0], d[3] - d[1]) * (X(1) - X(0));
+        var a0 = Math.atan2(Y(d[3]) - Y(d[1]), X(d[2]) - X(d[0])), a1 = Math.atan2(Y(d[5]) - Y(d[1]), X(d[4]) - X(d[0]));
+        ink(w2 * .5, 1); g.beginPath(); g.arc(X(d[0]), Y(d[1]), r, a0, a1, !d[6]); g.stroke(); ink(w2, 1);
+      });
+    }
+    /* the furniture, quiet, as on the home page */
+    if (fu > .004){
+      ink(fu * .3, 1);
+      P.FUR.forEach(function(o){
+        if (o[0] === 'r') R(o[1], o[2], o[3], o[4], o[5]);
+        else if (o[0] === 'c') C(o[1], o[2], o[3]);
+        else L(o[1], o[2], o[3], o[4]);
+      });
+    }
+    /* the keys, left on the table in the foyer */
+    if (lf > .004){
+      ink(lf * .6, 1);
+      C(466, 118, 9); L(474, 118, 500, 118); L(492, 118, 492, 128); L(500, 118, 500, 130);
     }
   }
 
@@ -583,7 +651,7 @@
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
     horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, room: room, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
+  var FIG = {cover: cover, steps: steps, plan: plan, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
