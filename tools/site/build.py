@@ -463,12 +463,14 @@ def sc_door(kick, h1, img):
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
 def tk_cover(kick, h1, img):
-    """01 — the first night. The page opens on the plan of the residence, drawn in our own hand in the dark: the first idea. The scroll lights
-    it room by room, the keys appear on the table in the foyer, and when the last room is lit the drawing gives way to the room itself —
-    their own «From First Idea to the First Night Home», and nothing on the screen slides (17.11 15:15)."""
+    """01 — the section, and the one home in it (17.11 16:40 and 16:47). The page opens on an architectural section of the building in our
+    hairlines — what the cut passes through outlined and hatched, the neighbours' rooms in elevation, the level marks and the dimension
+    chain outside the façade — and one apartment in it is drafted over its own photograph. The scroll goes into that apartment: the section
+    leaves by the edges, the evening light starts at the room's window and crosses it, and the drawing is given up to the room that was
+    built, line by line. Their own «From First Idea to the First Night Home», as one move. The figure is `section()` in js/inner.js."""
     hb = brk(h1, 18); ln = hb.count('<br>') + 1
     return '\n'.join([
-        '<section class="film tk-cv" data-fig="night" data-len="1.5" id="@ID@">', '  <div class="stg">',
+        '<section class="film tk-cv" data-fig="section" data-len="1.7" id="@ID@">', '  <div class="stg">',
         '    <div class="tk-cv-ph"><img src="%s" alt=""></div>' % img,
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
         '      <p class="lab3 rv tk-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),

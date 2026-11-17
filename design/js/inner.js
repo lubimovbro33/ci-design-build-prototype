@@ -434,32 +434,180 @@
       C(466, 118, 9); L(474, 118, 500, 118); L(492, 118, 492, 128); L(500, 118, 500, 130);
     }
   }
-  /* ================================================================== CI Turnkey's cover: the first night (17.11.2026 15:15)
-     «Мені не подобається головний екран, зовсім не подобається, як оця картинка з'їжджає.» Nothing slides here. The page opens on the plan of
-     the residence drawn in our own hand in the dark — the first idea. The scroll lights it room by room, the way a house is lit on the evening
-     you first sleep in it; the keys appear on the table in the foyer; and when the last room is lit the drawing gives way to the room itself.
-     Their own title says exactly this: From First Idea to the First Night Home. The title stands still at the foot of the screen the whole way. */
-  function night(f, q, t){
+  /* ================================================================== CI Turnkey's cover: the section, and the one home in it (17.11.2026 16:40)
+     «Не просто план поставити на напівпрозору плашку і там фото, а придумати якийсь прикольний transition. Можливо, з розрізу… показати
+     перевтілення: від першої ідеї, як я на заголовку, ми переходимо до реалізації.» The plan lit over a photograph was a layer on a layer.
+     Now the drawing and the room are one thing. The page opens on an architectural SECTION of the building in our own hairlines — slabs
+     hatched where the cut passes through them, the level marks and the dimension chain outside the façade, the neighbours' rooms in
+     elevation — and one apartment in it is drawn in full: the client's own room, as a drawing of itself. The scroll goes INTO that
+     apartment. The rest of the section leaves by the edges of the screen, and as the room grows the evening light starts at its window and
+     crosses it, turning the drawing into the room that was built. At the end the apartment IS the screen. From first idea to the first
+     night home, in one move. The photograph and its drawing live on the WebGL layer inside the room's rectangle; the section is the 2D
+     layer above it, so its lines stay hairlines at every distance. */
+  /* the neighbours, in elevation: [bay, floor, lit, [primitives in the room's own 0..1 box, y down]] — a door, a window on the far wall, and
+     what stands in the room, each as an architect would put it into a section: outlines, nothing shaded */
+  var SECF = [
+    [-1, 0, 1, [['r',.07,.34,.11,.66],['l',.155,.66,.165,.66], ['r',.30,.16,.30,.50],['l',.45,.16,.45,.66],['l',.30,.41,.60,.41],
+                ['r',.68,.74,.24,.14],['l',.68,.66,.68,.74],['l',.68,.66,.92,.66],['l',.92,.66,.92,.74],['l',.74,.88,.74,1],['l',.86,.88,.86,1]]],
+    [-2, 0, 0, [['r',.52,.20,.32,.46],['l',.68,.20,.68,.66],['r',.16,.70,.26,.30],['l',.16,.80,.42,.80],['l',.16,.90,.42,.90]]],
+    [0, -1, 0, [['r',.10,.30,.11,.70],['r',.36,.14,.34,.52],['l',.53,.14,.53,.66],['l',.36,.40,.70,.40],['l',.78,.72,.96,.72],['l',.80,.72,.80,1],['l',.94,.72,.94,1]]],
+    [-1, -1, 1, [['r',.30,.16,.30,.50],['l',.45,.16,.45,.66],['r',.14,.76,.40,.12],['l',.14,.68,.54,.68],['l',.14,.68,.14,.76],['l',.54,.68,.54,.76],['r',.74,.34,.11,.66]]],
+    [-2, -1, 0, [['r',.20,.18,.28,.48],['l',.34,.18,.34,.66],['r',.60,.62,.26,.38],['l',.60,.75,.86,.75],['l',.60,.88,.86,.88]]],
+    [0, 1, 0, [['r',.36,.14,.34,.52],['l',.53,.14,.53,.66],['r',.08,.34,.11,.66],['r',.56,.78,.36,.12],['r',.88,.64,.035,.26]]],
+    [-1, 1, 0, [['r',.30,.16,.30,.50],['l',.45,.16,.45,.66],['l',.12,.72,.44,.72],['l',.15,.72,.15,1],['l',.41,.72,.41,1],['r',.74,.34,.11,.66]]],
+    [-2, 1, 1, [['r',.20,.18,.28,.48],['l',.34,.18,.34,.66],['r',.56,.76,.32,.12]]]
+  ];
+  /* our room, drafted over its own photograph: every line here lies on an edge of the picture (coordinates are the photograph's own 0..1), so
+     when the light crosses the room the drawing is found to have been the room all along. [weight, closed, x, y, x, y …] */
+  var SECR = [
+    [1, 1, .437,.06, .737,.06, .737,.745, .437,.745],                                   /* the window */
+    [1, 0, .437,.243, .737,.243], [1, 0, .437,.262, .737,.262],                          /* its transom */
+    [.8, 0, .40,.757, .78,.757],                                                         /* the sill */
+    [1, 0, 0,.045, 1,.045],                                                              /* the ceiling */
+    [.8, 0, .313,.045, .313,.548], [.8, 0, .25,.045, .25,.56],                           /* the curtains, left */
+    [.4, 0, .335,.06, .335,.552], [.4, 0, .36,.06, .36,.556], [.4, 0, .385,.06, .385,.60], [.4, 0, .41,.06, .41,.66],
+    [.8, 0, .848,.045, .848,.78], [.8, 0, .955,.045, .955,.86],                          /* and right */
+    [.4, 0, .76,.06, .76,.75], [.4, 0, .785,.06, .785,.76], [.4, 0, .81,.06, .81,.77], [.4, 0, .835,.06, .835,.775],
+    [.9, 0, .279,0, .279,.455], [.9, 1, .270,.455, .288,.455, .288,.532, .270,.532], [.9, 0, .262,.512, .297,.512],   /* the pendant */
+    [.7, 0, .19,0, .19,.548], [.7, 0, 0,.17, .19,.292], [.7, 0, 0,.585, .19,.548], [.5, 0, .088,0, .088,.566],        /* the padded wall */
+    [.8, 0, .545,.762, .76,.742, .80,.76, 1,.965], [.8, 0, .545,.762, .565,1],           /* the bed */
+    [.5, 0, .50,.785, .52,1], [.6, 0, .44,.782, .545,.775],
+    [.8, 2, .030,.612, .115,.628, .235,.70, .283,.85, .272,.985, .12,1.02, .05,.90],     /* the pillows: soft things, a soft line */
+    [.7, 3, .112,.60, .125,.574, .16,.572, .235,.60, .30,.66, .312,.745], [.7, 3, .20,.60, .215,.57, .245,.57, .30,.61, .335,.70],
+    [.7, 3, .255,.565, .275,.548, .31,.548, .345,.57, .37,.62, .366,.70],
+    [.8, 2, .288,.775, .385,.668, .43,.70, .42,.83, .365,.972, .305,.955],
+    [.45, 0, .447,.745, .447,.41, .478,.41, .478,.52, .515,.52, .515,.60, .535,.60, .535,.52, .565,.52, .565,.59, .635,.59, .635,.66, .652,.66,
+          .652,.50, .678,.50, .678,.61, .728,.61, .728,.745]                             /* the city beyond the glass */
+  ];
+  SECR.forEach(function(L){ var n = 0, cx = 0, cy = 0, i; for (i = 2; i < L.length; i += 2){ cx += L[i]; cy += L[i + 1]; n++; }
+    L.d = Math.sqrt(Math.pow((cx / n - .585) * 1.387, 2) + Math.pow(cy / n - .40, 2)); });
+  function section(f, q, t){
     if (f.glo === undefined){
       var box = qs('.tk-cv-ph', f.el);
-      f.glo = box ? GL2.make(box, glCoverFS(GLSH.rise, .74), qsa('img', box)) : null;
-      f.tIn = t;
+      f.glo = box ? GL2.make(box, glCoverFS(GLSH.room, .74), qsa('img', box)) : null;
+      f.im = box && qs('img', box);
     }
-    var o = f.glo, fade = Math.max(.2, sg(q, .58, .92));   /* the room is already there in the dark, waiting to be lit */
-    if (o && o.ready){ o.size(); o.set1('uQ', fade); o.set1('uTime', (t * 60) | 0); o.draw(); }
-    /* the plan draws itself once, when the screen is first seen, and from then on it is simply there */
-    f.dp = Math.max(Math.min(1, (f.dp || 0) + .017), sg(q, 0, .08));
-    var al = 1 - sg(q, .66, .97);
-    if (al <= .004) return;
-    var P = PLN, S = 556 / P.H, OX = 960 - P.W * S / 2, OY = 370 - P.H * S / 2;
-    planDraw(function(x){ return W / 2 + (OX + x * S - 960) * U; },
-             function(y){ return MID + (OY + y * S - 540) * U; }, {
-      wall: al * .82, dp: f.dp,
-      win: al * .6 * sm(0, 1, c01((f.dp - .45) / .4)),
-      fur: al * .22 * sm(0, 1, c01((f.dp - .7) / .3)),
-      lampR: .78, lamp: al * 2.4, lampK: function(k){ return sg(q, .1 + k * .105, .26 + k * .105); },
-      keys: al * .7 * sg(q, .52, .66)
-    });
+    var o = f.glo;
+    if (H >= W){                                                            /* phones: no pinned film, so no way in — the room simply stands */
+      if (o && o.ready){ o.size(); o.set2('uC', .5, .5); o.set2('uH', .5, .5); o.set1('uA', 1); o.set1('uQ', 1); o.set1('uTime', (t * 60) | 0); o.draw(); }
+      return;
+    }
+    /* the section draws itself once, when the screen is first seen: by the clock, a second and a half, whatever the frame rate */
+    f.dp = Math.max(Math.min(1, (f.dp || 0) + Math.min(.05, Math.max(0, t - (f.tl || t)) / 1.5)), sg(q, 0, .08)); f.tl = t;
+    var dp = f.dp, tall = false, S0 = .30, px0 = .71, py0 = .36;
+    var e = eio(sg(q, .06, .86)), s = Math.exp(lerp(Math.log(S0), 0, e)), lp = Math.max(.055, sg(q, .2, .9)), R = lp * 2.2;   /* a first trace of the evening is in the window from the start */
+    var px = lerp(px0, .5, e) * W, py = lerp(py0, .5, e) * H;               /* where the room's centre stands on the screen */
+    var roomA = sm(0, 1, sg(dp, .4, .95));
+    if (o && o.ready){
+      o.size(); o.set2('uC', px / W, py / H); o.set2('uH', s / 2, s / 2);
+      o.set1('uA', roomA); o.set1('uQ', lp); o.set1('uTime', (t * 60) | 0); o.draw();
+    }
+    var st = .1 * H, wt = .045 * W, FX = W / 2, hw = W / 2, hh = H / 2, k, j;
+    function SX(x){ return px + x * s; }
+    function SY(y){ return py + y * s; }
+    function fy0(kk){ return kk * (H + st) - hh; }                          /* the ceiling of floor kk */
+    function bx0(jj){ return jj * (W + wt) - hw; }                          /* the left wall of bay jj */
+    var al = 1 - sg(e, .78, .97);
+    if (al > .004){
+      var wl = (0 - px) / s, wr = (W - px) / s, wt0 = (0 - py) / s, wb = (H - py) / s;      /* what of the building is on the screen */
+      var k0 = Math.floor((wt0 + hh) / (H + st)) - 1, k1 = Math.ceil((wb + hh) / (H + st)) + 1;
+      var j0 = Math.max(-4, Math.floor((wl + hw) / (W + wt)) - 1);
+      var grow = eo(sg(dp, 0, .6)), drop = eo(sg(dp, .2, .78)), fine = sm(0, 1, sg(dp, .5, 1));
+      var xL = lerp(FX, Math.min(wl, bx0(j0)) - 60, grow), nose = .012 * W, hs = Math.max(20, 8 / s);
+      g.lineCap = 'butt';
+      /* what the cut passes through — the slabs and the walls between apartments — is drawn as a cut: outlined, and hatched */
+      for (k = k0; k <= k1; k++){
+        var yb = fy0(k), ya = yb - st;
+        if (ya > wb || yb < wt0) continue;
+        ink(al * .7, LW); g.beginPath();
+        g.moveTo(SX(xL), SY(ya)); g.lineTo(SX(FX + nose), SY(ya)); g.lineTo(SX(FX + nose), SY(yb)); g.lineTo(SX(xL), SY(yb)); g.stroke();
+        ink(al * .26 * fine, 1); g.beginPath();
+        for (var hx = Math.ceil(Math.max(xL, wl - st) / hs) * hs; hx < Math.min(FX + nose - st, wr); hx += hs){ g.moveTo(SX(hx), SY(yb)); g.lineTo(SX(hx + st), SY(ya)); }
+        g.stroke();
+      }
+      for (k = k0; k <= k1; k++){
+        var yt = fy0(k), yf = yt + H, yd = lerp(yt, yf, drop);
+        if (yt > wb || yf < wt0) continue;
+        for (j = j0; j <= 0; j++){
+          var xw = bx0(j);
+          if (xw - wt > wr || xw < wl || xw - wt < xL) continue;
+          ink(al * .66, LW); g.beginPath(); g.moveTo(SX(xw), SY(yt)); g.lineTo(SX(xw), SY(yd)); g.moveTo(SX(xw - wt), SY(yt)); g.lineTo(SX(xw - wt), SY(yd)); g.stroke();
+          ink(al * .24 * fine, 1); g.beginPath();
+          for (var hy = yt + hs * .5; hy < yd - wt * .2; hy += hs){ g.moveTo(SX(xw - wt), SY(Math.min(yd, hy + wt))); g.lineTo(SX(xw), SY(hy)); }
+          g.stroke();
+          if (j !== 0 || k !== 0){                                         /* the finishes of each room: the floor build-up and the hung ceiling */
+            ink(al * .3 * fine, 1); g.beginPath();
+            g.moveTo(SX(xw), SY(yf - .016 * H)); g.lineTo(SX(Math.min(xw + W, FX)), SY(yf - .016 * H));
+            g.moveTo(SX(xw), SY(yt + .05 * H)); g.lineTo(SX(Math.min(xw + W, FX)), SY(yt + .05 * H)); g.stroke();
+          }
+        }
+        /* the façade: glass between the slabs, a mullion inside it */
+        ink(al * .66, LW); g.beginPath(); g.moveTo(SX(FX), SY(yt)); g.lineTo(SX(FX), SY(yd)); g.moveTo(SX(FX + nose * .6), SY(yt)); g.lineTo(SX(FX + nose * .6), SY(yd)); g.stroke();
+      }
+      /* the axes of the structure, dash and dot, through every wall */
+      if (fine > .01){
+        ink(al * .22 * fine, 1, [18 * U, 5 * U, 2 * U, 5 * U]); g.beginPath();
+        for (j = j0; j <= 0; j++){ var ax = SX(bx0(j) - wt / 2); if (ax > -2 && ax < W + 2){ g.moveTo(ax, 0); g.lineTo(ax, H); } }
+        g.stroke(); g.setLineDash([]);
+      }
+      /* the neighbours: a lamp left on here and there, and their rooms in elevation */
+      if (fine > .01) SECF.forEach(function(rm){
+        var x0 = bx0(rm[0]), y0 = fy0(rm[1]);
+        if (x0 > wr || x0 + W < wl || y0 > wb || y0 + H < wt0) return;
+        if (rm[2]){
+          var gx = SX(x0 + W * .5), gy = SY(y0 + H * .5), gr0 = W * .5 * s, gg = g.createRadialGradient(gx, gy, 0, gx, gy, gr0);
+          gg.addColorStop(0, 'rgba(255,255,255,' + (al * fine * .07).toFixed(3) + ')'); gg.addColorStop(1, 'rgba(255,255,255,0)');
+          g.fillStyle = gg; g.fillRect(SX(x0), SY(y0), W * s, H * s);
+        }
+        ink(al * .34 * fine, 1); g.beginPath();
+        rm[3].forEach(function(p){
+          if (p[0] === 'l'){ g.moveTo(SX(x0 + p[1] * W), SY(y0 + p[2] * H)); g.lineTo(SX(x0 + p[3] * W), SY(y0 + p[4] * H)); }
+          else g.rect(SX(x0 + p[1] * W), SY(y0 + p[2] * H), p[3] * W * s, p[4] * H * s);
+        });
+        g.stroke();
+      });
+      /* outside the façade: the dimension chain, and a level mark at every floor */
+      if (fine > .01 && SX(FX) < W - 8){
+        var dx = SX(FX) + 58 * U, mk = 7 * U, lx = dx + 44 * U;
+        ink(al * .55 * fine, 1); g.beginPath(); g.moveTo(dx, 0); g.lineTo(dx, H);
+        for (k = k0; k <= k1 + 1; k++){
+          var ly = SY(fy0(k)), l2 = SY(fy0(k) - st);
+          g.moveTo(dx - mk, ly + mk); g.lineTo(dx + mk, ly - mk); g.moveTo(dx - mk, l2 + mk); g.lineTo(dx + mk, l2 - mk);
+          g.moveTo(SX(FX) + 14 * U, ly); g.lineTo(lx + mk * 1.6, ly);
+          g.moveTo(lx, ly); g.lineTo(lx - mk, ly - mk * 1.5); g.lineTo(lx + mk, ly - mk * 1.5); g.closePath();
+        }
+        g.stroke();
+      }
+      /* the sheet has edges: the building runs on under the header and stops short of the title, which keeps its own ground */
+      var mY = SY(hh + st) + 3, mH = .085 * H, gm;                           /* (the edge travels with the floor it closes) */
+      g.save(); g.globalCompositeOperation = 'destination-out';
+      gm = g.createLinearGradient(0, mY, 0, mY + mH); gm.addColorStop(0, 'rgba(0,0,0,0)'); gm.addColorStop(1, 'rgba(0,0,0,1)');
+      g.fillStyle = gm; g.fillRect(0, mY, W, mH); g.fillStyle = '#000'; g.fillRect(0, mY + mH - 1, W, H);
+      gm = g.createLinearGradient(0, 0, 0, .17 * H); gm.addColorStop(0, 'rgba(0,0,0,.78)'); gm.addColorStop(1, 'rgba(0,0,0,0)');
+      g.fillStyle = gm; g.fillRect(0, 0, W, .17 * H);
+      g.restore();
+    }
+    /* our room: drafted on its own photograph, and given up to it line by line as the light arrives */
+    if (roomA > .004 && f.im && f.im.naturalWidth){
+      var ra = W / H, ri = f.im.naturalWidth / f.im.naturalHeight, kx = ra > ri ? 1 : ra / ri, ky = ra > ri ? ri / ra : 1;
+      g.save(); g.beginPath(); g.rect(SX(-hw), SY(-hh), W * s, H * s); g.clip();
+      SECR.forEach(function(L, n){
+        var a = roomA * L[0] * .86 * c01((dp - .42) * 9 - n * .11) * (1 - sm(0, 1, c01((R - .16 - L.d) / .42)));
+        if (a <= .004) return;
+        ink(a, LW); g.beginPath();
+        var P = [], i, n2;
+        for (i = 2; i < L.length; i += 2) P.push([SX(((L[i] - .5) / kx) * W), SY(((L[i + 1] - .5) / ky) * H)]);   /* the photograph covers the room, as in the shader */
+        n2 = P.length;
+        if (L[1] < 2){ P.forEach(function(pt, m){ if (m) g.lineTo(pt[0], pt[1]); else g.moveTo(pt[0], pt[1]); }); if (L[1]) g.closePath(); }
+        else {                                                              /* soft things: straight sides, the corners eased */
+          var rr = .016 * W * s, cl = L[1] === 2;
+          if (cl){ g.moveTo((P[n2 - 1][0] + P[0][0]) / 2, (P[n2 - 1][1] + P[0][1]) / 2); for (i = 0; i < n2; i++){ var nx = P[(i + 1) % n2]; g.arcTo(P[i][0], P[i][1], (P[i][0] + nx[0]) / 2, (P[i][1] + nx[1]) / 2, rr); } g.closePath(); }
+          else { g.moveTo(P[0][0], P[0][1]); for (i = 1; i < n2 - 1; i++) g.arcTo(P[i][0], P[i][1], P[i + 1][0], P[i + 1][1], rr); g.lineTo(P[n2 - 1][0], P[n2 - 1][1]); }
+        }
+        g.stroke();
+      });
+      g.restore();
+    }
   }
   /* ================================================================== Solutions: one house, four ways to it — a scenario (17.11.2026 16:30)
      «Щоб це не просто була зміна картинок, а прямо якийсь сценарій відбувався, коли ми скролимо і в нас міняється текст.» The plan no longer
@@ -761,7 +909,7 @@
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
     horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, night: night, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
+  var FIG = {cover: cover, steps: steps, plan: plan, section: section, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -976,6 +1124,17 @@
     rise: [
       'vec2 uv = (v - 0.5) / mix(1.05, 1.0, smoothstep(0.0, 1.0, uQ)) + 0.5;',
       'vec3 c = grade(texture2D(uT0, cov(uv, uS0)).rgb) * smoothstep(0.0, 0.92, uQ);'].join('\n'),
+    /* CI Turnkey: the room stands inside one rectangle of the screen (its apartment in the section), all but dark until the evening light,
+       starting at its own window, has crossed it. Its drawing is not here: it is drafted, line by line, on the 2D layer above. */
+    room: [
+      'vec2 r = (v - uC) / (2.0 * uH) + 0.5;',
+      'float ins = step(0.0, r.x) * step(r.x, 1.0) * step(0.0, r.y) * step(r.y, 1.0);',
+      'vec2 iu = cov(r, uS0);',
+      'vec3 ph = grade(texture2D(uT0, iu).rgb);',
+      'float d = length((iu - vec2(0.585, 0.40)) * vec2(uS0.x / uS0.y, 1.0));',
+      'float R = uQ * 2.2;',
+      'float m = 1.0 - smoothstep(R - 0.5, R, d);',
+      'vec3 c = ph * mix(0.045, mix(0.7, 1.0, smoothstep(0.3, 1.0, uQ)), m) * ins * uA;'].join('\n'),
     /* a photograph, settling */
     still: [
       'float s = mix(1.06, 1.0, smoothstep(0.0, 1.0, uQ));',
@@ -987,13 +1146,14 @@
       'precision highp float;',
       'uniform sampler2D uT0, uT1;',
       'uniform vec2 uRes, uS0, uS1;',
-      'uniform float uQ, uTime;',
+      'uniform float uQ, uTime, uA;',
+      'uniform vec2 uC, uH;',
       'varying vec2 v;',
       'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
       'vec2 cov(vec2 uv, vec2 img){',
       '  float ra = uRes.x / uRes.y, ri = img.x / img.y;',
       '  vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0);',
-      '  return (uv - 0.5) / s + 0.5;',
+      '  return (uv - 0.5) * s + 0.5;',   /* cover: the picture fills the box and is cropped, never squeezed in with its edge smeared */
       '}',
       'vec3 grade(vec3 c){ c = (c - 0.5) * 1.06 + 0.5; return c * ' + br.toFixed(3) + '; }',
       'void main(){',
@@ -1040,7 +1200,7 @@
       'vec2 cov(vec2 uv, vec2 img){',
       '  float ra = uRes.x / uRes.y, ri = img.x / img.y;',
       '  vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0);',
-      '  return (uv - 0.5) / s + 0.5;',
+      '  return (uv - 0.5) * s + 0.5;',   /* cover: the picture fills the box and is cropped, never squeezed in with its edge smeared */
       '}',
       'void main(){',
       '  float d = v.x - uX;',

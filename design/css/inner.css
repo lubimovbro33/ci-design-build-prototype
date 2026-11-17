@@ -1018,6 +1018,13 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
 }
 /* the WebGL layer of a block: it sits over the pictures it is made of, and those stay in place underneath as what is shown if a context
    is refused (17.11.2026 12:51 — «Завжди ми робимо на WebGL», with nothing lost where it cannot run) */
+/* phones: a film is not pinned there, and these covers have nothing in the flow to give them a height — the photograph stands a screen
+   high with its title at the foot (17.11.2026: all four solution covers had collapsed to their padding) */
+@media (max-aspect-ratio: 1/1){
+  .film.tk-cv .stg, .film.co-cv .stg{height:100vh;height:100svh;overflow:hidden}
+  .film.tk-cv .sc, .film.co-cv .sc{position:absolute;left:0;top:0;width:100%;height:100%;padding:0}
+  .film .tk-cv-h, .film .co-cv-h{bottom:max(40px, env(safe-area-inset-bottom))}
+}
 .glc{position:absolute;left:0;top:0;width:100%;height:100%;display:block;z-index:1}
 .gl-on > img{visibility:hidden}
 .co-sm-g .co-sm-ln{z-index:2}
