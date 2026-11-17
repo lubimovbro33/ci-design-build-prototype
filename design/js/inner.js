@@ -573,10 +573,11 @@
   (function(){
     var gs = qsa('[data-wl]'); if (!gs.length) return;
     gs.forEach(function(g){
-      var sec = g.parentNode, bs = qsa('.wl-b', sec), ls = qsa('.wl-sv g', g);
+      var sec = g.parentNode, bs = qsa('.wl-b', sec), ls = qsa('.wl-sv g', g), ds = qsa('.wl-d', sec);
       function set(i){
         bs.forEach(function(b, k){ b.classList.toggle('on', k === i); });
         ls.forEach(function(l, k){ l.classList.toggle('on', k === i); });
+        ds.forEach(function(d, k){ d.classList.toggle('on', k === i); });
         if (i < 0) g.removeAttribute('data-on'); else g.setAttribute('data-on', '1');
       }
       bs.forEach(function(b, i){
@@ -584,7 +585,7 @@
         b.addEventListener('focus', function(){ set(i); });
         b.addEventListener('click', function(){ set(i); });
       });
-      qs('.wl-nm', sec).addEventListener('pointerleave', function(){ set(-1); });
+      ls[0].classList.add('on'); g.setAttribute('data-on', '1');   /* the first quality is shown: the line under the room is never empty */
     });
   })();
 

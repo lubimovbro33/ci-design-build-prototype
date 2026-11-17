@@ -63,13 +63,19 @@ def wellness_page():
     lead0 = get(S[0], 'lead')[0][1]
     thought = esc(nop(lead0[0])) + '<br><span class="cb">' + esc(nop(lead0[1])) + '</span>'
     pg.add(tk_lead(thought, ' '.join(ps[1]) + ' ' + ' '.join(ps[2]), btn(a[0], 'contact.html')), 'Idea')
-    # 03 the instrument: the nine, drawn over a room
+    # 03 the instrument: the client's own nine groups of features, each drawn over one of their rooms
+    sec = S[6]; fp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    h3 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h3']
+    nine = [g[0] for g in P['_feats']]
+    feats = [[(g[j], g[j + 1]) for j in range(1, len(g), 2)] for g in P['_feats']]
+    pg.add(wl_unseen(label(sec), h_of(sec), fp[0] + ' ' + fp[1], nine, A + 'us/1511-06a.webp', [], feats), 'The Nine')
+    # 04 why it matters: luxury's next chapter, and the nine qualities of a home as one line
     sec = S[2]; wp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    nine = [it[1] for it in sec['items'] if it[0] == 'dots'][0]      # their own nine, as the copy gives them
-    assert len(nine) == 9, nine
+    qual = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
     st2 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(wl_unseen(label(sec), h_of(sec), wp[0] + ' ' + wp[1], nine, A + 'us/1511-06a.webp', wp[2:]), 'The Nine')
-    pg.add(tk_calm(None, None, None, [st2], ''), 'Luxury')
+    pg.add(tk_index(label(sec), h_of(sec), wp[0] + ' ' + wp[1], qual).replace('tk-ix', 'tk-ix wl-qu').replace(
+        '</section>', '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <p class="t34 rv tk-r-c">%s</p>\n</section>'
+        % (esc(nop(wp[2] + ' ' + wp[3])), blue(nop(st2), None)), 1), 'Luxury')
     # 04 what CI Wellness is
     sec = S[1]; ip = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     pg.add(tk_calm(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], ip, ''), 'What It Is')
@@ -84,11 +90,9 @@ def wellness_page():
     lead4 = get(sec, 'lead')[0][1]
     pg.add(wl_steps(label(sec), h_of(sec), ' '.join(lead4), rows), 'Process')
     # 07 one photograph, and the room that is part of the routine
-    sec = S[6]; fp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    h3 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h3']
-    pg.add(tk_plate(A + 'us/1511-04a.webp', fp[0] + ' ' + fp[1]), 'Right Solutions')
+    pg.add(tk_plate(A + 'us/1511-04a.webp', fp[2]), 'Recovery')
     spa = [x.strip(' .') for x in fp[3].split('.') if x.strip(' .')]        # Steam. Sauna. Cold therapy. …
-    pg.add(wl_spa(label(sec), h_of(sec), h3[0], fp[2], spa, [fp[4]]), 'Home Spa')
+    pg.add(wl_spa(label(S[6]), h3[0], '', fp[2], spa, [fp[4]]), 'Home Spa')
     # 08 technology that does not announce itself
     sec = S[7]; tp = [it[1] for it in sec['items'] if it[0] == 'p']
     tflat = [' '.join(x) for x in tp]

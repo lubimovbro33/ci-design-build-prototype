@@ -917,3 +917,16 @@ html body.inr .wl-sp-p{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u));width
   html body.inr .wl-s-r .h{margin-top:8px} .wl-s-t{margin-top:12px;width:auto}
   .wl-sp-g{display:block} .wl-sp-c{padding:14px 0;border-left:0;border-top:1px solid rgba(255,255,255,.22)}
 }
+/* the reading line under the nine: what each quality means in a house, in the client's own words */
+.wl-dd{position:relative;margin:calc(46 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));
+       border-top:1px solid rgba(255,255,255,.18);padding-top:calc(44 * var(--u));min-height:calc(240 * var(--u))}
+.wl-d{position:absolute;left:0;right:0;top:calc(44 * var(--u));opacity:0;visibility:hidden;
+      transition:opacity .5s cubic-bezier(.22,1,.36,1);display:grid;grid-template-columns:repeat(2, minmax(0, 1fr));
+      column-gap:calc(100 * var(--u));row-gap:calc(34 * var(--u))}
+.wl-d.on{opacity:1;visibility:visible}
+html body.inr .wl-d-f p{margin:0;color:#FFFFFF}
+html body.inr .wl-d-f p + p{margin-top:calc(16 * var(--u));color:#EBEBEB}
+@media (max-aspect-ratio: 1/1){
+  .wl-dd{margin:24px var(--m, 20px) 0;padding-top:22px;min-height:260px}
+  .wl-d{top:22px;display:block} .wl-d-f + .wl-d-f{margin-top:18px}
+}

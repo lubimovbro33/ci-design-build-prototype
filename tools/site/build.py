@@ -996,17 +996,24 @@ WL_PATHS = [
      'M 60 870 C 480 806, 1000 826, 1560 740',                                                      # movement, across the floor
      'M 300 790 C 420 420, 700 300, 900 330 C 1180 370, 1300 560, 1240 760'),                       # daily routines, the loop of a day
 ][0]
-def wl_unseen(kick, h1, lead, names, img, ps):
+def wl_unseen(kick, h1, lead, names, img, ps, feats):
     """03 — the page's instrument. The room is a room; the pointer on one of the client's nine draws it over the room in a single stroke, and
     lets it go again. Nothing is labelled on the photograph and nothing is faked as a technical plan: these are the qualities of a home, drawn."""
     g = ''.join('<g data-i="%d"><path d="%s"/></g>' % (i, d) for i, d in enumerate(WL_PATHS))
-    nm = ''.join('<button class="wl-b lab3" data-i="%d" type="button">%s</button>' % (i, esc(n)) for i, n in enumerate(names))
+    nm = ''.join('<button class="wl-b lab3%s" data-i="%d" type="button">%s</button>' % (' on' if i == 0 else '', i, esc(n))
+                 for i, n in enumerate(names))
+    ds = ''
+    for i, fs in enumerate(feats):                      # what each quality actually means in a house, in the client's own words
+        ds += '<div class="wl-d%s" data-i="%d">%s</div>' % (
+            ' on' if i == 0 else '', i,
+            ''.join('<div class="wl-d-f"><p class="t34">%s</p><p class="t20" style="--w:475">%s</p></div>' % (esc(a), esc(nop(b)))
+                    for a, b in fs))
     return ('<section class="bk wl-un" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t34 rv wl-un-l">%s</p>\n'
             '  <div class="wl-g rv" data-wl>\n    <img src="%s" alt="" loading="lazy">\n'
             '    <svg class="wl-sv" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">%s</svg>\n  </div>\n'
-            '  <div class="wl-nm rv">%s</div>\n%s</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), img, g, nm,
+            '  <div class="wl-nm rv">%s</div>\n  <div class="wl-dd rv">%s</div>\n%s</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), img, g, nm, ds,
                 ''.join('  <p class="t20 rv wl-un-p" style="--w:475">%s</p>\n' % esc(nop(x)) for x in ps))
 def wl_steps(kick, h1, lead, rows):
     """06 — the five steps of the integrated process, read straight down: the step in full ink, what it means beside it, the number quiet.
