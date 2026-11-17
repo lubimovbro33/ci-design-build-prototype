@@ -469,6 +469,11 @@
   /* ---------- film: doors — CI Turnkey (16.11.2026). Their own line: «hand you the keys to the life waiting on the other side». Eight thresholds
      stand one behind another in the site's hairlines; the scroll walks through them, one stage at a time, and the last one opens on the home.
      The thresholds stand on the right half of the screen, so the stage's name and its sentence keep the text line to themselves. */
+  /* CI Core's cover: the room stands as the drawing its own lines make, and the scroll builds it into the photograph. The figure draws
+     nothing itself — the two pictures are scrubbed. */
+  function drawn(f, q, t){
+    for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
+  }
   /* CI Turnkey's cover: the residence retreats below one hairline, and that line goes on to run the page — above it the client's life,
      below it the whole of the work. The canvas draws the line from the middle outward, arriving with the photograph's top edge. */
   function horiz(f, q, t){
@@ -480,7 +485,7 @@
     ink(a * .62, 1); seg(cx - hw, y, cx + hw, y);
     sq(cx - hw, y, a * .9); sq(cx + hw, y, a * .9);
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, horiz: horiz};
+  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -559,6 +564,32 @@
     cells.forEach(function(c, i){
       c.addEventListener('pointerenter', function(){ set(i); });
       c.addEventListener('focus', function(){ set(i); });
+    });
+  })();
+
+  /* ================================================================== CI Core's seam: the drawing on one side, the room on the other
+     The line follows the pointer across the block (and a finger that drags it), with the same lag as the gallery, so moving it feels like
+     drawing rather than dragging a control. The visitor does the page's argument with their own hand. */
+  (function(){
+    var gs = qsa('[data-seam]'); if (!gs.length) return;
+    gs.forEach(function(g){
+      var x = .5, tx = .5, run = 0, live = false;
+      function put(){ g.style.setProperty('--x', (x * 100).toFixed(2) + '%'); }
+      function tick(){
+        x += (tx - x) * .16;
+        put();
+        if (Math.abs(tx - x) > .0005 || live) requestAnimationFrame(tick); else run = 0;
+      }
+      function at(e){
+        var r = g.getBoundingClientRect();
+        tx = Math.max(.02, Math.min(.98, (e.clientX - r.left) / r.width));
+        if (!run){ run = 1; requestAnimationFrame(tick); }
+      }
+      g.addEventListener('pointerenter', function(e){ live = true; at(e); });
+      g.addEventListener('pointermove', at);
+      g.addEventListener('pointerleave', function(){ live = false; tx = .5; if (!run){ run = 1; requestAnimationFrame(tick); } });
+      g.addEventListener('pointerdown', function(e){ at(e); if (g.setPointerCapture) g.setPointerCapture(e.pointerId); });
+      put();
     });
   })();
 

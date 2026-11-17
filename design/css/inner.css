@@ -753,3 +753,61 @@ html body.inr .tk-s-r .t{color:#EBEBEB;padding-top:.55em}
   .tk-pl-b{height:56vh} html body.inr .tk-pl-t{left:var(--m, 20px);right:var(--m, 20px);width:auto;bottom:28px}
   html body.inr .tk-x .bk-h h2{font-size:clamp(26px, 8vw, 40px)!important}
 }
+/* ================================================================== CI CORE — one hand (17.11.2026)
+   The page's argument is the seam between the people who design and the people who build, so ITS line is vertical where CI Turnkey's is the
+   horizon. The room is shown twice — as the drawing its own lines make and as the thing itself — and the visitor moves the seam between them.
+   Same order as Turnkey: every block begins on the text line (421), headings at 60 (111 on the cover), running text at 475. */
+.co-cv .stg{background:#000}
+.co-cv-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:hidden}
+.co-cv-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;max-width:none;display:block;will-change:opacity, transform}
+.co-cv-ph .im{filter:contrast(1.06) brightness(.72);opacity:0}
+.film .co-cv-h{position:absolute;left:calc(50 * var(--u));top:auto;bottom:max(calc(50 * var(--u)), 50px);white-space:nowrap;color:#FFFFFF;
+               z-index:3;margin:0}
+.film .co-cv-k{position:absolute;left:calc(50 * var(--u));top:auto;z-index:3;margin:0;
+               bottom:calc(max(50 * var(--u), 50px) + var(--ln, 2) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
+/* 03 the seam, and the visitor's hand on it */
+html body.inr .co-sm-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
+.co-sm-g{position:relative;margin:calc(90 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));aspect-ratio:1.42;overflow:hidden;
+         cursor:ew-resize;touch-action:pan-y;background:#000}
+.co-sm-g img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;max-width:none;display:block}
+.co-sm-im{clip-path:inset(0 0 0 var(--x, 50%));filter:contrast(1.06) brightness(.82);will-change:clip-path}
+.co-sm-ln{position:absolute;top:0;bottom:0;left:var(--x, 50%);width:1px;background:rgba(255,255,255,.85);will-change:left}
+.co-sm-ln::before{content:"";position:absolute;left:calc(max(5px, 8 * var(--u)) / -2 + .5px);top:50%;
+                  width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));margin-top:calc(max(5px, 8 * var(--u)) / -2);background:#FFFFFF}
+html body.inr .co-sm-s{margin:calc(74 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
+html body.inr .co-sm-p{margin:calc(44 * var(--u)) 0 0 calc(421 * var(--u))}
+/* 06 your role, our role */
+.co-rl-p{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u))}
+html body.inr .co-rl-p p + p{margin-top:calc(24 * var(--u))}
+.co-rl-m{margin:calc(56 * var(--u)) 0 0 calc(421 * var(--u))}
+html body.inr .co-rl-m p{color:rgba(255,255,255,.72)}
+html body.inr .co-rl-m p + p{margin-top:calc(14 * var(--u))}
+.co-rl-g{margin:calc(100 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));display:grid;
+         grid-template-columns:minmax(0, 1fr) 1px minmax(0, 1fr);column-gap:calc(80 * var(--u));align-items:start}
+.co-rl-g i{width:1px;height:100%;background:rgba(255,255,255,.5)}
+/* 07 the connected scope, either side of the seam */
+html body.inr .co-sp-n{margin:calc(64 * var(--u)) 0 0 calc(421 * var(--u));color:rgba(255,255,255,.5)}
+.co-sp-g{margin:calc(44 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));display:grid;
+         grid-template-columns:minmax(0, 1fr) 1px minmax(0, 1fr);column-gap:calc(90 * var(--u))}
+.co-sp-g ul{margin:0;padding:0;list-style:none}
+.co-sp-g li{font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:2.05;letter-spacing:-.05em;color:#EBEBEB}
+.co-sp-g i{width:1px;height:100%;background:rgba(255,255,255,.35)}
+html body.inr .co-sp-c{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
+/* 08 the six stages as one band */
+.co-bd-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));display:grid;grid-template-columns:repeat(3, minmax(0, 1fr));
+         row-gap:calc(72 * var(--u))}
+.co-bd-c{padding:0 calc(46 * var(--u));border-left:1px solid rgba(255,255,255,.22)}
+html body.inr .co-bd-c .n{color:rgba(255,255,255,.45)}
+html body.inr .co-bd-c .h{margin:calc(22 * var(--u)) 0 0;color:#FFFFFF}
+html body.inr .co-bd-c .t{margin:calc(20 * var(--u)) 0 0;color:#EBEBEB}
+@media (max-aspect-ratio: 1/1){
+  .film .co-cv-h, .film .co-cv-k{left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
+  html body.inr .co-sm-l, html body.inr .co-sm-s, html body.inr .co-sm-p, html body.inr .co-sp-n, html body.inr .co-sp-c,
+  html body.inr .co-rl-p, .co-rl-m{margin:24px var(--m, 20px) 0;width:auto}
+  .co-sm-g{margin:26px 0 0;aspect-ratio:1.1}
+  .co-rl-g, .co-sp-g, .co-bd-g{display:block;margin:26px var(--m, 20px) 0}
+  .co-rl-g i, .co-sp-g i{display:none}
+  .co-rl-g p + p{margin-top:18px} .co-sp-g ul + ul{margin-top:10px}
+  .co-bd-c{padding:0;border-left:0;border-top:1px solid rgba(255,255,255,.22);padding-top:18px}
+  .co-bd-c + .co-bd-c{margin-top:26px}
+}

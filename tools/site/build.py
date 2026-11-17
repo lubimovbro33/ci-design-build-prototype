@@ -876,3 +876,57 @@ RAIL_SKIP = {'ci-wellness.html': {'Why', 'Design', 'One Team'}, 'partnerships.ht
 def emit(fname, title, pg, preload=None):
     rail = [(i, l) for i, l in pg.rail if l not in RAIL_SKIP.get(fname, ())]
     OUT[fname] = page(fname, title, pg.body(), rail, preload)
+
+# ================================================================== CI CORE — one hand (17.11.2026)
+# The page's whole argument is the seam between designing and building, so the page's line is VERTICAL (Turnkey's is the horizon), and the
+# room is shown twice: as the drawing its lines make, and as the thing itself. The drawings are made from the client's own photographs by
+# tools/site/lines.py — nothing is invented: every line in a drawing is a line of that room.
+def co_cover(kick, h1, img, ln):
+    """01 — the cover states the thesis before a word of copy: the room stands as a drawing, and the scroll builds it. No stock, no slogan."""
+    hb = brk(h1, 18); lnn = hb.count('<br>') + 1
+    return '\n'.join([
+        '<section class="film co-cv" data-fig="drawn" data-len="1.2" id="@ID@">', '  <div class="stg">',
+        '    <div class="co-cv-ph">',
+        '      <img class="dr" src="%s" alt="" data-s="op:1&gt;0@.16-.84">' % ln,
+        '      <img class="im" src="%s" alt="" data-s="op:0&gt;1@.14-.8; sc:1.06&gt;1@0-1.1">' % img, '    </div>',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
+        '      <p class="lab3 rv co-cv-k" style="--ln:%d">%s</p>' % (lnn, esc(kick)),
+        '      <h1 class="t111 rv co-cv-h" style="--ln:%d">%s</h1>' % (lnn, hb),
+        '    </div>', '  </div>', '</section>'])
+def co_seam(kick, h1, lead, ps, strong, img, ln):
+    """03 — the page's instrument. One room, drawn on one side of a line and built on the other, and the line follows the pointer: the visitor
+    moves the seam themselves and sees that there is nothing behind it. Their own sentence stands under it — «Design understands construction.
+    Construction understands design.»"""
+    return ('<section class="bk co-sm" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t20 rv co-sm-l" style="--w:475">%s</p>\n'
+            '  <div class="co-sm-g rv" data-seam style="--x:50%%">\n'
+            '    <img class="co-sm-dr" src="%s" alt="">\n    <img class="co-sm-im" src="%s" alt="" loading="lazy">\n'
+            '    <span class="co-sm-ln" aria-hidden="true"></span>\n  </div>\n'
+            '  <p class="t34 rv co-sm-s">%s</p>\n%s</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), ln, img,
+                blue(' '.join(nop(x) for x in strong), None),
+                ''.join('  <p class="t20 rv co-sm-p" style="--w:475">%s</p>\n' % esc(nop(x)) for x in ps))
+def co_split(kick, h1, note, left, right, close=None):
+    """07 — the connected scope, set as what the page is about: two columns either side of ONE vertical hairline, design on its left and
+    construction on its right, so the seam is the block"""
+    col = lambda g: ''.join('<li>%s</li>' % esc(x) for x in g)
+    return ('<section class="bk co-sp" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="lab3 rv co-sp-n">%s</p>\n  <div class="co-sp-g rv"><ul>%s</ul><i aria-hidden="true"></i><ul>%s</ul></div>\n%s</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), col(left), col(right),
+                '  <p class="t20 rv co-sp-c" style="--w:475">%s</p>\n' % esc(nop(close)) if close else '')
+def co_roles(kick, h1, ps, lines, strong):
+    """06 — «Your role … Our role …»: the two halves of the page's sentence, one either side of the same vertical line"""
+    a, b = strong[0], strong[1]
+    mid = ''.join('<p class="t20">%s</p>' % esc(nop(x)) for x in lines)
+    return ('<section class="bk co-rl" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <div class="co-rl-p rv">%s</div>\n  <div class="co-rl-m rv">%s</div>\n'
+            '  <div class="co-rl-g rv"><p class="t34">%s</p><i aria-hidden="true"></i><p class="t34">%s</p></div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)),
+                ''.join('<p class="t20" style="--w:475">%s</p>' % esc(nop(x)) for x in ps), mid, esc(nop(a)), blue(nop(b), None))
+def co_band(kick, h1, stages):
+    """08 — the six stages as one band, the columns kept apart by the page's own vertical hairlines"""
+    cells = ''.join('<div class="co-bd-c rv"><p class="lab3 n">%02d</p><p class="t34 h">%s</p><p class="t20 t">%s</p></div>'
+                    % (i + 1, esc(nm), esc(nop(tx))) for i, (nm, tx) in enumerate(stages))
+    return ('<section class="bk co-bd" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <div class="co-bd-g">%s</div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), cells)

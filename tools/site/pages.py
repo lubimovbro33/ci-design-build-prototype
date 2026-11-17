@@ -3,6 +3,7 @@ import os
 __file__ = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'build.py')
 exec(open(__file__).read())
 A = 'assets/ph/'
+L = 'assets/ln/'
 
 def dots_fix(sec):
     """a paragraph of words separated by " · " becomes a row of words with squares between them"""
@@ -51,6 +52,53 @@ SEG_CORE = open(os.path.join(HERE, 'seg_core.txt')).read().strip()
 def short_of(sec):
     """the one-line paragraphs of a section, in order"""
     return [x[1][0] for x in sec['items'] if x[0] == 'p' and len(x[1]) == 1]
+def core_page():
+    """CI Core — one hand. 17.11: the page's argument is the seam between the people who design and the people who build, so the page's line is
+    VERTICAL where Turnkey's is the horizon, and the room is shown twice: as the drawing its own lines make, and as the thing itself. The cover
+    builds the drawing into the photograph; the third screen gives the seam to the visitor to move. Drawings: tools/site/lines.py, from the
+    client's own photographs. No stock anywhere."""
+    S = [join_lists(dots_fix(x)) for x in P['core']]; pg = Pg()
+    h1, ps, a = hero(S[0])
+    pg.add(co_cover(label(S[0]), h1, A + 'us/1511-01a.webp', L + '1511-01a.webp'), 'Core', 'top')
+    # 02 the thought: their own sentence, its last line in the blue
+    ln_ = brk_lines(nop(' '.join(ps[0])), 32)
+    thought = '<br>'.join(esc(x) for x in ln_[:-1]) + '<br><span class="cb">' + esc(ln_[-1]) + '</span>'
+    pg.add(tk_lead(thought, ' '.join(ps[1]), btn(a[0], 'contact.html')), 'Idea')
+    # 03 the seam, and the visitor's hand on it
+    sec = S[2]; cp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
+    pg.add(co_seam(label(sec), h_of(sec), cp[0], cp[1:], st, A + 'ch/1450-17.webp', L + '1450-17.webp'), 'Connected')
+    # 04 the one list of the page
+    sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
+    pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows), 'Fit')
+    # 05 one photograph of the client's work, and the sentence that says what the page is against
+    sec = S[5]; rp = [it[1] for it in sec['items'] if it[0] == 'p']
+    rs = [x[0] for x in rp if len(x) == 1]; three = max(rp, key=len)
+    rst = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
+    pg.add(tk_plate(A + 'rtb/1430-08a.webp', rs[0]), 'Divided')
+    # 06 your role, our role — one either side of the same line
+    pg.add(co_roles(label(sec), h_of(sec), rs[1:], three, rst), 'Responsibility')
+    # 07 the connected scope, either side of the seam
+    sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
+    note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
+    left = list(ks[1]); right = list(ks[2])
+    cl = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    pg.add(co_split(label(sec), h_of(sec), note, left, right, cl[0] if cl else None), 'Included')
+    # 08 the six stages as one band
+    sec = S[6]
+    names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
+    txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
+    assert len(names) == len(txts) == 6, (len(names), len(txts))
+    pg.add(co_band(label(sec), h_of(sec), list(zip(names, txts))), 'Process')
+    # 09 the work itself
+    sec = S[7]
+    cards = ''.join(pf6_card(q['name'], q['loc'].split(' \u00b7 ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html') for q in PROJ[:3])
+    pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
+    pg.add(bk(h_of(sec), '    <div class="pf6">%s</div>\n    <div class="rv c1 g50">%s</div>' % (
+        cards, btn(pbt[0][2] if pbt else 'View the Portfolio', 'portfolio.html')), hcls=' l0'), 'Projects')
+    final_cta(pg, S[9], A + 'ch/1450-31.webp')
+    emit('ci-core.html', 'CI Core', pg, A + 'us/1511-01a.webp')
+
 def turnkey_page():
     """CI Turnkey — everything divides by one. 17.11 07:57: «Типографія: ужас, все розкидано… Всі стокові фотографії ми забираємо… не вистачає
     ідеї, метафор, і перший екран теж». So: no stock photography anywhere on the page (only the client's own work, and only where a photograph
@@ -123,8 +171,6 @@ def turnkey_page():
     final_cta(pg, S[9], A + 'ch/1450-29a.webp')
     emit('ci-turnkey.html', 'CI Turnkey', pg, A + 'ch/1450-32.webp')
 
-solution('core', 'ci-core.html', 'CI Core', lambda k, h, ps: sc_draw(k, h, A + 'rtb/1430-04a.webp', SEG_CORE, 1.4214),
-         A + 'of/plans_w.webp', 'What You Receive', A + 'ch/1450-04a.webp', ['1450-03a', '1511-08a', '1430-07'], proc='rows')
 solution('curated', 'ci-curated.html', 'CI Curated', lambda k, h, ps: sc_triptych(k, h, [A + 'ch/1450-08a.webp', A + 'ch/1450-15.webp', A + 'ch/1450-18.webp']),
          A + 'ch/1450-23.webp', 'What You Receive', A + 'ch/1450-31.webp', ['1450-08a', '1530-06a', '1430-10a'], proc='cells')
 solution('wellness', 'ci-wellness.html', 'CI Wellness', lambda k, h, ps: sc_dawn(k, h, A + 'ch/1450-25a.webp'),
@@ -573,6 +619,7 @@ def faq():
     pg.add(cta('Your Next Chapter Starts With a Conversation', [], ('Begin Your Better Life', 'contact.html'), A + 'ch/1450-29a.webp'), 'Contact')
     emit('faq.html', 'FAQ', pg)
     return len(items)
+core_page()
 turnkey_page()   # called here: it uses the project cards defined with the Portfolio page
 nq = faq()
 

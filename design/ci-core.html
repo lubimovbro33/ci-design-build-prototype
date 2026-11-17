@@ -5,17 +5,18 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CI Core — CI Design + Build</title>
 <meta name="robots" content="noindex">
+<link rel="preload" as="image" href="assets/ph/us/1511-01a.webp" fetchpriority="high">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=Zalando+Sans+SemiExpanded:wght@400;700&display=swap">
-<link rel="stylesheet" href="css/site.css?v=a996fd68">
-<link rel="stylesheet" href="css/chapters.css?v=a996fd68">
-<link rel="stylesheet" href="css/type.css?v=a996fd68">
-<link rel="stylesheet" href="css/polish.css?v=a996fd68">
-<link rel="stylesheet" href="css/v10.css?v=a996fd68">
-<link rel="stylesheet" href="css/r3.css?v=a996fd68">
-<link rel="stylesheet" href="css/inner.css?v=a996fd68">
-<link rel="stylesheet" href="css/form.css?v=a996fd68">
+<link rel="stylesheet" href="css/site.css?v=abd485fe">
+<link rel="stylesheet" href="css/chapters.css?v=abd485fe">
+<link rel="stylesheet" href="css/type.css?v=abd485fe">
+<link rel="stylesheet" href="css/polish.css?v=abd485fe">
+<link rel="stylesheet" href="css/v10.css?v=abd485fe">
+<link rel="stylesheet" href="css/r3.css?v=abd485fe">
+<link rel="stylesheet" href="css/inner.css?v=abd485fe">
+<link rel="stylesheet" href="css/form.css?v=abd485fe">
 <script>(function(){var d=document.documentElement,m=window.matchMedia,c=m&&m('(pointer: coarse)').matches;if(c||/[?&]lite/.test(location.search))d.classList.add('lite');})();</script>
 </head>
 <body class="inr ready">
@@ -62,92 +63,70 @@
 </header>
 
 <main id="main">
-<section class="film" data-fig="scene" data-len="2.0" data-seg="37,309,37,395,0,1,210,63,144,688,144,916,172,469,170,526,261,613,128,627,218,702,171,686,194,98,195,467,145,685,266,731,212,775,212,715,214,715,214,799,215,799,215,743,198,343,238,346,175,500,268,499,223,720,223,771,226,720,226,777,197,154,261,169,264,164,197,148,231,809,231,722,198,334,265,340,232,722,232,802,270,347,198,340,234,852,234,754,272,338,197,331,275,177,196,159,236,762,236,871,197,144,275,162,275,354,197,347,237,852,237,725,239,732,239,794,240,820,240,772,170,528,314,522,242,725,242,894,175,516,311,512,197,312,291,326,197,139,291,160,261,698,229,701,245,755,245,896,246,902,247,729,248,910,248,987,249,730,249,884,275,709,225,709,250,962,251,730,253,729,252,879,255,849,255,914,256,730,255,846,260,836,260,751,378,643,145,680,128,633,396,604,264,733,264,999,276,317,274,178,277,492,274,355,281,180,280,319,281,350,281,497,287,177,287,304,318,737,256,716,287,360,287,424,291,327,291,165,292,506,292,341,314,665,271,675,279,676,314,672,298,184,299,321,299,357,299,495,322,996,289,965,423,186,197,130,425,172,197,113,315,517,316,583,320,581,320,515,362,721,315,741,413,596,265,611,300,168,382,188,294,160,388,185,281,599,406,591,389,203,299,182,391,365,299,356,300,322,390,334,328,741,367,721,374,652,321,661,332,555,363,523,390,351,309,342,300,329,407,341,196,112,513,179,388,737,352,753,358,658,391,653,321,521,433,518,347,511,423,509,376,906,405,941,392,331,391,244,391,453,391,366,423,247,362,234,364,219,423,231,395,244,395,332,395,362,396,496,402,246,402,329,402,355,402,457,365,752,443,714,389,647,429,643,392,763,427,748,412,932,412,880,413,999,413,785,442,781,389,763,419,792,418,999,390,655,447,667,420,503,421,249,421,999,421,793,424,793,424,999,426,232,427,170,426,999,427,795,468,631,385,643,427,517,426,247,429,797,429,999,432,999,432,798,435,798,434,999,458,679,411,679,437,999,437,800,440,801,440,999,443,999,443,802,425,691,461,685,446,803,446,999,449,999,449,804,451,804,451,999,454,999,454,801,459,236,459,177,460,468,459,257,443,712,490,707,493,700,443,705,487,712,454,717,398,604,551,587,454,135,512,153,520,764,470,778,491,861,517,907,640,654,375,661,470,785,549,769,532,584,489,588,513,179,513,244,515,241,513,1,518,1,518,176,492,958,557,987,576,644,479,660,427,246,633,291,636,280,428,231,582,889,508,875,511,855,587,873,552,502,552,570,514,865,590,884,555,618,555,278,475,666,643,637,595,878,525,867,653,765,491,808,519,158,638,190,596,714,561,720,582,983,582,929,560,715,604,694,602,727,565,735,584,888,584,964,587,999,586,885,592,889,592,984,579,631,611,637,644,721,598,732,594,990,663,966,665,879,593,889,584,756,677,731,587,871,679,857,640,135,639,275,639,284,639,517,644,275,644,213,645,518,644,285,650,276,650,221,650,506,650,285,653,344,653,497,636,275,684,286,662,488,662,415,666,288,666,516,724,109,640,132,642,212,726,192,689,303,689,352,689,513,689,611,678,719,717,702,704,999,699,929,686,285,724,293,689,722,722,713,726,299,685,291,726,246,689,253,782,725,654,758,700,895,747,902,726,190,726,1,780,651,680,655,730,1,730,189,770,318,691,303,719,679,776,698,751,875,753,999,756,999,753,871,786,640,725,643,689,353,825,376,828,512,689,515,781,690,739,680,751,421,782,466,816,382,728,370,800,683,754,674,800,939,759,963,760,966,800,942,759,904,802,887,811,811,757,818,762,672,807,681,783,467,821,461,809,621,802,572,819,463,816,383,905,267,731,239,744,618,905,636,826,376,828,508,830,885,838,999,841,999,835,924,825,551,864,550,872,227,821,231,830,228,872,222,861,835,865,999,731,191,999,125,999,21,732,106,868,999,864,846,847,234,893,231,959,665,782,720,899,186,846,197,928,199,829,219,907,162,859,173,866,606,902,611,872,845,904,830,904,614,871,610,919,762,866,771,842,684,954,652,925,226,877,228,877,224,928,220,891,249,935,245,836,196,999,160,920,513,919,455,954,642,890,639,901,586,955,593,955,612,906,609,960,249,911,260,918,614,955,616,882,164,999,137,957,450,925,451,999,164,900,185,999,140,909,161,993,456,921,457,925,327,990,320,990,324,926,331,924,438,993,436,958,937,959,999,958,803,961,919,962,999,961,939,963,821,966,932,940,545,993,548,952,204,992,199,991,288,955,277,992,193,958,200,999,728,961,732,999,943,968,967,968,961,999,939,992,656,992,589,992,547,992,457,992,434,992,289" data-ar="1.4214" id="top">
+<section class="film co-cv" data-fig="drawn" data-len="1.2" id="top">
   <div class="stg">
-    <canvas class="ln" aria-hidden="true" style="z-index:3"></canvas>
-    <div class="sn-full" data-s="op:0>1@.95-1.7" style="opacity:0"><img src="assets/ph/rtb/1430-04a.webp" alt="" style="filter:contrast(1.04) brightness(0.66)"></div>
-    <h1 class="t111 sn-h"><span class="sn-hi">Design + Build,<br>Fully Connected</span></h1>
-    <p class="lab3 sn-k"><span class="sn-hi">CI Core</span></p>
-  </div>
-</section>
-<section class="bk" id="s2">
-  <div class="bk-b" style="margin-top:0">
-    <p class="t34 rv c1" style="--w:1240">CI Core brings architecture, interior design, construction, and project management together under one team</p>
-    <div class="g2">
-      <div class="rv"><a class="r3btn" href="contact.html"><span class="t">Start a CI<br>Core Project</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
-      <div class="t20s rv" style="--w:475"><p>It is the foundation of our integrated model, created for clients who want a thoughtful, highly coordinated transformation of the built environment without requiring CI to manage every layer beyond construction</p></div>
+    <div class="co-cv-ph">
+      <img class="dr" src="assets/ln/1511-01a.webp" alt="" data-s="op:1&gt;0@.16-.84">
+      <img class="im" src="assets/ph/us/1511-01a.webp" alt="" data-s="op:0&gt;1@.14-.8; sc:1.06&gt;1@0-1.1">
+    </div>
+    <canvas class="ln" aria-hidden="true"></canvas>
+    <div class="sc">
+      <p class="lab3 rv co-cv-k" style="--ln:2">CI Core</p>
+      <h1 class="t111 rv co-cv-h" style="--ln:2">Design + Build,<br>Fully Connected</h1>
     </div>
   </div>
 </section>
-<section class="bk" id="s3">
-  <h2 class="t60 bk-h rv">For Clients Who Want<br>One Team Responsible<br>for Design + Construction</h2>
-  <div class="bk-b">
-    <p class="t34 rv c1" style="--w:1000">CI Core may be the right fit if:</p>
-    <div class="rws">
-      <div class="rw rv"><span class="n">01</span><span class="t">You are planning a significant renovation or residential transformation</span></div>
-      <div class="rw rv"><span class="n">02</span><span class="t">You want architecture, interior design, and construction coordinated from the beginning</span></div>
-      <div class="rw rv"><span class="n">03</span><span class="t">You value professional project management and clear communication</span></div>
-      <div class="rw rv"><span class="n">04</span><span class="t">You want one point of accountability instead of managing separate firms</span></div>
-      <div class="rw rv"><span class="n">05</span><span class="t">You prefer to manage furnishings, art, or final styling independently, or already have those relationships in place</span></div>
-      <div class="rw rv"><span class="n">06</span><span class="t">You want the rigor of the CI process focused primarily on the permanent built environment</span></div>
-    </div>
-  </div>
+<section class="bk tk-ld" id="s2">
+  <p class="t60s rv tk-ld-h">CI Core brings architecture,<br>interior design, construction,<br>and project management<br><span class="cb">together under one team</span></p>
+  <p class="t20 rv tk-ld-t" style="--w:475">It is the foundation of our integrated model, created for clients who want a thoughtful, highly coordinated transformation of the built environment without requiring CI to manage every layer beyond construction</p>
+  <div class="rv tk-ld-b"><a class="r3btn" href="contact.html"><span class="t">Start a CI<br>Core Project</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
 </section>
-<section class="bk" id="s4">
-  <h2 class="t60 bk-h rv">Clarity From Concept<br>Through Construction</h2>
-  <div class="bk-b">
-    <div class="g2 r">
-      <div class="t20s rv" style="--w:430"><p>CI Core eliminates one of the largest sources of friction in residential renovation: the disconnect between the people designing the work and the people responsible for building it</p></div>
-      <div class="t20s rv" style="--w:380"><p>Instead, decisions are developed with both intent and execution in mind</p><p>You gain a more cohesive project and a team accountable for carrying the vision from drawings into reality</p></div>
-    </div>
-    <p class="t34 rv c1" style="--w:1000">Design understands construction.<br><span class="cb">Construction understands design</span></p>
+<section class="bk co-sm" id="s3">
+  <div class="bk-h"><p class="lab3">What You Receive</p><h2 class="t60">Clarity From Concept<br>Through Construction</h2></div>
+  <p class="t20 rv co-sm-l" style="--w:475">CI Core eliminates one of the largest sources of friction in residential renovation: the disconnect between the people designing the work and the people responsible for building it</p>
+  <div class="co-sm-g rv" data-seam style="--x:50%">
+    <img class="co-sm-dr" src="assets/ln/1450-17.webp" alt="">
+    <img class="co-sm-im" src="assets/ph/ch/1450-17.webp" alt="" loading="lazy">
+    <span class="co-sm-ln" aria-hidden="true"></span>
   </div>
+  <p class="t34 rv co-sm-s">Design understands construction Construction understands design</p>
+  <p class="t20 rv co-sm-p" style="--w:475">Instead, decisions are developed with both intent and execution in mind</p>
+  <p class="t20 rv co-sm-p" style="--w:475">You gain a more cohesive project and a team accountable for carrying the vision from drawings into reality</p>
 </section>
-<div class="bnd"><img src="assets/ph/of/plans_w.webp" alt="" loading="lazy"></div>
-<section class="bk" id="s6">
-  <h2 class="t60 bk-h rv">A Connected Design-Build Scope</h2>
-  <div class="bk-b">
-    <div class="g3">
-      <p class="t34 rv" style="--w:430">Project scope may include:</p>
-      <ul class="lns sm rv" style="margin-right:calc(50 * var(--u))"><li>Existing-condition assessment</li><li>Architectural planning</li><li>Interior architecture</li><li>Interior design</li><li>Space planning</li><li>Material and finish selections</li><li>Lighting design coordination</li><li>Millwork and cabinetry design</li><li>Kitchen and bathroom design</li></ul><ul class="lns sm rv"><li>Construction planning</li><li>Estimating and budgeting coordination</li><li>General construction</li><li>Project management</li><li>Trade coordination</li><li>Installation oversight</li><li>Quality control</li><li>Final construction detailing</li></ul>
-    </div>
-    <p class="t34 rv c2" style="--w:860"><span class="cb">Specific scope is defined around the needs of each project</span></p>
-  </div>
+<section class="bk tk-rw" id="s4">
+  <div class="bk-h"><p class="lab3">Is CI Core Right for You?</p><h2 class="t60">For Clients Who Want<br>One Team Responsible<br>for Design + Construction</h2></div>
+  <p class="t20 rv tk-r-l" style="--w:475">CI Core may be the right fit if:</p>
+  <div class="tk-r-g"><div class="tk-r-r rv"><p class="lab3 a">01</p><p class="t20 b">You are planning a significant renovation or residential transformation</p></div><div class="tk-r-r rv"><p class="lab3 a">02</p><p class="t20 b">You want architecture, interior design, and construction coordinated from the beginning</p></div><div class="tk-r-r rv"><p class="lab3 a">03</p><p class="t20 b">You value professional project management and clear communication</p></div><div class="tk-r-r rv"><p class="lab3 a">04</p><p class="t20 b">You want one point of accountability instead of managing separate firms</p></div><div class="tk-r-r rv"><p class="lab3 a">05</p><p class="t20 b">You prefer to manage furnishings, art, or final styling independently, or already have those relationships in place</p></div><div class="tk-r-r rv"><p class="lab3 a">06</p><p class="t20 b">You want the rigor of the CI process focused primarily on the permanent built environment</p></div></div>
 </section>
-<section class="bk" id="s7">
-  <h2 class="t60 bk-h rv">One Team Responsible<br>for Every Stage</h2>
-  <div class="bk-b">
-    <p class="t34 rv c1" style="--w:1000">When responsibility is divided between independent firms, the client often becomes the person connecting them</p>
-    <div class="g2">
-      <div class="t20s rv" style="--w:430"><p>CI Core changes that</p><p>Our architecture, design, construction, and project-management teams communicate directly throughout the project</p></div>
-      <div><ul class="lns rv"><li>Questions move internally</li><li>Details are coordinated earlier</li><li>Field conditions can be addressed with the design intent already understood</li></ul></div>
-    </div>
-    <p class="t34 rv c1" style="--w:1000">Your role is to make the decisions that shape the home. <span class="cb">Our role is to manage what it takes to execute them</span></p>
-  </div>
+<section class="tk-pl" id="s5">
+  <div class="bnd tk-pl-b"><img src="assets/ph/rtb/1430-08a.webp" alt="" loading="lazy"></div>
+  <p class="t34 rv tk-pl-t">When responsibility is divided between independent firms, the client often becomes the person connecting them</p>
 </section>
-<section class="bk" id="s8">
-  <h2 class="t60 bk-h rv">From Possibility<br>to Built Reality</h2>
-  <div class="bk-b">
-    <div class="rws">
-      <div class="rw d rv"><span class="n">01</span><span class="t">Discovery</span><div class="dsc"><p>Residence, goals, priorities, lifestyle, and scope</p></div></div>
-      <div class="rw d rv"><span class="n">02</span><span class="t">Project Definition</span><div class="dsc"><p>Feasibility, initial planning, direction, and project framework</p></div></div>
-      <div class="rw d rv"><span class="n">03</span><span class="t">Design Development</span><div class="dsc"><p>Architecture, interiors, materials, and technical decisions develop together</p></div></div>
-      <div class="rw d rv"><span class="n">04</span><span class="t">Pre-Construction</span><div class="dsc"><p>Documentation, pricing, scheduling, procurement planning, and trade coordination</p></div></div>
-      <div class="rw d rv"><span class="n">05</span><span class="t">Construction</span><div class="dsc"><p>The CI team manages execution in the field</p></div></div>
-      <div class="rw d rv"><span class="n">06</span><span class="t">Completion</span><div class="dsc"><p>Final details, quality review, and handoff</p></div></div>
-    </div>
-  </div>
+<section class="bk co-rl" id="s6">
+  <div class="bk-h"><p class="lab3">Our Responsibility</p><h2 class="t60">One Team Responsible<br>for Every Stage</h2></div>
+  <div class="co-rl-p rv"><p class="t20" style="--w:475">CI Core changes that</p><p class="t20" style="--w:475">Our architecture, design, construction, and project-management teams communicate directly throughout the project</p></div>
+  <div class="co-rl-m rv"><p class="t20">Questions move internally</p><p class="t20">Details are coordinated earlier</p><p class="t20">Field conditions can be addressed with the design intent already understood</p></div>
+  <div class="co-rl-g rv"><p class="t34">Your role is to make the decisions that shape the home</p><i aria-hidden="true"></i><p class="t34">Our role is to manage what it takes to execute them</p></div>
+</section>
+<section class="bk co-sp" id="s7">
+  <div class="bk-h"><p class="lab3">What’s Included</p><h2 class="t60">A Connected<br>Design-Build Scope</h2></div>
+  <p class="lab3 rv co-sp-n">Project scope may include:</p>
+  <div class="co-sp-g rv"><ul><li>Existing-condition assessment</li><li>Architectural planning</li><li>Interior architecture</li><li>Interior design</li><li>Space planning</li><li>Material and finish selections</li><li>Lighting design coordination</li><li>Millwork and cabinetry design</li><li>Kitchen and bathroom design</li></ul><i aria-hidden="true"></i><ul><li>Construction planning</li><li>Estimating and budgeting coordination</li><li>General construction</li><li>Project management</li><li>Trade coordination</li><li>Installation oversight</li><li>Quality control</li><li>Final construction detailing</li></ul></div>
+  <p class="t20 rv co-sp-c" style="--w:475">Specific scope is defined around the needs of each project</p>
+</section>
+<section class="bk co-bd" id="s8">
+  <div class="bk-h"><p class="lab3">The CI Core Process</p><h2 class="t60">From Possibility<br>to Built Reality</h2></div>
+  <div class="co-bd-g"><div class="co-bd-c rv"><p class="lab3 n">01</p><p class="t34 h">Discovery</p><p class="t20 t">Residence, goals, priorities, lifestyle, and scope</p></div><div class="co-bd-c rv"><p class="lab3 n">02</p><p class="t34 h">Project Definition</p><p class="t20 t">Feasibility, initial planning, direction, and project framework</p></div><div class="co-bd-c rv"><p class="lab3 n">03</p><p class="t34 h">Design Development</p><p class="t20 t">Architecture, interiors, materials, and technical decisions develop together</p></div><div class="co-bd-c rv"><p class="lab3 n">04</p><p class="t34 h">Pre-Construction</p><p class="t20 t">Documentation, pricing, scheduling, procurement planning, and trade coordination</p></div><div class="co-bd-c rv"><p class="lab3 n">05</p><p class="t34 h">Construction</p><p class="t20 t">The CI team manages execution in the field</p></div><div class="co-bd-c rv"><p class="lab3 n">06</p><p class="t34 h">Completion</p><p class="t20 t">Final details, quality review, and handoff</p></div></div>
 </section>
 <section class="bk" id="s9">
-  <h2 class="t60 bk-h rv">Built Through CI Core</h2>
+  <h2 class="t60 bk-h rv l0">Built Through CI Core</h2>
   <div class="bk-b">
-    <div class="cards"><a class="cd rv" href="collectors-home.html"><span class="im"><img src="assets/ph/ch/1450-03a.webp" alt="Collectors Home" loading="lazy"></span><span class="nm h5r">Collectors Home</span><span class="lc lab3"><span class="sqr"><span>Streeterville</span><span>Chicago</span></span></span></a><a class="cd rv" href="urban-sanctuary.html"><span class="im"><img src="assets/ph/us/1511-08a.webp" alt="Urban Sanctuary" loading="lazy"></span><span class="nm h5r">Urban Sanctuary</span><span class="lc lab3"><span class="sqr"><span>Gold Coast</span><span>Chicago</span></span></span></a><a class="cd rv" href="room-to-breathe.html"><span class="im"><img src="assets/ph/rtb/1430-07.webp" alt="Room To Breathe" loading="lazy"></span><span class="nm h5r">Room To Breathe</span><span class="lc lab3"><span class="sqr"><span>Lincoln Park</span><span>Chicago</span></span></span></a></div>
-    <div class="rv c1"><a class="r3btn" href="portfolio.html"><span class="t">Explore CI<br>Core Projects</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
+    <div class="pf6"><a class="cd rv" href="collectors-home.html"><span class="im"><img src="assets/ph/ch/1450-24.webp" alt="Collectors Home" loading="lazy"></span><span class="nm h5r">Collectors Home</span><span class="lc lab3 sqm"><span>Streeterville</span><span>Chicago</span><span>One Bennett Park</span></span></a><a class="cd rv" href="urban-sanctuary.html"><span class="im"><img src="assets/ph/us/1511-07a.webp" alt="Urban Sanctuary" loading="lazy"></span><span class="nm h5r">Urban Sanctuary</span><span class="lc lab3 sqm"><span>Gold Coast</span><span>Chicago</span><span>900 North Michigan</span></span></a><a class="cd rv" href="room-to-breathe.html"><span class="im"><img src="assets/ph/rtb/1430-01a.webp" alt="Room To Breathe" loading="lazy"></span><span class="nm h5r">Room To Breathe</span><span class="lc lab3 sqm"><span>Lincoln Park</span><span>Chicago</span><span>Residence</span></span></a></div>
+    <div class="rv c1 g50"><a class="r3btn" href="portfolio.html"><span class="t">Explore CI<br>Core Projects</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
   </div>
 </section>
-
-<section class="fin gr" id="s11">
-  <img src="assets/ph/ch/1450-04a.webp" alt="" loading="lazy">
+<section class="fin gr" id="s10">
+  <img src="assets/ph/ch/1450-31.webp" alt="" loading="lazy">
   <div class="fg-in"><div class="fg-t"><p class="t20 rv">Bring them together from the beginning</p></div><h2 class="t60 rv fg-h">Great<br>Design Needs<br>Great<br>Execution</h2></div>
   <div class="rv fg-b"><a class="r3btn" href="contact.html"><span class="t">Start Your CI<br>Core Project</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
 </section></main>
@@ -172,17 +151,19 @@
 <div class="grain on" aria-hidden="true"></div>
 <nav class="chap mono" id="chap" aria-label="Chapters">
   <a href="#top" data-ch="top"><span>01</span><span class="t">Core</span><i></i></a>
-  <a href="#s3" data-ch="s3"><span>02</span><span class="t">Fit</span><i></i></a>
-  <a href="#s4" data-ch="s4"><span>03</span><span class="t">Receive</span><i></i></a>
-  <a href="#s6" data-ch="s6"><span>04</span><span class="t">Included</span><i></i></a>
-  <a href="#s7" data-ch="s7"><span>05</span><span class="t">One Team</span><i></i></a>
-  <a href="#s8" data-ch="s8"><span>06</span><span class="t">Process</span><i></i></a>
-  <a href="#s9" data-ch="s9"><span>07</span><span class="t">Projects</span><i></i></a>
-  <a href="#s11" data-ch="s11"><span>08</span><span class="t">Contact</span><i></i></a>
+  <a href="#s2" data-ch="s2"><span>02</span><span class="t">Idea</span><i></i></a>
+  <a href="#s3" data-ch="s3"><span>03</span><span class="t">Connected</span><i></i></a>
+  <a href="#s4" data-ch="s4"><span>04</span><span class="t">Fit</span><i></i></a>
+  <a href="#s5" data-ch="s5"><span>05</span><span class="t">Divided</span><i></i></a>
+  <a href="#s6" data-ch="s6"><span>06</span><span class="t">Responsibility</span><i></i></a>
+  <a href="#s7" data-ch="s7"><span>07</span><span class="t">Included</span><i></i></a>
+  <a href="#s8" data-ch="s8"><span>08</span><span class="t">Process</span><i></i></a>
+  <a href="#s9" data-ch="s9"><span>09</span><span class="t">Projects</span><i></i></a>
+  <a href="#s10" data-ch="s10"><span>10</span><span class="t">Contact</span><i></i></a>
 </nav>
 
-<script src="js/v10.js?v=a996fd68"></script>
-<script src="js/inner.js?v=a996fd68"></script>
-<script src="js/form.js?v=a996fd68"></script>
+<script src="js/v10.js?v=abd485fe"></script>
+<script src="js/inner.js?v=abd485fe"></script>
+<script src="js/form.js?v=abd485fe"></script>
 </body>
 </html>
