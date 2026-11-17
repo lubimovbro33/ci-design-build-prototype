@@ -1034,7 +1034,16 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
   .film.tk-cv .tk-cv-ph{order:2;position:relative;height:66vh;height:66svh}
 }
 .glc{position:absolute;left:0;top:0;width:100%;height:100%;display:block;z-index:1}
-.tk-cv-ph img.tk-cv-ln{display:none}   /* the room's own drawing is a texture for the shader; without WebGL the photograph simply stands */
+/* the shader's canvas is opaque from the moment it is made, and it is made before its textures have arrived: until then it stood black
+   over the picture's own element (picture → black → picture). It shows itself only when it has something to show */
+.glc{visibility:hidden} .gl-on > .glc{visibility:visible}
+.tk-cv-ph img.tk-cv-ln{display:none}   /* the room's own drawing is a texture for the shader */
+/* 17.11 20:23: «коли я тільки заходжу на сторінку, мені попадається фотографія, а потім оп, чорний екран. Що це за скачок? Забери».
+   The photograph's own <img> stood on the screen until the three textures had loaded, and then the shader took over with black. On this
+   cover the room is shown by the film and never before it: the element is a texture only. (Phones keep it — there the room stands in
+   the flow under the words; and without WebGL the film brings it in itself, js/inner.js.) */
+.tk-cv-ph > img{visibility:hidden}
+@media (max-aspect-ratio: 1/1){ .tk-cv-ph > img:first-child{visibility:visible} .tk-cv-ph.gl-on > img:first-child{visibility:hidden} }
 .gl-on > img{visibility:hidden}
 .co-sm-g .co-sm-ln{z-index:2}
 

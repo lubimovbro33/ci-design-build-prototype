@@ -465,11 +465,15 @@
     if (f.glo === undefined){
       var box = qs('.tk-cv-ph', f.el);
       f.glo = box ? GL2.make(box, glCoverFS(GLSH.room, .93), qsa('img', box)) : null;
-      f.tx = qs('.tk-cv-t', f.el);
+      f.tx = qs('.tk-cv-t', f.el); f.ph = box && qs('img', box);
     }
     var o = f.glo, i, k;
     function room(grow, x1, x2, home){
-      if (!o || !o.ready) return;
+      if (!o){                                                              /* no WebGL: the photograph's own element, and only once the words have gone */
+        if (f.ph){ var a = H >= W ? 1 : sm(.5, 1.3, q).toFixed(3); if (f.ph.__a !== a){ f.ph.__a = a; f.ph.style.visibility = 'visible'; f.ph.style.opacity = a; } }
+        return;
+      }
+      if (!o.ready) return;
       o.size(); o.set1('uA', grow); o.set2('uB', x1, x2); o.set1('uQ', home); o.set1('uTime', (t * 60) | 0); o.draw();
     }
     if (H >= W){ room(1, -1, 2, 1); return; }                               /* phones: the words, the line, then the room — in the flow (css) */
