@@ -314,7 +314,7 @@ def solutions():
            '    <p class="t20 rv iv-p"><span class="wc">Some clients hand us the whole home;<br class="bd"> others bring an architect, or a residence already built.<br class="bd"> The way changes. The standard does not.</span></p>\n'
            '  </div>\n</section>')
     N = 4; t0 = .3; d = 1.0
-    o = ['<section class="film" data-fig="ways" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']
+    o = ['<section class="film" data-fig="room" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']
     for i, sec in enumerate(S[1:5]):
         T = t0 + i * d; last = i == N - 1
         k = '%.2f %.2f %s' % (T, T + .14, '99 99' if last else '%.2f %.2f' % (T + d - .12, T + d))
@@ -326,9 +326,9 @@ def solutions():
         # 17.11 12:58: the small word over the name sat on its own anchor, so a name of two lines ate the gap. The two are one block now,
         # hung from the same foot, and the distance between them is a margin — the same for «CI Core» as for «CI Wellness + In-Home Longevity»
         o.append('      <div class="m sw-hd" data-k="%s"><p class="lab3 sw-k">%s</p><p class="t60 sw-h nb">%s</p></div>' % (k, esc(tag), brk(nm, 22)))
-        o.append('      <p class="t34 m sw-l" data-k="%s" style="--w:430">%s</p>' % (k, esc(lead)))
-        o.append('      <div class="t20s m sw-t" data-k="%s" style="--w:475">%s</div>' % (k2, ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_)))
-        o.append('      <div class="m p-bl" data-k="%s">%s</div>' % (k2, btn(a_[2], href(a_[1]))))
+        o.append('      <div class="m sw-bd" data-k="%s"><p class="t34 sw-l">%s</p>'
+                 '<div class="t20s sw-t">%s</div><div class="sw-btn">%s</div></div>'
+                 % (k2, esc(lead), ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_), btn(a_[2], href(a_[1]))))
     o.append('    </div>\n  </div>\n</section>')
     pg.add('\n'.join(o), 'Four Ways')
     final_cta(pg, S[5], A + 'ch/1450-02a.webp')

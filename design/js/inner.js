@@ -272,32 +272,110 @@
     theLine(f.pic ? sg(q, .82, 1.0) : 1, E, t);
   }
   /* ---------- film: steps — a journey on the line; the square walks from mark to mark */
-  /* ================================================================== Solutions: the four ways, on one axis (17.11.2026 13:02)
-     Until now each way drew a shape of its own — two lines merging for Core, layers for Curated, a wave for Wellness — four unrelated figures
-     between which the line simply went straight, so the eye could learn nothing from them («виглядає якась непродумана, без логіки»).
-     One axis now: the road of a project, from the first idea at the left field to the home at the right. Every way begins at the same place,
-     and what differs is HOW FAR it carries the home — Core to the end of the build, Curated through the layers, Turnkey to the first night in
-     it. CI Wellness is not a part of that road but a second line under the whole of it: «Elevates any CI solution», «from day one».
-     The scroll moves the far end from one way to the next, so the page's only question — how much of the home we carry — is answered without
-     a word. */
-  function ways(f, q, t){
-    var x0 = xl(421), x1 = xr(1870), y = MID, i, x;   /* xr measures from the left of the frame: the right field is 1870, not 50 */
-    var END = [1, .5, .75, 1];                 /* Turnkey · Core · Curated · Wellness, in the order of the page */
-    var a = sg(q, f.t0 - .35, f.t0 + .05);
-    if (a <= .002) return;
-    ink(a * .26, 1); seg(x0, y, x1, y);        /* the whole road, always there */
-    for (i = 0; i < 5; i++){ x = Math.round(lerp(x0, x1, i / 4)) + .5; ink(a * .3, 1); seg(x, y - 8 * U, x, y + 8 * U); }
-    var n = f.n, p = c01((q - f.t0) / ((n - 1) * f.d)) * (n - 1);
-    var k = Math.min(n - 2, Math.floor(p)), fr = c01(p - k);
-    var e = lerp(END[k], END[k + 1], sm(0, 1, fr)), xe = lerp(x0, x1, e);
-    ink(a, LW); seg(x0, y, xe, y);             /* the part of it we carry */
-    sq(x0, y, a); sq(xe, y, a);
-    var wv = sm(0, 1, c01(p - (n - 2)));       /* the last way runs under all of them */
-    if (wv > .002){
-      var yy = Math.round(y + 38 * U) + .5;
-      ink(a * wv * .75, 1); seg(x0, yy, x1, yy); sq(x0, yy, a * wv); sq(x1, yy, a * wv);
+  /* ================================================================== Solutions: the four ways drawn as one room (17.11.2026 13:10)
+     An axis with a lit stretch said the right thing but said it plainly («поки що воно якось так по-простому»). The thing being sold is a
+     home, so the figure is a home: one room drawn in our hairlines, and each way owns a different amount of it.
+       CI Core      the shell — walls, floor, ceiling, the window, the opening of a door: the permanent environment, and nothing in it.
+       CI Curated   the shell, and the layers that make it a home: sofa, table, rug, lamp, the picture, the plant.
+       CI Turnkey   all of it, and the life in it: the pendant lit, the things on the table, the door standing open.
+       CI Wellness  the same room with what cannot be seen drawn through it: the light from the window, the air along the ceiling, the warmth
+                    across the floor — the three that move while the room stands still.
+     Nothing is added that the client's own copy does not sell, and the room is never rebuilt: parts of the same drawing come and go as the
+     scroll moves from one way to the next. The hairlines stay on the 2d canvas — a line of ours is one crisp pixel, which is the one thing a
+     shader does not do better. */
+  function rx(u){ return u <= 960 ? u * U : W - (1920 - u) * U; }
+  function ry(v){ return MID + (v - 540) * U; }
+  function pth(pts, close){
+    g.beginPath();
+    for (var i = 0; i < pts.length; i += 2){ var x = rx(pts[i]), y = ry(pts[i + 1]); if (i) g.lineTo(x, y); else g.moveTo(x, y); }
+    if (close) g.closePath();
+    g.stroke();
+  }
+  function rct(a, b, c, d){ pth([a, b, c, b, c, d, a, d], true); }
+  /* a polyline drawn up to a fraction of its own length: the room draws itself as the block arrives */
+  function pthF(pts, fr){
+    if (fr >= .999) return pth(pts);
+    if (fr <= .001) return;
+    var L = 0, i, s = [], x1, y1, x2, y2, d;
+    for (i = 0; i < pts.length - 2; i += 2){
+      x1 = rx(pts[i]); y1 = ry(pts[i + 1]); x2 = rx(pts[i + 2]); y2 = ry(pts[i + 3]);
+      d = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)); s.push([x1, y1, x2, y2, d]); L += d;
+    }
+    var want = L * fr, acc = 0;
+    g.beginPath(); g.moveTo(s[0][0], s[0][1]);
+    for (i = 0; i < s.length; i++){
+      if (acc + s[i][4] <= want){ g.lineTo(s[i][2], s[i][3]); acc += s[i][4]; }
+      else { var k = (want - acc) / s[i][4]; g.lineTo(s[i][0] + (s[i][2] - s[i][0]) * k, s[i][1] + (s[i][3] - s[i][1]) * k); break; }
+    }
+    g.stroke();
+  }
+  function room(f, q, t){
+    var N = f.n, i, A = [], WG = {sh: [1,1,1,1], ly: [1,0,1,1], lf: [1,0,0,1], fl: [0,0,0,1]};
+    for (i = 0; i < N; i++){
+      var c = f.t0 + i * f.d, dd = Math.abs(q - c) / f.d, a = sm(0, 1, 1 - c01(dd / .62));
+      if ((i === 0 && q < c) || (i === N - 1 && q > c)) a = 1;
+      A[i] = a;
+    }
+    function al(w){ var m = 0, j; for (j = 0; j < N; j++) m = Math.max(m, A[j] * w[j]); return m; }
+    var base = sg(q, f.t0 - .38, f.t0 + .04);
+    if (base <= .002) return;
+    var dp = sg(q, f.t0 - .34, f.t0 + .16), sh = base * al(WG.sh), ly = base * al(WG.ly), lf = base * al(WG.lf), fl = base * al(WG.fl);
+    /* the shell: one unbroken contour, drawn in one stroke */
+    ink(sh * .92, LW); pthF([1010, 215, 1860, 215, 1860, 845, 1010, 845, 1010, 215], dp);
+    var s2 = sh * .7 * sg(dp, .45, .95);
+    if (s2 > .002){
+      ink(s2, 1);
+      rct(1120, 300, 1430, 760);                                   /* the window */
+      pth([1275, 300, 1275, 760]); pth([1120, 440, 1430, 440]);
+      pth([1655, 395, 1800, 395, 1800, 845]);                      /* the opening of a door */
+    }
+    /* the layers that make it a home */
+    if (ly > .004){
+      ink(ly * .85, 1);
+      pth([1055, 800, 1620, 800]);                                 /* the rug */
+      pth([1150, 750, 1150, 688, 1480, 688, 1480, 750]);           /* the sofa */
+      pth([1150, 735, 1480, 735]);
+      pth([1168, 750, 1168, 775]); pth([1462, 750, 1462, 775]);
+      pth([1520, 748, 1625, 748]); pth([1534, 748, 1534, 776]); pth([1611, 748, 1611, 776]);   /* the table */
+      pth([1078, 790, 1078, 566]); pth([1052, 566, 1104, 566, 1096, 538, 1060, 538], true);    /* the floor lamp */
+      rct(1468, 330, 1566, 424);                                   /* the picture */
+      pth([1830, 800, 1830, 712]); pth([1830, 740, 1802, 706]); pth([1830, 726, 1855, 698]);   /* the plant */
+    }
+    /* and the life in it */
+    if (lf > .004){
+      ink(lf * .85, 1);
+      pth([1572, 215, 1572, 556]);                                 /* the pendant, over the table — away from the window's own mullion */
+      g.beginPath(); g.arc(rx(1572), ry(571), 15 * U, 0, 6.2832); g.stroke();
+      rct(1575, 730, 1596, 744);                                   /* what is left on the table */
+      g.beginPath(); g.arc(rx(1536), ry(731), 7 * U, 0, 6.2832); g.stroke();   /* and the keys, which is what they hand you */
+      pth([1543, 731, 1566, 731]); pth([1559, 731, 1559, 739]); pth([1566, 731, 1566, 740]);
+    }
+    /* what cannot be seen, and moves while the room stands still */
+    if (fl > .004){
+      var k, x, y;
+      ink(fl * .5, 1);
+      g.save(); g.beginPath();                                     /* the light stays inside the room it comes into */
+      g.rect(rx(1010), ry(215), rx(1860) - rx(1010), ry(845) - ry(215)); g.clip();
+      for (k = 0; k < 3; k++){                                     /* out of the window and across the floor */
+        var sx = 1150 + k * 90, w = .5 + .5 * Math.sin(t * .6 + k * 1.2);
+        ink(fl * (.3 + .3 * w), 1); pth([sx, 320 + k * 20, sx + 330 + k * 70, 843]);
+      }
+      g.restore();
+      g.beginPath();                                               /* the air, along the ceiling */
+      for (i = 0; i <= 160; i++){
+        x = 1010 + 850 * i / 160; y = 262 + 11 * Math.sin(i / 11 - t * .55);
+        if (i) g.lineTo(rx(x), ry(y)); else g.moveTo(rx(x), ry(y));
+      }
+      ink(fl * .55, 1); g.stroke();
+      g.beginPath();                                               /* the warmth, across the floor */
+      for (i = 0; i <= 160; i++){
+        x = 1055 + 760 * i / 160; y = 826 + 7 * Math.sin(i / 9 + t * .4);
+        if (i) g.lineTo(rx(x), ry(y)); else g.moveTo(rx(x), ry(y));
+      }
+      ink(fl * .45, 1); g.stroke();
     }
   }
+
   function steps(f, q, t){
     var N = f.n, x0 = xl(421), x1 = W - 50 * U, i, E = {};
     /* 16.11 23:09 («дуже якась рвана, топорна анімація тієї лінії. Хочеться легкості і плавності»): each way's own shape holds while its step is
@@ -505,7 +583,7 @@
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
     horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, ways: ways, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
+  var FIG = {cover: cover, steps: steps, room: room, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

@@ -45,8 +45,10 @@ body.inr .hdr{opacity:1}
 .film .sw-hd{left:calc(421 * var(--u));right:calc(50 * var(--u));bottom:calc(50% + 140 * var(--u))}
 html body.inr .film .sw-hd .sw-k{position:static;margin:0 0 calc(30 * var(--u))}
 html body.inr .film .sw-hd .sw-h{position:static;margin:0}
-.film .sw-l{left:calc(421 * var(--u));top:calc(50% + 130 * var(--u))}
-.film .sw-t{left:calc(1040 * var(--u));top:calc(50% + 130 * var(--u))}
+.film .sw-bd{left:calc(421 * var(--u));top:calc(50% + 130 * var(--u));width:calc(475 * var(--u))}
+html body.inr .film .sw-bd .sw-l{position:static;margin:0;width:calc(430 * var(--u))}
+html body.inr .film .sw-bd .sw-t{position:static;margin:calc(44 * var(--u)) 0 0}
+.film .sw-bd .sw-btn{margin:calc(50 * var(--u)) 0 0}
 .film .p-bm{left:calc(960 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .film .p-ar{left:calc(1440 * var(--u));bottom:calc(50% + 50 * var(--u))}
 /* a scene with a figure in the middle (her corner principle, 15.11): the title top left, under the logo; the text bottom right */
