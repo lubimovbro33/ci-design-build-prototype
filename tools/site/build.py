@@ -462,29 +462,25 @@ def sc_door(kick, h1, img):
         '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
-def tk_cover(kick, h1, wall):
-    """01 — the page's idea, before a word of copy. The WHOLE of a project stands on the screen at once, every discipline and every service of
-    the client's own list. The scroll makes it FALL: the wall comes down past a hairline that draws itself across the lower third, and nothing
-    of it comes back up. What is left is the line, and the title standing on it. That line is the page's metaphor — above it the client's life,
-    below it the whole of the work — and it returns at the middle of the page. 17.11 08:04: a line, but not the lines of the other pages."""
-    rows = 8; cells = []
-    for i, w in enumerate(wall):
-        r = i % rows                                   # one curtain, every word falling the same distance, the top row first
-        a0 = .06 + r * .012; a1 = a0 + .52      # a ripple, not a stagger: a bigger one lets a row catch the row above it
-        # the "&gt;" is deliberate: a bare > inside an attribute makes a tag unreadable to anything that parses the page with a regex
-        # (our own verify.py among them), and these spans are the only scrubbed elements whose TEXT has to be found again
-        cells.append('<span data-s="ty:0&gt;1150@%.2f-%.2f; op:1&gt;0@%.2f-%.2f">%s</span>' % (a0, a1, a0 + .16, a1 - .05, esc(w)))
+def tk_cover(kick, h1, img):
+    """01 — the cover, and the page's metaphor in one move. It opens on the client's own residence, full bleed. As the page is scrolled the
+    world RETREATS below one hairline: the photograph's top edge comes down to the line while the picture itself rises inside it, until all
+    that is left of the project is a band under the horizon and everything above it is clear. That line then runs the whole page — above it
+    the client's life, below it the whole of the work. (17.11 12:04: «Перший екран — це фіаско» — the wall of small words is gone; the first
+    thing on the screen is the work itself, at the size it was photographed for.)"""
     hb = brk(h1, 18); ln = hb.count('<br>') + 1
     return '\n'.join([
-        '<section class="film tk-cv" data-fig="coll" data-len="1.9" id="@ID@">', '  <div class="stg">',
-        '    <div class="tk-cv-w" aria-hidden="true">%s</div>' % ''.join(cells),
+        '<section class="film tk-cv" data-fig="horiz" data-len="1.25" id="@ID@">', '  <div class="stg">',
+        '    <div class="tk-cv-ph" data-s="ci:0,0,0,0&gt;56,0,0,0@.08-.92">',
+        '      <img src="%s" alt="" data-s="ty:0&gt;260@.08-.92; sc:1.04&gt;1@0-1">' % img, '    </div>',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-        '      <p class="lab3 m tk-cv-k" style="--ln:%d" data-k="1.02 1.28 99 99">%s</p>' % (ln, esc(kick)),
-        '      <h1 class="t111 m tk-cv-h" style="--ln:%d" data-k=".98 1.24 99 99">%s</h1>' % (ln, hb),
+        '      <p class="lab3 rv tk-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
+        '      <h1 class="t111 rv tk-cv-h" style="--ln:%d">%s</h1>' % (ln, hb),
         '    </div>', '  </div>', '</section>'])
 def tk_horizon(kick, h1, above, note, items):
-    """05 — the page's metaphor as one screen. One hairline across the frame: ABOVE it, in the client's own words, what stays the client's;
-    BELOW it, everything CI carries, their whole list of services as one field. The weight is below the line, the quiet above it."""
+    """05 — the page's metaphor as one screen: the same hairline the cover's photograph retreated below, come back at the middle of the page
+    with its two marks at the fields. ABOVE it, large, what stays the client's, in their own words; BELOW it, everything CI carries, their
+    whole list of services as one field. The quiet above the line, the weight below it."""
     return ('<section class="tk-hz" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t60s rv tk-hz-a">%s</p>\n  <div class="tk-hz-l rv" aria-hidden="true"></div>\n'
             '  <p class="lab3 rv tk-hz-n">%s</p>\n  <p class="t34 rv tk-hz-f">%s</p>\n</section>') % (

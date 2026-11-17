@@ -469,19 +469,18 @@
   /* ---------- film: doors — CI Turnkey (16.11.2026). Their own line: «hand you the keys to the life waiting on the other side». Eight thresholds
      stand one behind another in the site's hairlines; the scroll walks through them, one stage at a time, and the last one opens on the home.
      The thresholds stand on the right half of the screen, so the stage's name and its sentence keep the text line to themselves. */
-  /* CI Turnkey's cover: the whole of a project stands on the screen as a wall of its own words, and the scroll takes it away from the edges
-     inward (every word has its own scrub) until one line is left in the middle. The canvas draws that line — it is what the wall collapses
-     onto, and it stays under the title. 17.11: the page carries its idea here instead of a photograph. */
-  function coll(f, q, t){
+  /* CI Turnkey's cover: the residence retreats below one hairline, and that line goes on to run the page — above it the client's life,
+     below it the whole of the work. The canvas draws the line from the middle outward, arriving with the photograph's top edge. */
+  function horiz(f, q, t){
     var i;
     for (i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
-    var a = sg(q, .30, .9), w = eio(c01((q - .30) / .70));
+    var a = sg(q, .12, .62), w = eio(c01((q - .12) / .78));
     if (a <= .002 || w <= 0) return;
-    var y = Math.round(H - 200 * U) + .5, cx = W / 2, hw = (W / 2 - 50 * U) * w;   /* the horizon the wall falls past, and the title stands on */
-    ink(a * .5, 1); seg(cx - hw, y, cx + hw, y);
-    sq(cx - hw, y, a * .85); sq(cx + hw, y, a * .85);
+    var y = Math.round(H * .56) + .5, cx = W / 2, hw = (W / 2 - 50 * U) * w;
+    ink(a * .62, 1); seg(cx - hw, y, cx + hw, y);
+    sq(cx - hw, y, a * .9); sq(cx + hw, y, a * .9);
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, coll: coll};
+  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, horiz: horiz};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

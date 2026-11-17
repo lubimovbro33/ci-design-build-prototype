@@ -640,14 +640,13 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
    No stock photography: the only pictures are the client's own work, and only where a photograph IS the content. */
 /* 01 the wall, and what is left of it */
 .tk-cv .stg{background:#000}
-.tk-cv-w{position:absolute;left:calc(421 * var(--u));right:calc(50 * var(--u));top:calc(130 * var(--u));bottom:calc(300 * var(--u));z-index:1;
-         display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));grid-template-rows:repeat(8, 1fr);grid-auto-flow:column;
-         column-gap:calc(60 * var(--u))}
-.tk-cv-w span{display:block;align-self:center;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.1;
-              letter-spacing:-.05em;color:#EBEBEB;will-change:opacity}
-.film .tk-cv-h{left:calc(50 * var(--u));top:auto;bottom:calc(272 * var(--u));white-space:nowrap;color:#FFFFFF}
-.film .tk-cv-k{left:calc(50 * var(--u));top:auto;
-               bottom:calc(272 * var(--u) + var(--ln, 2) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
+.tk-cv-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:hidden;will-change:clip-path}
+.tk-cv-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;max-width:none;display:block;
+              filter:contrast(1.06) brightness(.7);will-change:transform}
+.film .tk-cv-h{position:absolute;left:calc(50 * var(--u));top:auto;bottom:max(calc(50 * var(--u)), 50px);white-space:nowrap;color:#FFFFFF;
+                z-index:3;margin:0}
+.film .tk-cv-k{position:absolute;left:calc(50 * var(--u));top:auto;z-index:3;margin:0;
+               bottom:calc(max(50 * var(--u), 50px) + var(--ln, 2) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
 /* 02 the thought */
 .tk-ld{padding:calc(170 * var(--u)) 0 calc(160 * var(--u))}
 html body.inr .tk-ld-h{margin:0 0 0 calc(421 * var(--u))}
@@ -715,9 +714,7 @@ html body.inr .tk-s-r .n{color:rgba(255,255,255,.45)}
 html body.inr .tk-s-r .h{color:#FFFFFF;padding-top:.3em}
 html body.inr .tk-s-r .t{color:#EBEBEB;padding-top:.55em}
 @media (max-aspect-ratio: 1/1){
-  .tk-cv-w{display:none}
-  .film .tk-cv-o{position:static;text-align:left;margin:0 var(--m, 20px)}
-  .film .tk-cv-h, .film .tk-cv-k{position:static;left:auto;bottom:auto;white-space:normal;margin:0 var(--m, 20px)}
+  .film .tk-cv-h, .film .tk-cv-k{position:absolute;left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
   .tk-ld{padding:72px 0}
   html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
   html body.inr .tk-ld-t{margin:24px var(--m, 20px) 0;width:auto}

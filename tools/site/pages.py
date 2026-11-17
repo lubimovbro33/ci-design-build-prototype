@@ -61,8 +61,8 @@ def turnkey_page():
     eco = [x for g in ks[1:] for x in (g if isinstance(g, (list, tuple)) else [g]) if x]
     chain = [x.strip(' .') for x in nop(' '.join(ps[1])).split('.')]
     assert len(chain) == 9 and chain[-1] == 'Project management', chain
-    # 01 the wall of a whole project, taken away until one line is left
-    pg.add(tk_cover(label(S[0]), h1, chain + eco), 'Turnkey', 'top')
+    # 01 the residence, and the horizon it retreats below
+    pg.add(tk_cover(label(S[0]), h1, A + 'ch/1450-32.webp'), 'Turnkey', 'top')
     # 02 the thought, and nothing else on the screen
     assert nop(ps[0][0]) == 'CI Turnkey is the most complete expression of the CI model', ps[0]
     thought = esc('CI Turnkey is the most complete') + '<br class="bd"> <span class="cb">' + esc('expression of the CI model') + '</span>'
@@ -83,7 +83,7 @@ def turnkey_page():
     sec = S[5]; p5 = [it[1] for it in sec['items'] if it[0] == 'p']
     one5 = [x[0] for x in p5 if len(x) == 1]; whens = max(p5, key=len)
     st5 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_horizon(label(sec4), h_of(sec4), sp[1], note, eco), 'Above the Line')
+    pg.add(tk_horizon(label(sec4), h_of(sec4), sp[1], note, chain + eco), 'Above the Line')
     # 06 the page's one great heading, and the six intersections
     sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
     inter = [x for x in pit if len(x) == 6][0]; short = [x[0] for x in pit if len(x) == 1]
