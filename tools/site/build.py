@@ -592,15 +592,23 @@ def tk_index(kick, h1, note, items):
     return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="lab3 rv tk-ix-n">%s</p>\n  <p class="t34 rv tk-ix-f">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), sqr(items))
-def tk_steps(kick, h1, stages):
-    """10 — the eight stages, read straight down. Each stage stands on its own hairline, and the hairline grows from the first stage to the
-    last: the project gathers as it goes. The grid under them does not move, so it reads as a table and not as scattering."""
-    rs = ''.join('<div class="tk-s-r rv" style="--i:%d"><i aria-hidden="true"></i><p class="t60 n">%02d</p>'
-                 '<p class="t34 h">%s</p><p class="t20 t" style="--w:430">%s</p></div>'
-                 % (i, i + 1, esc(nm), esc(nop(tx))) for i, (nm, tx) in enumerate(stages))
-    return ('<section class="bk tk-s" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <div class="tk-s-g">%s</div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), rs)
+def tk_viaduct(kick, h1, stages):
+    """10 — the eight stages as a viaduct (17.11.2026 20:33, chosen by her from the sketches: «Роби віадук»). The page's own line — the
+    horizon, above it the client's life and below it the work — runs level across the whole screen, and under it eight arches grow one
+    after another as the scroll goes: the reason the client's way is level is everything that carries it. Above the line, over each
+    arch, stands the stage's NAME (what the client sees); under the viaduct, on the text line, what CI does in it (the client's
+    sentence, one at a time, under its name). The site's square walks the line from the first arch to the last and comes to rest on the
+    blue one at the far end: home. Everything stands on one screen — no camera, so it is not the home page's process (an axis that
+    travels, circles above and below it). The figure is `viaduct()` in js/inner.js; on phones the film is not pinned and the stages
+    read down as rows: name, sentence."""
+    its = ''.join('<div class="tk-vd-s" style="--k:%d"><p class="tk-vd-n">%s</p><p class="t20 tk-vd-t"><b>%s</b><br>%s</p></div>'
+                  % (i, esc(nm).replace(' + ', ' <br>+ '), esc(nm), esc(nop(tx))) for i, (nm, tx) in enumerate(stages))
+    return '\n'.join([
+        '<section class="film tk-vd" data-fig="viaduct" data-len="2.9" id="@ID@">', '  <div class="stg">',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
+        '      <div class="tk-vd-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>' % (esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26))),
+        '      <div class="tk-vd-g">%s</div>' % its,
+        '    </div>', '  </div>', '</section>'])
 def sc_track(kick, h1, parts, statement, imgs):
     """Turnkey: one track from the first idea to the first night home; it pans sideways"""
     a, b = parts

@@ -736,21 +736,23 @@ html body.inr .tk-hz-n{margin:calc(34 * var(--u)) calc(50 * var(--u)) 0 0;text-a
 html body.inr .tk-hz-i p{margin:0;color:#EBEBEB;transition:color .4s}
 .tk-hz-i:hover p{color:#FFFFFF} .tk-hz-i:hover > b{background:#FFFFFF}
 .tk-hz-f .sqr{row-gap:.5em}
-/* 10 the eight stages: each on its own hairline, and the hairline grows from the first to the last */
-.tk-s-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
-.tk-s-r{position:relative;display:grid;grid-template-columns:calc(150 * var(--u)) calc(420 * var(--u)) minmax(0, 1fr);
-        column-gap:calc(50 * var(--u));align-items:start;padding:calc(36 * var(--u)) 0 calc(44 * var(--u))}
-.tk-s-r i{position:absolute;left:0;top:0;height:1px;background:rgba(255,255,255,.4);width:calc((34 + var(--i, 0) * 9.4) * 1%)}
-html body.inr .tk-s-r .n{color:rgba(255,255,255,.45)}
-html body.inr .tk-s-r .h{color:#FFFFFF;padding-top:.3em}
-html body.inr .tk-s-r .t{color:#EBEBEB;padding-top:.55em}
+/* 10 the eight stages as a viaduct (17.11.2026 20:33, «Роби віадук»). The page's line runs level across the screen and eight arches
+   grow under it; a stage's name stands above the line over its arch, what CI does in it under the viaduct on the text line. The film
+   (js/inner.js, viaduct()) gives the places: --xa the first pier, --bw a bay, --dy the line, --ty the head of the sentence */
+.tk-vd-h{position:absolute;left:calc(421 * var(--u));top:calc(150 * var(--u))}
+.tk-vd-h .lab3{margin:0 0 calc(30 * var(--u))}
+.tk-vd-n{position:absolute;left:calc(var(--xa, 50px) + (var(--k) + .5) * var(--bw, 12vw));top:calc(var(--dy, 50vh) - 40 * var(--u));margin:0;
+  transform:translate(-50%, -100%);text-align:center;white-space:nowrap;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(18 * var(--u)));
+  line-height:1.12;letter-spacing:-.02em;text-transform:uppercase;color:#FFFFFF;opacity:0;will-change:opacity,transform}
+html body.inr .tk-vd-t{position:absolute;left:calc(421 * var(--u));top:var(--ty, 80vh);width:calc(475 * var(--u));color:#FFFFFF;opacity:0;will-change:opacity,transform}
+html body.inr .tk-vd-t b{display:inline-block;margin-bottom:.45em}
 @media (max-aspect-ratio: 1/1){
   .tk-ld{padding:72px 0}
   html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
   html body.inr .tk-ld-t{margin:24px var(--m, 20px) 0;width:auto}
   .tk-ld-b{margin:26px var(--m, 20px) 0}
   html body.inr .tk-m-l, html body.inr .tk-r-l, html body.inr .tk-x-l{margin:24px var(--m, 20px) 0;width:auto}
-  .tk-m-g, .tk-r-g, .tk-x-g, .tk-s-g, .tk-x-p{margin:26px var(--m, 20px) 0}
+  .tk-m-g, .tk-r-g, .tk-x-g, .tk-x-p{margin:26px var(--m, 20px) 0}
   .tk-m-r{grid-template-columns:1fr;row-gap:6px;padding:18px 0} .tk-m-r i{display:none}
   .tk-m-dd{margin-top:28px;padding-top:24px;min-height:150px} .tk-m-d{top:24px}
   html body.inr .tk-m-r .a, html body.inr .tk-m-r .al, html body.inr .tk-m-r .b, html body.inr .tk-m-r .bl{grid-column:1;grid-row:auto}
@@ -761,8 +763,14 @@ html body.inr .tk-s-r .t{color:#EBEBEB;padding-top:.55em}
   .tk-x-r{grid-template-columns:1fr;row-gap:4px;padding:16px 0} .tk-x-r i{display:none}
   html body.inr .tk-x-c, html body.inr .tk-r-c, html body.inr .tk-cm-b, html body.inr .tk-cm-p, html body.inr .tk-cm-c,
   html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;max-width:none}
-  .tk-s-r{display:block;padding:18px 0 22px} .tk-s-r i{width:100%}
-  html body.inr .tk-s-r .h{padding-top:0;margin-top:8px} html body.inr .tk-s-r .t{padding-top:0;margin-top:10px;width:auto}
+  /* the viaduct on phones: nothing is pinned, the stages read down — a hairline, the name, the sentence */
+  .film.tk-vd .sc{padding-top:72px}
+  .tk-vd-h{position:static;margin:0 0 34px} .tk-vd-h .lab3{margin-bottom:14px}
+  .tk-vd-s{border-top:1px solid rgba(255,255,255,.4);padding:18px 0 24px}
+  .tk-vd-n{position:static;transform:none!important;opacity:1!important;text-align:left;white-space:normal;font-size:17px;margin:0 0 10px}
+  .tk-vd-n br{display:none}
+  html body.inr .tk-vd-t{position:static;width:auto;opacity:1!important;transform:none!important}
+  html body.inr .tk-vd-t b, .tk-vd-t br{display:none}
   html body.inr .tk-hz-a{margin:28px var(--m, 20px);width:auto}
   html body.inr .tk-hz-n, html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;text-align:left}
   .tk-hz-g{grid-template-columns:1fr;gap:18px;margin:22px var(--m, 20px) 0}

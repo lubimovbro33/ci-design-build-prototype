@@ -279,12 +279,12 @@ def turnkey_page():
            '  <p class="t34 rv tk-r-c">%s</p>\n</section>' % blue(nop(st5), None)), 'One Team')
     # 09 one photograph of the client's own work, and the sentence that says why the page exists
     pg.add(tk_plate(A + 'ch/1450-23.webp', one5[1]), 'Responsibility')
-    # 10 the eight stages, to read
+    # 10 the eight stages: a viaduct — the client's line stays level, eight arches carry it
     sec = S[6]
     names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
     txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
     assert len(names) == len(txts) == 8, (len(names), len(txts))
-    pg.add(tk_steps(label(sec), h_of(sec), list(zip(names, txts))), 'Process')
+    pg.add(tk_viaduct(label(sec), h_of(sec), list(zip(names, txts))), 'Process')
     # 11 the work itself
     sec = S[7]
     cards = ''.join(pf6_card(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html') for q in PROJ[:3])

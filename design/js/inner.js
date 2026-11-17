@@ -219,7 +219,7 @@
   /* anchors on this page: a film opens a little into itself, where its title already stands */
   qsa('a[href^="#"]').forEach(function(a){
     a.addEventListener('click', function(e){ var id = a.getAttribute('href').slice(1); if (!id){ e.preventDefault(); return; } var t = $(id); if (!t) return; e.preventDefault();
-      var y = t.getBoundingClientRect().top + window.scrollY; if (t.classList.contains('film') && t.getAttribute('data-fig') !== 'cover') y += .7 * SP * H; smoothTo(y); });
+      var y = t.getBoundingClientRect().top + window.scrollY; var fg = t.getAttribute('data-fig'); if (t.classList.contains('film') && fg !== 'cover' && fg !== 'viaduct') y += .7 * SP * H; smoothTo(y); });   /* the viaduct is met at its first arch */
   });
 
   /* the pen */
@@ -515,6 +515,49 @@
       /* the line, parted: the home stands between its two halves, its drawing outside them */
       var la = 1 - sg(sp, .97, 1);
       if (la > .004){ ink(la, LW); seg(xL, -10, xL, H + 10); seg(xR, -10, xR, H + 10); }
+    }
+  }
+  /* ================================================================== CI Turnkey's process: a viaduct (17.11.2026 20:33, «Роби віадук»)
+     «One Journey: From Vision to Home», eight stages. The page's line — the horizon: above it the client's life, below it the work —
+     runs level across the whole screen, and under it eight arches grow, one for each stage, as the scroll goes. The client's way is
+     level BECAUSE of what stands under it. Above the line, over each arch, the stage's name; under the viaduct, on the text line,
+     what CI does in it. The site's square walks the line, comes to rest over each arch in turn, and ends on the blue one at the far
+     pier: home. An arch is never uncovered — it grows out of a point on the line, always a whole arch, its two piers following it
+     down to their footings (the valley is only in the lengths of the piers). All eight stand on one screen and nothing pans. */
+  function viaduct(f, q, t){
+    var v = f.vd || (f.vd = {n: qsa('.tk-vd-n', f.el), tx: qsa('.tk-vd-t', f.el), key: ''}), N = v.n.length, i;
+    function put(e, a, tf){ var o = a.toFixed(3); if (e.__o !== o){ e.__o = o; e.style.opacity = o; } if (e.__t !== tf){ e.__t = tf; e.style.transform = tf; } }
+    if (H >= W || !N){ if (v.key !== 'flow'){ v.key = 'flow'; v.n.concat(v.tx).forEach(function(e){ e.__o = e.__t = null; e.style.opacity = ''; e.style.transform = ''; }); } return; }
+    /* the places: eight bays between the fields (never wider than 300 a bay), the line a little above the middle of what the title leaves */
+    var B = Math.min((W - 100 * U) / N, 300 * U), R = B / 2, xa = (W - N * B) / 2, dy = Math.round(480 * U + (H - 1080 * U) * .45) + .5, LM = 170 * U;
+    function L(j){ return (50 + 120 * Math.pow(Math.sin(Math.PI * j / N), 1.3)) * U; }
+    var key = W + 'x' + H; if (v.key !== key){ v.key = key; var st = f.el.style;
+      st.setProperty('--xa', xa.toFixed(1) + 'px'); st.setProperty('--bw', B.toFixed(2) + 'px'); st.setProperty('--dy', dy.toFixed(1) + 'px'); st.setProperty('--ty', (dy + R + LM + 96 * U).toFixed(1) + 'px'); }
+    /* the first stage begins while the screen is still arriving, so the film is never met empty; .34 of the scroll to a stage */
+    var s = (q + .25) / .34, dk = eo(sg(q, -1.05, -.4)), xe = xa + N * B;
+    ink(1, LW); seg(-10, dy, lerp(-10, W + 10, dk), dy);                    /* the line: level, from edge to edge, in one stroke as the screen comes up */
+    var h = [], k;
+    for (k = 0; k < N; k++) h.push(eio(sg(s, k + .02, k + .6)));
+    for (k = 0; k < N; k++){
+      if (h[k] <= 0) continue;
+      var cx = xa + (k + .5) * B, r = R * h[k], hl = sg(h[k], .45, 1);
+      ink(1, LW); g.beginPath(); g.arc(cx, dy + r, r, Math.PI, 2 * Math.PI); g.stroke();
+      if (hl > 0){ seg(cx - r, dy + r - .5, cx - r, dy + r + L(k) * hl); seg(cx + r, dy + r - .5, cx + r, dy + r + L(k + 1) * hl); }
+    }
+    for (i = 0; i <= N; i++){ var hf = h[Math.max(0, i - 1)]; if (hf > .96) sq(xa + i * B, dy + R + L(i), sg(hf, .96, 1), SQ * .75); }   /* the footings */
+    /* the square on the line: it walks with the scroll and only eases as it comes to rest over an arch; the last walk is home */
+    var ks = Math.floor(s), fr = s - ks, wx;
+    if (s <= 0) wx = xa;
+    else if (s >= N) wx = lerp(xa + (N - .5) * B, xe, eio(sg(s - N, 0, .8)));
+    else wx = lerp(ks ? xa + (ks - .5) * B : xa, xa + (ks + .5) * B, eio(sg(fr, 0, .5)));
+    if (dk >= 1){ g.fillStyle = '#96A8BF'; g.fillRect(Math.round(xe - SQ / 2), Math.round(dy - SQ / 2), Math.round(SQ), Math.round(SQ)); }
+    if (s < N + .8) sq(wx, dy, sg(dk, .1, .3));
+    /* the names stand up with their arches; the sentence in hand leaves as the square sets off and the next arrives as its arch settles */
+    for (k = 0; k < N; k++){
+      var an = sg(h[k], .3, .85);
+      put(v.n[k], an, 'translate(-50%, calc(-100% + ' + ((1 - an) * 8 * U).toFixed(1) + 'px))');
+      var ai = sg(s, k + .1, k + .3), ao = k < N - 1 ? sg(s, k + 1, k + 1.12) : 0;
+      put(v.tx[k], ai * (1 - ao), 'translate3d(0,' + (((1 - ai) - ao) * 12 * U).toFixed(1) + 'px,0)');
     }
   }
   /* ================================================================== Solutions: one house, four ways to it — a scenario (17.11.2026 16:30)
@@ -817,7 +860,7 @@
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
     horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, viaduct: viaduct, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
