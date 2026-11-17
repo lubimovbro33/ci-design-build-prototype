@@ -881,6 +881,20 @@ def emit(fname, title, pg, preload=None):
 # The page's whole argument is the seam between designing and building, so the page's line is VERTICAL (Turnkey's is the horizon), and the
 # room is shown twice: as the drawing its lines make, and as the thing itself. The drawings are made from the client's own photographs by
 # tools/site/lines.py — nothing is invented: every line in a drawing is a line of that room.
+def sc_still(kick, h1, img, br=.72):
+    """A cover that does not perform: the client's own room at full bleed, the title at the foot on the left as on every page of ours, and one
+    slow settle of the picture. 17.11 12:36: «перший екран мені зовсім не подобається: все дуже дешеве» — a cover earns its level from the
+    photograph and the type, not from a trick played on it."""
+    hb = brk(h1, 18); ln = hb.count('<br>') + 1
+    return '\n'.join([
+        '<section class="film co-cv sc-sl" data-fig="drawn" data-len=".9" id="@ID@">', '  <div class="stg">',
+        '    <div class="co-cv-ph">',
+        '      <img class="im on" src="%s" alt="" style="filter:contrast(1.06) brightness(%s)" data-s="sc:1.08&gt;1@0-1.4">' % (img, br),
+        '    </div>',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
+        '      <p class="lab3 rv co-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
+        '      <h1 class="t111 rv co-cv-h" style="--ln:%d">%s</h1>' % (ln, hb),
+        '    </div>', '  </div>', '</section>'])
 def co_cover(kick, h1, img, ln):
     """01 — the cover states the thesis before a word of copy: the room stands as a drawing, and the scroll builds it. No stock, no slogan."""
     hb = brk(h1, 18); lnn = hb.count('<br>') + 1
@@ -1035,3 +1049,51 @@ def wl_spa(kick, h1, sub, lead, parts, ps):
             '  <div class="wl-sp-g">%s</div>\n%s</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(sub)), esc(nop(lead)), cs,
                 ''.join('  <p class="t34 rv wl-sp-p">%s</p>\n' % esc(nop(x)) for x in ps))
+
+# ================================================================== SOLUTIONS — who carries what (17.11.2026)
+# The page exists to answer one question, and the client's own copy says so: «You do not need to know whether you need Core, Curated, or
+# Turnkey before contacting us.» So the page ends with the schedule an architect would draw: the layers of a project down the side, the three
+# ways across the top, and in every cell who carries it. Wellness is not a fourth column — their copy calls it «Signature Enhancement ·
+# Elevates any CI solution» — so it is the band that runs under all three.
+def sl_block(kick, name, lead, ps, button, img, i):
+    """03–06 — the three ways and the enhancement, one shape four times: the name and the words on the text line, the work itself to the right"""
+    return ('<section class="bk sl-b" id="@ID@" style="--i:%d">\n  <figure class="sl-b-ph rv"><img src="%s" alt="" loading="lazy"></figure>\n'
+            '  <p class="lab3 rv sl-b-k">%s</p>\n  <h2 class="t60 rv sl-b-h">%s</h2>\n  <p class="t34 rv sl-b-l">%s</p>\n'
+            '  <div class="t20s rv sl-b-t" style="--w:475">%s</div>\n  <div class="rv sl-b-btn">%s</div>\n</section>') % (
+                i, img, esc(kick), brk(name, 22), esc(nop(lead)),
+                ''.join('<p>%s</p>' % esc(nop(x)) for x in ps), button)
+def sl_matrix(kick, h1, note, cols, rows, band):
+    """07 — the schedule: the layers of a project down the side, the three ways across, and who carries each. The pointer on a row reads it
+    across; the pointer on a way reads it down. The mark for CI is the site's own square; what stays the client's is said in a word."""
+    head = ''.join('<div class="sl-m-c lab3" data-c="%d">%s</div>' % (i, esc(c)) for i, c in enumerate(cols))
+    body = ''
+    for j, (nm, cells) in enumerate(rows):
+        body += '<div class="sl-m-r" data-r="%d"><p class="t20 n">%s</p>%s</div>' % (
+            j, esc(nm), ''.join('<div class="sl-m-x%s" data-c="%d">%s</div>' % (
+                ' on' if v else '', i, '<i aria-hidden="true"></i>' if v else '<span class="lab3 wc">You</span>') for i, v in enumerate(cells)))
+    return ('<section class="bk sl-m" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t20 rv sl-m-l" style="--w:475">%s</p>\n'
+            '  <div class="sl-m-g rv" data-matrix>\n    <div class="sl-m-h"><p class="lab3 n"></p>%s</div>\n%s\n'
+            '    <div class="sl-m-bd"><p class="lab3 n">%s</p><div class="sl-m-bt t20">%s</div></div>\n  </div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(note)), head, body, esc(band[0]), esc(nop(band[1])))
+
+def sc_you(kick, h1, lead, rows, close=None):
+    """«Is this you?» — on every one of the four pages this was the page's longest list, seven lines of small type on seven hairlines. It is one
+    statement at a time now: the line alone on the screen at the size of a heading, its number beside it, the next arriving as the last leaves.
+    (17.11 12:36: «Ти все переважно подав просто списками» — a list of sentences about the reader is not a list, it is a question asked seven
+    times.) The scroll is the only control: nothing moves on a timer."""
+    d = .54; t0 = .3; n = len(rows)
+    o = ['<section class="film sc-yo" data-fig="drawn" data-len="%.2f" id="@ID@">' % (t0 + n * d + .45), '  <div class="stg">',
+         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
+         '      <p class="lab3 m yo-k" data-k="0 .18 99 99">%s</p>' % esc(kick),
+         '      <p class="t34 m yo-l" data-k="0 .2 99 99" style="--w:620">%s</p>' % esc(nop(lead))]
+    for i, r in enumerate(rows):
+        T = t0 + i * d; last = i == n - 1
+        k = '%.2f %.2f %s' % (T, T + .18, '99 99' if last else '%.2f %.2f' % (T + d - .14, T + d + .02))
+        o.append('      <p class="lab3 m yo-n" data-k="%s">%02d<span class="wc"> / %02d</span></p>' % (k, i + 1, n))
+        o.append('      <p class="t60s m yo-t" data-k="%s">%s</p>' % (k, '<br>'.join(esc(x) for x in brk_lines(nop(r), 34))))
+    if close:
+        T = t0 + n * d
+        o.append('      <p class="t20 m yo-c" data-k="%.2f %.2f 99 99" style="--w:475">%s</p>' % (T - .1, T + .12, esc(nop(close))))
+    o.append('    </div>\n  </div>\n</section>')
+    return '\n'.join(o)

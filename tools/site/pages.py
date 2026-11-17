@@ -58,7 +58,7 @@ def wellness_page():
     client's own nine drawn over one of their rooms in our hairlines, one stroke at a time, and gone again the moment you let go."""
     S = [join_lists(dots_fix(x)) for x in P['wellness']]; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(sc_dawn(label(S[0]), h1, A + 'ch/1450-25a.webp'), 'Wellness', 'top')
+    pg.add(sc_still(label(S[0]), h1, A + 'us/1511-11a.webp', .66), 'Wellness', 'top')
     # 02 the thought: their two-line lead, the second line in the blue
     lead0 = get(S[0], 'lead')[0][1]
     thought = esc(nop(lead0[0])) + '<br><span class="cb">' + esc(nop(lead0[1])) + '</span>'
@@ -82,8 +82,7 @@ def wellness_page():
     # 05 the one list of the page
     sec = S[3]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
     cl = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows).replace('</section>',
-           '  <p class="t20 rv tk-r-c" style="--w:475">%s</p>\n</section>' % esc(nop(cl[0]))), 'Fit')
+    pg.add(sc_you(h_of(sec), None, get(sec, 'lead')[0][1][0], rows, cl[0]), 'Fit')
     # 06 the five steps, each with what it means
     sec = S[4]
     rows = [(r[1] if isinstance(r[1], str) else ' '.join(r[1]), [' '.join(x) for x in r[2]]) for r in get(sec, 'row')]
@@ -115,8 +114,7 @@ def curated_page():
     residence composed out of six fragments of the client's rooms, any one of which the visitor can lift out of the whole."""
     S = [join_lists(dots_fix(x)) for x in P['curated']]; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(cu_cover(label(S[0]), h1, A + 'ch/1450-34.webp',
-                    [(0, 58, 62, 0, .06), (10, 0, 46, 66, .14), (54, 30, 0, 12, .22), (36, 64, 22, 18, .30)]), 'Curated', 'top')
+    pg.add(sc_still(label(S[0]), h1, A + 'rtb/1430-08a.webp', .62), 'Curated', 'top')
     # 02 the thought: their sentence, its last line in the blue
     ln_ = brk_lines(nop(' '.join(ps[0])), 32)
     thought = '<br>'.join(esc(x) for x in ln_[:-1]) + '<br><span class="cb">' + esc(ln_[-1]) + '</span>'
@@ -134,7 +132,7 @@ def curated_page():
                    list(zip(names, [A + x for x in imgs], cls))), 'Composed')
     # 04 the one list of the page
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
-    pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows), 'Fit')
+    pg.add(sc_you(h_of(sec), None, get(sec, 'lead')[0][1][0], rows), 'Fit')
     # 05 one photograph of the client's work, and the sentence the page is built on
     sec = S[7]; wp = [it[1] for it in sec['items'] if it[0] == 'p']
     ws = [x[0] for x in wp if len(x) == 1]; betw = max(wp, key=len)
@@ -184,7 +182,7 @@ def core_page():
     pg.add(co_seam(label(sec), h_of(sec), cp[0], cp[1:], st, A + 'ch/1450-17.webp', L + '1450-17.webp'), 'Connected')
     # 04 the one list of the page
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
-    pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows), 'Fit')
+    pg.add(sc_you(h_of(sec), None, get(sec, 'lead')[0][1][0], rows), 'Fit')
     # 05 one photograph of the client's work, and the sentence that says what the page is against
     sec = S[5]; rp = [it[1] for it in sec['items'] if it[0] == 'p']
     rs = [x[0] for x in rp if len(x) == 1]; three = max(rp, key=len)
@@ -248,7 +246,7 @@ def turnkey_page():
         ('Eight', 'stages', 'One', 'journey', 0, det[3])]), 'Arithmetic')
     # 04 the page's one list
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
-    pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows), 'Fit')
+    pg.add(sc_you(h_of(sec), None, get(sec, 'lead')[0][1][0], rows), 'Fit')
     # 05 the horizon: above the line what stays yours, below it everything we carry
     sec = S[5]; p5 = [it[1] for it in sec['items'] if it[0] == 'p']
     one5 = [x[0] for x in p5 if len(x) == 1]; whens = max(p5, key=len)
@@ -269,7 +267,7 @@ def turnkey_page():
     pg.add(tk_rows(label(S[5]), h_of(S[5]), None, pairs, num=False, cls=' tk-wn') .replace('</section>',
            '  <p class="t34 rv tk-r-c">%s</p>\n</section>' % blue(nop(st5), None)), 'One Team')
     # 09 one photograph of the client's own work, and the sentence that says why the page exists
-    pg.add(tk_plate(A + 'us/1511-11a.webp', one5[1]), 'Responsibility')
+    pg.add(tk_plate(A + 'ch/1450-23.webp', one5[1]), 'Responsibility')
     # 10 the eight stages, to read
     sec = S[6]
     names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
@@ -315,23 +313,23 @@ def solutions():
            # screen, so a second thought is written here from what their own pages say of the four ways — marked .wc, to be replaced by their text
            '    <p class="t20 rv iv-p"><span class="wc">Some clients hand us the whole home;<br class="bd"> others bring an architect, or a residence already built.<br class="bd"> The way changes. The standard does not.</span></p>\n'
            '  </div>\n</section>')
-    N = 4; t0 = .3; d = 1.0
-    o = ['<section class="film" data-fig="steps" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']
+    # 03–06 the three ways and the enhancement, one shape four times (16.11 23:09: the film had the name in one place, the lead in another,
+    # the description in a third and the button in a fourth; this reads in order, and every block begins on the same text line)
+    PH = [A + 'ch/1450-32.webp', A + 'us/1511-01a.webp', A + 'ch/1450-34.webp', A + 'us/1511-06a.webp']
     for i, sec in enumerate(S[1:5]):
-        T = t0 + i * d; last = i == N - 1
-        k = '%.2f %.2f %s' % (T, T + .14, '99 99' if last else '%.2f %.2f' % (T + d - .12, T + d))
-        k2 = '%.2f %.2f %s' % (T + .08, T + .26, '99 99' if last else '%.2f %.2f' % (T + d - .12, T + d))
-        tag = label(sec); nm = h_of(sec); lead = get(sec, 'lead')[0][1][0]; ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; a_ = get(sec, 'a')[0]
-        # 16.11 23:09: «текст розкиданий повністю: заголовок там, другий заголовок там, опис там, кнопка там». One composition now, read in order:
-        # the small name and the big one stand on the text line over the line itself; under the line the lead on the same text line, the description
-        # beside it at 1040, and the button at the foot of the same column
-        o.append('      <p class="lab3 m sw-k" data-k="%s">%s</p>' % (k, esc(tag)))
-        o.append('      <p class="t60 m sw-h nb" data-k="%s">%s</p>' % (k, brk(nm, 22)))
-        o.append('      <p class="t34 m sw-l" data-k="%s" style="--w:430">%s</p>' % (k, esc(lead)))
-        o.append('      <div class="t20s m sw-t" data-k="%s" style="--w:475">%s</div>' % (k2, ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_)))
-        o.append('      <div class="m p-bl" data-k="%s">%s</div>' % (k2, btn(a_[2], href(a_[1]))))
-    o.append('    </div>\n  </div>\n</section>')
-    pg.add('\n'.join(o), 'Four Ways')
+        lead = get(sec, 'lead')[0][1][0]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']; a_ = get(sec, 'a')[0]
+        pg.add(sl_block(label(sec), h_of(sec), lead, ps_, btn(a_[2], href(a_[1])), PH[i], i), h_of(sec).replace('CI ', ''))
+    # 07 the schedule: who carries what. The cells are ours, built on what their own pages say of each way, so they are marked .wc
+    rows = [('Architecture and interior design', (1, 1, 1)),
+            ('Construction and project management', (1, 1, 1)),
+            ('Furnishings and custom furniture', (1, 0, 1)),
+            ('Art, objects and styling', (1, 0, 1)),
+            ('Procurement, delivery and installation', (1, 0, 1)),
+            ('Move-in and onboarding', (1, 0, 0))]
+    pg.add(sl_matrix('What each way carries', 'One Standard, Three Ways to Reach It',
+                     'The same team and the same standard in every one of them. What changes is how much of the home we carry.',
+                     ['CI Turnkey', 'CI Core', 'CI Curated'], rows,
+                     ('CI Wellness', 'Elevates any CI solution')), 'Who Carries What')
     final_cta(pg, S[5], A + 'ch/1450-02a.webp')
     emit('solutions.html', 'Solutions', pg)
 solutions()
