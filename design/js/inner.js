@@ -272,6 +272,32 @@
     theLine(f.pic ? sg(q, .82, 1.0) : 1, E, t);
   }
   /* ---------- film: steps — a journey on the line; the square walks from mark to mark */
+  /* ================================================================== Solutions: the four ways, on one axis (17.11.2026 13:02)
+     Until now each way drew a shape of its own — two lines merging for Core, layers for Curated, a wave for Wellness — four unrelated figures
+     between which the line simply went straight, so the eye could learn nothing from them («виглядає якась непродумана, без логіки»).
+     One axis now: the road of a project, from the first idea at the left field to the home at the right. Every way begins at the same place,
+     and what differs is HOW FAR it carries the home — Core to the end of the build, Curated through the layers, Turnkey to the first night in
+     it. CI Wellness is not a part of that road but a second line under the whole of it: «Elevates any CI solution», «from day one».
+     The scroll moves the far end from one way to the next, so the page's only question — how much of the home we carry — is answered without
+     a word. */
+  function ways(f, q, t){
+    var x0 = xl(421), x1 = xr(1870), y = MID, i, x;   /* xr measures from the left of the frame: the right field is 1870, not 50 */
+    var END = [1, .5, .75, 1];                 /* Turnkey · Core · Curated · Wellness, in the order of the page */
+    var a = sg(q, f.t0 - .35, f.t0 + .05);
+    if (a <= .002) return;
+    ink(a * .26, 1); seg(x0, y, x1, y);        /* the whole road, always there */
+    for (i = 0; i < 5; i++){ x = Math.round(lerp(x0, x1, i / 4)) + .5; ink(a * .3, 1); seg(x, y - 8 * U, x, y + 8 * U); }
+    var n = f.n, p = c01((q - f.t0) / ((n - 1) * f.d)) * (n - 1);
+    var k = Math.min(n - 2, Math.floor(p)), fr = c01(p - k);
+    var e = lerp(END[k], END[k + 1], sm(0, 1, fr)), xe = lerp(x0, x1, e);
+    ink(a, LW); seg(x0, y, xe, y);             /* the part of it we carry */
+    sq(x0, y, a); sq(xe, y, a);
+    var wv = sm(0, 1, c01(p - (n - 2)));       /* the last way runs under all of them */
+    if (wv > .002){
+      var yy = Math.round(y + 38 * U) + .5;
+      ink(a * wv * .75, 1); seg(x0, yy, x1, yy); sq(x0, yy, a * wv); sq(x1, yy, a * wv);
+    }
+  }
   function steps(f, q, t){
     var N = f.n, x0 = xl(421), x1 = W - 50 * U, i, E = {};
     /* 16.11 23:09 («дуже якась рвана, топорна анімація тієї лінії. Хочеться легкості і плавності»): each way's own shape holds while its step is
@@ -479,7 +505,7 @@
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
     horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
+  var FIG = {cover: cover, steps: steps, ways: ways, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
