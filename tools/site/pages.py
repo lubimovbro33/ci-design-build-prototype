@@ -48,6 +48,9 @@ def solution(key, fname, name, scene, bnd, band_after, cta_img, picks, proc='fil
 
 SEG_CORE = open(os.path.join(HERE, 'seg_core.txt')).read().strip()
 # ---------------------------------------------------------------- CI Turnkey: one door (16.11.2026, her brief of 23:14 / 23:28)
+def short_of(sec):
+    """the one-line paragraphs of a section, in order"""
+    return [x[1][0] for x in sec['items'] if x[0] == 'p' and len(x[1]) == 1]
 def turnkey_page():
     """CI Turnkey — everything divides by one. 17.11 07:57: «Типографія: ужас, все розкидано… Всі стокові фотографії ми забираємо… не вистачає
     ідеї, метафор, і перший екран теж». So: no stock photography anywhere on the page (only the client's own work, and only where a photograph
@@ -71,11 +74,16 @@ def turnkey_page():
     sec = S[3]; sp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     six = [x for x in [it[1] for it in sec['items'] if it[0] == 'p'] if len(x) == 6][0]
     st3 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_math(label(sec), h_of(sec), sp[0], [
-        ('Nine', 'disciplines', 'One', 'team', 0),
-        ('Hundreds', 'of people', 'One', 'point of accountability', 0),
-        ('Thousands', 'of decisions', 'One', 'conversation at a time', 1),
-        ('Eight', 'stages', 'One', 'journey', 0)]), 'Arithmetic')
+    st8n = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in S[6]['items'] if x[0] == 'h4']
+    det = [sqr(chain),                                   # what the nine are: the client's own nine disciplines
+           '<p class="t20" style="--w:900">%s</p>' % esc(nop(short_of(S[2])[0])),
+           '<p class="t20 wc" style="--w:900">%s</p>' % esc('You are asked the ones only you can answer'),
+           sqr(st8n)]                                    # and the eight stages, by name
+    pg.add(tk_math(label(S[3]), h_of(S[3]), sp[0], [
+        ('Nine', 'disciplines', 'One', 'team', 0, det[0]),
+        ('Hundreds', 'of people', 'One', 'point of accountability', 0, det[1]),
+        ('Thousands', 'of decisions', 'One', 'conversation at a time', 1, det[2]),
+        ('Eight', 'stages', 'One', 'journey', 0, det[3])]), 'Arithmetic')
     # 04 the page's one list
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
     pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows), 'Fit')

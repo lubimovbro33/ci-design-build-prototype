@@ -562,6 +562,27 @@
     });
   })();
 
+  /* ================================================================== CI Turnkey's four counts: the instrument of the page
+     The rows are read first and opened second: the pointer (or the keyboard) on a count brings what it is made of into the one reading line
+     under them, so the page's lists live inside its numbers. The rows never move — only the line under them changes. */
+  (function(){
+    qsa('[data-math]').forEach(function(g){
+      var rows = qsa('.tk-m-r', g), ds = qsa('.tk-m-d', g), cur = 0;
+      if (!rows.length) return;
+      function set(i){
+        if (i === cur) return; cur = i;
+        rows.forEach(function(r, k){ r.classList.toggle('on', k === i); });
+        ds.forEach(function(d, k){ d.classList.toggle('on', k === i); });
+      }
+      rows.forEach(function(r, i){
+        r.addEventListener('pointerenter', function(){ set(i); });
+        r.addEventListener('focus', function(){ set(i); });
+        r.addEventListener('click', function(){ set(i); });
+      });
+      rows[0].classList.add('on'); g.setAttribute('data-on', '1');
+    });
+  })();
+
   /* ================================================================== the gallery: «Explore the Work» (16.11, her reference htarchitecte.com/en)
      One screen; the photographs stand along its foot, all of one height, each its own width. The scroll walks the row sideways, one pixel of the
      row to one pixel of the page, and the row follows with a lag — the inertia. The filters rebuild it. */

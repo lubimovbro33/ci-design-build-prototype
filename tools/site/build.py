@@ -492,15 +492,18 @@ def tk_lead(thought, para_, button):
             '  <p class="t20 rv tk-ld-t" style="--w:475">%s</p>\n  <div class="rv tk-ld-b">%s</div>\n</section>') % (
                 thought, esc(nop(para_)), button)
 def tk_math(kick, h1, lead, rows):
-    """03 — the metaphor, spelled out: a project's every count on the left, and one on the right. Four rows of one shape, so the eye learns it
-    on the first row and reads the rest in a second."""
-    rs = ''
-    for big, lab, one, ol, wc in rows:
-        rs += ('<div class="tk-m-r rv"><p class="t60 a">%s</p><p class="lab3 al">%s</p><i aria-hidden="true"></i>'
-               '<p class="t60 b">%s</p><p class="lab3 bl%s">%s</p></div>') % (esc(big), esc(lab), esc(one), ' wc' if wc else '', esc(ol))
+    """03 — the metaphor spelled out, and the page's instrument. Four counts of one shape: what a project is on the left, what CI makes of it
+    on the right. The four are READ, and then they are OPENED — the pointer on a count brings what it is made of into the one reading line
+    under them, so the lists of the page live inside its numbers instead of lying about as lists (16.11 23:58). The rows never move: only the
+    line under them changes, and the counts not in hand step back."""
+    rs = ''; ds = ''
+    for i, (big, lab, one, ol, wc, det) in enumerate(rows):
+        rs += ('<div class="tk-m-r rv" data-i="%d" tabindex="0"><p class="t60 a">%s</p><p class="lab3 al">%s</p><i aria-hidden="true"></i>'
+               '<p class="t60 b">%s</p><p class="lab3 bl%s">%s</p></div>') % (i, esc(big), esc(lab), esc(one), ' wc' if wc else '', esc(ol))
+        ds += '<div class="tk-m-d%s" data-i="%d">%s</div>' % (' on' if i == 0 else '', i, det)
     return ('<section class="bk tk-m" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <div class="tk-m-g">%s</div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), rs)
+            '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <div class="tk-m-g rv" data-math>%s\n    <div class="tk-m-dd">%s</div>\n  </div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), rs, ds)
 def tk_rows(kick, h1, lead, rows, num=True, cls=''):
     """the page's one list (04), and the table of conditions (08): the same row — a number or the first half on the left, the sentence on the
     right, a hairline over each. One shape, read straight down."""

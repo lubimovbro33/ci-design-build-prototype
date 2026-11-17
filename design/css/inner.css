@@ -656,7 +656,21 @@ html body.inr .tk-ld-t{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u))}
 html body.inr .tk-m-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
 .tk-m-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
 .tk-m-r{display:grid;grid-template-columns:calc(360 * var(--u)) calc(190 * var(--u)) minmax(0, 1fr);grid-template-rows:auto auto;
-        column-gap:calc(50 * var(--u));row-gap:calc(16 * var(--u));padding:calc(44 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
+        column-gap:calc(50 * var(--u));row-gap:calc(16 * var(--u));padding:calc(44 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18);
+        outline:0;transition:opacity .45s cubic-bezier(.22,1,.36,1)}
+.tk-m-g[data-on] .tk-m-r{opacity:.42}
+.tk-m-g[data-on] .tk-m-r.on{opacity:1}
+.tk-m-r i{transition:background .45s cubic-bezier(.22,1,.36,1)}
+.tk-m-r.on i{background:#FFFFFF}
+/* the one reading line under the four, where a count opens */
+.tk-m-dd{position:relative;margin-top:calc(56 * var(--u));border-top:1px solid rgba(255,255,255,.18);
+         padding-top:calc(44 * var(--u));min-height:calc(200 * var(--u))}
+.tk-m-d{position:absolute;left:0;right:0;top:calc(46 * var(--u));opacity:0;visibility:hidden;
+        transition:opacity .5s cubic-bezier(.22,1,.36,1);font-family:var(--fx);font-weight:400;font-size:max(17px, calc(34 * var(--u)));
+        line-height:1.4;letter-spacing:-.0294em;color:#EBEBEB}
+.tk-m-d.on{opacity:1;visibility:visible}
+html body.inr .tk-m-d p{margin:0}
+.tk-m-d .sqr{row-gap:.5em}
 html body.inr .tk-m-r .a{grid-column:1;grid-row:1;color:#FFFFFF}
 html body.inr .tk-m-r .al{grid-column:1;grid-row:2;color:rgba(255,255,255,.62)}
 .tk-m-r i{grid-column:2;grid-row:1;align-self:center;width:100%;height:1px;background:rgba(255,255,255,.5)}
@@ -722,6 +736,7 @@ html body.inr .tk-s-r .t{color:#EBEBEB;padding-top:.55em}
   html body.inr .tk-m-l, html body.inr .tk-r-l, html body.inr .tk-x-l{margin:24px var(--m, 20px) 0;width:auto}
   .tk-m-g, .tk-r-g, .tk-x-g, .tk-s-g, .tk-x-p{margin:26px var(--m, 20px) 0}
   .tk-m-r{grid-template-columns:1fr;row-gap:6px;padding:18px 0} .tk-m-r i{display:none}
+  .tk-m-dd{margin-top:28px;padding-top:24px;min-height:150px} .tk-m-d{top:24px}
   html body.inr .tk-m-r .a, html body.inr .tk-m-r .al, html body.inr .tk-m-r .b, html body.inr .tk-m-r .bl{grid-column:1;grid-row:auto}
   html body.inr .tk-m-r .b{margin-top:10px}
   .tk-r-r{grid-template-columns:40px minmax(0, 1fr);column-gap:14px;padding:16px 0}
