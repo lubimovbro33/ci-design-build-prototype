@@ -488,20 +488,26 @@ def tk_cover(kick, h1, img, line, order, lines):
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
         '      <div class="tk-cv-t"><p class="tk-cv-k rv">%s</p><h1 class="t111 tk-cv-h rv">%s</h1></div>' % (esc(kick), out),
         '    </div>', '  </div>', '</section>'])
-def tk_horizon(kick, h1, above, note, groups):
-    """05 — the page's metaphor as one screen, and the whole ecosystem hanging from it (17.11.2026 15:15). ABOVE the line, large, what stays
-    the client's, in their own words. The line itself, with its two marks at the fields. And BELOW it the client's own two groups of work, not
-    as a wall of bullets but as two cables let down from that line, each named thing a square on its cable: everything CI carries, held by the
-    one line the client never has to touch. The cables draw downward as the screen arrives, one thing after another."""
-    cs = ''
-    for gi, g in enumerate(groups):
-        it = ''.join('<div class="tk-hz-i rv" style="--k:%d"><b aria-hidden="true"></b><p class="t20">%s</p></div>' % (i, esc(nop(x)))
-                     for i, x in enumerate(g))
-        cs += '<div class="tk-hz-c rv" style="--k:%d"><i aria-hidden="true"></i>%s</div>' % (gi * 3, it)
-    return ('<section class="tk-hz" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <p class="t60s rv tk-hz-a">%s</p>\n  <div class="tk-hz-l rv" aria-hidden="true"></div>\n'
-            '  <p class="lab3 rv tk-hz-n">%s</p>\n  <div class="tk-hz-g">%s</div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(above)), esc(nop(note)), cs)
+def tk_scope(kick, h1, above, note, items):
+    """05 — the whole ecosystem as the client's own sentence made into a thing to do (17.11.2026 23:01: «як метафорично, цікаво,
+    інтерактивно»). The list of 22 is not a list: its point is WEIGHT — how much is inside. So the names stand as one dense field of
+    the 34 across the measure, the blue square between them, and the line of the page runs under the field with our square on it as a
+    handle. The client's own words are the mechanic: «Depending on project scope» — the further the handle goes, the further the field
+    opens, name after name, until all twenty-two stand. The scroll walks the handle the first time, so the block is never met empty;
+    from the first touch it is the reader's (drag, click anywhere on the line, arrow keys). Nothing is ever shown dimmed: a name is
+    either standing in full ink or not yet there (`[data-scope]` in js/inner.js).
+    The two cables hung from the horizon (17.11 15:15) stood here before: they read as two columns of bullets, which is the one shape
+    this site does not use."""
+    fs = ''.join('<span style="--i:%d">%s</span>' % (i, esc(nop(x))) for i, x in enumerate(items))
+    return ('<section class="bk tk-sc" id="@ID@" data-scope>\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t60s rv tk-sc-a">%s</p>\n'
+            '  <p class="t34 tk-sc-f"><span class="sqr">%s</span></p>\n'
+            '  <div class="tk-sc-b">\n    <p class="lab3 tk-sc-n">%s</p>\n'
+            '    <div class="tk-sc-l" role="slider" tabindex="0" aria-label="%s" aria-valuemin="0" aria-valuemax="%d" aria-valuenow="%d">'
+            '<i class="r" aria-hidden="true"></i><i class="f" aria-hidden="true"></i><i class="q" aria-hidden="true"></i></div>\n'
+            '  </div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(above)), fs,
+                esc(nop(note)), esc(nop(note)), len(items), len(items))
 def tk_lead(thought, para_, button):
     """02 — the thought of the page, and nothing else on the screen. Everything on the text line: the sentence, the paragraph under it, the button
     under that. (17.11 07:57: «все розкидано, неможливо це читати» — from here on every block of this page begins at the same left edge.)"""
@@ -564,16 +570,28 @@ def tk_plate(img, line, pos=None):
     return ('<section class="tk-pl" id="@ID@">\n  <div class="bnd tk-pl-b"><img src="%s" alt="" loading="lazy"%s></div>\n'
             '  <p class="t34 rv tk-pl-t">%s</p>\n</section>') % (
                 img, ' style="object-position:%s"' % pos if pos else '', esc(nop(line)))
+# the box joint of 06: two pieces of one board, the left with two fingers, the right with one, cut so that together they fill it
+# exactly. They are drawn apart, and the row in hand brings them together (css/inner.css, .tk-jn)
+JOINT = ('<svg class="jn" viewBox="0 0 340 64" fill="none" xmlns="http://www.w3.org/2000/svg">'
+         '<path class="l" d="M0 1H210V17H170V33H210V49H170V63H0"/>'
+         '<path class="r" d="M340 1H208V17H168V33H208V49H168V63H340"/>'
+         '<rect class="q" x="184" y="28" width="9" height="9"/></svg>')
 def tk_pairs(kick, h1, lead, ps, lines, closer_):
-    """06 — the page's one great heading, and under it the client's six intersections: each pair's halves either side of one hairline, every
-    hairline the same, so the six read as one figure"""
+    """06 — the client's six intersections as JOINTS (17.11.2026 23:01: «як метафорично, цікаво, інтерактивно це показати»). The block's
+    own word is HANDOFF: the argument is not that there are six disciplines but that between them there is no seam. So each pair is a
+    carpenter's box joint, drawn in our hairlines: the left half's fingers and the right half's notches. At rest the two halves stand
+    apart, taken to pieces; the pointer (or the keyboard) on a row brings them together, the gap closes and our square stands on the
+    joint. The names either side are the client's own halves of the sentence. Nothing moves but the row in hand.
+    The paragraph «Instead of becoming the central coordinator…» is gone from here: it also stands in the counts block, and the client
+    wrote it once (17.11 22:11, the duplicate found when the page was read against the prototype)."""
     rs = ''
-    for x in lines:
+    for i, x in enumerate(lines):
         a, b = nop(x).split(' ', 1)
-        rs += '<div class="tk-x-r rv"><p class="t34 a">%s</p><i aria-hidden="true"></i><p class="t34 b">%s</p></div>' % (esc(a), esc(b))
-    return ('<section class="bk tk-x" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+        rs += ('<div class="tk-jn-r rv" style="--k:%d" tabindex="0"><p class="t34 a">%s</p>'
+               '<span class="tk-jn-j" aria-hidden="true">%s</span><p class="t34 b">%s</p></div>') % (i, esc(a), JOINT, esc(b))
+    return ('<section class="bk tk-x tk-jn" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t34 rv tk-x-l">%s</p>\n  <div class="t20s rv tk-x-p" style="--w:475">%s</div>\n'
-            '  <div class="tk-x-g">%s</div>\n  <p class="t34 rv tk-x-c">%s</p>\n</section>') % (
+            '  <div class="tk-jn-g">%s</div>\n  <p class="t34 rv tk-x-c">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)),
                 ''.join('<p>%s</p>' % esc(nop(x)) for x in ps), rs, blue(nop(closer_), None))
 def tk_calm(kick, h1, big, lines, closer_):

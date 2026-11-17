@@ -710,40 +710,49 @@ html body.inr .tk-x .bk-h h2{font-size:max(28px, calc(111 * var(--u)))!important
 html body.inr .tk-x-l{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u))}
 .tk-x-p{margin:calc(44 * var(--u)) 0 0 calc(421 * var(--u))}
 .tk-x-p p + p{margin-top:calc(22 * var(--u))}
-.tk-x-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
-.tk-x-r{display:grid;grid-template-columns:calc(360 * var(--u)) calc(150 * var(--u)) minmax(0, 1fr);column-gap:calc(40 * var(--u));
-        align-items:center;padding:calc(30 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
-html body.inr .tk-x-r .a{color:#FFFFFF}
-html body.inr .tk-x-r .b{color:#EBEBEB}
-.tk-x-r i{width:100%;height:1px;background:rgba(255,255,255,.5)}
+/* 06 the intersections as JOINTS (17.11.2026 23:01): each pair is a box joint of our hairlines — the left half's two fingers, the
+   right half's notch. At rest the halves stand apart (the handoff); the row in hand draws them together, the gap closes and our
+   square stands on the joint. Nothing else on the row moves, and the text of a row at rest is full ink, never dimmed */
+.tk-jn-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-jn-r{display:grid;grid-template-columns:calc(360 * var(--u)) calc(340 * var(--u)) minmax(0, 1fr);column-gap:calc(50 * var(--u));
+  align-items:center;padding:calc(26 * var(--u)) 0;outline:0}
+html body.inr .tk-jn-r .a{color:#FFFFFF} html body.inr .tk-jn-r .b{color:#EBEBEB}
+.tk-jn-j{display:block;width:calc(340 * var(--u));height:calc(64 * var(--u))}
+.tk-jn-j .jn{display:block;width:100%;height:100%;overflow:visible}
+.tk-jn-j .jn path{stroke:#FFFFFF;stroke-width:1.5;vector-effect:non-scaling-stroke;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+.tk-jn-j .jn .l{transform:translateX(-34px)} .tk-jn-j .jn .r{transform:translateX(34px)}
+.tk-jn-j .jn .q{fill:#96A8BF;opacity:0;transition:opacity .5s}
+.tk-jn-r.on .jn .l, .tk-jn-r.on .jn .r{transform:none}
+.tk-jn-r.on .jn .q{opacity:1}
+@media (hover:hover){ .tk-jn-r:hover .jn .l, .tk-jn-r:hover .jn .r{transform:none} .tk-jn-r:hover .jn .q{opacity:1} }
+.tk-jn-r:focus-visible .jn .l, .tk-jn-r:focus-visible .jn .r{transform:none}
+.tk-jn-r:focus-visible .jn .q{opacity:1}
 html body.inr .tk-x-c{margin:calc(100 * var(--u)) 0 0 calc(421 * var(--u));width:calc(900 * var(--u))}
 /* 07 the six ways, as one paragraph */
 html body.inr .tk-cm-b{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u));width:calc(900 * var(--u))}
 html body.inr .tk-cm-p{margin:calc(56 * var(--u)) 0 0 calc(421 * var(--u))}
 html body.inr .tk-cm-c{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
 /* 05 the horizon: the page's metaphor as one screen */
-.tk-hz{position:relative;padding:calc(150 * var(--u)) 0 calc(160 * var(--u));background:#000}
-html body.inr .tk-hz .bk-h h2{font-size:max(17px, calc(34 * var(--u)))!important;line-height:.97!important;letter-spacing:-.0294em!important}
-html body.inr .tk-hz-a{margin:calc(150 * var(--u)) 0 calc(140 * var(--u)) calc(421 * var(--u));color:#FFFFFF;white-space:normal}
-/* the same line the cover's wall fell past, come back at the middle of the page: it carries its two marks at the fields */
-.tk-hz-l{position:relative;height:1px;background:rgba(255,255,255,.5);margin:0 calc(50 * var(--u))}
-.tk-hz-l::before, .tk-hz-l::after{content:"";position:absolute;top:50%;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));
-  margin-top:calc(max(5px, 8 * var(--u)) / -2);background:#FFFFFF}
-.tk-hz-l::before{left:calc(max(5px, 8 * var(--u)) / -2)} .tk-hz-l::after{right:calc(max(5px, 8 * var(--u)) / -2)}
-html body.inr .tk-hz-n{margin:calc(34 * var(--u)) calc(50 * var(--u)) 0 0;text-align:right;color:rgba(255,255,255,.5)}
-/* the ecosystem, let down from the line on two cables (17.11.2026 15:15) */
-.tk-hz-g{position:relative;display:grid;grid-template-columns:repeat(2, calc(600 * var(--u)));justify-content:space-between;gap:calc(130 * var(--u));
-  margin:calc(46 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
-.tk-hz-c{position:relative;padding-left:calc(38 * var(--u))}
-.tk-hz-c > i{position:absolute;left:0;top:calc(-80 * var(--u));bottom:calc(26 * var(--u));width:1px;background:rgba(255,255,255,.3);
-  transform-origin:top;transform:scaleY(0);transition:transform 1.5s cubic-bezier(.16,1,.3,1) .12s}
-.tk-hz-c.in > i{transform:scaleY(1)}
-.tk-hz-i{position:relative;padding:calc(10 * var(--u)) 0;transition-delay:calc(var(--k, 0) * 55ms + 240ms)}
-.tk-hz-i > b{position:absolute;left:calc(-38 * var(--u) - 3.5 * var(--u));top:calc(50% - 3.5 * var(--u));
-  width:max(5px, calc(7 * var(--u)));height:max(5px, calc(7 * var(--u)));background:rgba(255,255,255,.55);transition:background .4s}
-html body.inr .tk-hz-i p{margin:0;color:#EBEBEB;transition:color .4s}
-.tk-hz-i:hover p{color:#FFFFFF} .tk-hz-i:hover > b{background:#FFFFFF}
-.tk-hz-f .sqr{row-gap:.5em}
+/* 05 the ecosystem as a field, and the client's «depending on project scope» as the handle that opens it (17.11.2026 23:01).
+   The 22 names are one dense run across the measure with the blue square between them; under them the page's line, and our square
+   on it. A name is either in full ink or not yet there — never half shown. js/inner.js, [data-scope] */
+.tk-sc{position:relative;padding:calc(150 * var(--u)) 0 calc(160 * var(--u));background:#000;--n:0}
+html body.inr .tk-sc .bk-h h2{font-size:max(17px, calc(34 * var(--u)))!important;line-height:.97!important;letter-spacing:-.0294em!important}
+html body.inr .tk-sc-a{margin:calc(150 * var(--u)) calc(50 * var(--u)) calc(140 * var(--u)) calc(421 * var(--u));width:calc(900 * var(--u));white-space:normal;color:#FFFFFF}
+html body.inr .tk-sc-f{margin:0 calc(50 * var(--u)) 0 calc(421 * var(--u));color:#FFFFFF}
+.tk-sc-f .sqr{row-gap:.42em}
+.tk-sc-f .sqr > span{opacity:clamp(0, calc(var(--n) - var(--i)), 1);transform:translateY(calc((1 - clamp(0, calc(var(--n) - var(--i)), 1)) * .18em));
+  transition:opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1)}
+.tk-sc-f .sqr > span::before{opacity:clamp(0, calc(var(--n) - var(--i) - .25), 1);transition:opacity .5s ease}
+.tk-sc-b{margin:calc(110 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+html body.inr .tk-sc-n{margin:0 0 calc(26 * var(--u));color:#FFFFFF}
+.tk-sc-l{position:relative;height:calc(40 * var(--u));min-height:26px;cursor:none;touch-action:none;outline:0}
+.tk-sc-l .r, .tk-sc-l .f{position:absolute;left:0;top:50%;height:1px;margin-top:-.5px}
+.tk-sc-l .r{right:0;background:rgba(255,255,255,.3)}
+.tk-sc-l .f{width:0;background:#FFFFFF}
+.tk-sc-l .q{position:absolute;top:50%;left:0;width:max(7px, calc(12 * var(--u)));height:max(7px, calc(12 * var(--u)));
+  margin:calc(max(7px, 12 * var(--u)) / -2) 0 0 calc(max(7px, 12 * var(--u)) / -2);background:#96A8BF}
+.tk-sc-l:focus-visible .q{outline:1px solid #FFFFFF;outline-offset:3px}
 /* 10 the process after her reference (17.11.2026 22:40, santalarch.com/#process): a small heading on the left, the stages as a ribbon
    on the right — a row is the name and a plus, the open row drops its sentence under the name. Measured at 1440: the ribbon from the
    middle of the screen to the field, a closed row 83 high, the plus 36, the sentence 360 wide. In our frame: 960 → 1870, the name in
@@ -772,7 +781,7 @@ html body.inr .tk-ps-h h2{margin-top:calc(30 * var(--u));color:#FFFFFF}
   html body.inr .tk-ld-t{margin:24px var(--m, 20px) 0;width:auto}
   .tk-ld-b{margin:26px var(--m, 20px) 0}
   html body.inr .tk-m-l, html body.inr .tk-r-l, html body.inr .tk-x-l{margin:24px var(--m, 20px) 0;width:auto}
-  .tk-m-g, .tk-r-g, .tk-x-g, .tk-x-p{margin:26px var(--m, 20px) 0}
+  .tk-m-g, .tk-r-g, .tk-jn-g, .tk-x-p{margin:26px var(--m, 20px) 0}
   .tk-m-r{grid-template-columns:1fr;row-gap:6px;padding:18px 0} .tk-m-r i{display:none}
   .tk-m-dd{margin-top:28px;padding-top:24px;min-height:150px} .tk-m-d{top:24px}
   html body.inr .tk-m-r .a, html body.inr .tk-m-r .al, html body.inr .tk-m-r .b, html body.inr .tk-m-r .bl{grid-column:1;grid-row:auto}
@@ -780,9 +789,12 @@ html body.inr .tk-ps-h h2{margin-top:calc(30 * var(--u));color:#FFFFFF}
   .tk-r-r{grid-template-columns:40px minmax(0, 1fr);column-gap:14px;padding:16px 0}
   .tk-wn .tk-r-r{grid-template-columns:1fr;row-gap:6px}
   html body.inr .tk-r-r .b{width:auto}
-  .tk-x-r{grid-template-columns:1fr;row-gap:4px;padding:16px 0} .tk-x-r i{display:none}
+  /* the joints on phones: the two halves one under the other, the joint closed between them */
+  .tk-jn-r{grid-template-columns:1fr;row-gap:8px;padding:16px 0}
+  .tk-jn-j{width:140px;height:26px;margin:2px 0}
+  .tk-jn-j .jn .l, .tk-jn-j .jn .r{transform:none} .tk-jn-j .jn .q{opacity:1}
   html body.inr .tk-x-c, html body.inr .tk-r-c, html body.inr .tk-cm-b, html body.inr .tk-cm-p, html body.inr .tk-cm-c,
-  html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;max-width:none}
+  html body.inr .tk-sc-f{margin:0 var(--m, 20px);width:auto;max-width:none;font-size:20px}
   /* the process on phones: the heading, then the ribbon under it — one column */
   .tk-ps-g{display:block;margin:0 var(--m, 20px)}
   .tk-ps-h{width:auto;margin-bottom:26px}
@@ -791,11 +803,10 @@ html body.inr .tk-ps-h h2{margin-top:calc(30 * var(--u));color:#FFFFFF}
   .tk-ps .qa .qh .t{width:auto;font-size:17px}
   .tk-ps .qa .qh .pl{width:28px;height:28px;margin-top:-2px}
   .tk-ps .qa .ain{padding-bottom:22px}
-  html body.inr .tk-hz-a{margin:28px var(--m, 20px);width:auto}
-  html body.inr .tk-hz-n, html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;text-align:left}
-  .tk-hz-g{grid-template-columns:1fr;gap:18px;margin:22px var(--m, 20px) 0}
-  .tk-hz-c > i{top:0}
-  .tk-hz{padding:72px 0}
+  html body.inr .tk-sc-a{margin:28px var(--m, 20px);width:auto}
+  .tk-sc-b{margin:28px var(--m, 20px) 0}
+  html body.inr .tk-sc-n{margin-bottom:14px}
+  .tk-sc{padding:72px 0}
   .tk-pl-b{height:56vh} html body.inr .tk-pl-t{left:var(--m, 20px);right:var(--m, 20px);width:auto;bottom:28px}
   html body.inr .tk-x .bk-h h2{font-size:clamp(26px, 8vw, 40px)!important}
 }

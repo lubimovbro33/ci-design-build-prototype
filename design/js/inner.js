@@ -1282,6 +1282,37 @@
     });
   })();
 
+  /* ================================================================== the ecosystem's scope (17.11.2026 23:01)
+     The client's own sentence is the mechanic: «Depending on project scope» — the handle on the page's line opens the field of the
+     twenty-two, name after name. The scroll walks it the first time, so the block is never met empty; from the first touch it is the
+     reader's. A name is either in full ink or not yet there: nothing is shown half (the site's rule on in-between text). */
+  (function(){
+    var sec = qs('[data-scope]'); if (!sec) return;
+    var field = qs('.tk-sc-f', sec), its = qsa('.sqr > span', field), line = qs('.tk-sc-l', sec), fill = qs('.f', line), knob = qs('.q', line);
+    var N = its.length; if (!N || !line) return;
+    var p = -1, mine = false, vis = false, raf = 0;
+    function put(v){
+      v = c01(v); if (Math.abs(v - p) < .0008) return; p = v;
+      sec.style.setProperty('--n', (p * (N + .6)).toFixed(3));
+      var pc = (p * 100).toFixed(2) + '%'; fill.style.width = pc; knob.style.left = pc;
+      line.setAttribute('aria-valuenow', Math.round(p * N));
+    }
+    function fromX(x){ var r = line.getBoundingClientRect(); mine = true; put((x - r.left) / Math.max(1, r.width)); }
+    line.addEventListener('pointerdown', function(e){ line.setPointerCapture(e.pointerId); fromX(e.clientX); e.preventDefault(); });
+    line.addEventListener('pointermove', function(e){ if (e.buttons) fromX(e.clientX); });
+    line.addEventListener('keydown', function(e){
+      var d = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : (e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0);
+      if (!d) return; mine = true; put(p + d / N); e.preventDefault();
+    });
+    function loop(){ raf = 0; if (!vis) return;
+      if (!mine){ var r = field.getBoundingClientRect(); put((H * .84 - r.top) / Math.max(1, H * .44)); }
+      raf = requestAnimationFrame(loop);
+    }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }, {rootMargin: '30% 0px'}).observe(sec);
+    else { put(1); }
+    if (reduced) { mine = true; put(1); }
+  })();
+
   /* ================================================================== the «CI Difference» grid on an inner page (17.11.2026 19:34)
      The home page's block, by its own rules (js/chapters.js, 05 DIFFERENCE): one cell is open as a white card at a time; the pointer or a
      tap opens another; left alone, the block walks on by itself every 5.2 s while it is in view. Its entrance is the home page's as

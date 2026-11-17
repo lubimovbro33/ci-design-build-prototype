@@ -241,8 +241,11 @@ def turnkey_page():
     six = [x for x in [it[1] for it in sec['items'] if it[0] == 'p'] if len(x) == 6][0]
     st3 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
     st8n = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in S[6]['items'] if x[0] == 'h4']
+    # 17.11 22:11: the line under the counts was the sentence of block 03 («Instead of becoming the central coordinator…»), which
+    # also stands in that block — one sentence of the client printed twice on one page. The row «hundreds of people → one point of
+    # accountability» now carries the client's own sentence about people, from this very block (04), and block 07 keeps the rest.
     det = [sqr(chain),                                   # what the nine are: the client's own nine disciplines
-           '<p class="t20" style="--w:900">%s</p>' % esc(nop(short_of(S[2])[0])),
+           '<p class="t20" style="--w:900">%s</p>' % esc('We coordinate the people behind them'),
            '<p class="t20 wc" style="--w:900">%s</p>' % esc('You are asked the ones only you can answer'),
            sqr(st8n)]                                    # and the eight stages, by name
     pg.add(tk_math(label(S[3]), h_of(S[3]), sp[0], [
@@ -258,18 +261,19 @@ def turnkey_page():
     assert len(NM) == len(rows), (len(NM), len(rows))
     pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'ch/1450-01a.webp',
                   ['For Clients Who', 'Want the Whole', 'Experience', 'Managed']), 'Fit')
-    # 05 the horizon: above the line what stays yours, below it everything we carry
+    # 05 the ecosystem as a field of names and the client's own «depending on project scope» as the handle that opens it
     sec = S[5]; p5 = [it[1] for it in sec['items'] if it[0] == 'p']
     one5 = [x[0] for x in p5 if len(x) == 1]; whens = max(p5, key=len)
     st5 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_horizon(label(sec4), h_of(sec4), sp[1], note, [list(g) for g in ks[1:]]), 'Above the Line')
+    pg.add(tk_scope(label(sec4), h_of(sec4), sp[1], note, eco), 'Above the Line')
     # 06 the page's one great heading, and the six intersections
     sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
     inter = [x for x in pit if len(x) == 6][0]; short = [x[0] for x in pit if len(x) == 1]
     pg.add(tk_pairs(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], short, inter,
                     ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])), 'Receive')
     # 07 the six ways, as one paragraph
-    pg.add(tk_calm(None, None, None, six, st3), 'Managed')
+    six7 = [x for x in six if 'coordinate the people behind' not in x]   # that sentence now stands under the counts (03)
+    pg.add(tk_calm(None, None, None, six7, st3), 'Managed')
     # 08 the conditions, as a table: what happens, and what we do about it
     pairs = []
     for x in [one5[0]] + list(whens):
