@@ -147,7 +147,10 @@
   function updateChap(y, vh){
     if (!chap) return;
     var ftr = $('footer'), ftop = ftr ? ftr.getBoundingClientRect().top : 1e9;
-    chap.classList.toggle('show', y > vh * .6 && ftop > vh * .92);
+    /* a block whose cards run to its very foot (CI Turnkey's Fit grid) is seen without the rail while it holds the screen: the rail
+       would lie on the last line of its cards (17.11 21:38 — «не потрібно лишати відступи… карточки мають прилягати») */
+    var held = false; for (var h = 0; h < NORAIL.length; h++){ var nr = NORAIL[h].getBoundingClientRect(); if (nr.top < vh * .5 && nr.bottom > vh - 44 && nr.bottom < vh * 1.5){ held = true; break; } }
+    chap.classList.toggle('show', y > vh * .6 && ftop > vh * .92 && !held);
     var idx = 0, tops = chapSecs.map(function(s){ return s.getBoundingClientRect().top + y; });
     for (var i = 0; i < tops.length; i++) if (y + 2 >= tops[i]) idx = i;
     var next = idx + 1 < tops.length ? tops[idx + 1] : document.documentElement.scrollHeight - vh;
@@ -165,6 +168,27 @@
       var l = rgbL(cs.backgroundColor); if (l >= 0) return l;
     }
     return 0;
+  }
+  var NORAIL = qsa('[data-norail]');
+  /* the header over a light card: the logo and the menu square take ink, the white button gets a hairline — read, like the rail, from
+     what lies under them (the Fit grid's cards now run to the very top of the block, under the header) */
+  var hdrEl = $('hdr'), hdrMark = hdrEl && qs('.wm img', hdrEl), hdrMenu = hdrEl && qs('.menu-sq', hdrEl), hdrN = 0;
+  function underHdr(x, y){
+    var stk = document.elementsFromPoint(x, y);
+    for (var i = 0; i < stk.length; i++){
+      var e = stk[i]; if (hdrEl.contains(e) || (chap && chap.contains(e)) || (cur && cur.contains(e))) continue;
+      var cs = getComputedStyle(e); if (cs.visibility === 'hidden' || +cs.opacity < .5) continue;
+      var t = e.tagName; if (t === 'IMG' || t === 'VIDEO') return 0; if (t === 'CANVAS') continue;
+      var l = rgbL(cs.backgroundColor); if (l >= 0) return l;
+    }
+    return 0;
+  }
+  function hdrInk(){
+    if (!hdrEl || !hdrMark || !hdrMenu || (hdrN++ & 3)) return;
+    var a = hdrMark.getBoundingClientRect(), b = hdrMenu.getBoundingClientRect();
+    var l = a.width ? underHdr(a.left + a.width / 2, a.top + a.height / 2) > .6 : false, r = b.width ? underHdr(b.left + b.width / 2, b.top + b.height / 2) > .6 : false;
+    if (l !== hdrEl._l){ hdrEl._l = l; hdrEl.classList.toggle('lt-l', l); }
+    if (r !== hdrEl._r){ hdrEl._r = r; hdrEl.classList.toggle('lt-r', r); }
   }
   function chapInk(){
     if (!chapLinks.length || (chapN++ & 3)) return; var y = window.innerHeight - 18;
@@ -219,7 +243,7 @@
   /* anchors on this page: a film opens a little into itself, where its title already stands */
   qsa('a[href^="#"]').forEach(function(a){
     a.addEventListener('click', function(e){ var id = a.getAttribute('href').slice(1); if (!id){ e.preventDefault(); return; } var t = $(id); if (!t) return; e.preventDefault();
-      var y = t.getBoundingClientRect().top + window.scrollY; var fg = t.getAttribute('data-fig'); if (t.classList.contains('film') && fg !== 'cover' && fg !== 'viaduct') y += .7 * SP * H; smoothTo(y); });   /* the viaduct is met at its first arch */
+      var y = t.getBoundingClientRect().top + window.scrollY; if (t.classList.contains('film') && t.getAttribute('data-fig') !== 'cover') y += .7 * SP * H; smoothTo(y); });
   });
 
   /* the pen */
@@ -515,49 +539,6 @@
       /* the line, parted: the home stands between its two halves, its drawing outside them */
       var la = 1 - sg(sp, .97, 1);
       if (la > .004){ ink(la, LW); seg(xL, -10, xL, H + 10); seg(xR, -10, xR, H + 10); }
-    }
-  }
-  /* ================================================================== CI Turnkey's process: a viaduct (17.11.2026 20:33, «Роби віадук»)
-     «One Journey: From Vision to Home», eight stages. The page's line — the horizon: above it the client's life, below it the work —
-     runs level across the whole screen, and under it eight arches grow, one for each stage, as the scroll goes. The client's way is
-     level BECAUSE of what stands under it. Above the line, over each arch, the stage's name; under the viaduct, on the text line,
-     what CI does in it. The site's square walks the line, comes to rest over each arch in turn, and ends on the blue one at the far
-     pier: home. An arch is never uncovered — it grows out of a point on the line, always a whole arch, its two piers following it
-     down to their footings (the valley is only in the lengths of the piers). All eight stand on one screen and nothing pans. */
-  function viaduct(f, q, t){
-    var v = f.vd || (f.vd = {n: qsa('.tk-vd-n', f.el), tx: qsa('.tk-vd-t', f.el), key: ''}), N = v.n.length, i;
-    function put(e, a, tf){ var o = a.toFixed(3); if (e.__o !== o){ e.__o = o; e.style.opacity = o; } if (e.__t !== tf){ e.__t = tf; e.style.transform = tf; } }
-    if (H >= W || !N){ if (v.key !== 'flow'){ v.key = 'flow'; v.n.concat(v.tx).forEach(function(e){ e.__o = e.__t = null; e.style.opacity = ''; e.style.transform = ''; }); } return; }
-    /* the places: eight bays between the fields (never wider than 300 a bay), the line a little above the middle of what the title leaves */
-    var B = Math.min((W - 100 * U) / N, 300 * U), R = B / 2, xa = (W - N * B) / 2, dy = Math.round(480 * U + (H - 1080 * U) * .45) + .5, LM = 170 * U;
-    function L(j){ return (50 + 120 * Math.pow(Math.sin(Math.PI * j / N), 1.3)) * U; }
-    var key = W + 'x' + H; if (v.key !== key){ v.key = key; var st = f.el.style;
-      st.setProperty('--xa', xa.toFixed(1) + 'px'); st.setProperty('--bw', B.toFixed(2) + 'px'); st.setProperty('--dy', dy.toFixed(1) + 'px'); st.setProperty('--ty', (dy + R + LM + 96 * U).toFixed(1) + 'px'); }
-    /* the first stage begins while the screen is still arriving, so the film is never met empty; .34 of the scroll to a stage */
-    var s = (q + .25) / .34, dk = eo(sg(q, -1.05, -.4)), xe = xa + N * B;
-    ink(1, LW); seg(-10, dy, lerp(-10, W + 10, dk), dy);                    /* the line: level, from edge to edge, in one stroke as the screen comes up */
-    var h = [], k;
-    for (k = 0; k < N; k++) h.push(eio(sg(s, k + .02, k + .6)));
-    for (k = 0; k < N; k++){
-      if (h[k] <= 0) continue;
-      var cx = xa + (k + .5) * B, r = R * h[k], hl = sg(h[k], .45, 1);
-      ink(1, LW); g.beginPath(); g.arc(cx, dy + r, r, Math.PI, 2 * Math.PI); g.stroke();
-      if (hl > 0){ seg(cx - r, dy + r - .5, cx - r, dy + r + L(k) * hl); seg(cx + r, dy + r - .5, cx + r, dy + r + L(k + 1) * hl); }
-    }
-    for (i = 0; i <= N; i++){ var hf = h[Math.max(0, i - 1)]; if (hf > .96) sq(xa + i * B, dy + R + L(i), sg(hf, .96, 1), SQ * .75); }   /* the footings */
-    /* the square on the line: it walks with the scroll and only eases as it comes to rest over an arch; the last walk is home */
-    var ks = Math.floor(s), fr = s - ks, wx;
-    if (s <= 0) wx = xa;
-    else if (s >= N) wx = lerp(xa + (N - .5) * B, xe, eio(sg(s - N, 0, .8)));
-    else wx = lerp(ks ? xa + (ks - .5) * B : xa, xa + (ks + .5) * B, eio(sg(fr, 0, .5)));
-    if (dk >= 1){ g.fillStyle = '#96A8BF'; g.fillRect(Math.round(xe - SQ / 2), Math.round(dy - SQ / 2), Math.round(SQ), Math.round(SQ)); }
-    if (s < N + .8) sq(wx, dy, sg(dk, .1, .3));
-    /* the names stand up with their arches; the sentence in hand leaves as the square sets off and the next arrives as its arch settles */
-    for (k = 0; k < N; k++){
-      var an = sg(h[k], .3, .85);
-      put(v.n[k], an, 'translate(-50%, calc(-50% + ' + ((1 - an) * 8 * U).toFixed(1) + 'px))');
-      var ai = sg(s, k + .1, k + .3), ao = k < N - 1 ? sg(s, k + 1, k + 1.12) : 0;
-      put(v.tx[k], ai * (1 - ao), 'translate3d(0,' + (((1 - ai) - ao) * 12 * U).toFixed(1) + 'px,0)');
     }
   }
   /* ================================================================== Solutions: one house, four ways to it — a scenario (17.11.2026 16:30)
@@ -860,7 +841,7 @@
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
     horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, viaduct: viaduct, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -1301,6 +1282,106 @@
     });
   })();
 
+  /* ================================================================== CI Turnkey's process: the line, the stages, one wall (17.11.2026 21:31–21:37)
+     Her reference (j-vers.com): a line down the middle of the screen, the steps to its right, a picture to its left that stays while
+     the steps pass — «в нашій стилістиці… зліва не 3D-шка, щось ілюстративне». The reader's place is the middle of the screen: the
+     line is white down to it, our square stands on it there, and a stage is in hand from the moment its mark reaches that height.
+     The picture is ONE WALL — the window wall of the cover's room, as an interior elevation — and every stage gives it what it gives
+     a home (the layer of a stage draws itself while its mark comes up to the reader's place; earlier layers stay):
+       Discovery        the room as it is: an empty outline, and one square for scale — the person it is for
+       Strategy         its axes and its levels
+       Design           the window, the joints of the wall, the pocket for the curtains
+       Pre-Construction the cut walls and slabs outlined and hatched, the dimension chains
+       Build            what was hatched is solid, from the ground up; the window stands in full weight; the drawing's marks retire
+       Curate           the curtains, the bed
+       Install          the cushions, the lamp
+       Deliver          the evening city in the window (the cover's own photograph, in a shader; one front, rising from the sill)
+     Units are the drawing's own (739 × 604). Phones: the wall is drawn whole above the list. */
+  (function(){
+    var sec = qs('[data-pr]'); if (!sec) return;
+    var body = qs('.tk-pr-b', sec), st = qs('.tk-pr-st', sec), cv = qs('.tk-pr-c', sec), c = cv.getContext('2d'), pane = qs('.tk-pr-w', sec), img = qs('img', pane);
+    var line = qs('.tk-pr-l', sec), fill = qs('.f', line), dot = qs('.q', line), its = qsa('.tk-pr-i', sec), ms = its.map(function(e){ return qs('.m', e); }), N = its.length;
+    if (N < 2) return;
+    var PANE = [360, 128, 190, 315];                       /* the window's opening: the photograph's own window, to its proportions */
+    var glo, vis = false, raf = 0, cw = 0, ch = 0, s = 1, lk = '', pk = '', ik = '';
+    var FS = ['vec3 c = grade(texture2D(uT0, cov(v, uS0)).rgb);', 'float w = 1.0 / uRes.y;', 'c *= smoothstep(1.0 - uQ - w, 1.0 - uQ + w, v.y);'].join('\n');
+    /* a soft line through points; a hanging fold */
+    function soft(P, n){ var o = [], i, j; for (i = 0; i < P.length - 1; i++){ var a = P[Math.max(0, i - 1)], b = P[i], d = P[i + 1], e = P[Math.min(P.length - 1, i + 2)];
+      for (j = 0; j < n; j++){ var u = j / n, u2 = u * u, u3 = u2 * u; for (var q = 0; q < 2; q++) o.push(.5 * (2 * b[q] + (d[q] - a[q]) * u + (2 * a[q] - 5 * b[q] + 4 * d[q] - e[q]) * u2 + (3 * b[q] - a[q] - 3 * d[q] + e[q]) * u3)); } }
+      o.push(P[P.length - 1][0], P[P.length - 1][1]); return o; }
+    function fold(x, y0, y1, i){ var o = [], y; for (y = y0; y < y1; y += 26) o.push(x + 1.5 * Math.sin(y / 46 + i * 1.7), y); o.push(x + 1.5 * Math.sin(y1 / 46 + i * 1.7), y1); return o; }
+    var ROOM = [[70,520, 670,520, 670,100, 70,100, 70,520]];
+    var AXES = [[455,58, 455,566], [205,58, 205,566]], LEVELS = [[30,443, 708,443], [30,128, 708,128]];
+    var WIN = [[360,128, 550,128, 550,443, 360,443, 360,128], [352,120, 558,120, 558,451, 352,451, 352,120], [360,197, 550,197], [360,209, 550,209], [342,451, 342,458, 568,458, 568,451]];
+    var WALL = [[132,100, 132,520], [196,100, 196,520], [250,112, 660,112]];
+    var CUT = [[56,86, 684,86, 684,534, 56,534, 56,86]];
+    var DIMS = [[70,578, 670,578], [70,550, 70,584], [352,550, 352,584], [558,550, 558,584], [670,550, 670,584], [65,583, 75,573], [347,583, 357,573], [553,583, 563,573], [665,583, 675,573],
+                [722,100, 722,520], [700,100, 730,100], [700,128, 730,128], [700,443, 730,443], [700,520, 730,520], [717,105, 727,95], [717,133, 727,123], [717,448, 727,438], [717,525, 727,515]];
+    var FOLDS = [262, 276, 290, 304, 318, 332].map(function(x, i){ return fold(x, 112, 464, i); }).concat([566, 580, 594, 608, 622, 636].map(function(x, i){ return fold(x, 112, 516, i + 3); }), [[562,516, 640,516]]);
+    var BED = [soft([[82,488],[82,464],[190,464],[300,464],[326,465],[339,474],[340,488]], 8), [78,520, 78,488, 340,488, 340,520], [262,464, 262,488], [288,464, 288,488], [70,300, 82,300, 82,464]];
+    var BEDF = [74,520, 74,464, 300,464, 338,468, 342,488, 342,520];
+    var PILL = [[[86,464],[83,404],[90,378],[118,372],[146,378],[154,400],[152,464]], [[122,464],[120,420],[128,404],[156,400],[184,406],[190,424],[188,464]], [[166,464],[165,438],[172,428],[196,426],[218,430],[222,442],[221,464]]].map(function(P){ return soft(P, 8); });
+    var LAMP = [[164,100, 164,330], [157,330, 171,330, 171,372, 157,372, 157,330], [146,352, 182,352]];
+    function pen(a, w, dash){ c.strokeStyle = a >= 1 ? '#FFFFFF' : 'rgba(255,255,255,' + Math.max(0, a).toFixed(3) + ')'; c.lineWidth = w; c.setLineDash(dash ? dash.map(function(x){ return x * s; }) : []); }
+    function part(P, p){                                    /* a line drawn as far as p of its length: one stroke */
+      if (p <= 0) return; var i, L = 0, d = [];
+      for (i = 2; i < P.length; i += 2){ d.push(Math.hypot(P[i] - P[i - 2], P[i + 1] - P[i - 1])); L += d[d.length - 1]; }
+      var want = L * Math.min(1, p), acc = 0; c.beginPath(); c.moveTo(P[0] * s, P[1] * s);
+      for (i = 2; i < P.length; i += 2){ var dl = d[i / 2 - 1]; if (acc + dl >= want){ var k = dl ? (want - acc) / dl : 0; c.lineTo((P[i - 2] + (P[i] - P[i - 2]) * k) * s, (P[i - 1] + (P[i + 1] - P[i - 1]) * k) * s); break; } c.lineTo(P[i] * s, P[i + 1] * s); acc += dl; }
+      c.stroke();
+    }
+    function set(Ls, p, a, w, dash){ if (p <= 0 || a <= 0) return; pen(a, w, dash); var n = Ls.length; for (var i = 0; i < n; i++) part(Ls[i], c01(p * 1.6 - .6 * i / Math.max(1, n - 1))); }
+    function shape(P){ c.beginPath(); c.moveTo(P[0] * s, P[1] * s); for (var i = 2; i < P.length; i += 2) c.lineTo(P[i] * s, P[i + 1] * s); c.closePath(); }
+    function ring(){ c.beginPath(); c.rect(56 * s, 86 * s, 628 * s, 448 * s); c.rect(70 * s, 100 * s, 600 * s, 420 * s); }
+    function draw(pos, t){
+      var w = st.clientWidth, h = st.clientHeight, d = Math.min(2, window.devicePixelRatio || 1), k, i;
+      if (!w || !h) return;
+      if (w !== cw || h !== ch){ cw = w; ch = h; cv.width = Math.round(w * d); cv.height = Math.round(h * d); s = w / 739;
+        pane.style.left = (PANE[0] * s).toFixed(1) + 'px'; pane.style.top = (PANE[1] * s).toFixed(1) + 'px'; pane.style.width = (PANE[2] * s).toFixed(1) + 'px'; pane.style.height = (PANE[3] * s).toFixed(1) + 'px'; }
+      if (glo === undefined) glo = GL2.make(pane, glCoverFS(FS, .95), [img]) || null;
+      var p = []; for (k = 0; k < N; k++) p.push(eo(sg(pos, k - .45, k + .05)));
+      var b = p[4], thin = 1, LW2 = 1.5;
+      c.setTransform(d, 0, 0, d, 0, 0); c.clearRect(0, 0, w, h); c.lineCap = 'butt'; c.lineJoin = 'round';
+      set(AXES, p[1], lerp(.55, .16, b), thin, [10, 4, 2, 4]); set(LEVELS, p[1], lerp(.5, .14, b), thin, [5, 5]);          /* strategy: the axes, the levels */
+      set(ROOM, p[0], .95, LW2);                                                                                             /* discovery: the room */
+      set(WALL, p[2], lerp(.7, 1, b), 1.2);                                                                                  /* design: the wall's joints, the pocket */
+      if (p[3] > 0){                                                                                                         /* pre-construction: the cut, hatched; the chains */
+        set(CUT, p[3], .95, LW2);
+        var ha = .5 * (1 - b); if (ha > .01){ c.save(); ring(); c.clip('evenodd'); pen(ha, thin); var nh = Math.round(p[3] * 130);
+          for (i = 0; i < nh; i++){ var x0 = -400 + i * 9; c.beginPath(); c.moveTo(x0 * s, 534 * s); c.lineTo((x0 + 448) * s, 86 * s); c.stroke(); } c.restore(); }
+        set(DIMS, p[3], .75 * (1 - b), thin);
+      }
+      if (b > 0){ c.save(); c.beginPath(); c.rect(0, (534 - 448 * b) * s, w, h); c.clip(); ring(); c.fillStyle = '#FFFFFF'; c.fill('evenodd'); c.restore(); }   /* build: solid, from the ground up */
+      set(WIN, p[2], lerp(.8, 1, b), lerp(1.2, 1.6, b));                                                                     /* design, then built: the window */
+      set(FOLDS, p[5], .8, thin);                                                                                            /* curate: the curtains, the bed */
+      if (p[5] > 0){ c.globalAlpha = p[5]; shape(BEDF); c.fillStyle = '#000000'; c.fill(); c.globalAlpha = 1; set(BED, p[5], 1, 1.3); }
+      for (i = 0; i < PILL.length; i++){ var pp = c01(p[6] * 1.5 - .25 * i); if (pp <= 0) continue;                           /* install: the cushions, the lamp */
+        c.globalAlpha = pp; shape(PILL[i]); c.fillStyle = '#000000'; c.fill(); c.globalAlpha = 1; pen(1, 1.3); part(PILL[i], pp); }
+      if (p[6] > 0){ var lp = c01(p[6] * 1.4 - .4); set([LAMP[0]], c01(p[6] * 1.4), 1, thin);
+        if (lp > 0){ c.globalAlpha = lp; shape(LAMP[1]); c.fillStyle = p[7] > .5 ? '#FFFFFF' : '#000000'; c.fill(); c.globalAlpha = 1; set([LAMP[1], LAMP[2]], lp, 1, 1.3); } }
+      if (p[0] > 0){ c.fillStyle = 'rgba(255,255,255,' + p[0].toFixed(3) + ')'; c.fillRect(Math.round(451 * s), Math.round(512 * s), Math.round(8 * s), Math.round(8 * s)); }   /* the one it is for */
+      if (p[7] > 0 && p[7] < 1){ pen(1, LW2); c.beginPath(); c.moveTo(360 * s, (443 - 315 * p[7]) * s); c.lineTo(550 * s, (443 - 315 * p[7]) * s); c.stroke(); }   /* deliver: the front in the window */
+      if (glo){ if (glo.ready){ glo.size(); glo.set1('uQ', p[7]); glo.set1('uTime', (t * 60) | 0); glo.draw(); } }
+      else { var ck = p[7].toFixed(3); if (ck !== ik){ ik = ck; img.style.visibility = p[7] > 0 ? 'visible' : 'hidden'; clip(img, 'inset(' + ((1 - p[7]) * 100).toFixed(2) + '% 0 0 0)'); } }
+    }
+    function frame(now){
+      raf = 0; if (!vis) return;
+      var vw = window.innerWidth, vh = window.innerHeight, rb = body.getBoundingClientRect(), my = [], k;
+      for (k = 0; k < N; k++){ var r = ms[k].getBoundingClientRect(); my.push(r.top + r.height / 2); }
+      var yr = vh * .5, top = my[0] - rb.top, len = my[N - 1] - my[0], fl = Math.max(0, Math.min(len, yr - my[0]));
+      var key = top.toFixed(1) + '|' + len.toFixed(1); if (key !== lk){ lk = key; line.style.top = top.toFixed(1) + 'px'; line.style.height = len.toFixed(1) + 'px'; }
+      var fk = fl.toFixed(1); if (fk !== pk){ pk = fk; fill.style.height = fk + 'px'; dot.style.transform = 'translate3d(0,' + fk + 'px,0)'; }
+      var pos = (yr - my[0]) / Math.max(1, my[1] - my[0]);
+      for (k = 0; k < N - 1; k++) if (yr >= my[k]) pos = k + (yr - my[k]) / Math.max(1, my[k + 1] - my[k]);
+      if (yr >= my[N - 1]) pos = N - 1 + (yr - my[N - 1]) / Math.max(1, my[N - 1] - my[N - 2]);
+      for (k = 0; k < N; k++){ var on = yr >= my[k] - 1; if (its[k].__on !== on){ its[k].__on = on; its[k].classList.toggle('on', on); } }
+      draw(vh >= vw ? N : pos, now / 1000);
+      raf = requestAnimationFrame(frame);
+    }
+    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(frame); }, {rootMargin: '25% 0px'}).observe(sec);
+    else { vis = true; raf = requestAnimationFrame(frame); }
+  })();
+
   /* ================================================================== the «CI Difference» grid on an inner page (17.11.2026 19:34)
      The home page's block, by its own rules (js/chapters.js, 05 DIFFERENCE): one cell is open as a white card at a time; the pointer or a
      tap opens another; left alone, the block walks on by itself every 5.2 s while it is in view. Its entrance is the home page's as
@@ -1405,7 +1486,7 @@
     }
     if (GL) GL.frame();
     if (y !== lastY || H !== lastVH) updateChap(y, H);
-    chapInk(); updateLogo(y, H);
+    chapInk(); hdrInk(); updateLogo(y, H);
     lastY = y; lastVH = H;
     requestAnimationFrame(tick);
   }

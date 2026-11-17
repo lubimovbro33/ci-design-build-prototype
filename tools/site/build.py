@@ -540,11 +540,11 @@ def tk_fit(kick, h1, lead, rows, img, title_lines):
                   '<span class="df2-cd">%s</span></span><span class="df2-pm" aria-hidden="true"></span></button>') % (
                       i, i + 1, ' on' if i == 3 else '', i, 'true' if i == 3 else 'false', esc(nop(sent)), n, i + 1, n, esc(nop(sent)))
     assert nop(' '.join(title_lines)).lower() == nop(h1).lower(), (title_lines, h1)
-    return ('<section class="df2 tk-df" id="@ID@" data-df aria-label="%s">\n'
+    return ('<section class="df2 tk-df" id="@ID@" data-df data-norail aria-label="%s">\n'
             '  <div class="df2-bgw" aria-hidden="true"><div class="df2-bgs"><div class="df2-bg on"><img src="%s" alt="" loading="lazy" decoding="async"></div></div></div>\n'
             '  <div class="df2-body">\n'
             '    <i class="df2-v a" aria-hidden="true"></i><i class="df2-v b" aria-hidden="true"></i><i class="df2-v c" aria-hidden="true"></i>'
-            '<i class="df2-h a" aria-hidden="true"></i><i class="df2-h b" aria-hidden="true"></i><i class="df2-h c" aria-hidden="true"></i>\n'
+            '<i class="df2-h a" aria-hidden="true"></i><i class="df2-h b" aria-hidden="true"></i>\n'
             '    <div class="df2-cells">%s</div>\n'
             '    <div class="df2-panel"><p class="tk-df-k">%s</p><h2 class="df2-big">%s</h2><p class="df2-s1"><b>%s</b></p></div>\n'
             '  </div>\n</section>') % (esc(kick), img, cells, esc(kick), '<br>'.join(esc(x) for x in title_lines), esc(nop(lead)))
@@ -592,30 +592,30 @@ def tk_index(kick, h1, note, items):
     return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="lab3 rv tk-ix-n">%s</p>\n  <p class="t34 rv tk-ix-f">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), sqr(items))
-def tk_viaduct(kick, h1, stages, short=None):
-    """10 — the eight stages as a viaduct (17.11.2026 20:33, chosen by her from the sketches: «Роби віадук»). The page's own line — the
-    horizon, above it the client's life and below it the work — runs level across the whole screen, and under it eight arches grow one
-    after another as the scroll goes: the reason the client's way is level is everything that carries it. Above the line, over each
-    arch, stands the stage's NAME (what the client sees); under the viaduct, on the text line, what CI does in it (the client's
-    sentence, one at a time, under its name). The site's square walks the line from the first arch to the last and comes to rest on the
-    blue one at the far end: home. Everything stands on one screen — no camera, so it is not the home page's process (an axis that
-    travels, circles above and below it). The figure is `viaduct()` in js/inner.js; on phones the film is not pinned and the stages
-    read down as rows: name, sentence.
-    `short` (21:06, her note on «Architecture + Design» standing in two lines over its arch: «мені не подобається… як це можна скоротити?
-    чи можна якось одним словом?»): the label over an arch may be ONE word of the client's own name — asserted — so every label is one
-    line on one axis; the client's full name stands, as written, over the sentence under the viaduct, and on phones as the row's name."""
-    its = ''
-    for i, (nm, tx) in enumerate(stages):
-        lab = (short or {}).get(nm, nm)
-        assert lab == nm or lab.lower() in [w.lower() for w in nm.replace('+', ' ').split()], (lab, nm)
-        n = esc(nm) if lab == nm else '<span class="s">%s</span><span class="f">%s</span>' % (esc(lab), esc(nm))
-        its += '<div class="tk-vd-s" style="--k:%d"><p class="tk-vd-n">%s</p><p class="t20 tk-vd-t"><b>%s</b><br>%s</p></div>' % (i, n, esc(nm), esc(nop(tx)))
+def tk_process(kick, h1, stages, win):
+    """10 — the process after her reference (17.11.2026 21:31, j-vers.com: «центральна лінія, в нашій стилістиці… заголовок по центрі,
+    справа інформація про степи і зліва візуал… не 3D-шка, щось ілюстративне»; 21:37 «роби»). Measured off the reference at 1440: the
+    label and the title centred; under them a vertical line down the middle of the screen, a mark on it for each step, filling as the
+    scroll goes; the steps to its right, 125 from it (167 of our frame), a name and a text each; to its left a picture that stays in
+    place while the steps pass it.
+    In our hand: the line is our hairline — pale for its whole length, white where the reader has been — with our square walking it and
+    a small square at each step; the names in the 34 and the client's sentences in the running text, to the site's 475.
+    The picture is ONE WALL: the window wall of the cover's own room, drawn flat, as an interior elevation — and each stage gives it
+    what that stage gives a home: Discovery the empty room, Strategy its axes and levels, Architecture + Design the window and the
+    wall's joints, Pre-Construction the hatch and the dimension chains, Build the walls made solid (and the drawing's marks retire),
+    Curate the curtains and the bed, Install the cushions and the lamp, Deliver the evening city in the window — `win`, the window of
+    the cover's photograph (tools/site/crops.py). The page ends in the window it began with. The figure is the [data-pr] module of
+    js/inner.js. (It replaces the viaduct of 20:33, which stood for an hour.)"""
+    its = ''.join('<li class="tk-pr-i"><i class="m" aria-hidden="true"></i><h3 class="t34 up">%s</h3><p class="t20">%s</p></li>'
+                  % (esc(nm), esc(nop(tx))) for nm, tx in stages)
     return '\n'.join([
-        '<section class="film tk-vd" data-fig="viaduct" data-len="2.9" id="@ID@">', '  <div class="stg">',
-        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-        '      <div class="tk-vd-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>' % (esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26))),
-        '      <div class="tk-vd-g">%s</div>' % its,
-        '    </div>', '  </div>', '</section>'])
+        '<section class="tk-pr" id="@ID@" data-pr>',
+        '  <div class="tk-pr-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>' % (esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26))),
+        '  <div class="tk-pr-b">',
+        '    <div class="tk-pr-v" aria-hidden="true"><div class="tk-pr-st"><div class="tk-pr-w"><img src="%s" alt=""></div><canvas class="tk-pr-c"></canvas></div></div>' % win,
+        '    <div class="tk-pr-l" aria-hidden="true"><i class="f"></i><i class="q"></i></div>',
+        '    <ol class="tk-pr-s">%s</ol>' % its,
+        '  </div>', '</section>'])
 def sc_track(kick, h1, parts, statement, imgs):
     """Turnkey: one track from the first idea to the first night home; it pans sideways"""
     a, b = parts

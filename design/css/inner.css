@@ -744,17 +744,29 @@ html body.inr .tk-hz-n{margin:calc(34 * var(--u)) calc(50 * var(--u)) 0 0;text-a
 html body.inr .tk-hz-i p{margin:0;color:#EBEBEB;transition:color .4s}
 .tk-hz-i:hover p{color:#FFFFFF} .tk-hz-i:hover > b{background:#FFFFFF}
 .tk-hz-f .sqr{row-gap:.5em}
-/* 10 the eight stages as a viaduct (17.11.2026 20:33, «Роби віадук»). The page's line runs level across the screen and eight arches
-   grow under it; a stage's name stands above the line over its arch, what CI does in it under the viaduct on the text line. The film
-   (js/inner.js, viaduct()) gives the places: --xa the first pier, --bw a bay, --dy the line, --ty the head of the sentence */
-.tk-vd-h{position:absolute;left:calc(421 * var(--u));top:calc(150 * var(--u))}
-.tk-vd-h .lab3{margin:0 0 calc(30 * var(--u))}
-.tk-vd-n{position:absolute;left:calc(var(--xa, 50px) + (var(--k) + .5) * var(--bw, 12vw));top:calc(var(--dy, 50vh) - 50 * var(--u));margin:0;
-  transform:translate(-50%, -50%);text-align:center;white-space:nowrap;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(18 * var(--u)));
-  line-height:1.12;letter-spacing:-.02em;text-transform:uppercase;color:#FFFFFF;opacity:0;will-change:opacity,transform}
-html body.inr .tk-vd-t{position:absolute;left:calc(421 * var(--u));top:var(--ty, 80vh);width:calc(475 * var(--u));color:#FFFFFF;opacity:0;will-change:opacity,transform}
-html body.inr .tk-vd-t b{display:inline-block;margin-bottom:.45em}
-.tk-vd-n .f{display:none}   /* the client's full name of a stage whose label over the arch is one word of it: it stands over the sentence, and on phones */
+/* 10 the process after her reference (17.11.2026 21:31, j-vers.com; 21:37 «роби») — measured at 1440: the line down the middle, the
+   steps 125 to its right (167 of our frame), a picture 554 × 453 (739 × 604) to its left, 79 (105) from the line, which stays while the
+   steps pass. Ours: the hairline pale for its length and white where the reader has been, our square walking it, a small square at each
+   stage; the title centred in the 60; a stage every 360. The picture is one wall, drawn stage by stage (js/inner.js, [data-pr]) */
+.tk-pr{position:relative;display:block;background:#000;padding:calc(150 * var(--u)) 0}
+.tk-pr-h{text-align:center}
+.tk-pr-h .lab3{margin:0 0 calc(30 * var(--u))}
+.tk-pr-b{position:relative;display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);margin-top:calc(150 * var(--u))}
+.tk-pr-v{position:relative}
+.tk-pr-st{position:sticky;top:calc(50vh - 302 * var(--u));width:calc(739 * var(--u));height:calc(604 * var(--u));margin:0 calc(105 * var(--u)) 0 auto}
+.tk-pr-c{position:absolute;left:0;top:0;width:100%;height:100%;z-index:2;display:block}
+.tk-pr-w{position:absolute;z-index:1;overflow:hidden}
+.tk-pr-w > img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;visibility:hidden}   /* a texture; never on the screen before the drawing asks for it */
+.tk-pr-l{position:absolute;left:50%;top:0;width:0;height:0;pointer-events:none}
+.tk-pr-l::before{content:"";position:absolute;left:-.5px;top:0;width:1px;height:100%;background:rgba(255,255,255,.33)}
+.tk-pr-l .f{position:absolute;left:-.75px;top:0;width:1.5px;height:0;background:#FFFFFF}
+.tk-pr-l .q{position:absolute;left:0;top:0;--q:max(5px, calc(8 * var(--u)));width:var(--q);height:var(--q);margin:calc(var(--q) / -2) 0 0 calc(var(--q) / -2);background:#FFFFFF}
+.tk-pr-s{list-style:none;margin:0;padding:0 calc(50 * var(--u)) 0 calc(167 * var(--u))}
+.tk-pr-i{position:relative;min-height:calc(360 * var(--u))}
+.tk-pr-i .m{position:absolute;left:calc(-167 * var(--u));top:calc(16.5 * var(--u));--q:max(4px, calc(6 * var(--u)));width:var(--q);height:var(--q);margin:calc(var(--q) / -2) 0 0 calc(var(--q) / -2);
+  box-sizing:border-box;border:1px solid rgba(255,255,255,.5);background:#000;transition:background-color .4s,border-color .4s}
+.tk-pr-i.on .m{background:#FFFFFF;border-color:#FFFFFF}
+html body.inr .tk-pr-i .t20{margin-top:calc(25 * var(--u));width:calc(475 * var(--u));color:#FFFFFF}
 @media (max-aspect-ratio: 1/1){
   .tk-ld{padding:72px 0}
   html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
@@ -772,14 +784,16 @@ html body.inr .tk-vd-t b{display:inline-block;margin-bottom:.45em}
   .tk-x-r{grid-template-columns:1fr;row-gap:4px;padding:16px 0} .tk-x-r i{display:none}
   html body.inr .tk-x-c, html body.inr .tk-r-c, html body.inr .tk-cm-b, html body.inr .tk-cm-p, html body.inr .tk-cm-c,
   html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;max-width:none}
-  /* the viaduct on phones: nothing is pinned, the stages read down — a hairline, the name, the sentence */
-  .film.tk-vd .sc{padding-top:72px}
-  .tk-vd-h{position:static;margin:0 0 34px} .tk-vd-h .lab3{margin-bottom:14px}
-  .tk-vd-s{border-top:1px solid rgba(255,255,255,.4);padding:18px 0 24px}
-  .tk-vd-n{position:static;transform:none!important;opacity:1!important;text-align:left;white-space:normal;font-size:17px;margin:0 0 10px}
-  .tk-vd-n .s{display:none} .tk-vd-n .f{display:inline}
-  html body.inr .tk-vd-t{position:static;width:auto;opacity:1!important;transform:none!important}
-  html body.inr .tk-vd-t b, .tk-vd-t br{display:none}
+  /* the process on phones: the wall, drawn whole, then the line at the left edge and the stages beside it */
+  .tk-pr{padding:72px 0}
+  .tk-pr-h{text-align:left;margin:0 var(--m, 20px)} .tk-pr-h .lab3{margin-bottom:14px}
+  .tk-pr-b{display:block;margin:36px var(--m, 20px) 0}
+  .tk-pr-st{position:relative;top:auto;width:100%;height:auto;aspect-ratio:739 / 604;margin:0 0 36px}
+  .tk-pr-l{left:4px}
+  .tk-pr-s{padding:0 0 0 28px}
+  .tk-pr-i{min-height:0;padding-bottom:34px} .tk-pr-i:last-child{padding-bottom:0}
+  .tk-pr-i .m{left:-24px;top:9px}
+  html body.inr .tk-pr-i .t20{margin-top:10px;width:auto}
   html body.inr .tk-hz-a{margin:28px var(--m, 20px);width:auto}
   html body.inr .tk-hz-n, html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;text-align:left}
   .tk-hz-g{grid-template-columns:1fr;gap:18px;margin:22px var(--m, 20px) 0}
@@ -1077,16 +1091,23 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
    site's own mark instead, the square: blue on the photograph, black on the open card (as in the corner of «Begin your better life») */
 .tk-df .df2-pm{width:calc(8 * var(--u));height:calc(8 * var(--u));min-width:6px;min-height:6px;border:0;border-radius:0;background:#96A8BF;transition:background-color .5s}
 .tk-df .df2-cell.on .df2-pm{background:#000000}
-/* and so that «прибитий до нижнього краю» does not put a sentence under the chapter rail: the rail gets a band of its own under the grid.
-   The two rows give it its 36 px between them (18 each, so they stay equal), a third hairline closes the grid above it, and the foot of
-   every cell — and of the white panel — is 24 from that line. Nothing of the grid lies under the rail when the block fills the screen */
-.tk-df .df2-h.c{display:none}
+/* 21:38, her note: «ти лишив чомусь зверху і знизу відступи. Там не потрібно їх лишати. Карточки мають прилягати і лінії плотно до
+   фотографії, до самого верху.» So nothing is kept free of the grid: no band under the header (the home page's block has one) and no
+   band for the chapter rail (mine of 19:46, taken back). Two rows of half the block each, the cells from the photograph's very top to
+   its very foot, one hairline between the rows; every sentence 24 from the foot of its cell */
 @media (min-width:901px) and (min-aspect-ratio: 1/1){
-  .tk-df .df2-body{grid-template-rows:minmax(0, 1fr) calc(480 * var(--u) - 18px) calc(480 * var(--u) - 18px) 36px!important}
-  .tk-df .df2-h.c{display:block;grid-column:1/-1;grid-row:4;--s:.3;--du:.34}
-  .tk-df .df2-v.a, .tk-df .df2-v.c{grid-row:1/4} .tk-df .df2-v.b{grid-row:2/4}
+  .tk-df .df2-body{grid-template-rows:minmax(0, 1fr) minmax(0, 1fr)!important}
+  .tk-df .df2-cell.c1, .tk-df .df2-cell.c2, .tk-df .df2-cell.c3, .tk-df .df2-cell.c4{grid-row:1}
+  .tk-df .df2-cell.c5, .tk-df .df2-cell.c6, .tk-df .df2-cell.c7, .tk-df .df2-panel{grid-row:2}
+  .tk-df .df2-v.a, .tk-df .df2-v.b, .tk-df .df2-v.c{grid-row:1 / -1}
+  .tk-df .df2-h.a{grid-row:2} .tk-df .df2-h.b{display:none}
   html body.inr .tk-df .df2-s1{bottom:calc(24 * var(--u))}
+  .tk-df .df2-cell.c1 .df2-cn{left:calc(126 * var(--u))}   /* the first card lies under the logo: its number stands clear of it */
 }
+/* the header over an open card of the top row: ink instead of white (js/inner.js, hdrInk) */
+.hdr .wm img{transition:filter .45s} .hdr.lt-l .wm img{filter:invert(1)}
+.hdr.lt-r .menu-sq{border-color:rgba(0,0,0,.2);--ms:#000} .hdr.lt-r .menu-sq i{background:#000}
+.hdr .cta-blk{transition:box-shadow .45s} .hdr.lt-r .cta-blk{box-shadow:0 0 0 1px rgba(0,0,0,.16)}
 .tk-df-k{position:absolute;left:calc(24 * var(--u));top:calc(25 * var(--u));margin:0;font-family:var(--zx);font-weight:400;
   font-size:max(10px, calc(18 * var(--u)));line-height:.93;text-transform:uppercase;color:#000000}
 html body.inr .tk-df .df2-big{top:calc(72 * var(--u));margin:0;font-weight:500;text-transform:uppercase;color:#000000;white-space:nowrap}

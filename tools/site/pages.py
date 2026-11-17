@@ -279,12 +279,12 @@ def turnkey_page():
            '  <p class="t34 rv tk-r-c">%s</p>\n</section>' % blue(nop(st5), None)), 'One Team')
     # 09 one photograph of the client's own work, and the sentence that says why the page exists
     pg.add(tk_plate(A + 'ch/1450-23.webp', one5[1]), 'Responsibility')
-    # 10 the eight stages: a viaduct — the client's line stays level, eight arches carry it
+    # 10 the eight stages: the centre line, the stages to its right, one wall drawn stage by stage to its left
     sec = S[6]
     names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
     txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
     assert len(names) == len(txts) == 8, (len(names), len(txts))
-    pg.add(tk_viaduct(label(sec), h_of(sec), list(zip(names, txts)), short={'Architecture + Design': 'Design'}), 'Process')
+    pg.add(tk_process(label(sec), h_of(sec), list(zip(names, txts)), A + 'ch/1450-32-w.webp'), 'Process')
     # 11 the work itself — after her reference (17.11 21:06, holl&artists): three photographs on one top line, a large one in the
     # middle and a small one either side, each with its caption under it at its own left edge, nothing under the small ones. On our
     # grid that is the Portfolio's own block — one large card (two columns, 886 : 1112) and two small (419 : 525) — with the large one
