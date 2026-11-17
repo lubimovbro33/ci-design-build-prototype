@@ -647,7 +647,7 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
 .tk-cv-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;max-width:none;display:block;
               filter:contrast(1.04) brightness(.93)}
 /* her frame 603:742: the name and the title in the middle of the screen, centred; label 437, title 486–642 of 1080 */
-.film .tk-cv-t{position:absolute;left:0;right:0;top:calc(50% - 103 * var(--u));z-index:3;text-align:center;will-change:clip-path}
+.film .tk-cv-t{position:absolute;left:0;right:0;top:calc(50% - 103 * var(--u));z-index:3;text-align:center;will-change:transform}
 .tk-cv-k{margin:0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.2;letter-spacing:.05em;color:#EBEBEB}
 html body.inr .tk-cv-h{margin:calc(25 * var(--u)) 0 0!important;color:#EBEBEB;white-space:nowrap!important}
 /* 02 the thought */
@@ -1027,7 +1027,8 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
   .film.tk-cv .stg{display:flex;flex-direction:column;height:auto}
   .film.tk-cv .sc{order:1;position:relative;padding:0;min-height:62vh;min-height:62svh;display:flex;align-items:center;justify-content:center}
   .film .tk-cv-t{position:relative;top:auto;padding:96px var(--m, 20px) 56px}
-  .film .tk-cv-t::after{content:"";display:block;height:1px;background:rgba(255,255,255,.9);margin:56px calc(-1 * var(--m, 20px)) 0}
+  .film .tk-cv-t{padding-bottom:0}
+  .film .tk-cv-t::after{content:"";display:block;width:1px;height:96px;background:#FFFFFF;margin:44px auto 0}   /* the line, on its way down to the room */
   html body.inr .tk-cv-h{white-space:normal!important;margin-top:14px!important}
   .film.tk-cv .tk-cv-ph{order:2;position:relative;height:66vh;height:66svh}
 }

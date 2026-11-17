@@ -229,7 +229,8 @@ def turnkey_page():
     # without its article. The second agreed exception to the client's copy after Portfolio's; the client's wording stays in content.json
     # and tools/site/verify.py reports it as an EXCEPTION.
     h1 = 'From First Idea to First Night Home'
-    pg.add(tk_cover('CI Turnkey', h1, A + 'ch/1450-32.webp', L + '1450-32.webp', [('From First', ''), ('Idea to ', 'First'), ('', 'Night Home')]), 'Turnkey', 'top')
+    pg.add(tk_cover('CI Turnkey', h1, A + 'ch/1450-32.webp', L + '1450-32.webp', L + '1450-32-o.png',
+                    [('From First', ''), ('Idea to ', 'First'), ('', 'Night Home')]), 'Turnkey', 'top')
     # 02 the thought, and nothing else on the screen
     assert nop(ps[0][0]) == 'CI Turnkey is the most complete expression of the CI model', ps[0]
     thought = esc('CI Turnkey is the most complete') + '<br class="bd"> <span class="cb">' + esc('expression of the CI model') + '</span>'

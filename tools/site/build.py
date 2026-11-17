@@ -462,14 +462,14 @@ def sc_door(kick, h1, img):
         '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
-def tk_cover(kick, h1, img, line, lines):
-    """01 — her own frame and scenario (17.11 17:07, `603:742`): the page's name and its title stand in the middle of a black screen, the
-    title in three centred lines of 60, its first half white and «First Night Home» blue; under them, 140 away, runs the site's line. The
-    scroll parts the line in two. The two lines carry the drawing of the room between them and leave each of its lines where it belongs —
-    the line draws the picture — the upper one wiping the words away as it rises, so the text only ever stands on black (17:12: «текст
-    залишимо там, де він є, на чорному фоні. Не будемо його дублювати на фотографію»). Then the evening light crosses the drawing and it
-    is the photograph. `line` = the room's own drawing (tools/site/lines.py), `lines` = the title's lines as (white, blue) halves; the
-    figure is `unfold()` in js/inner.js."""
+def tk_cover(kick, h1, img, line, order, lines):
+    """01 — her own frame and scenario (17.11 17:07 `603:742`, 17:12, 17:33, 17:35): the page's name and its title stand in the middle of a
+    black screen, the title in three centred lines of 60, its first half white and «First Night Home» blue. Just under them turns a tangle —
+    the home page's knot: the idea, still chaos — and the site's line leaves it straight down. The scroll follows the line: the words go up
+    and away (they only ever stand on black), the tangle pays out into the line, the line parts in two and the room is drawn between its
+    halves, and the drawing is then filled in with the photograph one thing at a time. `line` = the room's own drawing (tools/site/lines.py),
+    `order` = the moment of every thing in the picture (tools/site/cells.py), `lines` = the title's lines as (white, blue) halves; the figure
+    is `unfold()` in js/inner.js."""
     assert nop(' '.join((a + b).strip() for a, b in lines)).lower() == nop(h1).lower(), (lines, h1)
     out = ''; on = False
     for i, (wh, bl) in enumerate(lines):
@@ -482,8 +482,8 @@ def tk_cover(kick, h1, img, line, lines):
             out += esc(bl)
     if on: out += '</span>'
     return '\n'.join([
-        '<section class="film tk-cv" data-fig="unfold" data-len="1.85" id="@ID@">', '  <div class="stg">',
-        '    <div class="tk-cv-ph"><img src="%s" alt=""><img class="tk-cv-ln" src="%s" alt=""></div>' % (img, line),
+        '<section class="film tk-cv" data-fig="unfold" data-len="2.2" id="@ID@">', '  <div class="stg">',
+        '    <div class="tk-cv-ph"><img src="%s" alt=""><img class="tk-cv-ln" src="%s" alt=""><img class="tk-cv-ln" src="%s" alt=""></div>' % (img, line, order),
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
         '      <div class="tk-cv-t"><p class="tk-cv-k rv">%s</p><h1 class="t60 tk-cv-h rv">%s</h1></div>' % (esc(kick), out),
         '    </div>', '  </div>', '</section>'])
