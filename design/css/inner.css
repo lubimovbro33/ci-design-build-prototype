@@ -870,3 +870,50 @@ html body.inr .cu-st-r .t{color:#EBEBEB;padding-top:.5em}
   .cu-st-r{display:block;padding:18px 0}
   html body.inr .cu-st-r .h{margin-top:8px;padding-top:0} html body.inr .cu-st-r .t{margin-top:10px;padding-top:0;width:auto}
 }
+/* ================================================================== CI WELLNESS — the invisible (17.11.2026)
+   «Controls can disappear. Technology can integrate. Infrastructure can remain behind the architecture.» So the room on this page looks like
+   a room until it is asked a question: the client's own nine are drawn over it in our hairlines, one stroke at a time, and gone again the
+   moment the pointer leaves. The cover comes out of the dark into the light — their first quality. Order as on the other three pages. */
+html body.inr .wl-un-l{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
+.wl-g{position:relative;margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));aspect-ratio:16 / 9;overflow:hidden;background:#000}
+.wl-g img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.05) brightness(.62);
+          transition:filter .7s cubic-bezier(.22,1,.36,1)}
+.wl-g[data-on] img{filter:contrast(1.05) brightness(.42)}
+.wl-sv{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.wl-sv g{opacity:0;transition:opacity .5s cubic-bezier(.22,1,.36,1)}
+.wl-sv g.on{opacity:1}
+.wl-sv path{fill:none;stroke:#FFFFFF;stroke-width:1;vector-effect:non-scaling-stroke;stroke-dasharray:4000;stroke-dashoffset:4000}
+.wl-sv g.on path{stroke-dashoffset:0;transition:stroke-dashoffset 1.4s cubic-bezier(.22,1,.36,1)}
+.wl-nm{margin:calc(54 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));display:flex;flex-wrap:wrap;align-items:center}
+.wl-b{display:inline-flex;align-items:center;background:none;border:0;padding:0;margin:0;cursor:pointer;color:rgba(255,255,255,.62);
+      font:inherit;transition:color .35s cubic-bezier(.22,1,.36,1)}
+.wl-b + .wl-b::before{content:"";flex:none;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));
+                      background:#96A8BF;margin:0 calc(14 * var(--u))}
+.wl-b.on{color:#FFFFFF}
+html body.inr .wl-un-p{margin:calc(60 * var(--u)) 0 0 calc(421 * var(--u))}
+/* 06 the five steps */
+html body.inr .wl-st-l{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
+.wl-s-g{margin:calc(90 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.wl-s-r{display:grid;grid-template-columns:calc(120 * var(--u)) calc(420 * var(--u)) minmax(0, 1fr);column-gap:calc(50 * var(--u));
+        align-items:start;border-top:1px solid rgba(255,255,255,.18);padding:calc(36 * var(--u)) 0}
+html body.inr .wl-s-r .n{color:rgba(255,255,255,.45);padding-top:.35em}
+html body.inr .wl-s-r .h{color:#FFFFFF}
+html body.inr .wl-s-t p{margin:0;color:#EBEBEB}
+html body.inr .wl-s-t p + p{margin-top:calc(16 * var(--u))}
+/* 07 the home spa, as a row of rooms */
+html body.inr .wl-sp-h{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u));color:#FFFFFF}
+html body.inr .wl-sp-l{margin:calc(40 * var(--u)) 0 0 calc(421 * var(--u))}
+.wl-sp-g{margin:calc(80 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));display:grid;
+         grid-template-columns:repeat(3, minmax(0, 1fr));row-gap:calc(44 * var(--u))}
+.wl-sp-c{padding:calc(26 * var(--u)) calc(40 * var(--u));border-left:1px solid rgba(255,255,255,.22)}
+html body.inr .wl-sp-c p{margin:0;color:#EBEBEB}
+html body.inr .wl-sp-p{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
+@media (max-aspect-ratio: 1/1){
+  html body.inr .wl-un-l, html body.inr .wl-un-p, html body.inr .wl-st-l, html body.inr .wl-sp-h, html body.inr .wl-sp-l,
+  html body.inr .wl-sp-p{margin:24px var(--m, 20px) 0;width:auto}
+  .wl-g{margin:26px var(--m, 20px) 0} .wl-nm{margin:22px var(--m, 20px) 0}
+  .wl-s-g, .wl-sp-g{margin:26px var(--m, 20px) 0}
+  .wl-s-r{display:block;padding:18px 0}
+  html body.inr .wl-s-r .h{margin-top:8px} .wl-s-t{margin-top:12px;width:auto}
+  .wl-sp-g{display:block} .wl-sp-c{padding:14px 0;border-left:0;border-top:1px solid rgba(255,255,255,.22)}
+}

@@ -979,3 +979,52 @@ def cu_steps(kick, h1, stages):
     return ('<section class="bk cu-st" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <div class="cu-st-g">%s</div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), rs)
+
+# ================================================================== CI WELLNESS — the invisible (17.11.2026)
+# «The environments around us influence daily routines in ways both visible and invisible… Controls can disappear. Technology can integrate.
+# Infrastructure can remain behind the architecture.» So the page's device is a room that LOOKS like a room until you ask it a question: the
+# client's own nine — light, air, water, sleep, recovery, acoustics, temperature, movement, daily routines — are drawn over it in our own
+# hairlines, one at a time, and the room goes back to being a room the moment you let go.
+WL_PATHS = [
+    ('M 120 40 L 620 880 M 320 30 L 980 820 M 40 200 L 420 900',                                    # light, from the window across the floor
+     'M 30 170 C 430 60, 980 270, 1570 120',                                                        # air, along the ceiling
+     'M 700 250 C 688 400, 716 520, 702 640 M 430 690 C 600 772, 860 772, 1010 690',                # water, falling and gathering
+     'M 290 770 C 520 630, 1090 630, 1320 770',                                                     # sleep, the quiet field
+     'M 1190 470 m -150 0 a 150 150 0 1 0 300 0 a 150 150 0 1 0 -300 0',                            # recovery, a circle that closes
+     'M 1370 210 A 110 110 0 0 1 1370 390 M 1370 140 A 180 180 0 0 1 1370 460 M 1370 70 A 250 250 0 0 1 1370 530',   # acoustics
+     'M 40 620 C 220 556, 400 684, 580 620 S 940 556, 1120 620 S 1480 684, 1570 620',               # temperature
+     'M 60 870 C 480 806, 1000 826, 1560 740',                                                      # movement, across the floor
+     'M 300 790 C 420 420, 700 300, 900 330 C 1180 370, 1300 560, 1240 760'),                       # daily routines, the loop of a day
+][0]
+def wl_unseen(kick, h1, lead, names, img, ps):
+    """03 — the page's instrument. The room is a room; the pointer on one of the client's nine draws it over the room in a single stroke, and
+    lets it go again. Nothing is labelled on the photograph and nothing is faked as a technical plan: these are the qualities of a home, drawn."""
+    g = ''.join('<g data-i="%d"><path d="%s"/></g>' % (i, d) for i, d in enumerate(WL_PATHS))
+    nm = ''.join('<button class="wl-b lab3" data-i="%d" type="button">%s</button>' % (i, esc(n)) for i, n in enumerate(names))
+    return ('<section class="bk wl-un" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t34 rv wl-un-l">%s</p>\n'
+            '  <div class="wl-g rv" data-wl>\n    <img src="%s" alt="" loading="lazy">\n'
+            '    <svg class="wl-sv" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">%s</svg>\n  </div>\n'
+            '  <div class="wl-nm rv">%s</div>\n%s</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), img, g, nm,
+                ''.join('  <p class="t20 rv wl-un-p" style="--w:475">%s</p>\n' % esc(nop(x)) for x in ps))
+def wl_steps(kick, h1, lead, rows):
+    """06 — the five steps of the integrated process, read straight down: the step in full ink, what it means beside it, the number quiet.
+    One shape five times, so the eye learns it once."""
+    rs = ''
+    for i, (nm, body) in enumerate(rows):
+        rs += ('<div class="wl-s-r rv"><p class="lab3 n">%02d</p><p class="t34 h">%s</p>'
+               '<div class="wl-s-t" style="--w:475">%s</div></div>') % (
+                   i + 1, esc(nop(nm)), ''.join('<p class="t20">%s</p>' % esc(nop(x)) for x in body))
+    return ('<section class="bk wl-st" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t34 rv wl-st-l">%s</p>\n  <div class="wl-s-g">%s</div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), rs)
+def wl_spa(kick, h1, sub, lead, parts, ps):
+    """07 — the home spa: their own «Steam. Sauna. Cold therapy. Hydrotherapy. Meditation. Movement. Rest. Lighting. Sound.» set as one row of
+    rooms on the page's own rules, because that sentence IS a plan of a room and not a paragraph"""
+    cs = ''.join('<div class="wl-sp-c rv"><p class="t34">%s</p></div>' % esc(x) for x in parts)
+    return ('<section class="bk wl-sp" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t34 rv wl-sp-h">%s</p>\n  <p class="t20 rv wl-sp-l" style="--w:475">%s</p>\n'
+            '  <div class="wl-sp-g">%s</div>\n%s</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(sub)), esc(nop(lead)), cs,
+                ''.join('  <p class="t34 rv wl-sp-p">%s</p>\n' % esc(nop(x)) for x in ps))

@@ -567,6 +567,27 @@
     });
   })();
 
+  /* ================================================================== CI Wellness: the invisible, drawn
+     The room is a room. The pointer on one of the client's nine draws that one over it in a single stroke and lets it go again — which is the
+     page's argument: «Controls can disappear. Infrastructure can remain behind the architecture.» */
+  (function(){
+    var gs = qsa('[data-wl]'); if (!gs.length) return;
+    gs.forEach(function(g){
+      var sec = g.parentNode, bs = qsa('.wl-b', sec), ls = qsa('.wl-sv g', g);
+      function set(i){
+        bs.forEach(function(b, k){ b.classList.toggle('on', k === i); });
+        ls.forEach(function(l, k){ l.classList.toggle('on', k === i); });
+        if (i < 0) g.removeAttribute('data-on'); else g.setAttribute('data-on', '1');
+      }
+      bs.forEach(function(b, i){
+        b.addEventListener('pointerenter', function(){ set(i); });
+        b.addEventListener('focus', function(){ set(i); });
+        b.addEventListener('click', function(){ set(i); });
+      });
+      qs('.wl-nm', sec).addEventListener('pointerleave', function(){ set(-1); });
+    });
+  })();
+
   /* ================================================================== CI Curated's composition: a residence, in its parts
      The pointer on a fragment names it and brings it forward; the rest step back. Nothing moves out of place — the composition holds, which
      is the page's whole argument. */

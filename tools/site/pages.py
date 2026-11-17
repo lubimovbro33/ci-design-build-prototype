@@ -52,6 +52,59 @@ SEG_CORE = open(os.path.join(HERE, 'seg_core.txt')).read().strip()
 def short_of(sec):
     """the one-line paragraphs of a section, in order"""
     return [x[1][0] for x in sec['items'] if x[0] == 'p' and len(x[1]) == 1]
+def wellness_page():
+    """CI Wellness — the invisible. 17.11: «Controls can disappear. Technology can integrate. Infrastructure can remain behind the
+    architecture.» The cover comes out of the dark into the light (their first quality is light); the third screen is the instrument — the
+    client's own nine drawn over one of their rooms in our hairlines, one stroke at a time, and gone again the moment you let go."""
+    S = [join_lists(dots_fix(x)) for x in P['wellness']]; pg = Pg()
+    h1, ps, a = hero(S[0])
+    pg.add(sc_dawn(label(S[0]), h1, A + 'ch/1450-25a.webp'), 'Wellness', 'top')
+    # 02 the thought: their two-line lead, the second line in the blue
+    lead0 = get(S[0], 'lead')[0][1]
+    thought = esc(nop(lead0[0])) + '<br><span class="cb">' + esc(nop(lead0[1])) + '</span>'
+    pg.add(tk_lead(thought, ' '.join(ps[1]) + ' ' + ' '.join(ps[2]), btn(a[0], 'contact.html')), 'Idea')
+    # 03 the instrument: the nine, drawn over a room
+    sec = S[2]; wp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    nine = [it[1] for it in sec['items'] if it[0] == 'dots'][0]      # their own nine, as the copy gives them
+    assert len(nine) == 9, nine
+    st2 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(wl_unseen(label(sec), h_of(sec), wp[0] + ' ' + wp[1], nine, A + 'us/1511-06a.webp', wp[2:]), 'The Nine')
+    pg.add(tk_calm(None, None, None, [st2], ''), 'Luxury')
+    # 04 what CI Wellness is
+    sec = S[1]; ip = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    pg.add(tk_calm(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], ip, ''), 'What It Is')
+    # 05 the one list of the page
+    sec = S[3]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
+    cl = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows).replace('</section>',
+           '  <p class="t20 rv tk-r-c" style="--w:475">%s</p>\n</section>' % esc(nop(cl[0]))), 'Fit')
+    # 06 the five steps, each with what it means
+    sec = S[4]
+    rows = [(r[1] if isinstance(r[1], str) else ' '.join(r[1]), [' '.join(x) for x in r[2]]) for r in get(sec, 'row')]
+    lead4 = get(sec, 'lead')[0][1]
+    pg.add(wl_steps(label(sec), h_of(sec), ' '.join(lead4), rows), 'Process')
+    # 07 one photograph, and the room that is part of the routine
+    sec = S[6]; fp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    h3 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h3']
+    pg.add(tk_plate(A + 'us/1511-04a.webp', fp[0] + ' ' + fp[1]), 'Right Solutions')
+    spa = [x.strip(' .') for x in fp[3].split('.') if x.strip(' .')]        # Steam. Sauna. Cold therapy. …
+    pg.add(wl_spa(label(sec), h_of(sec), h3[0], fp[2], spa, [fp[4]]), 'Home Spa')
+    # 08 technology that does not announce itself
+    sec = S[7]; tp = [it[1] for it in sec['items'] if it[0] == 'p']
+    tflat = [' '.join(x) for x in tp]
+    pg.add(cu_layers(label(sec), h_of(sec), [get(sec, 'lead')[0][1][0]] + tflat[1:5], tp[0], tflat[5]).replace('cu-ly', 'cu-ly wl-ly'), 'Design')
+    # 09 what it touches, and the outcome
+    sec = S[8]
+    touch = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
+    op = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    pg.add(tk_index(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], touch).replace('tk-ix', 'tk-ix wl-ix').replace(
+        '</section>', '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n</section>' % esc(nop(' '.join(op))), 1), 'Connected')
+    sec = S[9]; o9 = [it[1] for it in sec['items'] if it[0] == 'p']
+    st9 = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
+    pg.add(cu_layers(label(sec), h_of(sec), [' '.join(o9[1])], o9[0], ' '.join(st9)).replace('cu-ly', 'cu-ly wl-oc'), 'Outcome')
+    final_cta(pg, S[10], A + 'us/1511-11a.webp')
+    emit('ci-wellness.html', 'CI Wellness', pg, A + 'ch/1450-25a.webp')
+
 def curated_page():
     """CI Curated — the layers. 17.11: their own words give the page its device («the layers that make a residence feel complete», «Each layer
     belongs to the same story»), so the page COMPOSES: the cover's photograph comes together out of its own pieces, and the third screen is a
@@ -228,8 +281,6 @@ def turnkey_page():
     final_cta(pg, S[9], A + 'ch/1450-29a.webp')
     emit('ci-turnkey.html', 'CI Turnkey', pg, A + 'ch/1450-32.webp')
 
-solution('wellness', 'ci-wellness.html', 'CI Wellness', lambda k, h, ps: sc_dawn(k, h, A + 'ch/1450-25a.webp'),
-         A + 'us/1511-01a.webp', 'Why Wellness Matters to CI', A + 'us/1511-06a.webp', None, pre=A + 'ch/1450-25a.webp')
 
 # ================================================================== solutions (overview): the line becomes each of the four in turn
 def solutions():
@@ -674,6 +725,7 @@ def faq():
     pg.add(cta('Your Next Chapter Starts With a Conversation', [], ('Begin Your Better Life', 'contact.html'), A + 'ch/1450-29a.webp'), 'Contact')
     emit('faq.html', 'FAQ', pg)
     return len(items)
+wellness_page()
 curated_page()
 core_page()
 turnkey_page()   # called here: it uses the project cards defined with the Portfolio page
