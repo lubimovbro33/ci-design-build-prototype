@@ -595,12 +595,16 @@ def tk_index(kick, h1, note, items):
 def tk_process(kick, h1, stages):
     """10 — the process after her reference (17.11.2026 22:40, santalarch.com/#process: «зліва маленький заголовок, справа ось така от
     стрічка… нажимаємо на плюсик, у нас випадає опис. Дотримуйся нашої стилістики»). Measured at 1440: the ribbon starts at the middle
-    of the screen (720) and runs to the field (1424); a closed row is 83 high — the stage's name on the left, a plus 36 at the far
-    right; the open row drops its sentence under the name, 360 wide. In our frame: the ribbon 960 → 1870, the name in the 34, the
+    of the screen (720) and runs to the field (1424); a closed row is 83 high — the name in a narrow column of its OWN (198 of the
+    704), so it breaks as a name and the rest of the row is air, and the mark stands at the far right on the FIRST line; the open row
+    drops its sentence under the name, 360 wide. In our frame: the ribbon 960 → 1870, the name in the 34 in sentence case over 360,
+    every row the height of two lines so the ribbon is even, the sentence on our measure of 475, and the heading keeps the CAPS every
+    heading of this site has, so it never reads as one list with the names (17.11 22:50: «ти бачиш, як зроблено в них і що зробив ти?»).
     sentence on the site's own measure of 475, and the left column carries only the label and the heading in the 34 — the smallest
     heading of the page, over its densest block.
     The device is the site's OWN, not a new one: the FAQ's accordion (`.qa` in css/inner.css, the click in js/inner.js) — a hairline
-    over every row, the plus whose upright bar turns level as the row opens, the panel growing from 0fr to 1fr in .6 s, one row open
+    over every row, the mark of the CARDS (`.df2-pm`: a circle of our hairline with two bars in it — 22:50 «подивися, як на карточках
+    оформлені плюсики»), whose upright bar turns level as the row opens, the panel growing from 0fr to 1fr in .6 s, one row open
     at a time. The first stage stands open, as on the FAQ and in her reference. (Her note of 19:46 — «кнопочка з плюсиком, куди вона
     буде переходити? нам її не потрібно» — was about a mark that led nowhere; here the plus is the control that opens the row.)"""
     rs = ''
@@ -609,7 +613,7 @@ def tk_process(kick, h1, stages):
                '<span class="pl" aria-hidden="true"></span></button><div class="ab"><div><div class="ain"><div><p>%s</p></div></div></div></div></div>') % (
                    ' open' if i == 0 else '', 'true' if i == 0 else 'false', esc(nm), esc(nop(tx)))
     return ('<section class="bk tk-ps" id="@ID@">\n  <div class="tk-ps-g">\n'
-            '    <div class="tk-ps-h rv"><p class="lab3">%s</p><h2 class="t34">%s</h2></div>\n'
+            '    <div class="tk-ps-h rv"><p class="lab3">%s</p><h2 class="t34 up">%s</h2></div>\n'
             '    <div class="rws tk-ps-l">%s</div>\n  </div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 22)), rs)
 def sc_track(kick, h1, parts, statement, imgs):
