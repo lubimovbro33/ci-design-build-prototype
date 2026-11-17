@@ -1241,6 +1241,37 @@
     });
   })();
 
+  /* ================================================================== the «CI Difference» grid on an inner page (17.11.2026 19:34)
+     The home page's block, by its own rules (js/chapters.js, 05 DIFFERENCE): one cell is open as a white card at a time; the pointer or a
+     tap opens another; left alone, the block walks on by itself every 5.2 s while it is in view. Its entrance is the home page's as
+     well — the one number --t, 0 → 1, on which the rules draw in, the names come into focus, the panel and the open card unroll — only
+     here it is not pinned to the scroll: it plays once, when the block has come into view. */
+  (function(){
+    qsa('.df2[data-df]').forEach(function(sec){
+      var st = qs('.df2-body', sec), cells = qsa('.df2-cell', sec); if (!st || !cells.length) return;
+      var cur = 0, inView = false, hover = false, timer = null, played = false;
+      cells.forEach(function(c, i){ if (c.classList.contains('on')) cur = i; });
+      function show(i){ cur = i; cells.forEach(function(c, k){ c.classList.toggle('on', k === i); c.setAttribute('aria-expanded', k === i ? 'true' : 'false'); }); plan(); }
+      function plan(){ clearTimeout(timer); if (inView && !hover && !reduced && sec.classList.contains('ready')) timer = setTimeout(function(){ show((cur + 1) % cells.length); }, 5200); }
+      cells.forEach(function(c, i){
+        c.addEventListener('click', function(){ show(i); });
+        c.addEventListener('pointerenter', function(e){ if (e.pointerType === 'mouse'){ hover = true; if (i !== cur) show(i); else plan(); } });
+        c.addEventListener('pointerleave', function(){ hover = false; plan(); });
+      });
+      function enter(){
+        if (played) return; played = true;
+        if (reduced){ sec.style.setProperty('--t', 1); sec.classList.add('ready'); plan(); return; }
+        var t0 = null;
+        (function step(now){ if (t0 === null) t0 = now; var k = Math.min(1, (now - t0) / 1900);
+          sec.style.setProperty('--t', (1 - Math.pow(1 - k, 2.2)).toFixed(4));
+          if (k < 1) requestAnimationFrame(step); else { sec.classList.add('ready'); plan(); } })(performance.now());
+      }
+      if ('IntersectionObserver' in window){
+        new IntersectionObserver(function(es){ inView = es[0].isIntersecting; if (inView) enter(); plan(); }, {threshold: .32}).observe(st);
+      } else { inView = true; enter(); }
+    });
+  })();
+
   /* ================================================================== the gallery: «Explore the Work» (16.11, her reference htarchitecte.com/en)
      One screen; the photographs stand along its foot, all of one height, each its own width. The scroll walks the row sideways, one pixel of the
      row to one pixel of the page, and the row follows with a lag — the inertia. The filters rebuild it. */

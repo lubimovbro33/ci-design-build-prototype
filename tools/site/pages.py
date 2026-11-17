@@ -251,7 +251,12 @@ def turnkey_page():
         ('Eight', 'stages', 'One', 'journey', 0, det[3])]), 'Arithmetic')
     # 04 the page's one list
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
-    pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows, A + 'ch/1450-17.webp'), 'Fit')
+    # the name of each condition in the grid is a run of its own sentence's words (tk_fit asserts it); which run is our choice, hers to change
+    NM = [['A Significant', 'Residential', 'Transformation'], ['One Team', 'Responsible'], ['Limited Time'], ['A Highly', 'Personalized', 'Residence'],
+          ['Considered', 'Together'], ['A Single Point', 'of Accountability'], ['The Home', 'Finished']]
+    assert len(NM) == len(rows), (len(NM), len(rows))
+    pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'ch/1450-01a.webp',
+                  ['For Clients Who', 'Want the Whole', 'Experience', 'Managed']), 'Fit')
     # 05 the horizon: above the line what stays yours, below it everything we carry
     sec = S[5]; p5 = [it[1] for it in sec['items'] if it[0] == 'p']
     one5 = [x[0] for x in p5 if len(x) == 1]; whens = max(p5, key=len)

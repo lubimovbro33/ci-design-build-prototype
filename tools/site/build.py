@@ -520,17 +520,33 @@ def tk_math(kick, h1, lead, rows):
     return ('<section class="bk tk-m" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <div class="tk-m-g rv" data-math>%s\n    <div class="tk-m-dd">%s</div>\n  </div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), rs, ds)
-def tk_fit(kick, h1, lead, rows, img):
-    """04 — «Це ж можна, можливо, якимись акуратними карточками, так, як у нас на головній сторінці. На фотографії» (17.11 15:15). The seven
-    conditions stand as a field of cards over one photograph of the client's own work: the lead takes the first cell, the seven are numbered,
-    and the one in hand fills white — the same move the home page makes when a solution is chosen. Nothing is hidden, so the screen is never
-    a heading waiting for text."""
-    cs = '<div class="tk-fc-l rv"><p class="t34">%s</p></div>' % esc(nop(lead))
-    for i, r in enumerate(rows):
-        cs += ('<article class="tk-fc rv" tabindex="0"><p class="lab3 n">%02d</p><p class="t20 t">%s</p></article>') % (i + 1, esc(nop(r)))
-    return ('<section class="bk tk-fit" id="@ID@">\n  <div class="tk-fit-ph"><img src="%s" alt="" loading="lazy"></div>\n'
-            '  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n  <div class="tk-fit-g">%s</div>\n</section>') % (
-                img, esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), cs)
+def tk_fit(kick, h1, lead, rows, img, title_lines):
+    """04 — the home page's «CI Difference», given to this block on her word (17.11 19:34: «оцей наш нижній блок переробити за принципом
+    того, як зроблений дизайн верхнього блоку. А фотографію використай таку, яку ми ще не використовували»). The photograph is ruled
+    into the same grid — four columns, a band under the header and two rows of 480 — a condition stands in each cell as a short centred
+    name with the round plus at its corner, and the one in hand opens as a white card: its number, its name, and the client's sentence
+    at the foot. The white panel in the lower left corner carries the block's label, its title and the lead. The markup and the classes
+    are the home page's own (`.df2*`, css/chapters.css + css/r3.css); only what differs is in css/inner.css (`.tk-df`): seven cells and
+    a panel one column wide, since there are seven conditions and not six.
+    `rows` = [(the name's lines, the client's sentence)]: a name is a run of the sentence's OWN words, never anything written by us —
+    the assert keeps it so."""
+    cells = ''
+    for i, (nm, sent) in enumerate(rows):
+        assert nop(' '.join(nm)).lower() in nop(sent).lower(), (nm, sent)
+        n = '<br>'.join(esc(x) for x in nm)
+        cells += ('<button style="--k:%d" class="df2-cell c%d%s" type="button" data-i="%d" aria-expanded="%s" aria-label="%s">'
+                  '<span class="df2-nm">%s</span><span class="df2-card"><span class="df2-cn">%02d</span><span class="df2-ct">%s</span>'
+                  '<span class="df2-cd">%s</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>') % (
+                      i, i + 1, ' on' if i == 3 else '', i, 'true' if i == 3 else 'false', esc(nop(sent)), n, i + 1, n, esc(nop(sent)))
+    assert nop(' '.join(title_lines)).lower() == nop(h1).lower(), (title_lines, h1)
+    return ('<section class="df2 tk-df" id="@ID@" data-df aria-label="%s">\n'
+            '  <div class="df2-bgw" aria-hidden="true"><div class="df2-bgs"><div class="df2-bg on"><img src="%s" alt="" loading="lazy" decoding="async"></div></div></div>\n'
+            '  <div class="df2-body">\n'
+            '    <i class="df2-v a" aria-hidden="true"></i><i class="df2-v b" aria-hidden="true"></i><i class="df2-v c" aria-hidden="true"></i>'
+            '<i class="df2-h a" aria-hidden="true"></i><i class="df2-h b" aria-hidden="true"></i>\n'
+            '    <div class="df2-cells">%s</div>\n'
+            '    <div class="df2-panel"><p class="tk-df-k">%s</p><h2 class="df2-big">%s</h2><p class="df2-s1"><b>%s</b></p></div>\n'
+            '  </div>\n</section>') % (esc(kick), img, cells, esc(kick), '<br>'.join(esc(x) for x in title_lines), esc(nop(lead)))
 def tk_rows(kick, h1, lead, rows, num=True, cls=''):
     """the page's one list (04), and the table of conditions (08): the same row — a number or the first half on the left, the sentence on the
     right, a hairline over each. One shape, read straight down."""
