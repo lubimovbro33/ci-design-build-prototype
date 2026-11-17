@@ -657,8 +657,10 @@ html body.inr .tk-ld-t{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u))}
 .tk-ld-b{margin:calc(56 * var(--u)) 0 0 calc(421 * var(--u))}
 /* 03 the four counts */
 html body.inr .tk-m-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
-.tk-m-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
-.tk-m-r{display:grid;grid-template-columns:calc(360 * var(--u)) calc(190 * var(--u)) minmax(0, 1fr);grid-template-rows:auto auto;
+.tk-m-g{position:relative;margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-m-cv{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
+.tk-m-g.cv-on .tk-m-r i{opacity:0}
+.tk-m-r{display:grid;grid-template-columns:calc(360 * var(--u)) calc(640 * var(--u)) minmax(0, 1fr);grid-template-rows:auto auto;min-height:calc(152 * var(--u));align-content:center;
         column-gap:calc(50 * var(--u));row-gap:calc(16 * var(--u));padding:calc(44 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18);
         outline:0;transition:opacity .45s cubic-bezier(.22,1,.36,1)}
 .tk-m-g[data-on] .tk-m-r{opacity:.42}
@@ -719,8 +721,19 @@ html body.inr .tk-hz-a{margin:calc(150 * var(--u)) 0 calc(140 * var(--u)) calc(4
 .tk-hz-l::before, .tk-hz-l::after{content:"";position:absolute;top:50%;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));
   margin-top:calc(max(5px, 8 * var(--u)) / -2);background:#FFFFFF}
 .tk-hz-l::before{left:calc(max(5px, 8 * var(--u)) / -2)} .tk-hz-l::after{right:calc(max(5px, 8 * var(--u)) / -2)}
-html body.inr .tk-hz-n{margin:calc(140 * var(--u)) 0 0 calc(421 * var(--u));color:rgba(255,255,255,.5)}
-html body.inr .tk-hz-f{margin:calc(44 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));color:#EBEBEB}
+html body.inr .tk-hz-n{margin:calc(34 * var(--u)) calc(50 * var(--u)) 0 0;text-align:right;color:rgba(255,255,255,.5)}
+/* the ecosystem, let down from the line on two cables (17.11.2026 15:15) */
+.tk-hz-g{position:relative;display:grid;grid-template-columns:repeat(2, calc(600 * var(--u)));justify-content:space-between;gap:calc(130 * var(--u));
+  margin:calc(46 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-hz-c{position:relative;padding-left:calc(38 * var(--u))}
+.tk-hz-c > i{position:absolute;left:0;top:calc(-80 * var(--u));bottom:calc(26 * var(--u));width:1px;background:rgba(255,255,255,.3);
+  transform-origin:top;transform:scaleY(0);transition:transform 1.5s cubic-bezier(.16,1,.3,1) .12s}
+.tk-hz-c.in > i{transform:scaleY(1)}
+.tk-hz-i{position:relative;padding:calc(10 * var(--u)) 0;transition-delay:calc(var(--k, 0) * 55ms + 240ms)}
+.tk-hz-i > b{position:absolute;left:calc(-38 * var(--u) - 3.5 * var(--u));top:calc(50% - 3.5 * var(--u));
+  width:max(5px, calc(7 * var(--u)));height:max(5px, calc(7 * var(--u)));background:rgba(255,255,255,.55);transition:background .4s}
+html body.inr .tk-hz-i p{margin:0;color:#EBEBEB;transition:color .4s}
+.tk-hz-i:hover p{color:#FFFFFF} .tk-hz-i:hover > b{background:#FFFFFF}
 .tk-hz-f .sqr{row-gap:.5em}
 /* 10 the eight stages: each on its own hairline, and the hairline grows from the first to the last */
 .tk-s-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
@@ -751,7 +764,9 @@ html body.inr .tk-s-r .t{color:#EBEBEB;padding-top:.55em}
   .tk-s-r{display:block;padding:18px 0 22px} .tk-s-r i{width:100%}
   html body.inr .tk-s-r .h{padding-top:0;margin-top:8px} html body.inr .tk-s-r .t{padding-top:0;margin-top:10px;width:auto}
   html body.inr .tk-hz-a{margin:28px var(--m, 20px);width:auto}
-  html body.inr .tk-hz-n, html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto}
+  html body.inr .tk-hz-n, html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;text-align:left}
+  .tk-hz-g{grid-template-columns:1fr;gap:18px;margin:22px var(--m, 20px) 0}
+  .tk-hz-c > i{top:0}
   .tk-hz{padding:72px 0}
   .tk-pl-b{height:56vh} html body.inr .tk-pl-t{left:var(--m, 20px);right:var(--m, 20px);width:auto;bottom:28px}
   html body.inr .tk-x .bk-h h2{font-size:clamp(26px, 8vw, 40px)!important}
@@ -1006,3 +1021,34 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
 .glc{position:absolute;left:0;top:0;width:100%;height:100%;display:block;z-index:1}
 .gl-on > img{visibility:hidden}
 .co-sm-g .co-sm-ln{z-index:2}
+
+/* 04 the seven conditions as a field of cards over one photograph (17.11.2026 15:15) */
+.tk-fit{position:relative;overflow:hidden;padding:calc(126 * var(--u)) 0 calc(150 * var(--u))}
+.tk-fit-ph{position:absolute;left:0;top:0;right:0;bottom:0;overflow:hidden}
+.tk-fit-ph img{width:100%;height:100%;object-fit:cover;object-position:50% 50%}
+.tk-fit-ph:after{content:'';position:absolute;left:0;top:0;right:0;bottom:0;
+  background:linear-gradient(180deg,#000000 0%,rgba(0,0,0,.08) 16%,rgba(0,0,0,.08) 74%,#000000 100%),
+             linear-gradient(100deg,rgba(0,0,0,.90) 30%,rgba(0,0,0,.78) 62%,rgba(0,0,0,.66) 100%);
+  transition:opacity .7s cubic-bezier(.22,1,.36,1)}
+.tk-fit:has(.tk-fc:hover) .tk-fit-ph:after{opacity:.88}
+html body.inr .tk-fit .bk-h{position:relative}
+.tk-fit-g{position:relative;display:grid;grid-template-columns:repeat(3, 1fr);gap:calc(36 * var(--u));
+  margin:calc(78 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-fc-l{display:flex;align-items:flex-end;padding:0 calc(40 * var(--u)) calc(30 * var(--u)) 0}
+html body.inr .tk-fc-l p{margin:0}
+.tk-fc{position:relative;display:flex;flex-direction:column;justify-content:space-between;
+  min-height:calc(206 * var(--u));padding:calc(26 * var(--u)) calc(28 * var(--u)) calc(30 * var(--u));
+  border:1px solid rgba(255,255,255,.26);background:rgba(0,0,0,.45);outline:none;
+  transition:background .55s cubic-bezier(.22,1,.36,1),border-color .55s cubic-bezier(.22,1,.36,1)}
+.tk-fc:hover, .tk-fc:focus-visible{background:#FFFFFF;border-color:#FFFFFF}
+html body.inr .tk-fc .n{margin:0;color:rgba(255,255,255,.5);transition:color .55s cubic-bezier(.22,1,.36,1)}
+html body.inr .tk-fc .t{margin:calc(26 * var(--u)) 0 0;color:#FFFFFF;transition:color .55s cubic-bezier(.22,1,.36,1)}
+.tk-fc:hover .n, .tk-fc:focus-visible .n{color:rgba(0,0,0,.45)}
+.tk-fc:hover .t, .tk-fc:focus-visible .t{color:#000000}
+@media (max-width: 860px){
+  .tk-fit{padding:72px 0 80px}
+  .tk-fit-g{grid-template-columns:1fr;gap:12px;margin:26px var(--m, 20px) 0}
+  .tk-fc{min-height:0;padding:18px 18px 20px} .tk-fc-l{padding:0 0 6px}
+  html body.inr .tk-fc .t{margin:14px 0 0}
+  .tk-m-cv{display:none}
+}

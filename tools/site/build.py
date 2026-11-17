@@ -463,28 +463,31 @@ def sc_door(kick, h1, img):
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
 def tk_cover(kick, h1, img):
-    """01 — the cover, and the page's metaphor in one move. It opens on the client's own residence, full bleed. As the page is scrolled the
-    world RETREATS below one hairline: the photograph's top edge comes down to the line while the picture itself rises inside it, until all
-    that is left of the project is a band under the horizon and everything above it is clear. That line then runs the whole page — above it
-    the client's life, below it the whole of the work. (17.11 12:04: «Перший екран — це фіаско» — the wall of small words is gone; the first
-    thing on the screen is the work itself, at the size it was photographed for.)"""
+    """01 — the first night. The page opens on the plan of the residence, drawn in our own hand in the dark: the first idea. The scroll lights
+    it room by room, the keys appear on the table in the foyer, and when the last room is lit the drawing gives way to the room itself —
+    their own «From First Idea to the First Night Home», and nothing on the screen slides (17.11 15:15)."""
     hb = brk(h1, 18); ln = hb.count('<br>') + 1
     return '\n'.join([
-        '<section class="film tk-cv" data-fig="glcv" data-gl="retreat" data-br=".70" data-len="1.25" id="@ID@">', '  <div class="stg">',
-        '    <div class="tk-cv-ph" data-s="ci:0,0,0,0&gt;56,0,0,0@.08-.92">',
-        '      <img src="%s" alt="" data-s="ty:0&gt;260@.08-.92; sc:1.04&gt;1@0-1">' % img, '    </div>',
+        '<section class="film tk-cv" data-fig="night" data-len="1.5" id="@ID@">', '  <div class="stg">',
+        '    <div class="tk-cv-ph"><img src="%s" alt=""></div>' % img,
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
         '      <p class="lab3 rv tk-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
         '      <h1 class="t111 rv tk-cv-h" style="--ln:%d">%s</h1>' % (ln, hb),
         '    </div>', '  </div>', '</section>'])
-def tk_horizon(kick, h1, above, note, items):
-    """05 — the page's metaphor as one screen: the same hairline the cover's photograph retreated below, come back at the middle of the page
-    with its two marks at the fields. ABOVE it, large, what stays the client's, in their own words; BELOW it, everything CI carries, their
-    whole list of services as one field. The quiet above the line, the weight below it."""
+def tk_horizon(kick, h1, above, note, groups):
+    """05 — the page's metaphor as one screen, and the whole ecosystem hanging from it (17.11.2026 15:15). ABOVE the line, large, what stays
+    the client's, in their own words. The line itself, with its two marks at the fields. And BELOW it the client's own two groups of work, not
+    as a wall of bullets but as two cables let down from that line, each named thing a square on its cable: everything CI carries, held by the
+    one line the client never has to touch. The cables draw downward as the screen arrives, one thing after another."""
+    cs = ''
+    for gi, g in enumerate(groups):
+        it = ''.join('<div class="tk-hz-i rv" style="--k:%d"><b aria-hidden="true"></b><p class="t20">%s</p></div>' % (i, esc(nop(x)))
+                     for i, x in enumerate(g))
+        cs += '<div class="tk-hz-c rv" style="--k:%d"><i aria-hidden="true"></i>%s</div>' % (gi * 3, it)
     return ('<section class="tk-hz" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t60s rv tk-hz-a">%s</p>\n  <div class="tk-hz-l rv" aria-hidden="true"></div>\n'
-            '  <p class="lab3 rv tk-hz-n">%s</p>\n  <p class="t34 rv tk-hz-f">%s</p>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(above)), esc(nop(note)), sqr(items))
+            '  <p class="lab3 rv tk-hz-n">%s</p>\n  <div class="tk-hz-g">%s</div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(above)), esc(nop(note)), cs)
 def tk_lead(thought, para_, button):
     """02 — the thought of the page, and nothing else on the screen. Everything on the text line: the sentence, the paragraph under it, the button
     under that. (17.11 07:57: «все розкидано, неможливо це читати» — from here on every block of this page begins at the same left edge.)"""
@@ -504,6 +507,17 @@ def tk_math(kick, h1, lead, rows):
     return ('<section class="bk tk-m" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <div class="tk-m-g rv" data-math>%s\n    <div class="tk-m-dd">%s</div>\n  </div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), rs, ds)
+def tk_fit(kick, h1, lead, rows, img):
+    """04 — «Це ж можна, можливо, якимись акуратними карточками, так, як у нас на головній сторінці. На фотографії» (17.11 15:15). The seven
+    conditions stand as a field of cards over one photograph of the client's own work: the lead takes the first cell, the seven are numbered,
+    and the one in hand fills white — the same move the home page makes when a solution is chosen. Nothing is hidden, so the screen is never
+    a heading waiting for text."""
+    cs = '<div class="tk-fc-l rv"><p class="t34">%s</p></div>' % esc(nop(lead))
+    for i, r in enumerate(rows):
+        cs += ('<article class="tk-fc rv" tabindex="0"><p class="lab3 n">%02d</p><p class="t20 t">%s</p></article>') % (i + 1, esc(nop(r)))
+    return ('<section class="bk tk-fit" id="@ID@">\n  <div class="tk-fit-ph"><img src="%s" alt="" loading="lazy"></div>\n'
+            '  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n  <div class="tk-fit-g">%s</div>\n</section>') % (
+                img, esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), cs)
 def tk_rows(kick, h1, lead, rows, num=True, cls=''):
     """the page's one list (04), and the table of conditions (08): the same row — a number or the first half on the left, the sentence on the
     right, a hairline over each. One shape, read straight down."""

@@ -342,26 +342,18 @@
     }
     return {W: W, H: H, T: T, WIN: WIN, INT: INT, DRS: DRS, FUR: FUR, LAMP: LAMP, wins: wins, side: side};
   })();
-  function plan(f, q, t){
-    var N = f.n, i, A = [], WG = {pl: [1,1,1,1], fu: [1,0,1,1], lf: [1,0,0,1], li: [0,0,0,1]};
-    for (i = 0; i < N; i++){
-      var c = f.t0 + i * f.d, dd = Math.abs(q - c) / f.d, a = sm(0, 1, 1 - c01(dd / .62));
-      if ((i === 0 && q < c) || (i === N - 1 && q > c)) a = 1;
-      A[i] = a;
-    }
-    function al(w){ var m = 0, j; for (j = 0; j < N; j++) m = Math.max(m, A[j] * w[j]); return m; }
-    var base = sg(q, f.t0 - .38, f.t0 + .04);
-    if (base <= .002) return;
-    var P = PLN, S = 870 / P.W, OX = 1000, OY = 540 - P.H * S / 2;        /* the plan, in the right half of the frame */
-    function X(x){ return rx(OX + x * S); }
-    function Y(y){ return ry(OY + y * S); }
+  /* the house itself, drawn once and used by both pages: Solutions gives its layers to the four ways, CI Turnkey's cover lights it room by
+     room on the first night. X and Y are passed in, so the same plan can hug the right field on one page and stand in the middle on another. */
+  function planDraw(X, Y, o){
+    var P = PLN, i;
     function L(x1, y1, x2, y2){ g.beginPath(); g.moveTo(X(x1), Y(y1)); g.lineTo(X(x2), Y(y2)); g.stroke(); }
+    var UN = X(1) - X(0);
     function R(x, y, w, h, r){
       r = Math.min(r || 0, w / 2, h / 2);
       g.beginPath();
-      if (!r) g.rect(X(x), Y(y), X(x + w) - X(x), Y(y + h) - Y(y));
+      if (!r){ g.rect(X(x), Y(y), w * UN, h * UN); }
       else {
-        var rr = r * S * U / U * S ? r * (X(x + 1) - X(x)) : 0; rr = r * (X(1) - X(0));
+        var rr = r * UN;
         g.moveTo(X(x) + rr, Y(y));
         g.lineTo(X(x + w) - rr, Y(y)); g.quadraticCurveTo(X(x + w), Y(y), X(x + w), Y(y) + rr);
         g.lineTo(X(x + w), Y(y + h) - rr); g.quadraticCurveTo(X(x + w), Y(y + h), X(x + w) - rr, Y(y + h));
@@ -371,16 +363,14 @@
       }
       g.stroke();
     }
-    function C(x, y, r){ g.beginPath(); g.arc(X(x), Y(y), r * (X(1) - X(0)), 0, 6.2832); g.stroke(); }
-    var dp = sg(q, f.t0 - .34, f.t0 + .16), pl = base * al(WG.pl), fu = base * al(WG.fu), lf = base * al(WG.lf), li = base * al(WG.li);
-    /* the light first, under everything the hand drew */
-    if (li > .004){
-      var hr = 11.4 + 4.1 * Math.sin(t * .055), th = (hr - 6) / 12 * Math.PI, sx = -Math.cos(th), sy = -Math.sin(th);
-      var elev = Math.max(0, Math.sin(th)), LEN = (220 + 420 * (1 - elev));
-      g.save();
-      g.beginPath(); g.rect(X(P.T), Y(P.T), X(P.W - P.T) - X(P.T), Y(P.H - P.T) - Y(P.T)); g.clip();
+    function C(x, y, r){ g.beginPath(); g.arc(X(x), Y(y), r * UN, 0, 6.2832); g.stroke(); }
+    /* the sun, reaching in through every window it can see */
+    if (o.light > .004){
+      var th = (o.hour - 6) / 12 * Math.PI, sx = -Math.cos(th), sy = -Math.sin(th);
+      var elev = Math.max(0, Math.sin(th)), LEN = 220 + 420 * (1 - elev);
+      g.save(); g.beginPath(); g.rect(X(P.T), Y(P.T), (P.W - 2 * P.T) * UN, (P.H - 2 * P.T) * UN); g.clip();
       P.wins.forEach(function(w){
-        var kk = -(sx * w.n[0] + sy * w.n[1]), a = li * Math.max(0, kk) * (.55 + .45 * elev);
+        var kk = -(sx * w.n[0] + sy * w.n[1]), a = o.light * Math.max(0, kk) * (.55 + .45 * elev);
         if (a < .012) return;
         var mx = (w.a[0] + w.b[0]) / 2, my = (w.a[1] + w.b[1]) / 2;
         var gr = g.createLinearGradient(X(mx), Y(my), X(mx + sx * LEN), Y(my + sy * LEN));
@@ -394,25 +384,27 @@
       });
       g.restore();
     }
-    /* the evening lamps of a house that is lived in */
-    if (lf > .004){
-      P.LAMP.forEach(function(l){
-        var r = l[2] * (X(1) - X(0)), gr = g.createRadialGradient(X(l[0]), Y(l[1]), 0, X(l[0]), Y(l[1]), r);
-        gr.addColorStop(0, 'rgba(255,255,255,' + (lf * .12).toFixed(3) + ')'); gr.addColorStop(1, 'rgba(255,255,255,0)');
+    /* the lamps of the evening */
+    if (o.lamp > .004){
+      P.LAMP.forEach(function(l, k){
+        var a = o.lamp * (o.lampK ? o.lampK(k) : 1) * .16;
+        if (a < .004) return;
+        var r = l[2] * (o.lampR || 1) * UN, gr = g.createRadialGradient(X(l[0]), Y(l[1]), 0, X(l[0]), Y(l[1]), r);
+        gr.addColorStop(0, 'rgba(255,255,255,' + a.toFixed(3) + ')'); gr.addColorStop(1, 'rgba(255,255,255,0)');
         g.fillStyle = gr; g.beginPath(); g.arc(X(l[0]), Y(l[1]), r, 0, 6.2832); g.fill();
       });
     }
     /* the walls: two hairlines with the openings cut out of them */
-    ink(pl * .78 * dp, LW);
+    var dp = o.dp == null ? 1 : o.dp;
+    ink(o.wall * dp, LW);
     P.side('n', P.W).forEach(function(r){ L(r[0], 0, r[1], 0); L(Math.max(P.T, r[0]), P.T, Math.min(P.W - P.T, r[1]), P.T); });
     P.side('s', P.W).forEach(function(r){ L(r[0], P.H, r[1], P.H); L(Math.max(P.T, r[0]), P.H - P.T, Math.min(P.W - P.T, r[1]), P.H - P.T); });
     P.side('e', P.H).forEach(function(r){ L(P.W, r[0], P.W, r[1]); L(P.W - P.T, Math.max(P.T, r[0]), P.W - P.T, Math.min(P.H - P.T, r[1])); });
     P.side('w', P.H).forEach(function(r){ L(0, r[0], 0, r[1]); L(P.T, Math.max(P.T, r[0]), P.T, Math.min(P.H - P.T, r[1])); });
-    P.INT.forEach(function(s){ L(s[0], s[1], s[2], s[3]); });
-    /* the glazing in every opening, and the jambs of the entry */
-    var w2 = pl * .5 * sg(dp, .4, .95);
-    if (w2 > .004){
-      ink(w2, 1);
+    P.INT.forEach(function(sg_){ L(sg_[0], sg_[1], sg_[2], sg_[3]); });
+    /* the glazing in every opening, the jambs of the entry, and the doors with their swing */
+    if (o.win > .004){
+      ink(o.win, 1);
       P.wins.forEach(function(w){
         var tx = -w.n[0] * P.T, ty = -w.n[1] * P.T;
         L(w.a[0], w.a[1], w.a[0] + tx, w.a[1] + ty); L(w.b[0], w.b[1], w.b[0] + tx, w.b[1] + ty);
@@ -420,30 +412,73 @@
         L(w.a[0] + tx * .65, w.a[1] + ty * .65, w.b[0] + tx * .65, w.b[1] + ty * .65);
       });
       L(400, 0, 400, P.T); L(470, 0, 470, P.T);
-      /* and the doors, each with its swing */
       P.DRS.forEach(function(d){
         L(d[0], d[1], d[2], d[3]);
-        var r = Math.hypot(d[2] - d[0], d[3] - d[1]) * (X(1) - X(0));
+        var r = Math.sqrt((d[2] - d[0]) * (d[2] - d[0]) + (d[3] - d[1]) * (d[3] - d[1])) * UN;
         var a0 = Math.atan2(Y(d[3]) - Y(d[1]), X(d[2]) - X(d[0])), a1 = Math.atan2(Y(d[5]) - Y(d[1]), X(d[4]) - X(d[0]));
-        ink(w2 * .5, 1); g.beginPath(); g.arc(X(d[0]), Y(d[1]), r, a0, a1, !d[6]); g.stroke(); ink(w2, 1);
+        ink(o.win * .5, 1); g.beginPath(); g.arc(X(d[0]), Y(d[1]), r, a0, a1, !d[6]); g.stroke(); ink(o.win, 1);
       });
     }
-    /* the furniture, quiet, as on the home page */
-    if (fu > .004){
-      ink(fu * .3, 1);
-      P.FUR.forEach(function(o){
-        if (o[0] === 'r') R(o[1], o[2], o[3], o[4], o[5]);
-        else if (o[0] === 'c') C(o[1], o[2], o[3]);
-        else L(o[1], o[2], o[3], o[4]);
+    /* the furniture, quiet */
+    if (o.fur > .004){
+      ink(o.fur, 1);
+      P.FUR.forEach(function(it){
+        if (it[0] === 'r') R(it[1], it[2], it[3], it[4], it[5]);
+        else if (it[0] === 'c') C(it[1], it[2], it[3]);
+        else L(it[1], it[2], it[3], it[4]);
       });
     }
     /* the keys, left on the table in the foyer */
-    if (lf > .004){
-      ink(lf * .6, 1);
+    if (o.keys > .004){
+      ink(o.keys, 1);
       C(466, 118, 9); L(474, 118, 500, 118); L(492, 118, 492, 128); L(500, 118, 500, 130);
     }
   }
-
+  /* ================================================================== CI Turnkey's cover: the first night (17.11.2026 15:15)
+     «Мені не подобається головний екран, зовсім не подобається, як оця картинка з'їжджає.» Nothing slides here. The page opens on the plan of
+     the residence drawn in our own hand in the dark — the first idea. The scroll lights it room by room, the way a house is lit on the evening
+     you first sleep in it; the keys appear on the table in the foyer; and when the last room is lit the drawing gives way to the room itself.
+     Their own title says exactly this: From First Idea to the First Night Home. The title stands still at the foot of the screen the whole way. */
+  function night(f, q, t){
+    if (f.glo === undefined){
+      var box = qs('.tk-cv-ph', f.el);
+      f.glo = box ? GL2.make(box, glCoverFS(GLSH.rise, .74), qsa('img', box)) : null;
+      f.tIn = t;
+    }
+    var o = f.glo, fade = sg(q, .58, .92);
+    if (o && o.ready){ o.size(); o.set1('uQ', fade); o.set1('uTime', (t * 60) | 0); o.draw(); }
+    /* the plan draws itself once, when the screen is first seen, and from then on it is simply there */
+    f.dp = Math.max(Math.min(1, (f.dp || 0) + .017), sg(q, 0, .08));
+    var al = 1 - sg(q, .66, .97);
+    if (al <= .004) return;
+    var P = PLN, S = 556 / P.H, OX = 960 - P.W * S / 2, OY = 370 - P.H * S / 2;
+    planDraw(function(x){ return W / 2 + (OX + x * S - 960) * U; },
+             function(y){ return MID + (OY + y * S - 540) * U; }, {
+      wall: al * .82, dp: f.dp,
+      win: al * .6 * sm(0, 1, c01((f.dp - .45) / .4)),
+      fur: al * .22 * sm(0, 1, c01((f.dp - .7) / .3)),
+      lampR: .78, lamp: al * 2.4, lampK: function(k){ return sg(q, .1 + k * .105, .26 + k * .105); },
+      keys: al * .7 * sg(q, .52, .66)
+    });
+  }
+  function plan(f, q, t){
+    var N = f.n, i, A = [], WG = {pl: [1,1,1,1], fu: [1,0,1,1], lf: [1,0,0,1], li: [0,0,0,1]};
+    for (i = 0; i < N; i++){
+      var c = f.t0 + i * f.d, dd = Math.abs(q - c) / f.d, a = sm(0, 1, 1 - c01(dd / .62));
+      if ((i === 0 && q < c) || (i === N - 1 && q > c)) a = 1;
+      A[i] = a;
+    }
+    function al(w){ var m = 0, j; for (j = 0; j < N; j++) m = Math.max(m, A[j] * w[j]); return m; }
+    var base = sg(q, f.t0 - .38, f.t0 + .04);
+    if (base <= .002) return;
+    var P = PLN, S = 870 / P.W, OX = 1000, OY = 540 - P.H * S / 2;
+    planDraw(function(x){ return rx(OX + x * S); }, function(y){ return ry(OY + y * S); }, {
+      wall: base * al(WG.pl) * .78, dp: sg(q, f.t0 - .34, f.t0 + .16),
+      win: base * al(WG.pl) * .5 * sg(sg(q, f.t0 - .34, f.t0 + .16), .4, .95),
+      fur: base * al(WG.fu) * .3, lamp: base * al(WG.lf), keys: base * al(WG.lf) * .6,
+      light: base * al(WG.li), hour: 11.4 + 4.1 * Math.sin(t * .055)
+    });
+  }
   function steps(f, q, t){
     var N = f.n, x0 = xl(421), x1 = W - 50 * U, i, E = {};
     /* 16.11 23:09 («дуже якась рвана, топорна анімація тієї лінії. Хочеться легкості і плавності»): each way's own shape holds while its step is
@@ -651,7 +686,7 @@
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
     horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
+  var FIG = {cover: cover, steps: steps, plan: plan, night: night, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -862,6 +897,10 @@
       'float p = smoothstep(0.1, 0.9, uQ);',
       'float k = p * 1.45 - 0.45 + dot(a, vec3(0.299, 0.587, 0.114)) * 0.45;',
       'vec3 c = mix(a, b, smoothstep(0.0, 0.5, k));'].join('\n'),
+    /* the room itself, rising out of the dark where the drawing stood */
+    rise: [
+      'vec2 uv = (v - 0.5) / mix(1.05, 1.0, smoothstep(0.0, 1.0, uQ)) + 0.5;',
+      'vec3 c = grade(texture2D(uT0, cov(uv, uS0)).rgb) * smoothstep(0.0, 0.92, uQ);'].join('\n'),
     /* a photograph, settling */
     still: [
       'float s = mix(1.06, 1.0, smoothstep(0.0, 1.0, uQ));',
@@ -976,6 +1015,86 @@
     qsa('[data-math]').forEach(function(g){
       var rows = qsa('.tk-m-r', g), ds = qsa('.tk-m-d', g), cur = 0;
       if (!rows.length) return;
+      /* ---------------------------------------------------------------- the figure: the many, gathering (17.11.2026 15:15)
+         «Це ж можна якось цікаво візуалізувати, якоюсь цікавою інфографікою.» Each count is drawn, and every one of them is drawn as the
+         same event: what a project is made of enters on the left, narrows to a single point, and leaves as one line towards the word ONE.
+         Only the grain differs — nine lines, a few hundred dots, a thousand specks, eight stages laid end to end — so the four read as one
+         argument: whatever the quantity, the client receives one of it. The count in hand flows; the other three rest. */
+      var cv = document.createElement('canvas'); cv.className = 'tk-m-cv'; cv.setAttribute('aria-hidden', 'true');
+      g.insertBefore(cv, g.firstChild); g.classList.add('cv-on');
+      var x2 = cv.getContext('2d'), cw = 0, chh = 0, dpr = 1, SETS = [], ri;
+      function rnd(s){ var x = Math.sin(s * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
+      for (ri = 0; ri < 4; ri++){
+        var n = [9, 260, 1150, 8][ri], it = [], k;
+        for (k = 0; k < n; k++){
+          var u = n === 1 ? .5 : k / (n - 1);
+          it.push({y: ri === 1 || ri === 2 ? (rnd(ri * 31 + k) * 2 - 1) : (u * 2 - 1),
+                   p: rnd(ri * 97 + k * 3 + 7), v: .42 + rnd(ri * 53 + k * 5 + 13) * .7,
+                   w: .55 + rnd(ri * 17 + k * 11 + 3) * .45});
+        }
+        SETS.push(it);
+      }
+      function qd(ax, ay, bx, by, cx_, cy_, u){ var m = 1 - u;
+        return [m * m * ax + 2 * m * u * bx + u * u * cx_, m * m * ay + 2 * m * u * by + u * u * cy_]; }
+      function size(){
+        var r = g.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
+        if (Math.abs(r.width - cw) < .5 && Math.abs(r.height - chh) < .5) return;
+        cw = r.width; chh = r.height; cv.width = Math.round(cw * dpr); cv.height = Math.round(chh * dpr);
+      }
+      function draw(t){
+        var gr = g.getBoundingClientRect(), k, i;
+        x2.setTransform(dpr, 0, 0, dpr, 0, 0); x2.clearRect(0, 0, cw, chh);
+        x2.lineCap = 'butt'; x2.lineJoin = 'round';
+        for (i = 0; i < rows.length && i < 4; i++){
+          var rr = rows[i].getBoundingClientRect(), ir = qs('i', rows[i]).getBoundingClientRect();
+          if (ir.width < 40) continue;                /* the figure belongs to the wide screen; the phone reads the counts alone */
+          var x0 = ir.left - gr.left, x1 = ir.right - gr.left, cy = (rr.top + rr.bottom) / 2 - gr.top;
+          var hh = Math.min(rr.height * .46, 86 * U), wx = x0 + (x1 - x0) * .70, bx = x0 + (x1 - x0) * .40;
+          var on = i === cur, al = on ? 1 : .42, ph = on ? t * .09 : .34, set = SETS[i], pt;
+          if (i === 0){                                   /* nine disciplines: nine lines, bending into one */
+            for (k = 0; k < set.length; k++){
+              var y = cy + set[k].y * hh;
+              x2.strokeStyle = 'rgba(255,255,255,' + (al * .42).toFixed(3) + ')'; x2.lineWidth = LW;
+              x2.beginPath(); x2.moveTo(x0, y); x2.quadraticCurveTo(bx, y, wx, cy); x2.stroke();
+              if (on){                                    /* and one mark travelling down each of them */
+                var u0 = (ph * set[k].v + set[k].p) % 1;
+                pt = qd(x0, y, bx, y, wx, cy, u0);
+                sq2(pt[0], pt[1], .22 + .62 * u0, 4 * U);
+              }
+            }
+          } else if (i === 3){                            /* eight stages: laid end to end, closing into one journey */
+            var gap = 7 * U, seg = (wx - x0) / 8;
+            for (k = 0; k < 8; k++){
+              var sx = x0 + k * seg, gg = gap * (1 - k / 9);
+              x2.strokeStyle = 'rgba(255,255,255,' + (al * (.34 + .075 * k)).toFixed(3) + ')'; x2.lineWidth = LW;
+              x2.beginPath(); x2.moveTo(sx, cy); x2.lineTo(sx + seg - gg, cy); x2.stroke();
+              x2.strokeStyle = 'rgba(255,255,255,' + (al * .42).toFixed(3) + ')';
+              x2.beginPath(); x2.moveTo(sx, cy - 11 * U); x2.lineTo(sx, cy + 11 * U); x2.stroke();
+            }
+            if (on){ var uj = (t * .13) % 1; sq2(x0 + (wx - x0) * uj, cy, .3 + .6 * uj, 5 * U); }
+          } else {                                        /* hundreds of people, thousands of decisions: a field, drawn in */
+            var sz = i === 1 ? 2.4 : 1.6;
+            for (k = 0; k < set.length; k++){
+              var it2 = set[k], uu = (ph * it2.v + it2.p) % 1, yy = cy + it2.y * hh * (i === 1 ? 1 : .92);
+              pt = qd(x0, yy, bx, yy, wx, cy, Math.pow(uu, 1.7));
+              sq2(pt[0], pt[1], al * (i === 1 ? .13 + .42 * uu : .09 + .3 * uu) * it2.w, sz * U);
+            }
+          }
+          /* the one point everything arrives at, and the line that leaves it */
+          x2.strokeStyle = 'rgba(255,255,255,' + (al * .55).toFixed(3) + ')'; x2.lineWidth = LW;
+          x2.beginPath(); x2.moveTo(wx, cy); x2.lineTo(x1, cy); x2.stroke();
+          sq2(wx, cy, al * (on ? .95 : .5), 7 * U);
+        }
+      }
+      function sq2(x, y, a, s){ if (a <= .004) return;
+        x2.fillStyle = a >= 1 ? '#FFFFFF' : 'rgba(255,255,255,' + a.toFixed(3) + ')';
+        x2.fillRect(x - s / 2, y - s / 2, s, s); }
+      function loop(now){
+        var r = g.getBoundingClientRect();
+        if (r.bottom > -80 && r.top < H + 80){ size(); draw(now / 1000); }
+        requestAnimationFrame(loop);
+      }
+      requestAnimationFrame(loop);
       function set(i){
         if (i === cur) return; cur = i;
         rows.forEach(function(r, k){ r.classList.toggle('on', k === i); });

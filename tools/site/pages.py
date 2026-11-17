@@ -246,12 +246,12 @@ def turnkey_page():
         ('Eight', 'stages', 'One', 'journey', 0, det[3])]), 'Arithmetic')
     # 04 the page's one list
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
-    pg.add(sc_you(h_of(sec), None, get(sec, 'lead')[0][1][0], rows), 'Fit')
+    pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows, A + 'ch/1450-17.webp'), 'Fit')
     # 05 the horizon: above the line what stays yours, below it everything we carry
     sec = S[5]; p5 = [it[1] for it in sec['items'] if it[0] == 'p']
     one5 = [x[0] for x in p5 if len(x) == 1]; whens = max(p5, key=len)
     st5 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_horizon(label(sec4), h_of(sec4), sp[1], note, chain + eco), 'Above the Line')
+    pg.add(tk_horizon(label(sec4), h_of(sec4), sp[1], note, [list(g) for g in ks[1:]]), 'Above the Line')
     # 06 the page's one great heading, and the six intersections
     sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
     inter = [x for x in pit if len(x) == 6][0]; short = [x[0] for x in pit if len(x) == 1]
