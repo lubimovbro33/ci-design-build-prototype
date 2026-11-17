@@ -445,7 +445,7 @@
       f.glo = box ? GL2.make(box, glCoverFS(GLSH.rise, .74), qsa('img', box)) : null;
       f.tIn = t;
     }
-    var o = f.glo, fade = sg(q, .58, .92);
+    var o = f.glo, fade = Math.max(.2, sg(q, .58, .92));   /* the room is already there in the dark, waiting to be lit */
     if (o && o.ready){ o.size(); o.set1('uQ', fade); o.set1('uTime', (t * 60) | 0); o.draw(); }
     /* the plan draws itself once, when the screen is first seen, and from then on it is simply there */
     f.dp = Math.max(Math.min(1, (f.dp || 0) + .017), sg(q, 0, .08));
