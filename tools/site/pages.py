@@ -313,23 +313,23 @@ def solutions():
            # screen, so a second thought is written here from what their own pages say of the four ways — marked .wc, to be replaced by their text
            '    <p class="t20 rv iv-p"><span class="wc">Some clients hand us the whole home;<br class="bd"> others bring an architect, or a residence already built.<br class="bd"> The way changes. The standard does not.</span></p>\n'
            '  </div>\n</section>')
-    # 03–06 the three ways and the enhancement, one shape four times (16.11 23:09: the film had the name in one place, the lead in another,
-    # the description in a third and the button in a fourth; this reads in order, and every block begins on the same text line)
-    PH = [A + 'ch/1450-32.webp', A + 'us/1511-01a.webp', A + 'ch/1450-34.webp', A + 'us/1511-06a.webp']
+    N = 4; t0 = .3; d = 1.0
+    o = ['<section class="film" data-fig="steps" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']
     for i, sec in enumerate(S[1:5]):
-        lead = get(sec, 'lead')[0][1][0]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']; a_ = get(sec, 'a')[0]
-        pg.add(sl_block(label(sec), h_of(sec), lead, ps_, btn(a_[2], href(a_[1])), PH[i], i), h_of(sec).replace('CI ', ''))
-    # 07 the schedule: who carries what. The cells are ours, built on what their own pages say of each way, so they are marked .wc
-    rows = [('Architecture and interior design', (1, 1, 1)),
-            ('Construction and project management', (1, 1, 1)),
-            ('Furnishings and custom furniture', (1, 0, 1)),
-            ('Art, objects and styling', (1, 0, 1)),
-            ('Procurement, delivery and installation', (1, 0, 1)),
-            ('Move-in and onboarding', (1, 0, 0))]
-    pg.add(sl_matrix('What each way carries', 'One Standard, Three Ways to Reach It',
-                     'The same team and the same standard in every one of them. What changes is how much of the home we carry.',
-                     ['CI Turnkey', 'CI Core', 'CI Curated'], rows,
-                     ('CI Wellness', 'Elevates any CI solution')), 'Who Carries What')
+        T = t0 + i * d; last = i == N - 1
+        k = '%.2f %.2f %s' % (T, T + .14, '99 99' if last else '%.2f %.2f' % (T + d - .12, T + d))
+        k2 = '%.2f %.2f %s' % (T + .08, T + .26, '99 99' if last else '%.2f %.2f' % (T + d - .12, T + d))
+        tag = label(sec); nm = h_of(sec); lead = get(sec, 'lead')[0][1][0]; ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; a_ = get(sec, 'a')[0]
+        # 16.11 23:09: «текст розкиданий повністю: заголовок там, другий заголовок там, опис там, кнопка там». One composition now, read in order:
+        # the small name and the big one stand on the text line over the line itself; under the line the lead on the same text line, the description
+        # beside it at 1040, and the button at the foot of the same column
+        o.append('      <p class="lab3 m sw-k" data-k="%s">%s</p>' % (k, esc(tag)))
+        o.append('      <p class="t60 m sw-h nb" data-k="%s">%s</p>' % (k, brk(nm, 22)))
+        o.append('      <p class="t34 m sw-l" data-k="%s" style="--w:430">%s</p>' % (k, esc(lead)))
+        o.append('      <div class="t20s m sw-t" data-k="%s" style="--w:475">%s</div>' % (k2, ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_)))
+        o.append('      <div class="m p-bl" data-k="%s">%s</div>' % (k2, btn(a_[2], href(a_[1]))))
+    o.append('    </div>\n  </div>\n</section>')
+    pg.add('\n'.join(o), 'Four Ways')
     final_cta(pg, S[5], A + 'ch/1450-02a.webp')
     emit('solutions.html', 'Solutions', pg)
 solutions()
