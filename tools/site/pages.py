@@ -73,7 +73,7 @@ def wellness_page():
     sec = S[2]; wp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     qual = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
     st2 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_index(label(sec), h_of(sec), wp[0] + ' ' + wp[1], qual).replace('tk-ix', 'tk-ix wl-qu').replace(
+    pg.add(tk_index(label(sec), h_of(sec), wp[0] + ' ' + wp[1], qual).replace('class="bk tk-ix"', 'class="bk tk-ix wl-qu"', 1).replace(
         '</section>', '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <p class="t34 rv tk-r-c">%s</p>\n</section>'
         % (esc(nop(wp[2] + ' ' + wp[3])), blue(nop(st2), None)), 1), 'Luxury')
     # 04 what CI Wellness is
@@ -96,16 +96,16 @@ def wellness_page():
     # 08 technology that does not announce itself
     sec = S[7]; tp = [it[1] for it in sec['items'] if it[0] == 'p']
     tflat = [' '.join(x) for x in tp]
-    pg.add(cu_layers(label(sec), h_of(sec), [get(sec, 'lead')[0][1][0]] + tflat[1:5], tp[0], tflat[5]).replace('cu-ly', 'cu-ly wl-ly'), 'Design')
+    pg.add(cu_layers(label(sec), h_of(sec), [get(sec, 'lead')[0][1][0]] + tflat[1:5], tp[0], tflat[5]).replace('class="bk cu-ly"', 'class="bk cu-ly wl-ly"', 1), 'Design')
     # 09 what it touches, and the outcome
     sec = S[8]
     touch = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
     op = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    pg.add(tk_index(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], touch).replace('tk-ix', 'tk-ix wl-ix').replace(
+    pg.add(tk_index(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], touch).replace('class="bk tk-ix"', 'class="bk tk-ix wl-ix"', 1).replace(
         '</section>', '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n</section>' % esc(nop(' '.join(op))), 1), 'Connected')
     sec = S[9]; o9 = [it[1] for it in sec['items'] if it[0] == 'p']
     st9 = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
-    pg.add(cu_layers(label(sec), h_of(sec), [' '.join(o9[1])], o9[0], ' '.join(st9)).replace('cu-ly', 'cu-ly wl-oc'), 'Outcome')
+    pg.add(cu_layers(label(sec), h_of(sec), [' '.join(o9[1])], o9[0], ' '.join(st9)).replace('class="bk cu-ly"', 'class="bk cu-ly wl-oc"', 1), 'Outcome')
     final_cta(pg, S[10], A + 'us/1511-11a.webp')
     emit('ci-wellness.html', 'CI Wellness', pg, A + 'ch/1450-25a.webp')
 
@@ -148,7 +148,7 @@ def curated_page():
     # 07 what is included, in two quiet columns
     sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
     note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
-    pg.add(co_split(label(sec), h_of(sec), note, list(ks[1]), list(ks[2])).replace('co-sp', 'co-sp cu-sp'), 'Included')
+    pg.add(co_split(label(sec), h_of(sec), note, list(ks[1]), list(ks[2])).replace('class="bk co-sp"', 'class="bk co-sp cu-sp"', 1), 'Included')
     # 08 from architecture to atmosphere
     sec = S[6]
     names2 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
@@ -156,7 +156,7 @@ def curated_page():
     assert len(names2) == len(txts) == 7, (len(names2), len(txts))
     pg.add(cu_steps(label(sec), h_of(sec), list(zip(names2, txts))), 'Process')
     # 09 why: the four continuities, and their closing line
-    pg.add(cu_layers(label(S[7]), h_of(S[7]), ws[1:], betw, wst).replace('cu-ly', 'cu-ly cu-wy'), 'Why')
+    pg.add(cu_layers(label(S[7]), h_of(S[7]), ws[1:], betw, wst).replace('class="bk cu-ly"', 'class="bk cu-ly cu-wy"', 1), 'Why')
     # 10 the work itself
     sec = S[8]
     cards = ''.join(pf6_card(q['name'], q['loc'].split(' \u00b7 ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html') for q in PROJ[:3])
