@@ -930,3 +930,52 @@ def co_band(kick, h1, stages):
     return ('<section class="bk co-bd" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <div class="co-bd-g">%s</div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), cells)
+
+# ================================================================== CI CURATED — the layers (17.11.2026)
+# Their own words: «the layers that make a residence feel complete», «Each layer belongs to the same story», «The Final Layers Are Often the
+# Most Personal». So the page's device is COMPOSITION: fragments of the client's own rooms arrive and take their places, and the visitor can
+# lift any one of them out of the whole. The line is neither the horizon nor the seam here — the pieces themselves hold the grid.
+def cu_cover(kick, h1, img, parts):
+    """01 — the cover comes together. The same photograph stands on the screen in pieces, and the scroll brings them to their places until the
+    room is one picture. Nothing arrives from outside: every fragment is already part of what it will become."""
+    hb = brk(h1, 18); ln = hb.count('<br>') + 1
+    o = ['<section class="film cu-cv" data-fig="drawn" data-len="1.35" id="@ID@">', '  <div class="stg">', '    <div class="cu-cv-ph">']
+    for i, (t, r, b, l, a0) in enumerate(parts):
+        o.append('      <img src="%s" alt="" style="clip-path:inset(%s%% %s%% %s%% %s%%)" '
+                 'data-s="ci:%s,%s,%s,%s&gt;0,0,0,0@%.2f-%.2f; op:.55&gt;1@%.2f-%.2f">' % (
+                     img, t, r, b, l, t, r, b, l, a0, a0 + .62, a0, a0 + .62))
+    o += ['    </div>', '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
+          '      <p class="lab3 rv cu-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
+          '      <h1 class="t111 rv cu-cv-h" style="--ln:%d">%s</h1>' % (ln, hb), '    </div>', '  </div>', '</section>']
+    return '\n'.join(o)
+def cu_comp(kick, h1, lead, ps, strong, cells):
+    """03 — the page's instrument: a residence composed. Six fragments of the client's own rooms stand on the grid; the pointer on one names it
+    and lifts it, and the rest step back. Their own list — «Scale. Comfort. Furniture. Art. Texture. Objects.» — is the composition itself,
+    not a line of text."""
+    cs = ''
+    for i, (nm, im, cl) in enumerate(cells):
+        cs += ('<figure class="cu-c %s rv" data-i="%d" tabindex="0"><img src="%s" alt="" loading="lazy">'
+               '<p class="lab3">%s</p></figure>') % (cl, i, im, esc(nm))
+    return ('<section class="bk cu-cp" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t34 rv cu-cp-l">%s</p>\n  <div class="cu-cp-g rv" data-comp>%s</div>\n'
+            '%s  <p class="t34 rv cu-cp-s">%s</p>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), cs,
+                ''.join('  <p class="t20 rv cu-cp-p" style="--w:475">%s</p>\n' % esc(nop(x)) for x in ps),
+                blue(' '.join(nop(x) for x in strong), None))
+def cu_layers(kick, h1, ps, lines, strong):
+    """06 — «Furniture is considered against circulation and scale…»: four considerations, each on its own rule, and each rule a shade
+    brighter than the one above it — the layers gathering"""
+    rs = ''.join('<div class="cu-ly-r rv" style="--i:%d"><p class="t34">%s</p></div>' % (i, esc(nop(x))) for i, x in enumerate(lines))
+    return ('<section class="bk cu-ly" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '%s  <div class="cu-ly-g">%s</div>\n  <p class="t34 rv cu-ly-c">%s</p>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)),
+                ''.join('  <p class="t20 rv cu-ly-p" style="--w:475">%s</p>\n' % esc(nop(x)) for x in ps),
+                rs, blue(nop(strong), None))
+def cu_steps(kick, h1, stages):
+    """08 — «From Architecture to Atmosphere»: the seven stages one under another, and the rule over each a shade brighter than the last,
+    so the page's last layers are its strongest"""
+    rs = ''.join('<div class="cu-st-r rv" style="--i:%d"><p class="lab3 n">%02d</p><p class="t34 h">%s</p><p class="t20 t" style="--w:430">%s</p></div>'
+                 % (i, i + 1, esc(nm), esc(nop(tx))) for i, (nm, tx) in enumerate(stages))
+    return ('<section class="bk cu-st" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <div class="cu-st-g">%s</div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), rs)

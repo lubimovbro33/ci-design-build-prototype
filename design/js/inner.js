@@ -567,6 +567,25 @@
     });
   })();
 
+  /* ================================================================== CI Curated's composition: a residence, in its parts
+     The pointer on a fragment names it and brings it forward; the rest step back. Nothing moves out of place — the composition holds, which
+     is the page's whole argument. */
+  (function(){
+    var gs = qsa('[data-comp]'); if (!gs.length) return;
+    gs.forEach(function(g){
+      var cs = qsa('.cu-c', g);
+      function set(i){
+        cs.forEach(function(c, k){ c.classList.toggle('on', k === i); });
+        if (i < 0) g.removeAttribute('data-on'); else g.setAttribute('data-on', '1');
+      }
+      cs.forEach(function(c, i){
+        c.addEventListener('pointerenter', function(){ set(i); });
+        c.addEventListener('focus', function(){ set(i); });
+      });
+      g.addEventListener('pointerleave', function(){ set(-1); });
+    });
+  })();
+
   /* ================================================================== CI Core's seam: the drawing on one side, the room on the other
      The line follows the pointer across the block (and a finger that drags it), with the same lag as the gallery, so moving it feels like
      drawing rather than dragging a control. The visitor does the page's argument with their own hand. */

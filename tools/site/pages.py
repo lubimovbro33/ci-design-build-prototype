@@ -52,6 +52,63 @@ SEG_CORE = open(os.path.join(HERE, 'seg_core.txt')).read().strip()
 def short_of(sec):
     """the one-line paragraphs of a section, in order"""
     return [x[1][0] for x in sec['items'] if x[0] == 'p' and len(x[1]) == 1]
+def curated_page():
+    """CI Curated — the layers. 17.11: their own words give the page its device («the layers that make a residence feel complete», «Each layer
+    belongs to the same story»), so the page COMPOSES: the cover's photograph comes together out of its own pieces, and the third screen is a
+    residence composed out of six fragments of the client's rooms, any one of which the visitor can lift out of the whole."""
+    S = [join_lists(dots_fix(x)) for x in P['curated']]; pg = Pg()
+    h1, ps, a = hero(S[0])
+    pg.add(cu_cover(label(S[0]), h1, A + 'ch/1450-34.webp',
+                    [(0, 58, 62, 0, .06), (10, 0, 46, 66, .14), (54, 30, 0, 12, .22), (36, 64, 22, 18, .30)]), 'Curated', 'top')
+    # 02 the thought: their sentence, its last line in the blue
+    ln_ = brk_lines(nop(' '.join(ps[0])), 32)
+    thought = '<br>'.join(esc(x) for x in ln_[:-1]) + '<br><span class="cb">' + esc(ln_[-1]) + '</span>'
+    pg.add(tk_lead(thought, ' '.join(ps[1]) + ' ' + ' '.join(ps[2]) + ' ' + ' '.join(ps[3]), btn(a[0], 'contact.html')), 'Idea')
+    # 03 a residence composed — the page's instrument
+    sec = S[2]; cp = [it[1] for it in sec['items'] if it[0] == 'p']
+    six = [x for x in cp if len(x) > 1]
+    flat = [' '.join(x) for x in cp]
+    st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
+    names = [x.strip(' .') for x in flat[1].split('.') if x.strip(' .')]        # Scale. Comfort. Furniture. Art. Texture. Objects.
+    assert len(names) == 6, names
+    imgs = ['ch/1450-23.webp', 'ch/1450-30.webp', 'ch/1450-13.webp', 'ch/1450-11.webp', 'rtb/1430-08a.webp', 'ch/1450-21.webp']
+    cls = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6']   # not c1..c6: those are the site's own column classes
+    pg.add(cu_comp(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], [flat[0]] + flat[2:], st,
+                   list(zip(names, [A + x for x in imgs], cls))), 'Composed')
+    # 04 the one list of the page
+    sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
+    pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows), 'Fit')
+    # 05 one photograph of the client's work, and the sentence the page is built on
+    sec = S[7]; wp = [it[1] for it in sec['items'] if it[0] == 'p']
+    ws = [x[0] for x in wp if len(x) == 1]; betw = max(wp, key=len)
+    wst = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(tk_plate(A + 'ch/1450-18.webp', ws[0]), 'Complete')
+    # 06 the considerations, each on its own rule
+    sec = S[5]; lp = [it[1] for it in sec['items'] if it[0] == 'p']
+    lsingle = [x[0] for x in lp if len(x) == 1]; four = max(lp, key=len)
+    lst = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(cu_layers(label(sec), h_of(sec), lsingle, four, lst), 'Layers')
+    # 07 what is included, in two quiet columns
+    sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
+    note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
+    pg.add(co_split(label(sec), h_of(sec), note, list(ks[1]), list(ks[2])).replace('co-sp', 'co-sp cu-sp'), 'Included')
+    # 08 from architecture to atmosphere
+    sec = S[6]
+    names2 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
+    txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
+    assert len(names2) == len(txts) == 7, (len(names2), len(txts))
+    pg.add(cu_steps(label(sec), h_of(sec), list(zip(names2, txts))), 'Process')
+    # 09 why: the four continuities, and their closing line
+    pg.add(cu_layers(label(S[7]), h_of(S[7]), ws[1:], betw, wst).replace('cu-ly', 'cu-ly cu-wy'), 'Why')
+    # 10 the work itself
+    sec = S[8]
+    cards = ''.join(pf6_card(q['name'], q['loc'].split(' \u00b7 ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html') for q in PROJ[:3])
+    pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
+    pg.add(bk(h_of(sec), '    <div class="pf6">%s</div>\n    <div class="rv c1 g50">%s</div>' % (
+        cards, btn(pbt[0][2] if pbt else 'View the Portfolio', 'portfolio.html')), hcls=' l0'), 'Projects')
+    final_cta(pg, S[10], A + 'ch/1450-19.webp')
+    emit('ci-curated.html', 'CI Curated', pg, A + 'ch/1450-34.webp')
+
 def core_page():
     """CI Core — one hand. 17.11: the page's argument is the seam between the people who design and the people who build, so the page's line is
     VERTICAL where Turnkey's is the horizon, and the room is shown twice: as the drawing its own lines make, and as the thing itself. The cover
@@ -171,8 +228,6 @@ def turnkey_page():
     final_cta(pg, S[9], A + 'ch/1450-29a.webp')
     emit('ci-turnkey.html', 'CI Turnkey', pg, A + 'ch/1450-32.webp')
 
-solution('curated', 'ci-curated.html', 'CI Curated', lambda k, h, ps: sc_triptych(k, h, [A + 'ch/1450-08a.webp', A + 'ch/1450-15.webp', A + 'ch/1450-18.webp']),
-         A + 'ch/1450-23.webp', 'What You Receive', A + 'ch/1450-31.webp', ['1450-08a', '1530-06a', '1430-10a'], proc='cells')
 solution('wellness', 'ci-wellness.html', 'CI Wellness', lambda k, h, ps: sc_dawn(k, h, A + 'ch/1450-25a.webp'),
          A + 'us/1511-01a.webp', 'Why Wellness Matters to CI', A + 'us/1511-06a.webp', None, pre=A + 'ch/1450-25a.webp')
 
@@ -619,6 +674,7 @@ def faq():
     pg.add(cta('Your Next Chapter Starts With a Conversation', [], ('Begin Your Better Life', 'contact.html'), A + 'ch/1450-29a.webp'), 'Contact')
     emit('faq.html', 'FAQ', pg)
     return len(items)
+curated_page()
 core_page()
 turnkey_page()   # called here: it uses the project cards defined with the Portfolio page
 nq = faq()
