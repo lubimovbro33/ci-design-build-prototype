@@ -461,23 +461,98 @@
       keys: al * .7 * sg(q, .52, .66)
     });
   }
+  /* ================================================================== Solutions: one house, four ways to it — a scenario (17.11.2026 16:30)
+     «Щоб це не просто була зміна картинок, а прямо якийсь сценарій відбувався, коли ми скролимо і в нас міняється текст.» The plan no longer
+     fades from one set of layers to the next. It is one house and one camera, and each way DOES something to the drawing:
+       CI Turnkey   the whole house from above, and it is lived in — it builds itself as the screen arrives: walls, glazing, furniture, the
+                    lamps come on, the keys are left on the table in the foyer;
+       CI Core      the furniture goes, the camera pushes in on the structure, and the drawing becomes a construction drawing: the walls are
+                    hatched and the dimension chains draw themselves along them;
+       CI Curated   the camera glides down into the living room and comes closer still; the furniture returns bright and the room is dressed
+                    piece by piece — cushions, the table laid, a lamp, a plant;
+       CI Wellness  the camera pulls all the way back, and the house fills: the sun reaches in through every window and travels with the hour,
+                    the air moves through the rooms, the lamps glow.
+     Every move straddles the change of the text (the old text leaves in the middle of it, the new one arrives as the camera settles), so the
+     drawing is never showing one way while the words say another. The walls themselves never fade: it is the same house throughout. */
+  var PCAM = [[500, 358, 1], [290, 190, 1.6], [365, 452, 1.5], [500, 167, 1]];   /* what the camera looks at, and how closely; the last keeps the house clear of the long heading */
+  var PCUR = [['r',430,426,38,30,6],['r',474,426,38,30,6],['r',592,426,38,30,6],['r',426,476,30,36,6],['r',426,520,30,36,6],
+              ['c',560,520,13],['r',538,500,24,13,2],['c',150,440,8],['c',175,440,12],['c',200,440,8],
+              ['c',672,410,13],['l',662,410,682,410],['l',672,400,672,420],['c',384,588,17],['c',384,588,7]];
+  var PAIR = [[0,440, 330,400, 700,470, 1000,380], [0,130, 300,190, 560,90, 1000,120], [450,640, 500,470, 400,300, 435,0]];
   function plan(f, q, t){
-    var N = f.n, i, A = [], WG = {pl: [1,1,1,1], fu: [1,0,1,1], lf: [1,0,0,1], li: [0,0,0,1]};
-    for (i = 0; i < N; i++){
-      var c = f.t0 + i * f.d, dd = Math.abs(q - c) / f.d, a = sm(0, 1, 1 - c01(dd / .62));
-      if ((i === 0 && q < c) || (i === N - 1 && q > c)) a = 1;
-      A[i] = a;
+    var N = f.n, k, TR = [], A = [], E = [];
+    /* the three moves: each begins while the outgoing text still stands and ends as the incoming one has arrived */
+    for (k = 0; k < N - 1; k++) TR[k] = c01(((q - (f.t0 + k * f.d)) / f.d - .72) / .44);
+    for (k = 0; k < N; k++){
+      var inn = k === 0 ? 1 : sm(0, 1, c01((TR[k - 1] - .45) / .55)), out = k === N - 1 ? 0 : sm(0, 1, c01(TR[k] / .5));
+      A[k] = inn * (1 - out);                                       /* a way's own marks: in with the second half of its move, out with the first half of the next */
+      E[k] = k === 0 ? 1 : c01((TR[k - 1] - .4) / .6);              /* and how far they have drawn themselves */
     }
-    function al(w){ var m = 0, j; for (j = 0; j < N; j++) m = Math.max(m, A[j] * w[j]); return m; }
     var base = sg(q, f.t0 - .38, f.t0 + .04);
     if (base <= .002) return;
-    var P = PLN, S = 870 / P.W, OX = 1000, OY = 540 - P.H * S / 2;
-    planDraw(function(x){ return rx(OX + x * S); }, function(y){ return ry(OY + y * S); }, {
-      wall: base * al(WG.pl) * .78, dp: sg(q, f.t0 - .34, f.t0 + .16),
-      win: base * al(WG.pl) * .5 * sg(sg(q, f.t0 - .34, f.t0 + .16), .4, .95),
-      fur: base * al(WG.fu) * .3, lamp: base * al(WG.lf), keys: base * al(WG.lf) * .6,
-      light: base * al(WG.li), hour: 11.4 + 4.1 * Math.sin(t * .055)
+    var ci = 0, cu = 0;
+    for (k = 0; k < N - 1; k++) if (TR[k] > 0){ ci = k; cu = eio(TR[k]); }
+    var c0 = PCAM[ci], c1 = PCAM[Math.min(N - 1, ci + 1)];
+    var cx = lerp(c0[0], c1[0], cu), cy = lerp(c0[1], c1[1], cu), cs = Math.exp(lerp(Math.log(c0[2]), Math.log(c1[2]), cu));
+    /* the drawing lives in the right half of the frame; the camera looks at the house through that box */
+    var P = PLN, BX0 = 985, BX1 = 1870, BY0 = 150, BY1 = 990, S = (BX1 - BX0) * .88 / P.W * cs, bx = (BX0 + BX1) / 2, by = (BY0 + BY1) / 2;
+    function X(x){ return xr(bx + (x - cx) * S); }
+    function Y(y){ return ry(by + (y - cy) * S); }
+    function L(xa, ya, xb, yb){ g.beginPath(); g.moveTo(X(xa), Y(ya)); g.lineTo(X(xb), Y(yb)); g.stroke(); }
+    var UN = X(1) - X(0), x0 = xr(BX0), x1 = xr(BX1), y0 = ry(BY0), y1 = ry(BY1);
+    g.save(); g.beginPath(); g.rect(x0, y0, x1 - x0, y1 - y0); g.clip();
+    var dp = sg(q, f.t0 - .34, f.t0 + .16), a0 = A[0], a1 = A[1], a2 = A[2], a3 = A[3] || 0;
+    var fur0 = a0 * sg(q, f.t0 - .08, f.t0 + .24), lamp0 = a0 * sg(q, f.t0 + .06, f.t0 + .4), key0 = a0 * sg(q, f.t0 + .26, f.t0 + .5);
+    planDraw(X, Y, {
+      wall: base * .78, dp: dp, win: base * .5 * sg(dp, .4, .95),
+      fur: base * Math.max(fur0 * .3, a2 * .72, a3 * .26),
+      lamp: base * Math.max(lamp0, a3), keys: base * key0 * .6,
+      light: base * a3, hour: 11.4 + 4.1 * Math.sin(t * .055)
     });
+    /* CI Core: the house as it is built — the walls hatched, the dimension chains drawn along them */
+    if (a1 > .004){
+      var e1 = E[1], off = 36, tk = 9, T = P.T, n, xx, yy;
+      ink(base * a1 * .5, 1);
+      P.side('n', P.W).forEach(function(r){ for (xx = r[0]; xx < r[1] - 2; xx += 11) if ((xx / P.W) < e1) L(xx, T, Math.min(r[1], xx + T), T - Math.min(T, r[1] - xx)); });
+      P.side('s', P.W).forEach(function(r){ for (xx = r[0]; xx < r[1] - 2; xx += 11) if ((xx / P.W) < e1) L(xx, P.H, Math.min(r[1], xx + T), P.H - Math.min(T, r[1] - xx)); });
+      P.side('w', P.H).forEach(function(r){ for (yy = r[0]; yy < r[1] - 2; yy += 11) if ((yy / P.H) < e1) L(0, Math.min(r[1], yy + T), Math.min(T, r[1] - yy), yy); });
+      P.side('e', P.H).forEach(function(r){ for (yy = r[0]; yy < r[1] - 2; yy += 11) if ((yy / P.H) < e1) L(P.W - T, Math.min(r[1], yy + T), P.W - T + Math.min(T, r[1] - yy), yy); });
+      ink(base * a1 * .62, 1);
+      var xe = P.W * eo(e1), ye = P.H * eo(c01((e1 - .2) / .8));
+      L(0, -off, xe, -off);
+      [0, 300, 560, 770, 1000].forEach(function(v){ if (v <= xe + .5){ L(v - tk, -off + tk, v + tk, -off - tk); L(v, -off - 18, v, -8); } });
+      L(-off, 0, -off, ye);
+      [0, 240, 640].forEach(function(v){ if (v <= ye + .5){ L(-off - tk, v + tk, -off + tk, v - tk); L(-off - 18, v, -8, v); } });
+    }
+    /* CI Curated: the room is dressed, a piece at a time */
+    if (a2 > .004){
+      var e2 = E[2] * (PCUR.length + 1);
+      PCUR.forEach(function(it, i){
+        var al2 = base * a2 * .78 * c01(e2 - i); if (al2 <= .004) return;
+        ink(al2, 1);
+        if (it[0] === 'l') L(it[1], it[2], it[3], it[4]);
+        else if (it[0] === 'c'){ g.beginPath(); g.arc(X(it[1]), Y(it[2]), it[3] * UN, 0, 6.2832); g.stroke(); }
+        else { var rr = Math.min(it[5], it[3] / 2, it[4] / 2) * UN, xa = X(it[1]), ya = Y(it[2]), xb = X(it[1] + it[3]), yb = Y(it[2] + it[4]);
+          g.beginPath(); g.moveTo(xa + rr, ya); g.lineTo(xb - rr, ya); g.quadraticCurveTo(xb, ya, xb, ya + rr); g.lineTo(xb, yb - rr); g.quadraticCurveTo(xb, yb, xb - rr, yb);
+          g.lineTo(xa + rr, yb); g.quadraticCurveTo(xa, yb, xa, yb - rr); g.lineTo(xa, ya + rr); g.quadraticCurveTo(xa, ya, xa + rr, ya); g.closePath(); g.stroke(); }
+      });
+    }
+    /* CI Wellness: the air moves through the rooms */
+    if (a3 > .004){
+      g.save(); g.beginPath(); g.rect(X(P.T), Y(P.T), (P.W - 2 * P.T) * UN, (P.H - 2 * P.T) * UN); g.clip();
+      ink(base * a3 * .4 * E[3], 1, [7 * U, 13 * U]); g.lineDashOffset = -t * 24 * U;
+      PAIR.forEach(function(c){ g.beginPath(); g.moveTo(X(c[0]), Y(c[1])); g.bezierCurveTo(X(c[2]), Y(c[3]), X(c[4]), Y(c[5]), X(c[6]), Y(c[7])); g.stroke(); });
+      g.setLineDash([]); g.lineDashOffset = 0; g.restore();
+    }
+    g.restore();
+    /* the edges of the box are soft: a close view runs out of sight, it is not cut off */
+    var fw = 48 * U, gr;
+    g.save(); g.globalCompositeOperation = 'destination-out';
+    gr = g.createLinearGradient(x0, 0, x0 + fw, 0); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x0 - 2, y0 - 2, fw + 2, y1 - y0 + 4);
+    gr = g.createLinearGradient(x1, 0, x1 - fw, 0); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x1 - fw, y0 - 2, fw + 2, y1 - y0 + 4);
+    gr = g.createLinearGradient(0, y0, 0, y0 + fw); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x0 - 2, y0 - 2, x1 - x0 + 4, fw + 2);
+    gr = g.createLinearGradient(0, y1, 0, y1 - fw); gr.addColorStop(0, 'rgba(0,0,0,1)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(x0 - 2, y1 - fw, x1 - x0 + 4, fw + 2);
+    g.restore();
   }
   function steps(f, q, t){
     var N = f.n, x0 = xl(421), x1 = W - 50 * U, i, E = {};
