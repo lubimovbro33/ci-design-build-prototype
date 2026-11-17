@@ -608,28 +608,129 @@
     });
   })();
 
-  /* ================================================================== CI Core's seam: the drawing on one side, the room on the other
-     The line follows the pointer across the block (and a finger that drags it), with the same lag as the gallery, so moving it feels like
-     drawing rather than dragging a control. The visitor does the page's argument with their own hand. */
+  /* ================================================================== the site's WebGL layer (17.11.2026 12:51: «Завжди ми робимо на WebGL»)
+     A small one: one quad, one shader, the pictures of a block as its textures. The 3D of the intro is three.js; here a library would only
+     add weight — what these blocks need is a fragment shader over a photograph. Written against WebGL 1 so it runs everywhere, and every
+     block keeps its DOM version underneath: if the context is refused, nothing is lost. */
+  var GL2 = (function(){
+    var VS = 'attribute vec2 p;varying vec2 v;void main(){v=vec2(p.x,1.0-p.y);gl_Position=vec4(p*2.0-1.0,0.0,1.0);}';
+    function sh(gl, t, src){
+      var s = gl.createShader(t); gl.shaderSource(s, src); gl.compileShader(s);
+      if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)){ console.warn(gl.getShaderInfoLog(s)); return null; }
+      return s;
+    }
+    function tex(gl, img){
+      var t = gl.createTexture();
+      gl.bindTexture(gl.TEXTURE_2D, t);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+      gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+      gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
+      return t;
+    }
+    /* make(box, fragment source, the <img> elements of the block) → {set(name, …), draw(), live(bool)} or null if there is no context */
+    function make(box, FS, imgs){
+      var cv = document.createElement('canvas'); cv.className = 'glc'; cv.setAttribute('aria-hidden', 'true');
+      var gl = cv.getContext('webgl', {alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance'});
+      if (!gl) return null;
+      var pr = gl.createProgram(), vs = sh(gl, gl.VERTEX_SHADER, VS), fs = sh(gl, gl.FRAGMENT_SHADER, FS);
+      if (!vs || !fs) return null;
+      gl.attachShader(pr, vs); gl.attachShader(pr, fs); gl.linkProgram(pr);
+      if (!gl.getProgramParameter(pr, gl.LINK_STATUS)){ console.warn(gl.getProgramInfoLog(pr)); return null; }
+      gl.useProgram(pr);
+      var buf = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0,0, 1,0, 0,1, 0,1, 1,0, 1,1]), gl.STATIC_DRAW);
+      var ap = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(ap); gl.vertexAttribPointer(ap, 2, gl.FLOAT, false, 0, 0);
+      var U = {}, ts = [], ready = 0;
+      function u(n){ if (!(n in U)) U[n] = gl.getUniformLocation(pr, n); return U[n]; }
+      box.appendChild(cv);
+      var o = {
+        gl: gl, cv: cv, ready: false, w: 0, h: 0,
+        size: function(){
+          var r = box.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
+          var w = Math.round(r.width * d), h = Math.round(r.height * d);
+          if (w === o.w && h === o.h) return false;
+          o.w = w; o.h = h; cv.width = w; cv.height = h; gl.viewport(0, 0, w, h);
+          gl.uniform2f(u('uRes'), r.width, r.height);
+          return true;
+        },
+        set1: function(n, v){ gl.uniform1f(u(n), v); },
+        set2: function(n, a, b){ gl.uniform2f(u(n), a, b); },
+        draw: function(){ if (!o.ready) return; gl.drawArrays(gl.TRIANGLES, 0, 6); }
+      };
+      imgs.forEach(function(im, i){
+        function load(){
+          gl.activeTexture(gl.TEXTURE0 + i);
+          ts[i] = tex(gl, im);
+          gl.uniform1i(u('uT' + i), i);
+          gl.uniform2f(u('uS' + i), im.naturalWidth, im.naturalHeight);
+          if (++ready === imgs.length){ o.ready = true; box.classList.add('gl-on'); o.size(); if (o.onready) o.onready(); }
+        }
+        if (im.complete && im.naturalWidth) load(); else im.addEventListener('load', load);
+      });
+      return o;
+    }
+    return {make: make};
+  })();
+
+  /* ================================================================== CI Core's seam, in a shader
+     One room, drawn on one side of a line and built on the other. The seam is not a cut any more: the light bends as it crosses it, the
+     drawing's own lines light up where it passes them, and the whole picture carries our grain. The line follows the pointer with the
+     gallery's lag, so moving it feels like drawing rather than dragging a control. */
   (function(){
     var gs = qsa('[data-seam]'); if (!gs.length) return;
+    var FS = [
+      'precision highp float;',
+      'uniform sampler2D uT0, uT1;',            /* 0 the drawing, 1 the room */
+      'uniform vec2 uRes, uS0, uS1;',
+      'uniform float uX, uTime, uIn;',
+      'varying vec2 v;',
+      'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+      'vec2 cov(vec2 uv, vec2 img){',
+      '  float ra = uRes.x / uRes.y, ri = img.x / img.y;',
+      '  vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0);',
+      '  return (uv - 0.5) / s + 0.5;',
+      '}',
+      'void main(){',
+      '  float d = v.x - uX;',
+      '  float w = 0.9 / uRes.x * 26.0;',                       /* the edge is about 26 px of the block, whatever its width */
+      '  float e = exp(-abs(d) / w);',
+      '  vec2 uv = v + vec2(e * 0.0045 * sign(d) * uIn, 0.0);',  /* the light bends at the edge of the glass */
+      '  vec3 a = texture2D(uT0, cov(uv, uS0)).rgb;',
+      '  vec3 b = texture2D(uT1, cov(uv, uS1)).rgb;',
+      '  b = (b - 0.5) * 1.06 + 0.5; b *= 0.84;',                 /* the room, graded as the rest of the site grades its pictures */
+      '  float m = smoothstep(-w, w, d);',
+      '  vec3 c = mix(a, b, m);',
+      '  c += a * e * 0.55 * uIn;',                               /* the drawing lights up where the seam passes it */
+      '  c += (hash(v * uRes + uTime) - 0.5) * 0.022;',           /* our grain */
+      '  gl_FragColor = vec4(c, 1.0);',
+      '}'].join('\n');
     gs.forEach(function(g){
-      var x = .5, tx = .5, run = 0, live = false;
-      function put(){ g.style.setProperty('--x', (x * 100).toFixed(2) + '%'); }
+      var dr = qs('.co-sm-dr', g), im = qs('.co-sm-im', g);
+      var x = .5, tx = .5, run = 0, live = 0, lv = 0, t = 0;
+      var o = GL2.make(g, FS, [dr, im]);
+      function put(){ g.style.setProperty('--x', (x * 100).toFixed(2) + '%'); }          /* the hairline and its square are DOM, and stay crisp */
       function tick(){
-        x += (tx - x) * .16;
+        x += (tx - x) * .16; lv += (live - lv) * .12; t += 1.0;
         put();
-        if (Math.abs(tx - x) > .0005 || live) requestAnimationFrame(tick); else run = 0;
+        if (o && o.ready){ o.size(); o.set1('uX', x); o.set1('uTime', t); o.set1('uIn', lv); o.draw(); }
+        if (Math.abs(tx - x) > .0004 || live || lv > .01) requestAnimationFrame(tick); else run = 0;
       }
+      function kick(){ if (!run){ run = 1; requestAnimationFrame(tick); } }
       function at(e){
         var r = g.getBoundingClientRect();
         tx = Math.max(.02, Math.min(.98, (e.clientX - r.left) / r.width));
-        if (!run){ run = 1; requestAnimationFrame(tick); }
+        kick();
       }
-      g.addEventListener('pointerenter', function(e){ live = true; at(e); });
+      if (o) o.onready = function(){ o.set1('uX', x); o.set1('uIn', 0); o.set1('uTime', 0); o.draw(); };
+      g.addEventListener('pointerenter', function(e){ live = 1; at(e); });
       g.addEventListener('pointermove', at);
-      g.addEventListener('pointerleave', function(){ live = false; tx = .5; if (!run){ run = 1; requestAnimationFrame(tick); } });
+      g.addEventListener('pointerleave', function(){ live = 0; tx = .5; kick(); });
       g.addEventListener('pointerdown', function(e){ at(e); if (g.setPointerCapture) g.setPointerCapture(e.pointerId); });
+      window.addEventListener('resize', function(){ if (o && o.ready){ o.size(); o.set1('uX', x); o.draw(); } });
       put();
     });
   })();

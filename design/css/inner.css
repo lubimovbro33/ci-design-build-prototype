@@ -998,3 +998,8 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
   .sl-m-h, .sl-m-r, .sl-m-bd{grid-template-columns:minmax(0, 1fr) repeat(3, 56px);column-gap:8px}
   .sl-m-bt{grid-column:2 / 5;text-align:left;font-size:12px}
 }
+/* the WebGL layer of a block: it sits over the pictures it is made of, and those stay in place underneath as what is shown if a context
+   is refused (17.11.2026 12:51 — «Завжди ми робимо на WebGL», with nothing lost where it cannot run) */
+.glc{position:absolute;left:0;top:0;width:100%;height:100%;display:block;z-index:1}
+.gl-on > img{visibility:hidden}
+.co-sm-g .co-sm-ln{z-index:2}
