@@ -474,18 +474,12 @@
   function drawn(f, q, t){
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
   }
-  /* CI Turnkey's cover: the residence retreats below one hairline, and that line goes on to run the page — above it the client's life,
-     below it the whole of the work. The canvas draws the line from the middle outward, arriving with the photograph's top edge. */
+  /* CI Turnkey's cover before the WebGL layer: the same move in clip-path. Kept as the figure for a context that is refused. */
   function horiz(f, q, t){
-    var i;
-    for (i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
-    var a = sg(q, .12, .62), w = eio(c01((q - .12) / .78));
-    if (a <= .002 || w <= 0) return;
-    var y = Math.round(H * .56) + .5, cx = W / 2, hw = (W / 2 - 50 * U) * w;
-    ink(a * .62, 1); seg(cx - hw, y, cx + hw, y);
-    sq(cx - hw, y, a * .9); sq(cx + hw, y, a * .9);
+    for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
+    horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn};
+  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -675,6 +669,74 @@
     }
     return {make: make};
   })();
+
+  /* ================================================================== the covers, on the same layer (17.11.2026)
+     Three shaders, one for each thing a cover of ours does: the world retreating below the line (CI Turnkey), the drawing building into the
+     room along its own lines (CI Core), and a photograph simply standing there with our grain in it (CI Curated, CI Wellness). The scroll
+     drives them through the film's own q, so nothing is on a timer and nothing animates clip-path over a full-screen picture any more. */
+  var GLSH = {
+    /* the world goes below one line, and the picture rises inside what is left of it */
+    retreat: [
+      'float p = smoothstep(0.08, 0.92, uQ);',
+      'float cut = p * 0.56;',
+      'vec2 uv = v - vec2(0.0, p * 0.24);',
+      'vec3 c = grade(texture2D(uT0, cov(uv, uS0)).rgb);',
+      'float w = 1.2 / uRes.y;',
+      'c *= smoothstep(cut - w, cut + w, v.y);'].join('\n'),
+    /* the room arrives where the drawing already has ink, and spreads from there */
+    build: [
+      'vec3 a = texture2D(uT0, cov(v, uS0)).rgb;',
+      'vec3 b = grade(texture2D(uT1, cov(v, uS1)).rgb);',
+      'float p = smoothstep(0.1, 0.9, uQ);',
+      'float k = p * 1.45 - 0.45 + dot(a, vec3(0.299, 0.587, 0.114)) * 0.45;',
+      'vec3 c = mix(a, b, smoothstep(0.0, 0.5, k));'].join('\n'),
+    /* a photograph, settling */
+    still: [
+      'float s = mix(1.06, 1.0, smoothstep(0.0, 1.0, uQ));',
+      'vec2 uv = (v - 0.5) / s + 0.5;',
+      'vec3 c = grade(texture2D(uT0, cov(uv, uS0)).rgb);'].join('\n')
+  };
+  function glCoverFS(body, br){
+    return [
+      'precision highp float;',
+      'uniform sampler2D uT0, uT1;',
+      'uniform vec2 uRes, uS0, uS1;',
+      'uniform float uQ, uTime;',
+      'varying vec2 v;',
+      'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+      'vec2 cov(vec2 uv, vec2 img){',
+      '  float ra = uRes.x / uRes.y, ri = img.x / img.y;',
+      '  vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0);',
+      '  return (uv - 0.5) / s + 0.5;',
+      '}',
+      'vec3 grade(vec3 c){ c = (c - 0.5) * 1.06 + 0.5; return c * ' + br.toFixed(3) + '; }',
+      'void main(){',
+      body,
+      '  c += (hash(v * uRes + uTime) - 0.5) * 0.020;',
+      '  gl_FragColor = vec4(c, 1.0);',
+      '}'].join('\n');
+  }
+  /* the film's own figure: the cover is drawn by the scroll, like every other scene of ours */
+  function glcv(f, q, t){
+    if (f.glo === undefined){
+      var box = qs('.tk-cv-ph, .co-cv-ph, .cu-cv-ph', f.el);
+      var kind = f.el.getAttribute('data-gl') || 'still';
+      var br = +f.el.getAttribute('data-br') || .72;
+      f.glo = box ? GL2.make(box, glCoverFS(GLSH[kind] || GLSH.still, br), qsa('img', box)) : null;
+    }
+    var o = f.glo;
+    for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);   /* the DOM pictures keep their scrubs: they are what shows if there is no context */
+    if (o && o.ready){ o.size(); o.set1('uQ', q); o.set1('uTime', (t * 60) | 0); o.draw(); }
+    if (f.el.getAttribute('data-gl') === 'retreat') horizLine(f, q);   /* the line itself stays on the 2d canvas: one crisp pixel, and our square at each field */
+  }
+  /* the horizon CI Turnkey's cover leaves behind, and the page's own line */
+  function horizLine(f, q){
+    var a = sg(q, .12, .62), w = eio(c01((q - .12) / .78));
+    if (a <= .002 || w <= 0) return;
+    var y = Math.round(H * .56) + .5, cx = W / 2, hw = (W / 2 - 50 * U) * w;
+    ink(a * .62, 1); seg(cx - hw, y, cx + hw, y);
+    sq(cx - hw, y, a * .9); sq(cx + hw, y, a * .9);
+  }
 
   /* ================================================================== CI Core's seam, in a shader
      One room, drawn on one side of a line and built on the other. The seam is not a cut any more: the light bends as it crosses it, the

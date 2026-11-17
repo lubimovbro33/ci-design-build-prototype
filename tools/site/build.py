@@ -470,7 +470,7 @@ def tk_cover(kick, h1, img):
     thing on the screen is the work itself, at the size it was photographed for.)"""
     hb = brk(h1, 18); ln = hb.count('<br>') + 1
     return '\n'.join([
-        '<section class="film tk-cv" data-fig="horiz" data-len="1.25" id="@ID@">', '  <div class="stg">',
+        '<section class="film tk-cv" data-fig="glcv" data-gl="retreat" data-br=".70" data-len="1.25" id="@ID@">', '  <div class="stg">',
         '    <div class="tk-cv-ph" data-s="ci:0,0,0,0&gt;56,0,0,0@.08-.92">',
         '      <img src="%s" alt="" data-s="ty:0&gt;260@.08-.92; sc:1.04&gt;1@0-1">' % img, '    </div>',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
@@ -887,7 +887,7 @@ def sc_still(kick, h1, img, br=.72):
     photograph and the type, not from a trick played on it."""
     hb = brk(h1, 18); ln = hb.count('<br>') + 1
     return '\n'.join([
-        '<section class="film co-cv sc-sl" data-fig="drawn" data-len=".9" id="@ID@">', '  <div class="stg">',
+        '<section class="film co-cv sc-sl" data-fig="glcv" data-gl="still" data-br="%s" data-len=".9" id="@ID@">' % br, '  <div class="stg">',
         '    <div class="co-cv-ph">',
         '      <img class="im on" src="%s" alt="" style="filter:contrast(1.06) brightness(%s)" data-s="sc:1.08&gt;1@0-1.4">' % (img, br),
         '    </div>',
@@ -899,7 +899,7 @@ def co_cover(kick, h1, img, ln):
     """01 — the cover states the thesis before a word of copy: the room stands as a drawing, and the scroll builds it. No stock, no slogan."""
     hb = brk(h1, 18); lnn = hb.count('<br>') + 1
     return '\n'.join([
-        '<section class="film co-cv" data-fig="drawn" data-len="1.2" id="@ID@">', '  <div class="stg">',
+        '<section class="film co-cv" data-fig="glcv" data-gl="build" data-br=".72" data-len="1.2" id="@ID@">', '  <div class="stg">',
         '    <div class="co-cv-ph">',
         '      <img class="dr" src="%s" alt="" data-s="op:1&gt;0@.16-.84">' % ln,
         '      <img class="im" src="%s" alt="" data-s="op:0&gt;1@.14-.8; sc:1.06&gt;1@0-1.1">' % img, '    </div>',
