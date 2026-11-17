@@ -986,13 +986,22 @@ def cu_layers(kick, h1, ps, lines, strong):
                 ''.join('  <p class="t20 rv cu-ly-p" style="--w:475">%s</p>\n' % esc(nop(x)) for x in ps),
                 rs, blue(nop(strong), None))
 def cu_steps(kick, h1, stages):
-    """08 — «From Architecture to Atmosphere»: the seven stages one under another, and the rule over each a shade brighter than the last,
-    so the page's last layers are its strongest"""
-    rs = ''.join('<div class="cu-st-r rv" style="--i:%d"><p class="lab3 n">%02d</p><p class="t34 h">%s</p><p class="t20 t" style="--w:430">%s</p></div>'
-                 % (i, i + 1, esc(nm), esc(nop(tx))) for i, (nm, tx) in enumerate(stages))
-    return ('<section class="bk cu-st" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <div class="cu-st-g">%s</div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), rs)
+    """08 — «From Architecture to Atmosphere». The seven stages do not replace one another: they ACCUMULATE. Each arrives as the scroll reaches
+    it and stays, on a rule a shade brighter than the one above it, until all seven stand together — which is the page's whole argument,
+    «Each layer belongs to the same story». (17.11 12:36: a process set as seven numbered rows is one more list; watched gathering, it is the
+    thing the page is about.)"""
+    d = .4; t0 = .25; n = len(stages)
+    o = ['<section class="film cu-st" data-fig="drawn" data-len="%.2f" id="@ID@">' % (t0 + n * d + .5), '  <div class="stg">',
+         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
+         '      <p class="lab3 m cu-st-k" data-k="0 .16 99 99">%s</p>' % esc(kick),
+         '      <p class="t60 m cu-st-h" data-k="0 .2 99 99">%s</p>' % '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26))]
+    for i, (nm, tx) in enumerate(stages):
+        T = t0 + i * d
+        o.append('      <div class="m cu-st-r" data-k="%.2f %.2f 99 99" style="--i:%d">'
+                 '<p class="lab3 n">%02d</p><p class="t34 h">%s</p><p class="t20 t" style="--w:430">%s</p></div>'
+                 % (T, T + .22, i, i + 1, esc(nm), esc(nop(tx))))
+    o.append('    </div>\n  </div>\n</section>')
+    return '\n'.join(o)
 
 # ================================================================== CI WELLNESS — the invisible (17.11.2026)
 # «The environments around us influence daily routines in ways both visible and invisible… Controls can disappear. Technology can integrate.

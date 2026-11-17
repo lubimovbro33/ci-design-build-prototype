@@ -851,9 +851,12 @@ html body.inr .cu-ly-p{margin:calc(76 * var(--u)) 0 0 calc(421 * var(--u))}
 html body.inr .cu-ly-r p{margin:0;width:calc(1000 * var(--u))}
 html body.inr .cu-ly-c{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
 /* 08 from architecture to atmosphere */
-.cu-st-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
-.cu-st-r{display:grid;grid-template-columns:calc(120 * var(--u)) calc(420 * var(--u)) minmax(0, 1fr);column-gap:calc(50 * var(--u));
-         align-items:start;border-top:1px solid rgba(255, 255, 255, calc(.14 + var(--i, 0) * .1));padding:calc(34 * var(--u)) 0}
+.cu-st .stg{background:#000}
+.film .cu-st-k{left:calc(421 * var(--u));top:calc(120 * var(--u))}
+.film .cu-st-h{left:calc(421 * var(--u));top:calc(166 * var(--u))}
+.film .cu-st-r{left:calc(421 * var(--u));right:calc(50 * var(--u));top:calc((352 + var(--i, 0) * 86) * var(--u));
+         display:grid;grid-template-columns:calc(120 * var(--u)) calc(420 * var(--u)) minmax(0, 1fr);column-gap:calc(50 * var(--u));
+         align-items:start;border-top:1px solid rgba(255, 255, 255, calc(.14 + var(--i, 0) * .11));padding-top:calc(22 * var(--u))}
 html body.inr .cu-st-r .n{color:rgba(255,255,255,.45);padding-top:.35em}
 html body.inr .cu-st-r .h{color:#FFFFFF}
 html body.inr .cu-st-r .t{color:#EBEBEB;padding-top:.5em}
