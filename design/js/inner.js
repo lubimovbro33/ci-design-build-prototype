@@ -555,7 +555,7 @@
     /* the names stand up with their arches; the sentence in hand leaves as the square sets off and the next arrives as its arch settles */
     for (k = 0; k < N; k++){
       var an = sg(h[k], .3, .85);
-      put(v.n[k], an, 'translate(-50%, calc(-100% + ' + ((1 - an) * 8 * U).toFixed(1) + 'px))');
+      put(v.n[k], an, 'translate(-50%, calc(-50% + ' + ((1 - an) * 8 * U).toFixed(1) + 'px))');
       var ai = sg(s, k + .1, k + .3), ao = k < N - 1 ? sg(s, k + 1, k + 1.12) : 0;
       put(v.tx[k], ai * (1 - ao), 'translate3d(0,' + (((1 - ai) - ao) * 12 * U).toFixed(1) + 'px,0)');
     }

@@ -284,12 +284,17 @@ def turnkey_page():
     names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
     txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
     assert len(names) == len(txts) == 8, (len(names), len(txts))
-    pg.add(tk_viaduct(label(sec), h_of(sec), list(zip(names, txts))), 'Process')
-    # 11 the work itself
+    pg.add(tk_viaduct(label(sec), h_of(sec), list(zip(names, txts)), short={'Architecture + Design': 'Design'}), 'Process')
+    # 11 the work itself — after her reference (17.11 21:06, holl&artists): three photographs on one top line, a large one in the
+    # middle and a small one either side, each with its caption under it at its own left edge, nothing under the small ones. On our
+    # grid that is the Portfolio's own block — one large card (two columns, 886 : 1112) and two small (419 : 525) — with the large one
+    # in the MIDDLE. The photographs are the projects' own portrait files (`tall`), not landscapes cut down. The button stands in the
+    # air under the first small card, its foot on the foot of the row.
     sec = S[7]
-    cards = ''.join(pf6_card(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html') for q in PROJ[:3])
+    tri = [PROJ[1], PROJ[0], PROJ[2]]
+    cards = ''.join(pf6_card(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['tall']), q['slug'] + '.html', big=(q is PROJ[0])) for q in tri)
     pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
-    pg.add(bk(h_of(sec), '    <div class="pf6">%s</div>\n    <div class="rv c1 g50">%s</div>' % (
+    pg.add(bk(h_of(sec), '    <div class="pf6 tri">%s<div class="rv tri-b">%s</div></div>' % (
         cards, btn(pbt[0][2] if pbt else 'View the Portfolio', 'portfolio.html')), hcls=' l0'), 'Projects')
     final_cta(pg, S[9], A + 'ch/1450-29a.webp')
     emit('ci-turnkey.html', 'CI Turnkey', pg, A + 'ch/1450-32.webp')

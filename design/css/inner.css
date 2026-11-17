@@ -301,6 +301,12 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .pf6 .cd.big .im{aspect-ratio:886 / 1112}
 .pf6 .cd .nm{margin-top:calc(20 * var(--u))}
 .pf6 .cd .lc{margin-top:calc(20 * var(--u))}
+/* CI Turnkey's three projects after her reference (17.11 21:06, holl&artists — measured: on a page 940 wide, 213 × 280 / 445 × 551 / 213 × 280
+   on one top line, 14 between, captions 13 under each image at its left edge, nothing under the small ones). On this grid: the same block
+   with the large card in the MIDDLE — small, large across two columns, small; and the button in the air of the first column, at the foot */
+.pf6.tri .cd{grid-row:1}
+.pf6.tri .cd:nth-child(1){grid-column:1} .pf6.tri .cd.big{grid-column:2 / span 2} .pf6.tri .cd:nth-child(3){grid-column:4}
+.pf6.tri .tri-b{grid-column:1;grid-row:1;align-self:end}
 /* the Signature grid of Portfolio after her reference of 16.11 12:42 («взяти точно таку сітку»): the page's four columns, near-square tiles one
    column wide (211:224 as in the reference), a large landscape tile two columns wide (436:354), cells left empty on purpose; every card is put
    in its cell by --c (column) and --r (row); rows 100 apart, a small tile stands at the top of its row.
@@ -554,6 +560,8 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
   html body.inr .bk-h.l0{margin-left:var(--m, 20px)}
   .pf6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)}
   .pf6 .cd .im, .pf6 .cd.big .im{aspect-ratio:4 / 5}
+  .pf6.tri .cd, .pf6.tri .tri-b{grid-row:auto;grid-column:auto!important} .pf6.tri .cd.big{order:-1;grid-column:1 / -1!important}
+  .pf6.tri .tri-b{order:9;grid-column:1 / -1!important;margin-top:8px}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
   .pf7{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)} .pf7 .cd{grid-column:auto;grid-row:auto} .pf7 .cd.big{grid-column:span 2}
   .pf7 .cd .im{aspect-ratio:1 / 1} .pf7 .cd.big .im{aspect-ratio:436 / 354} .pf7 .cd .nm{margin-top:12px} .pf7 .cd .lc{margin-top:8px}
@@ -741,11 +749,12 @@ html body.inr .tk-hz-i p{margin:0;color:#EBEBEB;transition:color .4s}
    (js/inner.js, viaduct()) gives the places: --xa the first pier, --bw a bay, --dy the line, --ty the head of the sentence */
 .tk-vd-h{position:absolute;left:calc(421 * var(--u));top:calc(150 * var(--u))}
 .tk-vd-h .lab3{margin:0 0 calc(30 * var(--u))}
-.tk-vd-n{position:absolute;left:calc(var(--xa, 50px) + (var(--k) + .5) * var(--bw, 12vw));top:calc(var(--dy, 50vh) - 40 * var(--u));margin:0;
-  transform:translate(-50%, -100%);text-align:center;white-space:nowrap;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(18 * var(--u)));
+.tk-vd-n{position:absolute;left:calc(var(--xa, 50px) + (var(--k) + .5) * var(--bw, 12vw));top:calc(var(--dy, 50vh) - 50 * var(--u));margin:0;
+  transform:translate(-50%, -50%);text-align:center;white-space:nowrap;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(18 * var(--u)));
   line-height:1.12;letter-spacing:-.02em;text-transform:uppercase;color:#FFFFFF;opacity:0;will-change:opacity,transform}
 html body.inr .tk-vd-t{position:absolute;left:calc(421 * var(--u));top:var(--ty, 80vh);width:calc(475 * var(--u));color:#FFFFFF;opacity:0;will-change:opacity,transform}
 html body.inr .tk-vd-t b{display:inline-block;margin-bottom:.45em}
+.tk-vd-n .f{display:none}   /* the client's full name of a stage whose label over the arch is one word of it: it stands over the sentence, and on phones */
 @media (max-aspect-ratio: 1/1){
   .tk-ld{padding:72px 0}
   html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
@@ -768,7 +777,7 @@ html body.inr .tk-vd-t b{display:inline-block;margin-bottom:.45em}
   .tk-vd-h{position:static;margin:0 0 34px} .tk-vd-h .lab3{margin-bottom:14px}
   .tk-vd-s{border-top:1px solid rgba(255,255,255,.4);padding:18px 0 24px}
   .tk-vd-n{position:static;transform:none!important;opacity:1!important;text-align:left;white-space:normal;font-size:17px;margin:0 0 10px}
-  .tk-vd-n br{display:none}
+  .tk-vd-n .s{display:none} .tk-vd-n .f{display:inline}
   html body.inr .tk-vd-t{position:static;width:auto;opacity:1!important;transform:none!important}
   html body.inr .tk-vd-t b, .tk-vd-t br{display:none}
   html body.inr .tk-hz-a{margin:28px var(--m, 20px);width:auto}

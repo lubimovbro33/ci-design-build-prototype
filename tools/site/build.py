@@ -592,7 +592,7 @@ def tk_index(kick, h1, note, items):
     return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="lab3 rv tk-ix-n">%s</p>\n  <p class="t34 rv tk-ix-f">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), sqr(items))
-def tk_viaduct(kick, h1, stages):
+def tk_viaduct(kick, h1, stages, short=None):
     """10 — the eight stages as a viaduct (17.11.2026 20:33, chosen by her from the sketches: «Роби віадук»). The page's own line — the
     horizon, above it the client's life and below it the work — runs level across the whole screen, and under it eight arches grow one
     after another as the scroll goes: the reason the client's way is level is everything that carries it. Above the line, over each
@@ -600,9 +600,16 @@ def tk_viaduct(kick, h1, stages):
     sentence, one at a time, under its name). The site's square walks the line from the first arch to the last and comes to rest on the
     blue one at the far end: home. Everything stands on one screen — no camera, so it is not the home page's process (an axis that
     travels, circles above and below it). The figure is `viaduct()` in js/inner.js; on phones the film is not pinned and the stages
-    read down as rows: name, sentence."""
-    its = ''.join('<div class="tk-vd-s" style="--k:%d"><p class="tk-vd-n">%s</p><p class="t20 tk-vd-t"><b>%s</b><br>%s</p></div>'
-                  % (i, esc(nm).replace(' + ', ' <br>+ '), esc(nm), esc(nop(tx))) for i, (nm, tx) in enumerate(stages))
+    read down as rows: name, sentence.
+    `short` (21:06, her note on «Architecture + Design» standing in two lines over its arch: «мені не подобається… як це можна скоротити?
+    чи можна якось одним словом?»): the label over an arch may be ONE word of the client's own name — asserted — so every label is one
+    line on one axis; the client's full name stands, as written, over the sentence under the viaduct, and on phones as the row's name."""
+    its = ''
+    for i, (nm, tx) in enumerate(stages):
+        lab = (short or {}).get(nm, nm)
+        assert lab == nm or lab.lower() in [w.lower() for w in nm.replace('+', ' ').split()], (lab, nm)
+        n = esc(nm) if lab == nm else '<span class="s">%s</span><span class="f">%s</span>' % (esc(lab), esc(nm))
+        its += '<div class="tk-vd-s" style="--k:%d"><p class="tk-vd-n">%s</p><p class="t20 tk-vd-t"><b>%s</b><br>%s</p></div>' % (i, n, esc(nm), esc(nop(tx)))
     return '\n'.join([
         '<section class="film tk-vd" data-fig="viaduct" data-len="2.9" id="@ID@">', '  <div class="stg">',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
