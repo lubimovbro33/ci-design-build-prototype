@@ -744,29 +744,18 @@ html body.inr .tk-hz-n{margin:calc(34 * var(--u)) calc(50 * var(--u)) 0 0;text-a
 html body.inr .tk-hz-i p{margin:0;color:#EBEBEB;transition:color .4s}
 .tk-hz-i:hover p{color:#FFFFFF} .tk-hz-i:hover > b{background:#FFFFFF}
 .tk-hz-f .sqr{row-gap:.5em}
-/* 10 the process after her reference (17.11.2026 21:31, j-vers.com; 21:37 «роби») — measured at 1440: the line down the middle, the
-   steps 125 to its right (167 of our frame), a picture 554 × 453 (739 × 604) to its left, 79 (105) from the line, which stays while the
-   steps pass. Ours: the hairline pale for its length and white where the reader has been, our square walking it, a small square at each
-   stage; the title centred in the 60; a stage every 360. The picture is one wall, drawn stage by stage (js/inner.js, [data-pr]) */
-.tk-pr{position:relative;display:block;background:#000;padding:calc(150 * var(--u)) 0}
-.tk-pr-h{text-align:center}
-.tk-pr-h .lab3{margin:0 0 calc(30 * var(--u))}
-.tk-pr-b{position:relative;display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);margin-top:calc(150 * var(--u))}
-.tk-pr-v{position:relative}
-.tk-pr-st{position:sticky;top:calc(50vh - 302 * var(--u));width:calc(739 * var(--u));height:calc(604 * var(--u));margin:0 calc(105 * var(--u)) 0 auto}
-.tk-pr-c{position:absolute;left:0;top:0;width:100%;height:100%;z-index:2;display:block}
-.tk-pr-w{position:absolute;z-index:1;overflow:hidden}
-.tk-pr-w > img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;visibility:hidden}   /* a texture; never on the screen before the drawing asks for it */
-.tk-pr-l{position:absolute;left:50%;top:0;width:0;height:0;pointer-events:none}
-.tk-pr-l::before{content:"";position:absolute;left:-.5px;top:0;width:1px;height:100%;background:rgba(255,255,255,.33)}
-.tk-pr-l .f{position:absolute;left:-.75px;top:0;width:1.5px;height:0;background:#FFFFFF}
-.tk-pr-l .q{position:absolute;left:0;top:0;--q:max(5px, calc(8 * var(--u)));width:var(--q);height:var(--q);margin:calc(var(--q) / -2) 0 0 calc(var(--q) / -2);background:#FFFFFF}
-.tk-pr-s{list-style:none;margin:0;padding:0 calc(50 * var(--u)) 0 calc(167 * var(--u))}
-.tk-pr-i{position:relative;min-height:calc(360 * var(--u))}
-.tk-pr-i .m{position:absolute;left:calc(-167 * var(--u));top:calc(16.5 * var(--u));--q:max(4px, calc(6 * var(--u)));width:var(--q);height:var(--q);margin:calc(var(--q) / -2) 0 0 calc(var(--q) / -2);
-  box-sizing:border-box;border:1px solid rgba(255,255,255,.5);background:#000;transition:background-color .4s,border-color .4s}
-.tk-pr-i.on .m{background:#FFFFFF;border-color:#FFFFFF}
-html body.inr .tk-pr-i .t20{margin-top:calc(25 * var(--u));width:calc(475 * var(--u));color:#FFFFFF}
+/* 10 the process after her reference (17.11.2026 22:40, santalarch.com/#process): a small heading on the left, the stages as a ribbon
+   on the right — a row is the name and a plus, the open row drops its sentence under the name. Measured at 1440: the ribbon from the
+   middle of the screen to the field, a closed row 83 high, the plus 36, the sentence 360 wide. In our frame: 960 → 1870, the name in
+   the 34, the sentence on our measure of 475. The device is the FAQ's own accordion (.qa above; the click in js/inner.js) */
+.tk-ps-g{display:grid;grid-template-columns:calc(539 * var(--u)) minmax(0, 1fr);margin:0 calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-ps-h{width:calc(430 * var(--u))}
+html body.inr .tk-ps-h h2{margin-top:calc(30 * var(--u));color:#FFFFFF}
+.tk-ps .rws{margin:0}
+.tk-ps .qa .qh{grid-template-columns:minmax(0, 1fr) auto;align-items:center;padding:calc(38 * var(--u)) 0}
+.tk-ps .qa .qh .t{font-size:max(17px, calc(34 * var(--u)));line-height:.971;letter-spacing:-.0294em}
+.tk-ps .qa .qh .pl{width:max(16px, calc(38 * var(--u)));height:max(16px, calc(38 * var(--u)))}
+.tk-ps .qa .ain{margin-left:0;grid-template-columns:minmax(0, 1fr);padding:0 0 calc(50 * var(--u))}
 @media (max-aspect-ratio: 1/1){
   .tk-ld{padding:72px 0}
   html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
@@ -784,16 +773,14 @@ html body.inr .tk-pr-i .t20{margin-top:calc(25 * var(--u));width:calc(475 * var(
   .tk-x-r{grid-template-columns:1fr;row-gap:4px;padding:16px 0} .tk-x-r i{display:none}
   html body.inr .tk-x-c, html body.inr .tk-r-c, html body.inr .tk-cm-b, html body.inr .tk-cm-p, html body.inr .tk-cm-c,
   html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;max-width:none}
-  /* the process on phones: the wall, drawn whole, then the line at the left edge and the stages beside it */
-  .tk-pr{padding:72px 0}
-  .tk-pr-h{text-align:left;margin:0 var(--m, 20px)} .tk-pr-h .lab3{margin-bottom:14px}
-  .tk-pr-b{display:block;margin:36px var(--m, 20px) 0}
-  .tk-pr-st{position:relative;top:auto;width:100%;height:auto;aspect-ratio:739 / 604;margin:0 0 36px}
-  .tk-pr-l{left:4px}
-  .tk-pr-s{padding:0 0 0 28px}
-  .tk-pr-i{min-height:0;padding-bottom:34px} .tk-pr-i:last-child{padding-bottom:0}
-  .tk-pr-i .m{left:-24px;top:9px}
-  html body.inr .tk-pr-i .t20{margin-top:10px;width:auto}
+  /* the process on phones: the heading, then the ribbon under it — one column */
+  .tk-ps-g{display:block;margin:0 var(--m, 20px)}
+  .tk-ps-h{width:auto;margin-bottom:26px}
+  html body.inr .tk-ps-h h2{margin-top:14px}
+  .tk-ps .qa .qh{padding:18px 0}
+  .tk-ps .qa .qh .t{font-size:17px}
+  .tk-ps .qa .qh .pl{width:16px;height:16px}
+  .tk-ps .qa .ain{padding-bottom:22px}
   html body.inr .tk-hz-a{margin:28px var(--m, 20px);width:auto}
   html body.inr .tk-hz-n, html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;text-align:left}
   .tk-hz-g{grid-template-columns:1fr;gap:18px;margin:22px var(--m, 20px) 0}

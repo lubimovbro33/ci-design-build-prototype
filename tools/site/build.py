@@ -592,30 +592,26 @@ def tk_index(kick, h1, note, items):
     return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="lab3 rv tk-ix-n">%s</p>\n  <p class="t34 rv tk-ix-f">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), sqr(items))
-def tk_process(kick, h1, stages, win):
-    """10 — the process after her reference (17.11.2026 21:31, j-vers.com: «центральна лінія, в нашій стилістиці… заголовок по центрі,
-    справа інформація про степи і зліва візуал… не 3D-шка, щось ілюстративне»; 21:37 «роби»). Measured off the reference at 1440: the
-    label and the title centred; under them a vertical line down the middle of the screen, a mark on it for each step, filling as the
-    scroll goes; the steps to its right, 125 from it (167 of our frame), a name and a text each; to its left a picture that stays in
-    place while the steps pass it.
-    In our hand: the line is our hairline — pale for its whole length, white where the reader has been — with our square walking it and
-    a small square at each step; the names in the 34 and the client's sentences in the running text, to the site's 475.
-    The picture is ONE WALL: the window wall of the cover's own room, drawn flat, as an interior elevation — and each stage gives it
-    what that stage gives a home: Discovery the empty room, Strategy its axes and levels, Architecture + Design the window and the
-    wall's joints, Pre-Construction the hatch and the dimension chains, Build the walls made solid (and the drawing's marks retire),
-    Curate the curtains and the bed, Install the cushions and the lamp, Deliver the evening city in the window — `win`, the window of
-    the cover's photograph (tools/site/crops.py). The page ends in the window it began with. The figure is the [data-pr] module of
-    js/inner.js. (It replaces the viaduct of 20:33, which stood for an hour.)"""
-    its = ''.join('<li class="tk-pr-i"><i class="m" aria-hidden="true"></i><h3 class="t34 up">%s</h3><p class="t20">%s</p></li>'
-                  % (esc(nm), esc(nop(tx))) for nm, tx in stages)
-    return '\n'.join([
-        '<section class="tk-pr" id="@ID@" data-pr>',
-        '  <div class="tk-pr-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>' % (esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26))),
-        '  <div class="tk-pr-b">',
-        '    <div class="tk-pr-v" aria-hidden="true"><div class="tk-pr-st"><div class="tk-pr-w"><img src="%s" alt=""></div><canvas class="tk-pr-c"></canvas></div></div>' % win,
-        '    <div class="tk-pr-l" aria-hidden="true"><i class="f"></i><i class="q"></i></div>',
-        '    <ol class="tk-pr-s">%s</ol>' % its,
-        '  </div>', '</section>'])
+def tk_process(kick, h1, stages):
+    """10 — the process after her reference (17.11.2026 22:40, santalarch.com/#process: «зліва маленький заголовок, справа ось така от
+    стрічка… нажимаємо на плюсик, у нас випадає опис. Дотримуйся нашої стилістики»). Measured at 1440: the ribbon starts at the middle
+    of the screen (720) and runs to the field (1424); a closed row is 83 high — the stage's name on the left, a plus 36 at the far
+    right; the open row drops its sentence under the name, 360 wide. In our frame: the ribbon 960 → 1870, the name in the 34, the
+    sentence on the site's own measure of 475, and the left column carries only the label and the heading in the 34 — the smallest
+    heading of the page, over its densest block.
+    The device is the site's OWN, not a new one: the FAQ's accordion (`.qa` in css/inner.css, the click in js/inner.js) — a hairline
+    over every row, the plus whose upright bar turns level as the row opens, the panel growing from 0fr to 1fr in .6 s, one row open
+    at a time. The first stage stands open, as on the FAQ and in her reference. (Her note of 19:46 — «кнопочка з плюсиком, куди вона
+    буде переходити? нам її не потрібно» — was about a mark that led nowhere; here the plus is the control that opens the row.)"""
+    rs = ''
+    for i, (nm, tx) in enumerate(stages):
+        rs += ('<div class="qa rv%s"><button class="qh" type="button" aria-expanded="%s"><span class="t">%s</span>'
+               '<span class="pl" aria-hidden="true"></span></button><div class="ab"><div><div class="ain"><div><p>%s</p></div></div></div></div></div>') % (
+                   ' open' if i == 0 else '', 'true' if i == 0 else 'false', esc(nm), esc(nop(tx)))
+    return ('<section class="bk tk-ps" id="@ID@">\n  <div class="tk-ps-g">\n'
+            '    <div class="tk-ps-h rv"><p class="lab3">%s</p><h2 class="t34">%s</h2></div>\n'
+            '    <div class="rws tk-ps-l">%s</div>\n  </div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 22)), rs)
 def sc_track(kick, h1, parts, statement, imgs):
     """Turnkey: one track from the first idea to the first night home; it pans sideways"""
     a, b = parts
