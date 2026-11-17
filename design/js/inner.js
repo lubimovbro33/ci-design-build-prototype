@@ -469,22 +469,19 @@
   /* ---------- film: doors — CI Turnkey (16.11.2026). Their own line: «hand you the keys to the life waiting on the other side». Eight thresholds
      stand one behind another in the site's hairlines; the scroll walks through them, one stage at a time, and the last one opens on the home.
      The thresholds stand on the right half of the screen, so the stage's name and its sentence keep the text line to themselves. */
-  /* the CI Turnkey process: eight rooms. The photographs open out of the middle of the screen on their own scrubs (the cover's gesture,
-     eight times over); the canvas keeps the measure — one hairline along the foot with a mark for every stage, and the site's square
-     walking it. 16.11 23:42: eight identical drawn thresholds were the page's monotony; what opens now is the work itself. */
-  function rooms(f, q, t){
-    var i, N = f.n, x0 = xl(421), x1 = xr(1499), y = Math.round(H - 118 * U) + .5, c = (q - f.t0) / f.d, x;
+  /* CI Turnkey's cover: the whole of a project stands on the screen as a wall of its own words, and the scroll takes it away from the edges
+     inward (every word has its own scrub) until one line is left in the middle. The canvas draws that line — it is what the wall collapses
+     onto, and it stays under the title. 17.11: the page carries its idea here instead of a photograph. */
+  function coll(f, q, t){
+    var i;
     for (i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
-    var al = sg(q, f.t0 - .3, f.t0 + .15);
-    if (al <= .002) return;
-    ink(al * .34, 1); seg(x0, y, x1, y);
-    for (i = 0; i < N; i++){
-      x = Math.round(x0 + (x1 - x0) * (i / (N - 1))) + .5;
-      ink(al * (c >= i - .5 ? .8 : .3), 1); seg(x, y - 9 * U, x, y + 9 * U);
-    }
-    sq(x0 + (x1 - x0) * c01(c / (N - 1)), y, al * .95);
+    var a = sg(q, .30, .9), w = eio(c01((q - .30) / .70));
+    if (a <= .002 || w <= 0) return;
+    var y = Math.round(H - 200 * U) + .5, cx = W / 2, hw = (W / 2 - 50 * U) * w;   /* the horizon the wall falls past, and the title stands on */
+    ink(a * .5, 1); seg(cx - hw, y, cx + hw, y);
+    sq(cx - hw, y, a * .85); sq(cx + hw, y, a * .85);
   }
-  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, rooms: rooms};
+  var FIG = {cover: cover, steps: steps, scene: scene, key: key, many: many, wall: wall, coll: coll};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

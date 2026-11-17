@@ -629,109 +629,115 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
   .sn-img ~ .sn-img{display:none}
   .lst.w3 a{grid-template-columns:40px minmax(0,1fr)}
 }
-/* ================================================================== CI TURNKEY — one door (16.11.2026)
-   16.11 23:42: «Якась вона стала дуже одноманітна і абсолютно нецікава». She was right — the page ran seventeen screens in ONE register:
-   dark, small, left, listed, with photographs only at its two ends. It is rebuilt on change. Eleven screens, picture and type in turn, and
-   no two compositions the same: a mass of lines against a void; a photograph holding half the screen to its full height; the page's one
-   great heading; a plate with a single sentence on it; the centre line; a stair; an index; and a film that walks through eight rooms, each
-   opening out of the middle of the screen the way the cover opened. Every heading at its own size and in its own place (her 23:34). */
-/* 02 — the machine named once: the nine disciplines down the right, the sentence that shuts them on the left. No heading on this screen. */
-.tk-ch{padding:calc(170 * var(--u)) 0 calc(150 * var(--u))}
-html body.inr .tk-ch-k{margin:0 0 0 calc(421 * var(--u))}
-html body.inr .tk-ch-l{margin:calc(54 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));color:#EBEBEB}
-.tk-ch-l .sqr{row-gap:.55em}
-html body.inr .tk-ch-h{margin:calc(104 * var(--u)) 0 0 calc(421 * var(--u))}
-html body.inr .tk-ch-t{margin:calc(86 * var(--u)) 0 0 calc(1040 * var(--u))}
-.tk-ch-b{margin:calc(50 * var(--u)) 0 0 calc(1040 * var(--u))}
-/* 03 — the photograph takes the left half of the screen, full height; the heading beside it is the page's smallest but one */
-.tk-ft{position:relative;display:grid;grid-template-columns:calc(900 * var(--u)) minmax(0, 1fr);column-gap:calc(140 * var(--u));
-       padding:0 calc(50 * var(--u)) calc(150 * var(--u)) 0;background:#000;align-items:start}
-.tk-ft-ph{margin:0;height:calc(1010 * var(--u));overflow:hidden}
-.tk-ft-ph img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.04) brightness(.82)}
-.tk-ft-c{padding-top:calc(150 * var(--u))}
-html body.inr .tk-ft-h{margin:calc(44 * var(--u)) 0 0;color:#EBEBEB}
-html body.inr .tk-ft-l{margin:calc(50 * var(--u)) 0 0;color:rgba(255,255,255,.72)}
-.tk-ft-g{margin:calc(56 * var(--u)) 0 0}
-.tk-ft-r{display:flex;gap:calc(30 * var(--u));padding:calc(19 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
-.tk-ft-r .n{flex:none;color:rgba(255,255,255,.45);padding-top:.25em}
-.tk-ft-r p{margin:0}
-/* 04 — the page's one great heading, and the client's six intersections on six hairlines */
-html body.inr .tk-x .bk-h h2{font-size:max(28px, calc(111 * var(--u)))!important;line-height:.9!important;letter-spacing:-.03em!important}
-.tk-x-i{margin:calc(90 * var(--u)) calc(50 * var(--u)) 0 calc(960 * var(--u));display:grid;grid-template-columns:minmax(0, 1fr);row-gap:calc(40 * var(--u))}
-.tk-x-g{margin:calc(120 * var(--u)) 0 0;display:grid;row-gap:calc(40 * var(--u));justify-content:center}
-.tk-x-r{display:grid;grid-template-columns:calc(360 * var(--u)) auto auto;align-items:center}
-.tk-x-r .a{text-align:right;color:#FFFFFF}
-.tk-x-r .b{color:#EBEBEB}
-.tk-x-r i{display:block;height:1px;background:rgba(255,255,255,.5);width:calc(var(--l, 90) * var(--u));margin:0 calc(28 * var(--u))}
-.tk-x-r:nth-child(1){--l:80} .tk-x-r:nth-child(2){--l:170} .tk-x-r:nth-child(3){--l:110}
-.tk-x-r:nth-child(4){--l:220} .tk-x-r:nth-child(5){--l:130} .tk-x-r:nth-child(6){--l:190}
-html body.inr .tk-x-c{margin:calc(110 * var(--u)) 0 0 calc(421 * var(--u));width:calc(900 * var(--u))}
-/* 05 — the plate: one photograph across the screen, one sentence on it */
+/* ================================================================== CI TURNKEY — everything divides by one (17.11.2026)
+   17.11 07:57: «Типографія: ужас, все розкидано, неможливо це читати… Всі стокові фотографії ми забираємо… мені не вистачає ідеї, мені не
+   вистачає метафор, і перший екран теж.» So the page is built on ONE idea and ONE order.
+   The idea: a residential project is hundreds of people and thousands of decisions, and all of it divides by one team. The cover states it
+   without a word of copy — the whole of a project stands on the screen as a wall of its own disciplines and services, and the scroll takes
+   the wall away from its edges inward until one line is left in the middle. The third screen spells the same thing out as four counts.
+   The order: EVERY block of the page begins on the text line (421); headings come at two sizes only (60 for a chapter, 111 once); running
+   text is 475 and never wider; hairlines carry the rows. Nothing is centred, nothing is hung from the right, nothing cascades.
+   No stock photography: the only pictures are the client's own work, and only where a photograph IS the content. */
+/* 01 the wall, and what is left of it */
+.tk-cv .stg{background:#000}
+.tk-cv-w{position:absolute;left:calc(421 * var(--u));right:calc(50 * var(--u));top:calc(130 * var(--u));bottom:calc(300 * var(--u));z-index:1;
+         display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));grid-template-rows:repeat(8, 1fr);grid-auto-flow:column;
+         column-gap:calc(60 * var(--u))}
+.tk-cv-w span{display:block;align-self:center;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.1;
+              letter-spacing:-.05em;color:#EBEBEB;will-change:opacity}
+.film .tk-cv-h{left:calc(50 * var(--u));top:auto;bottom:calc(272 * var(--u));white-space:nowrap;color:#FFFFFF}
+.film .tk-cv-k{left:calc(50 * var(--u));top:auto;
+               bottom:calc(272 * var(--u) + var(--ln, 2) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
+/* 02 the thought */
+.tk-ld{padding:calc(170 * var(--u)) 0 calc(160 * var(--u))}
+html body.inr .tk-ld-h{margin:0 0 0 calc(421 * var(--u))}
+html body.inr .tk-ld-t{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u))}
+.tk-ld-b{margin:calc(56 * var(--u)) 0 0 calc(421 * var(--u))}
+/* 03 the four counts */
+html body.inr .tk-m-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
+.tk-m-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-m-r{display:grid;grid-template-columns:calc(360 * var(--u)) calc(190 * var(--u)) minmax(0, 1fr);grid-template-rows:auto auto;
+        column-gap:calc(50 * var(--u));row-gap:calc(16 * var(--u));padding:calc(44 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
+html body.inr .tk-m-r .a{grid-column:1;grid-row:1;color:#FFFFFF}
+html body.inr .tk-m-r .al{grid-column:1;grid-row:2;color:rgba(255,255,255,.62)}
+.tk-m-r i{grid-column:2;grid-row:1;align-self:center;width:100%;height:1px;background:rgba(255,255,255,.5)}
+html body.inr .tk-m-r .b{grid-column:3;grid-row:1;color:#FFFFFF}
+html body.inr .tk-m-r .bl{grid-column:3;grid-row:2;color:rgba(255,255,255,.62)}
+/* 04 the one list, and 08 the conditions — one row shape */
+html body.inr .tk-r-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
+.tk-r-g{margin:calc(84 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-r-r{display:grid;grid-template-columns:calc(120 * var(--u)) minmax(0, 1fr);column-gap:calc(40 * var(--u));
+        padding:calc(27 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
+html body.inr .tk-r-r .a{color:rgba(255,255,255,.5);padding-top:.3em}
+html body.inr .tk-r-r .b{color:#EBEBEB}
+.tk-wn .tk-r-r{grid-template-columns:calc(640 * var(--u)) minmax(0, 1fr);column-gap:calc(60 * var(--u))}
+html body.inr .tk-wn .tk-r-r .a{color:#FFFFFF;padding-top:0}
+html body.inr .tk-r-c{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u))}
+/* 05 the plate */
 .tk-pl{position:relative;display:block;background:#000}
-.tk-pl-b{height:calc(840 * var(--u))}
-.tk-pl-b img{filter:contrast(1.04) brightness(.44)}
+.tk-pl-b{height:calc(860 * var(--u))}
+.tk-pl-b img{filter:contrast(1.04) brightness(.5)}
 html body.inr .tk-pl-t{position:absolute;left:calc(421 * var(--u));bottom:calc(120 * var(--u));width:calc(900 * var(--u));margin:0;z-index:2}
-/* 06 — the one screen built on the centre line */
-.tk-cm{padding:calc(160 * var(--u)) calc(421 * var(--u)) calc(160 * var(--u));text-align:center}
-html body.inr .tk-cm-k{margin:0;color:rgba(255,255,255,.62)}
-html body.inr .tk-cm-h{margin:calc(56 * var(--u)) 0 0}
-html body.inr .tk-cm-b{margin:calc(60 * var(--u)) auto 0;max-width:calc(900 * var(--u))}
-.tk-cm-r{width:calc(120 * var(--u));height:1px;background:rgba(255,255,255,.45);margin:calc(84 * var(--u)) auto 0}
-html body.inr .tk-cm-p{margin:calc(78 * var(--u)) auto 0;text-align:left}
-html body.inr .tk-cm-c{margin:calc(100 * var(--u)) auto 0;max-width:calc(1100 * var(--u))}
-/* 07 — the stair, with the heading standing to the right of it */
-html body.inr .tk-w .bk-h{margin-left:calc(960 * var(--u));margin-right:calc(50 * var(--u))}
-.tk-w-g{margin:calc(110 * var(--u)) 0 0}
-html body.inr .tk-w-s{margin:0 0 0 calc((421 + var(--i) * 52) * var(--u));width:calc(820 * var(--u));color:#EBEBEB}
-html body.inr .tk-w-s + .tk-w-s{margin-top:calc(38 * var(--u))}
-html body.inr .tk-w-c{margin:calc(100 * var(--u)) 0 0 calc(421 * var(--u))}
-/* 08 — the index: the page's smallest heading over its heaviest block */
-html body.inr .tk-ix .bk-h h2{font-size:max(17px, calc(34 * var(--u)))!important;line-height:.97!important;letter-spacing:-.0294em!important}
-html body.inr .tk-ix-n{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u));color:rgba(255,255,255,.5)}
-html body.inr .tk-ix-f{margin:calc(44 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));
-         border-top:1px solid rgba(255,255,255,.18);padding-top:calc(46 * var(--u));color:#EBEBEB}
-.tk-ix-f .sqr{row-gap:.5em}
-/* 09 — the film: eight rooms, each opening out of the middle of the screen */
-.tk-r .stg{background:#000}
-.tk-r-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1}
-.tk-r-i{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden;will-change:clip-path}
-.tk-r-i img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;
-            filter:contrast(1.04) brightness(.56);will-change:transform}
-.tk-r-vl{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;pointer-events:none;
-         background:linear-gradient(90deg, rgba(0,0,0,.86) 0%, rgba(0,0,0,.72) 24%, rgba(0,0,0,.08) 48%, rgba(0,0,0,.08) 52%, rgba(0,0,0,.72) 76%, rgba(0,0,0,.86) 100%)}
-.film .tk-r-k{left:0;right:0;top:calc(120 * var(--u));text-align:center}
-.film .tk-r-h{left:0;right:0;top:calc(170 * var(--u));text-align:center}
-.film .tk-r-n{left:calc(421 * var(--u));top:calc(50% - 250 * var(--u));color:#FFFFFF}
-.film .tk-r-s{left:calc(421 * var(--u));top:calc(50% - 20 * var(--u));color:#EBEBEB}
-.film .tk-r-t{left:calc(421 * var(--u));top:calc(50% + 60 * var(--u))}
-.film .tk-r-n.r, .film .tk-r-s.r{left:auto;right:calc(421 * var(--u));text-align:right}
-.film .tk-r-t.r{left:auto;right:calc(421 * var(--u));text-align:right}
+/* 06 the page's one great heading, and the six intersections */
+html body.inr .tk-x .bk-h h2{font-size:max(28px, calc(111 * var(--u)))!important;line-height:.9!important;letter-spacing:-.03em!important}
+html body.inr .tk-x-l{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u))}
+.tk-x-p{margin:calc(44 * var(--u)) 0 0 calc(421 * var(--u))}
+.tk-x-p p + p{margin-top:calc(22 * var(--u))}
+.tk-x-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-x-r{display:grid;grid-template-columns:calc(360 * var(--u)) calc(150 * var(--u)) minmax(0, 1fr);column-gap:calc(40 * var(--u));
+        align-items:center;padding:calc(30 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
+html body.inr .tk-x-r .a{color:#FFFFFF}
+html body.inr .tk-x-r .b{color:#EBEBEB}
+.tk-x-r i{width:100%;height:1px;background:rgba(255,255,255,.5)}
+html body.inr .tk-x-c{margin:calc(100 * var(--u)) 0 0 calc(421 * var(--u));width:calc(900 * var(--u))}
+/* 07 the six ways, as one paragraph */
+html body.inr .tk-cm-b{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u));width:calc(900 * var(--u))}
+html body.inr .tk-cm-p{margin:calc(56 * var(--u)) 0 0 calc(421 * var(--u))}
+html body.inr .tk-cm-c{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
+/* 05 the horizon: the page's metaphor as one screen */
+.tk-hz{position:relative;padding:calc(150 * var(--u)) 0 calc(160 * var(--u));background:#000}
+html body.inr .tk-hz .bk-h h2{font-size:max(17px, calc(34 * var(--u)))!important;line-height:.97!important;letter-spacing:-.0294em!important}
+html body.inr .tk-hz-a{margin:calc(150 * var(--u)) 0 calc(140 * var(--u)) calc(421 * var(--u));color:#FFFFFF;white-space:normal}
+/* the same line the cover's wall fell past, come back at the middle of the page: it carries its two marks at the fields */
+.tk-hz-l{position:relative;height:1px;background:rgba(255,255,255,.5);margin:0 calc(50 * var(--u))}
+.tk-hz-l::before, .tk-hz-l::after{content:"";position:absolute;top:50%;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));
+  margin-top:calc(max(5px, 8 * var(--u)) / -2);background:#FFFFFF}
+.tk-hz-l::before{left:calc(max(5px, 8 * var(--u)) / -2)} .tk-hz-l::after{right:calc(max(5px, 8 * var(--u)) / -2)}
+html body.inr .tk-hz-n{margin:calc(140 * var(--u)) 0 0 calc(421 * var(--u));color:rgba(255,255,255,.5)}
+html body.inr .tk-hz-f{margin:calc(44 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));color:#EBEBEB}
+.tk-hz-f .sqr{row-gap:.5em}
+/* 10 the eight stages: each on its own hairline, and the hairline grows from the first to the last */
+.tk-s-g{margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
+.tk-s-r{position:relative;display:grid;grid-template-columns:calc(150 * var(--u)) calc(420 * var(--u)) minmax(0, 1fr);
+        column-gap:calc(50 * var(--u));align-items:start;padding:calc(36 * var(--u)) 0 calc(44 * var(--u))}
+.tk-s-r i{position:absolute;left:0;top:0;height:1px;background:rgba(255,255,255,.4);width:calc((34 + var(--i, 0) * 9.4) * 1%)}
+html body.inr .tk-s-r .n{color:rgba(255,255,255,.45)}
+html body.inr .tk-s-r .h{color:#FFFFFF;padding-top:.3em}
+html body.inr .tk-s-r .t{color:#EBEBEB;padding-top:.55em}
 @media (max-aspect-ratio: 1/1){
-  .tk-ch{padding:72px 0} html body.inr .tk-ch-h{margin:24px var(--m, 20px) 0;white-space:normal}
-  html body.inr .tk-ch-k{margin:0 var(--m, 20px)}
-  html body.inr .tk-ch-l{margin:22px var(--m, 20px) 0}
-  html body.inr .tk-ch-t, .tk-ch-b{margin:28px var(--m, 20px) 0}
-  .tk-ft{display:block;padding:0 0 72px}
-  .tk-ft-ph{height:62vh}
-  .tk-ft-c{padding:40px 0 0} html body.inr .tk-ft-h{margin:14px var(--m, 20px) 0}
-  .tk-ft-c > .lab3{margin:0 var(--m, 20px)}
-  html body.inr .tk-ft-l, .tk-ft-g{margin:24px var(--m, 20px) 0;width:auto}
-  .tk-ft-r{gap:14px;padding:16px 0} .tk-ft-r p{width:auto}
-  .tk-x-g{display:block;margin:28px var(--m, 20px) 0;row-gap:0}
-  .tk-x-r{display:block;padding:14px 0} .tk-x-r .a{text-align:left} .tk-x-r i{display:none} .tk-x-r .b{margin-left:.3em}
-  html body.inr .tk-ix-f, html body.inr .tk-cm-p{margin:24px var(--m, 20px) 0;width:auto;max-width:none}
-  .tk-x-i, .tk-w-g{margin:28px var(--m, 20px) 0}
-  html body.inr .tk-x-c, html body.inr .tk-ix-n, html body.inr .tk-w-c{margin:28px var(--m, 20px) 0;width:auto}
-  .tk-w-g{margin:24px 0 0} html body.inr .tk-w-s{margin:0 var(--m, 20px);width:auto} html body.inr .tk-w-s + .tk-w-s{margin-top:18px}
+  .tk-cv-w{display:none}
+  .film .tk-cv-o{position:static;text-align:left;margin:0 var(--m, 20px)}
+  .film .tk-cv-h, .film .tk-cv-k{position:static;left:auto;bottom:auto;white-space:normal;margin:0 var(--m, 20px)}
+  .tk-ld{padding:72px 0}
+  html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
+  html body.inr .tk-ld-t{margin:24px var(--m, 20px) 0;width:auto}
+  .tk-ld-b{margin:26px var(--m, 20px) 0}
+  html body.inr .tk-m-l, html body.inr .tk-r-l, html body.inr .tk-x-l{margin:24px var(--m, 20px) 0;width:auto}
+  .tk-m-g, .tk-r-g, .tk-x-g, .tk-s-g, .tk-x-p{margin:26px var(--m, 20px) 0}
+  .tk-m-r{grid-template-columns:1fr;row-gap:6px;padding:18px 0} .tk-m-r i{display:none}
+  html body.inr .tk-m-r .a, html body.inr .tk-m-r .al, html body.inr .tk-m-r .b, html body.inr .tk-m-r .bl{grid-column:1;grid-row:auto}
+  html body.inr .tk-m-r .b{margin-top:10px}
+  .tk-r-r{grid-template-columns:40px minmax(0, 1fr);column-gap:14px;padding:16px 0}
+  .tk-wn .tk-r-r{grid-template-columns:1fr;row-gap:6px}
+  html body.inr .tk-r-r .b{width:auto}
+  .tk-x-r{grid-template-columns:1fr;row-gap:4px;padding:16px 0} .tk-x-r i{display:none}
+  html body.inr .tk-x-c, html body.inr .tk-r-c, html body.inr .tk-cm-b, html body.inr .tk-cm-p, html body.inr .tk-cm-c,
+  html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto;max-width:none}
+  .tk-s-r{display:block;padding:18px 0 22px} .tk-s-r i{width:100%}
+  html body.inr .tk-s-r .h{padding-top:0;margin-top:8px} html body.inr .tk-s-r .t{padding-top:0;margin-top:10px;width:auto}
+  html body.inr .tk-hz-a{margin:28px var(--m, 20px);width:auto}
+  html body.inr .tk-hz-n, html body.inr .tk-hz-f{margin:26px var(--m, 20px) 0;width:auto}
+  .tk-hz{padding:72px 0}
+  .tk-pl-b{height:56vh} html body.inr .tk-pl-t{left:var(--m, 20px);right:var(--m, 20px);width:auto;bottom:28px}
   html body.inr .tk-x .bk-h h2{font-size:clamp(26px, 8vw, 40px)!important}
-  html body.inr .tk-w .bk-h{margin-left:var(--m, 20px);margin-right:var(--m, 20px)}
-  .tk-pl-b{height:56vh} .tk-pl-t{left:var(--m, 20px);right:var(--m, 20px);width:auto;bottom:28px}
-  .tk-cm{padding:72px var(--m, 20px);text-align:left}
-  html body.inr .tk-cm-h{margin:18px 0 0;white-space:normal}
-  html body.inr .tk-cm-b, .tk-cm-c{margin:24px 0 0;max-width:none}
-  .tk-cm-r{display:none}
-  .tk-ix-c li{line-height:1.7}
-  .film .tk-r-n, .film .tk-r-s, .film .tk-r-t{left:var(--m, 20px);right:var(--m, 20px);text-align:left}
-  .film .tk-r-n.r, .film .tk-r-s.r, .film .tk-r-t.r{left:var(--m, 20px);right:var(--m, 20px);text-align:left}
-  .tk-r-vl{background:linear-gradient(180deg, rgba(0,0,0,.5) 0%, rgba(0,0,0,.18) 40%, rgba(0,0,0,.7) 100%)}
 }

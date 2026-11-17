@@ -49,62 +49,66 @@ def solution(key, fname, name, scene, bnd, band_after, cta_img, picks, proc='fil
 SEG_CORE = open(os.path.join(HERE, 'seg_core.txt')).read().strip()
 # ---------------------------------------------------------------- CI Turnkey: one door (16.11.2026, her brief of 23:14 / 23:28)
 def turnkey_page():
-    """CI Turnkey — one door. 16.11 23:42: «Якась вона стала дуже одноманітна і абсолютно нецікава» — and she was right: seventeen screens in one
-    register, dark and small and listed, with photographs only at the two ends. The page is rebuilt on CHANGE: eleven screens that alternate
-    picture and type, and no two compositions alike — the slit of light, a mass of lines against a void, a photograph holding half the screen,
-    the page's one great heading, a plate with a single sentence on it, the centre line, a stair, an index, and the film that walks through
-    eight opening rooms. The heading of every screen is set at a different size and in a different place, as she asked at 23:34."""
+    """CI Turnkey — everything divides by one. 17.11 07:57: «Типографія: ужас, все розкидано… Всі стокові фотографії ми забираємо… не вистачає
+    ідеї, метафор, і перший екран теж». So: no stock photography anywhere on the page (only the client's own work, and only where a photograph
+    is the content); one metaphor, stated on the first screen and spelled out on the third — a project is hundreds of people and thousands of
+    decisions, and all of it divides by ONE team; and one typographic order — every block begins at the same left edge, headings at two sizes
+    only, running text at 475, so the page is read and not deciphered."""
     S = [join_lists(dots_fix(x)) for x in P['turnkey']]; pg = Pg()
     h1, ps, a = hero(S[0])
-    # 01 the door opens on the room
-    pg.add(sc_door(label(S[0]), h1, A + 'ch/1450-32.webp'), 'Turnkey', 'top')
-    # 02 the whole machine named once, and shut behind one team
+    sec4 = S[4]; ks = [it[1] for it in sec4['items'] if it[0] == 'k']
+    note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
+    eco = [x for g in ks[1:] for x in (g if isinstance(g, (list, tuple)) else [g]) if x]
+    chain = [x.strip(' .') for x in nop(' '.join(ps[1])).split('.')]
+    assert len(chain) == 9 and chain[-1] == 'Project management', chain
+    # 01 the wall of a whole project, taken away until one line is left
+    pg.add(tk_cover(label(S[0]), h1, chain + eco), 'Turnkey', 'top')
+    # 02 the thought, and nothing else on the screen
     assert nop(ps[0][0]) == 'CI Turnkey is the most complete expression of the CI model', ps[0]
     thought = esc('CI Turnkey is the most complete') + '<br class="bd"> <span class="cb">' + esc('expression of the CI model') + '</span>'
-    chain = [x.strip(' .') for x in nop(' '.join(ps[1])).split('.')]   # the client's nine disciplines, one to a line
-    assert len(chain) == 9 and chain[0] == 'Architecture' and chain[-1] == 'Project management', chain
-    pg.add(tk_chain(label(S[0]), thought, chain, ' '.join(ps[2]), btn(a[0], 'contact.html')), 'Idea')
-    # 03 is it you? the photograph takes the left half, the seven lines the right
-    sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
-    pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0] if get(sec, 'lead') else '', rows, A + 'ch/1450-10a.webp'), 'Fit')
-    # 04 the page's one great heading: the six intersections
-    sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
-    inter = [x for x in pit if len(x) == 6][0]
-    short = [x[0] for x in pit if len(x) == 1]
-    st = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_pairs(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], short, inter, st), 'Receive')
-    # 05 the plate: the size of the thing, in the client's own words, on one photograph
-    sec = S[3]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    st = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(tk_lead(thought, ' '.join(ps[2]), btn(a[0], 'contact.html')), 'Idea')
+    # 03 the metaphor spelled out: every count of a project on the left, one on the right
+    sec = S[3]; sp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     six = [x for x in [it[1] for it in sec['items'] if it[0] == 'p'] if len(x) == 6][0]
-    pg.add(tk_plate(A + 'ch/1450-18.webp', ps_[0]), 'Experience')
-    # 06 and the answer, on the centre line
-    pg.add(tk_calm(label(sec), h_of(sec), ps_[1], six, st), 'Managed')
-    # 07 one team: the «When …» sentences as a stair
-    sec = S[5]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
-    whens = max(pit, key=len)
-    one = [x[0] for x in pit if len(x) == 1]
-    st = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_when(label(sec), h_of(sec), [one[0]] + list(whens) + [one[1]], st), 'One Team')
-    # 08 everything behind the door, as an index
-    sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
-    note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
-    items = []
-    for gq in ks[1:]:
-        items += [x for x in (gq if isinstance(gq, (list, tuple)) else [gq])]
-    items = [x for x in items if x]
-    pg.add(tk_index(label(sec), h_of(sec), note, items), 'Included')
-    # 09 the film: eight rooms, each opening out of the middle of the screen. The photographs walk the project from paper to home.
-    sec = S[6]; st8 = []
-    names = [x[1] for x in sec['items'] if x[0] == 'h4']; txts = [x[1][0] for x in sec['items'] if x[0] == 'p']
+    st3 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(tk_math(label(sec), h_of(sec), sp[0], [
+        ('Nine', 'disciplines', 'One', 'team', 0),
+        ('Hundreds', 'of people', 'One', 'point of accountability', 0),
+        ('Thousands', 'of decisions', 'One', 'conversation at a time', 1),
+        ('Eight', 'stages', 'One', 'journey', 0)]), 'Arithmetic')
+    # 04 the page's one list
+    sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
+    pg.add(tk_rows(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], rows), 'Fit')
+    # 05 the horizon: above the line what stays yours, below it everything we carry
+    sec = S[5]; p5 = [it[1] for it in sec['items'] if it[0] == 'p']
+    one5 = [x[0] for x in p5 if len(x) == 1]; whens = max(p5, key=len)
+    st5 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
+    pg.add(tk_horizon(label(sec4), h_of(sec4), sp[1], note, eco), 'Above the Line')
+    # 06 the page's one great heading, and the six intersections
+    sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
+    inter = [x for x in pit if len(x) == 6][0]; short = [x[0] for x in pit if len(x) == 1]
+    pg.add(tk_pairs(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], short, inter,
+                    ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])), 'Receive')
+    # 07 the six ways, as one paragraph
+    pg.add(tk_calm(None, None, None, six, st3), 'Managed')
+    # 08 the conditions, as a table: what happens, and what we do about it
+    pairs = []
+    for x in [one5[0]] + list(whens):
+        a_, b_ = nop(x).split(', ', 1)
+        pairs.append((a_ + ',', b_))
+    pg.add(tk_rows(label(S[5]), h_of(S[5]), None, pairs, num=False, cls=' tk-wn') .replace('</section>',
+           '  <p class="t34 rv tk-r-c">%s</p>\n</section>' % blue(nop(st5), None)), 'One Team')
+    # 09 one photograph of the client's own work, and the sentence that says why the page exists
+    pg.add(tk_plate(A + 'us/1511-11a.webp', one5[1]), 'Responsibility')
+    # 10 the eight stages, to read
+    sec = S[6]
+    names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
+    txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
     assert len(names) == len(txts) == 8, (len(names), len(txts))
-    for nm, tx in zip(names, txts): st8.append((nm if isinstance(nm, str) else ' '.join(nm), tx if isinstance(tx, str) else ' '.join(tx)))
-    pg.add(tk_rooms(label(sec), h_of(sec), st8, [A + x for x in ['of/table.webp', 'of/plans.webp', 'of/plans2_w.webp', 'of/materials2.webp',
-                                                                'of/materials.webp', 'ch/1450-21.webp', 'ch/1450-30.webp', 'ch/1450-24.webp']]), 'Process')
-    # 10 projects
+    pg.add(tk_steps(label(sec), h_of(sec), list(zip(names, txts))), 'Process')
+    # 11 the work itself
     sec = S[7]
-    cards = ''.join(pf6_card(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html')
-                    for q in PROJ[:3])
+    cards = ''.join(pf6_card(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html') for q in PROJ[:3])
     pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
     pg.add(bk(h_of(sec), '    <div class="pf6">%s</div>\n    <div class="rv c1 g50">%s</div>' % (
         cards, btn(pbt[0][2] if pbt else 'View the Portfolio', 'portfolio.html')), hcls=' l0'), 'Projects')

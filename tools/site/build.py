@@ -462,85 +462,102 @@ def sc_door(kick, h1, img):
         '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
-def tk_chain(kick, thought, chain, para_, button):
-    """02 — the machine is named ONCE, as a plain column of lines down the right; the sentence that shuts it behind one team stands large on the
-    left. (16.11 23:42: the nine disciplines run together in a paragraph were one more grey block among many; here they are a mass against a void.)"""
-    return ('<section class="bk tk-ch" id="@ID@">\n  <p class="lab3 rv tk-ch-k">%s</p>\n  <p class="t34 rv tk-ch-l">%s</p>\n'
-            '  <p class="t60s rv tk-ch-h">%s</p>\n  <p class="t20 rv tk-ch-t" style="--w:430">%s</p>\n'
-            '  <div class="rv tk-ch-b">%s</div>\n</section>') % (
-                esc(kick), sqr(chain), thought, esc(nop(para_)), button)
-def tk_fit(kick, h1, lead, rows, img):
-    """03 — the photograph holds the whole left half of the screen to its full height; beside it the seven lines, small and numbered. The heading
-    is deliberately the page's smallest: the picture carries the screen, not the type."""
-    li = ''.join('<div class="tk-ft-r rv"><span class="n lab3">%02d</span><p class="t20">%s</p></div>' % (i + 1, esc(nop(x))) for i, x in enumerate(rows))
-    return ('<section class="tk-ft" id="@ID@">\n  <figure class="tk-ft-ph"><img src="%s" alt="" loading="lazy"></figure>\n'
-            '  <div class="tk-ft-c">\n    <p class="lab3 rv">%s</p>\n    <h2 class="t34 rv tk-ft-h">%s</h2>\n'
-            '    <p class="t20 rv tk-ft-l" style="--w:430">%s</p>\n    <div class="tk-ft-g">%s</div>\n  </div>\n</section>') % (
-                img, esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)), li)
-def tk_pairs(kick, h1, lead, ps, lines, closer_):
-    """04 — the page's one big heading. The client's six intersections are parallel sentences, so they are set as six lines on six hairlines,
-    three and three; nothing else on the screen."""
-    rows = ''
-    for x in lines:                                   # «Design» — «with construction»: the pair is DRAWN, the hairline between its two halves
-        a, b = nop(x).split(' ', 1)
-        rows += '<div class="tk-x-r rv"><span class="t34 a">%s</span><i aria-hidden="true"></i><span class="t34 b">%s</span></div>' % (esc(a), esc(b))
-    return ('<section class="bk tk-x" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <div class="tk-x-i"><p class="t34 rv">%s</p><div class="t20s rv" style="--w:475">%s</div></div>\n'
-            '  <div class="tk-x-g">%s</div>\n  <p class="t34 rv tk-x-c">%s</p>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)),
-                ''.join('<p>%s</p>' % esc(nop(x)) for x in ps), rows, blue(nop(closer_), None))
+def tk_cover(kick, h1, wall):
+    """01 — the page's idea, before a word of copy. The WHOLE of a project stands on the screen at once, every discipline and every service of
+    the client's own list. The scroll makes it FALL: the wall comes down past a hairline that draws itself across the lower third, and nothing
+    of it comes back up. What is left is the line, and the title standing on it. That line is the page's metaphor — above it the client's life,
+    below it the whole of the work — and it returns at the middle of the page. 17.11 08:04: a line, but not the lines of the other pages."""
+    rows = 8; cells = []
+    for i, w in enumerate(wall):
+        r = i % rows                                   # one curtain, every word falling the same distance, the top row first
+        a0 = .06 + r * .012; a1 = a0 + .52      # a ripple, not a stagger: a bigger one lets a row catch the row above it
+        # the "&gt;" is deliberate: a bare > inside an attribute makes a tag unreadable to anything that parses the page with a regex
+        # (our own verify.py among them), and these spans are the only scrubbed elements whose TEXT has to be found again
+        cells.append('<span data-s="ty:0&gt;1150@%.2f-%.2f; op:1&gt;0@%.2f-%.2f">%s</span>' % (a0, a1, a0 + .16, a1 - .05, esc(w)))
+    hb = brk(h1, 18); ln = hb.count('<br>') + 1
+    return '\n'.join([
+        '<section class="film tk-cv" data-fig="coll" data-len="1.9" id="@ID@">', '  <div class="stg">',
+        '    <div class="tk-cv-w" aria-hidden="true">%s</div>' % ''.join(cells),
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
+        '      <p class="lab3 m tk-cv-k" style="--ln:%d" data-k="1.02 1.28 99 99">%s</p>' % (ln, esc(kick)),
+        '      <h1 class="t111 m tk-cv-h" style="--ln:%d" data-k=".98 1.24 99 99">%s</h1>' % (ln, hb),
+        '    </div>', '  </div>', '</section>'])
+def tk_horizon(kick, h1, above, note, items):
+    """05 — the page's metaphor as one screen. One hairline across the frame: ABOVE it, in the client's own words, what stays the client's;
+    BELOW it, everything CI carries, their whole list of services as one field. The weight is below the line, the quiet above it."""
+    return ('<section class="tk-hz" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t60s rv tk-hz-a">%s</p>\n  <div class="tk-hz-l rv" aria-hidden="true"></div>\n'
+            '  <p class="lab3 rv tk-hz-n">%s</p>\n  <p class="t34 rv tk-hz-f">%s</p>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(above)), esc(nop(note)), sqr(items))
+def tk_lead(thought, para_, button):
+    """02 — the thought of the page, and nothing else on the screen. Everything on the text line: the sentence, the paragraph under it, the button
+    under that. (17.11 07:57: «все розкидано, неможливо це читати» — from here on every block of this page begins at the same left edge.)"""
+    return ('<section class="bk tk-ld" id="@ID@">\n  <p class="t60s rv tk-ld-h">%s</p>\n'
+            '  <p class="t20 rv tk-ld-t" style="--w:475">%s</p>\n  <div class="rv tk-ld-b">%s</div>\n</section>') % (
+                thought, esc(nop(para_)), button)
+def tk_math(kick, h1, lead, rows):
+    """03 — the metaphor, spelled out: a project's every count on the left, and one on the right. Four rows of one shape, so the eye learns it
+    on the first row and reads the rest in a second."""
+    rs = ''
+    for big, lab, one, ol, wc in rows:
+        rs += ('<div class="tk-m-r rv"><p class="t60 a">%s</p><p class="lab3 al">%s</p><i aria-hidden="true"></i>'
+               '<p class="t60 b">%s</p><p class="lab3 bl%s">%s</p></div>') % (esc(big), esc(lab), esc(one), ' wc' if wc else '', esc(ol))
+    return ('<section class="bk tk-m" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <div class="tk-m-g">%s</div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), rs)
+def tk_rows(kick, h1, lead, rows, num=True, cls=''):
+    """the page's one list (04), and the table of conditions (08): the same row — a number or the first half on the left, the sentence on the
+    right, a hairline over each. One shape, read straight down."""
+    rs = ''
+    for i, r in enumerate(rows):
+        a, b = (('%02d' % (i + 1)), r) if num else r
+        rs += '<div class="tk-r-r rv"><p class="%s a">%s</p><p class="t20 b">%s</p></div>' % ('lab3' if num else 't20', esc(a), esc(nop(b)))
+    return ('<section class="bk tk-rw%s" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '%s  <div class="tk-r-g">%s</div>\n</section>') % (
+                cls, esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)),
+                '  <p class="t20 rv tk-r-l" style="--w:475">%s</p>\n' % esc(nop(lead)) if lead else '', rs)
 def tk_plate(img, line, pos=None):
-    """05 — one photograph across the screen and a single sentence on it: the size of the thing, before the page answers it"""
+    """05 — one photograph of the client's own work across the screen, and one sentence on it, on the same left edge as every other block"""
     return ('<section class="tk-pl" id="@ID@">\n  <div class="bnd tk-pl-b"><img src="%s" alt="" loading="lazy"%s></div>\n'
             '  <p class="t34 rv tk-pl-t">%s</p>\n</section>') % (
                 img, ' style="object-position:%s"' % pos if pos else '', esc(nop(line)))
+def tk_pairs(kick, h1, lead, ps, lines, closer_):
+    """06 — the page's one great heading, and under it the client's six intersections: each pair's halves either side of one hairline, every
+    hairline the same, so the six read as one figure"""
+    rs = ''
+    for x in lines:
+        a, b = nop(x).split(' ', 1)
+        rs += '<div class="tk-x-r rv"><p class="t34 a">%s</p><i aria-hidden="true"></i><p class="t34 b">%s</p></div>' % (esc(a), esc(b))
+    return ('<section class="bk tk-x" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <p class="t34 rv tk-x-l">%s</p>\n  <div class="t20s rv tk-x-p" style="--w:475">%s</div>\n'
+            '  <div class="tk-x-g">%s</div>\n  <p class="t34 rv tk-x-c">%s</p>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)),
+                ''.join('<p>%s</p>' % esc(nop(x)) for x in ps), rs, blue(nop(closer_), None))
 def tk_calm(kick, h1, big, lines, closer_):
-    """06 — the answer, in the middle of the air: the long heading centred, the six ways under it in two quiet columns without rules,
-    and the client's own closing thought in blue. The one screen on the page built on the centre line."""
-    run = esc(nop(' '.join(lines)))                   # 16.11 23:58: six lines in a list read as one more list; as prose they read as a way of working
-    return ('<section class="bk tk-cm" id="@ID@">\n  <p class="lab3 rv tk-cm-k">%s</p>\n  <h2 class="t60s rv tk-cm-h">%s</h2>\n'
-            '  <p class="t34 rv tk-cm-b">%s</p>\n  <div class="tk-cm-r rv" aria-hidden="true"></div>\n'
-            '  <p class="t20 rv tk-cm-p" style="--w:475">%s</p>\n  <p class="t34 rv tk-cm-c">%s</p>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 30)), esc(nop(big)), run, blue(nop(closer_), None))
-def tk_when(kick, h1, lines, closer_):
-    """07 — «One Team. Complete Responsibility.»: the «When …» sentences are parallel, so they are a stair, each step on its own hairline,
-    with the heading standing to the right of them"""
-    rows = ''.join('<p class="t34 rv tk-w-s" style="--i:%d">%s</p>' % (i, esc(nop(x))) for i, x in enumerate(lines))
-    return ('<section class="bk tk-w" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <div class="tk-w-g">%s</div>\n  <p class="t34 rv tk-w-c">%s</p>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), rows, blue(nop(closer_), None))
+    """07 — the six ways of working as ONE paragraph, not six bullets (16.11 23:58), and the client's closing thought under it. The screen
+    carries no heading of its own: the heading of this part of their copy stands over the four counts on screen 03, and repeating it here
+    would read as two blocks saying the same thing."""
+    hd = ('  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n' % (
+        esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)))) if h1 else ''
+    return ('<section class="bk tk-cm" id="@ID@">\n%s%s  <p class="t20 rv tk-cm-p" style="--w:475">%s</p>\n'
+            '  <p class="t34 rv tk-cm-c">%s</p>\n</section>') % (
+                hd, '  <p class="t34 rv tk-cm-b">%s</p>\n' % esc(nop(big)) if big else '',
+                esc(nop(' '.join(lines))), blue(nop(closer_), None))
 def tk_index(kick, h1, note, items):
-    """08 — «The Complete CI Ecosystem»: everything that stands behind the door, as an index. Three columns of plain lines under the page's
-    smallest heading: its weight is the point, so it is set quietly."""
-    field = sqr(items)                                # everything behind the door as ONE field of words, set apart by the blue square
+    """09 — everything that stands behind one contract, as ONE field of words set apart by the blue square. Its weight is the point, so it is
+    set quietly, under the page's smallest heading."""
     return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="lab3 rv tk-ix-n">%s</p>\n  <p class="t34 rv tk-ix-f">%s</p>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), field)
-def tk_rooms(kick, h1, stages, imgs):
-    """09 — the page's own film, and the one door opening eight times. Each stage is a photograph that OPENS out of the middle of the screen,
-    the way the cover opened; the number stands at the stage's own size. The first four keep to the left of the frame and the last four cross to
-    the right, so the walk moves across the screen as the work moves from paper to home. The canvas keeps the measure: one hairline with eight
-    marks along the foot."""
-    d = .44; t0 = .5; n = len(stages); assert len(imgs) == n
-    o = ['<section class="film tk-r" data-fig="rooms" data-n="%d" data-t0="%s" data-d="%s" data-len="%.2f" id="@ID@">' % (n, t0, d, t0 + n * d + .55),
-         '  <div class="stg">\n    <div class="tk-r-ph">']
-    for i, im in enumerate(imgs):
-        T = t0 + i * d
-        a, b = (0, .30) if i == 0 else (T - .30, T + .14)   # the first room is already opening as the film is entered: no black screen at its door
-        o.append('      <div class="tk-r-i" data-s="ci:0,50,0,50>0,0,0,0@%.2f-%.2f" style="clip-path:inset(0 50%% 0 50%%)">'
-                 '<img src="%s" alt="" data-s="sc:1.12>1@%.2f-%.2f"></div>' % (a, b, im, a, b + .5))
-    o.append('    </div>\n    <div class="tk-r-vl" aria-hidden="true"></div>')
-    o.append('    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">')
-    o.append('      <p class="lab3 m tk-r-k" data-k="0 .16 %.2f %.2f">%s</p>' % (t0 - .22, t0 + .02, esc(kick)))
-    o.append('      <h2 class="t60 m tk-r-h" data-k="0 .16 %.2f %.2f">%s</h2>' % (t0 - .22, t0 + .02, '<br>'.join(esc(x) for x in brk_lines(nop(h1), 20))))
-    for i, (nm, tx) in enumerate(stages):
-        T = t0 + i * d; last = i == n - 1; side = ' r' if i >= n // 2 else ''
-        k = '%.2f %.2f %s' % (T, T + .15, '99 99' if last else '%.2f %.2f' % (T + d - .13, T + d + .02))
-        o.append('      <p class="t111 m tk-r-n%s" data-k="%s">%02d</p>' % (side, k, i + 1))
-        o.append('      <p class="t34 m tk-r-s%s" data-k="%s">%s</p>' % (side, k, esc(nm)))
-        o.append('      <p class="t20 m tk-r-t%s" data-k="%s" style="--w:430">%s</p>' % (side, k, esc(nop(tx))))
-    return '\n'.join(o + ['    </div>\n  </div>\n</section>'])
-
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), sqr(items))
+def tk_steps(kick, h1, stages):
+    """10 — the eight stages, read straight down. Each stage stands on its own hairline, and the hairline grows from the first stage to the
+    last: the project gathers as it goes. The grid under them does not move, so it reads as a table and not as scattering."""
+    rs = ''.join('<div class="tk-s-r rv" style="--i:%d"><i aria-hidden="true"></i><p class="t60 n">%02d</p>'
+                 '<p class="t34 h">%s</p><p class="t20 t" style="--w:430">%s</p></div>'
+                 % (i, i + 1, esc(nm), esc(nop(tx))) for i, (nm, tx) in enumerate(stages))
+    return ('<section class="bk tk-s" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+            '  <div class="tk-s-g">%s</div>\n</section>') % (
+                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), rs)
 def sc_track(kick, h1, parts, statement, imgs):
     """Turnkey: one track from the first idea to the first night home; it pans sideways"""
     a, b = parts
