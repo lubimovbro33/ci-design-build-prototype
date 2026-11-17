@@ -462,19 +462,30 @@ def sc_door(kick, h1, img):
         '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
-def tk_cover(kick, h1, img):
-    """01 — the section, and the one home in it (17.11 16:40 and 16:47). The page opens on an architectural section of the building in our
-    hairlines — what the cut passes through outlined and hatched, the neighbours' rooms in elevation, the level marks and the dimension
-    chain outside the façade — and one apartment in it is drafted over its own photograph. The scroll goes into that apartment: the section
-    leaves by the edges, the evening light starts at the room's window and crosses it, and the drawing is given up to the room that was
-    built, line by line. Their own «From First Idea to the First Night Home», as one move. The figure is `section()` in js/inner.js."""
-    hb = brk(h1, 18); ln = hb.count('<br>') + 1
+def tk_cover(kick, h1, img, line, lines):
+    """01 — her own frame and scenario (17.11 17:07, `603:742`): the page's name and its title stand in the middle of a black screen, the
+    title in three centred lines of 60, its first half white and «First Night Home» blue; under them, 140 away, runs the site's line. The
+    scroll parts the line in two. The two lines carry the drawing of the room between them and leave each of its lines where it belongs —
+    the line draws the picture — the upper one wiping the words away as it rises, so the text only ever stands on black (17:12: «текст
+    залишимо там, де він є, на чорному фоні. Не будемо його дублювати на фотографію»). Then the evening light crosses the drawing and it
+    is the photograph. `line` = the room's own drawing (tools/site/lines.py), `lines` = the title's lines as (white, blue) halves; the
+    figure is `unfold()` in js/inner.js."""
+    assert nop(' '.join((a + b).strip() for a, b in lines)).lower() == nop(h1).lower(), (lines, h1)
+    out = ''; on = False
+    for i, (wh, bl) in enumerate(lines):
+        if i: out += '<br>'
+        if wh:
+            if on: out += '</span>'; on = False
+            out += esc(wh)
+        if bl:
+            if not on: out += '<span class="cb">'; on = True
+            out += esc(bl)
+    if on: out += '</span>'
     return '\n'.join([
-        '<section class="film tk-cv" data-fig="section" data-len="1.7" id="@ID@">', '  <div class="stg">',
-        '    <div class="tk-cv-ph"><img src="%s" alt=""></div>' % img,
+        '<section class="film tk-cv" data-fig="unfold" data-len="1.85" id="@ID@">', '  <div class="stg">',
+        '    <div class="tk-cv-ph"><img src="%s" alt=""><img class="tk-cv-ln" src="%s" alt=""></div>' % (img, line),
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-        '      <p class="lab3 rv tk-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
-        '      <h1 class="t111 rv tk-cv-h" style="--ln:%d">%s</h1>' % (ln, hb),
+        '      <div class="tk-cv-t"><p class="tk-cv-k rv">%s</p><h1 class="t60 tk-cv-h rv">%s</h1></div>' % (esc(kick), out),
         '    </div>', '  </div>', '</section>'])
 def tk_horizon(kick, h1, above, note, groups):
     """05 — the page's metaphor as one screen, and the whole ecosystem hanging from it (17.11.2026 15:15). ABOVE the line, large, what stays

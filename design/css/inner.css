@@ -645,11 +645,11 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
 .tk-cv .stg{background:#000}
 .tk-cv-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:hidden;will-change:clip-path}
 .tk-cv-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;max-width:none;display:block;
-              filter:contrast(1.06) brightness(.7);will-change:transform}
-.film .tk-cv-h{position:absolute;left:calc(50 * var(--u));top:auto;bottom:max(calc(50 * var(--u)), 50px);white-space:nowrap;color:#FFFFFF;
-                z-index:3;margin:0}
-.film .tk-cv-k{position:absolute;left:calc(50 * var(--u));top:auto;z-index:3;margin:0;
-               bottom:calc(max(50 * var(--u), 50px) + var(--ln, 2) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
+              filter:contrast(1.04) brightness(.93)}
+/* her frame 603:742: the name and the title in the middle of the screen, centred; label 437, title 486–642 of 1080 */
+.film .tk-cv-t{position:absolute;left:0;right:0;top:calc(50% - 103 * var(--u));z-index:3;text-align:center;will-change:clip-path}
+.tk-cv-k{margin:0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.2;letter-spacing:.05em;color:#EBEBEB}
+html body.inr .tk-cv-h{margin:calc(25 * var(--u)) 0 0!important;color:#EBEBEB;white-space:nowrap!important}
 /* 02 the thought */
 .tk-ld{padding:calc(170 * var(--u)) 0 calc(160 * var(--u))}
 html body.inr .tk-ld-h{margin:0 0 0 calc(421 * var(--u))}
@@ -744,7 +744,6 @@ html body.inr .tk-s-r .n{color:rgba(255,255,255,.45)}
 html body.inr .tk-s-r .h{color:#FFFFFF;padding-top:.3em}
 html body.inr .tk-s-r .t{color:#EBEBEB;padding-top:.55em}
 @media (max-aspect-ratio: 1/1){
-  .film .tk-cv-h, .film .tk-cv-k{position:absolute;left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
   .tk-ld{padding:72px 0}
   html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
   html body.inr .tk-ld-t{margin:24px var(--m, 20px) 0;width:auto}
@@ -1021,11 +1020,19 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
 /* phones: a film is not pinned there, and these covers have nothing in the flow to give them a height — the photograph stands a screen
    high with its title at the foot (17.11.2026: all four solution covers had collapsed to their padding) */
 @media (max-aspect-ratio: 1/1){
-  .film.tk-cv .stg, .film.co-cv .stg{height:100vh;height:100svh;overflow:hidden}
-  .film.tk-cv .sc, .film.co-cv .sc{position:absolute;left:0;top:0;width:100%;height:100%;padding:0}
-  .film .tk-cv-h, .film .co-cv-h{bottom:max(40px, env(safe-area-inset-bottom))}
+  .film.co-cv .stg{height:100vh;height:100svh;overflow:hidden}
+  .film.co-cv .sc{position:absolute;left:0;top:0;width:100%;height:100%;padding:0}
+  .film .co-cv-h{bottom:max(40px, env(safe-area-inset-bottom))}
+  /* CI Turnkey: the words on black, the site's line under them, and then the room — one after another, since nothing is pinned here */
+  .film.tk-cv .stg{display:flex;flex-direction:column;height:auto}
+  .film.tk-cv .sc{order:1;position:relative;padding:0;min-height:62vh;min-height:62svh;display:flex;align-items:center;justify-content:center}
+  .film .tk-cv-t{position:relative;top:auto;padding:96px var(--m, 20px) 56px}
+  .film .tk-cv-t::after{content:"";display:block;height:1px;background:rgba(255,255,255,.9);margin:56px calc(-1 * var(--m, 20px)) 0}
+  html body.inr .tk-cv-h{white-space:normal!important;margin-top:14px!important}
+  .film.tk-cv .tk-cv-ph{order:2;position:relative;height:66vh;height:66svh}
 }
 .glc{position:absolute;left:0;top:0;width:100%;height:100%;display:block;z-index:1}
+.tk-cv-ph img.tk-cv-ln{display:none}   /* the room's own drawing is a texture for the shader; without WebGL the photograph simply stands */
 .gl-on > img{visibility:hidden}
 .co-sm-g .co-sm-ln{z-index:2}
 

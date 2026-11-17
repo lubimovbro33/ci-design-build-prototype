@@ -6,7 +6,8 @@ import os, sys
 from PIL import Image, ImageFilter
 import numpy as np
 SRC = 'design/assets/ph'; OUT = 'design/assets/ln'
-WANT = ['ch/1450-24', 'ch/1450-17', 'us/1511-01a', 'rtb/1430-08a', 'ch/1450-31']
+WANT = ['ch/1450-24', 'ch/1450-17', 'us/1511-01a', 'rtb/1430-08a', 'ch/1450-31', 'ch/1450-32']
+WIDE = {'ch/1450-32': 2560}   # CI Turnkey's cover shows its drawing across the whole screen: at the photograph's own width, so the lines stay fine
 KX = np.array([[-1., 0, 1], [-2, 0, 2], [-1, 0, 1]]); KY = KX.T
 def conv(a, k):
     p = np.pad(a, 1, mode='edge'); o = np.zeros_like(a)
@@ -27,7 +28,7 @@ if __name__ == '__main__':
     for n in WANT:
         p = os.path.join(SRC, n + '.webp')
         if not os.path.exists(p): print('missing', p); continue
-        d = draw(p)
+        d = draw(p, w=WIDE.get(n, 1800))
         o = os.path.join(OUT, n.split('/')[-1] + '.webp')
         d.save(o, quality=86, method=6)
         print(o, d.size, os.path.getsize(o) // 1024, 'kB')

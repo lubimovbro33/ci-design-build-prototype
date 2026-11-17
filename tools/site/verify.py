@@ -17,7 +17,8 @@ def page_text(f):
     m = re.sub(r'<br[^>]*>', ' ', m); m = re.sub(r'</(p|li|h1|h2|h3|div|span|dt|dd|a|button|label)>', ' ', m); m = re.sub(r'<[^>]+>', '', m)
     return ' ' + norm(m).replace('.', '') + ' '
 # agreed exceptions: (page key, the client's text) → the text that stands on the page instead, and who decided
-EXC = {('portfolio', 'Homes as Unique as the People Who Live in Them'): ('Homes Made for Unique Lives', 'the designer, 15.11.2026: the cover of Portfolio as in her frame')}
+EXC = {('portfolio', 'Homes as Unique as the People Who Live in Them'): ('Homes Made for Unique Lives', 'the designer, 15.11.2026: the cover of Portfolio as in her frame'),
+       ('turnkey', 'From First Idea to the First Night Home'): ('From First Idea to First Night Home', 'the designer, 17.11.2026: the cover of CI Turnkey as in her frame 603:742')}
 tot = miss = 0
 for k, fs in MAPF.items():
     T = ''.join(page_text(f) for f in fs)
