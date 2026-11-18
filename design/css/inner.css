@@ -60,7 +60,7 @@ html body.inr .film .sw-hd .sw-h{position:static;margin:0}
    the statement is 16.05 of its own size wide (385 / 24), the texts 16.55 of theirs (331 / 20), the list's second column 11.1 from
    the first (222 / 20), its rows .4 apart (8 / 20) — the lines break in every window exactly where they break in her frame. */
 html body.inr .film .sw-bd .sw-l{position:static;margin:0;width:16.05em;max-width:none;font-size:max(16px, calc(24 * var(--u)))!important;line-height:1.375!important}
-html body.inr .film .sw-bd .sw-t{position:static;margin:calc(78 * var(--u)) 0 0;width:16.55em}
+html body.inr .film .sw-bd .sw-t{position:static;margin:calc(40 * var(--u)) 0 0;width:16.55em}
 html body.inr .film .sw-bd .sw-t.two{display:grid;grid-auto-flow:column;grid-template-rows:repeat(5, auto);grid-template-columns:11.1em max-content;row-gap:.4em;width:auto}
 html body.inr .film .sw-bd .sw-t.two p{margin:0;white-space:nowrap}
 html body.inr .film .sw-bd .sw-f{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;width:16.55em}
