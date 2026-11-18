@@ -288,11 +288,16 @@ def turnkey_page():
     one5 = [x[0] for x in p5 if len(x) == 1]; whens = max(p5, key=len)
     st5 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
     pg.add(tk_scope(label(sec4), h_of(sec4), sp[1], note, eco), 'Above the Line')
-    # 06 the page's one great heading, and the six intersections
+    # 05 what you receive: the six intersections on one axis (18.11 17:01 — the joints were «громіздкий, неакуратний»)
     sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
     inter = [x for x in pit if len(x) == 6][0]; short = [x[0] for x in pit if len(x) == 1]
-    pg.add(tk_pairs(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], short, inter,
-                    ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])), 'Receive')
+    assert nop(h_of(sec)) == 'Complete Responsibility. Fewer Handoffs' and len(short) == 2, (h_of(sec), short)
+    p5l = ['Instead of becoming the central coordinator', 'between separate professionals, you work with one integrated', 'team already communicating internally']
+    assert ' '.join(p5l) == nop(short[0]), short[0]
+    cl5 = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
+    assert cl5 == 'You see the project as one journey because we manage it as one', cl5
+    pg.add(tk_pairs(label(sec), [('Complete Responsibility.', ''), ('', 'Fewer Handoffs')], get(sec, 'lead')[0][1][0], p5l, short[1], inter,
+                    [('You see the project as one journey', ''), ('', 'because we manage it as one')]), 'Receive')
     # 07 the six ways, as one paragraph
     six7 = [x for x in six if x not in ppl + dcs]   # those two sentences stand in the counts (03), each beside its own count
     pg.add(tk_calm(None, None, None, six7, st3), 'Managed')

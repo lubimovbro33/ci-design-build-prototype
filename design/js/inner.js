@@ -857,14 +857,18 @@
   }
   /* ================================================================== CI Turnkey, 18.11.2026: three more films
      count — her frame 643:8641. The four counts and, beside them, what the count in hand is made of. The scroll walks them one by one;
-     the pointer or the keyboard takes one in hand. Between the number and the content the film's canvas draws the page's own figure,
-     small and once: what the count is made of — nine lines, some forty, more than a hundred, eight — gathers into ONE line that runs
-     to our square («якісь прикольні лінії, чи так як у нас було на попередній версії, але акуратно і стримано»). */
+     the pointer or the keyboard takes one in hand.
+     16:56, on the first build (nine / forty / a hundred lines gathering into one in the panel): «мені не подобаються оті лінії, вони
+     якісь безсмисляні. Придумай іншу анімацію, елегантнішу, мінімалістичнішу і преміальнішу.» A figure that has to be decoded is not
+     one; and her frame keeps the panel empty between the number and the content. So nothing is drawn there. What moves is what the
+     block already has: along the foot of the count in hand the page's own white line is ruled over its hairline, exactly as far as
+     the scroll has carried the reader through that count, our square at its tip — when it reaches the end of the table the next count
+     takes over; the panel's number rolls; the content comes in line by line (css). */
   function count(f, q, t){
-    var c = f.ct, k, j;
+    var c = f.ct;
     if (!c){
       var gE = qs('[data-count]', f.el);
-      c = f.ct = {rows: qsa('.tk-ct-r', gE), ps: qsa('.tk-ct-p', gE), d: qs('.tk-ct-d', gE), cur: -1, hov: -1, t0: -1, N: [9, 44, 116, 8], A: [.5, .27, .14, .5]};
+      c = f.ct = {rows: qsa('.tk-ct-r', gE), ps: qsa('.tk-ct-p', gE), d: qs('.tk-ct-d', gE), cur: -1, hov: -1, p: 0, prev: -1, pp: 0, pt: 0};
       c.rows.forEach(function(r, i){
         function take(){ c.hov = i; c.hq = f.q; }
         r.addEventListener('pointerenter', take); r.addEventListener('pointermove', take); r.addEventListener('focus', take);
@@ -876,26 +880,26 @@
     /* a count is in hand while the pointer MOVES on it; once the page is scrolled on, the scroll walks the counts again — a pointer
        left lying on the table must not hold the block still */
     if (c.hov >= 0 && Math.abs(q - c.hq) > .04) c.hov = -1;
-    var on = c.hov >= 0 ? c.hov : q < .95 ? 0 : q < 1.5 ? 1 : q < 2.05 ? 2 : 3;
-    var r = c.d.getBoundingClientRect(), sr = f.cv.getBoundingClientRect();
+    var ST = [.2, .8, 1.4, 2, 2.6], on = c.hov >= 0 ? c.hov : q < ST[1] ? 0 : q < ST[2] ? 1 : q < ST[3] ? 2 : 3;
     if (on !== c.cur){
-      c.cur = on; if (c.t0 >= 0) c.t0 = t;
+      if (c.cur >= 0){ c.prev = c.cur; c.pp = c.p; c.pt = t; }
+      c.cur = on; c.p = 0;
       c.rows.forEach(function(e, i){ e.classList.toggle('on', i === on); });
       c.ps.forEach(function(e, i){ e.classList.toggle('on', i === on); });
+      c.d.style.setProperty('--i', on);
     }
-    if (c.t0 < 0){ if (r.top < H * .86) c.t0 = t; else return; }            /* the figure draws itself when its screen is first seen */
-    if (r.width < 80) return;
-    var x0 = r.left - sr.left, x1 = r.right - sr.left - SQ / 2, cy = Math.round(r.top - sr.top + r.height * .435) + .5, hh = 50 * U, xm = x0 + (x1 - x0) * .6;
-    var dp = reduced ? 1 : c01((t - c.t0) / 1.15), fan = eo(sg(dp, 0, .7)), one = eo(sg(dp, .46, 1)), n = c.N[on], S = 24, km = Math.max(1, Math.round(S * fan));
-    g.strokeStyle = 'rgba(235,235,235,' + c.A[on] + ')'; g.lineWidth = 1; g.setLineDash([]); g.beginPath();
-    for (k = 0; k < n; k++){
-      var y = cy + ((k / (n - 1)) * 2 - 1) * hh; g.moveTo(x0, y);
-      for (j = 1; j <= km; j++){ var u = j / S; g.lineTo(lerp(x0, xm, u), lerp(y, cy, u * u * (3 - 2 * u))); }
+    /* how far the line has got: with the scroll through this count; all the way, in one stroke, under a count taken by the pointer */
+    var tgt = c.hov >= 0 ? 1 : sg(q, ST[on], ST[on + 1]);
+    c.p = reduced ? tgt : c.p + (tgt - c.p) * (c.hov >= 0 ? .11 : .3); if (Math.abs(tgt - c.p) < .0015) c.p = tgt;
+    var sr = f.cv.getBoundingClientRect();
+    function rule(i, p, a){
+      var r = c.rows[i].getBoundingClientRect(); if (r.width < 40 || p <= .002 || a <= .004) return;
+      var x0 = r.left - sr.left, y = Math.round(r.bottom - sr.top) - .5, x1 = x0 + r.width * p;
+      ink(a, 1); seg(x0, y, x1, y);
+      g.globalAlpha = a; g.fillStyle = '#96A8BF'; g.fillRect(Math.round(Math.min(x1, x0 + r.width - SQ / 2) - SQ / 2), Math.round(y - SQ / 2), Math.round(SQ), Math.round(SQ)); g.globalAlpha = 1;
     }
-    g.stroke();
-    if (one > 0){ ink(1, LW); seg(xm, cy, lerp(xm, x1, one), cy); }
-    var sa = sg(dp, .9, 1);
-    if (sa > 0){ g.globalAlpha = sa; g.fillStyle = '#96A8BF'; g.fillRect(Math.round(x1 - SQ / 2), Math.round(cy - SQ / 2), Math.round(SQ), Math.round(SQ)); g.globalAlpha = 1; }
+    rule(on, c.p, 1);
+    if (c.prev >= 0){ var a = 1 - c01((t - c.pt) / .45); if (a > 0) rule(c.prev, c.pp, a); else c.prev = -1; }   /* the line of the count just left goes out */
   }
   /* team — her frames 644:8972 → 633:428: «зліва внизу фотографія маленька. Коли ми скролимо, вона буде збільшуватись, ставати на весь
      екран, затемнюватись… і появляється інформація». The square of the photograph in the corner of the list grows until it is the

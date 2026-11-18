@@ -528,8 +528,12 @@ def tk_count(kick, title, lead, rows):
     a table (a count is 92 high: the word in the 34, its small caps under it, ONE and what it is beside them), and what the count in
     hand is made of: its number at the head, its content on the foot, in the running 20. The scroll walks the counts one by one; the
     pointer (or the keyboard) takes one in hand. The counts not in hand stand at 26 % — as drawn in her frame.
-    rows: (word, small caps, ONE, small caps, wc, content markup). The figure between the number and the content is drawn by `count()`
-    in js/inner.js: what the count is made of, gathering into one line."""
+    rows: (word, small caps, ONE, small caps, wc, content markup).
+    18.11 16:56, on the first build: «мені не подобаються оті лінії, вони якісь безсмисляні. Придумай іншу анімацію, елегантнішу,
+    мінімалістичнішу і преміальнішу.» The figure of lines gathering into one is gone, and nothing is drawn in the panel at all — her
+    frame keeps it empty. What moves now is only what the block already has (`count()` in js/inner.js and the css): the page's own
+    white line is ruled along the foot of the count in hand, as far as the scroll has carried it, our square at its tip; the panel's
+    number rolls to the next; the content comes in line by line."""
     hl = ''; on = False
     for i, (bl, wh) in enumerate(title):
         if i: hl += '<br>'
@@ -550,11 +554,12 @@ def tk_count(kick, title, lead, rows):
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-ct-s">',
         '      <div class="tk-ct-h"><p class="lab3 rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
         '      <p class="t20 rv tk-ct-l">%s</p>' % (esc(nop(lead)) if isinstance(lead, str) else ' <br class="bd">'.join(esc(nop(x)) if i == len(lead) - 1 else esc(x) for i, x in enumerate(lead))),
-        '      <div class="tk-ct-g rv" data-count><div class="tk-ct-t">%s</div><div class="tk-ct-d">%s</div></div>' % (rs, ds),
+        '      <div class="tk-ct-g rv" data-count><div class="tk-ct-t">%s</div><div class="tk-ct-d"><p class="lab3 tk-ct-n" aria-hidden="true"><span>%s</span></p>%s</div></div>' % (
+            rs, ''.join('<i>%02d</i>' % (i + 1) for i in range(len(rows))), ds),
         '    </div>', '  </div>', '</section>'])
 def tk_items(parts):
     """the content of a count: its items in columns of three, each behind the site's blue square (her frame 643:8641)"""
-    return '<ul class="tk-ct-i">%s</ul>' % ''.join('<li>%s</li>' % esc(x) for x in parts)
+    return '<ul class="tk-ct-i">%s</ul>' % ''.join('<li style="--k:%d">%s</li>' % (k, esc(x)) for k, x in enumerate(parts))
 
 def tk_team(kick, title, pairs, closer_, img, line, lines2):
     """07 + 08 as ONE film — her frames `644:8972` and `633:428` (18.11 16:15): «На першому макеті у нас є ось такий список. Зверстай його
@@ -691,30 +696,36 @@ def tk_plate(img, line, pos=None):
     return ('<section class="tk-pl" id="@ID@">\n  <div class="bnd tk-pl-b"><img src="%s" alt="" loading="lazy"%s></div>\n'
             '  <p class="t34 rv tk-pl-t">%s</p>\n</section>') % (
                 img, ' style="object-position:%s"' % pos if pos else '', esc(nop(line)))
-# the box joint of 06: two pieces of one board, the left with two fingers, the right with one, cut so that together they fill it
-# exactly. They are drawn apart, and the row in hand brings them together (css/inner.css, .tk-jn)
-JOINT = ('<svg class="jn" viewBox="0 0 340 64" fill="none" xmlns="http://www.w3.org/2000/svg">'
-         '<path class="l" d="M0 1H210V17H170V33H210V49H170V63H0"/>'
-         '<path class="r" d="M340 1H208V17H168V33H208V49H168V63H340"/>'
-         '<rect class="q" x="184" y="28" width="9" height="9"/></svg>')
-def tk_pairs(kick, h1, lead, ps, lines, closer_):
-    """06 — the client's six intersections as JOINTS (17.11.2026 23:01: «як метафорично, цікаво, інтерактивно це показати»). The block's
-    own word is HANDOFF: the argument is not that there are six disciplines but that between them there is no seam. So each pair is a
-    carpenter's box joint, drawn in our hairlines: the left half's fingers and the right half's notches. At rest the two halves stand
-    apart, taken to pieces; the pointer (or the keyboard) on a row brings them together, the gap closes and our square stands on the
-    joint. The names either side are the client's own halves of the sentence. Nothing moves but the row in hand.
-    The paragraph «Instead of becoming the central coordinator…» is gone from here: it also stands in the counts block, and the client
-    wrote it once (17.11 22:11, the duplicate found when the page was read against the prototype)."""
+def tk_pairs(kick, title, lead, para, cap, lines, closer_):
+    """05 — «What You Receive», set on ONE AXIS (18.11.2026 17:01, on the block of joints: «він дуже громіздкий, дуже неакуратний.
+    Перероби його мінімалістичніше, зрозуміліше і преміальніше»). What was heavy: a heading in the 111 across two lines, six drawings
+    of carpenter's joints, four sizes of type. What stands now is type on a centre line, and one hairline:
+      the name and the title centred at the head, as on the process (`title` = lines of (white, blue));
+      the client's lead in the 34 and the paragraph in the running 20 under it (`para` = its own lines, broken for rhythm);
+      «We manage the intersections», and from it a hairline straight down the middle of the screen. The six pairs stand on it: the
+      first half of each sentence flush right against the line, the second flush left from it, our square on the line between them —
+      every intersection is on the one line, which is the whole argument. The line is ruled as the block arrives and the halves
+      come to it from either side; the pair under the pointer closes on its square;
+      the closing sentence at the line's foot.
+    `lines` are the client's sentences («Design with construction»), cut after the first word."""
+    hl = ''
+    for i, (wh, bl) in enumerate(title):
+        if i: hl += '<br>'
+        if wh: hl += esc(wh)
+        if bl: hl += '<span class="cb">%s</span>' % esc(bl)
     rs = ''
     for i, x in enumerate(lines):
         a, b = nop(x).split(' ', 1)
-        rs += ('<div class="tk-jn-r rv" style="--k:%d" tabindex="0"><p class="t34 a">%s</p>'
-               '<span class="tk-jn-j" aria-hidden="true">%s</span><p class="t34 b">%s</p></div>') % (i, esc(a), JOINT, esc(b))
-    return ('<section class="bk tk-x tk-jn" id="@ID@">\n  <div class="bk-h l0"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <p class="t34 rv tk-x-l">%s</p>\n  <div class="t20s rv tk-x-p" style="--w:475">%s</div>\n'
-            '  <div class="tk-jn-g">%s</div>\n  <p class="t34 rv tk-x-c">%s</p>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(lead)),
-                ''.join('<p>%s</p>' % esc(nop(x)) for x in ps), rs, blue(nop(closer_), None))
+        rs += '<div class="tk-ix-r" style="--k:%d" tabindex="0"><p class="t34 a">%s</p><i class="q" aria-hidden="true"></i><p class="t34 b">%s</p></div>' % (i, esc(a), esc(b))
+    return '\n'.join([
+        '<section class="bk tk-ix" id="@ID@">',
+        '  <div class="tk-ix-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
+        '  <p class="t34 rv tk-ix-l">%s</p>' % esc(nop(lead)),
+        '  <p class="t20 rv tk-ix-p">%s</p>' % ' <br class="bd">'.join(esc(x) for x in para),
+        '  <p class="t20 rv tk-ix-k">%s</p>' % esc(nop(cap)),
+        '  <div class="tk-ix-a rv"><i class="tk-ix-v" aria-hidden="true"></i>%s</div>' % rs,
+        '  <p class="t34 rv tk-ix-c">%s</p>' % ' <br class="bd">'.join(esc(w) + ('<span class="cb">%s</span>' % esc(b) if b else '') for w, b in closer_),
+        '</section>'])
 def tk_calm(kick, h1, big, lines, closer_):
     """07 — the six ways of working as ONE paragraph, not six bullets (16.11 23:58), and the client's closing thought under it. The screen
     carries no heading of its own: the heading of this part of their copy stands over the four counts on screen 03, and repeating it here
