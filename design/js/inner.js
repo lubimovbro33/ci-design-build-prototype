@@ -568,7 +568,7 @@
                     the air moves through the rooms, the lamps glow.
      Every move straddles the change of the text (the old text leaves in the middle of it, the new one arrives as the camera settles), so the
      drawing is never showing one way while the words say another. The walls themselves never fade: it is the same house throughout. */
-  var PCAM = [[500, 358, 1], [290, 190, 1.6], [365, 452, 1.5], [500, 167, 1]];   /* what the camera looks at, and how closely; the last keeps the house clear of the long heading */
+  var PCAM = [[500, 358, 1], [290, 190, 1.6], [365, 452, 1.5], [500, 358, 1]];   /* what the camera looks at, and how closely. 18.11.2026 20:50 (her frame 605:99): every heading stands at the head of the screen now, so the last way sees the whole house where the first does */
   var PCUR = [['r',430,426,38,30,6],['r',474,426,38,30,6],['r',592,426,38,30,6],['r',426,476,30,36,6],['r',426,520,30,36,6],
               ['c',560,520,13],['r',538,500,24,13,2],['c',150,440,8],['c',175,440,12],['c',200,440,8],
               ['c',672,410,13],['l',662,410,682,410],['l',672,400,672,420],['c',384,588,17],['c',384,588,7]];
@@ -588,12 +588,15 @@
     for (k = 0; k < N - 1; k++) if (TR[k] > 0){ ci = k; cu = eio(TR[k]); }
     var c0 = PCAM[ci], c1 = PCAM[Math.min(N - 1, ci + 1)];
     var cx = lerp(c0[0], c1[0], cu), cy = lerp(c0[1], c1[1], cu), cs = Math.exp(lerp(Math.log(c0[2]), Math.log(c1[2]), cu));
-    /* the drawing lives in the right half of the frame; the camera looks at the house through that box */
-    var P = PLN, BX0 = 985, BX1 = 1870, BY0 = 150, BY1 = 990, S = (BX1 - BX0) * .88 / P.W * cs, bx = (BX0 + BX1) / 2, by = (BY0 + BY1) / 2;
-    function X(x){ return xr(bx + (x - cx) * S); }
+    /* her frame 605:99 (18.11.2026 20:50): the drawing stands in the MIDDLE of the screen — on the screen's own axis, like the name over
+       it and the button under it (her plan sits 20 right of it; snapped) — at the size it had, its camera 66 under the screen's middle
+       as she set it; the camera looks at the house through a box that ends above the button (her second frame, 605:157: 226 … 903) */
+    var P = PLN, BX0 = 517.5, BX1 = 1402.5, BY0 = 226, BY1 = 903, S = (BX1 - BX0) * .88 / P.W * cs, bx = 960, by = 606;
+    function xm(v){ return W / 2 + (v - 960) * U; }
+    function X(x){ return xm(bx + (x - cx) * S); }
     function Y(y){ return ry(by + (y - cy) * S); }
     function L(xa, ya, xb, yb){ g.beginPath(); g.moveTo(X(xa), Y(ya)); g.lineTo(X(xb), Y(yb)); g.stroke(); }
-    var UN = X(1) - X(0), x0 = xr(BX0), x1 = xr(BX1), y0 = ry(BY0), y1 = ry(BY1);
+    var UN = X(1) - X(0), x0 = xm(BX0), x1 = xm(BX1), y0 = ry(BY0), y1 = ry(BY1);
     g.save(); g.beginPath(); g.rect(x0, y0, x1 - x0, y1 - y0); g.clip();
     var dp = sg(q, f.t0 - .34, f.t0 + .16), a0 = A[0], a1 = A[1], a2 = A[2], a3 = A[3] || 0;
     var fur0 = a0 * sg(q, f.t0 - .08, f.t0 + .24), lamp0 = a0 * sg(q, f.t0 + .06, f.t0 + .4), key0 = a0 * sg(q, f.t0 + .26, f.t0 + .5);

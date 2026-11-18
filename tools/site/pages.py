@@ -422,10 +422,24 @@ def solutions():
         # beside it at 1040, and the button at the foot of the same column
         # 17.11 12:58: the small word over the name sat on its own anchor, so a name of two lines ate the gap. The two are one block now,
         # hung from the same foot, and the distance between them is a margin — the same for «CI Core» as for «CI Wellness + In-Home Longevity»
+        # 18.11.2026 20:50, her frame 605:99 (the first way, drawn over the export of 17.11; «перероби цей блок за таким принципом…
+        # акуратно»): the small name and the big one CENTRED at the head of the screen (50 / 95); on the left field a statement in
+        # the 24 at 310, what the way consists of at 488, the closing paragraph on the foot; the button centred on the foot; the
+        # plan in the middle of the screen. For CI Turnkey she set it herself: the statement is the first paragraph, its ten
+        # disciplines stand in two columns of five, «One team, one roof…» is on the foot — and the lead «From First Idea to the
+        # First Night Home» is not in this state (it stands on this page's cover). The other three follow the same order with
+        # what they have: the lead as the statement, the first paragraph at 488, the second on the foot.
         o.append('      <div class="m sw-hd" data-k="%s"><p class="lab3 sw-k">%s</p><p class="t60 sw-h nb">%s</p></div>' % (k, esc(tag), brk(nm, 22)))
-        o.append('      <div class="m sw-bd" data-k="%s"><p class="t34 sw-l">%s</p>'
-                 '<div class="t20s sw-t">%s</div><div class="sw-btn">%s</div></div>'
-                 % (k2, esc(lead), ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_), btn(a_[2], href(a_[1]))))
+        if i == 0:
+            ten = [x.strip() for x in nop(ps_[1]).split('. ')]
+            assert len(ps_) == 3 and len(ten) == 10, (len(ps_), ten)
+            stmt = ps_[0]; mid = '<div class="t20s sw-t two">%s</div>' % ''.join('<p>%s</p>' % esc(x) for x in ten); foot = ps_[2]
+        else:
+            assert len(ps_) == 2, ps_
+            stmt = lead; mid = '<div class="t20s sw-t"><p>%s</p></div>' % esc(nop(ps_[0])); foot = ps_[1]
+        o.append('      <div class="m sw-bd" data-k="%s"><p class="t34 sw-l">%s</p>%s'
+                 '<div class="t20s sw-f"><p>%s</p></div><div class="sw-btn">%s</div></div>'
+                 % (k2, esc(nop(stmt)), mid, esc(nop(foot)), btn(a_[2], href(a_[1]))))
     o.append('    </div>\n  </div>\n</section>')
     pg.add('\n'.join(o), 'Four Ways')
     final_cta(pg, S[5], A + 'ch/1450-02a.webp')

@@ -42,13 +42,27 @@ body.inr .hdr{opacity:1}
 .film .p-ur{left:calc(1440 * var(--u));top:calc(50% + 50 * var(--u))}
 /* Solutions' four ways (16.11 23:09): everything on two columns — the name over the line, the lead under it at the text line, the description
    beside it, the button at the foot of the same column. 23:14: nothing clings to the line — 140 of air over it and 130 under it */
-.film .sw-hd{left:calc(421 * var(--u));right:calc(50 * var(--u));bottom:calc(50% + 140 * var(--u))}
-html body.inr .film .sw-hd .sw-k{position:static;margin:0 0 calc(30 * var(--u))}
+/* the four ways — her frame 605:99 (18.11.2026 20:50): the small name centred at 50 and the big one 29 under it; on the left
+   field the statement in the 24 / 33 at 310, 385 wide, what the way consists of at 488 (CI Turnkey's ten in two columns of five,
+   the second 222 from the first, 8 between rows), the closing paragraph on the foot, 331 wide; the button centred on the foot.
+   The plan stands in the middle of the screen (plan() in js/inner.js). */
+.film .sw-hd{left:0;right:0;top:calc(50 * var(--u));bottom:auto;text-align:center}
+html body.inr .film .sw-hd .sw-k{position:static;margin:0 0 calc(29 * var(--u))}
 html body.inr .film .sw-hd .sw-h{position:static;margin:0}
-.film .sw-bd{left:calc(421 * var(--u));top:calc(50% + 130 * var(--u));width:calc(475 * var(--u))}
-html body.inr .film .sw-bd .sw-l{position:static;margin:0;width:calc(430 * var(--u))}
-html body.inr .film .sw-bd .sw-t{position:static;margin:calc(44 * var(--u)) 0 0}
-.film .sw-bd .sw-btn{margin:calc(50 * var(--u)) 0 0}
+.film .sw-bd{left:0;top:0;width:100%;height:100%}
+html body.inr .film .sw-bd .sw-l{position:absolute;left:calc(50 * var(--u));top:calc(310 * var(--u));margin:0;width:calc(385 * var(--u));max-width:none;font-size:max(16px, calc(24 * var(--u)))!important;line-height:1.375!important}
+html body.inr .film .sw-bd .sw-t{position:absolute;left:calc(50 * var(--u));top:calc(488 * var(--u));margin:0;width:calc(331 * var(--u))}
+html body.inr .film .sw-bd .sw-t.two{display:grid;grid-auto-flow:column;grid-template-rows:repeat(5, auto);grid-template-columns:calc(222 * var(--u)) max-content;row-gap:calc(8 * var(--u));width:auto}
+html body.inr .film .sw-bd .sw-t.two p{margin:0;white-space:nowrap}
+html body.inr .film .sw-bd .sw-f{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;width:calc(331 * var(--u))}
+.film .sw-bd .sw-btn{position:absolute;left:0;bottom:max(calc(50 * var(--u)), 58px);width:100%;margin:0;display:flex;justify-content:center}
+@media (max-aspect-ratio: 1/1){
+  .film .sw-hd{text-align:left}
+  html body.inr .film .sw-bd .sw-l, html body.inr .film .sw-bd .sw-t, html body.inr .film .sw-bd .sw-f, .film .sw-bd .sw-btn{position:static;width:auto}
+  html body.inr .film .sw-bd .sw-t, html body.inr .film .sw-bd .sw-f{margin-top:20px}
+  html body.inr .film .sw-bd .sw-t.two{grid-template-columns:1fr 1fr} html body.inr .film .sw-bd .sw-t.two p{white-space:normal}
+  .film .sw-bd .sw-btn{display:block;margin-top:26px}
+}
 .film .p-bm{left:calc(960 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
 .film .p-ar{left:calc(1440 * var(--u));bottom:calc(50% + 50 * var(--u))}
 /* a scene with a figure in the middle (her corner principle, 15.11): the title top left, under the logo; the text bottom right */
