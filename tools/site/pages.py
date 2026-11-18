@@ -516,15 +516,57 @@ solutions()
 
 # ================================================================== broker program
 def brokers():
+    """The Broker Program, thought through again (18.11.2026 23:09, of this page and Partnerships: «вони не цікаві. Там дуже багато
+    просто шматків тексту, незрозуміло, без метафор, без візуалізації… думав метафорами і переробив на дуже високому рівні, акуратно
+    і зрозуміло… цікава креативна анімація. Бери за основу сторінки, які ми вже проробили. Але не повторяйся»). The page's own verb
+    is SEE («Help Your Clients See What a Property Could Become», «Turn Hesitation Into Vision»), so:
+      cover     the page's own (the window in the tower at night) stays;
+      Idea      the thought on its own black screen;
+      Why       the page's own block: a room OUT OF FOCUS — a property the buyer cannot yet read — comes into focus while the
+                client's three hesitations are read one at a time (tk_words, mode 'focus'); then «You introduce more than a
+                contractor» stands alone on the sharp room;
+      Journey   the five stages from property to move-in as a row of squares;
+      How       the five ways CI helps, on the grid over a photograph (the client's own row names);
+      Receive   the ten names of what the client's client receives let go, and the cleared screen says «Their path is already
+                clear» (Turnkey's scatter, with this page's own sentence);
+      Business  a still black screen.
+    A full-screen photograph never follows another. Every word is the client's."""
     S = [dots_fix(s) for s in P['brokers']]; pg = Pg()
     h1, ps, a = hero(S[0])
     pg.add(sc_window(label(S[0]), h1, 'assets/night/tower.jpg', A + 'ch/1450-20a.webp'), 'Brokers', 'top')
-    pg.add(intro(ps, (a[0], 'contact.html')))
-    for sec in S[1:-1]:
-        if not sec['items']: continue
-        auto(pg, sec, proc='cells', n=5)
-        if label(sec) == 'From Property to Finished Home': pg.add(band(A + 'us/1511-12a.webp'))
-    final_cta(pg, S[-1], A + 'ch/1450-28a.webp', top=True)
+    idea = ['Every property holds potential.', 'CI helps your clients see it']
+    assert ' '.join(idea) == nop(' '.join(ps[0])), ps[0]
+    thought(pg, 'Broker Program', idea, 1, [brk_lines(nop(' '.join(ps[1])), 62), tuple(nop(x) for x in ps[2])], btn(a[0], 'contact.html'), A + 'ch/1450-18.webp', '50% 50%')
+    # 03 why — the page's own block: the room comes into focus as the three hesitations pass
+    sec = S[1]; wp = [nop(' '.join(it[1])) for it in sec['items'] if it[0] == 'p']
+    doubts = [x.strip() for x in wp[0].split('. ')]; s3 = wp[2].split('. ', 1)
+    c3 = [('You introduce', 0), ('more than', 1), ('a contractor', 1)]
+    assert len(doubts) == 3 and len(s3) == 2 and ' '.join(x for x, _ in c3) == s3[0], (doubts, s3)
+    pg.add(tk_words(label(sec), [('Turn Hesitation', 0), ('Into Vision', 1)], [], doubts, [wp[1]], c3, A + 'ch/1450-24.webp', mode='focus', wsmall=True, foot3=[s3[1]]), 'Why')
+    # 04 the journey: five stages as a row of squares; the sentences are the client's own
+    sec = S[2]
+    names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
+    txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
+    assert len(names) == len(txts) == 5, (names, txts)
+    pg.add(tk_strip(label(sec), [('One Seamless', ''), ('Client ', 'Journey')], [(n, t_, 0) for n, t_ in zip(names, txts)]), 'Journey')
+    # 05 how CI helps: the client's five row names on the grid, each opening its sentence
+    sec = S[4]; rows = get(sec, 'row')
+    NMS = [['Renovation', 'Perspective'], ['A Trusted', 'Next Step'], ['Confidence', 'at Every', 'Decision'], ['Concierge-Level', 'Continuity'], ['A Partner Who', 'Honors the', 'Relationship']]
+    assert [' '.join(x) for x in NMS] == [r[1] for r in rows], [r[1] for r in rows]
+    pg.add(tk_fit(label(sec), h_of(sec), '', list(zip(NMS, [' '.join(r[2][0]) for r in rows])), A + 'ch/1450-22.webp',
+                  ['Help Clients', 'See Beyond What', 'Exists Today'], free=True), 'How')
+    # 06 what your clients receive: the ten names stand as one mass and let go — the screen clears and carries «Their path is already clear»
+    sec = S[5]; ten = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
+    rp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']; rs = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
+    assert len(ten) == 10 and rs == 'Their path is already clear' and nop(h_of(sec)) == 'One Team, From Keys to Move-In', (ten, rs, h_of(sec))
+    pg.add(tk_loose([label(sec)], [('One Team, From', ''), ('', 'Keys to Move-In')], ten, after=(rp[0], rs)), 'Receive')
+    # 07 why this strengthens your business: a still black screen
+    sec = S[6]; bp = [nop(' '.join(it[1])) for it in sec['items'] if it[0] == 'p']
+    bs = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
+    assert len(bp) == 3 and nop(h_of(sec)) == 'More Than a Referral. An Extension of Your Client Experience', (bp, h_of(sec))
+    pg.add(iv_quiet(label(sec), [('More Than a Referral.', 0), ('An Extension of Your', 1), ('Client Experience', 1)],
+                    [brk_lines(bp[0] + ' ' + bp[1], 64), brk_lines(bp[2], 64), (bs,)], A + 'us/1511-10.webp', '50% 40%'), 'Business')
+    final_cta(pg, S[-1], A + 'rtb/1430-01a.webp', top=True)
     emit('broker-program.html', 'Broker Program', pg, 'assets/night/tower.jpg')
 brokers()
 

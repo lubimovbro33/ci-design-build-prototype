@@ -706,7 +706,7 @@ def tk_fit(kick, h1, lead, rows, img, title_lines, tail=None, free=False):
             '<i class="df2-h a" aria-hidden="true"></i><i class="df2-h b" aria-hidden="true"></i>\n'
             '    <div class="df2-cells">%s</div>\n'
             '    <div class="df2-panel"><p class="tk-df-k">%s</p><h2 class="df2-big">%s</h2><p class="df2-s1"><b>%s</b>%s</p></div>\n'
-            '  </div>\n</section>') % (esc(kick), img, cells, esc(kick), '<br>'.join(esc(x) for x in title_lines), esc(nop(lead)),
+            '  </div>\n</section>') % (esc(kick), img, cells, esc(kick), '<br>'.join(esc(x) for x in title_lines), esc(nop(lead)) if lead else '',
                                       ('<span class="tk-df-tl">%s</span>' % esc(nop(tail))) if tail else '')   # tail: the section's own closing sentence (CI Wellness)
 def tk_rows(kick, h1, lead, rows, num=True, cls=''):
     """the page's one list (04), and the table of conditions (08): the same row — a number or the first half on the left, the sentence on the
