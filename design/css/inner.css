@@ -1311,3 +1311,24 @@ html body.inr .co-sm.one .co-sm-c{margin:calc(25 * var(--u)) 0 0;width:calc(475 
   html body.inr .co-sm.one .co-sm-l{margin-top:28px} html body.inr .co-sm.one .co-sm-s{margin:32px 0 0}
   .co-sm.one .co-sm-g{position:relative;left:0;aspect-ratio:1.1;margin:32px 0 0}
 }
+
+/* All Solutions, «The Same Standard» — her frame 658:9256 (18.11.2026 20:39). One screen: the eyebrow on the left field at 158, the
+   thought from 600 at 150 in her three lines, the two texts on the foot from 600 (38 between them), and in the right foot corner
+   a square photograph of 427, its foot level with the texts'. The photograph opens out of its own lower edge as it comes up the
+   screen, and is graded as the site grades its pictures. */
+.iv.ivq{display:block;position:relative;height:100vh;height:100svh;min-height:0;padding:0;overflow:hidden}
+.ivq .iv-k{left:calc(50 * var(--u));top:calc(158 * var(--u))}
+html body.inr .ivq-h{position:absolute;left:calc(600 * var(--u));top:calc(150 * var(--u));margin:0}
+.ivq-f{position:absolute;left:calc(600 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+html body.inr .ivq-f .iv-p{margin-top:0;white-space:nowrap}
+html body.inr .ivq-f .iv-p + .iv-p{margin-top:calc(38 * var(--u))}
+.ivq-ph{position:absolute;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:calc(427 * var(--u));height:calc(427 * var(--u));overflow:hidden;
+  clip-path:inset(100% 0 0 0);transition:clip-path 1.5s cubic-bezier(.16,1,.3,1)}
+.ivq-ph.rv{opacity:1;transform:none} .ivq-ph.in{clip-path:inset(0 0 0 0)}
+.ivq-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;object-position:62% 42%;display:block;max-width:none;filter:contrast(1.06) brightness(.86)}
+@media (max-aspect-ratio: 1/1), (max-width: 900px){
+  .iv.ivq{height:auto;overflow:visible;padding:72px var(--m, 20px) 0}
+  .ivq .iv-k{position:static} html body.inr .ivq-h{position:static}
+  .ivq-f{position:static;margin-top:28px} html body.inr .ivq-f .iv-p{white-space:normal} html body.inr .ivq-f .iv-p + .iv-p{margin-top:20px}
+  .ivq-ph{position:relative;right:auto;bottom:auto;width:100%;height:auto;aspect-ratio:1;margin-top:36px}
+}

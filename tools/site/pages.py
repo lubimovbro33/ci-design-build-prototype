@@ -394,16 +394,22 @@ def solutions():
     assert tx == ['Every client, every residence, and every vision is different',
                   'CI offers three ways to work together, led by CI Turnkey, our complete concierge-level experience. Each carries the same standard of quality'], tx
     # the eyebrow is not the client's copy: it is their own words from the sentence below it («the same standard»), as on Portfolio
-    pg.add('<section class="iv" id="@ID@">\n  <div class="iv-c">\n'
-           '    <p class="iv-k rv"><span class="wc">The Same Standard</span></p>\n'
-           # measured in the real face: 782 and 533 — the second line is a third shorter than the first (16.11 23:06: three lines of 280 / 773 / 246
-           # were «не ритміка, а палка»; the words of the long line move up into the first)
-           '    <p class="t60s rv">Every client, every residence, and<br class="bd"> <span class="cb">every vision is different</span></p>\n'
-           '    <p class="t20 rv iv-p">CI offers three ways to work together,<br class="bd"> led by CI Turnkey, our complete concierge-level experience.<br class="bd"> Each carries the same standard of quality</p>\n'
+    # 18.11.2026 20:39, her frame 658:9256 («перероби цей блок… там, де сірий прямокутник, постав туди фотографію, яку ми ще не
+    # використовували»): one screen. The eyebrow on the left field at 158; the thought in the 60 from 600 at 150, in HER three lines
+    # (16.11 the same three were «палка» in my setting — this is her own frame, and it stands); the two texts on the foot, 50 from
+    # the bottom; and in the right foot corner a square of 427 — a photograph of the client's own work used nowhere else on the
+    # site (us/1530-07a: the niche with the picture and the two lamps — «every vision is different»).
+    pg.add('<section class="iv ivq" id="@ID@">\n'
+           '  <p class="iv-k rv"><span class="wc">The Same Standard</span></p>\n'
+           '  <p class="t60s rv ivq-h">Every client, every<br> residence, and<br> <span class="cb">every vision is different</span></p>\n'
+           '  <div class="ivq-f">\n'
+           '    <p class="t20 iv-p">CI offers three ways to work together,<br class="bd"> led by CI Turnkey, our complete concierge-level experience.<br class="bd"> Each carries the same standard of quality</p>\n'
            # 16.11 23:01 («якщо тексту тобі не стає, то допиши, але не треба такі обгризки лишати»): the client's two sentences do not fill the
            # screen, so a second thought is written here from what their own pages say of the four ways — marked .wc, to be replaced by their text
-           '    <p class="t20 rv iv-p"><span class="wc">Some clients hand us the whole home;<br class="bd"> others bring an architect, or a residence already built.<br class="bd"> The way changes. The standard does not.</span></p>\n'
-           '  </div>\n</section>')
+           '    <p class="t20 iv-p"><span class="wc">Some clients hand us the whole home;<br class="bd"> others bring an architect, or a residence already built.<br class="bd"> The way changes. The standard does not.</span></p>\n'
+           '  </div>\n'
+           '  <div class="ivq-ph rv"><img src="%sus/1530-07a.webp" alt="" loading="lazy"></div>\n'
+           '</section>' % A)
     N = 4; t0 = .3; d = 1.0
     o = ['<section class="film" data-fig="plan" data-n="4" data-t0="%s" data-d="%s" data-len="%.2f" data-emb="turnkey,core,curated,wellness" id="@ID@">' % (t0, d, t0 + N * d + .6), '  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">']
     for i, sec in enumerate(S[1:5]):
