@@ -121,7 +121,7 @@ def wellness_page():
     h3 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h3']
     assert len(P['_feats']) == 9 and len(fp) == 5 and len(h3) == 1, (len(P['_feats']), fp, h3)
     spa = ['Home Spa + Personalized', 'Wellness Rooms']; assert ' '.join(spa) == h3[0], h3
-    states = [(g[0], [(g[k_], g[k_ + 1]) for k_ in range(1, len(g), 2)]) for g in P['_feats']] + [(spa, [fp[2], fp[3], fp[4]])]
+    states = [(g[0], [(g[k_], g[k_ + 1]) for k_ in range(1, len(g), 2)]) for g in P['_feats']] + [(h3[0], [fp[2], fp[3], fp[4]])]
     assert [x[0] for x in states[:9]] == ['Light', 'Air', 'Water', 'Heat + Recovery', 'Sleep', 'Sound', 'Climate', 'Materials', 'Movement'], [x[0] for x in states]
     # her reference for this screen (23:03, santalarch.com/#services): the names in a row on the line, the photograph of the one in hand under it
     FX = ['us/1511-05a', 'ch/1450-21', 'us/1530-01', 'us/1530-02', 'ch/1450-33', 'ch/1450-30', 'ch/1450-26', 'rtb/1430-14', 'rtb/1430-07', 'rtb/1430-15']

@@ -1410,37 +1410,44 @@ html body.inr .wl-pr-l{margin:calc(50 * var(--u)) calc(50 * var(--u)) calc(100 *
   html body.inr .wl-pr .qa .ain{display:block!important} html body.inr .wl-pr .qa .ain > div{width:auto!important;max-width:none!important} html body.inr .wl-pr .qa .ain > div + div{margin-top:12px}
 }
 
-/* CI Wellness, the features — her reference of 18.11.2026 23:03 (santalarch.com/#services). A black screen on the page's two centre
-   hairlines (the film's canvas). Upper left quarter: the name at 150, the title 25 under it, and the client's two opening sentences
-   50 over the horizontal line. The names stand in a row ON the line (22 over it), in the 60 sentence case; the row is seen only right
-   of the vertical line and begins 50 from it; 100 between names; the one in hand is bright. Under the line: its photograph, a column
-   480 wide from 50 right of the vertical line down to the foot; and on the left field, 50 under the line, what the name holds, on the
-   text line's measure (21.05 em of the 20). The count on the right field's foot. feat() in js/inner.js moves the row. */
+/* CI Wellness, the features — her reference of 18.11.2026 23:03 (santalarch.com/#services), made as the reference is made (23:15:
+   «зроби точно як на референсі»). A black screen ruled at the middle and at three quarters of its width and at half its height (the
+   film's canvas). The names are one row of columns a quarter of the screen wide, 50 between them, standing 32 over the horizontal
+   line; the row is there twice — .a quiet over the whole screen, .b bright but clipped to the WINDOW between the two vertical lines —
+   and feat() in js/inner.js moves both together. Under the line, in the same window, the photographs travel with their names (one
+   WebGL layer). Upper left: the block's name and title. Left field's foot: the client's two opening sentences and, 40 under them, the
+   description of the name in the window — its words come up one after another (23:15: «дай між ними нормальну відстань, там 40, і
+   прибий їх донизу екрана»); the box is as tall as the longest description, so the sentences do not move. Right field's foot: the
+   name in the window and the count. */
 .wl-fx .stg{background:#000}
 .wl-fx-h{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u))}
 html body.inr .wl-fx-h h2{margin-top:calc(25 * var(--u));color:#FFFFFF}
-.film .wl-fx-n{position:absolute;left:calc(50 * var(--u));bottom:calc(50% + 50 * var(--u));width:21.05em}
-html body.inr .wl-fx-s .t20s p{margin:0;max-width:none;color:#FFFFFF} html body.inr .wl-fx-s .t20s p + p{margin-top:.8em}
-.wl-fx-v{position:absolute;left:50%;right:0;bottom:calc(50% + 22 * var(--u));height:calc(190 * var(--u));overflow:hidden}
-.wl-fx-row{position:absolute;left:calc(50 * var(--u));bottom:0;display:flex;align-items:flex-end;column-gap:calc(100 * var(--u));white-space:nowrap;will-change:transform}
-html body.inr .wl-fx-nm{flex:none;margin:0;color:#FFFFFF;opacity:.26;transition:opacity .5s}
-html body.inr .wl-fx-nm.on{opacity:1}
-.wl-fx-ph{position:absolute;left:calc(50% + 50 * var(--u));top:50%;width:calc(480 * var(--u));bottom:max(calc(50 * var(--u)), 58px);overflow:hidden;background:#0A0A0A}
-.wl-fx-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;opacity:0;transition:opacity .6s;filter:contrast(1.06) brightness(.9)}
+.wl-fx-t{position:absolute;left:0;top:0;width:100%;height:50%;pointer-events:none}
+.wl-fx-t.a{opacity:.14}
+.wl-fx-t.b{clip-path:inset(0 25% 0 calc(50% + 1px))}
+.wl-fx-row{position:absolute;left:50%;bottom:calc(32 * var(--u));display:flex;align-items:flex-end;column-gap:calc(50 * var(--u));will-change:transform}
+html body.inr .wl-fx-nm{flex:none;width:25vw;margin:0;color:#FFFFFF;white-space:normal;box-sizing:border-box;padding-right:calc(60 * var(--u))}
+.wl-fx-ph{position:absolute;left:50%;top:50%;width:25%;bottom:0;overflow:hidden;background:#000}
+.wl-fx-ph img{position:absolute;left:calc(50 * var(--u));top:0;width:calc(100% - 50 * var(--u));height:100%;object-fit:cover;display:block;max-width:none;opacity:0;transition:opacity .6s;filter:contrast(1.06) brightness(.9)}
 .wl-fx-ph img.on{opacity:1}
-.wl-fx-d{position:absolute;left:calc(50 * var(--u));top:calc(50% + 50 * var(--u))}
-.film .wl-fx-i{position:absolute;left:0;top:0;width:21.05em;opacity:0;visibility:hidden;transition:opacity .45s, visibility 0s .45s}
-.film .wl-fx-i.on{opacity:1;visibility:visible;transition:opacity .45s .12s, visibility 0s}
+.wl-fx-l{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);display:flex;flex-direction:column}
+.film .wl-fx-n{width:21.05em}
+html body.inr .wl-fx-s .t20s p{margin:0;max-width:none;color:#FFFFFF} html body.inr .wl-fx-s .t20s p + p{margin-top:.8em}
+.wl-fx-d{display:grid;margin-top:calc(40 * var(--u))}
+.film .wl-fx-i{grid-area:1 / 1;width:21.05em;visibility:hidden;transition:visibility 0s .3s}
+.film .wl-fx-i.on{visibility:visible;transition:visibility 0s}
+.wl-fx-i .w{display:inline-block;opacity:0;transform:translate3d(0,.55em,0);transition:opacity .28s, transform .28s}
+.wl-fx-i.on .w{opacity:1;transform:none;transition:opacity .6s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);transition-delay:calc(120ms + var(--i) * 16ms)}
 .wl-fx-i .nm{color:#96A8BF} .wl-fx-i .nm0{display:none}
 html body.inr .wl-fx-c{position:absolute;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;display:flex;align-items:center;color:#FFFFFF}
+.wl-fx-c .n{margin-right:calc(40 * var(--u))}
 .wl-fx-c i{display:block;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));margin:0 calc(10 * var(--u));background:#96A8BF}
 @media (max-aspect-ratio: 1/1){
   /* phones: the title, the two sentences, one photograph, then every name with what it holds, one under another */
   .film .wl-fx-s{padding-top:72px}
-  .wl-fx-h, .film .wl-fx-n, .wl-fx-d, .film .wl-fx-i{position:static;width:auto;opacity:1;visibility:visible}
-  html body.inr .wl-fx-h h2{margin-top:14px} .film .wl-fx-n{margin-top:28px}
-  .wl-fx-v, html body.inr .wl-fx-c{display:none}
-  .wl-fx-ph{position:relative;left:auto;top:auto;bottom:auto;width:100%;aspect-ratio:3 / 2;margin-top:32px}
-  .wl-fx-ph .glc{display:none} .wl-fx-ph img{display:none} .wl-fx-ph img:first-child{display:block;opacity:1;visibility:visible}
+  .wl-fx-h, .wl-fx-l, .film .wl-fx-n, .wl-fx-d, .film .wl-fx-i{position:static;display:block;width:auto;visibility:visible}
+  html body.inr .wl-fx-h h2{margin-top:14px} .wl-fx-l{margin-top:28px} .wl-fx-d{margin-top:0}
+  .wl-fx-t, html body.inr .wl-fx-c, .wl-fx-ph{display:none}
+  .wl-fx-i .w{opacity:1;transform:none}
   .film .wl-fx-i{margin-top:28px} html body.inr .wl-fx-i .nm0{display:block;margin:0 0 10px}
 }

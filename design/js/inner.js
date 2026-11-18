@@ -1130,14 +1130,22 @@
               at the end the light is the whole room;
        day    a day passes through the room while the words are read — cool and low at dawn, full at noon, warm at dusk — and the
               sun's band crosses the picture;
+       focus  the room is out of focus — a property the buyer cannot yet read — and comes into focus as the words pass (the
+              Broker Program: «Turn Hesitation Into Vision»);
        still  the photograph only settles.
      Nothing is laid over the picture: its light is taken down in the shader where words stand on it. */
-  var WORDS_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uS0, uSun, uL, uLr;', 'uniform float uZ, uV, uD, uLk, uB, uTmp, uTime;', 'varying vec2 v;',
+  var WORDS_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uS0, uSun, uL, uLr;', 'uniform float uZ, uV, uD, uLk, uB, uTmp, uBl, uTime;', 'varying vec2 v;',
     'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
     'vec2 cov(vec2 uv, vec2 img){ float ra = uRes.x / uRes.y, ri = img.x / img.y; vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0); return (uv - 0.5) * s + 0.5; }',
     'void main(){',
     '  vec2 src = cov((v - 0.5) / uZ + 0.5, uS0);',
     '  vec3 c = texture2D(uT0, src).rgb;',
+    '  if (uBl > 0.0004){',                                                    /* out of focus: a disc of sixteen looks, turned differently at every point */
+    '    float j = hash(v * uRes) * 6.2832; c = vec3(0.0);',
+    '    for (int i = 0; i < 16; i++){ float fi = float(i), an = fi * 2.39996 + j, r = sqrt((fi + 0.5) / 16.0) * uBl;',
+    '      c += texture2D(uT0, src + vec2(cos(an) * uS0.y / uS0.x, sin(an)) * r).rgb; }',
+    '    c /= 16.0;',
+    '  }',
     '  c = (c - 0.5) * 1.05 + 0.5;',
     '  float l = dot(c, vec3(0.299, 0.587, 0.114));',
     '  float pool = 1.0 - smoothstep(0.5, 1.0, length((src - uL) * vec2(uS0.x / uS0.y, 1.0) / uLr));',   /* one light, the shape of the piece it rests on, in the photograph's own co-ordinates */
@@ -1164,19 +1172,22 @@
     o.on = true;
     var w0 = 1.0, wE = w0 + o.n * o.dw, p = (q - w0) / o.dw, k = c01((q - w0) / (wE - w0)), kc = eio(sg(q, wE + .12, wE + .5)), g2 = o.gl;
     if (g2 && g2.ready){
-      var V = .5, D = .65, lk = 0, L = [.5, .5, 1, 1], tmp = 0, sun = 0;
+      var V = .5, D = .65, lk = 0, L = [.5, .5, 1, 1], tmp = 0, sun = 0, blr = 0;
       if (o.mode === 'pool' && o.pts.length){
         var a = Math.max(0, Math.min(o.pts.length - 1, Math.floor(p))), b = Math.min(o.pts.length - 1, a + 1), fr = eio(sg(p - a, .56, 1)), A = o.pts[a], B = o.pts[b],
             open = eio(sg(q, wE - .04, wE + .5));                             /* at the end the light is the whole room */
         lk = eio(sg(q, w0 - .32, w0 + .04));
         L = [A[0] + (B[0] - A[0]) * fr, A[1] + (B[1] - A[1]) * fr, (A[2] + (B[2] - A[2]) * fr) * (1 + 9 * open), (A[3] + (B[3] - A[3]) * fr) * (1 + 9 * open)];
         V = .44 + .5 * lk - .2 * kc; D = .5 * (1 - lk) + .82 * kc;
+      } else if (o.mode === 'focus'){
+        var fk = eio(c01((q - w0 + .15) / (wE - w0 + .45)));                   /* from the first word to the closing sentence */
+        blr = .034 * (1 - fk); V = .42 + .22 * fk; D = .55 + .2 * kc;
       } else if (o.mode === 'day'){
         tmp = -.9 + 1.75 * k - .25 * kc; sun = Math.sin(Math.PI * k);
         V = .46 + .3 * sun + .06 * kc; D = .45 + .25 * kc;
       }
       g2.size(); g2.set1('uZ', 1.06 - .06 * eio(sg(q, -.6, wE + .6))); g2.set2('uL', L[0], L[1]); g2.set2('uLr', L[2], L[3]); g2.set1('uLk', lk); g2.set1('uB', .3);
-      g2.set1('uTmp', tmp); g2.set2('uSun', -.35 + 2.1 * k, sun); g2.set1('uV', V); g2.set1('uD', D); g2.set1('uTime', (t * 60) | 0); g2.draw();
+      g2.set1('uTmp', tmp); g2.set1('uBl', blr); g2.set2('uSun', -.35 + 2.1 * k, sun); g2.set1('uV', V); g2.set1('uD', D); g2.set1('uTime', (t * 60) | 0); g2.draw();
     }
     var ho = 1 - eio(sg(q, .62, .9));                                         /* step 1 goes up a little as it goes out */
     put(o.h, ho, ty(-16 * U * (1 - ho))); put(o.f1, ho, ty(-16 * U * (1 - ho)));
@@ -1196,58 +1207,62 @@
     put(o.f3, kc, ty(10 * U * (1 - kc)));
   }
   /* ================================================================== CI Wellness, the features: names in a row on the line
-     18.11.2026 23:03, her reference for this screen (santalarch.com/#services), in place of the index on a photograph. A black screen
-     ruled by the page's two centre hairlines. The names stand ON the horizontal line; the one in hand is bright and stands at the
-     vertical line, the scroll carries the row to the left name by name; under the line the photograph of the name in hand — the
-     next one opens downward out of the line — and on the left what the name holds. The photographs are ONE WebGL layer: they are
-     put on one sheet once they have loaded (a shader may not be given ten pictures on every device), and the shader shows two
-     tiles of it. Until then, and where there is no WebGL, the photographs themselves change. The type is DOM. */
-  var FEAT_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uG;', 'uniform float uA, uB, uF, uAr, uTime;', 'varying vec2 v;',
+     18.11.2026 23:03, her reference for this screen (santalarch.com/#services); 23:15, of my first version: «на прикладі воно ж не
+     так… яка там класна плавна анімація. Ти зробив якийсь топор. Зроби точно як на референсі». As the reference is made: the names
+     are one row that TRAVELS, continuously, and it exists twice — quiet over the whole screen and bright only in the window between
+     the middle of the screen and its third quarter — so a name lights up letter by letter as it crosses the line. Each name's
+     photograph travels with it under the horizontal line, seen only in the same window. The row comes in from the right as the
+     block arrives, rests on every name and glides to the next; what is shown follows the scroll with a little weight (it eases to
+     its place instead of being nailed to it). The photographs are ONE WebGL layer: a sheet of them made once they have loaded, and
+     the shader lays the travelling columns out of it. The type is DOM; the lines are ruled on the film's canvas. */
+  var FEAT_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uG;', 'uniform float uP, uN, uGap, uAr, uTime;', 'varying vec2 v;',
     'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
-    'vec3 tile(float i, vec2 uv){',
-    '  float ra = uRes.x / uRes.y; vec2 s = ra > uAr ? vec2(1.0, uAr / ra) : vec2(ra / uAr, 1.0);',
-    '  vec2 p = clamp((uv - 0.5) * s + 0.5, 0.004, 0.996);',
-    '  return texture2D(uT0, (vec2(mod(i, uG.x), floor(i / uG.x)) + p) / uG).rgb;',
-    '}',
     'void main(){',
-    '  float w = 1.5 / uRes.y;',
-    '  vec3 a = tile(uA, (v - 0.5) / (1.0 + 0.05 * uF) + 0.5);',
-    '  vec3 b = tile(uB, (v - 0.5) / (1.06 - 0.06 * uF) + 0.5);',
-    '  vec3 c = mix(b, a, smoothstep(uF - w, uF + w, v.y));',                 /* the next photograph opens downward out of the line */
-    '  c = ((c - 0.5) * 1.06 + 0.5) * 0.9;',
+    '  float pitch = 1.0 + uGap, i = floor((v.x - uGap) / pitch + uP), u = v.x - (uGap + (i - uP) * pitch);',   /* which column of the row this point is in */
+    '  vec3 c = vec3(0.0);',
+    '  if (u >= 0.0 && u < 1.0 && i >= 0.0 && i < uN){',
+    '    float ra = uRes.x / uRes.y; vec2 sc = ra > uAr ? vec2(1.0, uAr / ra) : vec2(ra / uAr, 1.0);',
+    '    vec2 q = clamp((vec2(u, v.y) - 0.5) * sc + 0.5, 0.004, 0.996);',
+    '    c = texture2D(uT0, (vec2(mod(i, uG.x), floor(i / uG.x)) + q) / uG).rgb;',
+    '    c = ((c - 0.5) * 1.06 + 0.5) * 0.9;',
+    '  }',
     '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
     '  gl_FragColor = vec4(c, 1.0);',
     '}'].join('\n');
   function feat(f, q, t){
     var o = f.fx, i, e = f.el;
     if (o === undefined){
-      o = f.fx = {n: +e.getAttribute('data-n') || 1, dw: +e.getAttribute('data-dw') || .5, row: qs('.wl-fx-row', e), nms: qsa('.wl-fx-nm', e), ds: qsa('.wl-fx-i', e),
-                  ca: qs('.wl-fx-c .a', e), box: qs('.wl-fx-ph', e), imgs: qsa('.wl-fx-ph img', e), gl: null, tried: false, cur: -1, lk: '', xs: [], on: false, C: 5, R: 1};
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ o.lk = ''; });
+      o = f.fx = {n: +e.getAttribute('data-n') || 1, dw: +e.getAttribute('data-dw') || .6, rows: qsa('.wl-fx-row', e), ds: qsa('.wl-fx-i', e), nms: qsa('.wl-fx-t.a .wl-fx-nm', e),
+                  ca: qs('.wl-fx-c .a', e), cn: qs('.wl-fx-c .n', e), box: qs('.wl-fx-ph', e), imgs: qsa('.wl-fx-ph img', e), gl: null, tried: false, cur: -1, P: -1.6, on: false, C: 5, R: 1, rt: ''};
     }
-    if (H >= W){ if (o.on){ o.on = false; o.lk = ''; if (o.row){ o.row.style.transform = ''; o.row.__t = ''; } } return; }   /* phones: in the flow (css) */
+    if (H >= W){ if (o.on){ o.on = false; o.rt = ''; o.rows.forEach(function(r_){ r_.style.transform = ''; }); } return; }   /* phones: in the flow (css) */
     o.on = true;
-    cross(eio(sg(q, -.7, -.15)), eio(sg(q, -.55, 0)));                        /* the two centre hairlines: ruled as the block arrives, then they stand */
+    var lh = eio(sg(q, -.7, -.15)), lv = eio(sg(q, -.55, 0));
+    cross(lh, lv);                                                            /* the two centre hairlines, and the window's other side */
+    if (lv > 0){ var vx = Math.round(W * .75) - .5; seg(vx, 0, vx, H * lv); }
     if (!o.tried && o.imgs.length && o.imgs.every(function(im){ return im.complete && im.naturalWidth; })){   /* the sheet of photographs */
       o.tried = true;
-      var TW = 560, TH = 600, cv = document.createElement('canvas'), x2 = cv.getContext('2d');
+      var TW = 540, TH = 620, cv = document.createElement('canvas'), x2 = cv.getContext('2d');
       o.R = Math.ceil(o.imgs.length / o.C); cv.width = TW * o.C; cv.height = TH * o.R;
       o.imgs.forEach(function(im, j){ var sc = Math.max(TW / im.naturalWidth, TH / im.naturalHeight), w = im.naturalWidth * sc, h = im.naturalHeight * sc, tx = (j % o.C) * TW, ty = Math.floor(j / o.C) * TH;
         x2.save(); x2.beginPath(); x2.rect(tx, ty, TW, TH); x2.clip(); x2.drawImage(im, tx + (TW - w) / 2, ty + (TH - h) / 2, w, h); x2.restore(); });
       cv.complete = true; cv.naturalWidth = cv.width; cv.naturalHeight = cv.height; o.ar = TW / TH;
       try { o.gl = GL2.make(o.box, FEAT_FS, [cv], {}); } catch (er){ o.gl = null; }
     }
-    var p = Math.max(0, q) / o.dw, a = Math.max(0, Math.min(o.n - 1, Math.floor(p))), b = Math.min(o.n - 1, a + 1), fr = b === a ? 0 : eio(sg(p - a, .52, 1)), cur = fr > .5 ? b : a;
-    var lk = W + 'x' + H;
-    if (o.lk !== lk){ o.lk = lk; o.xs = o.nms.map(function(n_){ return n_.offsetLeft; }); }
-    var rt = 'translate3d(' + (-(o.xs[a] + (o.xs[b] - o.xs[a]) * fr)).toFixed(1) + 'px,0,0)';
-    if (o.row && o.row.__t !== rt){ o.row.__t = rt; o.row.style.transform = rt; }
+    /* where the row should be, in names: in from the right as the block arrives, then a rest on every name and a glide to the next */
+    var p = q / o.dw, a = Math.max(0, Math.min(o.n - 1, Math.floor(p))), tg = q < 0 ? -1.6 * (1 - eio(sg(q, -.8, 0))) : Math.min(o.n - 1, a + eio(sg(p - a, .34, 1)));
+    o.P += (tg - o.P) * (Math.abs(tg - o.P) > 3 ? 1 : .1);                    /* it eases to its place; a jump (an anchor) is taken at once */
+    if (Math.abs(tg - o.P) < .0004) o.P = tg;
+    var colW = W * .25, gap = 50 * U, rt = 'translate3d(' + (gap - o.P * (colW + gap)).toFixed(2) + 'px,0,0)';
+    if (o.rt !== rt){ o.rt = rt; o.rows.forEach(function(r_){ r_.style.transform = rt; }); }
+    var cur = Math.max(0, Math.min(o.n - 1, Math.round(o.P)));
     if (cur !== o.cur){ o.cur = cur;
-      for (i = 0; i < o.n; i++){ if (o.nms[i]) o.nms[i].classList.toggle('on', i === cur); if (o.ds[i]) o.ds[i].classList.toggle('on', i === cur); if (o.imgs[i]) o.imgs[i].classList.toggle('on', i === cur); }
+      for (i = 0; i < o.n; i++){ if (o.ds[i]) o.ds[i].classList.toggle('on', i === cur); if (o.imgs[i]) o.imgs[i].classList.toggle('on', i === cur); }
       if (o.ca) o.ca.textContent = ('0' + (cur + 1)).slice(-2);
+      if (o.cn && o.nms[cur]){ var nt = o.nms[cur].textContent; o.cn.textContent = nt.length > 18 ? '' : nt; }   /* a long name is not said twice: it would run under the photograph */
     }
     var g2 = o.gl;
-    if (g2 && g2.ready){ g2.size(); g2.set2('uG', o.C, o.R); g2.set1('uAr', o.ar); g2.set1('uA', a); g2.set1('uB', b); g2.set1('uF', fr); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+    if (g2 && g2.ready){ g2.size(); g2.set2('uG', o.C, o.R); g2.set1('uAr', o.ar); g2.set1('uN', o.n); g2.set1('uGap', gap / colW); g2.set1('uP', o.P); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
   }
   var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat};
 
