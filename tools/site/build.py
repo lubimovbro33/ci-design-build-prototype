@@ -680,7 +680,7 @@ def tk_lead(thought, para_, button):
     return ('<section class="bk tk-ld" id="@ID@">\n  <p class="t60s rv tk-ld-h">%s</p>\n'
             '  <p class="t20 rv tk-ld-t" style="--w:475">%s</p>\n  <div class="rv tk-ld-b">%s</div>\n</section>') % (
                 thought, esc(nop(para_)), button)
-def tk_fit(kick, h1, lead, rows, img, title_lines):
+def tk_fit(kick, h1, lead, rows, img, title_lines, tail=None):
     """04 — the home page's «CI Difference», given to this block on her word (17.11 19:34: «оцей наш нижній блок переробити за принципом
     того, як зроблений дизайн верхнього блоку. А фотографію використай таку, яку ми ще не використовували»). The photograph is ruled
     into the same grid — four columns, a band under the header and two rows of 480 — a condition stands in each cell as a short centred
@@ -705,8 +705,9 @@ def tk_fit(kick, h1, lead, rows, img, title_lines):
             '    <i class="df2-v a" aria-hidden="true"></i><i class="df2-v b" aria-hidden="true"></i><i class="df2-v c" aria-hidden="true"></i>'
             '<i class="df2-h a" aria-hidden="true"></i><i class="df2-h b" aria-hidden="true"></i>\n'
             '    <div class="df2-cells">%s</div>\n'
-            '    <div class="df2-panel"><p class="tk-df-k">%s</p><h2 class="df2-big">%s</h2><p class="df2-s1"><b>%s</b></p></div>\n'
-            '  </div>\n</section>') % (esc(kick), img, cells, esc(kick), '<br>'.join(esc(x) for x in title_lines), esc(nop(lead)))
+            '    <div class="df2-panel"><p class="tk-df-k">%s</p><h2 class="df2-big">%s</h2><p class="df2-s1"><b>%s</b>%s</p></div>\n'
+            '  </div>\n</section>') % (esc(kick), img, cells, esc(kick), '<br>'.join(esc(x) for x in title_lines), esc(nop(lead)),
+                                      ('<span class="tk-df-tl">%s</span>' % esc(nop(tail))) if tail else '')   # tail: the section's own closing sentence (CI Wellness)
 def tk_rows(kick, h1, lead, rows, num=True, cls=''):
     """the page's one list (04), and the table of conditions (08): the same row — a number or the first half on the left, the sentence on the
     right, a hairline over each. One shape, read straight down."""
@@ -1132,7 +1133,7 @@ def co_cover(kick, h1, img, ln, idea=None):
         '      <p class="t20 m tk-cv-ip" data-k="1.7 1.96 99 99">%s</p>' % ' <br class="bd">'.join(esc(x) for x in idea[2]),
         '      <div class="m tk-cv-ib" data-k="1.82 2.02 99 99">%s</div>' % idea[3],
         '    </div>'] if idea else []) + ['  </div>', '</section>'])
-def tk_words(kick, title, foot1, words, foot2, closer_, img, mode='still', pts=None, mid=None, foot3=None, cls=''):
+def tk_words(kick, title, foot1, words, foot2, closer_, img, mode='still', pts=None, mid=None, foot3=None, cls='', wsmall=False, states=None, dw=None):
     """One thought to a step, on ONE photograph that does what the words say (18.11.2026 22:07, of CI Curated and CI Wellness:
     «вони дуже грузні… переосмислив, думав метафорами і зробив на рівні з тим, що у нас вже є»). A pinned screen in three steps:
       1  the name and the title (lines of (text, 1 if in the light blue)) at the left field; on the foot the first paragraphs;
@@ -1146,23 +1147,66 @@ def tk_words(kick, title, foot1, words, foot2, closer_, img, mode='still', pts=N
       'day'   a day passes through the room while the words are read: cool and low at dawn, full at noon, warm at dusk, and the
               sun's band crosses the picture (CI Wellness: Light, Air, Water, Sleep…);
       'still' the photograph only settles.
-    A paragraph is a string, or a list of the client's own lines (kept as lines). Every word is the client's."""
+    A paragraph is a string, or a list of the client's own lines (kept as lines). Every word is the client's.
+    `wsmall`: the «words» are whole sentences, set in the 34. `states` = [(name, paragraphs)] instead of words: the names stand as
+    an INDEX in the 34 where the title stood (the one in hand bright, the others quiet) and each name's paragraphs come up beside
+    it — a paragraph may be (a feature's name, its description). Without `closer_` the last state simply stays."""
     def two(ls): return '<br>'.join(('<span class="cbl">%s</span>' % esc(t)) if b else esc(t) for t, b in ls)
-    def par(x): return ''.join('<p>%s</p>' % (' <br>'.join(esc(nop(y)) for y in p) if isinstance(p, (list, tuple)) else esc(nop(p))) for p in x)
-    n = len(words) if words else 1; dw = .9 if not words else (.42 if n <= 6 else .36)
-    its = ''.join('<p class="t60 tk-wd-i">%s</p>' % esc(nop(w)) for w in words) if words else '<p class="t34 tk-wd-i m">%s</p>' % two(mid)
+    def par(x):
+        return ''.join('<p>%s</p>' % (('<span class="nm">%s</span><br>%s' % (esc(nop(p[0])), esc(nop(p[1])))) if isinstance(p, tuple) else
+                                      ' <br>'.join(esc(nop(y)) for y in p) if isinstance(p, list) else esc(nop(p))) for p in x)
+    n = len(states) if states else len(words) if words else 1
+    dw = dw or (.9 if not (words or states) else (.42 if n <= 6 else .36))
+    if states:
+        its = ''.join('<div class="t20s tk-wd-i st"><p class="t34 nm0">%s</p>%s</div>' % (esc(nm), par(ps_)) for nm, ps_ in states)
+    elif words:
+        its = ''.join('<p class="%s tk-wd-i%s">%s</p>' % ('t34' if wsmall else 't60', ' m' if wsmall else '', esc(nop(w))) for w in words)
+    else:
+        its = '<p class="t34 tk-wd-i m">%s</p>' % two(mid)
     return '\n'.join([
         '<section class="film tk-wd%s" data-fig="words" data-mode="%s" data-n="%d" data-dw="%s" data-pts="%s" data-len="%.2f" data-open="0" id="@ID@">' % (
-            (' ' + cls) if cls else '', mode, n, dw, ';'.join('%.4f,%.4f,%.3f,%.3f' % tuple(p) for p in (pts or [])), 1.0 + n * dw + 1.05), '  <div class="stg">',
+            (' ' + cls) if cls else '', mode, n, dw, ';'.join('%.4f,%.4f,%.3f,%.3f' % tuple(p) for p in (pts or [])), 1.0 + n * dw + (1.05 if closer_ else .45)), '  <div class="stg">',
         '    <div class="tk-wd-ph"><img src="%s" alt=""></div>' % img,
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-wd-s">',
         '      <div class="tk-wd-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), two(title)),
         '      <div class="t20s tk-wd-f1">%s</div>' % par(foot1),                # the foot: never .rv on a pinned screen
+        ('      <ol class="tk-wd-x">%s</ol>' % ''.join('<li class="t34">%s</li>' % esc(nm) for nm, _ in states)) if states else '',
         '      <div class="tk-wd-w">%s</div>' % its,
         ('      <div class="t20s tk-wd-f2">%s</div>' % par(foot2)) if foot2 else '',
-        '      <p class="t60 tk-wd-c"><span>%s</span></p>' % two(closer_),
+        ('      <p class="t60 tk-wd-c"><span>%s</span></p>' % two(closer_)) if closer_ else '',
         ('      <div class="t20s tk-wd-f3">%s</div>' % par(foot3)) if foot3 else '',
         '    </div>', '  </div>', '</section>'])
+
+
+def iv_quiet(kick, title, paras, img, pos=None, button=None):
+    """A still screen between two films — the block of HER frame 658:9256 (All Solutions, «The Same Standard»): the name at the left
+    field, the title in three lines from 600 (lines of (text, 1 if blue)), two paragraphs on the foot under it, each in its own lines
+    (`paras` = lists of lines), and one photograph in the corner square. Nothing moves but the reveal.
+    18.11.2026 22:34, of the page's thought standing on the cover's photograph with another full-screen photograph right under it:
+    «мені не подобається… коли у нас є повноекранна фотографія і внизу скролом ще одна повноекранна фотографія. Зробимо оцей текст
+    окремим блоком чорним… акуратно на весь екран 1080. При потребі додай якусь малу фотографію… і вибери, який стиль тексту
+    підійде» — so on CI Core, CI Curated and CI Wellness the thought is THIS block (with `button` on the left field's foot): the 60
+    in sentence case, two inks (22:32: «дуже грузний текст, його можна розбавити цим нашим світло-синім»)."""
+    hl = '<br> '.join(('<span class="cb">%s</span>' % esc(t)) if b else esc(t) for t, b in title)
+    # a list = one paragraph in its lines for a wide screen (a phone wraps it itself); a tuple = the client's own separate lines, always kept
+    ps = ''.join('    <p class="t20 iv-p">%s</p>\n' % ('<br> ' if isinstance(p, tuple) else '<br class="bd"> ').join(esc(x) for x in p) for p in paras)
+    return ('<section class="iv ivq" id="@ID@">\n  <p class="iv-k rv">%s</p>\n  <h2 class="t60s rv ivq-h">%s</h2>\n  <div class="ivq-f">\n%s  </div>\n'
+            '%s  <div class="ivq-ph rv"><img src="%s" alt="" loading="lazy"%s></div>\n</section>') % (
+                esc(kick), hl, ps, ('  <div class="ivq-b">%s</div>\n' % button) if button else '', img, (' style="object-position:%s"' % pos) if pos else '')
+
+
+def wl_rows(kick, title, lead, rows):
+    """CI Wellness, the process: five rows that open — the site's own rows (the FAQ's), so the page stays light and nothing of the
+    client's text is lost: a row shows the step's name; opened, its first sentence stands on the left and the rest beside it.
+    `title` = lines of (text, 1 if blue); `lead` = the client's own lines; `rows` = [(name, [paragraphs])]."""
+    hl = '<br>'.join(('<span class="cb">%s</span>' % esc(t)) if b else esc(t) for t, b in title)
+    r = ''.join('<div class="qa rv%s"><button class="qh" type="button" aria-expanded="%s"><span class="n">%02d</span><span class="t">%s</span><span class="pl"></span></button>'
+                '<div class="ab"><div><div class="ain"><div><p>%s</p></div><div>%s</div></div></div></div></div>' % (
+                    ' open' if i == 0 else '', 'true' if i == 0 else 'false', i + 1, esc(nm), esc(nop(ps_[0])), ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_[1:]))
+                for i, (nm, ps_) in enumerate(rows))
+    return ('<section class="bk wl-pr" id="@ID@">\n  <p class="lab3 rv c1">%s</p>\n  <h2 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h2>\n  <div class="bk-b">\n'
+            '    <p class="t34 rv wl-pr-l">%s</p>\n    <div class="rws">%s</div>\n  </div>\n</section>') % (
+                esc(kick), hl, esc(nop(lead[0])) + ''.join(' <br><span class="cb">%s</span>' % esc(nop(x)) for x in lead[1:]), r)
 
 
 def co_seam(kick, h1, lead, ps, strong, img, ln):

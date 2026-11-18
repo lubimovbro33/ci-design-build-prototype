@@ -52,60 +52,98 @@ SEG_CORE = open(os.path.join(HERE, 'seg_core.txt')).read().strip()
 def short_of(sec):
     """the one-line paragraphs of a section, in order"""
     return [x[1][0] for x in sec['items'] if x[0] == 'p' and len(x[1]) == 1]
+def thought(pg, name, lines, blue_from, paras, button, img, pos=None):
+    """The page's thought as its own black screen under the cover (18.11.2026 22:34: «мені не подобається… коли у нас є повноекранна
+    фотографія і внизу скролом ще одна повноекранна фотографія… зробимо оцей текст окремим блоком чорним… на весь екран 1080. При
+    потребі додай якусь малу фотографію… і вибери, який стиль тексту підійде»). Her own black screen of All Solutions (frame
+    658:9256): the name on the left field, the thought from 600 in the 60, sentence case, its second half in the blue (22:32: «дуже
+    грузний текст… розбавити світло-синім»), the client's paragraph on the foot, the button on the left field's foot, one small
+    photograph in the corner. On CI Turnkey the thought stays on the cover: that is her frame 637:7894, and a black table follows it."""
+    pg.add(iv_quiet(name, [(x, 1 if i >= blue_from else 0) for i, x in enumerate(lines)], paras, img, pos, button), 'Idea')
+
 def wellness_page():
-    """CI Wellness — the invisible. 17.11: «Controls can disappear. Technology can integrate. Infrastructure can remain behind the
-    architecture.» The cover comes out of the dark into the light (their first quality is light); the third screen is the instrument — the
-    client's own nine drawn over one of their rooms in our hairlines, one stroke at a time, and gone again the moment you let go."""
+    """CI Wellness, thought through again (18.11.2026 22:07, of CI Curated and this page: «вони дуже грузні, дуже некрасиві,
+    непривабливі, не цікаві. Я хочу, щоб ти це все ще раз переосмислив, думав метафорами і зробив на рівні з тим, що у нас вже є»).
+    The page is about what is FELT and not seen — light, air, water, sleep — so its pictures do not show things, they change:
+      cover     Turnkey's film with this page's room (the bath at the window);
+      Idea      the thought on its own black screen (22:34);
+      Why       the page's own block: A DAY PASSES THROUGH THE ROOM while the client's nine qualities are read one at a time —
+                cool and low at dawn, full at noon, warm at dusk, the sun's band crossing the picture (tk_words, mode 'day');
+      What      a still black screen (her frame of All Solutions);
+      Fit       the seven conditions on the grid;
+      Process   five rows that open (the site's own rows): the page stays light and none of the client's text is lost;
+      Features  the nine groups and the home spa as an index the scroll walks through, on one photograph;
+      One Team  the nine disciplines as one mass that lets go: «We manage the conversation between disciplines so you do not have
+                to» (Turnkey's scatter — here it is this page's own sentence);
+      Design    «Controls can disappear. Technology can integrate…» — the three sentences come and go one at a time;
+      Outcome   a still black screen.
+    A full-screen photograph never follows another (22:34): two sections of the client's order are exchanged for that — «Why
+    Wellness Matters» stands before «What CI Wellness Is», «Our Responsibility» before «Wellness Without Compromising Design».
+    Every word is the client's. No stock."""
     S = [join_lists(dots_fix(x)) for x in P['wellness']]; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(sc_still(label(S[0]), h1, A + 'us/1511-11a.webp', .66), 'Wellness', 'top')
-    # 02 the thought: their two-line lead, the second line in the blue
-    lead0 = get(S[0], 'lead')[0][1]
-    thought = esc(nop(lead0[0])) + '<br><span class="cb">' + esc(nop(lead0[1])) + '</span>'
-    pg.add(tk_lead(thought, ' '.join(ps[1]) + ' ' + ' '.join(ps[2]), btn(a[0], 'contact.html')), 'Idea')
-    # 03 the instrument: the client's own nine groups of features, each drawn over one of their rooms
-    sec = S[6]; fp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    h3 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h3']
-    nine = [g[0] for g in P['_feats']]
-    feats = [[(g[j], g[j + 1]) for j in range(1, len(g), 2)] for g in P['_feats']]
-    pg.add(wl_unseen(label(sec), h_of(sec), fp[0] + ' ' + fp[1], nine, A + 'us/1511-06a.webp', [], feats), 'The Nine')
-    # 04 why it matters: luxury's next chapter, and the nine qualities of a home as one line
-    sec = S[2]; wp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    lead0 = [nop(x) for x in get(S[0], 'lead')[0][1]]
+    pg.add(tk_cover(label(S[0]), h1, A + 'ch/1450-25a.webp', L + '1450-25a.webp', L + '1450-25a-g.png',
+                    [('Better Living,', ''), ('', 'Designed In')]), 'Wellness', 'top')
+    idea_t = ['A beautiful home changes', 'what you see.', 'A considered home can change', 'how you feel inside it']
+    assert ' '.join(idea_t) == nop(' '.join(get(S[0], 'lead')[0][1])), lead0
+    thought(pg, 'CI Wellness', idea_t, 2, [brk_lines(nop(' '.join(ps[1])), 62), tuple(nop(x) for x in ps[2])], btn(a[0], 'contact.html'), A + 'us/1511-03a.webp', '50% 40%')
+    # 03 why it matters — the page's own block: a day passes through the room, one of the client's nine qualities at a time
+    sec = S[2]; wp = [it[1] for it in sec['items'] if it[0] == 'p']
     qual = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
-    st2 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_index(label(sec), h_of(sec), wp[0] + ' ' + wp[1], qual).replace('class="bk tk-ix"', 'class="bk tk-ix wl-qu"', 1).replace(
-        '</section>', '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <p class="t34 rv tk-r-c">%s</p>\n</section>'
-        % (esc(nop(wp[2] + ' ' + wp[3])), blue(nop(st2), None)), 1), 'Luxury')
-    # 04 what CI Wellness is
+    st2 = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
+    assert len(qual) == 9 and len(wp) == 4 and len(wp[2]) == 2, (qual, wp)
+    c2 = [('This is how CI is', 0), ('redefining luxury:', 0), ('beyond appearance alone', 1), ('and toward the quality', 1), ('of everyday living', 1)]
+    assert ' '.join(x for x, _ in c2) == st2, st2
+    assert nop(h_of(sec)) == 'Better Design Should Support a Better Quality of Life', h_of(sec)
+    pg.add(tk_words(label(sec), [('Better Design Should', 0), ('Support a Better', 1), ('Quality of Life', 1)], [wp[0][0], wp[1][0]], qual, [wp[2]], c2,
+                    A + 'us/1511-11a.webp', mode='day', foot3=[wp[3][0]]), 'Why')
+    # 04 what CI Wellness is: a still black screen
     sec = S[1]; ip = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    pg.add(tk_calm(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], ip, ''), 'What It Is')
-    # 05 the one list of the page
+    assert nop(h_of(sec)) == 'The Home as Part of Your Wellbeing' and len(ip) == 5, (h_of(sec), ip)
+    pg.add(iv_quiet(label(sec), [('The Home as Part', 0), ('of Your Wellbeing', 1)],
+                    [brk_lines(nop(get(sec, 'lead')[0][1][0] + ' ' + ip[0]), 64), brk_lines(nop(' '.join(ip[1:])), 64)], A + 'us/1530-02.webp', '50% 50%'), 'What It Is')
+    # 05 the seven conditions on the grid; a name is a run of its own sentence's words; the section's closing sentence under the lead
     sec = S[3]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
     cl = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    pg.add(sc_you(h_of(sec), None, get(sec, 'lead')[0][1][0], rows, cl[0]), 'Fit')
-    # 06 the five steps, each with what it means
+    NM = [['A New', 'Residence'], ['The Quality', 'of Your Home', 'Environment'], ['Sleep, Recovery,', 'Movement, Light,', 'Air, or Water'], ['Long-Term', 'Living'],
+          ['Without', 'Compromising', 'Architecture'], ['A Home Spa,', 'Recovery Suite,', 'Fitness Area'], ['One Team', 'to Coordinate']]
+    assert len(NM) == len(rows) == 7 and len(cl) == 1, (len(rows), cl)
+    pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'us/1511-04a.webp',
+                  ['Personalized', 'Around the Way', 'You Want to Live'], tail=cl[0]), 'Fit')
+    # 06 the five steps as rows that open
     sec = S[4]
     rows = [(r[1] if isinstance(r[1], str) else ' '.join(r[1]), [' '.join(x) for x in r[2]]) for r in get(sec, 'row')]
-    lead4 = get(sec, 'lead')[0][1]
-    pg.add(wl_steps(label(sec), h_of(sec), ' '.join(lead4), rows), 'Process')
-    # 07 one photograph, and the room that is part of the routine
-    pg.add(tk_plate(A + 'us/1511-04a.webp', fp[2]), 'Recovery')
-    spa = [x.strip(' .') for x in fp[3].split('.') if x.strip(' .')]        # Steam. Sauna. Cold therapy. …
-    pg.add(wl_spa(label(S[6]), h3[0], '', fp[2], spa, [fp[4]]), 'Home Spa')
-    # 08 technology that does not announce itself
-    sec = S[7]; tp = [it[1] for it in sec['items'] if it[0] == 'p']
-    tflat = [' '.join(x) for x in tp]
-    pg.add(cu_layers(label(sec), h_of(sec), [get(sec, 'lead')[0][1][0]] + tflat[1:5], tp[0], tflat[5]).replace('class="bk cu-ly"', 'class="bk cu-ly wl-ly"', 1), 'Design')
-    # 09 what it touches, and the outcome
+    assert len(rows) == 5 and nop(h_of(sec)) == 'Expert Perspective. One Coordinated Team', (len(rows), h_of(sec))
+    pg.add(wl_rows(label(sec), [('Expert Perspective.', 0), ('One Coordinated Team', 1)], get(sec, 'lead')[0][1], rows), 'Process')
+    # 07 the features: the client's nine groups and the home spa as an index the scroll walks through
+    sec = S[6]; fp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    h3 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h3']
+    assert len(P['_feats']) == 9 and len(fp) == 5 and len(h3) == 1, (len(P['_feats']), fp, h3)
+    states = [(g[0], [(g[k_], g[k_ + 1]) for k_ in range(1, len(g), 2)]) for g in P['_feats']] + [(h3[0], [fp[2], fp[3], fp[4]])]
+    pg.add(tk_words(label(sec), [('The Right Solutions,', 0), ('in the Right Home', 1)], [fp[0], fp[1]], None, None, None, A + 'us/1511-06a.webp',
+                    states=states, dw=.5), 'Features')
+    # 08 our responsibility: the nine disciplines as one mass that lets go — «so you do not have to»
     sec = S[8]
     touch = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
     op = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    pg.add(tk_index(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], touch).replace('class="bk tk-ix"', 'class="bk tk-ix wl-ix"', 1).replace(
-        '</section>', '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n</section>' % esc(nop(' '.join(op))), 1), 'Connected')
+    assert len(touch) == 9 and len(op) == 3 and nop(h_of(sec)) == 'One Team Connecting Wellness to the Rest of the Home', (touch, op)
+    pg.add(tk_loose([label(sec)], [('One Team Connecting', ''), ('Wellness to the ', ''), ('', 'Rest of the Home')], touch, note=get(sec, 'lead')[0][1][0],
+                    after=(op[0] + ' ' + op[1], op[2])), 'One Team')
+    # 09 wellness without compromising design: the three sentences come and go, one at a time
+    sec = S[7]; tp = [it[1] for it in sec['items'] if it[0] == 'p']
+    assert [len(x) for x in tp] == [3, 1, 1, 1, 1, 4] and nop(h_of(sec)) == 'Technology Should Support the Home. Not Take It Over', ([len(x) for x in tp], h_of(sec))
+    c7 = [('The result should', 0), ('unmistakably feel', 0), ('like a CI home.', 0), ('Not a clinic.', 1), ('Not a commercial spa.', 1), ('Not a technology showroom', 1)]
+    assert ' '.join(x for x, _ in c7) == nop(' '.join(tp[5])), tp[5]
+    pg.add(tk_words(label(sec), [('Technology Should', 0), ('Support the Home.', 0), ('Not Take It Over', 1)], [get(sec, 'lead')[0][1][0]], tp[0],
+                    [tp[1][0], tp[2][0], tp[3][0]], c7, A + 'ch/1450-06.webp', wsmall=True, foot3=[tp[4][0]]), 'Design')
+    # 10 the outcome: a still black screen
     sec = S[9]; o9 = [it[1] for it in sec['items'] if it[0] == 'p']
     st9 = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
-    pg.add(cu_layers(label(sec), h_of(sec), [' '.join(o9[1])], o9[0], ' '.join(st9)).replace('class="bk cu-ly"', 'class="bk cu-ly wl-oc"', 1), 'Outcome')
-    final_cta(pg, S[10], A + 'us/1511-11a.webp')
+    assert len(o9[0]) == 4 and len(st9) == 2 and nop(h_of(sec)) == 'A Home That Works Harder for the Life Inside It', (o9, st9)
+    pg.add(iv_quiet(label(sec), [('A Home That Works Harder', 0), ('for the Life Inside It', 1)],
+                    [tuple(nop(x) for x in o9[0]), tuple([nop(o9[1][0])] + [nop(x) for x in st9])], A + 'ch/1450-26.webp', '50% 50%'), 'Outcome')
+    final_cta(pg, S[10], A + 'ch/1450-29a.webp')
     emit('ci-wellness.html', 'CI Wellness', pg, A + 'ch/1450-25a.webp')
 
 def curated_page():
@@ -125,11 +163,12 @@ def curated_page():
     h1, ps, a = hero(S[0])
     # 01 the cover, and the page's thought on its photograph: the client's lead cut into the name and the thought, word for word
     lead0 = nop(' '.join(ps[0]))
-    idea_t = ['Expands Our', 'Integrated', 'Design-Build', 'Approach Into', 'the Layers That', 'Make a Residence', 'Feel Complete']   # the column holds 20 letters of the 60
+    idea_t = ['Expands our integrated', 'design-build approach', 'into the layers that make', 'a residence feel complete']
     assert ('CI Curated ' + ' '.join(idea_t)).lower() == lead0.lower(), lead0
     pg.add(tk_cover(label(S[0]), h1, A + 'us/1511-12a.webp', L + '1511-12a.webp', L + '1511-12a-g.png',
-                    [('The Home, Considered', ''), ('', 'Beyond Construction')],
-                    idea=('CI Curated', idea_t, brk_lines(nop(' '.join(' '.join(x) for x in ps[1:4])), 46), btn(a[0], 'contact.html'))), 'Curated', 'top')
+                    [('The Home, Considered', ''), ('', 'Beyond Construction')]), 'Curated', 'top')
+    thought(pg, 'CI Curated', idea_t, 2, [brk_lines(nop(' '.join(' '.join(x) for x in ps[1:3])), 60), [nop(' '.join(ps[3]))]], btn(a[0], 'contact.html'),
+            A + 'us/1530-05.webp', '50% 50%')
     # 02 the conditions on the grid; a name is a run of its own sentence's words
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
     NM = [['Design and', 'Build Your', 'Residence'], ['Beyond the', 'Permanent', 'Architecture'], ['Expert', 'Furnishing', 'Selection'],
@@ -137,7 +176,12 @@ def curated_page():
     assert len(NM) == len(rows), (len(NM), len(rows))
     pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'ch/1450-05.webp',
                   ['For Clients Who', 'Want a More', 'Complete Design', 'Experience']), 'Fit')
-    # 03 what you receive — the page's own block: one light through the room, a piece for each of the client's six words
+    # 03 what is included (before «What You Receive», as on CI Core: a full-screen photograph never follows another): the two halves of the scope — the client's own two lists — come together into one mass
+    sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
+    note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
+    assert nop(h_of(sec)) == 'Design, Build + Curation', h_of(sec)
+    pg.add(tk_loose([label(sec)], [('Design, Build', ''), ('', '+ Curation')], list(ks[1]) + list(ks[2]), leave=False, note=note, gather=len(ks[1])), 'Included')
+    # 04 what you receive — the page's own block: one light through the room, a piece for each of the client's six words
     sec = S[2]; cp = [it[1] for it in sec['items'] if it[0] == 'p']
     st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
     six = [x.strip(' .') for x in cp[1][0].split('.') if x.strip(' .')]        # Scale. Comfort. Furniture. Art. Texture. Objects.
@@ -149,11 +193,6 @@ def curated_page():
     PTS = [(.50, .46, 1.3, .8), (.69, .60, .21, .13), (.44, .74, .50, .17), (.112, .392, .17, .17), (.455, .36, .10, .30), (.885, .50, .12, .21)]
     pg.add(tk_words(label(sec), [('A Home With Depth,', 0), ('Not Just a Finished', 1), ('Renovation', 1)], [get(sec, 'lead')[0][1][0], cp[0][0]],
                     six, [cp[2]], cl, A + 'ch/1450-20a.webp', mode='pool', pts=PTS), 'Receive')
-    # 04 what is included: the two halves of the scope — the client's own two lists — come together into one mass
-    sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
-    note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
-    assert nop(h_of(sec)) == 'Design, Build + Curation', h_of(sec)
-    pg.add(tk_loose([label(sec)], [('Design, Build', ''), ('', '+ Curation')], list(ks[1]) + list(ks[2]), leave=False, note=note, gather=len(ks[1])), 'Included')
     # 05 our responsibility: the client's sentences as rows, then the photograph becomes the screen and carries the closing line
     sec = S[5]; rp = [it[1] for it in sec['items'] if it[0] == 'p']
     one = [nop(x[0]) for x in rp if len(x) == 1]; four = [nop(x) for x in max(rp, key=len)]
@@ -205,15 +244,15 @@ def core_page():
     h1, ps, a = hero(S[0])
     # 01 the cover, and the page's thought on its photograph: the client's lead is cut into the name and the thought, word for word
     lead0 = nop(' '.join(ps[0]))
-    idea_t = ['Brings Architecture,', 'Interior Design,', 'Construction, and', 'Project Management', 'Together Under', 'One Team']
+    idea_t = ['Brings architecture,', 'interior design, construction,', 'and project management', 'together under one team']
     assert ('CI Core ' + ' '.join(idea_t)).lower() == lead0.lower(), lead0
     # 18.11 19:45, on Core's own cover (the room standing as a drawing that fills with the photograph): «чому ми не можемо зробити
     # так, як на Turnkey — там, де лінія малювала скетч, і потім скетч переходив в картинку. Чому ми не можемо взяти такий самий
     # прийом?» — so the cover is Turnkey's film itself (tk_cover / unfold()), with this page's room: the tangle pays out its line,
     # the room grows out of the line stroke by stroke (tools/site/sketch.py, 'us/1511-01a'), the line parts and the home stands.
     pg.add(tk_cover(label(S[0]), h1, A + 'us/1511-01a.webp', L + '1511-01a.webp', L + '1511-01a-g.png',
-                    [('Design + Build,', ''), ('', 'Fully Connected')],
-                    idea=('CI Core', idea_t, brk_lines(nop(' '.join(ps[1])), 46), btn(a[0], 'contact.html'))), 'Core', 'top')
+                    [('Design + Build,', ''), ('', 'Fully Connected')]), 'Core', 'top')
+    thought(pg, 'CI Core', idea_t, 3, [brk_lines(nop(' '.join(ps[1])), 60)], btn(a[0], 'contact.html'), A + 'ch/1450-12.webp', '50% 50%')
     # 02 the conditions on the grid; a name is a run of its own sentence's words (tk_fit asserts it); which run is our choice
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
     NM = [['A Significant', 'Renovation'], ['Coordinated', 'From the', 'Beginning'], ['Clear', 'Communication'], ['One Point of', 'Accountability'],

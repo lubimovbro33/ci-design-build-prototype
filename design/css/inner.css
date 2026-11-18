@@ -1388,3 +1388,24 @@ html body.inr .film .tk-wd-c{position:absolute;left:0;top:50%;width:100%;margin:
   .film .tk-wd-f1{margin-top:28px} .tk-wd-w{margin-top:36px} .film .tk-wd-f2{margin-top:24px} html body.inr .film .tk-wd-c{margin-top:40px} .film .tk-wd-f3{margin-top:20px}
   .tk-wd-c > span{transform:none}
 }
+
+/* a film of states (CI Wellness, the features): the names as an index in the 34 where the title stood — the one in hand bright, the
+   others quiet — and its paragraphs 25 right of the screen's middle, on the foot; a feature's own name in the light blue */
+.tk-wd-x{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u));margin:0;padding:0;list-style:none;opacity:0}
+html body.inr .tk-wd-x li{margin:0;color:#FFFFFF;opacity:.3;transition:opacity .45s} html body.inr .tk-wd-x li + li{margin-top:calc(15 * var(--u))}
+html body.inr .tk-wd-x li.on{opacity:1}
+html body.inr .film .tk-wd-i.st{left:calc(50% + 25 * var(--u));top:auto;bottom:max(calc(50 * var(--u)), 58px);width:min(26em, calc(50vw - 75 * var(--u)))}
+.tk-wd-i.st .nm{color:#BAC7D6} .tk-wd-i.st .nm0{display:none}
+/* the section's closing sentence under the lead of the grid's panel (CI Wellness) */
+.tk-df-tl{display:block;margin-top:.7em;font-weight:400}
+/* the thought of a page as its own black screen: the button on the left field's foot */
+.ivq-b{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+/* CI Wellness, the process: the site's rows that open; the client's two-line lead on the text line over them */
+html body.inr .wl-pr-l{margin:calc(50 * var(--u)) calc(50 * var(--u)) calc(100 * var(--u)) calc(421 * var(--u));max-width:none}
+@media (max-aspect-ratio: 1/1){
+  .tk-wd-x{display:none}
+  html body.inr .film .tk-wd-i.st{position:static;width:auto;margin-top:26px} html body.inr .tk-wd-i.st .nm0{display:block;margin:0 0 10px}
+  .ivq-b{position:static;margin-top:26px}
+  html body.inr .wl-pr-l{margin:24px var(--m, 20px) 36px}
+  html body.inr .wl-pr .qa .ain{display:block!important} html body.inr .wl-pr .qa .ain > div{width:auto!important;max-width:none!important} html body.inr .wl-pr .qa .ain > div + div{margin-top:12px}
+}

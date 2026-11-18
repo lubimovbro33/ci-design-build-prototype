@@ -1154,13 +1154,13 @@
       var box = qs('.tk-wd-ph', e);
       o = f.wd = {gl: box ? GL2.make(box, WORDS_FS, qsa('img', box), {}) : null, mode: e.getAttribute('data-mode') || 'still', n: +e.getAttribute('data-n') || 1, dw: +e.getAttribute('data-dw') || .42,
                   pts: (e.getAttribute('data-pts') || '').split(';').filter(Boolean).map(function(x){ return x.split(',').map(Number); }),
-                  h: qs('.tk-wd-h', e), f1: qs('.tk-wd-f1', e), f2: qs('.tk-wd-f2', e), f3: qs('.tk-wd-f3', e), ws: qsa('.tk-wd-i', e), c: qs('.tk-wd-c', e), on: false};
+                  h: qs('.tk-wd-h', e), f1: qs('.tk-wd-f1', e), f2: qs('.tk-wd-f2', e), f3: qs('.tk-wd-f3', e), ws: qsa('.tk-wd-i', e), c: qs('.tk-wd-c', e), x: qs('.tk-wd-x', e), ix: qsa('.tk-wd-x li', e), cur: -1, on: false};
     }
     function put(el_, op, tf, fl){ if (!el_) return; var k = op.toFixed(3) + tf + (fl || ''); if (el_.__k === k) return; el_.__k = k;
       var st = el_.style; st.opacity = op.toFixed(3); st.transform = tf; if (fl !== undefined) st.filter = fl; st.visibility = op <= .001 ? 'hidden' : 'visible'; }
     function clr(el_){ if (!el_) return; el_.__k = ''; var st = el_.style; st.opacity = ''; st.transform = ''; st.filter = ''; st.visibility = ''; }
     function ty(px){ return 'translate3d(0,' + px.toFixed(1) + 'px,0)'; }
-    if (H >= W){ if (o.on){ o.on = false; [o.h, o.f1, o.f2, o.f3, o.c].concat(o.ws).forEach(clr); } return; }   /* phones: in the flow (css) */
+    if (H >= W){ if (o.on){ o.on = false; [o.h, o.f1, o.f2, o.f3, o.c, o.x].concat(o.ws).forEach(clr); } return; }   /* phones: in the flow (css) */
     o.on = true;
     var w0 = 1.0, wE = w0 + o.n * o.dw, p = (q - w0) / o.dw, k = c01((q - w0) / (wE - w0)), kc = eio(sg(q, wE + .12, wE + .5)), g2 = o.gl;
     if (g2 && g2.ready){
@@ -1181,11 +1181,16 @@
     var ho = 1 - eio(sg(q, .62, .9));                                         /* step 1 goes up a little as it goes out */
     put(o.h, ho, ty(-16 * U * (1 - ho))); put(o.f1, ho, ty(-16 * U * (1 - ho)));
     for (i = 0; i < o.ws.length; i++){                                         /* step 2: each word comes up into the title's place and gives it to the next */
-      var a0 = w0 + i * o.dw, wi = eio(sg(q, a0 - .02, a0 + .14)), wo = 1 - (i === o.ws.length - 1 ? eio(sg(q, wE - .04, wE + .14)) : eio(sg(q, a0 + o.dw - .15, a0 + o.dw - .01)));
+      var a0 = w0 + i * o.dw, wi = eio(sg(q, a0 - .02, a0 + .14)), wo = 1 - (i === o.ws.length - 1 ? (o.c ? eio(sg(q, wE - .04, wE + .14)) : 0) : eio(sg(q, a0 + o.dw - .15, a0 + o.dw - .01)));   /* without a closing sentence the last one stays */
       put(o.ws[i], wi * wo, ty((1 - wi) * 20 * U - (1 - wo) * 16 * U));
     }
     var fi = eio(sg(q, w0 - .04, w0 + .22)), fo = 1 - eio(sg(q, wE - .04, wE + .14));
     put(o.f2, fi * fo, ty(10 * U * (1 - fi) - 12 * U * (1 - fo)));
+    if (o.x){                                                                 /* the index of a film of states: the name in hand is bright */
+      put(o.x, fi * (o.c ? fo : 1), ty(10 * U * (1 - fi)));
+      var cur = Math.max(0, Math.min(o.n - 1, Math.floor(p + .03)));
+      if (cur !== o.cur){ o.cur = cur; for (i = 0; i < o.ix.length; i++) o.ix[i].classList.toggle('on', i === cur); }
+    }
     var bl = (1 - kc) * 8 * U;                                                /* step 3 comes into focus */
     put(o.c, kc, ty(14 * U * (1 - kc)), bl > .2 ? 'blur(' + bl.toFixed(2) + 'px)' : 'none');
     put(o.f3, kc, ty(10 * U * (1 - kc)));
