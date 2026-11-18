@@ -675,27 +675,6 @@ html body.inr .tk-pl-t{position:absolute;left:calc(421 * var(--u));bottom:calc(1
 html body.inr .tk-cm-b{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u));width:calc(900 * var(--u))}
 html body.inr .tk-cm-p{margin:calc(56 * var(--u)) 0 0 calc(421 * var(--u))}
 html body.inr .tk-cm-c{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
-/* 05 the horizon: the page's metaphor as one screen */
-/* 05 the ecosystem as a field, and the client's «depending on project scope» as the handle that opens it (17.11.2026 23:01).
-   The 22 names are one dense run across the measure with the blue square between them; under them the page's line, and our square
-   on it. A name is either in full ink or not yet there — never half shown. js/inner.js, [data-scope] */
-.tk-sc{position:relative;padding:calc(150 * var(--u)) 0 calc(160 * var(--u));background:#000;--n:0}
-html body.inr .tk-sc .bk-h h2{font-size:max(17px, calc(34 * var(--u)))!important;line-height:.97!important;letter-spacing:-.0294em!important}
-html body.inr .tk-sc-a{margin:calc(150 * var(--u)) calc(50 * var(--u)) calc(140 * var(--u)) calc(421 * var(--u));width:calc(900 * var(--u));white-space:normal;color:#FFFFFF}
-html body.inr .tk-sc-f{margin:0 calc(50 * var(--u)) 0 calc(421 * var(--u));color:#FFFFFF}
-.tk-sc-f .sqr{row-gap:.42em}
-.tk-sc-f .sqr > span{opacity:clamp(0, calc(var(--n) - var(--i)), 1);transform:translateY(calc((1 - clamp(0, calc(var(--n) - var(--i)), 1)) * .18em));
-  transition:opacity .5s ease, transform .6s cubic-bezier(.16,1,.3,1)}
-.tk-sc-f .sqr > span::before{opacity:clamp(0, calc(var(--n) - var(--i) - .25), 1);transition:opacity .5s ease}
-.tk-sc-b{margin:calc(110 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
-html body.inr .tk-sc-n{margin:0 0 calc(26 * var(--u));color:#FFFFFF}
-.tk-sc-l{position:relative;height:calc(40 * var(--u));min-height:26px;cursor:none;touch-action:none;outline:0}
-.tk-sc-l .r, .tk-sc-l .f{position:absolute;left:0;top:50%;height:1px;margin-top:-.5px}
-.tk-sc-l .r{right:0;background:rgba(255,255,255,.3)}
-.tk-sc-l .f{width:0;background:#FFFFFF}
-.tk-sc-l .q{position:absolute;top:50%;left:0;width:max(7px, calc(12 * var(--u)));height:max(7px, calc(12 * var(--u)));
-  margin:calc(max(7px, 12 * var(--u)) / -2) 0 0 calc(max(7px, 12 * var(--u)) / -2);background:#96A8BF}
-.tk-sc-l:focus-visible .q{outline:1px solid #FFFFFF;outline-offset:3px}
 @media (max-aspect-ratio: 1/1){
   .tk-ld{padding:72px 0}
   html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
@@ -705,13 +684,7 @@ html body.inr .tk-sc-n{margin:0 0 calc(26 * var(--u));color:#FFFFFF}
   .tk-r-g{margin:26px var(--m, 20px) 0}
   .tk-r-r{grid-template-columns:40px minmax(0, 1fr);column-gap:14px;padding:16px 0}
   html body.inr .tk-r-r .b{width:auto}
-  html body.inr .tk-r-c, html body.inr .tk-cm-b, html body.inr .tk-cm-p, html body.inr .tk-cm-c,
-  html body.inr .tk-sc-f{margin:0 var(--m, 20px);width:auto;max-width:none;font-size:20px}
-  /* the process on phones: the heading, then the ribbon under it — one column */
-  html body.inr .tk-sc-a{margin:28px var(--m, 20px);width:auto}
-  .tk-sc-b{margin:28px var(--m, 20px) 0}
-  html body.inr .tk-sc-n{margin-bottom:14px}
-  .tk-sc{padding:72px 0}
+  html body.inr .tk-r-c, html body.inr .tk-cm-b, html body.inr .tk-cm-p, html body.inr .tk-cm-c{margin:0 var(--m, 20px);width:auto;max-width:none;font-size:20px}
   .tk-pl-b{height:56vh} html body.inr .tk-pl-t{left:var(--m, 20px);right:var(--m, 20px);width:auto;bottom:28px}
 }
 /* ================================================================== CI CORE — one hand (17.11.2026)
@@ -1036,6 +1009,32 @@ html body.inr .tk-df .df2-s1{width:auto;right:calc(24 * var(--u));white-space:no
   .tk-df .df2-cell .df2-cd{bottom:12px} .tk-df .df2-cell .df2-pm{right:12px;bottom:12px}
   .tk-df-k{position:static;font-size:11px}
   html body.inr .tk-df .df2-big{white-space:normal}
+}
+
+/* 04 the ecosystem — her frame 652:9078 and her idea (18.11.2026 17:37: «охапка тексту… щоб текст при скролі розсипався… метафора,
+   що вам цього не потрібно»). One pinned screen, set as drawn: the block's name on the left field at 150 (two lines), the sentence
+   in the 60 (sentence case, three lines) from the text line with its capitals on the same 150, and 220 under it the twenty-two names
+   as one mass of the 34, 1449 wide — the measure of her frame, so that its six lines stand in every window.
+   On the scroll the mass lets go (loose() in js/inner.js sets transform, opacity and blur on each name; the square between two
+   names goes out by --q). While the film runs the row's clip is taken off — a name has to be able to leave the paragraph — and
+   the square at the head of each line is hidden by the script instead (.h). The names pass UNDER the sentence. */
+.tk-lo .stg{background:#000}
+.film .tk-lo-s{pointer-events:auto}
+html body.inr .film .tk-lo-k{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u));margin:0;white-space:nowrap}
+html body.inr .film .tk-lo-h{position:absolute;z-index:2;left:calc(421 * var(--u));top:calc(137.4 * var(--u));margin:0;color:#FFFFFF}
+html body.inr .film .tk-lo-f{position:absolute;z-index:1;left:calc(421 * var(--u));top:calc(514.3 * var(--u));width:calc(1449 * var(--u));max-width:none;margin:0;color:#FFFFFF}
+.tk-lo-f .sqr{row-gap:.42em}
+.tk-lo-f .sqr > span::before{opacity:var(--q, 1)}   /* it goes out as a square — never shrinks into a dot */
+.tk-lo-f.fx .sqr{clip-path:none}
+.tk-lo-f.fx .sqr > span.h::before{visibility:hidden}
+@media (max-aspect-ratio: 1/1){
+  /* phones: the name, the sentence, the names — in the flow, nothing leaves */
+  .film .tk-lo-s{padding-top:72px}
+  html body.inr .film .tk-lo-k, html body.inr .film .tk-lo-h, html body.inr .film .tk-lo-f{position:static;width:auto}
+  html body.inr .film .tk-lo-k{margin:0 0 14px;white-space:normal}
+  html body.inr .film .tk-lo-h{white-space:normal}
+  html body.inr .film .tk-lo-f{margin:28px 0 0;font-size:20px}
+  .tk-lo br.lb{display:none}
 }
 
 /* 05 «What You Receive» on one axis (18.11.2026 17:01: «громіздкий, неакуратний… мінімалістичніше, зрозуміліше і преміальніше»).

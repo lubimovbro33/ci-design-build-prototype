@@ -500,26 +500,33 @@ def tk_cover(kick, h1, img, line, order, lines, idea=None):
         '      <p class="t20 m tk-cv-ip" data-k="2.8 3.06 99 99">%s</p>' % ' <br class="bd">'.join(esc(x) for x in idea[2]),
         '      <div class="m tk-cv-ib" data-k="2.92 3.12 99 99">%s</div>' % idea[3],
         '    </div>'] if idea else []) + ['  </div>', '</section>'])
-def tk_scope(kick, h1, above, note, items):
-    """05 — the whole ecosystem as the client's own sentence made into a thing to do (17.11.2026 23:01: «як метафорично, цікаво,
-    інтерактивно»). The list of 22 is not a list: its point is WEIGHT — how much is inside. So the names stand as one dense field of
-    the 34 across the measure, the blue square between them, and the line of the page runs under the field with our square on it as a
-    handle. The client's own words are the mechanic: «Depending on project scope» — the further the handle goes, the further the field
-    opens, name after name, until all twenty-two stand. The scroll walks the handle the first time, so the block is never met empty;
-    from the first touch it is the reader's (drag, click anywhere on the line, arrow keys). Nothing is ever shown dimmed: a name is
-    either standing in full ink or not yet there (`[data-scope]` in js/inner.js).
-    The two cables hung from the horizon (17.11 15:15) stood here before: they read as two columns of bullets, which is the one shape
-    this site does not use."""
-    fs = ''.join('<span style="--i:%d">%s</span>' % (i, esc(nop(x))) for i, x in enumerate(items))
-    return ('<section class="bk tk-sc" id="@ID@" data-scope>\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <p class="t60s rv tk-sc-a">%s</p>\n'
-            '  <p class="t34 tk-sc-f"><span class="sqr">%s</span></p>\n'
-            '  <div class="tk-sc-b">\n    <p class="lab3 tk-sc-n">%s</p>\n'
-            '    <div class="tk-sc-l" role="slider" tabindex="0" aria-label="%s" aria-valuemin="0" aria-valuemax="%d" aria-valuenow="%d">'
-            '<i class="r" aria-hidden="true"></i><i class="f" aria-hidden="true"></i><i class="q" aria-hidden="true"></i></div>\n'
-            '  </div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(above)), fs,
-                esc(nop(note)), esc(nop(note)), len(items), len(items))
+def tk_loose(kick, title, names):
+    """04 — the ecosystem, her frame `652:9078` and her idea (18.11.2026 17:37): «У нас отака величезна охапка тексту… щоб текст при
+    скролі, можливо, розсипався. Це як метафора, що вам цього не потрібно. Не потрібно про це думати… чи по букві, чи по слову.»
+    The frame: the block's name on the left field (`kick` = its two lines), the client's sentence as the title in the 60, sentence
+    case, three lines, two inks (`title` = lines of (white, blue)); 220 under it the twenty-two names as one solid mass of the 34
+    across the measure, our square between them. Nothing else: the scope handle and «Depending on project scope:» are not in her
+    frame («текст бери той, що на макеті»; verify.py: DROP).
+    One pinned screen (`loose()` in js/inner.js). The mass stands as drawn — it is the weight of what would have to be managed. On
+    the scroll it lets go: the squares that held the names together go first, then the names leave their lines one by one, each on
+    its own slow course, turning a little and going out of focus — some pass by the reader, some go off into the depth. They leave
+    BY NAME, so that what goes can still be read as it goes. What is left is a clear screen and the sentence. Scrolling back
+    gathers the mass again. The type stays in the page throughout."""
+    hl = ''
+    for i, (wh, bl) in enumerate(title):
+        if i: hl += ' <br class="lb">'
+        if wh: hl += esc(wh)
+        if bl: hl += '<span class="cb">%s</span>' % esc(bl)
+    fs = ''.join('<span>%s</span>' % esc(nop(x)) for x in names)
+    return '\n'.join([
+        '<section class="film tk-lo" data-fig="loose" data-len="2" data-open="0" id="@ID@">', '  <div class="stg">',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-lo-s">',
+        '      <p class="lab3 rv tk-lo-k">%s</p>' % ' <br class="lb">'.join(esc(x) for x in kick),
+        '      <h2 class="t60s rv tk-lo-h">%s</h2>' % hl,
+        '      <p class="t34 rv tk-lo-f" data-loose><span class="sqr">%s</span></p>' % fs,
+        '    </div>', '  </div>', '</section>'])
+
+
 def tk_count(kick, title, lead, rows):
     """03 — her frame `643:8641` (18.11 16:13): «Зроби його точно так само, як у мене на макеті… Коли ми проскролюємо, в нас міняється
     інформація. Перший пункт у нас білий, тобто він при наведенні. І справа є ще колонка, там пише 01 і внизу контент… на другий пункт

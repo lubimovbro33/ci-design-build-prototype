@@ -283,11 +283,16 @@ def turnkey_page():
     assert len(NM) == len(rows), (len(NM), len(rows))
     pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'ch/1450-01a.webp',
                   ['For Clients Who', 'Want the Whole', 'Experience', 'Managed']), 'Fit')
-    # 05 the ecosystem as a field of names and the client's own «depending on project scope» as the handle that opens it
+    # (the conditions' closing sentence, for 07 One Team)
     sec = S[5]; p5 = [it[1] for it in sec['items'] if it[0] == 'p']
     one5 = [x[0] for x in p5 if len(x) == 1]; whens = max(p5, key=len)
     st5 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_scope(label(sec4), h_of(sec4), sp[1], note, eco), 'Above the Line')
+    # 04 the ecosystem — her frame 652:9078 (18.11 17:37): the section's heading as the block's name on the field, the client's
+    # sentence as the title, the twenty-two names as one mass; «текст бери той, що на макеті» — the label «What's Included» and the
+    # client's «Depending on project scope:» are not in it (verify.py: DROP). The mass lets go on the scroll (tk_loose).
+    assert nop(h_of(sec4)) == 'The Complete CI Ecosystem' and nop(sp[1]) == 'Your life does not need to revolve around managing all of it', (h_of(sec4), sp[1])
+    assert len(eco) == 22 and nop(note) == 'Depending on project scope:', (len(eco), note)
+    pg.add(tk_loose(['The Complete CI', 'Ecosystem'], [('Your life does not', ''), ('need to ', 'revolve around'), ('', 'managing all of it')], eco), 'Ecosystem')
     # 05 what you receive: the six intersections on one axis (18.11 17:01 — the joints were «громіздкий, неакуратний»)
     sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
     inter = [x for x in pit if len(x) == 6][0]; short = [x[0] for x in pit if len(x) == 1]

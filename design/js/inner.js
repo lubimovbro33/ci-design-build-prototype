@@ -948,7 +948,58 @@
     var x = -Math.max(0, f.st.scrollWidth - W) * sg(q, .16, f.len - .2), tf = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
     if (f.st.__t !== tf){ f.st.__t = tf; f.st.style.transform = tf; }
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip};
+  /* loose — the ecosystem, her frame 652:9078 and her idea (18.11.2026 17:37): «охапка тексту… щоб текст при скролі розсипався… це як
+     метафора, що вам цього не потрібно, не потрібно про це думати». The twenty-two names stand as one solid mass, exactly as drawn.
+     On the scroll the mass lets go — not an explosion and not a fall: the squares that held the names together go first, then the
+     names leave their lines one by one (a fixed shuffled order, so the paragraph thins out everywhere at once), each on its own
+     slow course outwards, turning a few degrees, some towards the reader (larger, out of focus), some into the depth (smaller,
+     dimmer). By NAME, not by letter: what leaves can still be read as it leaves. What is left is a clear screen and the sentence.
+     The whole thing is scrubbed by the scroll, so scrolling back gathers the mass again. The type is the page's own type: only
+     transform, opacity and blur are set on it, and a name at rest carries no style at all. */
+  function loose(f, q, t){
+    var o = f.lo, i;
+    if (o === undefined){
+      var par = qs('[data-loose]', f.el), its = par ? qsa('.sqr > span', par) : [];
+      o = f.lo = its.length > 1 ? {p: par, its: its, n: its.length, k: '', on: false} : null;
+      if (o){ var sd = 29, ord = [], j, tmp; var rnd = function(){ sd = (sd * 16807) % 2147483647; return (sd - 1) / 2147483646; };
+        for (i = 0; i < o.n; i++) ord.push(i);
+        for (i = o.n - 1; i > 0; i--){ j = Math.floor(rnd() * (i + 1)); tmp = ord[i]; ord[i] = ord[j]; ord[j] = tmp; }
+        o.rank = []; ord.forEach(function(ix, r){ o.rank[ix] = r; });
+        o.r = its.map(function(){ return [rnd(), rnd(), rnd(), rnd()]; });
+        o.key = its.map(function(){ return ''; }); o.ps = its.map(function(){ return 0; });
+        if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ o.k = ''; }); }   /* the lines are read again in the real face */
+    }
+    if (!o) return;
+    function rest(e){ var st = e.style; st.transform = ''; st.opacity = ''; st.filter = ''; st.visibility = ''; st.willChange = ''; e.style.removeProperty('--q'); }
+    if (H >= W || reduced){ if (o.on){ o.on = false; o.k = ''; o.p.classList.remove('fx'); o.its.forEach(rest); } return; }   /* phones, reduced motion: the mass stands */
+    var lk = W + 'x' + H;
+    if (o.k !== lk){                                                       /* the places, read from the page as it is laid out */
+      o.k = lk; o.on = true; o.its.forEach(rest); o.p.classList.add('fx');
+      var pr = o.p.getBoundingClientRect(), last = -1e9;
+      o.c = o.its.map(function(e){ var r = e.getBoundingClientRect(), hd = Math.abs(r.top - last) > 4; last = r.top; e.classList.toggle('h', hd);
+        return [(r.left + r.width / 2 - pr.left - pr.width / 2) / (pr.width / 2), (r.top + r.height / 2 - pr.top - pr.height / 2) / (pr.height / 2)]; });
+      for (i = 0; i < o.n; i++) o.key[i] = '';
+    }
+    var A = .22, B = .98, D = .72;                                         /* the first lets go at .22 of a screen, the last at .98; each takes .72 */
+    for (i = 0; i < o.n; i++) o.ps[i] = c01((q - A - o.rank[i] / (o.n - 1) * (B - A)) / D);
+    for (i = 0; i < o.n; i++){
+      var p = o.ps[i], sqv = 1 - c01(Math.max(p, i ? o.ps[i - 1] : 0) * 6), ky = (p * 1000 | 0) + '/' + (sqv * 100 | 0);
+      if (ky === o.key[i]) continue; o.key[i] = ky;
+      var e = o.its[i], st = e.style;
+      if (sqv >= 1) st.removeProperty('--q'); else st.setProperty('--q', sqv.toFixed(3));
+      if (p <= 0){ st.transform = ''; st.opacity = ''; st.filter = ''; st.visibility = ''; st.willChange = ''; continue; }
+      if (p >= 1){ st.visibility = 'hidden'; st.willChange = ''; continue; }
+      var r = o.r[i], c = o.c[i], z = r[2] * 2 - 1, m = Math.pow(p, 1.9),                        /* reluctant at first, then it floats */
+          ang = Math.atan2(c[1] * .55 - .14, c[0]) + (r[0] - .5) * 1.15,
+          dist = (.15 + .2 * r[1]) * W * (1 + .5 * z) * m,
+          sc = 1 + m * (z >= 0 ? .7 * z : .42 * z), rot = m * (r[3] - .5) * 20,
+          bl = Math.pow(p, .75) * (4 + 9 * Math.abs(z)) * U, al = 1 - .25 * sm(0, .25, p) - .75 * sm(.3, .96, p);   /* the focus goes before the place does: a name that has moved is already on another plane */
+      st.visibility = ''; st.willChange = 'transform, opacity, filter';
+      st.transform = 'translate3d(' + (Math.cos(ang) * dist).toFixed(1) + 'px,' + (Math.sin(ang) * dist).toFixed(1) + 'px,0) rotate(' + rot.toFixed(2) + 'deg) scale(' + sc.toFixed(4) + ')';
+      st.opacity = al.toFixed(3); st.filter = bl > .25 ? 'blur(' + bl.toFixed(2) + 'px)' : '';
+    }
+  }
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -1395,37 +1446,6 @@
     window.addEventListener('load', rest);
     if ('ResizeObserver' in window) new ResizeObserver(rest).observe(row);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(rest);
-  })();
-
-  /* ================================================================== the ecosystem's scope (17.11.2026 23:01)
-     The client's own sentence is the mechanic: «Depending on project scope» — the handle on the page's line opens the field of the
-     twenty-two, name after name. The scroll walks it the first time, so the block is never met empty; from the first touch it is the
-     reader's. A name is either in full ink or not yet there: nothing is shown half (the site's rule on in-between text). */
-  (function(){
-    var sec = qs('[data-scope]'); if (!sec) return;
-    var field = qs('.tk-sc-f', sec), its = qsa('.sqr > span', field), line = qs('.tk-sc-l', sec), fill = qs('.f', line), knob = qs('.q', line);
-    var N = its.length; if (!N || !line) return;
-    var p = -1, mine = false, vis = false, raf = 0;
-    function put(v){
-      v = c01(v); if (Math.abs(v - p) < .0008) return; p = v;
-      sec.style.setProperty('--n', (p * (N + .6)).toFixed(3));
-      var pc = (p * 100).toFixed(2) + '%'; fill.style.width = pc; knob.style.left = pc;
-      line.setAttribute('aria-valuenow', Math.round(p * N));
-    }
-    function fromX(x){ var r = line.getBoundingClientRect(); mine = true; put((x - r.left) / Math.max(1, r.width)); }
-    line.addEventListener('pointerdown', function(e){ line.setPointerCapture(e.pointerId); fromX(e.clientX); e.preventDefault(); });
-    line.addEventListener('pointermove', function(e){ if (e.buttons) fromX(e.clientX); });
-    line.addEventListener('keydown', function(e){
-      var d = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : (e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0);
-      if (!d) return; mine = true; put(p + d / N); e.preventDefault();
-    });
-    function loop(){ raf = 0; if (!vis) return;
-      if (!mine){ var r = field.getBoundingClientRect(); put((H * .84 - r.top) / Math.max(1, H * .44)); }
-      raf = requestAnimationFrame(loop);
-    }
-    if ('IntersectionObserver' in window) new IntersectionObserver(function(es){ vis = es[0].isIntersecting; if (vis && !raf) raf = requestAnimationFrame(loop); }, {rootMargin: '30% 0px'}).observe(sec);
-    else { put(1); }
-    if (reduced) { mine = true; put(1); }
   })();
 
   /* ================================================================== the «CI Difference» grid on an inner page (17.11.2026 19:34)

@@ -31,6 +31,8 @@ EXC = {('portfolio', 'Homes as Unique as the People Who Live in Them'): ('Homes 
        ('turnkey', 'Developing the residence as one integrated vision.'): ('Developing Your Residence as One Integrated Vision, From the Architecture to the Last Detail', 'adapted on the designer\'s word, 18.11.2026 16:11'),
        ('turnkey', 'Technical documentation, budgeting, scheduling, procurement strategy, and coordination.'): ('Technical Documentation, Budgeting, Scheduling, Procurement Strategy, and Team Coordination', 'adapted on the designer\'s word, 18.11.2026 16:11'),
        ('turnkey', 'The residence is completed as a home, not handed over as a construction site.'): ('Your Residence Is Completed as a Home, Ready to Live In, Not Handed Over as a Construction Site', 'adapted on the designer\'s word, 18.11.2026 16:11')}
+# left out on the designer's word: the client's text that does not stand on the page at all (reported, not counted as missing)
+DROP = {('turnkey', 'Depending on project scope:'): 'the designer, 18.11.2026 17:37, frame 652:9078 («текст бери той, що на макеті»): the ecosystem is its name, the sentence and the twenty-two names'}
 tot = miss = 0
 for k, fs in MAPF.items():
     T = ''.join(page_text(f) for f in fs)
@@ -47,6 +49,7 @@ for k, fs in MAPF.items():
                 for part in ([t] if ' · ' not in t else t.split(' · ')):
                     n = norm(part).replace('.', ''); tot += 1
                     if k == 'project': n = n.replace('[project name]', 'collectors home')
+                    if (k, part) in DROP: print('LEFT OUT  %-13s s%-2d %-6s «%s» (%s)' % (k, si, it[0], part, DROP[(k, part)])); continue
                     if (k, part) in EXC:
                         r, why = EXC[(k, part)]; ok = norm(r).replace('.', '') in T
                         print('%s %-13s s%-2d %-6s «%s» stands for «%s» (%s)' % ('EXCEPTION' if ok else 'MISSING EXCEPTION', k, si, it[0], r, part, why)); miss += 0 if ok else 1; continue
