@@ -1133,31 +1133,34 @@ def co_cover(kick, h1, img, ln, idea=None):
         '      <div class="m tk-cv-ib" data-k="1.82 2.02 99 99">%s</div>' % idea[3],
         '    </div>'] if idea else []) + ['  </div>', '</section>'])
 def co_seam(kick, h1, lead, ps, strong, img, ln):
-    """04 — the page's instrument, on ONE SCREEN (18.11.2026 19:25: «мені не подобається, як показано до-після… текст там, обривок
-    фотографії, потім ще внизу текст. Давайте все зробимо висотою 1080 і все в одному екрані»). It was a heading, a picture taller
-    than the window and more text under it — never seen whole. Now the screen is two halves: the text on the left one, on black
-    (the name, the title in two inks, the two paragraphs at the head; the client's two sentences and the closing paragraph on the
-    foot), and the room on the right one, from the top of the screen to its foot — drawn on one side of a line and built on the
-    other. The line follows the pointer: the visitor moves the seam themselves and sees that there is nothing behind it."""
-    # the title in four short lines, its second half in the blue: the left half of the screen is 860 wide, and a title that fits it
-    # in the real face only by a hair would break differently from window to window
+    """04 — CI Core, «What You Receive»: THE DRAWING BECOMES THE ROOM, in three steps on one pinned screen (18.11.2026 21:36, of the
+    one-screen version: «цей блок мені не підходить. Він дуже грузний, дуже важкий»; 21:44, of the two storyboards: «то, що
+    рекомендуєш»). It was heavy because everything stood at once: six pieces of text in four sizes down one column, a title in four
+    lines of capitals, the drawing in full white ink beside them and the photograph cut in half. The idea is the same — one room,
+    drawn and built — but it is told in time, one thought to a step, and the picture is the whole screen:
+      1  the drawing alone, quiet (its ink at 42 %); the name and the title in TWO lines (the second in the light blue she uses on
+         pictures) at the left field, the paragraph about the disconnect on the foot. The seam stands on the right field;
+      2  the scroll walks the seam to the middle of the screen: the drawing on its left, the room on its right. The client's two
+         sentences stand either side of it on the screen's middle — «Design understands construction» on the drawing,
+         «Construction understands design» on the room; on the foot, «Instead, decisions…»;
+      3  the seam goes out at the left, the room is whole and lighter, and the closing sentence stands alone in the 34 on the
+         room's dark side.
+    Every word is the client's, in the client's order. The film is `seam()` in js/inner.js; the picture is one WebGL layer, the
+    seam's hairline and its square are ruled on the film's canvas, the type is DOM."""
     t = brk_lines(nop(h1), 26); assert len(t) == 2, t
-    def two(x): w = x.split(' '); k = (len(w) + 1) // 2; return [' '.join(w[:k]), ' '.join(w[k:])]
-    hl = '<br>'.join(esc(x) for x in two(t[0])) + '<br>' + '<br>'.join('<span class="cb">%s</span>' % esc(x) for x in two(t[1]))
-    st = [nop(x) for x in strong]
-    sl = esc(st[0]) + ''.join(' <br class="bd"><span class="cb">%s</span>' % esc(x) for x in st[1:])
+    st = [nop(x) for x in strong]; assert len(st) == 2 and len(ps) == 2, (st, ps)
     return '\n'.join([
-        '<section class="co-sm one" id="@ID@">',
-        '  <div class="co-sm-t">',
-        '    <p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2>' % (esc(kick), hl),
-        '    <p class="t20 rv co-sm-l">%s</p>' % esc(nop(lead)),
-        '    <p class="t20 rv co-sm-p">%s</p>' % esc(nop(ps[0])),
-        '    <p class="t34 co-sm-s">%s</p>' % sl,                       # the foot is not .rv: reveals begin above the screen's last eighth
-        ''.join('    <p class="t20 co-sm-c">%s</p>' % esc(nop(x)) for x in ps[1:]),
-        '  </div>',
-        '  <div class="co-sm-g" data-seam style="--x:50%">',
-        '    <img class="co-sm-dr" src="%s" alt="">' % ln, '    <img class="co-sm-im" src="%s" alt="" loading="lazy">' % img,
-        '    <span class="co-sm-ln" aria-hidden="true"></span>', '  </div>', '</section>'])
+        '<section class="film co-dw" data-fig="seam" data-len="3.4" data-open="0" id="@ID@">', '  <div class="stg">',
+        '    <div class="co-dw-ph"><img class="co-dw-dr" src="%s" alt=""><img class="co-dw-im" src="%s" alt=""></div>' % (ln, img),
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc co-dw-s">',
+        '      <div class="co-dw-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s<br><span class="cbl">%s</span></h2></div>' % (esc(kick), esc(t[0]), esc(t[1])),
+        '      <p class="t20 co-dw-l">%s</p>' % esc(nop(lead)),                 # the foot: never .rv on a pinned screen
+        '      <p class="t20 co-dw-p">%s</p>' % esc(nop(ps[0])),
+        '      <p class="t34 co-dw-t"><span class="a">%s</span> <br><span class="b cbl">%s</span></p>' % (esc(st[0]), esc(st[1])),
+        '      <p class="t34 co-dw-c">%s</p>' % esc(nop(ps[1])),
+        '    </div>', '  </div>', '</section>'])
+
+
 def co_split(kick, h1, note, left, right, close=None):
     """07 — the connected scope, set as what the page is about: two columns either side of ONE vertical hairline, design on its left and
     construction on its right, so the seam is the block"""

@@ -1063,7 +1063,65 @@
     var ci = eio(sg(q, 2.86, 3.18)), bl = (1 - ci) * 8 * U;                  /* step 3 comes into focus */
     put(o.c, ci, 'translate3d(0,' + (14 * U * (1 - ci)).toFixed(1) + 'px,0)', bl > .2 ? 'blur(' + bl.toFixed(2) + 'px)' : 'none');
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv};
+  /* ================================================================== CI Core, «What You Receive»: the drawing becomes the room
+     18.11.2026 21:36, of the one-screen version: «він дуже грузний, дуже важкий»; 21:44, of the storyboard: «то, що рекомендуєш».
+     One pinned screen, three steps, one thought to a step. The picture is one WebGL layer over the whole screen — the room's drawing
+     (quiet: its ink at 42 %) left of a seam and the room itself right of it — and the SCROLL walks the seam: it stands on the right
+     field while the title and the first paragraph are read, walks to the middle of the screen, where the client's two sentences
+     stand either side of it (design on the drawing, construction on the room), and goes out at the left; the room is whole, its
+     light comes back up, and the closing sentence stands alone. The seam's hairline and its square are ruled on the film's canvas
+     (one crisp pixel), the drawing's lines light up a little where the seam passes them, the type is DOM. */
+  var SEAM_FS = ['precision highp float;', 'uniform sampler2D uT0, uT1;', 'uniform vec2 uRes, uS0, uS1;', 'uniform float uX, uZ, uK, uD, uV, uTime;', 'varying vec2 v;',
+    'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'vec2 cov(vec2 uv, vec2 img){ float ra = uRes.x / uRes.y, ri = img.x / img.y; vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0); return (uv - 0.5) * s + 0.5; }',
+    'void main(){',
+    '  vec2 uv = (v - 0.5) / uZ + 0.5;',
+    '  float d = v.x - uX, w = 1.0 / uRes.x;',
+    '  float e = exp(-abs(d) * uRes.x / 30.0);',                              /* a hand's width either side of the seam */
+    '  vec3 a = texture2D(uT0, cov(uv, uS0)).rgb * (uK + e * 0.45);',         /* 0 the drawing: quiet, and brighter where the seam passes it */
+    '  vec3 b = texture2D(uT1, cov(uv, uS1)).rgb;',                           /* 1 the room */
+    '  b = (b - 0.5) * 1.06 + 0.5;',
+    '  float l = dot(b, vec3(0.299, 0.587, 0.114));',
+    '  b *= mix(1.0, mix(0.94, 0.6, smoothstep(0.16, 0.72, l)), uD) * uV;',   /* its light is taken down while words stand on it — graded, never veiled */
+    '  vec3 c = mix(a, b, smoothstep(-w, w, d));',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function seam(f, q, t){
+    var o = f.sm;
+    if (o === undefined){
+      var box = qs('.co-dw-ph', f.el);
+      o = f.sm = {gl: box ? GL2.make(box, SEAM_FS, qsa('img', box), {}) : null, im: box && qs('.co-dw-im', box), h: qs('.co-dw-h', f.el), l: qs('.co-dw-l', f.el), p: qs('.co-dw-p', f.el),
+                  s: qs('.co-dw-t', f.el), a: qs('.co-dw-t .a', f.el), b: qs('.co-dw-t .b', f.el), c: qs('.co-dw-c', f.el), on: false};
+    }
+    function put(e, op, tf, fl){ if (!e) return; var k = op.toFixed(3) + tf + (fl || ''); if (e.__k === k) return; e.__k = k;
+      var st = e.style; st.opacity = op.toFixed(3); st.transform = tf; if (fl !== undefined) st.filter = fl; st.visibility = op <= .001 ? 'hidden' : 'visible'; }
+    function clr(e){ if (!e) return; e.__k = ''; e.__t = ''; var st = e.style; st.opacity = ''; st.transform = ''; st.filter = ''; st.visibility = ''; }
+    if (H >= W){ if (o.on){ o.on = false; [o.h, o.l, o.p, o.s, o.a, o.b, o.c].forEach(clr); if (o.im) o.im.style.clipPath = ''; } return; }   /* phones: in the flow (css) */
+    o.on = true;
+    /* where the seam stands, as a part of the screen's width: in from the right edge to the right field as the block arrives; to the
+       middle; out at the left */
+    var xf = xr(1870) / W,
+        x = q < .6 ? 1.04 - (1.04 - xf) * eio(sg(q, -.6, -.08)) : q < 1.7 ? xf + (.5 - xf) * eio(sg(q, .6, 1.3)) : .5 - .54 * eio(sg(q, 2.0, 2.78)),
+        sx = Math.round(W * x) - .5, k3 = eio(sg(q, 2.0, 2.8)), g2 = o.gl;
+    if (g2 && g2.ready){ g2.size(); g2.set1('uX', sx / W); g2.set1('uZ', 1.045 - .045 * eio(sg(q, -.6, 2.9))); g2.set1('uK', .42); g2.set1('uD', .7 - .45 * k3); g2.set1('uV', .62 + .2 * k3);
+      g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+    else if (o.im && !g2){ var cp = 'inset(0 0 0 ' + (c01(x) * 100).toFixed(2) + '%)'; if (o.im.__c !== cp){ o.im.__c = cp; o.im.style.clipPath = cp; } }
+    if (sx > -1 && sx < W + 1){                                               /* the seam itself: one pixel, and our square on the screen's middle */
+      ink(.85, 1); seg(sx, 0, sx, H);
+      g.fillStyle = '#96A8BF'; g.fillRect(Math.round(sx - SQ / 2), Math.round(MID - SQ / 2), Math.round(SQ), Math.round(SQ));
+    }
+    var ho = 1 - eio(sg(q, .62, .9)), up = 'translate3d(0,' + (-16 * U * (1 - ho)).toFixed(1) + 'px,0)';   /* step 1 goes up a little as it goes out */
+    put(o.h, ho, up); put(o.l, ho, up);
+    var si = eio(sg(q, 1.14, 1.44)), so = 1 - eio(sg(q, 1.86, 2.08)), dx = 26 * U * (1 - si);        /* step 2: the two sentences come to the seam from their own sides */
+    put(o.s, si * so, 'translate3d(0,' + (-12 * U * (1 - so)).toFixed(1) + 'px,0)');
+    var ta = 'translate3d(' + (-dx).toFixed(1) + 'px,-50%,0)', tb = 'translate3d(' + dx.toFixed(1) + 'px,-50%,0)';
+    if (o.a && o.a.__t !== ta){ o.a.__t = ta; o.a.style.transform = ta; } if (o.b && o.b.__t !== tb){ o.b.__t = tb; o.b.style.transform = tb; }
+    put(o.p, si * so, 'translate3d(0,' + (10 * U * (1 - si) - 12 * U * (1 - so)).toFixed(1) + 'px,0)');
+    var ci = eio(sg(q, 2.62, 2.98)), bl = (1 - ci) * 8 * U;                  /* step 3 comes into focus */
+    put(o.c, ci, 'translate3d(0,' + (14 * U * (1 - ci)).toFixed(1) + 'px,0)', bl > .2 ? 'blur(' + bl.toFixed(2) + 'px)' : 'none');
+  }
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -1356,65 +1414,6 @@
     ink(a * .62, 1); seg(cx - hw, y, cx + hw, y);
     sq(cx - hw, y, a * .9); sq(cx + hw, y, a * .9);
   }
-
-  /* ================================================================== CI Core's seam, in a shader
-     One room, drawn on one side of a line and built on the other. The seam is not a cut any more: the light bends as it crosses it, the
-     drawing's own lines light up where it passes them, and the whole picture carries our grain. The line follows the pointer with the
-     gallery's lag, so moving it feels like drawing rather than dragging a control. */
-  (function(){
-    var gs = qsa('[data-seam]'); if (!gs.length) return;
-    var FS = [
-      'precision highp float;',
-      'uniform sampler2D uT0, uT1;',            /* 0 the drawing, 1 the room */
-      'uniform vec2 uRes, uS0, uS1;',
-      'uniform float uX, uTime, uIn;',
-      'varying vec2 v;',
-      'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
-      'vec2 cov(vec2 uv, vec2 img){',
-      '  float ra = uRes.x / uRes.y, ri = img.x / img.y;',
-      '  vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0);',
-      '  return (uv - 0.5) * s + 0.5;',   /* cover: the picture fills the box and is cropped, never squeezed in with its edge smeared */
-      '}',
-      'void main(){',
-      '  float d = v.x - uX;',
-      '  float w = 0.9 / uRes.x * 26.0;',                       /* the edge is about 26 px of the block, whatever its width */
-      '  float e = exp(-abs(d) / w);',
-      '  vec2 uv = v + vec2(e * 0.0045 * sign(d) * uIn, 0.0);',  /* the light bends at the edge of the glass */
-      '  vec3 a = texture2D(uT0, cov(uv, uS0)).rgb;',
-      '  vec3 b = texture2D(uT1, cov(uv, uS1)).rgb;',
-      '  b = (b - 0.5) * 1.06 + 0.5; b *= 0.84;',                 /* the room, graded as the rest of the site grades its pictures */
-      '  float m = smoothstep(-w, w, d);',
-      '  vec3 c = mix(a, b, m);',
-      '  c += a * e * 0.55 * uIn;',                               /* the drawing lights up where the seam passes it */
-      '  c += (hash(v * uRes + uTime) - 0.5) * 0.022;',           /* our grain */
-      '  gl_FragColor = vec4(c, 1.0);',
-      '}'].join('\n');
-    gs.forEach(function(g){
-      var dr = qs('.co-sm-dr', g), im = qs('.co-sm-im', g);
-      var x = .5, tx = .5, run = 0, live = 0, lv = 0, t = 0;
-      var o = GL2.make(g, FS, [dr, im]);
-      function put(){ g.style.setProperty('--x', (x * 100).toFixed(2) + '%'); }          /* the hairline and its square are DOM, and stay crisp */
-      function tick(){
-        x += (tx - x) * .16; lv += (live - lv) * .12; t += 1.0;
-        put();
-        if (o && o.ready){ o.size(); o.set1('uX', x); o.set1('uTime', t); o.set1('uIn', lv); o.draw(); }
-        if (Math.abs(tx - x) > .0004 || live || lv > .01) requestAnimationFrame(tick); else run = 0;
-      }
-      function kick(){ if (!run){ run = 1; requestAnimationFrame(tick); } }
-      function at(e){
-        var r = g.getBoundingClientRect();
-        tx = Math.max(.02, Math.min(.98, (e.clientX - r.left) / r.width));
-        kick();
-      }
-      if (o) o.onready = function(){ o.set1('uX', x); o.set1('uIn', 0); o.set1('uTime', 0); o.draw(); };
-      g.addEventListener('pointerenter', function(e){ live = 1; at(e); });
-      g.addEventListener('pointermove', at);
-      g.addEventListener('pointerleave', function(){ live = 0; tx = .5; kick(); });
-      g.addEventListener('pointerdown', function(e){ at(e); if (g.setPointerCapture) g.setPointerCapture(e.pointerId); });
-      window.addEventListener('resize', function(){ if (o && o.ready){ o.size(); o.set1('uX', x); o.draw(); } });
-      put();
-    });
-  })();
 
   /* ================================================================== CI Turnkey's projects: a slider (18.11.2026 16:10, her frame 644:8894)
      «Я хочу, щоб ти перемалював стрілку вліво і стрілку вправо, щоб наш слайдер працював.» The project in hand stands large in the

@@ -366,7 +366,6 @@ html body.inr .gl-hd .chip{position:relative;border:0;padding:0;background:none;
 .gl-im{position:relative;display:block;height:calc(580 * var(--u));width:calc(580 * var(--u) * var(--ar, 1.4));overflow:hidden;background:#0A0A0A}
 .gl-im img{width:100%;height:100%;object-fit:cover;display:block;filter:contrast(1.04) brightness(.92);transition:filter .55s}
 .gl-it:hover .gl-im img{filter:contrast(1.04) brightness(1)}
-.gl-rail:has(.gl-it:hover) .gl-it:not(:hover) .gl-im img{filter:grayscale(.9) brightness(.45)}
 .gl-none{position:absolute;left:calc(50 * var(--u));bottom:calc(300 * var(--u));display:none;z-index:3;color:rgba(255,255,255,.6)}
 .glx.empty .gl-none{display:block}
 .chip.off{opacity:.3;pointer-events:none}
@@ -723,17 +722,6 @@ html body.inr .tk-cm-c{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u));width
                z-index:3;margin:0}
 .film .co-cv-k{position:absolute;left:calc(50 * var(--u));top:auto;z-index:3;margin:0;
                bottom:calc(max(50 * var(--u), 50px) + var(--ln, 2) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
-/* 03 the seam, and the visitor's hand on it */
-html body.inr .co-sm-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
-.co-sm-g{position:relative;margin:calc(90 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u));aspect-ratio:1.42;overflow:hidden;
-         cursor:ew-resize;touch-action:pan-y;background:#000}
-.co-sm-g img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;max-width:none;display:block}
-.co-sm-im{clip-path:inset(0 0 0 var(--x, 50%));filter:contrast(1.06) brightness(.82);will-change:clip-path}
-.co-sm-ln{position:absolute;top:0;bottom:0;left:var(--x, 50%);width:1px;background:rgba(255,255,255,.85);will-change:left}
-.co-sm-ln::before{content:"";position:absolute;left:calc(max(5px, 8 * var(--u)) / -2 + .5px);top:50%;
-                  width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));margin-top:calc(max(5px, 8 * var(--u)) / -2);background:#FFFFFF}
-html body.inr .co-sm-s{margin:calc(74 * var(--u)) 0 0 calc(421 * var(--u));width:calc(1000 * var(--u))}
-html body.inr .co-sm-p{margin:calc(44 * var(--u)) 0 0 calc(421 * var(--u))}
 /* 06 your role, our role */
 .co-rl-p{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u))}
 html body.inr .co-rl-p p + p{margin-top:calc(24 * var(--u))}
@@ -760,9 +748,8 @@ html body.inr .co-bd-c .h{margin:calc(22 * var(--u)) 0 0;color:#FFFFFF}
 html body.inr .co-bd-c .t{margin:calc(20 * var(--u)) 0 0;color:#EBEBEB}
 @media (max-aspect-ratio: 1/1){
   .film .co-cv-h, .film .co-cv-k{left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
-  html body.inr .co-sm-l, html body.inr .co-sm-s, html body.inr .co-sm-p, html body.inr .co-sp-n, html body.inr .co-sp-c,
+  html body.inr .co-sp-n, html body.inr .co-sp-c,
   html body.inr .co-rl-p, .co-rl-m{margin:24px var(--m, 20px) 0;width:auto}
-  .co-sm-g{margin:26px 0 0;aspect-ratio:1.1}
   .co-rl-g, .co-sp-g, .co-bd-g{display:block;margin:26px var(--m, 20px) 0}
   .co-rl-g i, .co-sp-g i{display:none}
   .co-rl-g p + p{margin-top:18px} .co-sp-g ul + ul{margin-top:10px}
@@ -985,7 +972,6 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
 .tk-cv-ph > img{visibility:hidden}
 @media (max-aspect-ratio: 1/1){ .tk-cv-ph > img:first-child{visibility:visible} .tk-cv-ph.gl-on > img:first-child{visibility:hidden} }
 .gl-on > img{visibility:hidden}
-.co-sm-g .co-sm-ln{z-index:2}
 
 /* 04 the conditions on the home page's «CI Difference» grid (17.11.2026 19:34). The block is the home page's own markup and rules
    (.df2*, chapters.css + r3.css); here is only what differs: seven cells instead of six, so the white panel is one column wide */
@@ -1315,32 +1301,47 @@ html body.inr .tk-st-c .tx{position:absolute;left:50%;width:calc(339 * var(--u))
   .film.co-cv.has-i .sc.tk-cv-i{position:relative;height:auto;display:block;padding:40px var(--m, 20px) 72px}
 }
 
-/* CI Core, «What You Receive» on one screen (18.11.2026 19:25: «все висотою 1080 і все в одному екрані»). Two halves: the text on
-   the left one from the field at 150 — the name, the title 25 under it, the paragraphs 50 and 25 under, and on the foot the client's
-   two sentences in the 34 with the closing paragraph 25 under them; the room on the right half, the whole height of the screen,
-   drawn | built, the seam under the pointer. */
-.co-sm.one{position:relative;height:100vh;height:100svh;margin:0;padding:0;background:#000;overflow:hidden}
-.co-sm.one .co-sm-t{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:calc(860 * var(--u));display:flex;flex-direction:column;align-items:flex-start}
-html body.inr .co-sm.one h2{margin:calc(25 * var(--u)) 0 0;color:#FFFFFF;white-space:nowrap}
-html body.inr .co-sm.one .co-sm-l{margin:calc(50 * var(--u)) 0 0;width:calc(475 * var(--u));max-width:none;white-space:normal;color:#FFFFFF}
-html body.inr .co-sm.one .co-sm-p{margin:calc(25 * var(--u)) 0 0;width:calc(475 * var(--u));max-width:none;white-space:normal;color:#FFFFFF}
-html body.inr .co-sm.one .co-sm-s{margin:auto 0 0;width:auto;max-width:none;color:#FFFFFF}
-html body.inr .co-sm.one .co-sm-c{margin:calc(25 * var(--u)) 0 0;width:calc(475 * var(--u));max-width:none;white-space:normal;color:#FFFFFF}
-.co-sm.one .co-sm-g{position:absolute;left:50%;right:0;top:0;bottom:0;margin:0;aspect-ratio:auto}
+/* CI Core, «What You Receive»: the drawing becomes the room (18.11.2026 21:44 — «то, що рекомендуєш», of the one-screen version
+   that was «дуже грузний, дуже важкий»). One pinned screen, three steps, one thought to a step; seam() in js/inner.js sets what is
+   seen. The picture is the whole screen: the drawing (quiet) left of the seam, the room right of it, and the scroll walks the seam
+   from the right field to the middle and out at the left.
+   Step 1: the name at 150 on the left field and the title 25 under it, in two lines; on the foot the first paragraph, on the text
+   line's measure (421 of the 20 = 21.05 em: the 20 has a pixel floor, so its column is in em of itself).
+   Step 2: the client's two sentences on the screen's middle, 25 either side of the seam (the seam's square between them); on the
+   foot the second paragraph, where the first stood.
+   Step 3: the closing sentence in the 34, 25 right of the screen's middle, on the foot — the room's dark side. Its measure is in em
+   of the 34 (800 of it), never wider than the half it stands on. Until the script speaks, steps 2 and 3 are not shown. */
+.co-dw .stg{background:#000}
+.co-dw-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:hidden}
+.co-dw-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
+.co-dw-dr{opacity:.42}
+.co-dw-im{clip-path:inset(0 0 0 var(--x, 100%));filter:contrast(1.06) brightness(.6)}   /* seen only where there is no WebGL */
+.co-dw .cbl{color:#BAC7D6}                                            /* her blue on a photograph: lighter than the page's */
+.co-dw-h{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u))}
+html body.inr .co-dw-h h2{margin-top:calc(25 * var(--u));color:#FFFFFF;white-space:nowrap}
+html body.inr .film .co-dw-l, html body.inr .film .co-dw-p{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;white-space:normal;color:#FFFFFF}
+html body.inr .film .co-dw-p{opacity:0}
+html body.inr .film .co-dw-t{position:absolute;left:0;top:50%;width:100%;height:0;margin:0;color:#FFFFFF;opacity:0}
+.co-dw-t .a, .co-dw-t .b{position:absolute;top:0;white-space:nowrap;transform:translateY(-50%)}
+.co-dw-t .a{right:calc(50% + 25 * var(--u))}
+.co-dw-t .b{left:calc(50% + 25 * var(--u))}
+.co-dw-t br{display:none}
+html body.inr .film .co-dw-c{position:absolute;left:calc(50% + 25 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:min(23.5em, calc(50vw - 75 * var(--u)));margin:0;white-space:normal;color:#FFFFFF;opacity:0}
 @media (max-aspect-ratio: 1/1){
-  .co-sm.one{height:auto;overflow:visible;padding:72px 0 0}
-  .co-sm.one .co-sm-t{position:static;width:auto;display:block;padding:0 var(--m, 20px)}
-  html body.inr .co-sm.one h2{margin-top:14px}
-  html body.inr .co-sm.one .co-sm-l, html body.inr .co-sm.one .co-sm-p, html body.inr .co-sm.one .co-sm-c{width:auto;margin:16px 0 0}
-  html body.inr .co-sm.one .co-sm-l{margin-top:28px} html body.inr .co-sm.one .co-sm-s{margin:32px 0 0}
-  .co-sm.one .co-sm-g{position:relative;left:0;aspect-ratio:1.1;margin:32px 0 0}
+  /* phones: the room once, drawn on its left half and built on its right, then the three steps one under another on the text line */
+  .co-dw-ph{position:relative;height:auto;aspect-ratio:1.1}
+  .co-dw-ph .glc{display:none} .co-dw-ph.gl-on > img{visibility:visible}
+  .co-dw-dr{opacity:.7}
+  .co-dw-im{clip-path:inset(0 0 0 50%)!important;filter:contrast(1.06) brightness(.84)}
+  .co-dw-ph::after{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.85)}
+  .film .co-dw-s{padding-top:40px}
+  .co-dw-h, html body.inr .film .co-dw-l, html body.inr .film .co-dw-p, html body.inr .film .co-dw-t, html body.inr .film .co-dw-c{position:static;width:auto;height:auto;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
+  html body.inr .co-dw-h h2{margin-top:14px;white-space:normal}
+  html body.inr .film .co-dw-l{margin-top:28px} html body.inr .film .co-dw-p{margin-top:16px} html body.inr .film .co-dw-t{margin-top:32px}
+  /* on a phone the closing sentence is running text again: two groups of the 34 one under another would be the weight she sent back */
+  html body.inr .film .co-dw-c{margin-top:16px;font-family:var(--fz)!important;font-size:14px!important;line-height:1.15!important;letter-spacing:-.03em!important}
+  .co-dw-t .a, .co-dw-t .b{position:static;white-space:normal;transform:none!important} .co-dw-t br{display:inline}
 }
-
-/* All Solutions, «The Same Standard» — her frame 658:9256 (18.11.2026 20:39). One screen: the eyebrow on the left field at 158, the
-   thought from 600 at 150 in her three lines, the two texts on the foot from 600 (38 between them), and in the right foot corner
-   a square photograph of 427, its foot level with the texts'. The photograph opens out of its own lower edge as it comes up the
-   screen, and is graded as the site grades its pictures. */
-.iv.ivq{display:block;position:relative;height:100vh;height:100svh;min-height:0;padding:0;overflow:hidden}
 .ivq .iv-k{left:calc(50 * var(--u));top:calc(158 * var(--u))}
 html body.inr .ivq-h{position:absolute;left:calc(600 * var(--u));top:calc(150 * var(--u));margin:0}
 .ivq-f{position:absolute;left:calc(600 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}

@@ -204,7 +204,7 @@ def core_page():
     assert nop(h_of(sec)) == 'A Connected Design-Build Scope' and nop(cl[0]) == 'Specific scope is defined around the needs of each project', (h_of(sec), cl)
     pg.add(tk_loose(['A Connected', 'Design-Build Scope'], [('Specific scope is defined', ''), ('', 'around the needs'), ('', 'of each project')],
                     list(ks[1]) + list(ks[2]), leave=False, note=note, gather=len(ks[1])), 'Included')
-    # 04 what you receive — Core's own block: the seam, and the visitor's hand on it
+    # 04 what you receive — Core's own block: the drawing becomes the room as the seam crosses the screen, in three steps
     sec = S[2]; cp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
     pg.add(co_seam(label(sec), h_of(sec), cp[0], cp[1:], st, A + 'ch/1450-17.webp', L + '1450-17.webp'), 'Receive')
