@@ -169,7 +169,7 @@ def core_page():
     це» — «давай займися іншими сторінками»). The same blocks in the same order as CI Turnkey, with the client's own text of this
     page; two things stay Core's own, so that the pages are one family and not one page four times (her word of 16.11: «кожна сторінка
     повинна бути унікальною… але в нашій стилістиці»):
-      the cover — the room stands as a precise DRAWING and the scroll builds it (Turnkey's is a free sketch that grows from a line);
+      (the cover was Core's own until 19:45 — the room standing as a drawing; on her word it is Turnkey's film now, with this page's room;)
       «What You Receive» — the seam between the people who design and the people who build, under the visitor's hand.
     Everything else is the template: the thought on the cover's photograph, the conditions on the grid, what is included as one mass
     (it stands — here the names are what the client gets, nothing leaves), the list and the photograph that becomes the screen, the
@@ -181,7 +181,12 @@ def core_page():
     lead0 = nop(' '.join(ps[0]))
     idea_t = ['Brings Architecture,', 'Interior Design,', 'Construction, and', 'Project Management', 'Together Under', 'One Team']
     assert ('CI Core ' + ' '.join(idea_t)).lower() == lead0.lower(), lead0
-    pg.add(co_cover(label(S[0]), h1, A + 'us/1511-01a.webp', L + '1511-01a.webp',
+    # 18.11 19:45, on Core's own cover (the room standing as a drawing that fills with the photograph): «чому ми не можемо зробити
+    # так, як на Turnkey — там, де лінія малювала скетч, і потім скетч переходив в картинку. Чому ми не можемо взяти такий самий
+    # прийом?» — so the cover is Turnkey's film itself (tk_cover / unfold()), with this page's room: the tangle pays out its line,
+    # the room grows out of the line stroke by stroke (tools/site/sketch.py, 'us/1511-01a'), the line parts and the home stands.
+    pg.add(tk_cover(label(S[0]), h1, A + 'us/1511-01a.webp', L + '1511-01a.webp', L + '1511-01a-g.png',
+                    [('Design + Build,', ''), ('', 'Fully Connected')],
                     idea=('CI Core', idea_t, brk_lines(nop(' '.join(ps[1])), 46), btn(a[0], 'contact.html'))), 'Core', 'top')
     # 02 the conditions on the grid; a name is a run of its own sentence's words (tk_fit asserts it); which run is our choice
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]

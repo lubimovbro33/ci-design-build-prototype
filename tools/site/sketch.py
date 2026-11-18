@@ -39,6 +39,16 @@ WANT = {
         quiet=[(.0, .0, .305, .57, 150)],                              # the padded wall and the wall by the lamp: x0, y0, x1, y1, the least length
         ruled_only=[(.42, .0, .77, .083, 9999)],                       # the pocket over the window, lost in the dark: no line at all
     ),
+    # CI Core's cover (18.11.2026 19:45: «чому ми не можемо взяти такий самий прийом» — the line that draws the sketch, as on Turnkey)
+    'us/1511-01a': dict(
+        w=1280, out=2560,
+        city=(.0, .075, .268, .645),                                   # the tower beyond the glass: its outlines only
+        city_pass=dict(blur=1.6, lo=14, hi=34, speck=40),
+        quiet=[(.405, .10, .525, .64, 170), (.835, .0, 1.0, .70, 170),  # the two slatted walls: a slat is not a line, the wall's edges are
+               (.115, .735, .51, 1.0, 150),                             # the ribbed bench
+               (.0, .86, 1.0, 1.0, 200),                                # the rug
+               (.50, .50, .83, .70, 90)],                               # the cushions
+    ),
 }
 
 def edges(bgr, o):
@@ -280,6 +290,7 @@ def order(ink, o):
 if __name__ == '__main__':
     os.makedirs(OUT, exist_ok=True)
     for n, o in WANT.items():
+        if sys.argv[1:] and n not in sys.argv[1:]: continue          # python3 tools/site/sketch.py us/1511-01a — one drawing only
         p = os.path.join(SRC, n + '.webp')
         if not os.path.exists(p): print('missing', p); continue
         S, size, _ = strokes_of(p, o)
