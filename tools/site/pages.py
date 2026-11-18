@@ -211,6 +211,20 @@ def core_page():
     final_cta(pg, S[9], A + 'ch/1450-31.webp')
     emit('ci-core.html', 'CI Core', pg, A + 'us/1511-01a.webp')
 
+# CI Turnkey, the process as a row of squares (18.11.2026 16:11, her frame 644:8827). The first sentence is hers, as typed in the frame; the
+# rest are the client's own sentences for each stage (content.json) brought to about the same length (her card holds 97 characters in
+# three lines) and to the same voice — the reader is «you», the words in capitals as she set them. Nothing is claimed that the client's
+# sentence does not say; what is added only spells it out. WORKING COPY (.wc on the page), hers and the client's to change.
+TK_STAGE = {
+    'Discovery': 'Understanding You, Your Home, Lifestyle, Priorities, Collections, Wellness Goals, and Aspirations',
+    'Strategy': 'Establishing the Scope, Team, Program, Timeline, and Priorities That Will Guide Your Project',
+    'Architecture + Design': 'Developing Your Residence as One Integrated Vision, From the Architecture to the Last Detail',
+    'Pre-Construction': 'Technical Documentation, Budgeting, Scheduling, Procurement Strategy, and Team Coordination',
+    'Build': 'CI Manages the Physical Transformation of Your Home, Every Trade, Every Phase, Every Detail',
+    'Curate': 'Furnishings, Art, Lighting, Textiles, and Finishing Layers Are Developed Alongside the Build',
+    'Install': 'Furniture, Artwork, Objects, and Details Move Into Place, Room by Room, Exactly as Planned',
+    'Deliver': 'Your Residence Is Completed as a Home, Ready to Live In, Not Handed Over as a Construction Site',
+}
 def turnkey_page():
     """CI Turnkey — everything divides by one. 17.11 07:57: «Типографія: ужас, все розкидано… Всі стокові фотографії ми забираємо… не вистачає
     ідеї, метафор, і перший екран теж». So: no stock photography anywhere on the page (only the client's own work, and only where a photograph
@@ -230,25 +244,33 @@ def turnkey_page():
     # now shows exactly that, a sketch becoming the home. The agreed exception to the client's copy on this page; the client's wording
     # stays in content.json and tools/site/verify.py reports it as an EXCEPTION.
     h1 = 'From Sketch to First Night Home'
-    pg.add(tk_cover('CI Turnkey', h1, A + 'ch/1450-32.webp', L + '1450-32.webp', L + '1450-32-g.png',
-                    [('From Sketch', ''), ('to ', 'First'), ('', 'Night Home')]), 'Turnkey', 'top')
-    # 02 the thought, and nothing else on the screen
+    # 01 + 02 (18.11 09:27 / 16:14, her frame 637:7894): the page's thought stands ON the cover's photograph, once it is drawn — the name,
+    # «The most complete expression of the CI model» in the 60, the client's paragraph and the button. Her wording: the client's sentence
+    # «CI Turnkey is the most complete expression of the CI model» is cut into the name and the thought, and its «is» goes (verify.py: EXC).
     assert nop(ps[0][0]) == 'CI Turnkey is the most complete expression of the CI model', ps[0]
-    thought = esc('CI Turnkey is the most complete') + '<br class="bd"> <span class="cb">' + esc('expression of the CI model') + '</span>'
-    pg.add(tk_lead(thought, ' '.join(ps[2]), btn(a[0], 'contact.html')), 'Idea')
-    # 03 the metaphor spelled out: every count of a project on the left, one on the right
+    idea_p = ['One team coordinates the complete', 'transformation so you can remain', 'focused on the life waiting at the other', 'side of the project']
+    assert ' '.join(idea_p) == nop(' '.join(ps[2])), ps[2]
+    pg.add(tk_cover('CI Turnkey', h1, A + 'ch/1450-32.webp', L + '1450-32.webp', L + '1450-32-g.png',
+                    [('From Sketch', ''), ('to ', 'First'), ('', 'Night Home')],
+                    idea=('CI Turnkey', ['The Most', 'Complete', 'Expression', 'of the CI', 'Model'], idea_p, btn(a[0], 'contact.html'))), 'Turnkey', 'top')
+    # 03 the counts — her frame 643:8641 (18.11 16:13). The title is hers («Там текст заголовку відрізняється. Використовуємо те, що в
+    # мене на макеті»): «Create a Stunning Home Without Remodel Skills» for the client's «You Shouldn't Have to Become an Expert in
+    # Renovation to Create an Extraordinary Home» (verify.py: EXC). What each count is made of stands in the right column, in the
+    # client's own words: the nine disciplines, the sentence about people, the sentence about decisions (both from this very block's
+    # list of six — block 06 keeps the other four, so nothing is printed twice), and the eight stages by name.
     sec = S[3]; sp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     six = [x for x in [it[1] for it in sec['items'] if it[0] == 'p'] if len(x) == 6][0]
     st3 = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
     st8n = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in S[6]['items'] if x[0] == 'h4']
-    # 17.11 22:11: the line under the counts was the sentence of block 03 («Instead of becoming the central coordinator…»), which
-    # also stands in that block — one sentence of the client printed twice on one page. The row «hundreds of people → one point of
-    # accountability» now carries the client's own sentence about people, from this very block (04), and block 07 keeps the rest.
-    det = [sqr(chain),                                   # what the nine are: the client's own nine disciplines
-           '<p class="t20" style="--w:900">%s</p>' % esc('We coordinate the people behind them'),
-           '<p class="t20 wc" style="--w:900">%s</p>' % esc('You are asked the ones only you can answer'),
-           sqr(st8n)]                                    # and the eight stages, by name
-    pg.add(tk_math(label(S[3]), h_of(S[3]), sp[0], [
+    ppl = [x for x in six if 'coordinate the people behind' in x]; dcs = [x for x in six if 'bring decisions to you' in x]
+    assert len(ppl) == 1 and len(dcs) == 1, six
+    det = [tk_items(chain),                              # what the nine are: the client's own nine disciplines
+           '<p class="t20">%s</p>' % esc(nop(ppl[0])),
+           '<p class="t20">%s</p>' % esc(nop(dcs[0])),
+           tk_items(st8n)]                               # and the eight stages, by name
+    lead3 = ['A major residential project can involve', 'hundreds of people, thousands of decisions,', 'and years of combined expertise']   # her three lines
+    assert ' '.join(lead3) == nop(sp[0]), sp[0]
+    pg.add(tk_count(label(S[3]), [('Create a Stunning', ''), ('Home', ' Without'), ('', 'Remodel Skills')], lead3, [
         ('Nine', 'disciplines', 'One', 'team', 0, det[0]),
         ('Hundreds', 'of people', 'One', 'point of accountability', 0, det[1]),
         ('Thousands', 'of decisions', 'One', 'conversation at a time', 1, det[2]),
@@ -272,34 +294,38 @@ def turnkey_page():
     pg.add(tk_pairs(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], short, inter,
                     ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])), 'Receive')
     # 07 the six ways, as one paragraph
-    six7 = [x for x in six if 'coordinate the people behind' not in x]   # that sentence now stands under the counts (03)
+    six7 = [x for x in six if x not in ppl + dcs]   # those two sentences stand in the counts (03), each beside its own count
     pg.add(tk_calm(None, None, None, six7, st3), 'Managed')
-    # 08 the conditions, as a table: what happens, and what we do about it
+    # 07 the conditions and the client's sentence, as one film — her frames 644:8972 and 633:428 (18.11 16:15). The title is hers:
+    # «One Team and Complete Responsibility» for the client's «One Team. Complete Responsibility.» (verify.py: EXC)
     pairs = []
     for x in [one5[0]] + list(whens):
         a_, b_ = nop(x).split(', ', 1)
-        pairs.append((a_ + ',', b_))
-    pg.add(tk_rows(label(S[5]), h_of(S[5]), None, pairs, num=False, cls=' tk-wn') .replace('</section>',
-           '  <p class="t34 rv tk-r-c">%s</p>\n</section>' % blue(nop(st5), None)), 'One Team')
-    # 09 one photograph of the client's own work, and the sentence that says why the page exists
-    pg.add(tk_plate(A + 'ch/1450-23.webp', one5[1]), 'Responsibility')
-    # 10 the eight stages as the site's own accordion: a small heading on the left, the ribbon on the right (her reference 22:40)
+        pairs.append((a_, b_[0].upper() + b_[1:]))
+    cl = nop(one5[1]); cut = 'The client should not have to discover'
+    assert cl.startswith(cut + ' where'), cl
+    rest = cl[len(cut) + 1:]; rest = rest[0].upper() + rest[1:]
+    l2 = ['Where one consultant\'s', 'responsibility ends and', 'another begins']
+    assert ' '.join(l2) == rest, (l2, rest)
+    pg.add(tk_team(label(S[5]), [('One Team', ' and'), ('', 'Complete'), ('', 'Responsibility')], pairs, st5,
+                   A + 'ch/1450-23.webp', ['The Client', 'Should Not', 'Have to', 'Discover'], l2), 'One Team')
+    # 08 the eight stages as a row of squares — her frame 644:8827 (18.11 16:11): «в карточках тексти маленькі, повторюються. Я хочу,
+    # щоб ти з такою самою кількістю тексту написав на кожну карточку свій текст… щоб ти адаптував.» Her own first card is the client's
+    # sentence turned to the reader («Understanding You, Your Home…»); the other seven are the client's sentences brought to the same
+    # length and the same voice. They are NOT the client's wording any more (verify.py: EXC, one per stage) and carry .wc.
     sec = S[6]
     names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
-    txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
-    assert len(names) == len(txts) == 8, (len(names), len(txts))
-    pg.add(tk_process(label(sec), h_of(sec), list(zip(names, txts))), 'Process')
-    # 11 the work itself — after her reference (17.11 21:06, holl&artists): three photographs on one top line, a large one in the
-    # middle and a small one either side, each with its caption under it at its own left edge, nothing under the small ones. On our
-    # grid that is the Portfolio's own block — one large card (two columns, 886 : 1112) and two small (419 : 525) — with the large one
-    # in the MIDDLE. The photographs are the projects' own portrait files (`tall`), not landscapes cut down. The button stands in the
-    # air under the first small card, its foot on the foot of the row.
+    assert names == ['Discovery', 'Strategy', 'Architecture + Design', 'Pre-Construction', 'Build', 'Curate', 'Install', 'Deliver'], names
+    pg.add(tk_strip(label(sec), [('One Journey', ''), ('From ', 'Vision to'), ('', 'Home')], [(n, TK_STAGE[n], 0 if n in ('Discovery', 'Curate') else 1) for n in names]), 'Process')   # her own card, and the one sentence that needed nothing
+    # 09 the work itself, as a slider — her frame 644:8894 (18.11 16:10). The title is hers: «Projects Delivered by CI Turnkey» for the
+    # client's «…Through CI Turnkey» (verify.py: EXC). The project in hand is large in the middle; the focus of each picture is read
+    # from her crops (the part of the photograph she kept in the frame).
     sec = S[7]
-    tri = [PROJ[1], PROJ[0], PROJ[2]]
-    cards = ''.join(pf6_card(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['tall']), q['slug'] + '.html', big=(q is PROJ[0])) for q in tri)
     pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
-    pg.add(bk(h_of(sec), '    <div class="pf6 tri">%s<div class="rv tri-b">%s</div></div>' % (
-        cards, btn(pbt[0][2] if pbt else 'View the Portfolio', 'portfolio.html')), hcls=' l0'), 'Projects')
+    FOC = {'collectors-home': (.528, .652), 'room-to-breathe': (.5, .713), 'urban-sanctuary': (.5, .665)}
+    sl = [PROJ[0], PROJ[2], PROJ[1]]                     # in hand, the next (right), and the one before (left) — as in her frame
+    pg.add(tk_slider([('Projects ', 'Delivered', ''), ('by CI Turnkey', '', '')], btn(pbt[0][2] if pbt else 'Explore Turnkey Projects', 'portfolio.html'),
+                     [(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['tall']), q['slug'] + '.html', FOC[q['slug']]) for q in sl]), 'Projects')
     final_cta(pg, S[9], A + 'ch/1450-29a.webp')
     emit('ci-turnkey.html', 'CI Turnkey', pg, A + 'ch/1450-32.webp')
 

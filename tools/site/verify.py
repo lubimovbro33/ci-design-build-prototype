@@ -18,7 +18,19 @@ def page_text(f):
     return ' ' + norm(m).replace('.', '') + ' '
 # agreed exceptions: (page key, the client's text) → the text that stands on the page instead, and who decided
 EXC = {('portfolio', 'Homes as Unique as the People Who Live in Them'): ('Homes Made for Unique Lives', 'the designer, 15.11.2026: the cover of Portfolio as in her frame'),
-       ('turnkey', 'From First Idea to the First Night Home'): ('From Sketch to First Night Home', 'the designer, 17.11.2026 19:48: the cover of CI Turnkey as in her frame 610:99')}
+       ('turnkey', 'From First Idea to the First Night Home'): ('From Sketch to First Night Home', 'the designer, 17.11.2026 19:48: the cover of CI Turnkey as in her frame 610:99'),
+       # 18.11.2026, her frames on the page «CI Turnkey · 1920 (з коду) · 18.11» — every time her word was «якщо текст відрізняється від клієнтського, роби так, як у мене на макеті»
+       ('turnkey', 'CI Turnkey is the most complete expression of the CI model.'): ('The Most Complete Expression of the CI Model', 'the designer, 18.11.2026 09:27 / 16:14, frame 637:7894: the name stands over the thought as its label, the «is» goes'),
+       ('turnkey', "You Shouldn't Have to Become an Expert in Renovation to Create an Extraordinary Home"): ('Create a Stunning Home Without Remodel Skills', 'the designer, 18.11.2026 16:13, frame 643:8641'),
+       ('turnkey', 'One Team. Complete Responsibility.'): ('One Team and Complete Responsibility', 'the designer, 18.11.2026 16:15, frame 644:8972'),
+       ('turnkey', 'Projects Delivered Through CI Turnkey'): ('Projects Delivered by CI Turnkey', 'the designer, 18.11.2026 16:10, frame 644:8894'),
+       # the stages of the process, frame 644:8827, 16:11: «на кожну карточку свій текст… щоб кількість тексту була плюс-мінус така, як у мене» — the first is hers as typed,
+       # the others are the client's sentences brought to its length and voice (TK_STAGE in pages.py; working copy, .wc on the page)
+       ('turnkey', 'Understanding the client, residence, lifestyle, priorities, collections, wellness goals, and aspirations.'): ('Understanding You, Your Home, Lifestyle, Priorities, Collections, Wellness Goals, and Aspirations', 'the designer, 18.11.2026 16:11, frame 644:8827: her own card'),
+       ('turnkey', 'Establishing scope, team, program, timeline, and project priorities.'): ('Establishing the Scope, Team, Program, Timeline, and Priorities That Will Guide Your Project', 'adapted on the designer\'s word, 18.11.2026 16:11'),
+       ('turnkey', 'Developing the residence as one integrated vision.'): ('Developing Your Residence as One Integrated Vision, From the Architecture to the Last Detail', 'adapted on the designer\'s word, 18.11.2026 16:11'),
+       ('turnkey', 'Technical documentation, budgeting, scheduling, procurement strategy, and coordination.'): ('Technical Documentation, Budgeting, Scheduling, Procurement Strategy, and Team Coordination', 'adapted on the designer\'s word, 18.11.2026 16:11'),
+       ('turnkey', 'The residence is completed as a home, not handed over as a construction site.'): ('Your Residence Is Completed as a Home, Ready to Live In, Not Handed Over as a Construction Site', 'adapted on the designer\'s word, 18.11.2026 16:11')}
 tot = miss = 0
 for k, fs in MAPF.items():
     T = ''.join(page_text(f) for f in fs)

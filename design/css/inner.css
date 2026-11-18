@@ -301,12 +301,6 @@ html body.inr .bk-h.l0{margin-left:calc(50 * var(--u))}
 .pf6 .cd.big .im{aspect-ratio:886 / 1112}
 .pf6 .cd .nm{margin-top:calc(20 * var(--u))}
 .pf6 .cd .lc{margin-top:calc(20 * var(--u))}
-/* CI Turnkey's three projects after her reference (17.11 21:06, holl&artists — measured: on a page 940 wide, 213 × 280 / 445 × 551 / 213 × 280
-   on one top line, 14 between, captions 13 under each image at its left edge, nothing under the small ones). On this grid: the same block
-   with the large card in the MIDDLE — small, large across two columns, small; and the button in the air of the first column, at the foot */
-.pf6.tri .cd{grid-row:1}
-.pf6.tri .cd:nth-child(1){grid-column:1} .pf6.tri .cd.big{grid-column:2 / span 2} .pf6.tri .cd:nth-child(3){grid-column:4}
-.pf6.tri .tri-b{grid-column:1;grid-row:1;align-self:end}
 /* the Signature grid of Portfolio after her reference of 16.11 12:42 («взяти точно таку сітку»): the page's four columns, near-square tiles one
    column wide (211:224 as in the reference), a large landscape tile two columns wide (436:354), cells left empty on purpose; every card is put
    in its cell by --c (column) and --r (row); rows 100 apart, a small tile stands at the top of its row.
@@ -560,8 +554,6 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
   html body.inr .bk-h.l0{margin-left:var(--m, 20px)}
   .pf6{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)}
   .pf6 .cd .im, .pf6 .cd.big .im{aspect-ratio:4 / 5}
-  .pf6.tri .cd, .pf6.tri .tri-b{grid-row:auto;grid-column:auto!important} .pf6.tri .cd.big{order:-1;grid-column:1 / -1!important}
-  .pf6.tri .tri-b{order:9;grid-column:1 / -1!important;margin-top:8px}
   .pf6 .cd .nm{margin-top:12px} .pf6 .cd .lc{margin-top:8px} .inr .lab3.sqm{--sg:6px}
   .pf7{grid-template-columns:minmax(0,1fr) minmax(0,1fr);column-gap:12px;row-gap:32px;margin:0 var(--m, 20px)} .pf7 .cd{grid-column:auto;grid-row:auto} .pf7 .cd.big{grid-column:span 2}
   .pf7 .cd .im{aspect-ratio:1 / 1} .pf7 .cd.big .im{aspect-ratio:436 / 354} .pf7 .cd .nm{margin-top:12px} .pf7 .cd .lc{margin-top:8px}
@@ -666,30 +658,6 @@ html body.inr .tk-ld-t{margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u))}
 .tk-ld-b{margin:calc(56 * var(--u)) 0 0 calc(421 * var(--u))}
 /* 03 the four counts */
 html body.inr .tk-m-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
-.tk-m-g{position:relative;margin:calc(94 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
-.tk-m-cv{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none}
-.tk-m-g.cv-on .tk-m-r i{opacity:0}
-.tk-m-r{display:grid;grid-template-columns:calc(360 * var(--u)) calc(640 * var(--u)) minmax(0, 1fr);grid-template-rows:auto auto;min-height:calc(152 * var(--u));align-content:center;
-        column-gap:calc(50 * var(--u));row-gap:calc(16 * var(--u));padding:calc(44 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18);
-        outline:0;transition:opacity .45s cubic-bezier(.22,1,.36,1)}
-.tk-m-g[data-on] .tk-m-r{opacity:.42}
-.tk-m-g[data-on] .tk-m-r.on{opacity:1}
-.tk-m-r i{transition:background .45s cubic-bezier(.22,1,.36,1)}
-.tk-m-r.on i{background:#FFFFFF}
-/* the one reading line under the four, where a count opens */
-.tk-m-dd{position:relative;margin-top:calc(56 * var(--u));border-top:1px solid rgba(255,255,255,.18);
-         padding-top:calc(44 * var(--u));min-height:calc(200 * var(--u))}
-.tk-m-d{position:absolute;left:0;right:0;top:calc(46 * var(--u));opacity:0;visibility:hidden;
-        transition:opacity .5s cubic-bezier(.22,1,.36,1);font-family:var(--fx);font-weight:400;font-size:max(17px, calc(34 * var(--u)));
-        line-height:1.4;letter-spacing:-.0294em;color:#EBEBEB}
-.tk-m-d.on{opacity:1;visibility:visible}
-html body.inr .tk-m-d p{margin:0}
-.tk-m-d .sqr{row-gap:.5em}
-html body.inr .tk-m-r .a{grid-column:1;grid-row:1;color:#FFFFFF}
-html body.inr .tk-m-r .al{grid-column:1;grid-row:2;color:rgba(255,255,255,.62)}
-.tk-m-r i{grid-column:2;grid-row:1;align-self:center;width:100%;height:1px;background:rgba(255,255,255,.5)}
-html body.inr .tk-m-r .b{grid-column:3;grid-row:1;color:#FFFFFF}
-html body.inr .tk-m-r .bl{grid-column:3;grid-row:2;color:rgba(255,255,255,.62)}
 /* 04 the one list, and 08 the conditions — one row shape */
 html body.inr .tk-r-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
 .tk-r-g{margin:calc(84 * var(--u)) calc(50 * var(--u)) 0 calc(421 * var(--u))}
@@ -697,8 +665,6 @@ html body.inr .tk-r-l{margin:calc(70 * var(--u)) 0 0 calc(421 * var(--u))}
         padding:calc(27 * var(--u)) 0;border-top:1px solid rgba(255,255,255,.18)}
 html body.inr .tk-r-r .a{color:rgba(255,255,255,.5);padding-top:.3em}
 html body.inr .tk-r-r .b{color:#EBEBEB}
-.tk-wn .tk-r-r{grid-template-columns:calc(640 * var(--u)) minmax(0, 1fr);column-gap:calc(60 * var(--u))}
-html body.inr .tk-wn .tk-r-r .a{color:#FFFFFF;padding-top:0}
 html body.inr .tk-r-c{margin:calc(90 * var(--u)) 0 0 calc(421 * var(--u))}
 /* 05 the plate */
 .tk-pl{position:relative;display:block;background:#000}
@@ -753,41 +719,14 @@ html body.inr .tk-sc-n{margin:0 0 calc(26 * var(--u));color:#FFFFFF}
 .tk-sc-l .q{position:absolute;top:50%;left:0;width:max(7px, calc(12 * var(--u)));height:max(7px, calc(12 * var(--u)));
   margin:calc(max(7px, 12 * var(--u)) / -2) 0 0 calc(max(7px, 12 * var(--u)) / -2);background:#96A8BF}
 .tk-sc-l:focus-visible .q{outline:1px solid #FFFFFF;outline-offset:3px}
-/* 10 the process after her reference (17.11.2026 22:40, santalarch.com/#process): a small heading on the left, the stages as a ribbon
-   on the right — a row is the name and a plus, the open row drops its sentence under the name. Measured at 1440: the ribbon from the
-   middle of the screen to the field, a closed row 83 high, the plus 36, the sentence 360 wide. In our frame: 960 → 1870, the name in
-   the 34, the sentence on our measure of 475. The device is the FAQ's own accordion (.qa above; the click in js/inner.js) */
-.tk-ps-g{display:grid;grid-template-columns:calc(539 * var(--u)) minmax(0, 1fr);margin:0 calc(50 * var(--u)) 0 calc(421 * var(--u))}
-.tk-ps-h{width:calc(500 * var(--u))}
-html body.inr .tk-ps-h h2{margin-top:calc(30 * var(--u));color:#FFFFFF}
-.tk-ps .rws{margin:0}
-/* a row as in her reference: the name in its own narrow column so it breaks as a name, not as a line of a list; the rest of the row
-   is air, and the mark stands at the far field on the first line. Every row is the height of two lines, so the ribbon is even */
-.tk-ps .qa .qh{grid-template-columns:minmax(0, 1fr) auto;align-items:start;padding:calc(28 * var(--u)) 0;min-height:calc(122 * var(--u));box-sizing:border-box}
-.tk-ps .qa .qh .t{width:calc(360 * var(--u));font-size:max(17px, calc(34 * var(--u)));line-height:.971;letter-spacing:-.0294em;text-transform:none}
-/* the mark is the site's own: the plus of the cards (.df2-pm on the home page) — a circle of our hairline with two bars in it;
-   open, the upright bar turns level (17.11 22:50: «плюсики — це не в нашій стилістиці, подивися, як на карточках») */
-.tk-ps .qa .qh .pl{width:calc(48 * var(--u));height:calc(48 * var(--u));min-width:28px;min-height:28px;margin-top:calc(-7 * var(--u));
-  border:1px solid rgba(255,255,255,.3);border-radius:50%;box-sizing:border-box;transition:border-color .5s}
-.tk-ps .qa .qh .pl::before, .tk-ps .qa .qh .pl::after{left:50%;right:auto;top:50%;width:calc(16 * var(--u));min-width:9px;height:max(1px, calc(1.3 * var(--u)));transform:translate(-50%,-50%)}
-.tk-ps .qa .qh .pl::after{transform:translate(-50%,-50%) rotate(90deg)}
-.tk-ps .qa.open .qh .pl{border-color:rgba(255,255,255,.6)}
-.tk-ps .qa.open .qh .pl::after{transform:translate(-50%,-50%) rotate(0deg)}
-@media (hover:hover){ .tk-ps .qa:not(.open) .qh:hover .pl{border-color:rgba(255,255,255,.6)} }
-.tk-ps .qa .ain{margin-left:0;grid-template-columns:minmax(0, 1fr);padding:0 0 calc(50 * var(--u))}
 @media (max-aspect-ratio: 1/1){
   .tk-ld{padding:72px 0}
   html body.inr .tk-ld-h{margin:0 var(--m, 20px);white-space:normal}
   html body.inr .tk-ld-t{margin:24px var(--m, 20px) 0;width:auto}
   .tk-ld-b{margin:26px var(--m, 20px) 0}
   html body.inr .tk-m-l, html body.inr .tk-r-l, html body.inr .tk-x-l{margin:24px var(--m, 20px) 0;width:auto}
-  .tk-m-g, .tk-r-g, .tk-jn-g, .tk-x-p{margin:26px var(--m, 20px) 0}
-  .tk-m-r{grid-template-columns:1fr;row-gap:6px;padding:18px 0} .tk-m-r i{display:none}
-  .tk-m-dd{margin-top:28px;padding-top:24px;min-height:150px} .tk-m-d{top:24px}
-  html body.inr .tk-m-r .a, html body.inr .tk-m-r .al, html body.inr .tk-m-r .b, html body.inr .tk-m-r .bl{grid-column:1;grid-row:auto}
-  html body.inr .tk-m-r .b{margin-top:10px}
+  .tk-r-g, .tk-jn-g, .tk-x-p{margin:26px var(--m, 20px) 0}
   .tk-r-r{grid-template-columns:40px minmax(0, 1fr);column-gap:14px;padding:16px 0}
-  .tk-wn .tk-r-r{grid-template-columns:1fr;row-gap:6px}
   html body.inr .tk-r-r .b{width:auto}
   /* the joints on phones: the two halves one under the other, the joint closed between them */
   .tk-jn-r{grid-template-columns:1fr;row-gap:8px;padding:16px 0}
@@ -796,13 +735,6 @@ html body.inr .tk-ps-h h2{margin-top:calc(30 * var(--u));color:#FFFFFF}
   html body.inr .tk-x-c, html body.inr .tk-r-c, html body.inr .tk-cm-b, html body.inr .tk-cm-p, html body.inr .tk-cm-c,
   html body.inr .tk-sc-f{margin:0 var(--m, 20px);width:auto;max-width:none;font-size:20px}
   /* the process on phones: the heading, then the ribbon under it — one column */
-  .tk-ps-g{display:block;margin:0 var(--m, 20px)}
-  .tk-ps-h{width:auto;margin-bottom:26px}
-  html body.inr .tk-ps-h h2{margin-top:14px}
-  .tk-ps .qa .qh{padding:18px 0;min-height:0}
-  .tk-ps .qa .qh .t{width:auto;font-size:17px}
-  .tk-ps .qa .qh .pl{width:28px;height:28px;margin-top:-2px}
-  .tk-ps .qa .ain{padding-bottom:22px}
   html body.inr .tk-sc-a{margin:28px var(--m, 20px);width:auto}
   .tk-sc-b{margin:28px var(--m, 20px) 0}
   html body.inr .tk-sc-n{margin-bottom:14px}
@@ -1132,5 +1064,179 @@ html body.inr .tk-df .df2-s1{width:auto;right:calc(24 * var(--u));white-space:no
   .tk-df .df2-cell .df2-cd{bottom:12px} .tk-df .df2-cell .df2-pm{right:12px;bottom:12px}
   .tk-df-k{position:static;font-size:11px}
   html body.inr .tk-df .df2-big{white-space:normal}
-  .tk-m-cv{display:none}
+}
+
+/* ================================================================== CI Turnkey, 18.11.2026 — five blocks after her frames of that day
+   (page «CI Turnkey · 1920 (з коду) · 18.11»: 637:7894, 643:8641, 644:8972 + 633:428, 644:8827, 644:8894). Her word on every one of them:
+   «зроби точно так само, як у мене на макеті»; where a title differs from the client's, hers stands (tools/site/verify.py, EXC). */
+
+/* 01 → 02 the page's thought on the cover's own photograph (637:7894). The two centre hairlines are ruled on the film's canvas, the
+   photograph is graded down in its shader; here only the type: right of the vertical line by 50, the name at 181, the thought at 230,
+   the paragraph and the button on the foot (never under the rail) */
+.film .tk-cv-i{z-index:4}
+.film .tk-cv-ik{left:calc(50% + 50 * var(--u));top:calc(181 * var(--u))}
+html body.inr .film .tk-cv-ih{left:calc(50% + 50 * var(--u));top:calc(230 * var(--u));color:#EBEBEB}
+html body.inr .film .tk-cv-ip{left:calc(50% + 50 * var(--u));right:calc(80 * var(--u) + max(170px, 295 * var(--u)));bottom:max(calc(50 * var(--u)), 58px);color:#EBEBEB}   /* her lines on a wide window; on a small one it wraps before the button */
+.film .tk-cv-ib{right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+
+/* 03 the counts (643:8641): one pinned screen. The label on the left field, the title from the text line at 150, the lead 100 under it,
+   and 80 under that two columns of 632, 50 apart, between the same two hairlines: the four counts (92 each) and what the one in hand
+   is made of. A count not in hand stands at 26 % — her frame. */
+.tk-ct .stg{background:#000}
+.film .tk-ct-s{pointer-events:auto;box-sizing:border-box;padding-top:calc(150 * var(--u))}
+.tk-ct-h{position:relative;margin-left:calc(421 * var(--u))}
+html body.inr .tk-ct-h .lab3{position:absolute;left:calc(-371 * var(--u));top:calc(1 * var(--u));margin:0;white-space:nowrap}
+html body.inr .tk-ct-l{margin:calc(100 * var(--u)) 0 0 calc(421 * var(--u));white-space:nowrap}
+.tk-ct-g{display:grid;grid-template-columns:calc(632 * var(--u)) calc(632 * var(--u));column-gap:calc(50 * var(--u));margin:calc(80 * var(--u)) 0 0 calc(421 * var(--u))}
+.tk-ct-t{border-top:1px solid rgba(235,235,235,.3)}
+.tk-ct-r{display:grid;grid-template-columns:calc(402 * var(--u)) minmax(0, 1fr);grid-template-rows:auto auto;align-content:start;height:calc(92 * var(--u));box-sizing:border-box;
+  padding-top:calc(15.5 * var(--u));border-bottom:1px solid rgba(235,235,235,.3);outline:0;cursor:default}
+html body.inr .tk-ct-r p{opacity:.26;transition:opacity .55s cubic-bezier(.22,1,.36,1)}
+html body.inr .tk-ct-r.on p{opacity:1}
+html body.inr .tk-ct-r .a{grid-column:1;grid-row:1;color:#EBEBEB}
+html body.inr .tk-ct-r .b{grid-column:2;grid-row:1;color:#EBEBEB}
+html body.inr .tk-ct-r .al{grid-column:1;grid-row:2;margin-top:calc(7.5 * var(--u))}
+html body.inr .tk-ct-r .bl{grid-column:2;grid-row:2;margin-top:calc(7.5 * var(--u))}
+.tk-ct-d{position:relative;border-top:1px solid rgba(235,235,235,.3);border-bottom:1px solid rgba(235,235,235,.3)}
+.tk-ct-p{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0;visibility:hidden;transition:opacity .3s, visibility 0s .3s}
+.tk-ct-p.on{opacity:1;visibility:visible;transition:opacity .6s .18s, visibility 0s}
+html body.inr .tk-ct-p .n{position:absolute;left:0;top:calc(20 * var(--u));margin:0;color:#96A8BF}
+.tk-ct-c{position:absolute;left:0;right:0;bottom:calc(30 * var(--u));transform:translateY(calc(14 * var(--u)));transition:transform .3s}
+.tk-ct-p.on .tk-ct-c{transform:none;transition:transform .9s cubic-bezier(.16,1,.3,1) .18s}
+html body.inr .tk-ct-c p{margin:0;max-width:calc(420 * var(--u))}
+.tk-ct-i{list-style:none;margin:0;padding:0;display:grid;grid-auto-flow:column;grid-template-rows:repeat(3, auto);justify-content:start;column-gap:calc(30 * var(--u));row-gap:calc(6 * var(--u));
+  font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.15;letter-spacing:-.05em;color:#FFFFFF}
+.tk-ct-i li{position:relative;padding-left:calc(16 * var(--u));white-space:nowrap}
+.tk-ct-i li::before{content:"";position:absolute;left:0;top:50%;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));margin-top:calc(max(5px, calc(8 * var(--u))) / -2);background:#96A8BF}
+
+/* 07 the conditions, and the photograph that becomes the screen (644:8972 → 633:428). The list is the first state: the name and the
+   title on the left field, a hairline down the screen at 851, the rows from 852 to the right field (78 each, the condition in small
+   caps 23 in, what we do about it at 671), the closing sentence on the foot at 875, the photograph a square of 217 in the corner.
+   The second state is drawn by the film (js/inner.js, team): the square grows to the screen and the sentence stands on the crossing
+   of the two centre hairlines — its first half flush right against the vertical one, 28 over the horizontal; the rest 23 right and
+   29 under. */
+.tk-ot .stg{background:#000}
+.film .tk-ot-a{z-index:3;pointer-events:auto}
+.tk-ot-h{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u))}
+html body.inr .tk-ot-h h2{margin-top:calc(25 * var(--u))}
+.tk-ot-v{position:absolute;left:calc(851 * var(--u));top:0;bottom:0;width:1px;background:rgba(255,255,255,.3)}
+.tk-ot-g{position:absolute;left:calc(852 * var(--u));right:calc(50 * var(--u));top:calc(167 * var(--u))}
+.tk-ot-r{display:grid;grid-template-columns:calc(671 * var(--u)) minmax(0, 1fr);align-items:center;height:calc(78 * var(--u));box-sizing:border-box}
+.tk-ot-r + .tk-ot-r{border-top:1px solid rgba(255,255,255,.18)}
+html body.inr .tk-ot-r .a{margin:0;padding-left:calc(23 * var(--u));color:#FFFFFF}
+html body.inr .tk-ot-r .b{margin:0}
+html body.inr .tk-ot-c{position:absolute;left:calc(875 * var(--u));bottom:max(calc(50 * var(--u)), 58px)}
+.tk-ot-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:4;pointer-events:none}
+.tk-ot-ph img{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:calc(217 * var(--u));height:calc(217 * var(--u));object-fit:cover;display:block;max-width:none;visibility:hidden;filter:contrast(1.05) brightness(.6)}   /* a texture: shown by the script alone, if there is no WebGL */
+.film.tk-ot .ln{z-index:5}
+.film .tk-ot-b{z-index:6}
+html body.inr .film .tk-ot-t{right:50%;bottom:calc(50% + 28 * var(--u));text-align:right;color:#FFFFFF}
+html body.inr .film .tk-ot-p{left:calc(50% + 23 * var(--u));top:calc(50% + 29 * var(--u))}
+
+/* 08 the process as a row of squares (644:8827): the name and the title centred at the head (150 / 199), the eight squares of 470 on
+   the foot, 50 apart, the first at the left field; the film carries the row to the left (js/inner.js, strip). In a square: the number
+   40 from its head, the name on 213, the sentence 339 wide with its foot 30 from the square's. Under the pointer — the frame's
+   gradient (155°: the blue at 26 %, Japanese Indigo at 62 % by 55 %, black at 70 %). */
+.tk-st .stg{background:#000}
+.tk-st-h{position:absolute;left:0;right:0;top:calc(150 * var(--u));text-align:center}
+html body.inr .tk-st-h h2{margin-top:calc(25 * var(--u));color:#EBEBEB}
+.tk-st-w{position:absolute;left:0;right:0;bottom:max(calc(50 * var(--u)), 58px);height:calc(470 * var(--u));pointer-events:auto}
+.tk-st-t{display:flex;gap:calc(50 * var(--u));width:max-content;padding:0 calc(50 * var(--u));will-change:transform}
+.tk-st-c{position:relative;flex:0 0 calc(470 * var(--u));height:calc(470 * var(--u));box-sizing:border-box;border:max(1px, calc(1.2 * var(--u))) solid rgba(235,235,235,.82);text-align:center}
+.tk-st-c::before{content:"";position:absolute;left:0;top:0;width:100%;height:100%;background:linear-gradient(155deg, rgba(150,168,191,.26) 0%, rgba(41,61,74,.62) 55%, rgba(0,0,0,.7) 100%);opacity:0;transition:opacity .7s cubic-bezier(.22,1,.36,1)}
+@media (hover:hover){ .tk-st-c:hover::before{opacity:1;transition-duration:.45s} }
+html body.inr .tk-st-c .n{position:absolute;left:0;right:0;top:calc(40 * var(--u));margin:0;color:#96A8BF}
+html body.inr .tk-st-c .nm{position:absolute;left:calc(65 * var(--u));right:calc(65 * var(--u));top:calc(213 * var(--u));transform:translateY(-50%);margin:0;color:#EBEBEB}
+html body.inr .tk-st-c .tx{position:absolute;left:50%;width:calc(339 * var(--u));margin:0 0 0 calc(-169.5 * var(--u));bottom:calc(30 * var(--u));text-wrap:balance}
+
+/* 09 the projects as a slider (644:8894): the title on the left field and the button on its last baseline at the right one; 105 under
+   them one row on the page's width — the project in hand in the middle (886 : 670), the one before and the one after either side
+   (447 : 278), 20 apart, on one top line; its name 20 under the large picture and its small caps 20 under the name. The columns are
+   taken from the width (the rule of 15.11: a block in the flow never has fixed-u columns). The pictures are one WebGL layer; the two
+   controls are the cards' own mark with an arrow drawn of its bars. */
+.tk-pj-h{display:flex;justify-content:space-between;align-items:flex-end;margin:0 calc(50 * var(--u))}
+.tk-pj-b{flex:0 0 auto;margin-bottom:calc(5 * var(--u))}
+.tk-pj-r{--sm:24.56%;position:relative;display:grid;grid-template-columns:var(--sm) minmax(0, 1fr) var(--sm);column-gap:calc(20 * var(--u));align-items:start;margin:calc(105 * var(--u)) calc(50 * var(--u)) 0}
+.tk-pj-r{touch-action:pan-y}
+.tk-pj-r.rv{transform:none}                                     /* the row is revealed by its own layer, not moved: its children are measured */
+.tk-pj-s{display:block;width:100%;visibility:hidden;pointer-events:none}
+.tk-pj-s.l, .tk-pj-s.r{aspect-ratio:447 / 278} .tk-pj-s.c{aspect-ratio:886 / 670}
+.tk-pj-ph{position:absolute;left:0;top:0;width:100%;height:100%;overflow:hidden}
+.tk-pj-ph img{position:absolute;left:0;top:0;width:0;height:0;display:block;max-width:none;object-fit:cover;visibility:hidden}
+.tk-pj-ph.dom img.s{visibility:visible}                         /* no WebGL: the pictures themselves, set in their places by the script */
+.tk-pj-go{position:absolute;top:0;z-index:2;display:block;margin:0;padding:0;border:0;background:none;cursor:pointer}
+.tk-pj-go.l{left:0;width:var(--sm);aspect-ratio:447 / 278} .tk-pj-go.r{right:0;width:var(--sm);aspect-ratio:447 / 278}
+.tk-pj-go.c{left:calc(var(--sm) + 20 * var(--u));right:calc(var(--sm) + 20 * var(--u));bottom:0}
+.tk-pj-a{--h:max(5px, calc(8 * var(--u)));position:absolute;bottom:0;z-index:3;width:calc(48 * var(--u));height:calc(48 * var(--u));min-width:32px;min-height:32px;margin:0;padding:0;
+  border-radius:50%;box-sizing:border-box;border:1px solid rgba(255,255,255,.12);background:none;cursor:pointer;transition:border-color .5s}
+.tk-pj-a.prev{left:0;transform:scaleX(-1)} .tk-pj-a.next{right:0}
+.tk-pj-a i{position:absolute;top:50%;height:max(1px, calc(1.3 * var(--u)));background:#FFFFFF;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.tk-pj-a i:nth-child(1){left:50%;width:calc(2 * var(--h));transform:translate(-50%, -50%)}
+.tk-pj-a i:nth-child(2), .tk-pj-a i:nth-child(3){right:calc(50% - var(--h));width:calc(.9 * var(--h));transform-origin:100% 50%}
+.tk-pj-a i:nth-child(2){transform:translateY(-50%) rotate(42deg)} .tk-pj-a i:nth-child(3){transform:translateY(-50%) rotate(-42deg)}
+.tk-pj-a:focus-visible{outline:0;border-color:rgba(255,255,255,.7)}
+@media (hover:hover){
+  .tk-pj-a:hover{border-color:rgba(255,255,255,.4)}
+  .tk-pj-a:hover i:nth-child(1){transform:translate(calc(-50% + 3 * var(--u)), -50%)}
+  .tk-pj-a:hover i:nth-child(2){transform:translate(calc(3 * var(--u)), -50%) rotate(42deg)} .tk-pj-a:hover i:nth-child(3){transform:translate(calc(3 * var(--u)), -50%) rotate(-42deg)}
+}
+.tk-pj-c{position:relative;height:calc(62 * var(--u));min-height:46px;margin:calc(20 * var(--u)) calc(50 * var(--u)) 0}
+.tk-pj-cp{position:absolute;left:calc(24.56% + 20 * var(--u));top:0;display:block;text-decoration:none;color:#FFFFFF;white-space:nowrap;
+  opacity:0;visibility:hidden;transform:translateY(calc(12 * var(--u)));transition:opacity .28s, transform .28s, visibility 0s .28s}
+.tk-pj-cp.on{opacity:1;visibility:visible;transform:none;transition:opacity .7s .5s, transform .9s cubic-bezier(.16,1,.3,1) .5s, visibility 0s .5s}
+.tk-pj-cp .nm{display:block}
+.tk-pj-cp .lc{margin-top:calc(20 * var(--u))}
+
+@media (max-aspect-ratio: 1/1){
+  /* the cover's thought: under the photograph, in the flow */
+  .film.tk-cv .tk-cv-i{order:3;display:block;min-height:0;padding:40px var(--m, 20px) 72px}
+  html body.inr .film .tk-cv-ih{margin-top:14px}
+  .film .tk-cv-ib{margin-top:26px}
+  /* the counts: read straight down — the four, and under them what each is made of */
+  .film .tk-ct-s{padding-top:72px}
+  .tk-ct-h{margin-left:0}
+  html body.inr .tk-ct-h .lab3{position:static;margin:0 0 14px;white-space:normal}
+  html body.inr .tk-ct-l{margin:24px 0 0;white-space:normal}
+  .tk-ct-g{display:block;margin:26px 0 0}
+  .tk-ct-r{height:auto;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);padding:16px 0}
+  html body.inr .tk-ct-r p{opacity:1}
+  html body.inr .tk-ct-r .al, html body.inr .tk-ct-r .bl{margin-top:6px}
+  .tk-ct-d{border:0}
+  .tk-ct-p{position:relative;height:auto;opacity:1;visibility:visible;padding:18px 0;border-bottom:1px solid rgba(235,235,235,.3)}
+  html body.inr .tk-ct-p .n{position:static;margin:0 0 12px}
+  .tk-ct-c{position:static;transform:none}
+  .tk-ct-i{grid-auto-flow:row;grid-template-rows:none;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);row-gap:8px;font-size:14px;letter-spacing:-.03em}
+  .tk-ct-i li{padding-left:14px;white-space:normal}
+  /* the conditions: the list, then the photograph, then its sentence */
+  .film.tk-ot .stg{display:flex;flex-direction:column}
+  .film .tk-ot-a{padding-top:72px;padding-bottom:40px}
+  .tk-ot-h{position:static} html body.inr .tk-ot-h h2{margin-top:14px}
+  .tk-ot-v{display:none}
+  .tk-ot-g{position:static;margin-top:28px}
+  .tk-ot-r{display:block;height:auto;padding:16px 0}
+  html body.inr .tk-ot-r .a{padding-left:0;margin-bottom:8px}
+  html body.inr .tk-ot-c{position:static;margin-top:28px}
+  .tk-ot-ph{position:relative;height:auto;aspect-ratio:4 / 5}
+  .tk-ot-ph img{left:0;top:0;bottom:auto;width:100%;height:100%;visibility:visible!important}
+  .tk-ot-ph .glc{display:none}
+  .film .tk-ot-b{padding-top:28px}
+  html body.inr .film .tk-ot-t{text-align:left}
+  /* the process: the same squares, moved by the finger */
+  .film .tk-st-s{padding:72px 0}
+  .tk-st-h{position:static;padding:0 var(--m, 20px)} html body.inr .tk-st-h h2{margin-top:14px}
+  .tk-st-w{position:static;height:auto;margin-top:36px;overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-snap-type:x mandatory;scrollbar-width:none}
+  .tk-st-w::-webkit-scrollbar{display:none}
+  .tk-st-t{gap:14px;padding:0 var(--m, 20px);transform:none!important}
+  .tk-st-c{flex:0 0 76vw;height:76vw;scroll-snap-align:center}
+  html body.inr .tk-st-c .n{top:22px}
+  html body.inr .tk-st-c .nm{left:16px;right:16px;top:44%}
+  html body.inr .tk-st-c .tx{left:18px;right:18px;width:auto;margin:0;bottom:20px}
+  /* the projects: the one in hand, its caption, and the two controls beside the caption */
+  .tk-pj-h{display:block;margin:0 var(--m, 20px)} .tk-pj-b{margin:22px 0 0}
+  .tk-pj-r{grid-template-columns:minmax(0, 1fr);margin:32px var(--m, 20px) 0}
+  .tk-pj-s.l, .tk-pj-s.r, .tk-pj-go.l, .tk-pj-go.r{display:none}
+  .tk-pj-s.c{aspect-ratio:4 / 5} .tk-pj-go.c{left:0;right:0}
+  .tk-pj-a{bottom:auto;top:calc(100% + 16px);width:40px;height:40px} .tk-pj-a.prev{left:auto;right:52px}
+  .tk-pj-c{height:64px;margin:18px var(--m, 20px) 0}
+  .tk-pj-cp{left:0;white-space:normal;max-width:calc(100% - 110px)}
 }

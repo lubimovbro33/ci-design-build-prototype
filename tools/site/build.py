@@ -462,7 +462,7 @@ def sc_door(kick, h1, img):
         '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
-def tk_cover(kick, h1, img, line, order, lines):
+def tk_cover(kick, h1, img, line, order, lines, idea=None):
     """01 — her own frame and scenario (17.11 17:07 `603:742`, 17:12, 17:33, 17:35; re-set by her 19:48 in frame `610:99`): the page's name
     and its title stand at the HEAD of a black screen — the name at 116, the title in the site's 111 (`.t111`: 111 / 95, −8) in three
     centred lines from 190, its first half white and «First Night Home» blue. Under them, in the rest of the screen, turns the tangle — the
@@ -470,7 +470,13 @@ def tk_cover(kick, h1, img, line, order, lines):
     it straight: the words go up and away (they only ever stand on black), the tangle is one line down the middle of the screen, the room
     GROWS OUT OF that line stroke by stroke, and then the line parts in two and the home stands between its halves.
     `line` = the room drafted clean and `order` = the moment the ink reaches each stroke (both tools/site/sketch.py), `lines` = the title's
-    lines as (white, blue) halves; the figure is `unfold()` in js/inner.js."""
+    lines as (white, blue) halves; the figure is `unfold()` in js/inner.js.
+    18.11 09:27 / 16:14, her frame `637:7894`: the page's thought no longer has a black screen of its own. «Коли у нас вже промалювалася
+    і проявилася фотографія, у нас іде легке затемнення, і промальовуються лінії горизонтальна, вертикальна, і появляється ось цей
+    контент… щоб оце затемнення було практично незамітно.» So the film runs on: the home stands, the picture is graded down a little
+    where the words will stand (in the shader, slowly — never a veil laid over it), the page's two centre hairlines are ruled across it,
+    and `idea` = (name, the thought's own lines, the paragraph's lines, the button) comes in right of the vertical one: the name at 181,
+    the thought in the 60 from 230, the paragraph and the button on the foot."""
     assert nop(' '.join((a + b).strip() for a, b in lines)).lower() == nop(h1).lower(), (lines, h1)
     out = ''; on = False
     for i, (wh, bl) in enumerate(lines):
@@ -483,11 +489,17 @@ def tk_cover(kick, h1, img, line, order, lines):
             out += esc(bl)
     if on: out += '</span>'
     return '\n'.join([
-        '<section class="film tk-cv" data-fig="unfold" data-len="2.4" id="@ID@">', '  <div class="stg">',
+        '<section class="film tk-cv" data-fig="unfold" data-len="%s" data-open="0" id="@ID@">' % ('3.6' if idea else '2.4'), '  <div class="stg">',
         '    <div class="tk-cv-ph"><img src="%s" alt=""><img class="tk-cv-ln" src="%s" alt=""><img class="tk-cv-ln" src="%s" alt=""></div>' % (img, line, order),
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
         '      <div class="tk-cv-t"><p class="tk-cv-k rv">%s</p><h1 class="t111 tk-cv-h rv">%s</h1></div>' % (esc(kick), out),
-        '    </div>', '  </div>', '</section>'])
+        '    </div>'] + ([
+        '    <div class="sc tk-cv-i">',
+        '      <p class="tk-cv-k m tk-cv-ik" data-k="2.5 2.66 99 99">%s</p>' % esc(idea[0]),
+        '      <h2 class="t60 m tk-cv-ih" data-k="2.56 2.96 99 99">%s</h2>' % '<br>'.join(esc(x) for x in idea[1]),
+        '      <p class="t20 m tk-cv-ip" data-k="2.8 3.06 99 99">%s</p>' % ' <br class="bd">'.join(esc(x) for x in idea[2]),
+        '      <div class="m tk-cv-ib" data-k="2.92 3.12 99 99">%s</div>' % idea[3],
+        '    </div>'] if idea else []) + ['  </div>', '</section>'])
 def tk_scope(kick, h1, above, note, items):
     """05 — the whole ecosystem as the client's own sentence made into a thing to do (17.11.2026 23:01: «як метафорично, цікаво,
     інтерактивно»). The list of 22 is not a list: its point is WEIGHT — how much is inside. So the names stand as one dense field of
@@ -508,25 +520,134 @@ def tk_scope(kick, h1, above, note, items):
             '  </div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(above)), fs,
                 esc(nop(note)), esc(nop(note)), len(items), len(items))
+def tk_count(kick, title, lead, rows):
+    """03 — her frame `643:8641` (18.11 16:13): «Зроби його точно так само, як у мене на макеті… Коли ми проскролюємо, в нас міняється
+    інформація. Перший пункт у нас білий, тобто він при наведенні. І справа є ще колонка, там пише 01 і внизу контент… на другий пункт
+    цифра буде 02 і контент відповідний.» One pinned screen: the label on the left field, the title from the text line (`title` = its
+    lines as (blue, white) halves), the lead under it, and then two columns of 632 between the same two hairlines — the four counts as
+    a table (a count is 92 high: the word in the 34, its small caps under it, ONE and what it is beside them), and what the count in
+    hand is made of: its number at the head, its content on the foot, in the running 20. The scroll walks the counts one by one; the
+    pointer (or the keyboard) takes one in hand. The counts not in hand stand at 26 % — as drawn in her frame.
+    rows: (word, small caps, ONE, small caps, wc, content markup). The figure between the number and the content is drawn by `count()`
+    in js/inner.js: what the count is made of, gathering into one line."""
+    hl = ''; on = False
+    for i, (bl, wh) in enumerate(title):
+        if i: hl += '<br>'
+        if bl:
+            if not on: hl += '<span class="cb">'; on = True
+            hl += esc(bl)
+        if wh:
+            if on: hl += '</span>'; on = False
+            hl += esc(wh)
+    if on: hl += '</span>'
+    rs = ''; ds = ''
+    for i, (big, lab, one, ol, wc, det) in enumerate(rows):
+        rs += ('<div class="tk-ct-r%s" data-i="%d" tabindex="0"><p class="t34 up a">%s</p><p class="lab3 al">%s</p>'
+               '<p class="t34 up b">%s</p><p class="lab3 bl%s">%s</p></div>') % (' on' if i == 0 else '', i, esc(big), esc(lab), esc(one), ' wc' if wc else '', esc(ol))
+        ds += '<div class="tk-ct-p%s" data-i="%d"><p class="lab3 n">%02d</p><div class="tk-ct-c">%s</div></div>' % (' on' if i == 0 else '', i, i + 1, det)
+    return '\n'.join([
+        '<section class="film tk-ct" data-fig="count" data-len="2.7" data-open="0" id="@ID@">', '  <div class="stg">',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-ct-s">',
+        '      <div class="tk-ct-h"><p class="lab3 rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
+        '      <p class="t20 rv tk-ct-l">%s</p>' % (esc(nop(lead)) if isinstance(lead, str) else ' <br class="bd">'.join(esc(nop(x)) if i == len(lead) - 1 else esc(x) for i, x in enumerate(lead))),
+        '      <div class="tk-ct-g rv" data-count><div class="tk-ct-t">%s</div><div class="tk-ct-d">%s</div></div>' % (rs, ds),
+        '    </div>', '  </div>', '</section>'])
+def tk_items(parts):
+    """the content of a count: its items in columns of three, each behind the site's blue square (her frame 643:8641)"""
+    return '<ul class="tk-ct-i">%s</ul>' % ''.join('<li>%s</li>' % esc(x) for x in parts)
+
+def tk_team(kick, title, pairs, closer_, img, line, lines2):
+    """07 + 08 as ONE film — her frames `644:8972` and `633:428` (18.11 16:15): «На першому макеті у нас є ось такий список. Зверстай його
+    точно так само. І зліва внизу у нас є фотографія маленька. Коли ми скролимо, вона буде збільшуватись, ставати на весь екран,
+    затемнюватись… І появляється інформація, та, яка в мене на макеті.»
+    The first state: the name and the title on the left field (`title` = (blue, white) halves by line), a hairline down the screen at
+    851, the five conditions right of it as rows of 78 — the condition in small caps, what CI does about it in the running 20 — the
+    closing sentence in the 34 on the foot, and a square of the photograph, 217, in the bottom left corner.
+    The scroll: that square GROWS until it is the screen (in the shader, `team()` in js/inner.js: the picture is fitted to the growing
+    frame every moment, so it is never stretched), it is graded down, the two centre hairlines are ruled, and the client's sentence
+    stands on their crossing — its first half in the 60, set flush right against the vertical line, the rest in the running 20 under
+    the horizontal one. `pairs` are the client's own sentences cut at their comma: the comma stays in the page for the reader and the
+    checker (class .vh), and is not drawn — as in her frame."""
+    hl = ''
+    for i, (bl, wh) in enumerate(title):
+        if i: hl += '<br>'
+        if bl: hl += '<span class="cb">%s</span>' % esc(bl)
+        if wh: hl += esc(wh)
+    rs = ''.join('<div class="tk-ot-r"><p class="lab3 a">%s<span class="vh">,</span></p><p class="t20 b">%s</p></div>' % (esc(a), esc(nop(b))) for a, b in pairs)
+    return '\n'.join([
+        '<section class="film tk-ot" data-fig="team" data-len="3.1" data-open="0" id="@ID@">', '  <div class="stg">',
+        '    <div class="sc tk-ot-a">',
+        '      <div class="tk-ot-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
+        '      <i class="tk-ot-v" aria-hidden="true"></i>',
+        '      <div class="tk-ot-g rv">%s</div>' % rs,
+        '      <p class="t34 tk-ot-c">%s</p>' % esc(nop(closer_)),      # not .rv: it stands on the foot, under the line where reveals begin
+        '    </div>',
+        '    <div class="tk-ot-ph"><img src="%s" alt=""></div>' % img,
+        '    <canvas class="ln" aria-hidden="true"></canvas>',
+        '    <div class="sc tk-ot-b">',
+        '      <p class="t60 m tk-ot-t" data-k="2.24 2.62 99 99">%s</p>' % '<br>'.join(esc(x) for x in line),
+        '      <p class="t20 m tk-ot-p" data-k="2.5 2.78 99 99">%s</p>' % ' <br class="bd">'.join(esc(nop(x)) if i == len(lines2) - 1 else esc(x) for i, x in enumerate(lines2)),
+        '    </div>', '  </div>', '</section>'])
+
+def tk_strip(kick, title, stages):
+    """10 — her frame `644:8827` (18.11 16:11): the process as a row of squares that runs off the right edge of the screen. The name of
+    the block and its title stand centred at the head (`title` = (white, blue) halves by line); under them the eight stages, each a
+    square of 470 drawn in our hairline — its number at the head, its name in the 34 a little above the middle, its sentence in the
+    running 20 on the foot. The screen is pinned and the scroll carries the row to the left until the eighth stands at the right
+    field (`strip()` in js/inner.js). Under the pointer a square takes the frame's gradient (the blue into the dark).
+    stages: (name, sentence, wc) — wc marks a sentence adapted from the client's on her word («з такою самою кількістю тексту…
+    на кожну карточку свій текст»), so it can be found and replaced."""
+    hl = ''
+    for i, (wh, bl) in enumerate(title):
+        if i: hl += '<br>'
+        if wh: hl += esc(wh)
+        if bl: hl += '<span class="cb">%s</span>' % esc(bl)
+    cs = ''.join('<article class="tk-st-c"><p class="lab3 n">%02d</p><h3 class="t34 up nm">%s</h3><p class="t20 tx%s">%s</p></article>' % (
+        i + 1, esc(n), ' wc' if wc else '', esc(nop(t))) for i, (n, t, wc) in enumerate(stages))
+    return '\n'.join([
+        '<section class="film tk-st" data-fig="strip" data-len="3" data-open="0" id="@ID@">', '  <div class="stg">',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-st-s">',
+        '      <div class="tk-st-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
+        '      <div class="tk-st-w"><div class="tk-st-t" data-strip>%s</div></div>' % cs,
+        '    </div>', '  </div>', '</section>'])
+
+def tk_slider(title, button, items):
+    """11 — her frame `644:8894` (18.11 16:10): the projects as a slider. The title on the left field (`title` = lines of (white, blue,
+    white)), the button on its last baseline at the right field; under them one row: the project in hand large in the middle
+    (886 : 670) with its name and its line of small caps under it, the one before it and the one after it small either side
+    (447 : 278), on the same top line, 20 apart. «По боках стоять плюсики. Це неправильно. Я хочу, щоб ти перемалював стрілку вліво
+    і стрілку вправо, щоб наш слайдер працював. І в нашій стилістиці, в стилістиці цих плюсиків» — so the two controls are the cards'
+    own mark (a circle of 48 in our hairline) with an arrow drawn of the same bars, on the foot of the large picture at either field.
+    The pictures are one WebGL layer (`[data-pjs]` in js/inner.js): on a step each picture travels to its next place and is fitted
+    to its frame all the way, the one that leaves closes at the field and the one that arrives opens from it. The <img> elements are
+    its textures and its stand-in. items: (name, parts of the small caps, picture, href, focus) — focus = the point of the picture
+    kept in the frame (x, y of the picture, 0…1), read from her crops."""
+    hl = ''
+    for i, (a, b, c) in enumerate(title):
+        if i: hl += '<br>'
+        hl += esc(a) + ('<span class="cb">%s</span>' % esc(b) if b else '') + esc(c)
+    ims = ''.join('<img src="%s" alt="" data-f="%s">' % (im, '%.3f,%.3f' % fo) for n, parts, im, hf, fo in items)
+    caps = ''.join('<a class="tk-pj-cp%s" href="%s"><span class="nm h5r">%s</span><span class="lc lab3 sqm">%s</span></a>' % (
+        ' on' if i == 0 else '', hf, esc(n), ''.join('<span>%s</span>' % esc(x) for x in parts if x)) for i, (n, parts, im, hf, fo) in enumerate(items))
+    ar = '<i></i><i></i><i></i>'
+    return '\n'.join([
+        '<section class="bk tk-pj" id="@ID@" data-pjs>',
+        '  <div class="tk-pj-h"><h2 class="t60 rv">%s</h2><div class="rv tk-pj-b">%s</div></div>' % (hl, button),
+        '  <div class="tk-pj-r rv">',
+        '    <i class="tk-pj-s l" aria-hidden="true"></i><i class="tk-pj-s c" aria-hidden="true"></i><i class="tk-pj-s r" aria-hidden="true"></i>',
+        '    <div class="tk-pj-ph" aria-hidden="true">%s</div>' % ims,
+        '    <button class="tk-pj-go l" type="button" tabindex="-1" aria-hidden="true"></button><a class="tk-pj-go c" href="%s" aria-label="%s"></a><button class="tk-pj-go r" type="button" tabindex="-1" aria-hidden="true"></button>' % (items[0][3], esc(items[0][0])),
+        '    <button class="tk-pj-a prev" type="button" aria-label="Previous project">%s</button><button class="tk-pj-a next" type="button" aria-label="Next project">%s</button>' % (ar, ar),
+        '  </div>',
+        '  <div class="tk-pj-c">%s</div>' % caps,
+        '</section>'])
+
 def tk_lead(thought, para_, button):
     """02 — the thought of the page, and nothing else on the screen. Everything on the text line: the sentence, the paragraph under it, the button
     under that. (17.11 07:57: «все розкидано, неможливо це читати» — from here on every block of this page begins at the same left edge.)"""
     return ('<section class="bk tk-ld" id="@ID@">\n  <p class="t60s rv tk-ld-h">%s</p>\n'
             '  <p class="t20 rv tk-ld-t" style="--w:475">%s</p>\n  <div class="rv tk-ld-b">%s</div>\n</section>') % (
                 thought, esc(nop(para_)), button)
-def tk_math(kick, h1, lead, rows):
-    """03 — the metaphor spelled out, and the page's instrument. Four counts of one shape: what a project is on the left, what CI makes of it
-    on the right. The four are READ, and then they are OPENED — the pointer on a count brings what it is made of into the one reading line
-    under them, so the lists of the page live inside its numbers instead of lying about as lists (16.11 23:58). The rows never move: only the
-    line under them changes, and the counts not in hand step back."""
-    rs = ''; ds = ''
-    for i, (big, lab, one, ol, wc, det) in enumerate(rows):
-        rs += ('<div class="tk-m-r rv" data-i="%d" tabindex="0"><p class="t60 a">%s</p><p class="lab3 al">%s</p><i aria-hidden="true"></i>'
-               '<p class="t60 b">%s</p><p class="lab3 bl%s">%s</p></div>') % (i, esc(big), esc(lab), esc(one), ' wc' if wc else '', esc(ol))
-        ds += '<div class="tk-m-d%s" data-i="%d">%s</div>' % (' on' if i == 0 else '', i, det)
-    return ('<section class="bk tk-m" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <p class="t20 rv tk-m-l" style="--w:475">%s</p>\n  <div class="tk-m-g rv" data-math>%s\n    <div class="tk-m-dd">%s</div>\n  </div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), rs, ds)
 def tk_fit(kick, h1, lead, rows, img, title_lines):
     """04 — the home page's «CI Difference», given to this block on her word (17.11 19:34: «оцей наш нижній блок переробити за принципом
     того, як зроблений дизайн верхнього блоку. А фотографію використай таку, яку ми ще не використовували»). The photograph is ruled
@@ -610,30 +731,6 @@ def tk_index(kick, h1, note, items):
     return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="lab3 rv tk-ix-n">%s</p>\n  <p class="t34 rv tk-ix-f">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), sqr(items))
-def tk_process(kick, h1, stages):
-    """10 — the process after her reference (17.11.2026 22:40, santalarch.com/#process: «зліва маленький заголовок, справа ось така от
-    стрічка… нажимаємо на плюсик, у нас випадає опис. Дотримуйся нашої стилістики»). Measured at 1440: the ribbon starts at the middle
-    of the screen (720) and runs to the field (1424); a closed row is 83 high — the name in a narrow column of its OWN (198 of the
-    704), so it breaks as a name and the rest of the row is air, and the mark stands at the far right on the FIRST line; the open row
-    drops its sentence under the name, 360 wide. In our frame: the ribbon 960 → 1870, the name in the 34 in sentence case over 360,
-    every row the height of two lines so the ribbon is even, the sentence on our measure of 475, and the heading keeps the CAPS every
-    heading of this site has, so it never reads as one list with the names (17.11 22:50: «ти бачиш, як зроблено в них і що зробив ти?»).
-    sentence on the site's own measure of 475, and the left column carries only the label and the heading in the 34 — the smallest
-    heading of the page, over its densest block.
-    The device is the site's OWN, not a new one: the FAQ's accordion (`.qa` in css/inner.css, the click in js/inner.js) — a hairline
-    over every row, the mark of the CARDS (`.df2-pm`: a circle of our hairline with two bars in it — 22:50 «подивися, як на карточках
-    оформлені плюсики»), whose upright bar turns level as the row opens, the panel growing from 0fr to 1fr in .6 s, one row open
-    at a time. The first stage stands open, as on the FAQ and in her reference. (Her note of 19:46 — «кнопочка з плюсиком, куди вона
-    буде переходити? нам її не потрібно» — was about a mark that led nowhere; here the plus is the control that opens the row.)"""
-    rs = ''
-    for i, (nm, tx) in enumerate(stages):
-        rs += ('<div class="qa rv%s"><button class="qh" type="button" aria-expanded="%s"><span class="t">%s</span>'
-               '<span class="pl" aria-hidden="true"></span></button><div class="ab"><div><div class="ain"><div><p>%s</p></div></div></div></div></div>') % (
-                   ' open' if i == 0 else '', 'true' if i == 0 else 'false', esc(nm), esc(nop(tx)))
-    return ('<section class="bk tk-ps" id="@ID@">\n  <div class="tk-ps-g">\n'
-            '    <div class="tk-ps-h rv"><p class="lab3">%s</p><h2 class="t34 up">%s</h2></div>\n'
-            '    <div class="rws tk-ps-l">%s</div>\n  </div>\n</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 22)), rs)
 def sc_track(kick, h1, parts, statement, imgs):
     """Turnkey: one track from the first idea to the first night home; it pans sideways"""
     a, b = parts

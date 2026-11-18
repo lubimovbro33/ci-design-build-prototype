@@ -243,7 +243,7 @@
   /* anchors on this page: a film opens a little into itself, where its title already stands */
   qsa('a[href^="#"]').forEach(function(a){
     a.addEventListener('click', function(e){ var id = a.getAttribute('href').slice(1); if (!id){ e.preventDefault(); return; } var t = $(id); if (!t) return; e.preventDefault();
-      var y = t.getBoundingClientRect().top + window.scrollY; if (t.classList.contains('film') && t.getAttribute('data-fig') !== 'cover') y += .7 * SP * H; smoothTo(y); });
+      var y = t.getBoundingClientRect().top + window.scrollY, op = t.getAttribute('data-open'); if (t.classList.contains('film') && t.getAttribute('data-fig') !== 'cover') y += (op == null ? .7 : +op) * SP * H; smoothTo(y); });
   });
 
   /* the pen */
@@ -492,15 +492,16 @@
       f.tx = qs('.tk-cv-t', f.el); f.ph = box && qs('img', box);
     }
     var o = f.glo, i, k;
-    function room(grow, x1, x2, home){
+    function room(grow, x1, x2, home, dim){
       if (!o){                                                              /* no WebGL: the photograph's own element, and only once the words have gone */
-        if (f.ph){ var a = H >= W ? 1 : sm(.5, 1.3, q).toFixed(3); if (f.ph.__a !== a){ f.ph.__a = a; f.ph.style.visibility = 'visible'; f.ph.style.opacity = a; } }
+        if (f.ph){ var a = H >= W ? 1 : sm(.5, 1.3, q).toFixed(3) + (dim > 0 ? ' ' + dim.toFixed(2) : '');
+          if (f.ph.__a !== a){ f.ph.__a = a; f.ph.style.visibility = 'visible'; f.ph.style.opacity = parseFloat(a); f.ph.style.filter = dim > 0 ? 'brightness(' + (1 - .4 * dim).toFixed(3) + ')' : ''; } }
         return;
       }
       if (!o.ready) return;
-      o.size(); o.set1('uA', grow); o.set2('uB', x1, x2); o.set1('uQ', home); o.set1('uTime', (t * 60) | 0); o.draw();
+      o.size(); o.set1('uA', grow); o.set2('uB', x1, x2); o.set1('uQ', home); o.set1('uF', dim || 0); o.set1('uTime', (t * 60) | 0); o.draw();
     }
-    if (H >= W){ room(1, -1, 2, 1); return; }                               /* phones: the words, the line, then the room — in the flow (css) */
+    if (H >= W){ room(1, -1, 2, 1, 0); return; }                               /* phones: the words, the line, then the room — in the flow (css) */
     /* the tangle and its line come once, when the screen is first seen: drawn in one stroke, by the clock */
     f.dp = Math.max(Math.min(1, (f.dp || 0) + Math.min(.05, Math.max(0, t - (f.tl || t)) / 1.9)), sg(q, 0, .06)); f.tl = t;
     var dp = f.dp, sh = Math.min(H * 1.3, q * SP * H * 1.5);                /* the page seems to scroll on: the words leave upward */
@@ -514,7 +515,11 @@
     var top = 530 * U, foot = H - Math.max(58, 50 * U), RK = Math.min(190 * U, (foot - top) / 2.75), KX = W / 2, KY = top + RK, FP = 7.5 / 2.9;
     var e = sm(0, 1, sg(q, .06, .42)), e2 = e * e * (3 - 2 * e);
     var grow = sg(q, .46, 1.18), sp = eio(sg(q, 1.28, 2.08)), dist = sp * (W / 2 + 10), xL = W / 2 - dist, xR = W / 2 + dist;
-    room(grow, sp > 0 ? xL / W : 2, sp > 0 ? xR / W : 2, sg(q, 1.28, 2.12));   /* not parted yet: no home at all, not even a hair of it */
+    /* 18.11, her frame 637:7894: once the home stands, its light goes down a little — slowly, over most of a screen of scroll, so that it
+       is never seen happening — and the page's two centre hairlines are ruled across it: the horizontal from the left field, then the
+       vertical from the head. The words arrive as the film's moments (.tk-cv-i). */
+    var dim = sm(2.12, 3.02, q);
+    room(grow, sp > 0 ? xL / W : 2, sp > 0 ? xR / W : 2, sg(q, 1.28, 2.12), dim);   /* not parted yet: no home at all, not even a hair of it */
     g.lineCap = 'butt'; g.lineJoin = 'round';
     if (sp <= 0){
       var N = TANG.length - 1, yJ = KY + TANG[N][3] * RK, yT = Math.max(-10, 535 * U - sh);   /* where the tangle meets its line, and the loose end, which follows the words up */
@@ -539,7 +544,16 @@
       /* the line, parted: the home stands between its two halves, its drawing outside them */
       var la = 1 - sg(sp, .97, 1);
       if (la > .004){ ink(la, LW); seg(xL, -10, xL, H + 10); seg(xR, -10, xR, H + 10); }
+      cross(eio(sg(q, 2.26, 2.7)), eio(sg(q, 2.4, 2.84)));
     }
+  }
+  /* the two centre hairlines of a photograph that carries words (the home page's own, 13.11): Bright Gray at 33 %, one pixel, ruled —
+     the horizontal from the left edge, the vertical from the head */
+  function cross(lh, lv){
+    if (lh <= 0 && lv <= 0) return;
+    g.strokeStyle = 'rgba(235,235,235,.33)'; g.lineWidth = 1; g.setLineDash([]);
+    if (lh > 0) seg(0, MID, W * lh, MID);
+    if (lv > 0){ var vx = Math.round(W / 2) - .5; seg(vx, 0, vx, H * lv); }
   }
   /* ================================================================== Solutions: one house, four ways to it — a scenario (17.11.2026 16:30)
      «Щоб це не просто була зміна картинок, а прямо якийсь сценарій відбувався, коли ми скролимо і в нас міняється текст.» The plan no longer
@@ -841,7 +855,96 @@
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
     horizLine(f, q);
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv};
+  /* ================================================================== CI Turnkey, 18.11.2026: three more films
+     count — her frame 643:8641. The four counts and, beside them, what the count in hand is made of. The scroll walks them one by one;
+     the pointer or the keyboard takes one in hand. Between the number and the content the film's canvas draws the page's own figure,
+     small and once: what the count is made of — nine lines, some forty, more than a hundred, eight — gathers into ONE line that runs
+     to our square («якісь прикольні лінії, чи так як у нас було на попередній версії, але акуратно і стримано»). */
+  function count(f, q, t){
+    var c = f.ct, k, j;
+    if (!c){
+      var gE = qs('[data-count]', f.el);
+      c = f.ct = {rows: qsa('.tk-ct-r', gE), ps: qsa('.tk-ct-p', gE), d: qs('.tk-ct-d', gE), cur: -1, hov: -1, t0: -1, N: [9, 44, 116, 8], A: [.5, .27, .14, .5]};
+      c.rows.forEach(function(r, i){
+        function take(){ c.hov = i; c.hq = f.q; }
+        r.addEventListener('pointerenter', take); r.addEventListener('pointermove', take); r.addEventListener('focus', take);
+        r.addEventListener('blur', function(){ if (c.hov === i) c.hov = -1; });
+      });
+      qs('.tk-ct-t', gE).addEventListener('pointerleave', function(){ c.hov = -1; });
+    }
+    if (H >= W) return;                                                     /* phones read the four and their contents straight down (css) */
+    /* a count is in hand while the pointer MOVES on it; once the page is scrolled on, the scroll walks the counts again — a pointer
+       left lying on the table must not hold the block still */
+    if (c.hov >= 0 && Math.abs(q - c.hq) > .04) c.hov = -1;
+    var on = c.hov >= 0 ? c.hov : q < .95 ? 0 : q < 1.5 ? 1 : q < 2.05 ? 2 : 3;
+    var r = c.d.getBoundingClientRect(), sr = f.cv.getBoundingClientRect();
+    if (on !== c.cur){
+      c.cur = on; if (c.t0 >= 0) c.t0 = t;
+      c.rows.forEach(function(e, i){ e.classList.toggle('on', i === on); });
+      c.ps.forEach(function(e, i){ e.classList.toggle('on', i === on); });
+    }
+    if (c.t0 < 0){ if (r.top < H * .86) c.t0 = t; else return; }            /* the figure draws itself when its screen is first seen */
+    if (r.width < 80) return;
+    var x0 = r.left - sr.left, x1 = r.right - sr.left - SQ / 2, cy = Math.round(r.top - sr.top + r.height * .435) + .5, hh = 50 * U, xm = x0 + (x1 - x0) * .6;
+    var dp = reduced ? 1 : c01((t - c.t0) / 1.15), fan = eo(sg(dp, 0, .7)), one = eo(sg(dp, .46, 1)), n = c.N[on], S = 24, km = Math.max(1, Math.round(S * fan));
+    g.strokeStyle = 'rgba(235,235,235,' + c.A[on] + ')'; g.lineWidth = 1; g.setLineDash([]); g.beginPath();
+    for (k = 0; k < n; k++){
+      var y = cy + ((k / (n - 1)) * 2 - 1) * hh; g.moveTo(x0, y);
+      for (j = 1; j <= km; j++){ var u = j / S; g.lineTo(lerp(x0, xm, u), lerp(y, cy, u * u * (3 - 2 * u))); }
+    }
+    g.stroke();
+    if (one > 0){ ink(1, LW); seg(xm, cy, lerp(xm, x1, one), cy); }
+    var sa = sg(dp, .9, 1);
+    if (sa > 0){ g.globalAlpha = sa; g.fillStyle = '#96A8BF'; g.fillRect(Math.round(x1 - SQ / 2), Math.round(cy - SQ / 2), Math.round(SQ), Math.round(SQ)); g.globalAlpha = 1; }
+  }
+  /* team — her frames 644:8972 → 633:428: «зліва внизу фотографія маленька. Коли ми скролимо, вона буде збільшуватись, ставати на весь
+     екран, затемнюватись… і появляється інформація». The square of the photograph in the corner of the list grows until it is the
+     screen. It is one layer over the list, seen through everywhere but where the picture is (so the picture covers the list as it
+     grows — nothing fades); the picture is fitted to its frame at every moment, graded down as it fills the screen, and then the two
+     centre hairlines are ruled and the client's sentence comes to their crossing (the film's moments). */
+  var TEAM_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uS0;', 'uniform vec4 uR;', 'uniform float uD, uTime;', 'varying vec2 v;',
+    'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'void main(){',
+    '  vec2 sz = uR.zw - uR.xy, uv = (v - uR.xy) / sz, px = sz * uRes;',
+    '  float ra = px.x / px.y, ri = uS0.x / uS0.y;',
+    '  vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0);',
+    '  vec3 c = texture2D(uT0, (uv - 0.5) * s + 0.5).rgb;',
+    '  c = (c - 0.5) * 1.04 + 0.5;',
+    '  float l = dot(c, vec3(0.299, 0.587, 0.114));',
+    /* her grade of the plate, measured off her frames (exposure −0.45, contrast +0.04): the mids and the shadows come down to about
+       four tenths, the lights keep three quarters; and her 34 % of dark once the picture is the screen */
+    '  c *= 0.745 * mix(0.55, 1.0, smoothstep(0.45, 0.95, l)) * mix(1.0, 0.659, uD);',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
+    '  vec2 d = min(uv, 1.0 - uv) * px;',
+    '  float a = clamp(min(d.x, d.y) + 0.5, 0.0, 1.0);',
+    '  gl_FragColor = vec4(c * a, a);',
+    '}'].join('\n');
+  function team(f, q, t){
+    if (f.glo === undefined){
+      var box = qs('.tk-ot-ph', f.el);
+      f.ph = box && qs('img', box);
+      f.glo = box ? GL2.make(box, TEAM_FS, qsa('img', box), {alpha: true}) : null;
+    }
+    if (H >= W) return;                                                     /* phones: the list, the photograph, the sentence — in the flow (css) */
+    var o = f.glo, foot = Math.max(58, 50 * U), s0 = 217 * U, e = eio(sg(q, .95, 1.95)), dim = sm(1.5, 2.2, q);
+    var x0 = lerp(50 * U, 0, e), y0 = lerp(H - foot - s0, 0, e), x1 = lerp(50 * U + s0, W, e), y1 = lerp(H - foot, H, e);
+    if (o && o.ready){ o.size(); o.gl.uniform4f(o.u('uR'), x0 / W, y0 / H, x1 / W, y1 / H); o.set1('uD', dim); o.set1('uTime', (t * 60) | 0); o.draw(); }
+    else if (f.ph && !o){
+      var key = x0.toFixed(1) + y0.toFixed(1) + x1.toFixed(1) + dim.toFixed(2);
+      if (f.ph.__k !== key){ f.ph.__k = key; var st = f.ph.style; st.visibility = 'visible'; st.left = x0 + 'px'; st.top = y0 + 'px'; st.bottom = 'auto'; st.width = (x1 - x0) + 'px'; st.height = (y1 - y0) + 'px';
+        st.filter = 'contrast(1.05) brightness(' + lerp(.6, .4, dim).toFixed(3) + ')'; }
+    }
+    cross(eio(sg(q, 1.96, 2.38)), eio(sg(q, 2.1, 2.52)));
+  }
+  /* strip — her frame 644:8827: the eight stages are a row of squares longer than the screen; the scroll carries it to the left until
+     the last one stands at the right field. It moves exactly with the scroll (the wheel is already eased) */
+  function strip(f, q, t){
+    if (f.st === undefined) f.st = qs('[data-strip]', f.el);
+    if (H >= W || !f.st) return;
+    var x = -Math.max(0, f.st.scrollWidth - W) * sg(q, .16, f.len - .2), tf = 'translate3d(' + x.toFixed(1) + 'px,0,0)';
+    if (f.st.__t !== tf){ f.st.__t = tf; f.st.style.transform = tf; }
+  }
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
@@ -975,8 +1078,13 @@
       if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)){ console.warn(gl.getShaderInfoLog(s)); return null; }
       return s;
     }
-    function tex(gl, img){
-      var t = gl.createTexture();
+    function tex(gl, img, max){
+      var t = gl.createTexture(), m = Math.max(img.naturalWidth, img.naturalHeight);
+      if (max && m > max){                                                  /* a picture shown small is given to the GPU small: no shimmer where it is reduced */
+        var c = document.createElement('canvas'), x = c.getContext('2d');
+        c.width = Math.round(img.naturalWidth * max / m); c.height = Math.round(img.naturalHeight * max / m);
+        x.imageSmoothingQuality = 'high'; x.drawImage(img, 0, 0, c.width, c.height); img = c;
+      }
       gl.bindTexture(gl.TEXTURE_2D, t);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
@@ -986,10 +1094,12 @@
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, img);
       return t;
     }
-    /* make(box, fragment source, the <img> elements of the block) → {set(name, …), draw(), live(bool)} or null if there is no context */
-    function make(box, FS, imgs){
+    /* make(box, fragment source, the <img> elements of the block, {alpha: the layer is seen through where the shader says so,
+       max: the longest side of a texture}) → {set(name, …), draw(), u(name)} or null if there is no context */
+    function make(box, FS, imgs, opt){
+      opt = opt || {};
       var cv = document.createElement('canvas'); cv.className = 'glc'; cv.setAttribute('aria-hidden', 'true');
-      var gl = cv.getContext('webgl', {alpha: false, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance'});
+      var gl = cv.getContext('webgl', {alpha: !!opt.alpha, premultipliedAlpha: true, antialias: false, depth: false, stencil: false, powerPreference: 'high-performance'});
       if (!gl) return null;
       var pr = gl.createProgram(), vs = sh(gl, gl.VERTEX_SHADER, VS), fs = sh(gl, gl.FRAGMENT_SHADER, FS);
       if (!vs || !fs) return null;
@@ -1004,7 +1114,7 @@
       function u(n){ if (!(n in U)) U[n] = gl.getUniformLocation(pr, n); return U[n]; }
       box.appendChild(cv);
       var o = {
-        gl: gl, cv: cv, ready: false, w: 0, h: 0,
+        gl: gl, cv: cv, u: u, ready: false, w: 0, h: 0,
         size: function(){
           var r = box.getBoundingClientRect(), d = Math.min(2, window.devicePixelRatio || 1);
           var w = Math.round(r.width * d), h = Math.round(r.height * d);
@@ -1020,9 +1130,9 @@
       imgs.forEach(function(im, i){
         function load(){
           gl.activeTexture(gl.TEXTURE0 + i);
-          ts[i] = tex(gl, im);
+          ts[i] = tex(gl, im, opt.max);
           gl.uniform1i(u('uT' + i), i);
-          gl.uniform2f(u('uS' + i), im.naturalWidth, im.naturalHeight);
+          gl.uniform2f(u('uS' + i), im.naturalWidth, im.naturalHeight);   /* the picture's own proportions, whatever size the texture is */
           if (++ready === imgs.length){ o.ready = true; box.classList.add('gl-on'); o.size(); if (o.onready) o.onready(); }
         }
         if (im.complete && im.naturalWidth) load(); else im.addEventListener('load', load);
@@ -1072,7 +1182,11 @@
       'float w = 1.0 / uRes.x;',
       'float ins = smoothstep(uB.x - w, uB.x + w, v.x) * (1.0 - smoothstep(uB.y - w, uB.y + w, v.x));',
       'float keep = 1.0 - smoothstep(0.0, 0.085, min(v.x - uB.x, uB.y - v.x));',
-      'vec3 c = mix(sk, ph * mix(0.88, 1.0, smoothstep(0.3, 1.0, uQ)) + sk * keep * 0.9, ins);'].join('\n'),
+      'vec3 c = mix(sk, ph * mix(0.88, 1.0, smoothstep(0.3, 1.0, uQ)) + sk * keep * 0.9, ins);',
+      /* 18.11: the page's thought comes to stand on the home. The picture is not veiled: its LIGHT is taken down — the sky in the window
+         most, the room in its own dusk hardly at all — and more towards the half where the words stand. The evening simply deepens. */
+      'float lum = dot(c, vec3(0.299, 0.587, 0.114));',
+      'c *= mix(1.0, mix(0.9, 0.5, smoothstep(0.12, 0.62, lum)), uF * mix(0.5, 1.0, smoothstep(0.24, 0.56, v.x)));'].join('\n'),
     /* a photograph, settling */
     still: [
       'float s = mix(1.06, 1.0, smoothstep(0.0, 1.0, uQ));',
@@ -1181,105 +1295,102 @@
     });
   })();
 
-  /* ================================================================== CI Turnkey's four counts: the instrument of the page
-     The rows are read first and opened second: the pointer (or the keyboard) on a count brings what it is made of into the one reading line
-     under them, so the page's lists live inside its numbers. The rows never move — only the line under them changes. */
+  /* ================================================================== CI Turnkey's projects: a slider (18.11.2026 16:10, her frame 644:8894)
+     «Я хочу, щоб ти перемалював стрілку вліво і стрілку вправо, щоб наш слайдер працював.» The project in hand stands large in the
+     middle, the one before it and the one after it small either side. The three pictures are ONE WebGL layer over the row: on a step
+     each picture travels to its next place and is fitted to its frame all the way (its crop is kept on the point read from her
+     frame, data-f), the one that leaves closes at its field and the one that arrives opens from it — photographs on this site open and
+     close, they do not fade. Where the places are is read from the page (three empty cells laid out by the css), so the same code
+     serves the phone, where only the middle one exists and the pictures pass through it. The name and the small caps are DOM. */
   (function(){
-    qsa('[data-math]').forEach(function(g){
-      var rows = qsa('.tk-m-r', g), ds = qsa('.tk-m-d', g), cur = 0;
-      if (!rows.length) return;
-      /* ---------------------------------------------------------------- the figure: the many, gathering (17.11.2026 15:15)
-         «Це ж можна якось цікаво візуалізувати, якоюсь цікавою інфографікою.» Each count is drawn, and every one of them is drawn as the
-         same event: what a project is made of enters on the left, narrows to a single point, and leaves as one line towards the word ONE.
-         Only the grain differs — nine lines, a few hundred dots, a thousand specks, eight stages laid end to end — so the four read as one
-         argument: whatever the quantity, the client receives one of it. The count in hand flows; the other three rest. */
-      var cv = document.createElement('canvas'); cv.className = 'tk-m-cv'; cv.setAttribute('aria-hidden', 'true');
-      g.insertBefore(cv, g.firstChild); g.classList.add('cv-on');
-      var x2 = cv.getContext('2d'), cw = 0, chh = 0, dpr = 1, SETS = [], ri;
-      function rnd(s){ var x = Math.sin(s * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); }
-      for (ri = 0; ri < 4; ri++){
-        var n = [9, 260, 1150, 8][ri], it = [], k;
-        for (k = 0; k < n; k++){
-          var u = n === 1 ? .5 : k / (n - 1);
-          it.push({y: ri === 1 || ri === 2 ? (rnd(ri * 31 + k) * 2 - 1) : (u * 2 - 1),
-                   p: rnd(ri * 97 + k * 3 + 7), v: .42 + rnd(ri * 53 + k * 5 + 13) * .7,
-                   w: .55 + rnd(ri * 17 + k * 11 + 3) * .45});
-        }
-        SETS.push(it);
+    var sec = qs('[data-pjs]'); if (!sec) return;
+    var row = qs('.tk-pj-r', sec), box = qs('.tk-pj-ph', sec), imgs = qsa('img', box), caps = qsa('.tk-pj-cp', sec), N = imgs.length;
+    if (N < 2) return;
+    var sL = qs('.tk-pj-s.l', sec), sC = qs('.tk-pj-s.c', sec), sR = qs('.tk-pj-s.r', sec), link = qs('a.tk-pj-go.c', sec);
+    var foc = imgs.map(function(im){ var a = (im.getAttribute('data-f') || '.5,.5').split(','); return [+a[0] || .5, +a[1] || .5]; });
+    var cur = 0, dir = 0, p = 1, t0 = 0, raf = 0, queued = 0, i;
+    function mod(k){ return ((k % N) + N) % N; }
+    var FS = ['precision highp float;', 'uniform vec2 uRes;', 'uniform vec4 uV[4], uC[4];', 'uniform vec3 uP[4];', 'varying vec2 v;'];
+    for (i = 0; i < N; i++) FS.push('uniform sampler2D uT' + i + '; uniform vec2 uS' + i + ';');
+    FS.push('vec3 tx(float id, vec2 uv){');
+    for (i = 0; i < N; i++) FS.push((i ? 'else ' : '') + (i < N - 1 ? 'if (id < ' + (i + .5).toFixed(1) + ') ' : '') + 'return texture2D(uT' + i + ', uv).rgb;');
+    FS.push('}', 'vec2 sz(float id){');
+    for (i = 0; i < N; i++) FS.push((i ? 'else ' : '') + (i < N - 1 ? 'if (id < ' + (i + .5).toFixed(1) + ') ' : '') + 'return uS' + i + ';');
+    FS.push('}', 'void main(){', '  vec2 p = v * uRes; vec3 c = vec3(0.0);',
+      '  for (int i = 0; i < 4; i++){',
+      '    vec4 cl = uC[i]; vec2 d = p - cl.xy;',
+      '    if (cl.z > 0.5 && d.x >= 0.0 && d.y >= 0.0 && d.x <= cl.z && d.y <= cl.w){',
+      '      vec4 r = uV[i]; vec2 uv = (p - r.xy) / r.zw, im = sz(uP[i].x);',
+      '      float ra = r.z / r.w, ri = im.x / im.y;',
+      '      vec2 vis = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0);',          /* how much of the picture its frame shows, and which part: about its own point */
+      '      c = tx(uP[i].x, clamp(uP[i].yz - vis * 0.5, vec2(0.0), vec2(1.0) - vis) + uv * vis);',
+      '    }', '  }', '  gl_FragColor = vec4(c, 1.0);', '}');
+    var o = GL2.make(box, FS.join('\n'), imgs, {max: 1600});
+    function geo(){
+      var rr = row.getBoundingClientRect();
+      function R(e){ var b = e.getBoundingClientRect(); return b.width < 2 ? null : [b.left - rr.left, b.top - rr.top, b.width, b.height]; }
+      var C = R(sC) || [0, 0, rr.width, rr.height], L = R(sL), Rg = R(sR), gap = 20 * U;
+      return {C: C, L: L || [C[0] - C[2] - gap, C[1], C[2], C[3]], R: Rg || [C[0] + C[2] + gap, C[1], C[2], C[3]]};
+    }
+    function mix4(a, b, e){ return [lerp(a[0], b[0], e), lerp(a[1], b[1], e), lerp(a[2], b[2], e), lerp(a[3], b[3], e)]; }
+    /* the pictures of a moment: [which, the frame it is fitted to, the part of that frame that is seen]. `cur` is already the one that
+       will be in hand; `dir` is the way we went (+1 = to the next, the one on the right) */
+    function boxes(G, e){
+      var L = G.L, C = G.C, R = G.R, B;
+      if (!dir || e >= 1) return [[mod(cur - 1), L, L], [cur, C, C], [mod(cur + 1), R, R]];
+      if (dir > 0) B = [[mod(cur - 1), mix4(C, L, e), 0], [cur, mix4(R, C, e), 0],
+                        [mod(cur - 2), L, [L[0], L[1], L[2] * (1 - e), L[3]]], [mod(cur + 1), R, [R[0] + R[2] * (1 - e), R[1], R[2] * e, R[3]]]];
+      else B = [[mod(cur + 1), mix4(C, R, e), 0], [cur, mix4(L, C, e), 0],
+                [mod(cur + 2), R, [R[0] + R[2] * e, R[1], R[2] * (1 - e), R[3]]], [mod(cur - 1), L, [L[0], L[1], L[2] * e, L[3]]]];
+      B.forEach(function(b){ if (!b[2]) b[2] = b[1]; });
+      return B;
+    }
+    function draw(e){
+      var G = geo(), B = boxes(G, e);
+      if (o && o.ready){
+        var V = new Float32Array(16), K = new Float32Array(16), P = new Float32Array(12);
+        B.forEach(function(b, k){ V.set(b[1], k * 4); K.set(b[2], k * 4); P[k * 3] = b[0]; P[k * 3 + 1] = foc[b[0]][0]; P[k * 3 + 2] = foc[b[0]][1]; });
+        o.size(); o.gl.uniform4fv(o.u('uV'), V); o.gl.uniform4fv(o.u('uC'), K); o.gl.uniform3fv(o.u('uP'), P); o.draw();
+      } else if (!o){                                                       /* no WebGL: the pictures themselves stand in their places, and change places at once */
+        box.classList.add('dom');
+        imgs.forEach(function(im, k){
+          var r = k === cur ? G.C : k === mod(cur + 1) ? G.R : k === mod(cur - 1) ? G.L : null;
+          im.classList.toggle('s', !!r);
+          if (r){ var st = im.style; st.left = r[0] + 'px'; st.top = r[1] + 'px'; st.width = r[2] + 'px'; st.height = r[3] + 'px'; st.objectPosition = (foc[k][0] * 100) + '% ' + (foc[k][1] * 100) + '%'; }
+        });
       }
-      function qd(ax, ay, bx, by, cx_, cy_, u){ var m = 1 - u;
-        return [m * m * ax + 2 * m * u * bx + u * u * cx_, m * m * ay + 2 * m * u * by + u * u * cy_]; }
-      function size(){
-        var r = g.getBoundingClientRect(); dpr = Math.min(2, window.devicePixelRatio || 1);
-        if (Math.abs(r.width - cw) < .5 && Math.abs(r.height - chh) < .5) return;
-        cw = r.width; chh = r.height; cv.width = Math.round(cw * dpr); cv.height = Math.round(chh * dpr);
-      }
-      function draw(t){
-        var gr = g.getBoundingClientRect(), k, i;
-        x2.setTransform(dpr, 0, 0, dpr, 0, 0); x2.clearRect(0, 0, cw, chh);
-        x2.lineCap = 'butt'; x2.lineJoin = 'round';
-        for (i = 0; i < rows.length && i < 4; i++){
-          var rr = rows[i].getBoundingClientRect(), ir = qs('i', rows[i]).getBoundingClientRect();
-          if (ir.width < 40) continue;                /* the figure belongs to the wide screen; the phone reads the counts alone */
-          var x0 = ir.left - gr.left, x1 = ir.right - gr.left, cy = (rr.top + rr.bottom) / 2 - gr.top;
-          var hh = Math.min(rr.height * .46, 86 * U), wx = x0 + (x1 - x0) * .70, bx = x0 + (x1 - x0) * .40;
-          var on = i === cur, al = on ? 1 : .42, ph = on ? t * .09 : .34, set = SETS[i], pt;
-          if (i === 0){                                   /* nine disciplines: nine lines, bending into one */
-            for (k = 0; k < set.length; k++){
-              var y = cy + set[k].y * hh;
-              x2.strokeStyle = 'rgba(255,255,255,' + (al * .42).toFixed(3) + ')'; x2.lineWidth = LW;
-              x2.beginPath(); x2.moveTo(x0, y); x2.quadraticCurveTo(bx, y, wx, cy); x2.stroke();
-              if (on){                                    /* and one mark travelling down each of them */
-                var u0 = (ph * set[k].v + set[k].p) % 1;
-                pt = qd(x0, y, bx, y, wx, cy, u0);
-                sq2(pt[0], pt[1], .22 + .62 * u0, 4 * U);
-              }
-            }
-          } else if (i === 3){                            /* eight stages: laid end to end, closing into one journey */
-            var gap = 7 * U, seg = (wx - x0) / 8;
-            for (k = 0; k < 8; k++){
-              var sx = x0 + k * seg, gg = gap * (1 - k / 9);
-              x2.strokeStyle = 'rgba(255,255,255,' + (al * (.34 + .075 * k)).toFixed(3) + ')'; x2.lineWidth = LW;
-              x2.beginPath(); x2.moveTo(sx, cy); x2.lineTo(sx + seg - gg, cy); x2.stroke();
-              x2.strokeStyle = 'rgba(255,255,255,' + (al * .42).toFixed(3) + ')';
-              x2.beginPath(); x2.moveTo(sx, cy - 11 * U); x2.lineTo(sx, cy + 11 * U); x2.stroke();
-            }
-            if (on){ var uj = (t * .13) % 1; sq2(x0 + (wx - x0) * uj, cy, .3 + .6 * uj, 5 * U); }
-          } else {                                        /* hundreds of people, thousands of decisions: a field, drawn in */
-            var sz = i === 1 ? 2.4 : 1.6;
-            for (k = 0; k < set.length; k++){
-              var it2 = set[k], uu = (ph * it2.v + it2.p) % 1, yy = cy + it2.y * hh * (i === 1 ? 1 : .92);
-              pt = qd(x0, yy, bx, yy, wx, cy, Math.pow(uu, 1.7));
-              sq2(pt[0], pt[1], al * (i === 1 ? .13 + .42 * uu : .09 + .3 * uu) * it2.w, sz * U);
-            }
-          }
-          /* the one point everything arrives at, and the line that leaves it */
-          x2.strokeStyle = 'rgba(255,255,255,' + (al * .55).toFixed(3) + ')'; x2.lineWidth = LW;
-          x2.beginPath(); x2.moveTo(wx, cy); x2.lineTo(x1, cy); x2.stroke();
-          sq2(wx, cy, al * (on ? .95 : .5), 7 * U);
-        }
-      }
-      function sq2(x, y, a, s){ if (a <= .004) return;
-        x2.fillStyle = a >= 1 ? '#FFFFFF' : 'rgba(255,255,255,' + a.toFixed(3) + ')';
-        x2.fillRect(x - s / 2, y - s / 2, s, s); }
-      function loop(now){
-        var r = g.getBoundingClientRect();
-        if (r.bottom > -80 && r.top < H + 80){ size(); draw(now / 1000); }
-        requestAnimationFrame(loop);
-      }
-      requestAnimationFrame(loop);
-      function set(i){
-        if (i === cur) return; cur = i;
-        rows.forEach(function(r, k){ r.classList.toggle('on', k === i); });
-        ds.forEach(function(d, k){ d.classList.toggle('on', k === i); });
-      }
-      rows.forEach(function(r, i){
-        r.addEventListener('pointerenter', function(){ set(i); });
-        r.addEventListener('focus', function(){ set(i); });
-        r.addEventListener('click', function(){ set(i); });
-      });
-      rows[0].classList.add('on'); g.setAttribute('data-on', '1');
-    });
+    }
+    function step(now){
+      if (!t0) t0 = now;
+      p = reduced ? 1 : Math.min(1, (now - t0) / 1150);
+      draw(p < .5 ? 16 * p * p * p * p * p : 1 - Math.pow(-2 * p + 2, 5) / 2);
+      if (p < 1){ raf = requestAnimationFrame(step); return; }
+      raf = 0; dir = 0;
+      if (queued){ var d = queued; queued = 0; go(d); }
+    }
+    function go(d){
+      if (p < 1){ queued = d; return; }                                     /* one step at a time; one more is remembered */
+      dir = d; cur = mod(cur + d); p = 0; t0 = 0;
+      caps.forEach(function(c, k){ c.classList.toggle('on', k === cur); });
+      if (link){ link.setAttribute('href', caps[cur].getAttribute('href')); var nm = qs('.nm', caps[cur]); if (nm) link.setAttribute('aria-label', nm.textContent); }
+      raf = requestAnimationFrame(step);
+    }
+    function rest(){ if (p >= 1) draw(1); }
+    sec.__still = function(d, e){ dir = d; draw(e); dir = 0; };              /* a moment of a step, held (for stills) */
+    qs('.tk-pj-a.prev', sec).addEventListener('click', function(){ go(-1); });
+    qs('.tk-pj-a.next', sec).addEventListener('click', function(){ go(1); });
+    qsa('.tk-pj-go.l', sec).forEach(function(b){ b.addEventListener('click', function(){ go(-1); }); });
+    qsa('.tk-pj-go.r', sec).forEach(function(b){ b.addEventListener('click', function(){ go(1); }); });
+    sec.addEventListener('keydown', function(e){ if (e.key === 'ArrowLeft'){ go(-1); e.preventDefault(); } else if (e.key === 'ArrowRight'){ go(1); e.preventDefault(); } });
+    var sx = null;                                                          /* the finger: a stroke across the row is a step */
+    row.addEventListener('pointerdown', function(e){ sx = e.pointerType === 'mouse' ? null : e.clientX; });
+    row.addEventListener('pointerup', function(e){ if (sx == null) return; var dx = e.clientX - sx; sx = null; if (Math.abs(dx) > 40) go(dx < 0 ? 1 : -1); });
+    row.addEventListener('pointercancel', function(){ sx = null; });
+    if (o) o.onready = rest; else if (document.readyState === 'complete') rest(); else window.addEventListener('load', rest);
+    window.addEventListener('resize', function(){ requestAnimationFrame(rest); });
+    window.addEventListener('load', rest);
+    if ('ResizeObserver' in window) new ResizeObserver(rest).observe(row);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(rest);
   })();
 
   /* ================================================================== the ecosystem's scope (17.11.2026 23:01)
