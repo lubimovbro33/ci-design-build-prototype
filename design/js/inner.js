@@ -981,8 +981,10 @@
         return [(r.left + r.width / 2 - pr.left - pr.width / 2) / (pr.width / 2), (r.top + r.height / 2 - pr.top - pr.height / 2) / (pr.height / 2)]; });
       for (i = 0; i < o.n; i++) o.key[i] = '';
     }
-    var A = .22, B = .98, D = .72;                                         /* the first lets go at .22 of a screen, the last at .98; each takes .72 */
-    for (i = 0; i < o.n; i++) o.ps[i] = c01((q - A - o.rank[i] / (o.n - 1) * (B - A)) / D);
+    if (f.gat === undefined){ var ga = f.el.getAttribute('data-gather'); f.gat = ga == null ? -1 : +ga; }
+    var gat = f.gat, A = gat >= 0 ? -.12 : .22, B = gat >= 0 ? .5 : .98, D = gat >= 0 ? .66 : .72;   /* the first lets go at .22 of a screen, the last at .98; each takes .72 */
+    /* gather (CI Core): the same course run backwards — a name is away and out of focus until the scroll reaches it, then comes home */
+    for (i = 0; i < o.n; i++){ var raw = c01((q - A - o.rank[i] / (o.n - 1) * (B - A)) / D); o.ps[i] = gat >= 0 ? 1 - raw : raw; }
     for (i = 0; i < o.n; i++){
       var p = o.ps[i], sqv = 1 - c01(Math.max(p, i ? o.ps[i - 1] : 0) * 6), ky = (p * 1000 | 0) + '/' + (sqv * 100 | 0);
       if (ky === o.key[i]) continue; o.key[i] = ky;
@@ -991,7 +993,8 @@
       if (p <= 0){ st.transform = ''; st.opacity = ''; st.filter = ''; st.visibility = ''; st.willChange = ''; continue; }
       if (p >= 1){ st.visibility = 'hidden'; st.willChange = ''; continue; }
       var r = o.r[i], c = o.c[i], z = r[2] * 2 - 1, m = Math.pow(p, 1.9),                        /* reluctant at first, then it floats */
-          ang = Math.atan2(c[1] * .55 - .14, c[0]) + (r[0] - .5) * 1.15,
+          ang = gat >= 0 ? (i < gat ? Math.PI : 0) + (r[0] - .5) * .9 + c[1] * .22 * (i < gat ? -1 : 1)     /* the design side from the left, the build side from the right */
+                         : Math.atan2(c[1] * .55 - .14, c[0]) + (r[0] - .5) * 1.15,
           dist = (.15 + .2 * r[1]) * W * (1 + .5 * z) * m,
           sc = 1 + m * (z >= 0 ? .7 * z : .42 * z), rot = m * (r[3] - .5) * 20,
           bl = Math.pow(p, .75) * (4 + 9 * Math.abs(z)) * U, al = 1 - .25 * sm(0, .25, p) - .75 * sm(.3, .96, p);   /* the focus goes before the place does: a name that has moved is already on another plane */

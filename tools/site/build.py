@@ -502,7 +502,7 @@ def tk_cover(kick, h1, img, line, order, lines, idea=None):
         '      <p class="t20 m tk-cv-ip" data-k="2.8 3.06 99 99">%s</p>' % ' <br class="bd">'.join(esc(x) for x in idea[2]),
         '      <div class="m tk-cv-ib" data-k="2.92 3.12 99 99">%s</div>' % idea[3],
         '    </div>'] if idea else []) + ['  </div>', '</section>'])
-def tk_loose(kick, title, names, leave=True, note=None):
+def tk_loose(kick, title, names, leave=True, note=None, gather=None):
     """04 — the ecosystem, her frame `652:9078` and her idea (18.11.2026 17:37): «У нас отака величезна охапка тексту… щоб текст при
     скролі, можливо, розсипався. Це як метафора, що вам цього не потрібно. Не потрібно про це думати… чи по букві, чи по слову.»
     The frame: the block's name on the left field (`kick` = its two lines), the client's sentence as the title in the 60, sentence
@@ -523,7 +523,13 @@ def tk_loose(kick, title, names, leave=True, note=None):
     # stand; `note` = the client's line over them («Project scope may include:»), in the running 20.
     fs = ''.join('<span>%s</span>' % esc(nop(x)) for x in names)
     return '\n'.join([
-        '<section class="film tk-lo%s" data-fig="loose" data-len="%s" data-open="0"%s id="@ID@">' % ('' if leave else ' stay', '2' if leave else '0', '' if leave else ' data-stay'), '  <div class="stg">',
+        # gather=N (CI Core, 18.11 19:24 — «яка ідея цього блоку? чому тут розпад не дав?»): the same motion run the other way and
+        # with this page's meaning. The first N names (what the designers do) come in from the left, the rest (what the builders do)
+        # from the right, out of the blur, and CONNECT into one mass, the squares closing the joints last — «A Connected
+        # Design-Build Scope». Turnkey's mass lets go; Core's comes together.
+        '<section class="film tk-lo%s" data-fig="loose" data-len="%s" data-open="0"%s id="@ID@">' % (
+            '' if leave else (' gat' if gather else ' stay'), '2' if leave else ('1.7' if gather else '0'),
+            '' if leave else (' data-gather="%d"' % gather if gather else ' data-stay')), '  <div class="stg">',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-lo-s">',
         '      <p class="lab3 rv tk-lo-k">%s</p>' % ' <br class="lb">'.join(esc(x) for x in kick),
         '      <h2 class="t60s rv tk-lo-h">%s</h2>' % hl,
@@ -1126,18 +1132,31 @@ def co_cover(kick, h1, img, ln, idea=None):
         '      <div class="m tk-cv-ib" data-k="1.82 2.02 99 99">%s</div>' % idea[3],
         '    </div>'] if idea else []) + ['  </div>', '</section>'])
 def co_seam(kick, h1, lead, ps, strong, img, ln):
-    """03 — the page's instrument. One room, drawn on one side of a line and built on the other, and the line follows the pointer: the visitor
-    moves the seam themselves and sees that there is nothing behind it. Their own sentence stands under it — «Design understands construction.
-    Construction understands design.»"""
-    return ('<section class="bk co-sm" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
-            '  <p class="t20 rv co-sm-l" style="--w:475">%s</p>\n'
-            '  <div class="co-sm-g rv" data-seam style="--x:50%%">\n'
-            '    <img class="co-sm-dr" src="%s" alt="">\n    <img class="co-sm-im" src="%s" alt="" loading="lazy">\n'
-            '    <span class="co-sm-ln" aria-hidden="true"></span>\n  </div>\n'
-            '  <p class="t34 rv co-sm-s">%s</p>\n%s</section>') % (
-                esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), ln, img,
-                blue(' '.join(nop(x) for x in strong), None),
-                ''.join('  <p class="t20 rv co-sm-p" style="--w:475">%s</p>\n' % esc(nop(x)) for x in ps))
+    """04 — the page's instrument, on ONE SCREEN (18.11.2026 19:25: «мені не подобається, як показано до-після… текст там, обривок
+    фотографії, потім ще внизу текст. Давайте все зробимо висотою 1080 і все в одному екрані»). It was a heading, a picture taller
+    than the window and more text under it — never seen whole. Now the screen is two halves: the text on the left one, on black
+    (the name, the title in two inks, the two paragraphs at the head; the client's two sentences and the closing paragraph on the
+    foot), and the room on the right one, from the top of the screen to its foot — drawn on one side of a line and built on the
+    other. The line follows the pointer: the visitor moves the seam themselves and sees that there is nothing behind it."""
+    # the title in four short lines, its second half in the blue: the left half of the screen is 860 wide, and a title that fits it
+    # in the real face only by a hair would break differently from window to window
+    t = brk_lines(nop(h1), 26); assert len(t) == 2, t
+    def two(x): w = x.split(' '); k = (len(w) + 1) // 2; return [' '.join(w[:k]), ' '.join(w[k:])]
+    hl = '<br>'.join(esc(x) for x in two(t[0])) + '<br>' + '<br>'.join('<span class="cb">%s</span>' % esc(x) for x in two(t[1]))
+    st = [nop(x) for x in strong]
+    sl = esc(st[0]) + ''.join(' <br class="bd"><span class="cb">%s</span>' % esc(x) for x in st[1:])
+    return '\n'.join([
+        '<section class="co-sm one" id="@ID@">',
+        '  <div class="co-sm-t">',
+        '    <p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2>' % (esc(kick), hl),
+        '    <p class="t20 rv co-sm-l">%s</p>' % esc(nop(lead)),
+        '    <p class="t20 rv co-sm-p">%s</p>' % esc(nop(ps[0])),
+        '    <p class="t34 co-sm-s">%s</p>' % sl,                       # the foot is not .rv: reveals begin above the screen's last eighth
+        ''.join('    <p class="t20 co-sm-c">%s</p>' % esc(nop(x)) for x in ps[1:]),
+        '  </div>',
+        '  <div class="co-sm-g" data-seam style="--x:50%">',
+        '    <img class="co-sm-dr" src="%s" alt="">' % ln, '    <img class="co-sm-im" src="%s" alt="" loading="lazy">' % img,
+        '    <span class="co-sm-ln" aria-hidden="true"></span>', '  </div>', '</section>'])
 def co_split(kick, h1, note, left, right, close=None):
     """07 — the connected scope, set as what the page is about: two columns either side of ONE vertical hairline, design on its left and
     construction on its right, so the seam is the block"""

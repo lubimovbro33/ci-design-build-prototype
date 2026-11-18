@@ -191,13 +191,14 @@ def core_page():
     pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'ch/1450-04a.webp',
                   ['For Clients Who', 'Want One Team', 'Responsible for', 'Design + Construction']), 'Fit')
     # 03 what is included: the section's heading as the block's name, its own closing sentence as the title, the seventeen names as
-    # one mass under the client's note. They stand (leave=False): on this page the list is what the client receives.
+    # one mass under the client's note. On this page the list is what the client receives, so nothing leaves: the two halves of
+    # the scope — the design side and the build side, the client's own two lists — come together from either side into one mass.
     sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
     note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
     cl = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     assert nop(h_of(sec)) == 'A Connected Design-Build Scope' and nop(cl[0]) == 'Specific scope is defined around the needs of each project', (h_of(sec), cl)
     pg.add(tk_loose(['A Connected', 'Design-Build Scope'], [('Specific scope is defined', ''), ('', 'around the needs'), ('', 'of each project')],
-                    list(ks[1]) + list(ks[2]), leave=False, note=note), 'Included')
+                    list(ks[1]) + list(ks[2]), leave=False, note=note, gather=len(ks[1])), 'Included')
     # 04 what you receive — Core's own block: the seam, and the visitor's hand on it
     sec = S[2]; cp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]

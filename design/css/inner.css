@@ -1286,3 +1286,24 @@ html body.inr .tk-st-c .tx{position:absolute;left:50%;width:calc(339 * var(--u))
   .film.co-cv.has-i .sc:not(.tk-cv-i){height:100vh;height:100svh}
   .film.co-cv.has-i .sc.tk-cv-i{position:relative;height:auto;display:block;padding:40px var(--m, 20px) 72px}
 }
+
+/* CI Core, «What You Receive» on one screen (18.11.2026 19:25: «все висотою 1080 і все в одному екрані»). Two halves: the text on
+   the left one from the field at 150 — the name, the title 25 under it, the paragraphs 50 and 25 under, and on the foot the client's
+   two sentences in the 34 with the closing paragraph 25 under them; the room on the right half, the whole height of the screen,
+   drawn | built, the seam under the pointer. */
+.co-sm.one{position:relative;height:100vh;height:100svh;margin:0;padding:0;background:#000;overflow:hidden}
+.co-sm.one .co-sm-t{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:calc(860 * var(--u));display:flex;flex-direction:column;align-items:flex-start}
+html body.inr .co-sm.one h2{margin:calc(25 * var(--u)) 0 0;color:#FFFFFF;white-space:nowrap}
+html body.inr .co-sm.one .co-sm-l{margin:calc(50 * var(--u)) 0 0;width:calc(475 * var(--u));max-width:none;white-space:normal;color:#FFFFFF}
+html body.inr .co-sm.one .co-sm-p{margin:calc(25 * var(--u)) 0 0;width:calc(475 * var(--u));max-width:none;white-space:normal;color:#FFFFFF}
+html body.inr .co-sm.one .co-sm-s{margin:auto 0 0;width:auto;max-width:none;color:#FFFFFF}
+html body.inr .co-sm.one .co-sm-c{margin:calc(25 * var(--u)) 0 0;width:calc(475 * var(--u));max-width:none;white-space:normal;color:#FFFFFF}
+.co-sm.one .co-sm-g{position:absolute;left:50%;right:0;top:0;bottom:0;margin:0;aspect-ratio:auto}
+@media (max-aspect-ratio: 1/1){
+  .co-sm.one{height:auto;overflow:visible;padding:72px 0 0}
+  .co-sm.one .co-sm-t{position:static;width:auto;display:block;padding:0 var(--m, 20px)}
+  html body.inr .co-sm.one h2{margin-top:14px}
+  html body.inr .co-sm.one .co-sm-l, html body.inr .co-sm.one .co-sm-p, html body.inr .co-sm.one .co-sm-c{width:auto;margin:16px 0 0}
+  html body.inr .co-sm.one .co-sm-l{margin-top:28px} html body.inr .co-sm.one .co-sm-s{margin:32px 0 0}
+  .co-sm.one .co-sm-g{position:relative;left:0;aspect-ratio:1.1;margin:32px 0 0}
+}
