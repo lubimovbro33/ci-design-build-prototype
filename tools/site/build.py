@@ -14,7 +14,9 @@ FILE = {'home': 'index.html', 'about': 'about.html', 'services': 'solutions.html
 NAV = [('About Us', 'about.html'), ('Portfolio', 'portfolio.html'), ('Solutions', 'solutions.html'), ('Broker Program', 'broker-program.html'), ('Partnerships', 'partnerships.html'), ('News', 'news.html')]
 LINKS = dict(NAV); LINKS.update({'FAQ': 'faq.html', 'Contact': 'contact.html', 'All Solutions': 'solutions.html', 'CI Turnkey': 'ci-turnkey.html', 'CI Core': 'ci-core.html',
                                   'CI Curated': 'ci-curated.html', 'CI Wellness': 'ci-wellness.html'})
-MENU_PH = ['assets/ph/of/team3.webp', 'assets/ph/ch/1450-09a.webp', 'assets/ph/ch/1450-15.webp', 'assets/ph/us/1530-04.webp', 'assets/ph/of/materials.webp', 'assets/ph/us/1530-06a.webp']
+# 18.11.2026 18:40 («міняй на клієнтські»): the two stock pictures (About Us, Partnerships) gave way to the client's own work — the foyer of
+# Collectors Home and the stone island of Room To Breathe. The menu shows nothing that CI has not built.
+MENU_PH = ['assets/ph/ch/1450-31.webp', 'assets/ph/ch/1450-09a.webp', 'assets/ph/ch/1450-15.webp', 'assets/ph/us/1530-04.webp', 'assets/ph/rtb/1430-04a.webp', 'assets/ph/us/1530-06a.webp']
 PROJ = [
     dict(slug='collectors-home', name='Collectors Home', loc='Streeterville · Chicago', bld='One Bennett Park', facts={'Residence': 'One Bennett Park, 55th floor · Streeterville · Chicago', 'Size': '5,130 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Space reconfiguration / Wine cellar / Primary bathroom / Millwork + stone / Home automation / Furnishings + art'}, set='ch', cover='1450-20a', card='1450-24', tall='1450-09a', cta='1450-31', g=.7,
          gal=[('full', ['1450-24']), ('pair', ['1450-15', '1450-09a']), ('duo', ['1450-02a', '1450-03a']), ('full', ['1450-22']), ('duor', ['1450-10a', '1450-05']), ('pair', ['1450-08a', '1450-16a']),
@@ -703,36 +705,44 @@ def tk_plate(img, line, pos=None):
     return ('<section class="tk-pl" id="@ID@">\n  <div class="bnd tk-pl-b"><img src="%s" alt="" loading="lazy"%s></div>\n'
             '  <p class="t34 rv tk-pl-t">%s</p>\n</section>') % (
                 img, ' style="object-position:%s"' % pos if pos else '', esc(nop(line)))
-def tk_pairs(kick, title, lead, para, cap, lines, closer_):
-    """05 — «What You Receive», set on ONE AXIS (18.11.2026 17:01, on the block of joints: «він дуже громіздкий, дуже неакуратний.
-    Перероби його мінімалістичніше, зрозуміліше і преміальніше»). What was heavy: a heading in the 111 across two lines, six drawings
-    of carpenter's joints, four sizes of type. What stands now is type on a centre line, and one hairline:
-      the name and the title centred at the head, as on the process (`title` = lines of (white, blue));
-      the client's lead in the 34 and the paragraph in the running 20 under it (`para` = its own lines, broken for rhythm);
-      «We manage the intersections», and from it a hairline straight down the middle of the screen. The six pairs stand on it: the
-      first half of each sentence flush right against the line, the second flush left from it, our square on the line between them —
-      every intersection is on the one line, which is the whole argument. The line is ruled as the block arrives and the halves
-      come to it from either side; the pair under the pointer closes on its square;
-      the closing sentence at the line's foot.
-    `lines` are the client's sentences («Design with construction»), cut after the first word."""
+def tk_recv(kick, title, lead, para, cap, lines, closer_, img):
+    """05 — «What You Receive» on a photograph (18.11.2026 18:29–18:40). On the axis block of 17:01 she said: «він теж дуже
+    перевантажений, і не цікавий абсолютно»; then: «повноформатна, широкоформатна фотографія, і на ній розміщений текст… його дуже
+    багато, можливо, щось скрутити»; and, on the idea of a crossing that travels to six places in the picture: «роби, щоб було
+    красиво і щоб було менше ризиків… щоб ми не втратили суть… і щоб він був зрозумілий і легко сприймався».
+    So: one pinned screen on one photograph of the client's own work, and the block's text in THREE STEPS, never all at once —
+      1  what changes for you: the name, the title in the 60 (two inks), the lead in the 34, the paragraph in the running 20;
+      2  «We manage the intersections», and from it a hairline straight down: the six pairs come to it one after another with the
+         scroll, the first word from the left, «with …» from the right, our square where they meet — and stand there complete;
+      3  the closing sentence alone, in the 60, sentence case, two inks.
+    Nothing in the picture is pointed at (no claim is made about what in this home is which intersection): the picture is the
+    finished home, the text stands on its own dark wall, and the camera comes a little closer as the list is set (`recv()` in
+    js/inner.js: WebGL, a slow push-in; the lights of the picture taken down a little, no veil).
+    `title` = lines of (white, blue); `para` = its own lines; `lines` = the client's sentences, cut after the first word;
+    `closer_` = lines of (white, blue)."""
     hl = ''
     for i, (wh, bl) in enumerate(title):
         if i: hl += '<br>'
         if wh: hl += esc(wh)
         if bl: hl += '<span class="cb">%s</span>' % esc(bl)
     rs = ''
-    for i, x in enumerate(lines):
+    for x in lines:
         a, b = nop(x).split(' ', 1)
-        rs += '<div class="tk-ix-r" style="--k:%d" tabindex="0"><p class="t34 a">%s</p><i class="q" aria-hidden="true"></i><p class="t34 b">%s</p></div>' % (i, esc(a), esc(b))
+        rs += '<div class="tk-rc-r"><p class="t34 a">%s</p><i class="q" aria-hidden="true"></i><p class="t34 b">%s</p></div>' % (esc(a), esc(b))
+    cl = ' <br class="lb">'.join(esc(w) + ('<span class="cb">%s</span>' % esc(b) if b else '') for w, b in closer_)
     return '\n'.join([
-        '<section class="bk tk-ix" id="@ID@">',
-        '  <div class="tk-ix-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
-        '  <p class="t34 rv tk-ix-l">%s</p>' % esc(nop(lead)),
-        '  <p class="t20 rv tk-ix-p">%s</p>' % ' <br class="bd">'.join(esc(x) for x in para),
-        '  <p class="t20 rv tk-ix-k">%s</p>' % esc(nop(cap)),
-        '  <div class="tk-ix-a rv"><i class="tk-ix-v" aria-hidden="true"></i>%s</div>' % rs,
-        '  <p class="t34 rv tk-ix-c">%s</p>' % ' <br class="bd">'.join(esc(w) + ('<span class="cb">%s</span>' % esc(b) if b else '') for w, b in closer_),
-        '</section>'])
+        '<section class="film tk-rc" data-fig="recv" data-len="3.1" data-open="0" id="@ID@">', '  <div class="stg">',
+        '    <div class="tk-rc-ph"><img src="%s" alt=""></div>' % img,
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-rc-s">',
+        '      <div class="tk-rc-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2>' % (esc(kick), hl),
+        '        <p class="t34 rv tk-rc-l">%s</p>' % esc(nop(lead)),
+        '        <p class="t20 rv tk-rc-p">%s</p></div>' % ' <br class="bd">'.join(esc(x) for x in para),
+        '      <div class="tk-rc-x"><p class="t20 tk-rc-k">%s</p>' % esc(nop(cap)),
+        '        <div class="tk-rc-a"><i class="tk-rc-v" aria-hidden="true"></i>%s</div></div>' % rs,
+        '      <p class="t60s tk-rc-c">%s</p>' % cl,
+        '    </div>', '  </div>', '</section>'])
+
+
 def tk_calm(kick, h1, big, lines, closer_):
     """07 — the six ways of working as ONE paragraph, not six bullets (16.11 23:58), and the client's closing thought under it. The screen
     carries no heading of its own: the heading of this part of their copy stands over the four counts on screen 03, and repeating it here

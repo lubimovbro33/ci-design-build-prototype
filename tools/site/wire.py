@@ -7,7 +7,9 @@ MAP = {'About Us': 'about.html', 'Portfolio': 'portfolio.html', 'Solutions': 'so
        'Contact': 'contact.html', 'All Solutions': 'solutions.html', 'CI Turnkey': 'ci-turnkey.html', 'CI Core': 'ci-core.html', 'CI Curated': 'ci-curated.html', 'CI Wellness': 'ci-wellness.html',
        'Begin Your Better Life': 'contact.html', 'Discover CI Design + Build': 'about.html', 'Explore CI Turnkey': 'ci-turnkey.html', 'Explore CI Core': 'ci-core.html',
        'Explore CI Curated': 'ci-curated.html', 'Explore CI Wellness': 'ci-wellness.html', 'View the Portfolio': 'portfolio.html', 'Start a Conversation': 'contact.html'}
-MENU_PH = ['assets/ph/of/team3.webp', 'assets/ph/ch/1450-09a.webp', 'assets/ph/ch/1450-15.webp', 'assets/ph/us/1530-04.webp', 'assets/ph/of/materials.webp', 'assets/ph/us/1530-06a.webp']
+# 18.11.2026 18:40 («міняй на клієнтські»): the two stock pictures (About Us, Partnerships) gave way to the client's own work — the foyer of
+# Collectors Home and the stone island of Room To Breathe. The menu shows nothing that CI has not built.
+MENU_PH = ['assets/ph/ch/1450-31.webp', 'assets/ph/ch/1450-09a.webp', 'assets/ph/ch/1450-15.webp', 'assets/ph/us/1530-04.webp', 'assets/ph/rtb/1430-04a.webp', 'assets/ph/us/1530-06a.webp']
 def text(x): return re.sub(r'\s+', ' ', re.sub(r'<[^>]+>', ' ', x)).strip()
 def _stamp():
     """the same short number for the state of our css and js that the generated pages carry, so no browser keeps an older copy"""

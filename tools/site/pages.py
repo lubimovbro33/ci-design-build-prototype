@@ -293,7 +293,7 @@ def turnkey_page():
     assert nop(h_of(sec4)) == 'The Complete CI Ecosystem' and nop(sp[1]) == 'Your life does not need to revolve around managing all of it', (h_of(sec4), sp[1])
     assert len(eco) == 22 and nop(note) == 'Depending on project scope:', (len(eco), note)
     pg.add(tk_loose(['The Complete CI', 'Ecosystem'], [('Your life does not', ''), ('need to ', 'revolve around'), ('', 'managing all of it')], eco), 'Ecosystem')
-    # 05 what you receive: the six intersections on one axis (18.11 17:01 — the joints were «громіздкий, неакуратний»)
+    # 05 what you receive (17:01: the joints were «громіздкий, неакуратний»; 18:29: the axis on black was «перевантажений, не цікавий»)
     sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
     inter = [x for x in pit if len(x) == 6][0]; short = [x[0] for x in pit if len(x) == 1]
     assert nop(h_of(sec)) == 'Complete Responsibility. Fewer Handoffs' and len(short) == 2, (h_of(sec), short)
@@ -301,8 +301,10 @@ def turnkey_page():
     assert ' '.join(p5l) == nop(short[0]), short[0]
     cl5 = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
     assert cl5 == 'You see the project as one journey because we manage it as one', cl5
-    pg.add(tk_pairs(label(sec), [('Complete Responsibility.', ''), ('', 'Fewer Handoffs')], get(sec, 'lead')[0][1][0], p5l, short[1], inter,
-                    [('You see the project as one journey', ''), ('', 'because we manage it as one')]), 'Receive')
+    # 18.11 18:40: on a photograph of the client's own work (the hearth wall of Collectors Home — its dark wall carries the type), in
+    # three steps; see tk_recv
+    pg.add(tk_recv(label(sec), [('Complete Responsibility.', ''), ('', 'Fewer Handoffs')], get(sec, 'lead')[0][1][0], p5l, short[1], inter,
+                   [('You see the project as one journey', ''), ('', 'because we manage it as one')], A + 'ch/1450-22.webp'), 'Receive')
     # 07 the six ways, as one paragraph
     six7 = [x for x in six if x not in ppl + dcs]   # those two sentences stand in the counts (03), each beside its own count
     pg.add(tk_calm(None, None, None, six7, st3), 'Managed')
