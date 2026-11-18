@@ -316,7 +316,12 @@ def turnkey_page():
     # client's «Depending on project scope:» are not in it (verify.py: DROP). The mass lets go on the scroll (tk_loose).
     assert nop(h_of(sec4)) == 'The Complete CI Ecosystem' and nop(sp[1]) == 'Your life does not need to revolve around managing all of it', (h_of(sec4), sp[1])
     assert len(eco) == 22 and nop(note) == 'Depending on project scope:', (len(eco), note)
-    pg.add(tk_loose(['The Complete CI', 'Ecosystem'], [('Your life does not', ''), ('need to ', 'revolve around'), ('', 'managing all of it')], eco), 'Ecosystem')
+    # 18.11 20:20–20:21: the four sentences and the closing thought of this part of the copy stood as a block of their own (06, no
+    # heading) — «непонятно». They follow this block's sentence in the client's text, so they come onto the screen the names have left.
+    six7 = [x for x in six if x not in ppl + dcs]   # the other two sentences stand in the counts (02), each beside its own count
+    assert len(six7) == 4, six7
+    pg.add(tk_loose(['The Complete CI', 'Ecosystem'], [('Your life does not', ''), ('need to ', 'revolve around'), ('', 'managing all of it')], eco,
+                    after=(' '.join(six7), st3)), 'Ecosystem')
     # 05 what you receive (17:01: the joints were «громіздкий, неакуратний»; 18:29: the axis on black was «перевантажений, не цікавий»)
     sec = S[2]; pit = [it[1] for it in sec['items'] if it[0] == 'p']
     inter = [x for x in pit if len(x) == 6][0]; short = [x[0] for x in pit if len(x) == 1]
@@ -325,13 +330,17 @@ def turnkey_page():
     assert ' '.join(p5l) == nop(short[0]), short[0]
     cl5 = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
     assert cl5 == 'You see the project as one journey because we manage it as one', cl5
-    # 18.11 18:40: on a photograph of the client's own work (the hearth wall of Collectors Home — its dark wall carries the type), in
-    # three steps; see tk_recv
-    pg.add(tk_recv(label(sec), [('Complete Responsibility.', ''), ('', 'Fewer Handoffs')], get(sec, 'lead')[0][1][0], p5l, short[1], inter,
-                   [('You see the project as one journey', ''), ('', 'because we manage it as one')], A + 'ch/1450-22.webp'), 'Receive')
+    # 18.11 18:40: on a photograph of the client's own work (the hearth wall of Collectors Home); 20:19: her frames 658:9130 /
+    # 658:9201 / 658:9234 over the first version — the type of the first step, the pairs as a row of blocks carried along the
+    # horizontal line, the closing sentence in capitals on the crossing. Her frame types «the clients experience»: the client's
+    # «the client experience» is kept (a slip of the key, not a change of copy).
+    l5 = ['Turnkey should change', 'the client experience']
+    assert ' '.join(l5) == nop(get(sec, 'lead')[0][1][0]), get(sec, 'lead')
+    c5 = [('You see the', 0), ('project as one', 0), ('journey', 0), ('because we', 1), ('manage it as one', 1)]
+    assert ' '.join(t for t, b in c5) == cl5, cl5
+    pg.add(tk_recv(label(sec), [('Complete', 1), ('Responsibility.', 1), ('Fewer Handoffs', 0)], l5, short[0], short[1], inter, c5,
+                   A + 'ch/1450-22.webp'), 'Receive')
     # 07 the six ways, as one paragraph
-    six7 = [x for x in six if x not in ppl + dcs]   # those two sentences stand in the counts (03), each beside its own count
-    pg.add(tk_calm(None, None, None, six7, st3), 'Managed')
     # 07 the conditions and the client's sentence, as one film — her frames 644:8972 and 633:428 (18.11 16:15). The title is hers:
     # «One Team and Complete Responsibility» for the client's «One Team. Complete Responsibility.» (verify.py: EXC)
     pairs = []

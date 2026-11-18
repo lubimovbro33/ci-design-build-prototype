@@ -502,7 +502,7 @@ def tk_cover(kick, h1, img, line, order, lines, idea=None):
         '      <p class="t20 m tk-cv-ip" data-k="2.8 3.06 99 99">%s</p>' % ' <br class="bd">'.join(esc(x) for x in idea[2]),
         '      <div class="m tk-cv-ib" data-k="2.92 3.12 99 99">%s</div>' % idea[3],
         '    </div>'] if idea else []) + ['  </div>', '</section>'])
-def tk_loose(kick, title, names, leave=True, note=None, gather=None):
+def tk_loose(kick, title, names, leave=True, note=None, gather=None, after=None):
     """04 — the ecosystem, her frame `652:9078` and her idea (18.11.2026 17:37): «У нас отака величезна охапка тексту… щоб текст при
     скролі, можливо, розсипався. Це як метафора, що вам цього не потрібно. Не потрібно про це думати… чи по букві, чи по слову.»
     The frame: the block's name on the left field (`kick` = its two lines), the client's sentence as the title in the 60, sentence
@@ -528,13 +528,19 @@ def tk_loose(kick, title, names, leave=True, note=None, gather=None):
         # from the right, out of the blur, and CONNECT into one mass, the squares closing the joints last — «A Connected
         # Design-Build Scope». Turnkey's mass lets go; Core's comes together.
         '<section class="film tk-lo%s" data-fig="loose" data-len="%s" data-open="0"%s id="@ID@">' % (
-            '' if leave else (' gat' if gather else ' stay'), '2' if leave else ('1.7' if gather else '0'),
+            '' if leave else (' gat' if gather else ' stay'), ('2.7' if after else '2') if leave else ('1.7' if gather else '0'),
             '' if leave else (' data-gather="%d"' % gather if gather else ' data-stay')), '  <div class="stg">',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-lo-s">',
         '      <p class="lab3 rv tk-lo-k">%s</p>' % ' <br class="lb">'.join(esc(x) for x in kick),
         '      <h2 class="t60s rv tk-lo-h">%s</h2>' % hl,
         ] + (['      <p class="t20 rv tk-lo-n">%s</p>' % esc(nop(note))] if note else []) + [
         '      <p class="t34 rv tk-lo-f" data-loose><span class="sqr">%s</span></p>' % fs,
+        # after=(paragraph, sentence) — 18.11 20:20, on the small block that stood alone under «What You Receive»: «що це за текст?
+        # до чого він відноситься?… чи це взагалі окрема секція? Непонятно». It is the end of this very part of the client's copy
+        # (after «Your life does not need to revolve around managing all of it» come «We educate you… We anticipate… We solve…
+        # And we stay responsible…» and «The luxury is not avoiding every decision…»). So it stands HERE: when the names have left,
+        # the cleared screen is not empty — it carries what the client has instead of them.
+        ] + (['      <div class="tk-lo-a"><p class="t20 tk-lo-ap">%s</p><p class="t34 tk-lo-ac">%s</p></div>' % (esc(nop(after[0])), blue(nop(after[1]), None))] if after else []) + [
         '    </div>', '  </div>', '</section>'])
 
 
@@ -718,40 +724,35 @@ def tk_plate(img, line, pos=None):
             '  <p class="t34 rv tk-pl-t">%s</p>\n</section>') % (
                 img, ' style="object-position:%s"' % pos if pos else '', esc(nop(line)))
 def tk_recv(kick, title, lead, para, cap, lines, closer_, img):
-    """05 — «What You Receive» on a photograph (18.11.2026 18:29–18:40). On the axis block of 17:01 she said: «він теж дуже
-    перевантажений, і не цікавий абсолютно»; then: «повноформатна, широкоформатна фотографія, і на ній розміщений текст… його дуже
-    багато, можливо, щось скрутити»; and, on the idea of a crossing that travels to six places in the picture: «роби, щоб було
-    красиво і щоб було менше ризиків… щоб ми не втратили суть… і щоб він був зрозумілий і легко сприймався».
-    So: one pinned screen on one photograph of the client's own work, and the block's text in THREE STEPS, never all at once —
-      1  what changes for you: the name, the title in the 60 (two inks), the lead in the 34, the paragraph in the running 20;
-      2  «We manage the intersections», and from it a hairline straight down: the six pairs come to it one after another with the
-         scroll, the first word from the left, «with …» from the right, our square where they meet — and stand there complete;
-      3  the closing sentence alone, in the 60, sentence case, two inks.
-    Nothing in the picture is pointed at (no claim is made about what in this home is which intersection): the picture is the
-    finished home, the text stands on its own dark wall, and the camera comes a little closer as the list is set (`recv()` in
-    js/inner.js: WebGL, a slow push-in; the lights of the picture taken down a little, no veil).
-    `title` = lines of (white, blue); `para` = its own lines; `lines` = the client's sentences, cut after the first word;
-    `closer_` = lines of (white, blue)."""
-    hl = ''
-    for i, (wh, bl) in enumerate(title):
-        if i: hl += '<br>'
-        if wh: hl += esc(wh)
-        if bl: hl += '<span class="cb">%s</span>' % esc(bl)
-    rs = ''
+    """05 — «What You Receive» on a photograph — HER FRAMES `658:9130`, `658:9201`, `658:9234` (18.11.2026 20:19), drawn over my
+    export of the first version: «спочатку така типографія, як на першому слайді. Далі у нас пропадає, і в нас іде по горизонтальній
+    лінії при скролі оці блочки, вони типу рухаються. Починається воно з по центру, і при скролі вони рухаються вліво. Вони там
+    прорухалися, текст пропав і появився текст той, що на третьому фреймі.»
+    One pinned screen on the photograph (darkened as in her frame), with the page's two centre hairlines across it all the time:
+      1  the name at 285 and the title in the 60 from 334 on the left field, its foot 50 over the horizontal line (her three lines;
+         the first two in the light blue she uses on photographs, the third light); on the foot the lead in the 34 at the left
+         field (her two lines) and the paragraph in the running 20, 50 right of the vertical line, 298 wide;
+      2  «We manage the intersections» centred at 150, and ON THE HORIZONTAL LINE the six pairs as a row of blocks — our square on
+         the line, the pair centred 23 under it, the first word light, «with …» blue; 55 between blocks. The row starts with the
+         first pair on the crossing and the scroll carries it to the left until the sixth stands there;
+      3  the closing sentence alone, centred on the crossing, in the 60, capitals, her five lines, two inks.
+    `title` / `closer_` = lines of (text, 1 if in the light blue); `lead` = its lines; `lines` = the client's sentences, cut after
+    the first word. The film is `recv()` in js/inner.js."""
+    def two(ls): return '<br>'.join(('<span class="cbl">%s</span>' % esc(t)) if b else esc(t) for t, b in ls)
+    bs = ''
     for x in lines:
         a, b = nop(x).split(' ', 1)
-        rs += '<div class="tk-rc-r"><p class="t34 a">%s</p><i class="q" aria-hidden="true"></i><p class="t34 b">%s</p></div>' % (esc(a), esc(b))
-    cl = ' <br class="lb">'.join(esc(w) + ('<span class="cb">%s</span>' % esc(b) if b else '') for w, b in closer_)
+        bs += '<div class="tk-rc-b"><i class="q" aria-hidden="true"></i><p class="t34">%s <br class="lb"><span class="cb">%s</span></p></div>' % (esc(a), esc(b))
     return '\n'.join([
-        '<section class="film tk-rc" data-fig="recv" data-len="3.1" data-open="0" id="@ID@">', '  <div class="stg">',
+        '<section class="film tk-rc" data-fig="recv" data-len="3.55" data-open="0" id="@ID@">', '  <div class="stg">',
         '    <div class="tk-rc-ph"><img src="%s" alt=""></div>' % img,
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-rc-s">',
-        '      <div class="tk-rc-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2>' % (esc(kick), hl),
-        '        <p class="t34 rv tk-rc-l">%s</p>' % esc(nop(lead)),
-        '        <p class="t20 rv tk-rc-p">%s</p></div>' % ' <br class="bd">'.join(esc(x) for x in para),
-        '      <div class="tk-rc-x"><p class="t20 tk-rc-k">%s</p>' % esc(nop(cap)),
-        '        <div class="tk-rc-a"><i class="tk-rc-v" aria-hidden="true"></i>%s</div></div>' % rs,
-        '      <p class="t60s tk-rc-c">%s</p>' % cl,
+        '      <div class="tk-rc-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), two(title)),
+        '      <p class="t34 tk-rc-l">%s</p>' % ' <br class="lb">'.join(esc(x) for x in lead),      # the foot: never .rv on a pinned screen
+        '      <p class="t20 tk-rc-p">%s</p>' % esc(nop(para)),
+        '      <p class="t20 tk-rc-k">%s</p>' % esc(nop(cap)),
+        '      <div class="tk-rc-w"><div class="tk-rc-row">%s</div></div>' % bs,
+        '      <p class="t60 tk-rc-c">%s</p>' % two(closer_),
         '    </div>', '  </div>', '</section>'])
 
 

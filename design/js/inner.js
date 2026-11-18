@@ -972,7 +972,10 @@
     if (!o) return;
     if (f.el.hasAttribute('data-stay')) return;                              /* the other solutions: the names are what is included — they stand */
     function rest(e){ var st = e.style; st.transform = ''; st.opacity = ''; st.filter = ''; st.visibility = ''; st.willChange = ''; e.style.removeProperty('--q'); }
-    if (H >= W || reduced){ if (o.on){ o.on = false; o.k = ''; o.p.classList.remove('fx'); o.its.forEach(rest); } return; }   /* phones, reduced motion: the mass stands */
+    if (o.aft === undefined) o.aft = qs('.tk-lo-a', f.el) || null;
+    if (H >= W){ if (o.on){ o.on = false; o.k = ''; o.p.classList.remove('fx'); o.its.forEach(rest); if (o.aft){ o.aft.__k = ''; o.aft.style.cssText = ''; } } return; }   /* phones: the mass stands, in the flow */
+    if (o.aft){ var ai = eio(sg(q, 1.62, 1.98)), ak = ai.toFixed(3);         /* the screen the names have left carries what the client has instead */
+      if (o.aft.__k !== ak){ o.aft.__k = ak; var as = o.aft.style; as.opacity = ak; as.visibility = ai <= .001 ? 'hidden' : 'visible'; as.transform = 'translate3d(0,' + (16 * U * (1 - ai)).toFixed(1) + 'px,0)'; } }
     var lk = W + 'x' + H;
     if (o.k !== lk){                                                       /* the places, read from the page as it is laid out */
       o.k = lk; o.on = true; o.its.forEach(rest); o.p.classList.add('fx');
@@ -1003,13 +1006,16 @@
       st.opacity = al.toFixed(3); st.filter = bl > .25 ? 'blur(' + bl.toFixed(2) + 'px)' : '';
     }
   }
-  /* recv — «What You Receive» on a photograph, in three steps (18.11.2026 18:40: «повноформатна фотографія, і на ній текст… менше
-     ризиків… зрозумілий і легко сприймався»). The picture is one WebGL layer: fitted to the screen, pushed in a little about a
-     point on its upper edge as the list is set (1.16 → 1.22 → 1.25), its lights taken down a little, no veil. The type is the
-     page's own. Step 1 (the name, the title, the lead, the paragraph) stands as the block arrives and goes at .62–.9; step 2: the
-     caption, the hairline ruled down from it, and the six pairs, each coming to the line from either side as the scroll reaches
-     it (1.02 + .16 a pair), all six then standing complete; step 3: they go together and the closing sentence comes into focus. */
-  var RECV_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uS0, uP;', 'uniform float uZ, uD, uTime;', 'varying vec2 v;',
+  /* recv — «What You Receive» on a photograph, her frames 658:9130 / 658:9201 / 658:9234 (18.11.2026 20:19): «спочатку така
+     типографія, як на першому слайді. Далі пропадає, і по горизонтальній лінії при скролі ідуть оці блочки… починається з по
+     центру, і при скролі вони рухаються вліво… прорухалися, текст пропав і появився текст той, що на третьому фреймі.»
+     The picture is one WebGL layer: fitted to the screen, pushed in a little about a point on its upper edge, darkened as her
+     frame darkens it (her veil of 46.5 % is a multiply by .535 — done in the shader, nothing is laid over the picture). The two
+     centre hairlines are ruled on the film's canvas as the block arrives and stay. Step 1 (the name and the title; the lead and
+     the paragraph on the foot) goes at .62–.9. Step 2: the caption, and the six pairs as a row on the horizontal line — it comes
+     in with the first pair on the crossing and then moves exactly with the scroll (1.22 → 2.62) until the sixth stands there.
+     Step 3: the row and the caption go and the closing sentence comes into focus on the crossing. */
+  var RECV_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uS0, uP;', 'uniform float uZ, uD, uV, uTime;', 'varying vec2 v;',
     'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
     'void main(){',
     '  float ra = uRes.x / uRes.y, ri = uS0.x / uS0.y;',
@@ -1020,7 +1026,7 @@
     '  vec3 c = texture2D(uT0, src).rgb;',
     '  c = (c - 0.5) * 1.05 + 0.5;',
     '  float l = dot(c, vec3(0.299, 0.587, 0.114));',
-    '  c *= mix(1.0, mix(0.94, 0.6, smoothstep(0.16, 0.72, l)), uD);',      /* the light of the picture comes down; its dusk stays as it is */
+    '  c *= mix(1.0, mix(0.94, 0.6, smoothstep(0.16, 0.72, l)), uD) * uV;',  /* the light of the picture comes down; then her darkening of the whole */
     '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
     '  gl_FragColor = vec4(c, 1.0);',
     '}'].join('\n');
@@ -1028,28 +1034,30 @@
     var o = f.rc, i;
     if (o === undefined){
       var box = qs('.tk-rc-ph', f.el);
-      o = f.rc = {gl: box ? GL2.make(box, RECV_FS, qsa('img', box), {}) : null, img: box && qs('img', box), h: qs('.tk-rc-h', f.el), k: qs('.tk-rc-k', f.el), v: qs('.tk-rc-v', f.el), c: qs('.tk-rc-c', f.el),
-                  rows: qsa('.tk-rc-r', f.el).map(function(r){ return [qs('.a', r), qs('.b', r), qs('.q', r)]; }), on: false};
+      o = f.rc = {gl: box ? GL2.make(box, RECV_FS, qsa('img', box), {}) : null, img: box && qs('img', box), h: qs('.tk-rc-h', f.el), l: qs('.tk-rc-l', f.el), p: qs('.tk-rc-p', f.el),
+                  k: qs('.tk-rc-k', f.el), w: qs('.tk-rc-w', f.el), row: qs('.tk-rc-row', f.el), bs: qsa('.tk-rc-b', f.el), c: qs('.tk-rc-c', f.el), on: false, lk: '', c0: 0, c1: 0};
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ o.lk = ''; });
     }
     function put(e, op, tf, fl){ if (!e) return; var k = op.toFixed(3) + tf + (fl || ''); if (e.__k === k) return; e.__k = k;
       var st = e.style; st.opacity = op.toFixed(3); st.transform = tf; if (fl !== undefined) st.filter = fl; st.visibility = op <= .001 ? 'hidden' : 'visible'; }
     function clr(e){ if (!e) return; e.__k = ''; var st = e.style; st.opacity = ''; st.transform = ''; st.filter = ''; st.visibility = ''; }
-    if (H >= W){ if (o.on){ o.on = false; [o.h, o.k, o.v, o.c].forEach(clr); o.rows.forEach(function(r){ r.forEach(clr); }); if (o.img) o.img.style.transform = ''; } return; }   /* phones: in the flow (css) */
+    if (H >= W){ if (o.on){ o.on = false; o.lk = ''; [o.h, o.l, o.p, o.k, o.w, o.row, o.c].forEach(clr); if (o.img) o.img.style.transform = ''; } return; }   /* phones: in the flow (css) */
     o.on = true;
-    var z = 1.16 + .06 * eio(sg(q, .55, 1.25)) + .03 * eio(sg(q, 2.2, 2.9)), g2 = o.gl;
-    if (g2 && g2.ready){ g2.size(); g2.set2('uP', .62, .105); g2.set1('uZ', z); g2.set1('uD', .55 + .25 * sm(.6, 1.2, q)); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+    var z = 1.16 + .06 * eio(sg(q, .55, 1.25)) + .03 * eio(sg(q, 2.5, 3.2)), g2 = o.gl;
+    if (g2 && g2.ready){ g2.size(); g2.set2('uP', .62, .105); g2.set1('uZ', z); g2.set1('uD', .7); g2.set1('uV', .535); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
     else if (o.img && !g2){ var tz = 'scale(' + z.toFixed(4) + ')'; if (o.img.__t !== tz){ o.img.__t = tz; o.img.style.transform = tz; } }
-    var ho = 1 - eio(sg(q, .62, .9));                                        /* step 1 goes up a little as it goes out */
-    put(o.h, ho, 'translate3d(0,' + (-16 * U * (1 - ho)).toFixed(1) + 'px,0)');
-    var xi = eio(sg(q, .92, 1.2)), xo = 1 - eio(sg(q, 2.3, 2.52));           /* step 2: in with the line, out together */
+    cross(eio(sg(q, -.7, -.15)), eio(sg(q, -.55, 0)));                       /* the two centre hairlines: ruled as the block arrives, then they stand */
+    var ho = 1 - eio(sg(q, .62, .9)), up = 'translate3d(0,' + (-16 * U * (1 - ho)).toFixed(1) + 'px,0)';   /* step 1 goes up a little as it goes out */
+    put(o.h, ho, up); put(o.l, ho, up); put(o.p, ho, up);
+    var lk = W + 'x' + H;
+    if (o.lk !== lk && o.bs.length){ o.lk = lk;                               /* where each pair's middle stands in the row */
+      var a = o.bs[0], b = o.bs[o.bs.length - 1]; o.c0 = a.offsetLeft + a.offsetWidth / 2; o.c1 = b.offsetLeft + b.offsetWidth / 2; }
+    var xi = eio(sg(q, .92, 1.2)), xo = 1 - eio(sg(q, 2.68, 2.88)), tr = sg(q, 1.22, 2.62);
     put(o.k, xi * xo, 'translate3d(0,' + (10 * U * (1 - xi)).toFixed(1) + 'px,0)');
-    put(o.v, xo, 'scaleY(' + eio(sg(q, .98, 1.9)).toFixed(4) + ')');
-    for (i = 0; i < o.rows.length; i++){
-      var p = eio(sg(q, 1.02 + i * .16, 1.36 + i * .16)), d = 36 * U * (1 - p), r = o.rows[i];
-      put(r[0], p * xo, 'translate3d(' + (-d).toFixed(1) + 'px,0,0)'); put(r[1], p * xo, 'translate3d(' + d.toFixed(1) + 'px,0,0)');
-      put(r[2], xo * c01(p * 3), 'scale(' + c01(p * 2).toFixed(3) + ')');
-    }
-    var ci = eio(sg(q, 2.48, 2.82)), bl = (1 - ci) * 8 * U;                  /* step 3 comes into focus */
+    put(o.w, xi * xo, 'none');
+    var rx = -(o.c0 + (o.c1 - o.c0) * tr) + 70 * U * (1 - xi), rt = 'translate3d(' + rx.toFixed(1) + 'px,0,0)';
+    if (o.row && o.row.__t !== rt){ o.row.__t = rt; o.row.style.transform = rt; }
+    var ci = eio(sg(q, 2.86, 3.18)), bl = (1 - ci) * 8 * U;                  /* step 3 comes into focus */
     put(o.c, ci, 'translate3d(0,' + (14 * U * (1 - ci)).toFixed(1) + 'px,0)', bl > .2 ? 'blur(' + bl.toFixed(2) + 'px)' : 'none');
   }
   var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv};

@@ -1030,57 +1030,61 @@ html body.inr .film .tk-lo-f{position:absolute;z-index:1;left:calc(421 * var(--u
 html body.inr .film .tk-lo-n{position:absolute;left:calc(421 * var(--u));top:calc(466 * var(--u));margin:0;color:#FFFFFF}   /* the client's note, 25 over the mass */
 .tk-lo-f .sqr > span::before{opacity:var(--q, 1)}   /* it goes out as a square — never shrinks into a dot */
 .tk-lo-f.fx .sqr{clip-path:none}
+/* what stands on the screen the names have left (18.11.2026 20:21): the four sentences in the running 20, 475 wide, and 50 under
+   them the closing thought in the 34 — from the mass's own place */
+.tk-lo-a{position:absolute;z-index:1;left:calc(421 * var(--u));top:calc(514.3 * var(--u));opacity:0}
+html body.inr .film .tk-lo-ap{margin:0;width:calc(475 * var(--u));max-width:none;white-space:normal;color:#FFFFFF}
+html body.inr .film .tk-lo-ac{margin:calc(50 * var(--u)) 0 0;width:calc(1000 * var(--u));max-width:none;white-space:normal;color:#FFFFFF}
 .tk-lo-f.fx .sqr > span.h::before{visibility:hidden}
 @media (max-aspect-ratio: 1/1){
   /* phones: the name, the sentence, the names — in the flow, nothing leaves */
   .film .tk-lo-s{padding-top:72px}
   html body.inr .film .tk-lo-k, html body.inr .film .tk-lo-h, html body.inr .film .tk-lo-f{position:static;width:auto}
   html body.inr .film .tk-lo-n{position:static;margin:28px 0 -14px}
+  .tk-lo-a{position:static;opacity:1!important;transform:none!important;visibility:visible!important;margin-top:32px}
+  html body.inr .film .tk-lo-ap, html body.inr .film .tk-lo-ac{width:auto} html body.inr .film .tk-lo-ac{margin-top:24px}
   html body.inr .film .tk-lo-k{margin:0 0 14px;white-space:normal}
   html body.inr .film .tk-lo-h{white-space:normal}
   html body.inr .film .tk-lo-f{margin:28px 0 0;font-size:20px}
   .tk-lo br.lb{display:none}
 }
 
-/* 05 «What You Receive» on a photograph, in three steps (18.11.2026 18:40: «повноформатна фотографія, і на ній текст… щоб було
-   красиво і менше ризиків… зрозумілий і легко сприймався»). One pinned screen; recv() in js/inner.js sets what is seen.
-   The picture is the hearth wall of Collectors Home: its own dark wall (and the black of the screen in it) carries the type, so
-   nothing is veiled. Step 1, from the text line at 150: the name, the title 25 under it, the lead 50 under, the paragraph 25 under.
-   Step 2, centred on the screen from 130: «We manage the intersections», 25 under it a hairline straight down, and on it the six
-   pairs, 44 apart — the first word flush right, 28 from the line, the second flush left, 28 from it, our square on the line.
-   Step 3: the closing sentence centred at 250, sentence case, two inks. Until the script speaks, steps 2 and 3 are not shown. */
+/* 05 «What You Receive» on a photograph — her frames 658:9130 / 658:9201 / 658:9234 (18.11.2026 20:19). One pinned screen;
+   recv() in js/inner.js sets what is seen. The photograph is darkened in its shader as her frame darkens it (46.5 %), and the
+   page's two centre hairlines stand across it throughout (the film's canvas).
+   Step 1: on the left field the name at 285 and the title 25 under it (its foot 50 over the horizontal line); on the foot the lead
+   in the 34 at the left field and the paragraph in the 20, 50 right of the vertical line, 298 wide — their heads level.
+   Step 2: the caption centred at 150; the six pairs as a row ON the horizontal line, 55 between them: our square on the line, the
+   pair centred 23 under it. The row is laid out from the screen's centre and the script moves it (the first pair on the crossing).
+   Step 3: the closing sentence centred on the crossing, five lines of the 60. Until the script speaks, steps 2 and 3 are not shown. */
 .tk-rc .stg{background:#000}
 .tk-rc-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:hidden}
-.tk-rc-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;transform-origin:62% 0;filter:contrast(1.05) brightness(.84)}
-.tk-rc-h{position:absolute;left:calc(421 * var(--u));top:calc(150 * var(--u))}
-html body.inr .tk-rc-h h2{margin-top:calc(25 * var(--u));color:#FFFFFF}
-html body.inr .film .tk-rc-l{margin:calc(50 * var(--u)) 0 0;max-width:none;color:#FFFFFF}
-html body.inr .film .tk-rc-p{margin:calc(25 * var(--u)) 0 0;color:#FFFFFF}
-.tk-rc-x{position:absolute;left:0;top:calc(130 * var(--u));width:100%;text-align:center}
-html body.inr .film .tk-rc-k{margin:0;color:#FFFFFF;opacity:0}
-.tk-rc-a{position:relative;margin-top:calc(25 * var(--u));padding:calc(14 * var(--u)) 0}
-.tk-rc-v{position:absolute;left:50%;top:0;bottom:0;width:1px;margin-left:-.5px;background:rgba(235,235,235,.33);transform:scaleY(0);transform-origin:50% 0}
-.tk-rc-r{--g:calc(28 * var(--u));--sq:max(5px, calc(8 * var(--u)));position:relative;display:grid;grid-template-columns:minmax(0, 1fr) minmax(0, 1fr);align-items:center;height:calc(44 * var(--u));min-height:26px}
-html body.inr .tk-rc-r p{white-space:nowrap;opacity:0}
-html body.inr .tk-rc-r .a{grid-column:1;grid-row:1;text-align:right;margin-right:var(--g);color:#FFFFFF}   /* a margin: r3.css takes every padding off a .t34 */
-html body.inr .tk-rc-r .b{grid-column:2;grid-row:1;text-align:left;margin-left:var(--g);color:var(--blue)}
-.tk-rc-r .q{position:absolute;left:50%;top:50%;width:var(--sq);height:var(--sq);margin:calc(var(--sq) / -2) 0 0 calc(var(--sq) / -2);background:#96A8BF;opacity:0}
-html body.inr .film .tk-rc-c{position:absolute;left:0;top:calc(250 * var(--u));width:100%;margin:0;text-align:center;color:#FFFFFF;opacity:0}
+.tk-rc-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;transform-origin:62% 0;filter:contrast(1.05) brightness(.46)}
+.tk-rc .cbl{color:#BAC7D6}                                            /* her blue on a photograph: lighter than the page's */
+.tk-rc-h{position:absolute;left:calc(50 * var(--u));top:calc(285 * var(--u))}
+html body.inr .tk-rc-h h2{margin-top:calc(25 * var(--u));color:#EBEBEB;white-space:nowrap}
+html body.inr .film .tk-rc-l{position:absolute;left:calc(50 * var(--u));bottom:calc(max(50 * var(--u), 58px) + 51 * var(--u));margin:0;max-width:none;white-space:nowrap;color:#FFFFFF}
+html body.inr .film .tk-rc-p{position:absolute;left:calc(50% + 50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:calc(298 * var(--u));min-width:216px;margin:0;white-space:normal;color:#FFFFFF}
+html body.inr .film .tk-rc-k{position:absolute;left:0;top:calc(150 * var(--u));width:100%;margin:0;text-align:center;color:#FFFFFF;opacity:0}
+.tk-rc-w{position:absolute;left:50%;top:50%;width:0;height:0;opacity:0}
+.tk-rc-row{position:absolute;left:0;top:0;display:flex;column-gap:calc(55 * var(--u));white-space:nowrap;will-change:transform}
+.tk-rc-b{--sq:max(5px, calc(8 * var(--u)));position:relative;flex:none;padding-top:calc(23 * var(--u));text-align:center}
+.tk-rc-b .q{position:absolute;left:50%;top:0;width:var(--sq);height:var(--sq);margin:calc(var(--sq) / -2) 0 0 calc(var(--sq) / -2);background:#96A8BF}
+html body.inr .tk-rc-b p{margin:0;max-width:none;white-space:nowrap;color:#FFFFFF}
+html body.inr .tk-rc-b p .cb{color:#96A8BF}
+html body.inr .film .tk-rc-c{position:absolute;left:0;top:calc(50% - 130 * var(--u));width:100%;margin:0;text-align:center;white-space:nowrap;color:#FFFFFF;opacity:0}
 @media (max-aspect-ratio: 1/1){
   /* phones: the photograph, then the three steps one under another on the text line — nothing is hidden, nothing moves */
   .tk-rc-ph{position:relative;height:auto;aspect-ratio:3 / 2}
-  .tk-rc-ph img{transform:none!important} .tk-rc-ph .glc{display:none} .tk-rc-ph.gl-on > img{visibility:visible}
+  .tk-rc-ph img{transform:none!important;filter:contrast(1.05) brightness(.84)} .tk-rc-ph .glc{display:none} .tk-rc-ph.gl-on > img{visibility:visible}
   .film .tk-rc-s{padding-top:40px}
-  .tk-rc-h, .tk-rc-x, html body.inr .film .tk-rc-c{position:static;width:auto;text-align:left;opacity:1!important;transform:none!important;filter:none!important}
-  html body.inr .tk-rc-h h2{margin-top:14px}
-  html body.inr .film .tk-rc-l{margin-top:28px;white-space:normal} html body.inr .film .tk-rc-p{margin-top:16px;white-space:normal}
-  .tk-rc-x{margin-top:40px}
-  html body.inr .film .tk-rc-k{opacity:1!important}
-  .tk-rc-a{margin-top:10px;padding:0} .tk-rc-v, .tk-rc-r .q{display:none}
-  .tk-rc-r{display:flex;flex-wrap:wrap;column-gap:.28em;height:auto;min-height:0;padding:9px 0}
-  html body.inr .tk-rc-r p{white-space:normal;opacity:1!important;transform:none!important}
-  html body.inr .tk-rc-r .a, html body.inr .tk-rc-r .b{margin:0;text-align:left}
-  html body.inr .film .tk-rc-c{margin-top:32px;white-space:normal}
+  .tk-rc-h, html body.inr .film .tk-rc-l, html body.inr .film .tk-rc-p, html body.inr .film .tk-rc-k, .tk-rc-w, html body.inr .film .tk-rc-c{position:static;width:auto;height:auto;min-width:0;text-align:left;white-space:normal;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
+  html body.inr .tk-rc-h h2{margin-top:14px;white-space:normal}
+  html body.inr .film .tk-rc-l{margin-top:28px} html body.inr .film .tk-rc-p{margin-top:16px} html body.inr .film .tk-rc-k{margin-top:40px}
+  .tk-rc-row{position:static;display:block;transform:none!important;margin-top:10px}
+  .tk-rc-b{padding:9px 0;text-align:left} .tk-rc-b .q{display:none}
+  html body.inr .tk-rc-b p{white-space:normal}
+  html body.inr .film .tk-rc-c{margin-top:32px}
   .tk-rc br.lb{display:none}
 }
 
