@@ -502,7 +502,7 @@ def tk_cover(kick, h1, img, line, order, lines, idea=None):
         '      <p class="t20 m tk-cv-ip" data-k="2.8 3.06 99 99">%s</p>' % ' <br class="bd">'.join(esc(x) for x in idea[2]),
         '      <div class="m tk-cv-ib" data-k="2.92 3.12 99 99">%s</div>' % idea[3],
         '    </div>'] if idea else []) + ['  </div>', '</section>'])
-def tk_loose(kick, title, names):
+def tk_loose(kick, title, names, leave=True, note=None):
     """04 — the ecosystem, her frame `652:9078` and her idea (18.11.2026 17:37): «У нас отака величезна охапка тексту… щоб текст при
     скролі, можливо, розсипався. Це як метафора, що вам цього не потрібно. Не потрібно про це думати… чи по букві, чи по слову.»
     The frame: the block's name on the left field (`kick` = its two lines), the client's sentence as the title in the 60, sentence
@@ -519,12 +519,15 @@ def tk_loose(kick, title, names):
         if i: hl += ' <br class="lb">'
         if wh: hl += esc(wh)
         if bl: hl += '<span class="cb">%s</span>' % esc(bl)
+    # leave=False (the other solutions, 18.11 18:45): the same screen, not pinned — there the names are what IS included, so they
+    # stand; `note` = the client's line over them («Project scope may include:»), in the running 20.
     fs = ''.join('<span>%s</span>' % esc(nop(x)) for x in names)
     return '\n'.join([
-        '<section class="film tk-lo" data-fig="loose" data-len="2" data-open="0" id="@ID@">', '  <div class="stg">',
+        '<section class="film tk-lo%s" data-fig="loose" data-len="%s" data-open="0"%s id="@ID@">' % ('' if leave else ' stay', '2' if leave else '0', '' if leave else ' data-stay'), '  <div class="stg">',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-lo-s">',
         '      <p class="lab3 rv tk-lo-k">%s</p>' % ' <br class="lb">'.join(esc(x) for x in kick),
         '      <h2 class="t60s rv tk-lo-h">%s</h2>' % hl,
+        ] + (['      <p class="t20 rv tk-lo-n">%s</p>' % esc(nop(note))] if note else []) + [
         '      <p class="t34 rv tk-lo-f" data-loose><span class="sqr">%s</span></p>' % fs,
         '    </div>', '  </div>', '</section>'])
 
@@ -587,14 +590,17 @@ def tk_team(kick, title, pairs, closer_, img, line, lines2):
         if i: hl += '<br>'
         if bl: hl += '<span class="cb">%s</span>' % esc(bl)
         if wh: hl += esc(wh)
-    rs = ''.join('<div class="tk-ot-r"><p class="lab3 a">%s<span class="vh">,</span></p><p class="t20 b">%s</p></div>' % (esc(a), esc(nop(b))) for a, b in pairs)
+    # a row is (the condition, what we do) — the client's sentence cut at its comma, which stays in the page unseen — or, with a third
+    # item '', a sentence cut where it has no comma (18.11 18:45, CI Core: «Questions | move internally»)
+    rs = ''.join('<div class="tk-ot-r"><p class="lab3 a">%s%s</p><p class="t20 b">%s</p></div>' % (
+        esc(r[0]), '<span class="vh">,</span>' if len(r) < 3 else '', esc(nop(r[1]))) for r in pairs)
     return '\n'.join([
         '<section class="film tk-ot" data-fig="team" data-len="3.1" data-open="0" id="@ID@">', '  <div class="stg">',
         '    <div class="sc tk-ot-a">',
         '      <div class="tk-ot-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
         '      <i class="tk-ot-v" aria-hidden="true"></i>',
         '      <div class="tk-ot-g rv">%s</div>' % rs,
-        '      <p class="t34 tk-ot-c">%s</p>' % esc(nop(closer_)),      # not .rv: it stands on the foot, under the line where reveals begin
+        ] + (['      <p class="t34 tk-ot-c">%s</p>' % esc(nop(closer_))] if closer_ else []) + [      # not .rv: it stands on the foot, under the line where reveals begin
         '    </div>',
         '    <div class="tk-ot-ph"><img src="%s" alt=""></div>' % img,
         '    <canvas class="ln" aria-hidden="true"></canvas>',
@@ -681,7 +687,7 @@ def tk_fit(kick, h1, lead, rows, img, title_lines):
                   '<span class="df2-cd">%s</span></span><span class="df2-pm" aria-hidden="true"></span></button>') % (
                       i, i + 1, ' on' if i == 3 else '', i, 'true' if i == 3 else 'false', esc(nop(sent)), n, i + 1, n, esc(nop(sent)))
     assert nop(' '.join(title_lines)).lower() == nop(h1).lower(), (title_lines, h1)
-    return ('<section class="df2 tk-df" id="@ID@" data-df data-norail aria-label="%s">\n'
+    return ('<section class="df2 tk-df' + (' six' if len(rows) == 6 else '') + '" id="@ID@" data-df data-norail aria-label="%s">\n'
             '  <div class="df2-bgw" aria-hidden="true"><div class="df2-bgs"><div class="df2-bg on"><img src="%s" alt="" loading="lazy" decoding="async"></div></div></div>\n'
             '  <div class="df2-body">\n'
             '    <i class="df2-v a" aria-hidden="true"></i><i class="df2-v b" aria-hidden="true"></i><i class="df2-v c" aria-hidden="true"></i>'
@@ -1097,18 +1103,28 @@ def sc_still(kick, h1, img, br=.72):
         '      <p class="lab3 rv co-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
         '      <h1 class="t111 rv co-cv-h" style="--ln:%d">%s</h1>' % (ln, hb),
         '    </div>', '  </div>', '</section>'])
-def co_cover(kick, h1, img, ln):
-    """01 — the cover states the thesis before a word of copy: the room stands as a drawing, and the scroll builds it. No stock, no slogan."""
+def co_cover(kick, h1, img, ln, idea=None):
+    """01 — the cover states the thesis before a word of copy: the room stands as a drawing, and the scroll builds it. No stock, no slogan.
+    18.11.2026 18:45 («давай займися іншими сторінками» — the other solutions on Turnkey's skeleton): `idea` = (name, the thought's
+    lines, the paragraph's lines, the button) stands ON the built photograph, as on Turnkey's cover (her frame 637:7894): the film
+    runs on, the title leaves, the page's two centre hairlines are ruled and the thought comes in right of the vertical one."""
     hb = brk(h1, 18); lnn = hb.count('<br>') + 1
+    out_ = ' data-s="op:1&gt;0@1.1-1.3"' if idea else ''
     return '\n'.join([
-        '<section class="film co-cv" data-fig="glcv" data-gl="build" data-br=".72" data-len="1.2" id="@ID@">', '  <div class="stg">',
+        '<section class="film co-cv%s" data-fig="glcv" data-gl="build" data-br=".72" data-len="%s"%s id="@ID@">' % (' has-i' if idea else '', '2.5' if idea else '1.2', ' data-open="0"' if idea else ''), '  <div class="stg">',
         '    <div class="co-cv-ph">',
         '      <img class="dr" src="%s" alt="" data-s="op:1&gt;0@.16-.84">' % ln,
         '      <img class="im" src="%s" alt="" data-s="op:0&gt;1@.14-.8; sc:1.06&gt;1@0-1.1">' % img, '    </div>',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-        '      <p class="lab3 rv co-cv-k" style="--ln:%d">%s</p>' % (lnn, esc(kick)),
-        '      <h1 class="t111 rv co-cv-h" style="--ln:%d">%s</h1>' % (lnn, hb),
-        '    </div>', '  </div>', '</section>'])
+        '      <p class="lab3 rv co-cv-k" style="--ln:%d"%s>%s</p>' % (lnn, out_, esc(kick)),
+        '      <h1 class="t111 rv co-cv-h" style="--ln:%d"%s>%s</h1>' % (lnn, out_, hb),
+        '    </div>'] + ([
+        '    <div class="sc tk-cv-i">',
+        '      <p class="tk-cv-k m tk-cv-ik" data-k="1.4 1.56 99 99">%s</p>' % esc(idea[0]),
+        '      <h2 class="t60 m tk-cv-ih" data-k="1.46 1.86 99 99">%s</h2>' % '<br>'.join(esc(x) for x in idea[1]),
+        '      <p class="t20 m tk-cv-ip" data-k="1.7 1.96 99 99">%s</p>' % ' <br class="bd">'.join(esc(x) for x in idea[2]),
+        '      <div class="m tk-cv-ib" data-k="1.82 2.02 99 99">%s</div>' % idea[3],
+        '    </div>'] if idea else []) + ['  </div>', '</section>'])
 def co_seam(kick, h1, lead, ps, strong, img, ln):
     """03 — the page's instrument. One room, drawn on one side of a line and built on the other, and the line follows the pointer: the visitor
     moves the seam themselves and sees that there is nothing behind it. Their own sentence stands under it — «Design understands construction.

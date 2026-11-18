@@ -970,6 +970,7 @@
         if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ o.k = ''; }); }   /* the lines are read again in the real face */
     }
     if (!o) return;
+    if (f.el.hasAttribute('data-stay')) return;                              /* the other solutions: the names are what is included — they stand */
     function rest(e){ var st = e.style; st.transform = ''; st.opacity = ''; st.filter = ''; st.visibility = ''; st.willChange = ''; e.style.removeProperty('--q'); }
     if (H >= W || reduced){ if (o.on){ o.on = false; o.k = ''; o.p.classList.remove('fx'); o.its.forEach(rest); } return; }   /* phones, reduced motion: the mass stands */
     var lk = W + 'x' + H;
@@ -1329,6 +1330,8 @@
     var o = f.glo;
     for (var i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);   /* the DOM pictures keep their scrubs: they are what shows if there is no context */
     if (o && o.ready){ o.size(); o.set1('uQ', q); o.set1('uTime', (t * 60) | 0); o.draw(); }
+    if (f.hasI === undefined) f.hasI = f.el.classList.contains('has-i');
+    if (f.hasI && W > H) cross(eio(sg(q, 1.2, 1.62)), eio(sg(q, 1.34, 1.76)));   /* the page's thought on the built photograph, as on Turnkey's cover */
     if (f.el.getAttribute('data-gl') === 'retreat') horizLine(f, q);   /* the line itself stays on the 2d canvas: one crisp pixel, and our square at each field */
   }
   /* the horizon CI Turnkey's cover leaves behind, and the page's own line */

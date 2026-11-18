@@ -165,49 +165,67 @@ def curated_page():
     emit('ci-curated.html', 'CI Curated', pg, A + 'ch/1450-34.webp')
 
 def core_page():
-    """CI Core — one hand. 17.11: the page's argument is the seam between the people who design and the people who build, so the page's line is
-    VERTICAL where Turnkey's is the horizon, and the room is shown twice: as the drawing its own lines make, and as the thing itself. The cover
-    builds the drawing into the photograph; the third screen gives the seam to the visitor to move. Drawings: tools/site/lines.py, from the
-    client's own photographs. No stock anywhere."""
+    """CI Core on Turnkey's skeleton (18.11.2026 18:40–18:45: «це ж шаблонні плюс-мінус сторінки… ми можемо адаптувати всі інші під
+    це» — «давай займися іншими сторінками»). The same blocks in the same order as CI Turnkey, with the client's own text of this
+    page; two things stay Core's own, so that the pages are one family and not one page four times (her word of 16.11: «кожна сторінка
+    повинна бути унікальною… але в нашій стилістиці»):
+      the cover — the room stands as a precise DRAWING and the scroll builds it (Turnkey's is a free sketch that grows from a line);
+      «What You Receive» — the seam between the people who design and the people who build, under the visitor's hand.
+    Everything else is the template: the thought on the cover's photograph, the conditions on the grid, what is included as one mass
+    (it stands — here the names are what the client gets, nothing leaves), the list and the photograph that becomes the screen, the
+    stages as a row of squares, the projects as a slider. FIRST PASS — the names in the grid, the line breaks and the photographs are
+    mine, hers to change. No stock anywhere."""
     S = [join_lists(dots_fix(x)) for x in P['core']]; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(co_cover(label(S[0]), h1, A + 'us/1511-01a.webp', L + '1511-01a.webp'), 'Core', 'top')
-    # 02 the thought: their own sentence, its last line in the blue
-    ln_ = brk_lines(nop(' '.join(ps[0])), 32)
-    thought = '<br>'.join(esc(x) for x in ln_[:-1]) + '<br><span class="cb">' + esc(ln_[-1]) + '</span>'
-    pg.add(tk_lead(thought, ' '.join(ps[1]), btn(a[0], 'contact.html')), 'Idea')
-    # 03 the seam, and the visitor's hand on it
-    sec = S[2]; cp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
-    pg.add(co_seam(label(sec), h_of(sec), cp[0], cp[1:], st, A + 'ch/1450-17.webp', L + '1450-17.webp'), 'Connected')
-    # 04 the one list of the page
+    # 01 the cover, and the page's thought on its photograph: the client's lead is cut into the name and the thought, word for word
+    lead0 = nop(' '.join(ps[0]))
+    idea_t = ['Brings Architecture,', 'Interior Design,', 'Construction, and', 'Project Management', 'Together Under', 'One Team']
+    assert ('CI Core ' + ' '.join(idea_t)).lower() == lead0.lower(), lead0
+    pg.add(co_cover(label(S[0]), h1, A + 'us/1511-01a.webp', L + '1511-01a.webp',
+                    idea=('CI Core', idea_t, brk_lines(nop(' '.join(ps[1])), 46), btn(a[0], 'contact.html'))), 'Core', 'top')
+    # 02 the conditions on the grid; a name is a run of its own sentence's words (tk_fit asserts it); which run is our choice
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
-    pg.add(sc_you(h_of(sec), None, get(sec, 'lead')[0][1][0], rows), 'Fit')
-    # 05 one photograph of the client's work, and the sentence that says what the page is against
-    sec = S[5]; rp = [it[1] for it in sec['items'] if it[0] == 'p']
-    rs = [x[0] for x in rp if len(x) == 1]; three = max(rp, key=len)
-    rst = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
-    pg.add(tk_plate(A + 'rtb/1430-08a.webp', rs[0]), 'Divided')
-    # 06 your role, our role — one either side of the same line
-    pg.add(co_roles(label(sec), h_of(sec), rs[1:], three, rst), 'Responsibility')
-    # 07 the connected scope, either side of the seam
+    NM = [['A Significant', 'Renovation'], ['Coordinated', 'From the', 'Beginning'], ['Clear', 'Communication'], ['One Point of', 'Accountability'],
+          ['Final Styling', 'Independently'], ['The Permanent', 'Built', 'Environment']]
+    assert len(NM) == len(rows), (len(NM), len(rows))
+    pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'ch/1450-04a.webp',
+                  ['For Clients Who', 'Want One Team', 'Responsible for', 'Design + Construction']), 'Fit')
+    # 03 what is included: the section's heading as the block's name, its own closing sentence as the title, the seventeen names as
+    # one mass under the client's note. They stand (leave=False): on this page the list is what the client receives.
     sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
     note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
-    left = list(ks[1]); right = list(ks[2])
     cl = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    pg.add(co_split(label(sec), h_of(sec), note, left, right, cl[0] if cl else None), 'Included')
-    # 08 the six stages as one band
+    assert nop(h_of(sec)) == 'A Connected Design-Build Scope' and nop(cl[0]) == 'Specific scope is defined around the needs of each project', (h_of(sec), cl)
+    pg.add(tk_loose(['A Connected', 'Design-Build Scope'], [('Specific scope is defined', ''), ('', 'around the needs'), ('', 'of each project')],
+                    list(ks[1]) + list(ks[2]), leave=False, note=note), 'Included')
+    # 04 what you receive — Core's own block: the seam, and the visitor's hand on it
+    sec = S[2]; cp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
+    st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
+    pg.add(co_seam(label(sec), h_of(sec), cp[0], cp[1:], st, A + 'ch/1450-17.webp', L + '1450-17.webp'), 'Receive')
+    # 05 our responsibility: five rows in the client's order, then the photograph becomes the screen and carries the two roles
+    sec = S[5]; rp = [it[1] for it in sec['items'] if it[0] == 'p']
+    one = [nop(x[0]) for x in rp if len(x) == 1]; three = [nop(x) for x in max(rp, key=len)]
+    rst = [nop(x) for x in [it[1] for it in sec['items'] if it[0] == 'strong'][0]]
+    assert len(one) == 3 and len(three) == 3 and len(rst) == 2, (one, three, rst)
+    def up(x): return x[0].upper() + x[1:]
+    def cut(x, n): w = x.split(' '); return (' '.join(w[:n]), up(' '.join(w[n:])), '')
+    a1, b1 = one[0].split(', ', 1)
+    pairs = [(a1, up(b1)), (one[1], one[2], ''), cut(three[0], 1), cut(three[1], 1), cut(three[2], 2)]
+    line = ['Your Role Is', 'to Make the', 'Decisions That', 'Shape the Home']; l2 = ['Our role is to manage', 'what it takes to', 'execute them']
+    assert ' '.join(line).lower() == rst[0].lower() and ' '.join(l2) == rst[1], rst
+    pg.add(tk_team(label(sec), [('One Team', ''), ('', 'Responsible for'), ('', 'Every Stage')], pairs, None, A + 'rtb/1430-08a.webp', line, l2), 'One Team')
+    # 06 the six stages as a row of squares; the sentences are the client's own, as written
     sec = S[6]
     names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
     txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
     assert len(names) == len(txts) == 6, (len(names), len(txts))
-    pg.add(co_band(label(sec), h_of(sec), list(zip(names, txts))), 'Process')
-    # 09 the work itself
-    sec = S[7]
-    cards = ''.join(pf6_card(q['name'], q['loc'].split(' \u00b7 ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html') for q in PROJ[:3])
-    pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
-    pg.add(bk(h_of(sec), '    <div class="pf6">%s</div>\n    <div class="rv c1 g50">%s</div>' % (
-        cards, btn(pbt[0][2] if pbt else 'View the Portfolio', 'portfolio.html')), hcls=' l0'), 'Projects')
+    pg.add(tk_strip(label(sec), [('From Possibility', ''), ('to ', 'Built'), ('', 'Reality')], [(n, t_, 0) for n, t_ in zip(names, txts)]), 'Process')
+    # 07 the work itself, as the slider (the client's three are still placeholders: the same three homes, another one in hand)
+    sec = S[7]; pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
+    FOC = {'collectors-home': (.528, .652), 'room-to-breathe': (.5, .713), 'urban-sanctuary': (.5, .665)}
+    sl = [PROJ[1], PROJ[0], PROJ[2]]
+    pg.add(tk_slider([('Built ', 'Through', ''), ('CI Core', '', '')], btn(pbt[0][2] if pbt else 'Explore CI Core Projects', 'portfolio.html'),
+                     [(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['tall']), q['slug'] + '.html', FOC[q['slug']]) for q in sl]), 'Projects')
     final_cta(pg, S[9], A + 'ch/1450-31.webp')
     emit('ci-core.html', 'CI Core', pg, A + 'us/1511-01a.webp')
 

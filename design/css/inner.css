@@ -967,6 +967,8 @@ html body.inr .sl-m-bd .n{margin:0;color:#FFFFFF}
    (.df2*, chapters.css + r3.css); here is only what differs: seven cells instead of six, so the white panel is one column wide */
 .tk-df .df2-cell.c5{grid-column:2;grid-row:3} .tk-df .df2-cell.c6{grid-column:3;grid-row:3} .tk-df .df2-cell.c7{grid-column:4;grid-row:3}
 .tk-df .df2-panel{grid-column:1;grid-row:3}
+/* six conditions (CI Core, CI Curated — 18.11.2026 18:45): the panel is two columns wide, the fifth and the sixth stand beside it */
+.tk-df.six .df2-panel{grid-column:1 / span 2} .tk-df.six .df2-cell.c5{grid-column:3} .tk-df.six .df2-cell.c6{grid-column:4}
 .tk-df .df2-nm, .tk-df .df2-ct{padding:0 calc(34 * var(--u));box-sizing:border-box}
 .tk-df{--hm:var(--m, 20px);--hdr:64px}
 .tk-df .df2-cd{width:calc(260 * var(--u))}
@@ -1004,6 +1006,7 @@ html body.inr .tk-df .df2-s1{width:auto;right:calc(24 * var(--u));white-space:no
   .tk-df .df2-cell.c7{grid-column:1;grid-row:4}
   .tk-df .df2-v.b{grid-column:2;grid-row:1/5} .tk-df .df2-h.a{grid-row:2} .tk-df .df2-h.b{display:block;grid-row:3}
   .tk-df .df2-panel{grid-column:1/3;grid-row:5}
+  .tk-df.six .df2-body{grid-template-rows:50vw 50vw 50vw auto} .tk-df.six .df2-panel{grid-row:4} .tk-df.six .df2-v.b{grid-row:1/4}
   .tk-df .df2-nm, .tk-df .df2-ct{padding:0 12px}
   .tk-df .df2-cd{width:calc(100% - 60px)}
   .tk-df .df2-cell .df2-cd{bottom:12px} .tk-df .df2-cell .df2-pm{right:12px;bottom:12px}
@@ -1024,6 +1027,7 @@ html body.inr .film .tk-lo-k{position:absolute;left:calc(50 * var(--u));top:calc
 html body.inr .film .tk-lo-h{position:absolute;z-index:2;left:calc(421 * var(--u));top:calc(137.4 * var(--u));margin:0;color:#FFFFFF}
 html body.inr .film .tk-lo-f{position:absolute;z-index:1;left:calc(421 * var(--u));top:calc(514.3 * var(--u));width:calc(1449 * var(--u));max-width:none;margin:0;color:#FFFFFF}
 .tk-lo-f .sqr{row-gap:.42em}
+html body.inr .film .tk-lo-n{position:absolute;left:calc(421 * var(--u));top:calc(466 * var(--u));margin:0;color:#FFFFFF}   /* the client's note, 25 over the mass */
 .tk-lo-f .sqr > span::before{opacity:var(--q, 1)}   /* it goes out as a square — never shrinks into a dot */
 .tk-lo-f.fx .sqr{clip-path:none}
 .tk-lo-f.fx .sqr > span.h::before{visibility:hidden}
@@ -1031,6 +1035,7 @@ html body.inr .film .tk-lo-f{position:absolute;z-index:1;left:calc(421 * var(--u
   /* phones: the name, the sentence, the names — in the flow, nothing leaves */
   .film .tk-lo-s{padding-top:72px}
   html body.inr .film .tk-lo-k, html body.inr .film .tk-lo-h, html body.inr .film .tk-lo-f{position:static;width:auto}
+  html body.inr .film .tk-lo-n{position:static;margin:28px 0 -14px}
   html body.inr .film .tk-lo-k{margin:0 0 14px;white-space:normal}
   html body.inr .film .tk-lo-h{white-space:normal}
   html body.inr .film .tk-lo-f{margin:28px 0 0;font-size:20px}
@@ -1271,4 +1276,13 @@ html body.inr .tk-st-c .tx{position:absolute;left:50%;width:calc(339 * var(--u))
   .tk-pj-a{bottom:auto;top:calc(100% + 16px);width:40px;height:40px} .tk-pj-a.prev{left:auto;right:52px}
   .tk-pj-c{height:64px;margin:18px var(--m, 20px) 0}
   .tk-pj-cp{left:0;white-space:normal;max-width:calc(100% - 110px)}
+}
+
+/* the Core cover with the page's thought on its photograph (18.11.2026 18:45): on phones the picture is one screen and the thought
+   stands under it in the flow, as on Turnkey */
+@media (max-aspect-ratio: 1/1){
+  .film.co-cv.has-i .stg{height:auto;overflow:visible}
+  .film.co-cv.has-i .co-cv-ph{position:relative;height:100vh;height:100svh}
+  .film.co-cv.has-i .sc:not(.tk-cv-i){height:100vh;height:100svh}
+  .film.co-cv.has-i .sc.tk-cv-i{position:relative;height:auto;display:block;padding:40px var(--m, 20px) 72px}
 }
