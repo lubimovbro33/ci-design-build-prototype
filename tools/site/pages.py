@@ -109,59 +109,85 @@ def wellness_page():
     emit('ci-wellness.html', 'CI Wellness', pg, A + 'ch/1450-25a.webp')
 
 def curated_page():
-    """CI Curated — the layers. 17.11: their own words give the page its device («the layers that make a residence feel complete», «Each layer
-    belongs to the same story»), so the page COMPOSES: the cover's photograph comes together out of its own pieces, and the third screen is a
-    residence composed out of six fragments of the client's rooms, any one of which the visitor can lift out of the whole."""
+    """CI Curated on Turnkey's skeleton, thought through again (18.11.2026 22:07, of this page and CI Wellness: «вони дуже грузні,
+    дуже некрасиві, непривабливі, не цікаві. Я хочу, щоб ти це все ще раз переосмислив, думав метафорами і зробив на рівні з тим,
+    що у нас вже є — головної і попередніх solutions»). The page's own word is LAYERS and its own verb is COMPOSE, so:
+      cover     Turnkey's film with this page's room — here the line draws the THINGS (the sofa, the tables, the lamp) before the
+                home stands;
+      Receive   the page's own block: the room in its evening and ONE LIGHT that travels through it and rests on a piece for each of
+                the client's six words — the curator's eye. At the end the whole room is lit: composed, not filled;
+      Included  the built side and the curated side of the scope come together into one mass («Design, Build + Curation»);
+      Why       the client's four continuities on ONE continuous line across a photograph (the row of Turnkey's block 05, with this
+                page's meaning: nothing breaks between what is built and how it is lived in).
+    The conditions on the grid, the list and the photograph that becomes the screen, the stages as a row of squares and the projects
+    as a slider are the template. Every word is the client's; the testimonial is still a placeholder, so there is none. No stock."""
     S = [join_lists(dots_fix(x)) for x in P['curated']]; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add(sc_still(label(S[0]), h1, A + 'rtb/1430-08a.webp', .62), 'Curated', 'top')
-    # 02 the thought: their sentence, its last line in the blue
-    ln_ = brk_lines(nop(' '.join(ps[0])), 32)
-    thought = '<br>'.join(esc(x) for x in ln_[:-1]) + '<br><span class="cb">' + esc(ln_[-1]) + '</span>'
-    pg.add(tk_lead(thought, ' '.join(ps[1]) + ' ' + ' '.join(ps[2]) + ' ' + ' '.join(ps[3]), btn(a[0], 'contact.html')), 'Idea')
-    # 03 a residence composed — the page's instrument
-    sec = S[2]; cp = [it[1] for it in sec['items'] if it[0] == 'p']
-    six = [x for x in cp if len(x) > 1]
-    flat = [' '.join(x) for x in cp]
-    st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
-    names = [x.strip(' .') for x in flat[1].split('.') if x.strip(' .')]        # Scale. Comfort. Furniture. Art. Texture. Objects.
-    assert len(names) == 6, names
-    imgs = ['ch/1450-23.webp', 'ch/1450-30.webp', 'ch/1450-13.webp', 'ch/1450-11.webp', 'rtb/1430-08a.webp', 'ch/1450-21.webp']
-    cls = ['f1', 'f2', 'f3', 'f4', 'f5', 'f6']   # not c1..c6: those are the site's own column classes
-    pg.add(cu_comp(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], [flat[0]] + flat[2:], st,
-                   list(zip(names, [A + x for x in imgs], cls))), 'Composed')
-    # 04 the one list of the page
+    # 01 the cover, and the page's thought on its photograph: the client's lead cut into the name and the thought, word for word
+    lead0 = nop(' '.join(ps[0]))
+    idea_t = ['Expands Our', 'Integrated', 'Design-Build', 'Approach Into', 'the Layers That', 'Make a Residence', 'Feel Complete']   # the column holds 20 letters of the 60
+    assert ('CI Curated ' + ' '.join(idea_t)).lower() == lead0.lower(), lead0
+    pg.add(tk_cover(label(S[0]), h1, A + 'us/1511-12a.webp', L + '1511-12a.webp', L + '1511-12a-g.png',
+                    [('The Home, Considered', ''), ('', 'Beyond Construction')],
+                    idea=('CI Curated', idea_t, brk_lines(nop(' '.join(' '.join(x) for x in ps[1:4])), 46), btn(a[0], 'contact.html'))), 'Curated', 'top')
+    # 02 the conditions on the grid; a name is a run of its own sentence's words
     sec = S[1]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
-    pg.add(sc_you(h_of(sec), None, get(sec, 'lead')[0][1][0], rows), 'Fit')
-    # 05 one photograph of the client's work, and the sentence the page is built on
-    sec = S[7]; wp = [it[1] for it in sec['items'] if it[0] == 'p']
-    ws = [x[0] for x in wp if len(x) == 1]; betw = max(wp, key=len)
-    wst = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(tk_plate(A + 'ch/1450-18.webp', ws[0]), 'Complete')
-    # 06 the considerations, each on its own rule
-    sec = S[5]; lp = [it[1] for it in sec['items'] if it[0] == 'p']
-    lsingle = [x[0] for x in lp if len(x) == 1]; four = max(lp, key=len)
-    lst = ' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0])
-    pg.add(cu_layers(label(sec), h_of(sec), lsingle, four, lst), 'Layers')
-    # 07 what is included, in two quiet columns
+    NM = [['Design and', 'Build Your', 'Residence'], ['Beyond the', 'Permanent', 'Architecture'], ['Expert', 'Furnishing', 'Selection'],
+          ['Art Considered', 'Within the', 'Design'], ['A Coherent', 'Visual', 'Language'], ['More', 'Involvement']]
+    assert len(NM) == len(rows), (len(NM), len(rows))
+    pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'ch/1450-05.webp',
+                  ['For Clients Who', 'Want a More', 'Complete Design', 'Experience']), 'Fit')
+    # 03 what you receive — the page's own block: one light through the room, a piece for each of the client's six words
+    sec = S[2]; cp = [it[1] for it in sec['items'] if it[0] == 'p']
+    st = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
+    six = [x.strip(' .') for x in cp[1][0].split('.') if x.strip(' .')]        # Scale. Comfort. Furniture. Art. Texture. Objects.
+    assert six == ['Scale', 'Comfort', 'Furniture', 'Art', 'Texture', 'Objects'] and len(cp[2]) == 3 and len(st) == 2, (six, cp[2], st)
+    assert nop(h_of(sec)) == 'A Home With Depth, Not Just a Finished Renovation', h_of(sec)
+    cl = [('The goal is not', 0), ('to fill rooms.', 0), ('It is to compose', 1), ('a residence', 1)]
+    assert ' '.join(x for x, _ in cl) == nop(' '.join(st)), st
+    #                 the whole room      the armchairs       the sofa            the painting        the wall + curtain   the bust + the lamp
+    PTS = [(.50, .46, 1.3, .8), (.69, .60, .21, .13), (.44, .74, .50, .17), (.112, .392, .17, .17), (.455, .36, .10, .30), (.885, .50, .12, .21)]
+    pg.add(tk_words(label(sec), [('A Home With Depth,', 0), ('Not Just a Finished', 1), ('Renovation', 1)], [get(sec, 'lead')[0][1][0], cp[0][0]],
+                    six, [cp[2]], cl, A + 'ch/1450-20a.webp', mode='pool', pts=PTS), 'Receive')
+    # 04 what is included: the two halves of the scope — the client's own two lists — come together into one mass
     sec = S[4]; ks = [it[1] for it in sec['items'] if it[0] == 'k']
     note = ks[0][0] if isinstance(ks[0], (list, tuple)) else ks[0]
-    pg.add(co_split(label(sec), h_of(sec), note, list(ks[1]), list(ks[2])).replace('class="bk co-sp"', 'class="bk co-sp cu-sp"', 1), 'Included')
-    # 08 from architecture to atmosphere
+    assert nop(h_of(sec)) == 'Design, Build + Curation', h_of(sec)
+    pg.add(tk_loose([label(sec)], [('Design, Build', ''), ('', '+ Curation')], list(ks[1]) + list(ks[2]), leave=False, note=note, gather=len(ks[1])), 'Included')
+    # 05 our responsibility: the client's sentences as rows, then the photograph becomes the screen and carries the closing line
+    sec = S[5]; rp = [it[1] for it in sec['items'] if it[0] == 'p']
+    one = [nop(x[0]) for x in rp if len(x) == 1]; four = [nop(x) for x in max(rp, key=len)]
+    rst = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
+    assert len(one) == 1 and len(four) == 4, (one, four)
+    def up(x): return x[0].upper() + x[1:]
+    def cut(x, n): w = x.split(' '); return (' '.join(w[:n]), up(' '.join(w[n:])), '')
+    a1, b1 = one[0].split(', ', 1)
+    line = ['Each Layer', 'Belongs to the', 'Same Story']
+    assert ' '.join(line).lower() == rst.lower(), rst
+    pg.add(tk_team(label(sec), [('One Team', ''), ('', 'Managing'), ('', 'Every Stage')], [(a1, up(b1))] + [cut(x, 1) for x in four], None,
+                   A + 'us/1530-03.webp', line, []), 'One Team')
+    # 06 the seven stages as a row of squares; the sentences are the client's own, as written
     sec = S[6]
-    names2 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
+    names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
     txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
-    assert len(names2) == len(txts) == 7, (len(names2), len(txts))
-    pg.add(cu_steps(label(sec), h_of(sec), list(zip(names2, txts))), 'Process')
-    # 09 why: the four continuities, and their closing line
-    pg.add(cu_layers(label(S[7]), h_of(S[7]), ws[1:], betw, wst).replace('class="bk cu-ly"', 'class="bk cu-ly cu-wy"', 1), 'Why')
-    # 10 the work itself
-    sec = S[8]
-    cards = ''.join(pf6_card(q['name'], q['loc'].split(' \u00b7 ') + [q['bld']], ph(q['set'], q['card']), q['slug'] + '.html') for q in PROJ[:3])
-    pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
-    pg.add(bk(h_of(sec), '    <div class="pf6">%s</div>\n    <div class="rv c1 g50">%s</div>' % (
-        cards, btn(pbt[0][2] if pbt else 'View the Portfolio', 'portfolio.html')), hcls=' l0'), 'Projects')
-    final_cta(pg, S[10], A + 'ch/1450-19.webp')
+    assert len(names) == len(txts) == 7, (len(names), len(txts))
+    pg.add(tk_strip(label(sec), [('From Architecture', ''), ('to ', 'Atmosphere')], [(n, t_, 0) for n, t_ in zip(names, txts)]), 'Process')
+    # 07 why: the four continuities on one continuous line across a photograph; «CI Curated connects them» stands over the line
+    sec = S[7]; wp = [it[1] for it in sec['items'] if it[0] == 'p']
+    ws = [nop(x[0]) for x in wp if len(x) == 1]; betw = [nop(x) for x in max(wp, key=len)]
+    wst = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
+    assert len(ws) == 2 and len(betw) == 4 and betw[0].startswith('There is continuity between '), (ws, betw)
+    pairs = [('There is continuity', betw[0][len('There is continuity '):])] + [tuple(x.split(' ', 1)) for x in betw[1:]]
+    c7 = [('The result feels', 0), ('collected, personal,', 0), ('and complete,', 0), ('not decorated', 1), ('after the fact', 1)]
+    assert ' '.join(x for x, _ in c7) == wst, wst
+    pg.add(tk_recv(label(sec), [('Because Completion', 1), ('Changes How', 1), ('a Home Feels', 0)], [], ws[0], ws[1], pairs, c7, A + 'rtb/1430-12a.webp'), 'Why')
+    # 08 the work itself, as the slider (the client's three are still placeholders: the same three homes, another one in hand)
+    sec = S[8]; pbt = [x for x in get(sec, 'a') if 'portfolio' in x[1]]
+    FOC = {'collectors-home': (.528, .652), 'room-to-breathe': (.5, .713), 'urban-sanctuary': (.5, .665)}
+    sl = [PROJ[2], PROJ[1], PROJ[0]]
+    pg.add(tk_slider([('Projects ', 'Delivered', ''), ('Through CI Curated', '', '')], btn(pbt[0][2] if pbt else 'Explore CI Curated Projects', 'portfolio.html'),
+                     [(q['name'], q['loc'].split(' · ') + [q['bld']], ph(q['set'], q['tall']), q['slug'] + '.html', FOC[q['slug']]) for q in sl]), 'Projects')
+    final_cta(pg, S[10], A + 'ch/1450-28a.webp')
     emit('ci-curated.html', 'CI Curated', pg, A + 'ch/1450-34.webp')
 
 def core_page():

@@ -1357,3 +1357,34 @@ html body.inr .ivq-f .iv-p + .iv-p{margin-top:calc(38 * var(--u))}
   .ivq-f{position:static;margin-top:28px} html body.inr .ivq-f .iv-p{white-space:normal} html body.inr .ivq-f .iv-p + .iv-p{margin-top:20px}
   .ivq-ph{position:relative;right:auto;bottom:auto;width:100%;height:auto;aspect-ratio:1;margin-top:36px}
 }
+
+/* A film of words on one photograph (18.11.2026 22:07, CI Curated and CI Wellness — «вони дуже грузні… думав метафорами»). One pinned
+   screen, three steps, one thought to a step; words() in js/inner.js sets what is seen, and the photograph (one WebGL layer) does what
+   the words say: a light that rests on a piece for each word, or a day that passes through the room.
+   Step 1: the name at 150 on the left field and the title 25 under it; the first paragraphs on the foot, on the text line's measure
+   (421 of the 20 = 21.05 em — the 20 has a pixel floor, so its column is in em of itself).
+   Step 2: the words, one at a time, in the 60 exactly where the title stood; the second paragraphs on the foot.
+   Step 3: the closing sentence alone, centred on the screen's middle. Until the script speaks, steps 2 and 3 are not shown. */
+.tk-wd .stg{background:#000}
+.tk-wd-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:hidden}
+.tk-wd-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;filter:contrast(1.05) brightness(.46)}
+.tk-wd .cbl{color:#BAC7D6}                                            /* her blue on a photograph: lighter than the page's */
+.tk-wd-h{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u))}
+html body.inr .tk-wd-h h2{margin-top:calc(25 * var(--u));color:#FFFFFF}
+.film .tk-wd-f1, .film .tk-wd-f2, .film .tk-wd-f3{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em}
+html body.inr .tk-wd-s .t20s p{margin:0;max-width:none;color:#FFFFFF} html body.inr .tk-wd-s .t20s p + p{margin-top:.8em}
+.film .tk-wd-f2, .film .tk-wd-f3{opacity:0}
+html body.inr .film .tk-wd-i{position:absolute;left:calc(50 * var(--u));top:calc(175 * var(--u) + 1.2 * var(--t-run));margin:0;color:#FFFFFF;opacity:0}
+html body.inr .film .tk-wd-i.m{width:24em;line-height:1.12!important}   /* a statement in the 34 instead of a word */
+html body.inr .film .tk-wd-c{position:absolute;left:0;top:50%;width:100%;margin:0;text-align:center;color:#FFFFFF;opacity:0}
+.tk-wd-c > span{display:block;transform:translateY(-50%)}
+@media (max-aspect-ratio: 1/1){
+  /* phones: the photograph, then the three steps one under another on the text line — the words as a column; nothing is hidden */
+  .tk-wd-ph{position:relative;height:auto;aspect-ratio:3 / 2}
+  .tk-wd-ph img{filter:contrast(1.05) brightness(.84)} .tk-wd-ph .glc{display:none} .tk-wd-ph.gl-on > img{visibility:visible}
+  .film .tk-wd-s{padding-top:40px}
+  .tk-wd-h, .film .tk-wd-f1, .film .tk-wd-f2, .film .tk-wd-f3, html body.inr .film .tk-wd-i, html body.inr .film .tk-wd-c{position:static;width:auto;height:auto;text-align:left;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
+  html body.inr .tk-wd-h h2{margin-top:14px}
+  .film .tk-wd-f1{margin-top:28px} .tk-wd-w{margin-top:36px} .film .tk-wd-f2{margin-top:24px} html body.inr .film .tk-wd-c{margin-top:40px} .film .tk-wd-f3{margin-top:20px}
+  .tk-wd-c > span{transform:none}
+}

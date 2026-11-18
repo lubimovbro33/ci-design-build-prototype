@@ -1121,7 +1121,76 @@
     var ci = eio(sg(q, 2.62, 2.98)), bl = (1 - ci) * 8 * U;                  /* step 3 comes into focus */
     put(o.c, ci, 'translate3d(0,' + (14 * U * (1 - ci)).toFixed(1) + 'px,0)', bl > .2 ? 'blur(' + bl.toFixed(2) + 'px)' : 'none');
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam};
+  /* ================================================================== a film of words on one photograph (18.11.2026 22:07)
+     CI Curated and CI Wellness: «вони дуже грузні… переосмислив, думав метафорами». One pinned screen, three steps, one thought to a
+     step (tk_words() in build.py): the name and the title with the first paragraphs; then the client's WORDS one at a time where the
+     title stood, with the second paragraphs on the foot; then the closing sentence alone on the screen's middle. The photograph is
+     one WebGL layer that does what the words say:
+       pool   the room stands in its evening and one light travels through it, resting on a piece for each word (the curator's eye);
+              at the end the light is the whole room;
+       day    a day passes through the room while the words are read — cool and low at dawn, full at noon, warm at dusk — and the
+              sun's band crosses the picture;
+       still  the photograph only settles.
+     Nothing is laid over the picture: its light is taken down in the shader where words stand on it. */
+  var WORDS_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uS0, uSun, uL, uLr;', 'uniform float uZ, uV, uD, uLk, uB, uTmp, uTime;', 'varying vec2 v;',
+    'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'vec2 cov(vec2 uv, vec2 img){ float ra = uRes.x / uRes.y, ri = img.x / img.y; vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0); return (uv - 0.5) * s + 0.5; }',
+    'void main(){',
+    '  vec2 src = cov((v - 0.5) / uZ + 0.5, uS0);',
+    '  vec3 c = texture2D(uT0, src).rgb;',
+    '  c = (c - 0.5) * 1.05 + 0.5;',
+    '  float l = dot(c, vec3(0.299, 0.587, 0.114));',
+    '  float pool = 1.0 - smoothstep(0.5, 1.0, length((src - uL) * vec2(uS0.x / uS0.y, 1.0) / uLr));',   /* one light, the shape of the piece it rests on, in the photograph's own co-ordinates */
+    '  c *= mix(1.0, mix(uB, 1.08, pool), uLk);',
+    '  vec3 tn = uTmp < 0.0 ? mix(vec3(1.0), vec3(0.78, 0.9, 1.14), -uTmp) : mix(vec3(1.0), vec3(1.13, 0.95, 0.76), uTmp);',   /* the hour: cool, then warm */
+    '  c *= tn * (1.0 + (1.0 - smoothstep(0.0, 0.45, abs(v.x + v.y * 0.4 - uSun.x))) * uSun.y * 0.22);',                      /* and the sun crossing the room */
+    '  c *= mix(1.0, mix(0.94, 0.6, smoothstep(0.16, 0.72, l)), uD) * uV;',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function words(f, q, t){
+    var o = f.wd, i, e = f.el;
+    if (o === undefined){
+      var box = qs('.tk-wd-ph', e);
+      o = f.wd = {gl: box ? GL2.make(box, WORDS_FS, qsa('img', box), {}) : null, mode: e.getAttribute('data-mode') || 'still', n: +e.getAttribute('data-n') || 1, dw: +e.getAttribute('data-dw') || .42,
+                  pts: (e.getAttribute('data-pts') || '').split(';').filter(Boolean).map(function(x){ return x.split(',').map(Number); }),
+                  h: qs('.tk-wd-h', e), f1: qs('.tk-wd-f1', e), f2: qs('.tk-wd-f2', e), f3: qs('.tk-wd-f3', e), ws: qsa('.tk-wd-i', e), c: qs('.tk-wd-c', e), on: false};
+    }
+    function put(el_, op, tf, fl){ if (!el_) return; var k = op.toFixed(3) + tf + (fl || ''); if (el_.__k === k) return; el_.__k = k;
+      var st = el_.style; st.opacity = op.toFixed(3); st.transform = tf; if (fl !== undefined) st.filter = fl; st.visibility = op <= .001 ? 'hidden' : 'visible'; }
+    function clr(el_){ if (!el_) return; el_.__k = ''; var st = el_.style; st.opacity = ''; st.transform = ''; st.filter = ''; st.visibility = ''; }
+    function ty(px){ return 'translate3d(0,' + px.toFixed(1) + 'px,0)'; }
+    if (H >= W){ if (o.on){ o.on = false; [o.h, o.f1, o.f2, o.f3, o.c].concat(o.ws).forEach(clr); } return; }   /* phones: in the flow (css) */
+    o.on = true;
+    var w0 = 1.0, wE = w0 + o.n * o.dw, p = (q - w0) / o.dw, k = c01((q - w0) / (wE - w0)), kc = eio(sg(q, wE + .12, wE + .5)), g2 = o.gl;
+    if (g2 && g2.ready){
+      var V = .5, D = .65, lk = 0, L = [.5, .5, 1, 1], tmp = 0, sun = 0;
+      if (o.mode === 'pool' && o.pts.length){
+        var a = Math.max(0, Math.min(o.pts.length - 1, Math.floor(p))), b = Math.min(o.pts.length - 1, a + 1), fr = eio(sg(p - a, .56, 1)), A = o.pts[a], B = o.pts[b],
+            open = eio(sg(q, wE - .04, wE + .5));                             /* at the end the light is the whole room */
+        lk = eio(sg(q, w0 - .32, w0 + .04));
+        L = [A[0] + (B[0] - A[0]) * fr, A[1] + (B[1] - A[1]) * fr, (A[2] + (B[2] - A[2]) * fr) * (1 + 9 * open), (A[3] + (B[3] - A[3]) * fr) * (1 + 9 * open)];
+        V = .44 + .5 * lk - .2 * kc; D = .5 * (1 - lk) + .82 * kc;
+      } else if (o.mode === 'day'){
+        tmp = -.9 + 1.75 * k - .25 * kc; sun = Math.sin(Math.PI * k);
+        V = .46 + .3 * sun + .06 * kc; D = .45 + .25 * kc;
+      }
+      g2.size(); g2.set1('uZ', 1.06 - .06 * eio(sg(q, -.6, wE + .6))); g2.set2('uL', L[0], L[1]); g2.set2('uLr', L[2], L[3]); g2.set1('uLk', lk); g2.set1('uB', .3);
+      g2.set1('uTmp', tmp); g2.set2('uSun', -.35 + 2.1 * k, sun); g2.set1('uV', V); g2.set1('uD', D); g2.set1('uTime', (t * 60) | 0); g2.draw();
+    }
+    var ho = 1 - eio(sg(q, .62, .9));                                         /* step 1 goes up a little as it goes out */
+    put(o.h, ho, ty(-16 * U * (1 - ho))); put(o.f1, ho, ty(-16 * U * (1 - ho)));
+    for (i = 0; i < o.ws.length; i++){                                         /* step 2: each word comes up into the title's place and gives it to the next */
+      var a0 = w0 + i * o.dw, wi = eio(sg(q, a0 - .02, a0 + .14)), wo = 1 - (i === o.ws.length - 1 ? eio(sg(q, wE - .04, wE + .14)) : eio(sg(q, a0 + o.dw - .15, a0 + o.dw - .01)));
+      put(o.ws[i], wi * wo, ty((1 - wi) * 20 * U - (1 - wo) * 16 * U));
+    }
+    var fi = eio(sg(q, w0 - .04, w0 + .22)), fo = 1 - eio(sg(q, wE - .04, wE + .14));
+    put(o.f2, fi * fo, ty(10 * U * (1 - fi) - 12 * U * (1 - fo)));
+    var bl = (1 - kc) * 8 * U;                                                /* step 3 comes into focus */
+    put(o.c, kc, ty(14 * U * (1 - kc)), bl > .2 ? 'blur(' + bl.toFixed(2) + 'px)' : 'none');
+    put(o.f3, kc, ty(10 * U * (1 - kc)));
+  }
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

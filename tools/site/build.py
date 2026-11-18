@@ -741,14 +741,14 @@ def tk_recv(kick, title, lead, para, cap, lines, closer_, img):
     def two(ls): return '<br>'.join(('<span class="cbl">%s</span>' % esc(t)) if b else esc(t) for t, b in ls)
     bs = ''
     for x in lines:
-        a, b = nop(x).split(' ', 1)
+        a, b = x if isinstance(x, (list, tuple)) else nop(x).split(' ', 1)      # a pair already cut (CI Curated: «Between | art and architecture»)
         bs += '<div class="tk-rc-b"><i class="q" aria-hidden="true"></i><p class="t34">%s <br class="lb"><span class="cb">%s</span></p></div>' % (esc(a), esc(b))
     return '\n'.join([
         '<section class="film tk-rc" data-fig="recv" data-len="3.55" data-open="0" id="@ID@">', '  <div class="stg">',
         '    <div class="tk-rc-ph"><img src="%s" alt=""></div>' % img,
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-rc-s">',
         '      <div class="tk-rc-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), two(title)),
-        '      <p class="t34 tk-rc-l">%s</p>' % ' <br class="lb">'.join(esc(x) for x in lead),      # the foot: never .rv on a pinned screen
+        ('      <p class="t34 tk-rc-l">%s</p>' % ' <br class="lb">'.join(esc(x) for x in lead)) if lead else '',      # the foot: never .rv on a pinned screen
         '      <p class="t20 tk-rc-p">%s</p>' % esc(nop(para)),
         '      <p class="t20 tk-rc-k">%s</p>' % esc(nop(cap)),
         '      <div class="tk-rc-w"><div class="tk-rc-row">%s</div></div>' % bs,
@@ -1132,6 +1132,39 @@ def co_cover(kick, h1, img, ln, idea=None):
         '      <p class="t20 m tk-cv-ip" data-k="1.7 1.96 99 99">%s</p>' % ' <br class="bd">'.join(esc(x) for x in idea[2]),
         '      <div class="m tk-cv-ib" data-k="1.82 2.02 99 99">%s</div>' % idea[3],
         '    </div>'] if idea else []) + ['  </div>', '</section>'])
+def tk_words(kick, title, foot1, words, foot2, closer_, img, mode='still', pts=None, mid=None, foot3=None, cls=''):
+    """One thought to a step, on ONE photograph that does what the words say (18.11.2026 22:07, of CI Curated and CI Wellness:
+    «вони дуже грузні… переосмислив, думав метафорами і зробив на рівні з тим, що у нас вже є»). A pinned screen in three steps:
+      1  the name and the title (lines of (text, 1 if in the light blue)) at the left field; on the foot the first paragraphs;
+      2  the client's WORDS, one at a time, in the 60 where the title stood — or, with `mid`, one statement in the 34 — and on the
+         foot the second paragraphs;
+      3  the closing sentence alone on the screen's middle, in the 60, two inks (`foot3`: paragraphs on the foot with it).
+    The photograph is one WebGL layer and its `mode` is the page's metaphor (words() in js/inner.js):
+      'pool'  the room stands in its evening and ONE LIGHT travels through it, resting on a piece for each word — the curator's
+              eye (CI Curated: Scale, Comfort, Furniture, Art, Texture, Objects). `pts` = for each word (x, y, rx, ry) in the
+              PHOTOGRAPH's own co-ordinates (x across, y down; the light's two radii in picture heights — the shape of the piece). At the end the whole room is lit;
+      'day'   a day passes through the room while the words are read: cool and low at dawn, full at noon, warm at dusk, and the
+              sun's band crosses the picture (CI Wellness: Light, Air, Water, Sleep…);
+      'still' the photograph only settles.
+    A paragraph is a string, or a list of the client's own lines (kept as lines). Every word is the client's."""
+    def two(ls): return '<br>'.join(('<span class="cbl">%s</span>' % esc(t)) if b else esc(t) for t, b in ls)
+    def par(x): return ''.join('<p>%s</p>' % (' <br>'.join(esc(nop(y)) for y in p) if isinstance(p, (list, tuple)) else esc(nop(p))) for p in x)
+    n = len(words) if words else 1; dw = .9 if not words else (.42 if n <= 6 else .36)
+    its = ''.join('<p class="t60 tk-wd-i">%s</p>' % esc(nop(w)) for w in words) if words else '<p class="t34 tk-wd-i m">%s</p>' % two(mid)
+    return '\n'.join([
+        '<section class="film tk-wd%s" data-fig="words" data-mode="%s" data-n="%d" data-dw="%s" data-pts="%s" data-len="%.2f" data-open="0" id="@ID@">' % (
+            (' ' + cls) if cls else '', mode, n, dw, ';'.join('%.4f,%.4f,%.3f,%.3f' % tuple(p) for p in (pts or [])), 1.0 + n * dw + 1.05), '  <div class="stg">',
+        '    <div class="tk-wd-ph"><img src="%s" alt=""></div>' % img,
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-wd-s">',
+        '      <div class="tk-wd-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), two(title)),
+        '      <div class="t20s tk-wd-f1">%s</div>' % par(foot1),                # the foot: never .rv on a pinned screen
+        '      <div class="tk-wd-w">%s</div>' % its,
+        ('      <div class="t20s tk-wd-f2">%s</div>' % par(foot2)) if foot2 else '',
+        '      <p class="t60 tk-wd-c"><span>%s</span></p>' % two(closer_),
+        ('      <div class="t20s tk-wd-f3">%s</div>' % par(foot3)) if foot3 else '',
+        '    </div>', '  </div>', '</section>'])
+
+
 def co_seam(kick, h1, lead, ps, strong, img, ln):
     """04 — CI Core, «What You Receive»: THE DRAWING BECOMES THE ROOM, in three steps on one pinned screen (18.11.2026 21:36, of the
     one-screen version: «цей блок мені не підходить. Він дуже грузний, дуже важкий»; 21:44, of the two storyboards: «то, що

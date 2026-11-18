@@ -49,6 +49,9 @@ WANT = {
                (.0, .86, 1.0, 1.0, 200),                                # the rug
                (.50, .50, .83, .70, 90)],                               # the cushions
     ),
+    # CI Curated's and CI Wellness's covers (18.11.2026 22:07: both pages on Turnkey's skeleton, the same film on the cover)
+    'us/1511-12a': dict(w=1280, out=2560),
+    'ch/1450-25a': dict(w=1280, out=2560),
 }
 
 def edges(bgr, o):
