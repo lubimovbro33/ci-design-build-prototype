@@ -49,15 +49,25 @@ body.inr .hdr{opacity:1}
 .film .sw-hd{left:0;right:0;top:calc(50 * var(--u));bottom:auto;text-align:center}
 html body.inr .film .sw-hd .sw-k{position:static;margin:0 0 calc(29 * var(--u))}
 html body.inr .film .sw-hd .sw-h{position:static;margin:0}
-.film .sw-bd{left:0;top:0;width:100%;height:100%}
-html body.inr .film .sw-bd .sw-l{position:absolute;left:calc(50 * var(--u));top:calc(310 * var(--u));margin:0;width:calc(385 * var(--u));max-width:none;font-size:max(16px, calc(24 * var(--u)))!important;line-height:1.375!important}
-html body.inr .film .sw-bd .sw-t{position:absolute;left:calc(50 * var(--u));top:calc(488 * var(--u));margin:0;width:calc(331 * var(--u))}
-html body.inr .film .sw-bd .sw-t.two{display:grid;grid-auto-flow:column;grid-template-rows:repeat(5, auto);grid-template-columns:calc(222 * var(--u)) max-content;row-gap:calc(8 * var(--u));width:auto}
+/* 21:06: «чому в тебе всюди між цим заголовком і описом різна відстань? Чому ти не дотримуєшся відстані, яка закладена в макеті?» —
+   the statement and what follows it were each pinned to the frame's own coordinates (310 and 488), so a statement of two lines or of
+   one left 112 or 145 between them where her frame has 78. They are one column now: the statement from 310, and what the way consists
+   of 78 UNDER ITS FOOT, however many lines it has. */
+.film .sw-bd{left:0;top:0;width:100%;height:100%;box-sizing:border-box;padding:calc(310 * var(--u)) 0 0 calc(50 * var(--u))}
+/* 21:06, her window (about 1440 x 750): «такий заголовок — це є недобре. Дотримуйся того, як зроблено на макеті» — the statement stood
+   in FOUR lines where her frame has three: its type was on its 16 px floor while its column was still 385 of the frame's units. The
+   same mistake as the counts table of this afternoon. So every measure of this column is taken from the type that stands in it:
+   the statement is 16.05 of its own size wide (385 / 24), the texts 16.55 of theirs (331 / 20), the list's second column 11.1 from
+   the first (222 / 20), its rows .4 apart (8 / 20) — the lines break in every window exactly where they break in her frame. */
+html body.inr .film .sw-bd .sw-l{position:static;margin:0;width:16.05em;max-width:none;font-size:max(16px, calc(24 * var(--u)))!important;line-height:1.375!important}
+html body.inr .film .sw-bd .sw-t{position:static;margin:calc(78 * var(--u)) 0 0;width:16.55em}
+html body.inr .film .sw-bd .sw-t.two{display:grid;grid-auto-flow:column;grid-template-rows:repeat(5, auto);grid-template-columns:11.1em max-content;row-gap:.4em;width:auto}
 html body.inr .film .sw-bd .sw-t.two p{margin:0;white-space:nowrap}
-html body.inr .film .sw-bd .sw-f{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;width:calc(331 * var(--u))}
+html body.inr .film .sw-bd .sw-f{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;width:16.55em}
 .film .sw-bd .sw-btn{position:absolute;left:0;bottom:max(calc(50 * var(--u)), 58px);width:100%;margin:0;display:flex;justify-content:center}
 @media (max-aspect-ratio: 1/1){
   .film .sw-hd{text-align:left}
+  .film .sw-bd{padding:0}
   html body.inr .film .sw-bd .sw-l, html body.inr .film .sw-bd .sw-t, html body.inr .film .sw-bd .sw-f, .film .sw-bd .sw-btn{position:static;width:auto}
   html body.inr .film .sw-bd .sw-t, html body.inr .film .sw-bd .sw-f{margin-top:20px}
   html body.inr .film .sw-bd .sw-t.two{grid-template-columns:1fr 1fr} html body.inr .film .sw-bd .sw-t.two p{white-space:normal}
