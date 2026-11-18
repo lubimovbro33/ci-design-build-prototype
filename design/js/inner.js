@@ -1195,7 +1195,61 @@
     put(o.c, kc, ty(14 * U * (1 - kc)), bl > .2 ? 'blur(' + bl.toFixed(2) + 'px)' : 'none');
     put(o.f3, kc, ty(10 * U * (1 - kc)));
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words};
+  /* ================================================================== CI Wellness, the features: names in a row on the line
+     18.11.2026 23:03, her reference for this screen (santalarch.com/#services), in place of the index on a photograph. A black screen
+     ruled by the page's two centre hairlines. The names stand ON the horizontal line; the one in hand is bright and stands at the
+     vertical line, the scroll carries the row to the left name by name; under the line the photograph of the name in hand — the
+     next one opens downward out of the line — and on the left what the name holds. The photographs are ONE WebGL layer: they are
+     put on one sheet once they have loaded (a shader may not be given ten pictures on every device), and the shader shows two
+     tiles of it. Until then, and where there is no WebGL, the photographs themselves change. The type is DOM. */
+  var FEAT_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uG;', 'uniform float uA, uB, uF, uAr, uTime;', 'varying vec2 v;',
+    'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'vec3 tile(float i, vec2 uv){',
+    '  float ra = uRes.x / uRes.y; vec2 s = ra > uAr ? vec2(1.0, uAr / ra) : vec2(ra / uAr, 1.0);',
+    '  vec2 p = clamp((uv - 0.5) * s + 0.5, 0.004, 0.996);',
+    '  return texture2D(uT0, (vec2(mod(i, uG.x), floor(i / uG.x)) + p) / uG).rgb;',
+    '}',
+    'void main(){',
+    '  float w = 1.5 / uRes.y;',
+    '  vec3 a = tile(uA, (v - 0.5) / (1.0 + 0.05 * uF) + 0.5);',
+    '  vec3 b = tile(uB, (v - 0.5) / (1.06 - 0.06 * uF) + 0.5);',
+    '  vec3 c = mix(b, a, smoothstep(uF - w, uF + w, v.y));',                 /* the next photograph opens downward out of the line */
+    '  c = ((c - 0.5) * 1.06 + 0.5) * 0.9;',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function feat(f, q, t){
+    var o = f.fx, i, e = f.el;
+    if (o === undefined){
+      o = f.fx = {n: +e.getAttribute('data-n') || 1, dw: +e.getAttribute('data-dw') || .5, row: qs('.wl-fx-row', e), nms: qsa('.wl-fx-nm', e), ds: qsa('.wl-fx-i', e),
+                  ca: qs('.wl-fx-c .a', e), box: qs('.wl-fx-ph', e), imgs: qsa('.wl-fx-ph img', e), gl: null, tried: false, cur: -1, lk: '', xs: [], on: false, C: 5, R: 1};
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ o.lk = ''; });
+    }
+    if (H >= W){ if (o.on){ o.on = false; o.lk = ''; if (o.row){ o.row.style.transform = ''; o.row.__t = ''; } } return; }   /* phones: in the flow (css) */
+    o.on = true;
+    cross(eio(sg(q, -.7, -.15)), eio(sg(q, -.55, 0)));                        /* the two centre hairlines: ruled as the block arrives, then they stand */
+    if (!o.tried && o.imgs.length && o.imgs.every(function(im){ return im.complete && im.naturalWidth; })){   /* the sheet of photographs */
+      o.tried = true;
+      var TW = 560, TH = 600, cv = document.createElement('canvas'), x2 = cv.getContext('2d');
+      o.R = Math.ceil(o.imgs.length / o.C); cv.width = TW * o.C; cv.height = TH * o.R;
+      o.imgs.forEach(function(im, j){ var sc = Math.max(TW / im.naturalWidth, TH / im.naturalHeight), w = im.naturalWidth * sc, h = im.naturalHeight * sc, tx = (j % o.C) * TW, ty = Math.floor(j / o.C) * TH;
+        x2.save(); x2.beginPath(); x2.rect(tx, ty, TW, TH); x2.clip(); x2.drawImage(im, tx + (TW - w) / 2, ty + (TH - h) / 2, w, h); x2.restore(); });
+      cv.complete = true; cv.naturalWidth = cv.width; cv.naturalHeight = cv.height; o.ar = TW / TH;
+      try { o.gl = GL2.make(o.box, FEAT_FS, [cv], {}); } catch (er){ o.gl = null; }
+    }
+    var p = Math.max(0, q) / o.dw, a = Math.max(0, Math.min(o.n - 1, Math.floor(p))), b = Math.min(o.n - 1, a + 1), fr = b === a ? 0 : eio(sg(p - a, .52, 1)), cur = fr > .5 ? b : a;
+    var lk = W + 'x' + H;
+    if (o.lk !== lk){ o.lk = lk; o.xs = o.nms.map(function(n_){ return n_.offsetLeft; }); }
+    var rt = 'translate3d(' + (-(o.xs[a] + (o.xs[b] - o.xs[a]) * fr)).toFixed(1) + 'px,0,0)';
+    if (o.row && o.row.__t !== rt){ o.row.__t = rt; o.row.style.transform = rt; }
+    if (cur !== o.cur){ o.cur = cur;
+      for (i = 0; i < o.n; i++){ if (o.nms[i]) o.nms[i].classList.toggle('on', i === cur); if (o.ds[i]) o.ds[i].classList.toggle('on', i === cur); if (o.imgs[i]) o.imgs[i].classList.toggle('on', i === cur); }
+      if (o.ca) o.ca.textContent = ('0' + (cur + 1)).slice(-2);
+    }
+    var g2 = o.gl;
+    if (g2 && g2.ready){ g2.size(); g2.set2('uG', o.C, o.R); g2.set1('uAr', o.ar); g2.set1('uA', a); g2.set1('uB', b); g2.set1('uF', fr); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+  }
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

@@ -72,7 +72,7 @@ def wellness_page():
       What      a still black screen (her frame of All Solutions);
       Fit       the seven conditions on the grid;
       Process   five rows that open (the site's own rows): the page stays light and none of the client's text is lost;
-      Features  the nine groups and the home spa as an index the scroll walks through, on one photograph;
+      Features  her reference (23:03): the nine groups and the home spa as names in a row on the line, each with its photograph;
       One Team  the nine disciplines as one mass that lets go: «We manage the conversation between disciplines so you do not have
                 to» (Turnkey's scatter — here it is this page's own sentence);
       Design    «Controls can disappear. Technology can integrate…» — the three sentences come and go one at a time;
@@ -102,7 +102,7 @@ def wellness_page():
     sec = S[1]; ip = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     assert nop(h_of(sec)) == 'The Home as Part of Your Wellbeing' and len(ip) == 5, (h_of(sec), ip)
     pg.add(iv_quiet(label(sec), [('The Home as Part', 0), ('of Your Wellbeing', 1)],
-                    [brk_lines(nop(get(sec, 'lead')[0][1][0] + ' ' + ip[0]), 64), brk_lines(nop(' '.join(ip[1:])), 64)], A + 'us/1530-02.webp', '50% 50%'), 'What It Is')
+                    [brk_lines(nop(get(sec, 'lead')[0][1][0] + ' ' + ip[0]), 64), brk_lines(nop(' '.join(ip[1:])), 64)], A + 'ch/1450-14.webp', '50% 60%'), 'What It Is')
     # 05 the seven conditions on the grid; a name is a run of its own sentence's words; the section's closing sentence under the lead
     sec = S[3]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
     cl = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
@@ -120,9 +120,12 @@ def wellness_page():
     sec = S[6]; fp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
     h3 = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h3']
     assert len(P['_feats']) == 9 and len(fp) == 5 and len(h3) == 1, (len(P['_feats']), fp, h3)
-    states = [(g[0], [(g[k_], g[k_ + 1]) for k_ in range(1, len(g), 2)]) for g in P['_feats']] + [(h3[0], [fp[2], fp[3], fp[4]])]
-    pg.add(tk_words(label(sec), [('The Right Solutions,', 0), ('in the Right Home', 1)], [fp[0], fp[1]], None, None, None, A + 'us/1511-06a.webp',
-                    states=states, dw=.5), 'Features')
+    spa = ['Home Spa + Personalized', 'Wellness Rooms']; assert ' '.join(spa) == h3[0], h3
+    states = [(g[0], [(g[k_], g[k_ + 1]) for k_ in range(1, len(g), 2)]) for g in P['_feats']] + [(spa, [fp[2], fp[3], fp[4]])]
+    assert [x[0] for x in states[:9]] == ['Light', 'Air', 'Water', 'Heat + Recovery', 'Sleep', 'Sound', 'Climate', 'Materials', 'Movement'], [x[0] for x in states]
+    # her reference for this screen (23:03, santalarch.com/#services): the names in a row on the line, the photograph of the one in hand under it
+    FX = ['us/1511-05a', 'ch/1450-21', 'us/1530-01', 'us/1530-02', 'ch/1450-33', 'ch/1450-30', 'ch/1450-26', 'rtb/1430-14', 'rtb/1430-07', 'rtb/1430-15']
+    pg.add(wl_feats(label(sec), [('The Right Solutions,', 0), ('in the Right Home', 1)], [fp[0], fp[1]], states, [A + x + '.webp' for x in FX]), 'Features')
     # 08 our responsibility: the nine disciplines as one mass that lets go — «so you do not have to»
     sec = S[8]
     touch = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
@@ -142,7 +145,7 @@ def wellness_page():
     st9 = [it[1] for it in sec['items'] if it[0] == 'strong'][0]
     assert len(o9[0]) == 4 and len(st9) == 2 and nop(h_of(sec)) == 'A Home That Works Harder for the Life Inside It', (o9, st9)
     pg.add(iv_quiet(label(sec), [('A Home That Works Harder', 0), ('for the Life Inside It', 1)],
-                    [tuple(nop(x) for x in o9[0]), tuple([nop(o9[1][0])] + [nop(x) for x in st9])], A + 'ch/1450-26.webp', '50% 50%'), 'Outcome')
+                    [tuple(nop(x) for x in o9[0]), tuple([nop(o9[1][0])] + [nop(x) for x in st9])], A + 'rtb/1430-13.webp', '50% 50%'), 'Outcome')
     final_cta(pg, S[10], A + 'ch/1450-29a.webp')
     emit('ci-wellness.html', 'CI Wellness', pg, A + 'ch/1450-25a.webp')
 

@@ -1209,6 +1209,33 @@ def wl_rows(kick, title, lead, rows):
                 esc(kick), hl, esc(nop(lead[0])) + ''.join(' <br><span class="cb">%s</span>' % esc(nop(x)) for x in lead[1:]), r)
 
 
+def wl_feats(kick, title, intro, states, imgs):
+    """CI Wellness, the features — to HER REFERENCE (18.11.2026 23:03, of the index film on a photograph: «ось тобі референс на цей
+    екран», santalarch.com/#services): a black screen ruled by the page's two centre hairlines; the NAMES stand in a row ON the
+    horizontal line, in the 60, sentence case — the one in hand bright at the vertical line, the next ones quiet to its right —
+    and the scroll carries the row to the left, name by name; under the line, under the name in hand, its PHOTOGRAPH (a column
+    from the line to the foot; the next one opens downward out of the line); on the left under the line what the name holds (a
+    feature's own name in the blue, its description under it); the count on the right field's foot. The block's own name, title
+    and the client's two opening sentences keep the upper left quarter, 50 over the line. feat() in js/inner.js.
+    `states` = [(name or its lines, paragraphs)], a paragraph = a string or (a feature's name, its description); `imgs` one each."""
+    assert len(states) == len(imgs), (len(states), len(imgs))
+    def nm(x): return '<br>'.join(esc(y) for y in x) if isinstance(x, (list, tuple)) else esc(x)
+    def flat(x): return ' '.join(x) if isinstance(x, (list, tuple)) else x
+    def par(x):
+        return ''.join('<p>%s</p>' % (('<span class="nm">%s</span><br>%s' % (esc(nop(q[0])), esc(nop(q[1])))) if isinstance(q, tuple) else esc(nop(q))) for q in x)
+    hl = '<br>'.join(('<span class="cb">%s</span>' % esc(t)) if b else esc(t) for t, b in title)
+    return '\n'.join([
+        '<section class="film wl-fx" data-fig="feat" data-n="%d" data-dw="0.5" data-len="%.2f" data-open="0" id="@ID@">' % (len(states), len(states) * .5 + .4), '  <div class="stg">',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc wl-fx-s">',
+        '      <div class="wl-fx-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
+        '      <div class="t20s wl-fx-n">%s</div>' % par(intro),
+        '      <div class="wl-fx-v" aria-hidden="true"><div class="wl-fx-row">%s</div></div>' % ''.join('<p class="t60s wl-fx-nm">%s</p>' % nm(n) for n, _ in states),
+        '      <div class="wl-fx-ph">%s</div>' % ''.join('<img src="%s" alt=""%s loading="lazy">' % (im, ' class="on"' if i == 0 else '') for i, im in enumerate(imgs)),
+        '      <div class="wl-fx-d">%s</div>' % ''.join('<div class="t20s wl-fx-i%s"><p class="t34 nm0">%s</p>%s</div>' % (' on' if i == 0 else '', esc(flat(n)), par(ps_)) for i, (n, ps_) in enumerate(states)),
+        '      <p class="lab3 wl-fx-c" aria-hidden="true"><span class="a">01</span><i></i><span>%02d</span></p>' % len(states),
+        '    </div>', '  </div>', '</section>'])
+
+
 def co_seam(kick, h1, lead, ps, strong, img, ln):
     """04 — CI Core, «What You Receive»: THE DRAWING BECOMES THE ROOM, in three steps on one pinned screen (18.11.2026 21:36, of the
     one-screen version: «цей блок мені не підходить. Він дуже грузний, дуже важкий»; 21:44, of the two storyboards: «то, що

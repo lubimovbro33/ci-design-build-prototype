@@ -1409,3 +1409,38 @@ html body.inr .wl-pr-l{margin:calc(50 * var(--u)) calc(50 * var(--u)) calc(100 *
   html body.inr .wl-pr-l{margin:24px var(--m, 20px) 36px}
   html body.inr .wl-pr .qa .ain{display:block!important} html body.inr .wl-pr .qa .ain > div{width:auto!important;max-width:none!important} html body.inr .wl-pr .qa .ain > div + div{margin-top:12px}
 }
+
+/* CI Wellness, the features — her reference of 18.11.2026 23:03 (santalarch.com/#services). A black screen on the page's two centre
+   hairlines (the film's canvas). Upper left quarter: the name at 150, the title 25 under it, and the client's two opening sentences
+   50 over the horizontal line. The names stand in a row ON the line (22 over it), in the 60 sentence case; the row is seen only right
+   of the vertical line and begins 50 from it; 100 between names; the one in hand is bright. Under the line: its photograph, a column
+   480 wide from 50 right of the vertical line down to the foot; and on the left field, 50 under the line, what the name holds, on the
+   text line's measure (21.05 em of the 20). The count on the right field's foot. feat() in js/inner.js moves the row. */
+.wl-fx .stg{background:#000}
+.wl-fx-h{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u))}
+html body.inr .wl-fx-h h2{margin-top:calc(25 * var(--u));color:#FFFFFF}
+.film .wl-fx-n{position:absolute;left:calc(50 * var(--u));bottom:calc(50% + 50 * var(--u));width:21.05em}
+html body.inr .wl-fx-s .t20s p{margin:0;max-width:none;color:#FFFFFF} html body.inr .wl-fx-s .t20s p + p{margin-top:.8em}
+.wl-fx-v{position:absolute;left:50%;right:0;bottom:calc(50% + 22 * var(--u));height:calc(190 * var(--u));overflow:hidden}
+.wl-fx-row{position:absolute;left:calc(50 * var(--u));bottom:0;display:flex;align-items:flex-end;column-gap:calc(100 * var(--u));white-space:nowrap;will-change:transform}
+html body.inr .wl-fx-nm{flex:none;margin:0;color:#FFFFFF;opacity:.26;transition:opacity .5s}
+html body.inr .wl-fx-nm.on{opacity:1}
+.wl-fx-ph{position:absolute;left:calc(50% + 50 * var(--u));top:50%;width:calc(480 * var(--u));bottom:max(calc(50 * var(--u)), 58px);overflow:hidden;background:#0A0A0A}
+.wl-fx-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;opacity:0;transition:opacity .6s;filter:contrast(1.06) brightness(.9)}
+.wl-fx-ph img.on{opacity:1}
+.wl-fx-d{position:absolute;left:calc(50 * var(--u));top:calc(50% + 50 * var(--u))}
+.film .wl-fx-i{position:absolute;left:0;top:0;width:21.05em;opacity:0;visibility:hidden;transition:opacity .45s, visibility 0s .45s}
+.film .wl-fx-i.on{opacity:1;visibility:visible;transition:opacity .45s .12s, visibility 0s}
+.wl-fx-i .nm{color:#96A8BF} .wl-fx-i .nm0{display:none}
+html body.inr .wl-fx-c{position:absolute;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;display:flex;align-items:center;color:#FFFFFF}
+.wl-fx-c i{display:block;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));margin:0 calc(10 * var(--u));background:#96A8BF}
+@media (max-aspect-ratio: 1/1){
+  /* phones: the title, the two sentences, one photograph, then every name with what it holds, one under another */
+  .film .wl-fx-s{padding-top:72px}
+  .wl-fx-h, .film .wl-fx-n, .wl-fx-d, .film .wl-fx-i{position:static;width:auto;opacity:1;visibility:visible}
+  html body.inr .wl-fx-h h2{margin-top:14px} .film .wl-fx-n{margin-top:28px}
+  .wl-fx-v, html body.inr .wl-fx-c{display:none}
+  .wl-fx-ph{position:relative;left:auto;top:auto;bottom:auto;width:100%;aspect-ratio:3 / 2;margin-top:32px}
+  .wl-fx-ph .glc{display:none} .wl-fx-ph img{display:none} .wl-fx-ph img:first-child{display:block;opacity:1;visibility:visible}
+  .film .wl-fx-i{margin-top:28px} html body.inr .wl-fx-i .nm0{display:block;margin:0 0 10px}
+}
