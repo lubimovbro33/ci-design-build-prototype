@@ -1265,7 +1265,105 @@
     var g2 = o.gl;
     if (g2 && g2.ready){ g2.size(); g2.set2('uG', o.C, o.R); g2.set1('uAr', o.ar); g2.set1('uN', o.n); g2.set1('uGap', gap / colW); g2.set1('uP', o.P); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat};
+  /* ================================================================== Broker Program: «Естафета» and «Одна точка» (19.11.2026 07:53)
+     Of the storyboard: «третій, ну окей, подивимося, як воно працює… п'ятий, ну, не знаю, подивимося, як воно працює».
+     relay — three lanes (You · CI · Your client) ruled across the screen and ONE line that the scroll walks through the five stages,
+     stepping from lane to lane; a stage's name over its square, the sentence of the stage in hand under it.
+     point — ten names in two columns, a line from each to one point in the middle; then one line leaves the point downward and the
+     client's sentence stands under it. Lines on the film's canvas, type in the DOM (placed here: the geometry is the screen's). */
+  /* 19.11.2026 08:15 — «тепер мені якось не вистачає фотографій. Воно все чорне, чорне, чорне. Можливо, вставити ще якусь фотку»:
+     relay — a band of ONE photograph lies under the three lanes and is uncovered exactly as far as the line has walked: the home
+             appears along the journey, and is whole at «Move-In»;
+     point — the one point OPENS into a photograph of the finished home (a window growing out of the square). One WebGL layer each. */
+  var RELAY_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uS0;', 'uniform float uX, uV, uTime;', 'varying vec2 v;',
+    'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'vec2 cov(vec2 uv, vec2 img){ float ra = uRes.x / uRes.y, ri = img.x / img.y; vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0); return (uv - 0.5) * s + 0.5; }',
+    'void main(){',
+    '  vec3 c = texture2D(uT0, cov(v, uS0)).rgb; c = (c - 0.5) * 1.05 + 0.5;',
+    '  float l = dot(c, vec3(0.299, 0.587, 0.114));',
+    '  c *= mix(0.94, 0.6, smoothstep(0.16, 0.72, l)) * uV;',                 /* its light taken down: names and sentences stand on it */
+    '  c *= 1.0 - smoothstep(uX - 70.0 / uRes.x, uX, v.x);',                  /* uncovered as far as the line has walked */
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  var POINT_FS = ['precision highp float;', 'uniform sampler2D uT0;', 'uniform vec2 uRes, uS0;', 'uniform float uA, uTime;', 'varying vec2 v;',
+    'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'vec2 cov(vec2 uv, vec2 img){ float ra = uRes.x / uRes.y, ri = img.x / img.y; vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0); return (uv - 0.5) * s + 0.5; }',
+    'void main(){',
+    '  vec2 d = abs(v - 0.5) * 2.0;',
+    '  vec3 c = texture2D(uT0, cov((v - 0.5) / (1.14 - 0.14 * uA) + 0.5, uS0)).rgb;',
+    '  c = ((c - 0.5) * 1.05 + 0.5) * 0.92 * step(max(d.x, d.y), uA);',       /* the window grows out of the point */
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02 * step(max(d.x, d.y), uA);',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function relay(f, q, t){
+    var o = f.rl, i, e = f.el;
+    if (o === undefined){ o = f.rl = {ls: qsa('.br-rl-l', e), st: qsa('.br-rl-st', e), lk: '', P: -1, cur: -2, on: false};
+      var bx = qs('.br-rl-ph', e); o.gl = bx ? GL2.make(bx, RELAY_FS, qsa('img', bx), {}) : null; }
+    var n = o.st.length;
+    if (H >= W){ if (o.on){ o.on = false; o.lk = ''; o.ls.concat(o.st).forEach(function(x){ x.style.left = ''; x.style.top = ''; x.style.opacity = ''; x.classList.remove('on'); }); } return; }
+    o.on = true;
+    var ys = [MID - 20 * U, MID + 140 * U, MID + 300 * U], x0 = 330 * U, x1 = W - 50 * U, xs = [], ly = [];
+    for (i = 0; i < n; i++){ xs.push(x0 + 140 * U + i * (x1 - x0 - 520 * U) / (n - 1)); ly.push(ys[+o.st[i].getAttribute('data-l') || 0]); }   /* the last stage keeps room for its sentence inside the right field */
+    var lk = W + 'x' + H;
+    if (o.lk !== lk){ o.lk = lk;
+      o.ls.forEach(function(x, j){ x.style.left = (50 * U) + 'px'; x.style.top = (ys[j] - 44 * U) + 'px'; });
+      o.st.forEach(function(x, j){ x.style.left = xs[j] + 'px'; x.style.top = (ly[j] - 58 * U) + 'px'; });   /* the name is centred over its square (css): no step of the line passes through it */
+    }
+    /* where the line's head is, in stages: in to the first as the block arrives, then a rest on each and a walk to the next */
+    var a0 = .2, dw = .62, k = Math.max(0, Math.min(n - 1, Math.floor((q - a0) / dw))), tg = q < a0 ? -1 + eio(sg(q, -.35, a0)) : Math.min(n - 1 + .35 * eio(sg(q, a0 + (n - 1) * dw + .1, a0 + n * dw)), k + eio(sg(q - a0 - k * dw, .22, dw)));
+    o.P += (tg - o.P) * (Math.abs(tg - o.P) > 2 ? 1 : .12); if (Math.abs(tg - o.P) < .0005) o.P = tg;
+    var la = eio(sg(q, -.6, -.1));
+    ink(.2, 1); for (i = 0; i < 3; i++) seg(x0, Math.round(ys[i]) + .5, x0 + (x1 - x0) * la, Math.round(ys[i]) + .5);        /* the three lanes */
+    function at(p){                                                                /* the line's point at p stages */
+      if (p <= 0) return [xs[0] - (xs[0] - x0) * -p, ly[0], []];
+      var a = Math.min(n - 1, Math.floor(p)), fr = p - a, pts = [];
+      for (var j = 0; j < a; j++){ var mx_ = (xs[j] + xs[j + 1]) / 2; pts.push([mx_, ly[j]], [mx_, ly[j + 1]], [xs[j + 1], ly[j + 1]]); }
+      if (a >= n - 1) return [xs[n - 1] + fr * (W - xs[n - 1]) / .35 * .35, ly[n - 1], pts];
+      var dx = xs[a + 1] - xs[a], dy = ly[a + 1] - ly[a], L = dx + Math.abs(dy), d = fr * L, mx2 = xs[a] + dx / 2;
+      if (d <= dx / 2) return [xs[a] + d, ly[a], pts];
+      pts.push([mx2, ly[a]]);
+      if (d <= dx / 2 + Math.abs(dy)) return [mx2, ly[a] + (dy < 0 ? -1 : 1) * (d - dx / 2), pts];
+      pts.push([mx2, ly[a + 1]]); return [mx2 + (d - dx / 2 - Math.abs(dy)), ly[a + 1], pts];
+    }
+    var hd = at(o.P), px = x0, py = ly[0];
+    ink(1, 1.5);
+    hd[2].concat([[hd[0], hd[1]]]).forEach(function(pt){ seg(Math.round(px) + .5, Math.round(py) + .5, Math.round(pt[0]) + .5, Math.round(pt[1]) + .5); px = pt[0]; py = pt[1]; });
+    if (o.gl && o.gl.ready){ var endk = eio(sg(q, a0 + (n - 1) * dw + .1, a0 + n * dw)), ux = hd[0] / W; o.gl.size(); o.gl.set1('uX', (ux + (1.08 - ux) * endk) * la); o.gl.set1('uV', .56); o.gl.set1('uTime', (t * 60) | 0); o.gl.draw(); }   /* the photograph under the lanes */
+    var rp = Math.round(o.P), cur = Math.abs(o.P - rp) < .16 && rp >= 0 && rp < n ? rp : (o.P > n - 1 ? n - 1 : -1);   /* a sentence stands only while the line rests on its stage */
+    for (i = 0; i < n; i++){                                                         /* the squares: a stage reached is whole, one ahead is quiet */
+      var r = o.P >= i - .02; g.globalAlpha = r ? 1 : .35; g.fillStyle = '#96A8BF'; g.fillRect(Math.round(xs[i] - SQ / 2), Math.round(ly[i] - SQ / 2), Math.round(SQ), Math.round(SQ)); g.globalAlpha = 1;
+      var op = (r ? 1 : .26) * la, ops = op.toFixed(2); if (o.st[i].__o !== ops){ o.st[i].__o = ops; o.st[i].style.opacity = ops; }
+    }
+    if (cur !== o.cur || la < 1){ o.cur = cur; o.st.forEach(function(x, j){ x.classList.toggle('on', j === cur && o.P > -.3); });
+      var lc = Math.max(0, Math.min(n - 1, Math.round(o.P))); o.ls.forEach(function(x, j){ x.style.opacity = (la * (o.P > -.3 && ys[j] === ly[lc] ? 1 : .42)).toFixed(2); }); }
+  }
+  function point(f, q, t){
+    var o = f.pt, i, e = f.el;
+    if (o === undefined){ o = f.pt = {ns: qsa('.br-pt-n', e), c: qs('.br-pt-c', e), p: qs('.br-pt-p', e), lk: '', on: false};
+      var bx = qs('.br-pt-ph', e); o.im = bx && qs('img', bx); o.gl = bx ? GL2.make(bx, POINT_FS, qsa('img', bx), {}) : null; }
+    var n = o.ns.length, h = Math.ceil(n / 2);
+    if (H >= W){ if (o.on){ o.on = false; o.lk = ''; o.ns.concat([o.c, o.p]).forEach(function(x){ if (x){ x.style.left = ''; x.style.right = ''; x.style.top = ''; x.style.opacity = ''; x.style.transform = ''; } }); } return; }
+    o.on = true;
+    var cx = W / 2, cy = MID + 10 * U, gapx = 250 * U, row = 68 * U, yy = function(j){ return cy + ((j % h) - (h - 1) / 2) * row; }, lk = W + 'x' + H;
+    if (o.lk !== lk){ o.lk = lk;
+      o.ns.forEach(function(x, j){ var L_ = j < h; x.style.top = (yy(j) - 17 * U) + 'px'; if (L_){ x.style.right = (W - (cx - gapx)) + 'px'; x.style.left = 'auto'; } else { x.style.left = (cx + gapx) + 'px'; x.style.right = 'auto'; } });
+      if (o.c){ o.c.style.top = (cy + 300 * U) + 'px'; }
+    }
+    var quiet = eio(sg(q, 1.5, 1.9)), any = 0, ap = eio(sg(q, 1.62, 2.3));
+    for (i = 0; i < n; i++){
+      var L2 = i < h, ord = L2 ? i : i - h, ni = eio(sg(q, -.45 + ord * .05, -.05 + ord * .05)), li = eio(sg(q, .15 + i * .1, .62 + i * .1)), x_ = cx + (L2 ? -1 : 1) * (gapx - 22 * U), y_ = yy(i);
+      var op = (ni * (1 - .78 * quiet)).toFixed(2); if (o.ns[i].__o !== op){ o.ns[i].__o = op; o.ns[i].style.opacity = op; }
+      if (li > 0){ any = Math.max(any, li); ink(.5 * (1 - .8 * quiet), 1); seg(x_, y_, x_ + (cx - x_) * li, y_ + (cy - y_) * li); }
+    }
+    if ((any > .98 || quiet > 0) && ap < .25){ g.globalAlpha = 1 - ap * 4; g.fillStyle = '#96A8BF'; g.fillRect(Math.round(cx - SQ / 2), Math.round(cy - SQ / 2), Math.round(SQ), Math.round(SQ)); g.globalAlpha = 1; }
+    if (o.gl && o.gl.ready){ o.gl.size(); o.gl.set1('uA', ap); o.gl.set1('uTime', (t * 60) | 0); o.gl.draw(); }   /* the point opens into the finished home */
+    else if (o.im && !o.gl){ o.im.style.opacity = ap.toFixed(3); }
+    var ci = eio(sg(q, 2.2, 2.52));
+    if (o.c){ o.c.style.opacity = ci.toFixed(3); o.c.style.transform = 'translate3d(0,' + (14 * U * (1 - ci)).toFixed(1) + 'px,0)'; }
+    if (o.p){ o.p.style.opacity = ci.toFixed(3); }
+  }
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

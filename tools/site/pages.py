@@ -548,7 +548,9 @@ def brokers():
     names = [x[1] if isinstance(x[1], str) else ' '.join(x[1]) for x in sec['items'] if x[0] == 'h4']
     txts = [x[1][0] if isinstance(x[1], (list, tuple)) else x[1] for x in sec['items'] if x[0] == 'p']
     assert len(names) == len(txts) == 5, (names, txts)
-    pg.add(tk_strip(label(sec), [('One Seamless', ''), ('Client ', 'Journey')], [(n, t_, 0) for n, t_ in zip(names, txts)]), 'Journey')
+    LN = [0, 1, 2, 1, 2]                                                       # who leads: You · CI · Your client · CI · Your client — the subjects of the client's own five sentences
+    assert txts[0].startswith('You ') and txts[1].startswith('CI ') and txts[2].startswith('Your client ') and 'CI team' in txts[3] and 'Your client' in txts[4], txts
+    pg.add(br_relay(label(sec), [('One Seamless', 0), ('Client Journey', 1)], ['You', 'CI', 'Your client'], [(n, t_, l) for n, t_, l in zip(names, txts, LN)], A + 'us/1511-12a.webp'), 'Journey')
     # 05 how CI helps: the client's five row names on the grid, each opening its sentence
     sec = S[4]; rows = get(sec, 'row')
     NMS = [['Renovation', 'Perspective'], ['A Trusted', 'Next Step'], ['Confidence', 'at Every', 'Decision'], ['Concierge-Level', 'Continuity'], ['A Partner Who', 'Honors the', 'Relationship']]
@@ -559,7 +561,7 @@ def brokers():
     sec = S[5]; ten = [it[1] for it in sec['items'] if it[0] == 'dots'][0]
     rp = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']; rs = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))
     assert len(ten) == 10 and rs == 'Their path is already clear' and nop(h_of(sec)) == 'One Team, From Keys to Move-In', (ten, rs, h_of(sec))
-    pg.add(tk_loose([label(sec)], [('One Team, From', ''), ('', 'Keys to Move-In')], ten, after=(rp[0], rs)), 'Receive')
+    pg.add(br_point(label(sec), [('One Team, From', 0), ('Keys to Move-In', 1)], ten, rp[0], rs, A + 'us/1530-04.webp'), 'Receive')
     # 07 why this strengthens your business: a still black screen
     sec = S[6]; bp = [nop(' '.join(it[1])) for it in sec['items'] if it[0] == 'p']
     bs = nop(' '.join([it[1] for it in sec['items'] if it[0] == 'strong'][0]))

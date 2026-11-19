@@ -1248,6 +1248,44 @@ def wl_feats(kick, title, intro, states, imgs):
         '    </div>', '  </div>', '</section>'])
 
 
+def br_relay(kick, title, lanes, stages, img=None):
+    """Broker Program, the journey — «Естафета» (19.11.2026 07:53, of the storyboard: «третій, ну окей, подивимося, як воно працює»).
+    Three lanes ruled across a black screen — the three who carry the client: `lanes` = their names (words of the client's own
+    sentences) — and ONE line that the scroll walks through the five stages, stepping from lane to lane: it shows who leads at
+    each moment, and that the journey is one unbroken line («One Seamless Client Journey»). A stage's name stands over its square;
+    the sentence of the stage in hand under it. `stages` = [(name, sentence, lane index)]. relay() in js/inner.js; lines on the
+    film's canvas, type in the DOM."""
+    hl = '<br>'.join(('<span class="cb">%s</span>' % esc(t)) if b else esc(t) for t, b in title)
+    return '\n'.join([
+        '<section class="film br-rl" data-fig="relay" data-len="%.2f" data-open="0" id="@ID@">' % (.2 + len(stages) * .62 + .35), '  <div class="stg">',
+        # 19.11 08:15: «мені не вистачає фотографій… все чорне, чорне, чорне» — a band of one photograph lies under the lanes and is uncovered as far as the line has walked
+        ('    <div class="br-rl-ph"><img src="%s" alt=""></div>' % img) if img else '',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc br-rl-s">',
+        '      <div class="br-rl-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
+        ''.join('      <p class="t34 br-rl-l" aria-hidden="true">%s</p>\n' % esc(x) for x in lanes).rstrip('\n'),
+        ''.join('      <div class="br-rl-st" data-l="%d" data-who="%s"><p class="t34 n">%s</p><p class="t20 d">%s</p></div>\n' % (l, esc(lanes[l]), esc(n), esc(nop(t_))) for n, t_, l in stages).rstrip('\n'),
+        '    </div>', '  </div>', '</section>'])
+
+
+def br_point(kick, title, names, para, closer_, img=None):
+    """Broker Program, what the client's client receives — «Одна точка» (19.11.2026 07:53: «п'ятий, ну, не знаю, подивимося, як
+    воно працює»). The ten names stand in two columns; a line is ruled from each of them to ONE point — our square — in the
+    middle («one point of contact, one seamless process»); then the names go quiet, one line leaves the point downward and the
+    client's sentence stands under it: «Their path is already clear». point() in js/inner.js."""
+    hl = '<br>'.join(('<span class="cb">%s</span>' % esc(t)) if b else esc(t) for t, b in title)
+    h = (len(names) + 1) // 2
+    return '\n'.join([
+        '<section class="film br-pt" data-fig="point" data-len="2.9" data-open="0" id="@ID@">', '  <div class="stg">',
+        # 19.11 08:15: the one point OPENS into a photograph of the finished home (instead of a line going on)
+        ('    <div class="br-pt-ph"><img src="%s" alt=""></div>' % img) if img else '',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc br-pt-s">',
+        '      <div class="br-pt-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
+        '      <div class="br-pt-ns">%s</div>' % ''.join('<p class="t34 br-pt-n %s">%s</p>' % ('l' if i < h else 'r', esc(n)) for i, n in enumerate(names)),
+        '      <p class="t34 br-pt-c">%s</p>' % esc(nop(closer_)),
+        '      <p class="t20 br-pt-p">%s</p>' % esc(nop(para)),
+        '    </div>', '  </div>', '</section>'])
+
+
 def co_seam(kick, h1, lead, ps, strong, img, ln):
     """04 — CI Core, «What You Receive»: THE DRAWING BECOMES THE ROOM, in three steps on one pinned screen (18.11.2026 21:36, of the
     one-screen version: «цей блок мені не підходить. Він дуже грузний, дуже важкий»; 21:44, of the two storyboards: «то, що

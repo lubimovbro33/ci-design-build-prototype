@@ -1451,3 +1451,41 @@ html body.inr .wl-fx-c{position:absolute;right:calc(50 * var(--u));bottom:max(ca
   .wl-fx-i .w{opacity:1;transform:none}
   .film .wl-fx-i{margin-top:28px} html body.inr .wl-fx-i .nm0{display:block;margin:0 0 10px}
 }
+
+/* Broker Program — «Естафета» (the journey as one line through three lanes) and «Одна точка» (ten names, ten lines to one point).
+   19.11.2026 07:53. The geometry is the screen's, so relay() and point() in js/inner.js place the type; here only how it looks. */
+.br-rl .stg, .br-pt .stg{background:#000}
+.br-rl-h, .br-pt-h{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u))}
+html body.inr .br-rl-h h2, html body.inr .br-pt-h h2{margin-top:calc(25 * var(--u));color:#FFFFFF}
+html body.inr .film .br-rl-l{position:absolute;margin:0;color:#FFFFFF;white-space:nowrap;opacity:0;transition:opacity .4s}
+.br-rl-st{position:absolute;opacity:0}
+html body.inr .film .br-rl-st .n{position:absolute;left:0;top:0;margin:0;color:#FFFFFF;white-space:nowrap;transform:translateX(-50%)}
+html body.inr .film .br-rl-st .d{position:absolute;left:calc(-100 * var(--u));top:calc(82 * var(--u));width:15.5em;margin:0;color:#FFFFFF;white-space:normal;opacity:0;transform:translate3d(0,.5em,0);transition:opacity .35s, transform .5s}
+/* the last stage stands near the right field: its sentence keeps to the left of it, so nothing runs off the screen or into the rail */
+html body.inr .film .br-rl-st:last-of-type .d{left:auto;right:calc(-140 * var(--u))}
+html body.inr .film .br-rl-st.on .d{opacity:1;transform:none;transition:opacity .6s .15s, transform .8s cubic-bezier(.16,1,.3,1) .15s}
+html body.inr .film .br-pt-n{position:absolute;margin:0;color:#FFFFFF;white-space:nowrap;opacity:0}
+html body.inr .film .br-pt-c{position:absolute;left:0;width:100%;margin:0;text-align:center;color:#FFFFFF;opacity:0}
+html body.inr .film .br-pt-p{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;white-space:normal;opacity:0}
+@media (max-aspect-ratio: 1/1){
+  /* phones: the title, then the stages (who leads, the name, the sentence) one under another; the ten names as a column, the sentence, the paragraph */
+  .film .br-rl-s, .film .br-pt-s{padding-top:72px}
+  .br-rl-h, .br-pt-h, .br-rl-st, html body.inr .film .br-rl-st .n, html body.inr .film .br-rl-st .d, html body.inr .film .br-pt-n, html body.inr .film .br-pt-c, html body.inr .film .br-pt-p{position:static;width:auto;opacity:1!important;transform:none!important;text-align:left}
+  html body.inr .br-rl-h h2, html body.inr .br-pt-h h2{margin-top:14px}
+  html body.inr .film .br-rl-l{display:none}
+  .br-rl-st{margin-top:30px} .br-rl-st::before{content:attr(data-who);display:block;margin:0 0 8px;font-family:var(--fz);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#96A8BF}
+  html body.inr .film .br-rl-st .d{margin-top:8px}
+  .br-pt-ns{margin-top:30px} html body.inr .film .br-pt-n + .br-pt-n{margin-top:8px} html body.inr .film .br-pt-c{margin-top:36px;color:#96A8BF} html body.inr .film .br-pt-p{margin-top:16px}
+}
+
+/* 19.11.2026 08:15 — photographs in the two black screens of the Broker Program. The relay: a band of one photograph under the lanes,
+   from 110 over the first lane to 130 under the last (uncovered by relay() as far as the line has walked). The one point: a window
+   420 × 520 on the point, which opens out of it. */
+.br-rl-ph{position:absolute;left:0;width:100%;top:calc(50% - 130 * var(--u));height:calc(560 * var(--u));z-index:1;overflow:hidden;background:#000}
+.br-pt-ph{position:absolute;left:calc(50% - 210 * var(--u));top:calc(50% - 250 * var(--u));width:calc(420 * var(--u));height:calc(520 * var(--u));z-index:1;overflow:hidden;background:#000}
+.br-rl-ph img, .br-pt-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none}
+.br-rl-ph img{filter:brightness(.4)} .br-pt-ph img{opacity:0}
+@media (max-aspect-ratio: 1/1){
+  .br-rl-ph, .br-pt-ph{position:relative;left:auto;top:auto;width:100%;height:auto;aspect-ratio:3 / 2}
+  .br-rl-ph .glc, .br-pt-ph .glc{display:none} .br-rl-ph.gl-on > img, .br-pt-ph.gl-on > img, .br-rl-ph img, .br-pt-ph img{visibility:visible;opacity:1!important;filter:brightness(.86)}
+}
