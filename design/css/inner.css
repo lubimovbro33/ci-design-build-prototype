@@ -1375,7 +1375,7 @@ html body.inr .tk-wd-h h2{margin-top:calc(25 * var(--u));color:#FFFFFF}
 html body.inr .tk-wd-s .t20s p{margin:0;max-width:none;color:#FFFFFF} html body.inr .tk-wd-s .t20s p + p{margin-top:.8em}
 .film .tk-wd-f2, .film .tk-wd-f3{opacity:0}
 html body.inr .film .tk-wd-i{position:absolute;left:calc(50 * var(--u));top:calc(175 * var(--u) + 1.2 * var(--t-run));margin:0;color:#FFFFFF;opacity:0}
-html body.inr .film .tk-wd-i.m{width:24em;line-height:1.12!important}   /* a statement in the 34 instead of a word */
+html body.inr .film .tk-wd-i.sm{width:24em;line-height:1.12!important}   /* a statement in the 34 instead of a word */
 html body.inr .film .tk-wd-c{position:absolute;left:0;top:50%;width:100%;margin:0;text-align:center;color:#FFFFFF;opacity:0}
 .tk-wd-c > span{display:block;transform:translateY(-50%)}
 @media (max-aspect-ratio: 1/1){

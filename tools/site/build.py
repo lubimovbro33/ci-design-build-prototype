@@ -1160,9 +1160,9 @@ def tk_words(kick, title, foot1, words, foot2, closer_, img, mode='still', pts=N
     if states:
         its = ''.join('<div class="t20s tk-wd-i st"><p class="t34 nm0">%s</p>%s</div>' % (esc(nm), par(ps_)) for nm, ps_ in states)
     elif words:
-        its = ''.join('<p class="%s tk-wd-i%s">%s</p>' % ('t34' if wsmall else 't60', ' m' if wsmall else '', esc(nop(w))) for w in words)
+        its = ''.join('<p class="%s tk-wd-i%s">%s</p>' % ('t34' if wsmall else 't60', ' sm' if wsmall else '', esc(nop(w))) for w in words)   # never the class «m»: that is the films' own text moment, and the driver shows it
     else:
-        its = '<p class="t34 tk-wd-i m">%s</p>' % two(mid)
+        its = '<p class="t34 tk-wd-i sm">%s</p>' % two(mid)
     return '\n'.join([
         '<section class="film tk-wd%s" data-fig="words" data-mode="%s" data-n="%d" data-dw="%s" data-pts="%s" data-len="%.2f" data-open="0" id="@ID@">' % (
             (' ' + cls) if cls else '', mode, n, dw, ';'.join('%.4f,%.4f,%.3f,%.3f' % tuple(p) for p in (pts or [])), 1.0 + n * dw + (1.05 if closer_ else .45)), '  <div class="stg">',

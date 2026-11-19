@@ -1192,7 +1192,8 @@
     var ho = 1 - eio(sg(q, .62, .9));                                         /* step 1 goes up a little as it goes out */
     put(o.h, ho, ty(-16 * U * (1 - ho))); put(o.f1, ho, ty(-16 * U * (1 - ho)));
     for (i = 0; i < o.ws.length; i++){                                         /* step 2: each word comes up into the title's place and gives it to the next */
-      var a0 = w0 + i * o.dw, wi = eio(sg(q, a0 - .02, a0 + .14)), wo = 1 - (i === o.ws.length - 1 ? (o.c ? eio(sg(q, wE - .04, wE + .14)) : 0) : eio(sg(q, a0 + o.dw - .15, a0 + o.dw - .01)));   /* without a closing sentence the last one stays */
+      /* one is fully gone before the next begins to come (19.11.2026: «текст наїхав один на одний» — two sentences were on the screen at once for a moment) */
+      var a0 = w0 + i * o.dw, wi = eio(sg(q, a0 + .02, a0 + .16)), wo = 1 - (i === o.ws.length - 1 ? (o.c ? eio(sg(q, wE - .04, wE + .1)) : 0) : eio(sg(q, a0 + o.dw - .16, a0 + o.dw - .04)));   /* without a closing sentence the last one stays */
       put(o.ws[i], wi * wo, ty((1 - wi) * 20 * U - (1 - wo) * 16 * U));
     }
     var fi = eio(sg(q, w0 - .04, w0 + .22)), fo = 1 - eio(sg(q, wE - .04, wE + .14));
