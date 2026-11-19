@@ -546,3 +546,14 @@ p, dd, li, blockquote{text-wrap:pretty}
 .sqr > span::before{content:"";position:absolute;left:var(--sg);top:50%;margin-top:calc(var(--sw) / -2);width:var(--sw);height:var(--sw);background:#96A8BF}
 @media (max-aspect-ratio: 1/1){ .sqr{--sg:6px} }
 
+/* ================================================================== ONE EYEBROW FOR THE WHOLE SITE (19.11.2026 10:13)
+   «Мені не подобається, що оці наші eyebrow всюди різні. Десь воно капсом написано, десь без капса, різний розмір, десь 20, десь 14.
+   Давай зведемо на всьому сайті це до одного знаменника. Давай зробимо без капса.» There were three on the site: the small caps of
+   the first type scale (Zalando Sans Expanded 14, capitals), the 18 capitals of the «CI Difference» grid, and the one of her own
+   frames since 15.11 (529:907, 658:9256, 658:9130): Zalando Sans 20 / 120 %, +5 %, as typed, Bright Gray. The last is now the only
+   one. An eyebrow is the NAME OF A BLOCK OVER ITS TITLE and carries the class «ey» (with whatever class places it); .tk-cv-k and
+   .iv-k in inner.css are the same style. What is not an eyebrow keeps the small caps: counters, card lines, table terms, the rail.
+   The ink is Bright Gray, except on the white panel of the «right fit» grid, where the place's own black stays. */
+html body .ey, html body.inr .ey{font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:.05em!important;text-transform:none!important}
+html body .ey *{font-family:inherit!important;font-weight:inherit!important;font-size:inherit!important;line-height:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important}
+html body .ey:not(.tk-df-k), html body.inr .ey:not(.tk-df-k){color:#EBEBEB}

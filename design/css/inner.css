@@ -47,7 +47,7 @@ body.inr .hdr{opacity:1}
    the second 222 from the first, 8 between rows), the closing paragraph on the foot, 331 wide; the button centred on the foot.
    The plan stands in the middle of the screen (plan() in js/inner.js). */
 .film .sw-hd{left:0;right:0;top:calc(50 * var(--u));bottom:auto;text-align:center}
-html body.inr .film .sw-hd .sw-k{position:static;margin:0 0 calc(29 * var(--u))}
+html body.inr .film .sw-hd .sw-k{position:static;margin:0 0 calc(21 * var(--u))}   /* 19.11: the eyebrow is the site's one (20 / 24) now — 21 under it keeps the title on her 95 */
 html body.inr .film .sw-hd .sw-h{position:static;margin:0}
 /* 21:06: «чому в тебе всюди між цим заголовком і описом різна відстань? Чому ти не дотримуєшся відстані, яка закладена в макеті?» —
    the statement and what follows it were each pinned to the frame's own coordinates (310 and 488), so a statement of two lines or of
@@ -474,7 +474,7 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
    and the page's name stands centred one step (30) above it. --ln = the number of the title's lines. (.bl: her frame of 17:18, a column
    in the bottom left corner — kept for the builder's place='bl') */
 .sn-h.cc{left:0;right:0;text-align:center;top:calc(50% - var(--ln, 3) * .428 * max(38px, 111 * var(--u)))}
-.sn-k.cc{left:0;right:0;text-align:center;top:calc(50% - var(--ln, 3) * .428 * max(38px, 111 * var(--u)) - 30 * var(--u) - 1.136em)}
+.sn-k.cc{left:0;right:0;text-align:center;top:calc(50% - var(--ln, 3) * .428 * max(38px, 111 * var(--u)) - 30 * var(--u) - 1.2em)}
 .sn-h.bl{left:calc(50 * var(--u));top:auto;bottom:max(calc(50 * var(--u)), 50px)}
 .sn-k.bl{left:calc(50 * var(--u));top:auto;bottom:calc(max(50 * var(--u), 50px) + var(--ln, 6) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
 .sn-hi{display:block;animation:cvIn 1.7s cubic-bezier(.16,1,.3,1) .25s both}
@@ -631,7 +631,7 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
   .sn-h, .sn-k, .sn-lead{left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
   .sn-h.bl, .sn-k.bl{left:var(--m, 20px)} .sn-h.cc, .sn-k.cc{left:var(--m, 20px);right:var(--m, 20px)}
   .sn-h.cc{white-space:nowrap}   /* phones: the centred title keeps its own lines */
-  .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 38px - 14px - 1.136em)}
+  .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 38px - 14px - 1.2em)}
   /* phones: the four panes stand two by two under the title */
   .sf-cells{top:auto;height:calc(100svh - 56vw);grid-template-columns:repeat(2, minmax(0, 1fr));grid-template-rows:repeat(2, minmax(0, 1fr))}
   .sf-cell + .sf-cell::after{display:none}

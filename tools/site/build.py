@@ -413,7 +413,7 @@ def cover(kick, h1, paras, img, button=None, emb='', pos=None, g=None):
     if img: o.append('    <div class="pic"><img src="%s" alt=""%s></div>' % (img, ' style="%s"' % st if st else ''))
     o.append('    <canvas class="ln" aria-hidden="true"></canvas>\n    <div class="sc">')
     o.append('      <h1 class="t111 cv-h%s"><span class="cv-hi">%s</span></h1>' % (l3, hb))
-    if kick: o.append('      <p class="lab3 cv-k%s"><span class="cv-hi">%s</span></p>' % (l3, esc(kick)))
+    if kick: o.append('      <p class="lab3 ey cv-k%s"><span class="cv-hi">%s</span></p>' % (l3, esc(kick)))
     if paras:
         first = paras[0]; rest = paras[1:]
         o.append('      <p class="t34 m p-al" data-k="1.0 1.35 99 99" style="--w:1240">%s</p>' % blue(' '.join(first), first))
@@ -431,7 +431,7 @@ def sn_title(h1, kick, scrub='', style='', maxc=18, hidden=False):
     hb = brk(h1, maxc); l = {2: ' l3', 3: ' l4'}.get(hb.count('<br>'), '')
     sa = (' data-s="%s"' % scrub if scrub else '') + (' style="%s"' % style if style else '')
     o = '    <%s class="t111 sn-h%s"%s%s><span class="sn-hi">%s</span></%s>' % ('p' if hidden else 'h1', l, sa, ' aria-hidden="true"' if hidden else '', hb, 'p' if hidden else 'h1')
-    if kick and not hidden: o += '\n    <p class="lab3 sn-k%s"%s><span class="sn-hi">%s</span></p>' % (l, sa.replace('top:' + UU(150), 'top:' + UU(100)), esc(kick))
+    if kick and not hidden: o += '\n    <p class="lab3 ey sn-k%s"%s><span class="sn-hi">%s</span></p>' % (l, sa.replace('top:' + UU(150), 'top:' + UU(100)), esc(kick))
     return o
 def sc_four(kick, h1, ways):
     """Solutions, her word of 16.11 22:48: the four ways are shown the way the home page shows the six parts of CI (the «df2» block) — PANES over
@@ -442,7 +442,7 @@ def sc_four(kick, h1, ways):
     for i, w in enumerate(ways):
         o.append('      <img class="sf-i%s" data-i="%d" src="%s" alt="">' % (' on' if i == 0 else '', i, w[2]))
     o.append('    </div>')
-    o.append('    <p class="lab3 sf-k">%s</p>' % esc(kick))
+    o.append('    <p class="lab3 ey sf-k">%s</p>' % esc(kick))
     o.append('    <h1 class="t60 sf-h">%s</h1>' % brk(h1, 20))
     o.append('    <div class="sf-cells">')
     for i, w in enumerate(ways):
@@ -461,7 +461,7 @@ def sc_door(kick, h1, img):
     hb = brk(h1, 18); n = hb.count('<br>') + 1
     return '\n'.join([sn_open(1.7),
         '    <div class="sn-full tkd-ph" data-s="ci:0,49.3,0,49.3>0,0,0,0@.04-1.3"><img src="%s" alt="" data-s="sc:1.16>1@.04-1.45" style="filter:contrast(1.04) brightness(.74)"></div>' % img,
-        '    <p class="lab3 sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
+        '    <p class="lab3 ey sn-k bl" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, esc(kick)),
         '    <h1 class="t111 sn-h bl" style="--ln:%d"><span class="sn-hi">%s</span></h1>' % (n, hb),
         SN_CLOSE])
 def tk_cover(kick, h1, img, line, order, lines, idea=None):
@@ -531,7 +531,7 @@ def tk_loose(kick, title, names, leave=True, note=None, gather=None, after=None)
             '' if leave else (' gat' if gather else ' stay'), ('2.7' if after else '2') if leave else ('1.7' if gather else '0'),
             '' if leave else (' data-gather="%d"' % gather if gather else ' data-stay')), '  <div class="stg">',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-lo-s">',
-        '      <p class="lab3 rv tk-lo-k">%s</p>' % ' <br class="lb">'.join(esc(x) for x in kick),
+        '      <p class="lab3 ey rv tk-lo-k">%s</p>' % ' <br class="lb">'.join(esc(x) for x in kick),
         '      <h2 class="t60s rv tk-lo-h">%s</h2>' % hl,
         ] + (['      <p class="t20 rv tk-lo-n">%s</p>' % esc(nop(note))] if note else []) + [
         '      <p class="t34 rv tk-lo-f" data-loose><span class="sqr">%s</span></p>' % fs,
@@ -576,7 +576,7 @@ def tk_count(kick, title, lead, rows):
     return '\n'.join([
         '<section class="film tk-ct" data-fig="count" data-len="2.7" data-open="0" id="@ID@">', '  <div class="stg">',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-ct-s">',
-        '      <div class="tk-ct-h"><p class="lab3 rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
+        '      <div class="tk-ct-h"><p class="lab3 ey rv">%s</p><h2 class="t60 rv">%s</h2></div>' % (esc(kick), hl),
         '      <p class="t20 rv tk-ct-l">%s</p>' % (esc(nop(lead)) if isinstance(lead, str) else ' <br class="bd">'.join(esc(nop(x)) if i == len(lead) - 1 else esc(x) for i, x in enumerate(lead))),
         '      <div class="tk-ct-g rv" data-count><div class="tk-ct-t">%s</div><div class="tk-ct-d"><p class="lab3 tk-ct-n" aria-hidden="true"><span>%s</span></p>%s</div></div>' % (
             rs, ''.join('<i>%02d</i>' % (i + 1) for i in range(len(rows))), ds),
@@ -705,7 +705,7 @@ def tk_fit(kick, h1, lead, rows, img, title_lines, tail=None, free=False):
             '    <i class="df2-v a" aria-hidden="true"></i><i class="df2-v b" aria-hidden="true"></i><i class="df2-v c" aria-hidden="true"></i>'
             '<i class="df2-h a" aria-hidden="true"></i><i class="df2-h b" aria-hidden="true"></i>\n'
             '    <div class="df2-cells">%s</div>\n'
-            '    <div class="df2-panel"><p class="tk-df-k">%s</p><h2 class="df2-big">%s</h2><p class="df2-s1"><b>%s</b>%s</p></div>\n'
+            '    <div class="df2-panel"><p class="tk-df-k ey">%s</p><h2 class="df2-big">%s</h2><p class="df2-s1"><b>%s</b>%s</p></div>\n'
             '  </div>\n</section>') % (esc(kick), img, cells, esc(kick), '<br>'.join(esc(x) for x in title_lines), esc(nop(lead)) if lead else '',
                                       ('<span class="tk-df-tl">%s</span>' % esc(nop(tail))) if tail else '')   # tail: the section's own closing sentence (CI Wellness)
 def tk_rows(kick, h1, lead, rows, num=True, cls=''):
@@ -715,7 +715,7 @@ def tk_rows(kick, h1, lead, rows, num=True, cls=''):
     for i, r in enumerate(rows):
         a, b = (('%02d' % (i + 1)), r) if num else r
         rs += '<div class="tk-r-r rv"><p class="%s a">%s</p><p class="t20 b">%s</p></div>' % ('lab3' if num else 't20', esc(a), esc(nop(b)))
-    return ('<section class="bk tk-rw%s" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk tk-rw%s" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '%s  <div class="tk-r-g">%s</div>\n</section>') % (
                 cls, esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)),
                 '  <p class="t20 rv tk-r-l" style="--w:475">%s</p>\n' % esc(nop(lead)) if lead else '', rs)
@@ -761,7 +761,7 @@ def tk_calm(kick, h1, big, lines, closer_):
     """07 — the six ways of working as ONE paragraph, not six bullets (16.11 23:58), and the client's closing thought under it. The screen
     carries no heading of its own: the heading of this part of their copy stands over the four counts on screen 03, and repeating it here
     would read as two blocks saying the same thing."""
-    hd = ('  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n' % (
+    hd = ('  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n' % (
         esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)))) if h1 else ''
     return ('<section class="bk tk-cm" id="@ID@">\n%s%s  <p class="t20 rv tk-cm-p" style="--w:475">%s</p>\n'
             '  <p class="t34 rv tk-cm-c">%s</p>\n</section>') % (
@@ -770,14 +770,14 @@ def tk_calm(kick, h1, big, lines, closer_):
 def tk_index(kick, h1, note, items):
     """09 — everything that stands behind one contract, as ONE field of words set apart by the blue square. Its weight is the point, so it is
     set quietly, under the page's smallest heading."""
-    return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk tk-ix" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="lab3 rv tk-ix-n">%s</p>\n  <p class="t34 rv tk-ix-f">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), sqr(items))
 def sc_track(kick, h1, parts, statement, imgs):
     """Turnkey: one track from the first idea to the first night home; it pans sideways"""
     a, b = parts
     o = [sn_open(2.9, ' trk'), '    <div class="sn-trk" data-track="0.05 2.75">',
-         '      <div class="tk-t a" style="width:%s"><p class="lab3">%s</p><h1 class="t111" aria-label="%s">%s</h1></div>' % (UU(1280), esc(kick), html.escape(nop(h1)), brk(a, 18)),
+         '      <div class="tk-t a" style="width:%s"><p class="lab3 ey">%s</p><h1 class="t111" aria-label="%s">%s</h1></div>' % (UU(1280), esc(kick), html.escape(nop(h1)), brk(a, 18)),
          '      <figure class="tk-i" style="width:%s"><img src="%s" alt=""></figure>' % (UU(900), imgs[0]),
          '      <div class="tk-t" style="width:%s"><p class="t34" style="--w:620">%s</p></div>' % (UU(920), statement),
          '      <figure class="tk-i" style="width:%s"><img src="%s" alt=""></figure>' % (UU(640), imgs[1]),
@@ -817,11 +817,11 @@ def sc_letters(kick, h1, img, lines=None, place='cc', zoom=False):
         hb = '<br>'.join(esc(x) for x in lines); n = len(lines)
         t = '    <h1 style="color:#FFFFFF;--ln:%d" class="t111 sn-h %s"><span class="sn-hi">%s</span></h1>' % (n, place, hb)
         dup = '    <p class="t111 sn-h %s"%s style="opacity:0;--ln:%d" aria-hidden="true"><span class="sn-hi">%s</span></p>' % (place, '' if zoom else ' data-s="op:0>1@.75-1.35"', n, hb)
-        kk = '    <p class="lab3 sn-k %s" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (place, n, esc(kick))
+        kk = '    <p class="lab3 ey sn-k %s" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (place, n, esc(kick))
     else:
         t = sn_title(h1, None).replace('<h1 ', '<h1 style="color:#FFFFFF" ')
         dup = sn_title(h1, None, scrub='' if zoom else 'op:0>1@.75-1.35', style='opacity:0', hidden=True)
-        kk = '    <p class="lab3 sn-k l3"><span class="sn-hi">%s</span></p>' % esc(kick)
+        kk = '    <p class="lab3 ey sn-k l3"><span class="sn-hi">%s</span></p>' % esc(kick)
     if zoom:
         return '\n'.join(["<script>document.documentElement.className += ' zfjs';</script>", sn_open(1.5, cls=' zf'),
                           '    <div class="sn-full"><img src="%s" alt="" data-s="sc:1.18>1@0-1.3;br:1>.78@.9-1.3" style="filter:contrast(1.04) brightness(1)"></div>' % img,
@@ -1108,7 +1108,7 @@ def sc_still(kick, h1, img, br=.72):
         '      <img class="im on" src="%s" alt="" style="filter:contrast(1.06) brightness(%s)" data-s="sc:1.08&gt;1@0-1.4">' % (img, br),
         '    </div>',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-        '      <p class="lab3 rv co-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
+        '      <p class="lab3 ey rv co-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
         '      <h1 class="t111 rv co-cv-h" style="--ln:%d">%s</h1>' % (ln, hb),
         '    </div>', '  </div>', '</section>'])
 def co_cover(kick, h1, img, ln, idea=None):
@@ -1124,7 +1124,7 @@ def co_cover(kick, h1, img, ln, idea=None):
         '      <img class="dr" src="%s" alt="" data-s="op:1&gt;0@.16-.84">' % ln,
         '      <img class="im" src="%s" alt="" data-s="op:0&gt;1@.14-.8; sc:1.06&gt;1@0-1.1">' % img, '    </div>',
         '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-        '      <p class="lab3 rv co-cv-k" style="--ln:%d"%s>%s</p>' % (lnn, out_, esc(kick)),
+        '      <p class="lab3 ey rv co-cv-k" style="--ln:%d"%s>%s</p>' % (lnn, out_, esc(kick)),
         '      <h1 class="t111 rv co-cv-h" style="--ln:%d"%s>%s</h1>' % (lnn, out_, hb),
         '    </div>'] + ([
         '    <div class="sc tk-cv-i">',
@@ -1204,7 +1204,7 @@ def wl_rows(kick, title, lead, rows):
                 '<div class="ab"><div><div class="ain"><div><p>%s</p></div><div>%s</div></div></div></div></div>' % (
                     ' open' if i == 0 else '', 'true' if i == 0 else 'false', i + 1, esc(nm), esc(nop(ps_[0])), ''.join('<p>%s</p>' % esc(nop(x)) for x in ps_[1:]))
                 for i, (nm, ps_) in enumerate(rows))
-    return ('<section class="bk wl-pr" id="@ID@">\n  <p class="lab3 rv c1">%s</p>\n  <h2 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h2>\n  <div class="bk-b">\n'
+    return ('<section class="bk wl-pr" id="@ID@">\n  <p class="lab3 ey rv c1">%s</p>\n  <h2 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h2>\n  <div class="bk-b">\n'
             '    <p class="t34 rv wl-pr-l">%s</p>\n    <div class="rws">%s</div>\n  </div>\n</section>') % (
                 esc(kick), hl, esc(nop(lead[0])) + ''.join(' <br><span class="cb">%s</span>' % esc(nop(x)) for x in lead[1:]), r)
 
@@ -1448,7 +1448,7 @@ def co_split(kick, h1, note, left, right, close=None):
     """07 — the connected scope, set as what the page is about: two columns either side of ONE vertical hairline, design on its left and
     construction on its right, so the seam is the block"""
     col = lambda g: ''.join('<li>%s</li>' % esc(x) for x in g)
-    return ('<section class="bk co-sp" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk co-sp" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="lab3 rv co-sp-n">%s</p>\n  <div class="co-sp-g rv"><ul>%s</ul><i aria-hidden="true"></i><ul>%s</ul></div>\n%s</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 24)), esc(nop(note)), col(left), col(right),
                 '  <p class="t20 rv co-sp-c" style="--w:475">%s</p>\n' % esc(nop(close)) if close else '')
@@ -1456,7 +1456,7 @@ def co_roles(kick, h1, ps, lines, strong):
     """06 — «Your role … Our role …»: the two halves of the page's sentence, one either side of the same vertical line"""
     a, b = strong[0], strong[1]
     mid = ''.join('<p class="t20">%s</p>' % esc(nop(x)) for x in lines)
-    return ('<section class="bk co-rl" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk co-rl" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <div class="co-rl-p rv">%s</div>\n  <div class="co-rl-m rv">%s</div>\n'
             '  <div class="co-rl-g rv"><p class="t34">%s</p><i aria-hidden="true"></i><p class="t34">%s</p></div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)),
@@ -1465,7 +1465,7 @@ def co_band(kick, h1, stages):
     """08 — the six stages as one band, the columns kept apart by the page's own vertical hairlines"""
     cells = ''.join('<div class="co-bd-c rv"><p class="lab3 n">%02d</p><p class="t34 h">%s</p><p class="t20 t">%s</p></div>'
                     % (i + 1, esc(nm), esc(nop(tx))) for i, (nm, tx) in enumerate(stages))
-    return ('<section class="bk co-bd" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk co-bd" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <div class="co-bd-g">%s</div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), cells)
 
@@ -1483,7 +1483,7 @@ def cu_cover(kick, h1, img, parts):
                  'data-s="ci:%s,%s,%s,%s&gt;0,0,0,0@%.2f-%.2f; op:.55&gt;1@%.2f-%.2f">' % (
                      img, t, r, b, l, t, r, b, l, a0, a0 + .62, a0, a0 + .62))
     o += ['    </div>', '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-          '      <p class="lab3 rv cu-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
+          '      <p class="lab3 ey rv cu-cv-k" style="--ln:%d">%s</p>' % (ln, esc(kick)),
           '      <h1 class="t111 rv cu-cv-h" style="--ln:%d">%s</h1>' % (ln, hb), '    </div>', '  </div>', '</section>']
     return '\n'.join(o)
 def cu_comp(kick, h1, lead, ps, strong, cells):
@@ -1494,7 +1494,7 @@ def cu_comp(kick, h1, lead, ps, strong, cells):
     for i, (nm, im, cl) in enumerate(cells):
         cs += ('<figure class="cu-c %s rv" data-i="%d" tabindex="0"><img src="%s" alt="" loading="lazy">'
                '<p class="lab3">%s</p></figure>') % (cl, i, im, esc(nm))
-    return ('<section class="bk cu-cp" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk cu-cp" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t34 rv cu-cp-l">%s</p>\n  <div class="cu-cp-g rv" data-comp>%s</div>\n'
             '%s  <p class="t34 rv cu-cp-s">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), cs,
@@ -1504,7 +1504,7 @@ def cu_layers(kick, h1, ps, lines, strong):
     """06 — «Furniture is considered against circulation and scale…»: four considerations, each on its own rule, and each rule a shade
     brighter than the one above it — the layers gathering"""
     rs = ''.join('<div class="cu-ly-r rv" style="--i:%d"><p class="t34">%s</p></div>' % (i, esc(nop(x))) for i, x in enumerate(lines))
-    return ('<section class="bk cu-ly" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk cu-ly" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '%s  <div class="cu-ly-g">%s</div>\n  <p class="t34 rv cu-ly-c">%s</p>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)),
                 ''.join('  <p class="t20 rv cu-ly-p" style="--w:475">%s</p>\n' % esc(nop(x)) for x in ps),
@@ -1517,7 +1517,7 @@ def cu_steps(kick, h1, stages):
     d = .4; t0 = .25; n = len(stages)
     o = ['<section class="film cu-st" data-fig="drawn" data-len="%.2f" id="@ID@">' % (t0 + n * d + .5), '  <div class="stg">',
          '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-         '      <p class="lab3 m cu-st-k" data-k="0 .16 99 99">%s</p>' % esc(kick),
+         '      <p class="lab3 ey m cu-st-k" data-k="0 .16 99 99">%s</p>' % esc(kick),
          '      <p class="t60 m cu-st-h" data-k="0 .2 99 99">%s</p>' % '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26))]
     for i, (nm, tx) in enumerate(stages):
         T = t0 + i * d
@@ -1555,7 +1555,7 @@ def wl_unseen(kick, h1, lead, names, img, ps, feats):
             ' on' if i == 0 else '', i,
             ''.join('<div class="wl-d-f"><p class="t34">%s</p><p class="t20" style="--w:475">%s</p></div>' % (esc(a), esc(nop(b)))
                     for a, b in fs))
-    return ('<section class="bk wl-un" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk wl-un" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t34 rv wl-un-l">%s</p>\n'
             '  <div class="wl-g rv" data-wl>\n    <img src="%s" alt="" loading="lazy">\n'
             '    <svg class="wl-sv" viewBox="0 0 1600 900" preserveAspectRatio="none" aria-hidden="true">%s</svg>\n  </div>\n'
@@ -1570,14 +1570,14 @@ def wl_steps(kick, h1, lead, rows):
         rs += ('<div class="wl-s-r rv"><p class="lab3 n">%02d</p><p class="t34 h">%s</p>'
                '<div class="wl-s-t" style="--w:475">%s</div></div>') % (
                    i + 1, esc(nop(nm)), ''.join('<p class="t20">%s</p>' % esc(nop(x)) for x in body))
-    return ('<section class="bk wl-st" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk wl-st" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t34 rv wl-st-l">%s</p>\n  <div class="wl-s-g">%s</div>\n</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(lead)), rs)
 def wl_spa(kick, h1, sub, lead, parts, ps):
     """07 — the home spa: their own «Steam. Sauna. Cold therapy. Hydrotherapy. Meditation. Movement. Rest. Lighting. Sound.» set as one row of
     rooms on the page's own rules, because that sentence IS a plan of a room and not a paragraph"""
     cs = ''.join('<div class="wl-sp-c rv"><p class="t34">%s</p></div>' % esc(x) for x in parts)
-    return ('<section class="bk wl-sp" id="@ID@">\n  <div class="bk-h"><p class="lab3">%s</p><h2 class="t60">%s</h2></div>\n'
+    return ('<section class="bk wl-sp" id="@ID@">\n  <div class="bk-h"><p class="lab3 ey">%s</p><h2 class="t60">%s</h2></div>\n'
             '  <p class="t34 rv wl-sp-h">%s</p>\n  <p class="t20 rv wl-sp-l" style="--w:475">%s</p>\n'
             '  <div class="wl-sp-g">%s</div>\n%s</section>') % (
                 esc(kick), '<br>'.join(esc(x) for x in brk_lines(nop(h1), 26)), esc(nop(sub)), esc(nop(lead)), cs,
@@ -1591,7 +1591,7 @@ def sc_you(kick, h1, lead, rows, close=None):
     d = .54; t0 = .3; n = len(rows)
     o = ['<section class="film sc-yo" data-fig="drawn" data-len="%.2f" id="@ID@">' % (t0 + n * d + .45), '  <div class="stg">',
          '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc">',
-         '      <p class="lab3 m yo-k" data-k="0 .18 99 99">%s</p>' % esc(kick),
+         '      <p class="lab3 ey m yo-k" data-k="0 .18 99 99">%s</p>' % esc(kick),
          '      <p class="t34 m yo-l" data-k="0 .2 99 99" style="--w:620">%s</p>' % esc(nop(lead))]
     for i, r in enumerate(rows):
         T = t0 + i * d; last = i == n - 1

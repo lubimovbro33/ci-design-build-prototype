@@ -497,7 +497,7 @@ def solutions():
         # disciplines stand in two columns of five, «One team, one roof…» is on the foot — and the lead «From First Idea to the
         # First Night Home» is not in this state (it stands on this page's cover). The other three follow the same order with
         # what they have: the lead as the statement, the first paragraph at 488, the second on the foot.
-        o.append('      <div class="m sw-hd" data-k="%s"><p class="lab3 sw-k">%s</p><p class="t60 sw-h nb">%s</p></div>' % (k, esc(tag), brk(nm, 22)))
+        o.append('      <div class="m sw-hd" data-k="%s"><p class="lab3 ey sw-k">%s</p><p class="t60 sw-h nb">%s</p></div>' % (k, esc(tag), brk(nm, 22)))
         if i == 0:
             ten = [x.strip() for x in nop(ps_[1]).split('. ')]
             assert len(ps_) == 3 and len(ten) == 10, (len(ps_), ten)
@@ -846,7 +846,7 @@ def project_collection(p, nxt):
     cov = ph(p['set'], p['cover'])
     pg.add('<section class="film wl" data-fig="wall" data-len="0" id="@ID@">\n  <div class="stg">\n    <canvas class="ln" aria-hidden="true"></canvas>\n'
            '    <div class="wl-p"><img src="%s" alt="%s"><i class="wl-sh"></i></div>\n'
-           '    <p class="lab3 wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n  </div>\n</section>'
+           '    <p class="lab3 ey wl-k">%s</p>\n    <h1 class="t111 wl-h">%s</h1>\n    <p class="t20 wl-s"><span>%s</span></p>\n  </div>\n</section>'
            % (cov, nm, esc(p['loc']), '<br>'.join(esc(x) for x in p['lines']), wc('lead', ' '.join(get(S[0], 'lead')[0][1]))), 'Project', 'top')
     # the pictures of the page, numbered through (the collection)
     PL = p['gal3']; total = sum(len(fs) for k, fs in PL) + (1 if p.get('quote') else 0); n = [0]   # + the testimonial's photograph, when there is a testimonial
@@ -873,17 +873,17 @@ def project_collection(p, nxt):
         x = known.get(k, ' '.join(v))
         return '<br>'.join(esc(y) for y in x.split(' / ')) if k == 'Scope' and k in known else esc(x)   # the scope: an item a line
     goal = get(sec, 'h3')[0][1]; gp = [it[1][0] for it in sec['items'] if it[0] == 'p']
-    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <div class="g4-b pj-st rv"><h3 class="lab3 pj-in">%s</h3><p class="t60s">%s</p></div>\n  </div>\n'
-           '  <div class="g4 pj-2">\n    <h2 class="lab3 rv g4-k">%s</h2>\n    <dl class="g4-b pj-tb">%s</dl>\n  </div>\n</section>'
+    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 ey rv g4-k">%s</p>\n    <div class="g4-b pj-st rv"><h3 class="lab3 ey pj-in">%s</h3><p class="t60s">%s</p></div>\n  </div>\n'
+           '  <div class="g4 pj-2">\n    <h2 class="lab3 ey rv g4-k">%s</h2>\n    <dl class="g4-b pj-tb">%s</dl>\n  </div>\n</section>'
            % (esc(label(sec)), esc(goal), wc('goal', ' '.join(gp)), esc(nop(h_of(sec))), ''.join('<div class="rv"><dt class="lab3">%s</dt><dd>%s</dd></div>' % (esc(k), val(k, v)) for k, v in dl)))
     # design vision: the concept at the spine, its paragraphs small in the fourth column; then the first staggered pair
     sec = S[2]; ps_ = [' '.join(it[1]) for it in sec['items'] if it[0] in ('p', 'lead')]; assert len(ps_) == 3 and ps_[0].startswith('The design began with [') and ps_[2].startswith('['), ps_
     pv = [wc('began', nop(ps_[0])), esc(nop(ps_[1])), wc('narrative', nop(ps_[2]))]
-    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">%s</h2>\n    <div class="pj-tx">%s</div>\n  </div>\n%s\n</section>'
+    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 ey rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">%s</h2>\n    <div class="pj-tx">%s</div>\n  </div>\n%s\n</section>'
            % (esc(label(sec)), wc('concept', h_of(sec)), ''.join('<p class="t20 rv">%s</p>' % x for x in pv), rows(PL[:1])), 'Vision')
     # the gallery: staggered on the column lines
     ttl = sub(h_of(S[3])).replace('[', '').replace(']', ''); assert ttl == 'Inside ' + nm, ttl
-    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">Inside<br>%s</h2>\n  </div>\n%s\n</section>'
+    pg.add('<section class="bk pj" id="@ID@">\n  <div class="g4">\n    <p class="lab3 ey rv g4-k">%s</p>\n    <h2 class="t60 rv pj-h">Inside<br>%s</h2>\n  </div>\n%s\n</section>'
            % (esc(label(S[3])), esc(nm), rows(PL[1:])), 'Gallery')
     # behind the design: hundreds of strokes become one line; the three decisions are the client's placeholders
     sec = S[4]; rws = get(sec, 'row'); ld = get(sec, 'lead'); q0 = [(.75, .95, 1.35, 1.5), (1.5, 1.65, 1.95, 2.1), (2.1, 2.25, 2.6, 2.75)]
@@ -904,7 +904,7 @@ def project_collection(p, nxt):
     # 16.11 18:33, her frame «18 Next project» (567:2689): a whole screen — the label in the top left corner, the name and its line of
     # places on the left field in the middle of the height, the button «Explore» in the bottom left corner, the photograph on the right
     # half of the screen from edge to edge
-    pg.add('<section class="nx3" id="@ID@">\n  <p class="lab3 nx3-k">Next project</p>\n  <div class="nx3-m"><h2 class="t60 rv"><a href="%s.html">%s</a></h2><p class="lab3 nx3-l rv">%s</p></div>\n'
+    pg.add('<section class="nx3" id="@ID@">\n  <p class="lab3 ey nx3-k">Next project</p>\n  <div class="nx3-m"><h2 class="t60 rv"><a href="%s.html">%s</a></h2><p class="lab3 nx3-l rv">%s</p></div>\n'
            '  <div class="nx3-b rv">%s</div>\n  <a class="nx3-i cd rv" href="%s.html" tabindex="-1" aria-hidden="true"><span class="im"><img src="%s" alt="" loading="lazy"></span></a>\n</section>'
            % (nxt['slug'], '<br>'.join(esc(x) for x in nxt['lines']), sqr(nxt['loc'].split(' · ') + [nxt['bld']]), btn('Explore', nxt['slug'] + '.html'), nxt['slug'], ph(nxt['set'], nxt['card'])))
     final_cta(pg, S[6], ph(p['set'], p['cta']), top=p.get('top', False))
@@ -937,7 +937,7 @@ ART = {'head': 'Why One Team Changes the Outcome', 'cat': 'Perspectives', 'date'
 def news():
     S = P['news']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1">%s</p>\n  <h1 class="t111 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n%s\n%s\n  </div>\n</section>' % (esc(label(S[0])), brk(h1, 20), lead_p(ps[0], w=1240), p20(ps[1:], 'c2')), 'News', 'top')
+    pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 ey rv c1">%s</p>\n  <h1 class="t111 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n%s\n%s\n  </div>\n</section>' % (esc(label(S[0])), brk(h1, 20), lead_p(ps[0], w=1240), p20(ps[1:], 'c2')), 'News', 'top')
     chips = ['All CI News', 'Projects', 'Perspectives', 'Partnerships', 'Press', 'CI News']
     ch = ''.join('<button class="chip%s" type="button" data-f="%s">%s</button>' % (' on' if i == 0 else '', 'all' if i == 0 else slug(c), c) for i, c in enumerate(chips))
     rows = ''.join('<a href="article.html" data-tags="%s"><span class="n">%02d</span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span></a>'
@@ -950,7 +950,7 @@ news()
 def article():
     S = P['article']; pg = Pg()
     sec = S[1]; ks = [it[1][0] for it in sec['items'] if it[0] == 'k']
-    head = '<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1 mt3"><span class="sqr"><span><a href="news.html">← News</a></span><span>%s</span><span>%s</span></span></p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <p class="t34 rv c1" style="--w:900;margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (drw(ART['cat']), drw(ART['date']), drw(ART['head']), drw(ART['lead']))
+    head = '<section class="bk hd0" id="@ID@">\n  <p class="lab3 ey rv c1 mt3"><span class="sqr"><span><a href="news.html">← News</a></span><span>%s</span><span>%s</span></span></p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <p class="t34 rv c1" style="--w:900;margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (drw(ART['cat']), drw(ART['date']), drw(ART['head']), drw(ART['lead']))
     pg.add(head, 'Article', 'top')
     body = []; ps_ = list(ART['ps'])
     def fill(t, kind):
@@ -1018,7 +1018,7 @@ def faq():
     for i, (q, cols) in enumerate(items):
         r.append('<div class="qa rv%s"><button class="qh" type="button" aria-expanded="%s"><span class="n">%02d</span><span class="t">%s</span><span class="pl"></span></button><div class="ab"><div><div class="ain">%s</div></div></div></div>' % (
             ' open' if i == 0 else '', 'true' if i == 0 else 'false', i + 1, html.escape(q, quote=False), ''.join('<div>%s</div>' % c for c in cols)))
-    pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 rv c1">FAQ</p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n    <div class="rws">\n      %s\n    </div>\n  </div>\n</section>' % (title, '\n      '.join(r)), 'FAQ', 'top')
+    pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 ey rv c1">FAQ</p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n    <div class="rws">\n      %s\n    </div>\n  </div>\n</section>' % (title, '\n      '.join(r)), 'FAQ', 'top')
     pg.add(cta('Your Next Chapter Starts With a Conversation', [], ('Begin Your Better Life', 'contact.html'), A + 'ch/1450-29a.webp'), 'Contact')
     emit('faq.html', 'FAQ', pg)
     return len(items)
