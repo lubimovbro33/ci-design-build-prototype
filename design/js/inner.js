@@ -671,6 +671,10 @@
   /* ---------- film: scene — the page's own opening; a track pans sideways, a drawing draws itself */
   function scene(f, q, t){
     var i; for (i = 0; i < f.sc.length; i++) runScrub(f.sc[i], q);
+    /* a cover that stands on the site's two centre lines (19.11.2026 13:24, Partnerships: «одна вертикальна, одна горизонтальна лінія по центру»):
+       ruled once, in time, when the page opens — the title is centred on their crossing from the first moment; wide screens only */
+    if (f.cr === undefined) f.cr = f.el.hasAttribute('data-cross') ? {t0: t} : null;
+    if (f.cr && W > H) cross(eio(c01((t - f.cr.t0 - .3) / 1.3)), eio(c01((t - f.cr.t0 - .5) / 1.3)));
     if (f.trk){ var tk = (f.trk.getAttribute('data-track') || '0 1').split(' '), k = sg(q, +tk[0], +tk[1]), x = -(f.trk.scrollWidth - W) * k;
       if (f.trk.__x !== x){ f.trk.__x = x; f.trk.style.transform = 'translate3d(' + x.toFixed(1) + 'px,0,0)'; } }
     if (f.seg){ var S = f.seg, n = S.length / 4, p = sg(q, .02, 1.05), al = 1 - sg(q, 1.35, 1.9); if (p > 0 && al > 0){

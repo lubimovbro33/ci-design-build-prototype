@@ -836,24 +836,32 @@ def sc_window(kick, h1, img_out, img_in):
     return '\n'.join([sn_open(1.7), '    <div class="sn-full"><img src="%s" alt="" style="object-position:50%% 40%%"></div>' % img_out,
                       '    <div class="sn-full" data-s="ci:48.1,2.6,6.5,72.2>0,0,0,0@.15-1.3" style="clip-path:inset(48.1%% 2.6%% 6.5%% 72.2%%)"><img src="%s" alt="" data-s="sc:1.22>1@.15-1.3" style="filter:contrast(1.04) brightness(.9)"></div>' % img_in,
                       sn_title(h1, kick, scrub='op:1>0@.6-1.0'), SN_CLOSE])
-def sc_strips(kick, h1, img, g=.7, centre=False, lines=None):
+def sc_strips(kick, h1, img, g=.7, centre=False, lines=None, cross=False):
     """Partnerships: one photograph in strips that come together.
     `centre` (19.11.2026 11:58: «зроби на сторінці partnership заголовок і оцей підпис над заголовком посередині з виключкою»): the
     title and the page's name over it are set CENTRED on the screen's vertical axis (`.sn-h.ct` / `.sn-k.ct`), at the height every
-    cover of ours keeps its title (the capitals from 420 of 1080, the name 50 over them). Not on the exact middle of the height:
-    there the name would lie on the lit niche of this photograph and could not be read.
+    cover of ours keeps its title (the capitals from 420 of 1080, the name 50 over them).
     `lines` = the title in its own lines, (text, 1 if in the site's blue) — 12:03: «спробуй дати в дві лінії ще. І together, можливо,
-    заповнене нашим синім кольором» (shown to her as two stills; the page keeps one line until she chooses)."""
-    off = [(-70, -150), (-35, 120), (0, -80), (35, 160), (70, -110)]; o = [sn_open(1.5)]
+    заповнене нашим синім кольором»; 13:24, of the two stills: «давай зробимо в дві лінії з синім кольором».
+    `cross` (13:24: «і додай на цей екран… одна вертикальна, одна горизонтальна лінія по центру»): the site's two centre hairlines
+    on the cover (ruled by scene() in js/inner.js when the page opens; `data-cross`), and the title stands ON THE CROSSING, as type
+    centred on these lines stands in her frames (`.sn-h.cc`: the block on the screen's middle, the name 30 over it) — so with two
+    lines the horizontal hairline runs exactly between them, and no letter lies on it."""
+    off = [(-70, -150), (-35, 120), (0, -80), (35, 160), (70, -110)]; o = [sn_open(1.5, attrs=' data-cross="1"' if cross else '')]
     for i, (dx, dy) in enumerate(off):
         o.append('    <div class="sn-strip" style="clip-path:inset(0 %d%% 0 %d%%)" data-s="tx:%d>0@0-1.15;ty:%d>0@0-1.15"><img src="%s" alt="" style="filter:contrast(1.04) brightness(%s)"></div>' % (80 - i * 20, i * 20, dx, dy, img, g))
     t = sn_title(h1, kick)
     if lines:
         assert ' '.join(x for x, _ in lines) == nop(h1), (lines, h1)
-        l = {3: ' l3', 4: ' l4'}.get(len(lines), '')
-        t = ('    <h1 class="t111 sn-h%s"><span class="sn-hi">%s</span></h1>\n    <p class="lab3 ey sn-k%s"><span class="sn-hi">%s</span></p>'
-             % (l, '<br>'.join(('<span class="cb">%s</span>' % esc(x)) if b else esc(x) for x, b in lines), l, esc(kick)))
-    if centre:
+        n = len(lines); hb = '<br>'.join(('<span class="cb">%s</span>' % esc(x)) if b else esc(x) for x, b in lines)
+        if cross:
+            # `pu`: on a phone (no lines there) the pair stands 100 higher — on the dark cabinets, not on the lit niche
+            t = ('    <h1 class="t111 sn-h cc pu" style="--ln:%d"><span class="sn-hi">%s</span></h1>\n    <p class="lab3 ey sn-k cc pu" style="--ln:%d"><span class="sn-hi">%s</span></p>' % (n, hb, n, esc(kick)))
+        else:
+            l = {3: ' l3', 4: ' l4'}.get(n, '')
+            t = '    <h1 class="t111 sn-h%s"><span class="sn-hi">%s</span></h1>\n    <p class="lab3 ey sn-k%s"><span class="sn-hi">%s</span></p>' % (l, hb, l, esc(kick))
+    else: assert not cross, 'the crossing needs the title in its own lines'
+    if centre and not (lines and cross):
         assert t.count('class="t111 sn-h') == 1 and t.count('class="lab3 ey sn-k') == 1, t
         t = t.replace('class="t111 sn-h', 'class="t111 sn-h ct').replace('class="lab3 ey sn-k', 'class="lab3 ey sn-k ct')
     return '\n'.join(o + [t, SN_CLOSE])

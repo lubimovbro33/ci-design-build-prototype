@@ -633,6 +633,7 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
   .sn-h.bl, .sn-k.bl{left:var(--m, 20px)} .sn-h.cc, .sn-k.cc{left:var(--m, 20px);right:var(--m, 20px)}
   .sn-h.cc{white-space:nowrap}   /* phones: the centred title keeps its own lines */
   .sn-h.ct, .sn-k.ct{left:var(--m, 20px);right:var(--m, 20px)}
+  .sn-h.cc.pu{top:calc(50% - var(--ln, 3) * .428 * 38px - 100px)} .sn-k.cc.pu{top:calc(50% - var(--ln, 3) * .428 * 38px - 100px - 14px - 1.2em)}   /* Partnerships: the pair higher on a phone — on the dark cabinets, off the lit niche */
   .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 38px - 14px - 1.2em)}
   /* phones: the four panes stand two by two under the title */
   .sf-cells{top:auto;height:calc(100svh - 56vw);grid-template-columns:repeat(2, minmax(0, 1fr));grid-template-rows:repeat(2, minmax(0, 1fr))}
