@@ -554,6 +554,8 @@ p, dd, li, blockquote{text-wrap:pretty}
    one. An eyebrow is the NAME OF A BLOCK OVER ITS TITLE and carries the class «ey» (with whatever class places it); .tk-cv-k and
    .iv-k in inner.css are the same style. What is not an eyebrow keeps the small caps: counters, card lines, table terms, the rail.
    The ink is Bright Gray, except on the white panel of the «right fit» grid, where the place's own black stays. */
-html body .ey, html body.inr .ey{font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:.05em!important;text-transform:none!important}
-html body .ey *{font-family:inherit!important;font-weight:inherit!important;font-size:inherit!important;line-height:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important}
+/* 11:17, of the +5 % above: «Стоп. Трекінг не можна давати плюсовий. Трекінг мінус один має бути» — the tracking is −1 at 20 (−.05em), as in the
+   site's running text; the positive one came from two of her frames and is gone everywhere, .tk-cv-k and .iv-k included (they share this rule now) */
+html body .ey, html body.inr .ey, html body .tk-cv-k, html body .iv-k{font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.05em!important;text-transform:none!important}
+html body .ey *, html body .tk-cv-k *, html body .iv-k *{font-family:inherit!important;font-weight:inherit!important;font-size:inherit!important;line-height:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important}
 html body .ey:not(.tk-df-k), html body.inr .ey:not(.tk-df-k){color:#EBEBEB}
