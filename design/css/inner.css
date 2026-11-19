@@ -474,6 +474,7 @@ body.inr .ch-ftr{position:relative;z-index:5;background:#000}
    and the page's name stands centred one step (30) above it. --ln = the number of the title's lines. (.bl: her frame of 17:18, a column
    in the bottom left corner — kept for the builder's place='bl') */
 .sn-h.cc{left:0;right:0;text-align:center;top:calc(50% - var(--ln, 3) * .428 * max(38px, 111 * var(--u)))}
+.sn-h.ct, .sn-k.ct{left:0;right:0;text-align:center}                        /* 19.11.2026 11:58, Partnerships: the title and the name over it centred, at the cover's own height */
 .sn-k.cc{left:0;right:0;text-align:center;top:calc(50% - var(--ln, 3) * .428 * max(38px, 111 * var(--u)) - 30 * var(--u) - 1.2em)}
 .sn-h.bl{left:calc(50 * var(--u));top:auto;bottom:max(calc(50 * var(--u)), 50px)}
 .sn-k.bl{left:calc(50 * var(--u));top:auto;bottom:calc(max(50 * var(--u), 50px) + var(--ln, 6) * .856 * max(38px, 111 * var(--u)) + 30 * var(--u))}
@@ -631,6 +632,7 @@ html body.inr .sf-h{position:absolute;left:0;right:0;top:calc(215 * var(--u));te
   .sn-h, .sn-k, .sn-lead{left:var(--m, 20px);right:var(--m, 20px);white-space:normal}
   .sn-h.bl, .sn-k.bl{left:var(--m, 20px)} .sn-h.cc, .sn-k.cc{left:var(--m, 20px);right:var(--m, 20px)}
   .sn-h.cc{white-space:nowrap}   /* phones: the centred title keeps its own lines */
+  .sn-h.ct, .sn-k.ct{left:var(--m, 20px);right:var(--m, 20px)}
   .sn-k.cc{top:calc(50% - var(--ln, 3) * .428 * 38px - 14px - 1.2em)}
   /* phones: the four panes stand two by two under the title */
   .sf-cells{top:auto;height:calc(100svh - 56vw);grid-template-columns:repeat(2, minmax(0, 1fr));grid-template-rows:repeat(2, minmax(0, 1fr))}

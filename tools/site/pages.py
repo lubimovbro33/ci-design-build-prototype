@@ -632,7 +632,7 @@ def partnerships():
     J = lambda ls: ' '.join(x for x, _ in ls)
     W_ = lambda *xs: [A + x + '.webp' for x in xs]
     h1, ps, a = hero(S[0])
-    pg.add(sc_strips(label(S[0]), h1, A + 'us/1511-07a.webp'), 'Partners', 'top')
+    pg.add(sc_strips(label(S[0]), h1, A + 'us/1511-07a.webp', centre=True), 'Partners', 'top')   # 19.11 11:58: the title and the name over it centred
     # 02 the thought
     idea = ['Exceptional homes are shaped', 'by exceptional collaboration']
     para_ = ['CI partners with leaders across real estate, wellness, lifestyle,', 'technology, design, and luxury residential products.', 'We bring world-class expertise into every project',

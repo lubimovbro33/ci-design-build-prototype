@@ -836,12 +836,27 @@ def sc_window(kick, h1, img_out, img_in):
     return '\n'.join([sn_open(1.7), '    <div class="sn-full"><img src="%s" alt="" style="object-position:50%% 40%%"></div>' % img_out,
                       '    <div class="sn-full" data-s="ci:48.1,2.6,6.5,72.2>0,0,0,0@.15-1.3" style="clip-path:inset(48.1%% 2.6%% 6.5%% 72.2%%)"><img src="%s" alt="" data-s="sc:1.22>1@.15-1.3" style="filter:contrast(1.04) brightness(.9)"></div>' % img_in,
                       sn_title(h1, kick, scrub='op:1>0@.6-1.0'), SN_CLOSE])
-def sc_strips(kick, h1, img, g=.7):
-    """Partnerships: one photograph in strips that come together"""
+def sc_strips(kick, h1, img, g=.7, centre=False, lines=None):
+    """Partnerships: one photograph in strips that come together.
+    `centre` (19.11.2026 11:58: «зроби на сторінці partnership заголовок і оцей підпис над заголовком посередині з виключкою»): the
+    title and the page's name over it are set CENTRED on the screen's vertical axis (`.sn-h.ct` / `.sn-k.ct`), at the height every
+    cover of ours keeps its title (the capitals from 420 of 1080, the name 50 over them). Not on the exact middle of the height:
+    there the name would lie on the lit niche of this photograph and could not be read.
+    `lines` = the title in its own lines, (text, 1 if in the site's blue) — 12:03: «спробуй дати в дві лінії ще. І together, можливо,
+    заповнене нашим синім кольором» (shown to her as two stills; the page keeps one line until she chooses)."""
     off = [(-70, -150), (-35, 120), (0, -80), (35, 160), (70, -110)]; o = [sn_open(1.5)]
     for i, (dx, dy) in enumerate(off):
         o.append('    <div class="sn-strip" style="clip-path:inset(0 %d%% 0 %d%%)" data-s="tx:%d>0@0-1.15;ty:%d>0@0-1.15"><img src="%s" alt="" style="filter:contrast(1.04) brightness(%s)"></div>' % (80 - i * 20, i * 20, dx, dy, img, g))
-    return '\n'.join(o + [sn_title(h1, kick), SN_CLOSE])
+    t = sn_title(h1, kick)
+    if lines:
+        assert ' '.join(x for x, _ in lines) == nop(h1), (lines, h1)
+        l = {3: ' l3', 4: ' l4'}.get(len(lines), '')
+        t = ('    <h1 class="t111 sn-h%s"><span class="sn-hi">%s</span></h1>\n    <p class="lab3 ey sn-k%s"><span class="sn-hi">%s</span></p>'
+             % (l, '<br>'.join(('<span class="cb">%s</span>' % esc(x)) if b else esc(x) for x, b in lines), l, esc(kick)))
+    if centre:
+        assert t.count('class="t111 sn-h') == 1 and t.count('class="lab3 ey sn-k') == 1, t
+        t = t.replace('class="t111 sn-h', 'class="t111 sn-h ct').replace('class="lab3 ey sn-k', 'class="lab3 ey sn-k ct')
+    return '\n'.join(o + [t, SN_CLOSE])
 def sc_split(kick, h1, img, lead):
     """Contact: the words on the left, the studio on the right"""
     return '\n'.join([sn_open(.7), '    <figure class="sn-img ct" style="left:%s;right:0;top:0;height:100%%"><img src="%s" alt="" data-s="sc:1.12>1@0-1" style="filter:contrast(1.04) brightness(.8)"></figure>' % (UU(1160), img),
