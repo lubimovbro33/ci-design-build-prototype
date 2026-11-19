@@ -1489,3 +1489,97 @@ html body.inr .film .br-pt-p{position:absolute;left:calc(50 * var(--u));bottom:m
   .br-rl-ph, .br-pt-ph{position:relative;left:auto;top:auto;width:100%;height:auto;aspect-ratio:3 / 2}
   .br-rl-ph .glc, .br-pt-ph .glc{display:none} .br-rl-ph.gl-on > img, .br-pt-ph.gl-on > img, .br-rl-ph img, .br-pt-ph img{visibility:visible;opacity:1!important;filter:brightness(.86)}
 }
+
+/* ================================================================== Partnerships, built to the storyboard (19.11.2026 09:02)
+   «Ну, давай, збирай, подивимося, як воно працює все». Six films (pp_*() in build.py, pp*() in js/inner.js). The circle is on the
+   page once (08:38: «якось занадто багато кружечків»); everything else is ruled in straight lines. Shared: the head at the left
+   field (.pp-h; .pp-hh is the part a film takes away), paragraphs on the foot in columns of the text line (.pp-f), a closing
+   sentence alone on the screen's middle in the 60, sentence case, two inks (.pp-c), a partner's name as type (.pp-n). */
+.pp .stg{background:#000}
+.pp .cbl{color:#BAC7D6}                                                   /* her blue on a photograph: lighter than the page's */
+.pp-h{position:absolute;left:calc(50 * var(--u));top:calc(150 * var(--u))}
+html body.inr .pp-h h2{margin-top:calc(25 * var(--u));color:#FFFFFF}
+html body.inr .pp-h .pp-sub{margin-top:calc(25 * var(--u));color:#BAC7D6}
+.film .pp-f{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);display:flex;gap:calc(50 * var(--u))}
+html body.inr .pp .t20s p{margin:0;width:21.05em;max-width:none;color:#FFFFFF}
+.film .pp-f.col{display:block;width:21.05em} html body.inr .pp .pp-f.col p + p{margin-top:.8em}
+html body.inr .film .pp-c{position:absolute;left:0;top:50%;width:100%;margin:0;text-align:center;color:#FFFFFF;opacity:0}
+.pp-c > span{display:block;transform:translateY(-50%)}
+html body.inr .pp-n{font-family:var(--fx);font-weight:400;font-size:max(34px, calc(100 * var(--u)));line-height:.86;letter-spacing:-.025em;text-transform:none;margin:0;padding:0;color:#FFFFFF;white-space:nowrap}
+.pp-pa-ph, .pp-nm-ph, .pp-qt-ph, .pp-wd-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:hidden;background:#000}
+.pp-pa-ph img, .pp-nm-ph img, .pp-qt-ph img, .pp-wd-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;display:block;max-width:none;filter:contrast(1.05) brightness(.46)}
+.pp-nm-ph img + img, .pp-qt-ph img, .pp-wd-ph img{opacity:0}
+.pp-qt-ph img{width:50%;height:50%;filter:contrast(1.05) brightness(.6)} .pp-qt-ph img:nth-child(1){left:50%} .pp-qt-ph img:nth-child(2){left:50%;top:50%} .pp-qt-ph img:nth-child(3){top:50%}   /* each in its quarter (what the WebGL layer draws; this is what stands without it) */              /* drawn by the WebGL layer only: a part of the picture, never the whole of it at once */
+/* six parts: the second head waits; a benefit stands in the lower left corner of its part (placed by ppParts()) */
+.pp-h.b{opacity:0}
+html body.inr .film .pp-pa-ca{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;color:#FFFFFF;opacity:0;line-height:1.02!important;white-space:nowrap}
+html body.inr .film .pp-pa-t{margin:0;padding:0;list-style:none}
+html body.inr .film .pp-pa-t li{position:absolute;margin:0;width:21.05em;max-width:calc(33.333vw - 75 * var(--u));color:#FFFFFF;opacity:0}
+/* the quarters: a sentence in the corner of its quarter by the crossing, 50 from both lines */
+html body.inr .film .pp-qt-l, html body.inr .film .pp-qt-p{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;opacity:0}
+html body.inr .film .pp-qt-i{position:absolute;margin:0;width:17em;color:#FFFFFF;opacity:0;line-height:1.02!important}
+.pp-qt-i .w0{display:block}
+.pp-qt-i[data-q="0"]{left:calc(50% + 50 * var(--u));bottom:calc(50% + 50 * var(--u))}
+.pp-qt-i[data-q="1"]{left:calc(50% + 50 * var(--u));top:calc(50% + 50 * var(--u))}
+.pp-qt-i[data-q="2"]{right:calc(50% + 50 * var(--u));top:calc(50% + 50 * var(--u));text-align:right}
+.pp-qt-i[data-q="3"]{right:calc(50% + 50 * var(--u));bottom:calc(50% + 50 * var(--u));text-align:right}
+html body.inr .film .pp-qt-c{position:absolute;left:calc(50% + 50 * var(--u));top:calc(175 * var(--u) + 1.2 * var(--t-run));margin:0;color:#FFFFFF;opacity:0}
+/* partners on a full-screen photograph: the name where the title stood, its paragraphs on the foot */
+.pp-nm-i, .pp-wd-i{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0}
+html body.inr .film .pp-nm-i .pp-n{position:absolute;left:calc(50 * var(--u));top:calc(175 * var(--u) + 1.2 * var(--t-run))}
+html body.inr .film .pp-nm-ic{position:absolute;left:calc(50 * var(--u));top:calc(175 * var(--u) + 1.2 * var(--t-run));width:27em;margin:0;color:#FFFFFF;opacity:0;line-height:1.06!important}
+.pp-nm-ic span{display:block} .pp-nm-ic span + span{margin-top:.55em}
+.pp-nm-b{position:absolute;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);opacity:0;pointer-events:auto}
+/* the photograph that grows wider: the name on the black at 420 of the frame, its line under it, the paragraphs on the foot — all inside the narrowest black field (a third of the screen) */
+html body.inr .film .pp-wd-i .pp-n{position:absolute;left:calc(50 * var(--u));top:calc(50% - 120 * var(--u));font-size:max(30px, calc(80 * var(--u)))}
+html body.inr .film .pp-wd-i .pp-st{position:absolute;left:calc(50 * var(--u));top:calc(50% - 10 * var(--u));width:16em;max-width:calc(33.333vw - 100 * var(--u));margin:0;color:#96A8BF;line-height:1.02!important}
+/* five samples: the row of squares from 50 to 50, each 332, 40 over the screen's middle (on a low wide window the closing line on the foot needs the room under their names); the WebGL layer lies exactly over the squares */
+.pp-sm-g{position:absolute;left:calc(50 * var(--u));right:calc(50 * var(--u));top:calc(50% - 40 * var(--u));height:calc(332 * var(--u));z-index:1}
+html body.inr .film .pp-sm-r{position:absolute;left:calc(50 * var(--u));right:calc(50 * var(--u));top:calc(50% - 40 * var(--u));margin:0;padding:0;list-style:none;display:flex;justify-content:space-between}
+html body.inr .pp-sm-r li{width:calc(332 * var(--u));margin:0;padding:0}
+.pp-sm-r img{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover;max-width:none;opacity:0}
+html body.inr .pp-sm-r li p{margin:calc(20 * var(--u)) 0 0;color:#FFFFFF;opacity:0}
+html body.inr .film .pp-sm-l{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;opacity:0}
+html body.inr .film .pp-sm-c{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;color:#FFFFFF;opacity:0;line-height:1.02!important;white-space:nowrap}
+/* the one circle: a round photograph 380 on the ring's centre (280 right of the screen's middle, 60 under it); the names are placed by ppRing() */
+.pp-rg-ph{position:absolute;left:calc(50% + 90 * var(--u));top:calc(50% - 130 * var(--u));width:calc(380 * var(--u));height:calc(380 * var(--u));z-index:1}
+.pp-rg-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;max-width:none;opacity:0}
+html body.inr .film .pp-rg-n{position:absolute;margin:0;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(20 * var(--u)));line-height:1.15;letter-spacing:-.02em;color:#FFFFFF;white-space:nowrap;transform:translateY(-50%);opacity:0}
+html body.inr .film .pp-rg-pr{position:absolute;left:calc(50 * var(--u));top:calc(50% + 20 * var(--u));margin:0;color:#FFFFFF;opacity:0;line-height:1.02!important;white-space:nowrap}
+.pp-rg-pr span{display:block}
+html body.inr .film .pp-rg-c{position:absolute;left:calc(50 * var(--u));top:calc(50% + 10 * var(--u));margin:0;color:#FFFFFF;opacity:0}
+html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;opacity:0}
+@media (max-aspect-ratio: 1/1){
+  /* phones: each block in the flow — its photograph, then its text in the client's order */
+  .pp-pa-ph, .pp-nm-ph, .pp-wd-ph{position:relative;height:auto;aspect-ratio:3 / 2}
+  .pp-pa-ph img, .pp-nm-ph img, .pp-wd-ph img{opacity:1;filter:contrast(1.05) brightness(.84)} .pp-nm-ph img + img{display:none}
+  .pp .glc, .pp-sm-g{display:none} .pp .gl-on > img{visibility:visible}
+  .pp-qt-ph{position:relative;height:auto;display:grid;grid-template-columns:1fr 1fr;gap:6px;background:none}
+  .pp-qt-ph img{position:static;opacity:1!important;width:100%;height:auto;aspect-ratio:1;filter:contrast(1.05) brightness(.84)}
+  .film .pp-s{padding-top:40px} .film.pp-sm .pp-s{padding-top:96px}
+  .pp-h, .film .pp-f, html body.inr .film .pp-c, html body.inr .film .pp-pa-ca, html body.inr .film .pp-pa-t li, html body.inr .film .pp-qt-l, html body.inr .film .pp-qt-p, html body.inr .film .pp-qt-i, html body.inr .film .pp-qt-c,
+  .pp-nm-i, .pp-wd-i, html body.inr .film .pp-nm-i .pp-n, html body.inr .film .pp-nm-ic, .pp-nm-b, html body.inr .film .pp-wd-i .pp-n, html body.inr .film .pp-wd-i .pp-st, html body.inr .film .pp-sm-r,
+  html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-n, html body.inr .film .pp-rg-pr, html body.inr .film .pp-rg-c, html body.inr .film .pp-rg-l{
+    position:static;width:auto;max-width:none;height:auto;text-align:left;white-space:normal;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
+  html body.inr .pp-h h2{margin-top:14px} html body.inr .pp-h .pp-sub{margin-top:14px}
+  .pp-h.b{margin-top:56px}
+  .film .pp-f, .film .pp-f.col{display:block;width:auto;margin-top:28px} html body.inr .pp .t20s p{width:auto} html body.inr .pp .t20s p + p{margin-top:.8em}
+  html body.inr .film .pp-c{margin-top:40px} .pp-c > span{transform:none} html body.inr .film .pp-pa-ca{margin-top:36px}
+  html body.inr .film .pp-pa-t{margin-top:30px} html body.inr .film .pp-pa-t li{padding:14px 0;border-top:1px solid rgba(255,255,255,.22)}
+  html body.inr .film .pp-qt-l{margin-top:24px} .pp-qt-q{margin-top:30px} html body.inr .film .pp-qt-i + .pp-qt-i{margin-top:20px}
+  html body.inr .film .pp-qt-p{margin-top:28px} html body.inr .film .pp-qt-c{margin-top:36px}
+  html body.inr .pp-n, html body.inr .film .pp-wd-i .pp-n{font-size:clamp(30px, 9vw, 44px);white-space:normal}
+  html body.inr .film .pp-nm-ic{margin-top:36px}
+  .pp-nm-i, .pp-wd-i{margin-top:52px} .pp-nm-i .pp-f, .pp-wd-i .pp-f{margin-top:18px}
+  html body.inr .film .pp-wd-i .pp-st{margin-top:18px}
+  .pp-nm-b{margin-top:30px}
+  html body.inr .film .pp-sm-l{margin-top:24px}
+  html body.inr .film .pp-sm-r{display:grid;grid-template-columns:1fr 1fr;gap:22px 12px;margin-top:30px} html body.inr .pp-sm-r li{width:auto} .pp-sm-r img{opacity:1}
+  html body.inr .pp-sm-r li p{margin-top:10px;opacity:1!important}
+  html body.inr .film .pp-sm-c{margin-top:36px;color:#FFFFFF}
+  .pp-rg-ph{position:relative;left:auto;top:auto;width:64vw;height:64vw;margin:96px auto 0} .pp-rg-ph img{opacity:1}
+  html body.inr .film .pp-rg-l{margin-top:24px}
+  .pp-rg-ns{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px} html body.inr .film .pp-rg-n{white-space:normal}
+  html body.inr .film .pp-rg-pr{margin-top:28px}
+  html body.inr .film .pp-rg-c{margin-top:36px}
+}

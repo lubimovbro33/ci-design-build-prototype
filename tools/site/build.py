@@ -1286,6 +1286,135 @@ def br_point(kick, title, names, para, closer_, img=None):
         '    </div>', '  </div>', '</section>'])
 
 
+# ================================================================== Partnerships — the page built to the storyboard (19.11.2026)
+# 18.11 23:09, of the Broker Program and this page: «вони не цікаві. Там дуже багато просто шматків тексту, незрозуміло, без метафор,
+# без візуалізації… думав метафорами і переробив на дуже високому рівні… цікава креативна анімація… але не повторяйся». 19.11 08:38, of
+# the first storyboard, where a ring stood on five screens of eight: «якось занадто багато кружечків» — so the circle is on this page
+# ONCE, at its end, where the client's own words draw it («around every client… That is the CI ecosystem»); everything else is ruled
+# in the site's own straight lines. 09:02, of the second storyboard (`partnerships-ideas-2.jpg`): «Ну, давай, збирай, подивимося, як
+# воно працює все». Her rules kept: a full-screen photograph never follows another; a black screen carries a photograph; little
+# text to a step; no partner logos (names are type); the photographs are the client's own work.
+def pp_two(ls, cls='cb'): return '<br>'.join(('<span class="%s">%s</span>' % (cls, esc(t))) if b else esc(t) for t, b in ls)
+def pp_ps(ps): return ''.join('<p>%s</p>' % esc(nop(p)).replace('Dr. Alka', 'Dr.&nbsp;Alka') for p in ps)   # a title is never parted from its name at a line's end
+def pp_head(kick, title, cls='', ink='cb', sub=None, rv=True):
+    """the name of the block and its title at the left field; `.pp-hh` is what a film takes away when the title's turn is over"""
+    r = ' rv' if rv else ''
+    return '      <div class="pp-h%s"><p class="tk-cv-k%s">%s</p><div class="pp-hh"><h2 class="t60%s">%s</h2>%s</div></div>' % (
+        (' ' + cls) if cls else '', r, esc(kick), r, pp_two(title, ink), ('<p class="t34 pp-sub">%s</p>' % '<br>'.join(esc(x) for x in sub)) if sub else '')
+PP_CV = '    <canvas class="ln" aria-hidden="true"></canvas>'
+
+
+def pp_parts(k1, t1, ps1, c1, k2, t2, rows, c2, img):
+    """«Шість частин» — two sections of the client's copy on ONE full-screen photograph that stands in six parts:
+      «World-Class Expertise. One Seamless Experience.» — the parts come from apart into an ordered grid with seams (the title, the
+          three paragraphs on the foot; then «Together, we build a trusted ecosystem around every client» in their place — in the 34,
+          inside the lower left part, so no line of type lies across a seam);
+      «Better Access. Better Coordination. Better Decisions.» — the six benefits, one to a part, each lighting its part; then the
+          seams close, the room is one, and «You gain world-class expertise. We manage every detail» stands on it.
+    One WebGL layer (ppParts() in js/inner.js); the type is DOM. `t*`, `c*` = lines of (text, 1 if in the light blue)."""
+    n = len(rows); assert n == 6, n
+    return '\n'.join([
+        '<section class="film pp pp-pa" data-fig="pparts" data-len="%.2f" data-open="0" id="@ID@">' % (2.1 + n * .32 + 1.25), '  <div class="stg">',
+        '    <div class="pp-pa-ph"><img src="%s" alt=""></div>' % img, PP_CV, '    <div class="sc pp-s">',
+        pp_head(k1, t1, 'a', 'cbl'),
+        '      <div class="t20s pp-f a">%s</div>' % pp_ps(ps1),                  # the foot: never .rv on a pinned screen
+        '      <p class="t34 pp-pa-ca">%s</p>' % pp_two(c1, 'cbl'),            # the section's closing line takes the paragraphs' place on the foot, under its title
+        pp_head(k2, t2, 'b', 'cbl', rv=False),
+        '      <ol class="pp-pa-t">%s</ol>' % ''.join('<li class="t20">%s</li>' % esc(nop(r)) for r in rows),
+        '      <p class="t60s pp-c b"><span>%s</span></p>' % pp_two(c2, 'cbl'),
+        '    </div>', '  </div>', '</section>'])
+
+
+def pp_quart(kick, title, lead, pairs, para, closer_, imgs):
+    """«Чверті» — «The Right Expertise at the Right Moment» (in place of the dial of the first storyboard): the black screen is ruled
+    by the site's two centre lines, our square on their crossing (CI — «your single point of coordination»). A photograph goes from
+    quarter to quarter CLOCKWISE from twelve — an expert to a quarter, each at its moment; the hand that brings it is the edge of
+    the photograph itself. The sentence of the expert in hand stands in the corner of its quarter by the crossing, 50 from both
+    lines (who in white, what in the light blue); the ones already said stay, quiet. `pairs` = [(who, what)] — the client's four
+    sentences cut after their subject; `imgs` in the same order. ppQuart() in js/inner.js."""
+    assert len(pairs) == len(imgs) == 4, pairs
+    return '\n'.join([
+        '<section class="film pp pp-qt" data-fig="pquart" data-len="%.2f" data-open="0" id="@ID@">' % (.3 + 4 * .62 + .95), '  <div class="stg">',
+        '    <div class="pp-qt-ph">%s</div>' % ''.join('<img src="%s" alt="">' % x for x in imgs), PP_CV, '    <div class="sc pp-s">',
+        pp_head(kick, title),
+        '      <p class="t20 pp-qt-l">%s</p>' % esc(nop(lead)),
+        '      <div class="pp-qt-q">%s</div>' % ''.join('<p class="t34 pp-qt-i" data-q="%d"><span class="w0">%s</span> <span class="cbl">%s</span></p>' % (i, esc(a), esc(nop(b))) for i, (a, b) in enumerate(pairs)),
+        '      <p class="t20 pp-qt-p">%s</p>' % esc(nop(para)),
+        '      <p class="t60s pp-qt-c">%s</p>' % pp_two(closer_),
+        '    </div>', '  </div>', '</section>'])
+
+
+def pp_names(kick, title, sub, paras, strong, partners, imgs, closer_=None, button=None):
+    """A group of partners on a FULL-SCREEN photograph: the names are the picture's type (no logos). Steps: the title (with `sub`,
+    the client's sub-heading, under it) and the paragraphs on the foot; `strong` — the client's closing lines of that opening, alone;
+    then a partner to a step — the name large at the left field, its paragraphs on the foot (`partners` = [(lines of the name,
+    [paragraphs])]); `closer_` — the group's last sentence alone on the middle, after which the type leaves and the photograph comes
+    forward («The technology recedes. The experience of home comes forward»). `imgs`: one photograph for the whole group, or one for
+    each partner (they change with the names — one WebGL layer). `button`: on the right field's foot with the last partner.
+    ppNames() in js/inner.js."""
+    n = len(partners)
+    return '\n'.join([
+        '<section class="film pp pp-nm" data-fig="pnames" data-len="%.2f" data-open="0" id="@ID@">' % ((1.8 if strong else .95) + n * .7 + (1.75 if closer_ else .35)), '  <div class="stg">',
+        '    <div class="pp-nm-ph">%s</div>' % ''.join('<img src="%s" alt="">' % x for x in imgs), PP_CV, '    <div class="sc pp-s">',
+        pp_head(kick, title, '', 'cbl', sub),
+        '      <div class="t20s pp-f i0">%s</div>' % pp_ps(paras),
+        ('      <p class="t34 pp-nm-ic">%s</p>' % ''.join('<span%s>%s</span> ' % (' class="cbl"' if i else '', esc(nop(x))) for i, x in enumerate(strong))) if strong else '',
+        ''.join('      <div class="pp-nm-i"><h3 class="pp-n">%s</h3><div class="t20s pp-f">%s</div></div>\n' % ('<br>'.join(esc(x) for x in nm), pp_ps(ps)) for nm, ps in partners).rstrip('\n'),
+        ('      <div class="pp-nm-b">%s</div>' % button) if button else '',
+        ('      <p class="t60s pp-c"><span>%s</span></p>' % pp_two(closer_, 'cbl')) if closer_ else '',
+        '    </div>', '  </div>', '</section>'])
+
+
+def pp_wide(kick, title, paras, partners, img):
+    """«Relationships That EXPAND the Idea of Better Living» (in place of the three round windows): a photograph stands at the right
+    edge of a black screen and grows WIDER with each partner — a fifth with the title, then a third, a half, two thirds. It never
+    fills the screen, so a full-screen photograph may follow. The partner in hand: the name large on the black, its closing line
+    (if the client gave one) in the 34 blue under it, its paragraphs on the foot. `partners` = [(name, [paragraphs], closing line
+    or None)]. ppWide() in js/inner.js."""
+    n = len(partners)
+    return '\n'.join([
+        '<section class="film pp pp-wd" data-fig="pwide" data-len="%.2f" data-open="0" id="@ID@">' % (.95 + n * .8 + .35), '  <div class="stg">',
+        '    <div class="pp-wd-ph"><img src="%s" alt=""></div>' % img, PP_CV, '    <div class="sc pp-s">',
+        pp_head(kick, title),
+        '      <div class="t20s pp-f i0">%s</div>' % pp_ps(paras),
+        ''.join('      <div class="pp-wd-i"><h3 class="pp-n">%s</h3><div class="t20s pp-f col">%s</div>%s</div>\n' % (
+            esc(nm), pp_ps(ps), ('<p class="t34 pp-st">%s</p>' % esc(nop(st))) if st else '') for nm, ps, st in partners).rstrip('\n'),
+        '    </div>', '  </div>', '</section>'])
+
+
+def pp_samples(kick, title, lead, items, closer_, imgs):
+    """«Зразки» — «We Choose Partners the Way We Choose Materials: With Intention»: the five standards are laid on the black board
+    one by one like five samples of material — a square of the client's own work each (stone, metal, wood, fabric, light), its
+    standard under it; a place not yet filled is a square ruled in our hairline. Then the closing sentence takes the lead's place
+    on the foot. One WebGL layer for the five squares (ppSamp() in js/inner.js)."""
+    n = len(items); assert n == len(imgs) == 5, items
+    return '\n'.join([
+        '<section class="film pp pp-sm" data-fig="psamp" data-len="%.2f" data-open="0" id="@ID@">' % (.12 + n * .34 + 1.0), '  <div class="stg">',
+        '    <div class="pp-sm-g"></div>', PP_CV, '    <div class="sc pp-s">',
+        pp_head(kick, title),
+        '      <p class="t20 pp-sm-l">%s</p>' % esc(nop(lead)),
+        '      <ol class="pp-sm-r">%s</ol>' % ''.join('<li><img src="%s" alt=""><p class="t20">%s</p></li>' % (im, esc(nop(x))) for x, im in zip(items, imgs)),
+        '      <p class="t34 pp-sm-c">%s</p>' % pp_two(closer_),
+        '    </div>', '  </div>', '</section>'])
+
+
+def pp_ring(kick, title, lead, pairs, closer_, names, groups, img):
+    """«Мережа» — «A Stronger Network Around Every Client»: THE PAGE'S ONE CIRCLE. The partners the visitor has just read stand
+    round a home in the order of the page; the ring is ruled in three arcs — one for each pair «You… / We…» (`pairs`), as far as
+    the names of one group (`groups` = how many names stand when each arc is done) — and it closes on «That is the CI ecosystem».
+    `names` = lines of each name. The ring and the squares on the film's canvas, the round photograph one WebGL layer, the type DOM
+    (placed by ppRing() in js/inner.js: the geometry is the screen's)."""
+    return '\n'.join([
+        '<section class="film pp pp-rg" data-fig="pring" data-g="%s" data-len="%.2f" data-open="0" id="@ID@">' % (','.join(str(x) for x in groups), len(pairs) * .75 + 1.1), '  <div class="stg">',
+        '    <div class="pp-rg-ph"><img src="%s" alt=""></div>' % img, PP_CV, '    <div class="sc pp-s">',
+        pp_head(kick, title),
+        '      <p class="t20 pp-rg-l">%s</p>' % esc(nop(lead)),
+        '      <div class="pp-rg-ns" aria-hidden="true">%s</div>' % ''.join('<p class="pp-rg-n">%s</p>' % '<br>'.join(esc(x) for x in nm) for nm in names),
+        ''.join('      <p class="t34 pp-rg-pr"><span>%s</span> <span class="cb">%s</span></p>\n' % (esc(nop(a)), esc(nop(b))) for a, b in pairs).rstrip('\n'),
+        '      <p class="t60s pp-rg-c">%s</p>' % pp_two(closer_),
+        '    </div>', '  </div>', '</section>'])
+
+
 def co_seam(kick, h1, lead, ps, strong, img, ln):
     """04 — CI Core, «What You Receive»: THE DRAWING BECOMES THE ROOM, in three steps on one pinned screen (18.11.2026 21:36, of the
     one-screen version: «цей блок мені не підходить. Він дуже грузний, дуже важкий»; 21:44, of the two storyboards: «то, що

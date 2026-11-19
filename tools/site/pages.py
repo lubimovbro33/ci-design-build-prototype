@@ -600,16 +600,87 @@ def partners_block(sec):
     if h2 == 'Broker Partnerships': o.append('    <div class="dots rv c1"><span>Property</span><i></i><span>Possibility</span><i></i><span>Home</span></div>')
     if link: o.append('    <div class="rv c1">%s</div>' % btn(link[2], href(link[1])))
     return bk(h2, '\n'.join(o))
+def pp_groups(sec):
+    """a section of partners: the paragraphs before the first name, then [name, [paragraphs], [closing lines]] for each name, and the link"""
+    intro_ = []; groups = []; link = None
+    for it in sec['items']:
+        if it[0] in ('label', 'h2'): continue
+        if it[0] == 'h3': groups.append([it[1], [], []])
+        elif it[0] == 'a': link = it
+        elif not groups: intro_.append(' '.join(it[1]))
+        elif it[0] == 'strong': groups[-1][2] += list(it[1])
+        else: groups[-1][1].append(' '.join(it[1]))
+    return intro_, groups, link
 def partnerships():
+    """Partnerships, built to the second storyboard (19.11.2026 09:02: «Ну, давай, збирай, подивимося, як воно працює все»; 08:38, of
+    the first one: «якось занадто багато кружечків» — the circle is on the page ONCE, at its end). The page's words are TOGETHER
+    and «around every client», so:
+      cover      the page's own (one photograph in strips that come together) stays;
+      Idea       the thought on its own black screen, as on the other pages;
+      Why        ONE full-screen photograph in six parts for two sections of the copy: the parts come into an ordered grid («World-
+                 Class Expertise. One Seamless Experience.»), each lights with one of the six benefits, then the seams close;
+      How        black, ruled by the two centre lines: a photograph goes from quarter to quarter clockwise, an expert to a quarter
+                 («The Right Expertise at the Right Moment»); our square on the crossing;
+      Brokers    a full-screen photograph, the names large on it;
+      Lifestyle  black: a photograph at the right edge grows wider with each partner («…Expand the Idea of Better Living»);
+      Vendors    full-screen photographs that change with the names (water, sleep, light); at the end the type leaves and the
+                 picture comes forward («The technology recedes. The experience of home comes forward»);
+      Vision     black: the five standards laid down like five samples of material;
+      Value      black: the one circle — the eight names round a home, closed on «That is the CI ecosystem».
+    A full-screen photograph never follows another; every black screen carries a photograph. Every word is the client's."""
     S = [join_lists(dots_fix(s)) for s in P['partnerships']]; pg = Pg()
+    J = lambda ls: ' '.join(x for x, _ in ls)
+    W_ = lambda *xs: [A + x + '.webp' for x in xs]
     h1, ps, a = hero(S[0])
     pg.add(sc_strips(label(S[0]), h1, A + 'us/1511-07a.webp'), 'Partners', 'top')
-    pg.add(intro(ps))
-    for sec in S[1:-1]:
-        lb = label(sec)
-        if lb in ('Partnerships in Practice', 'Strategic + Lifestyle Partners', 'Preferred Vendors + Technology Partners'): pg.add(partners_block(sec), rail_of(lb))
-        else: auto(pg, sec)
-        if lb == 'Preferred Vendors + Technology Partners': pg.add(band(A + 'ch/1450-22.webp'))
+    # 02 the thought
+    idea = ['Exceptional homes are shaped', 'by exceptional collaboration']
+    para_ = ['CI partners with leaders across real estate, wellness, lifestyle,', 'technology, design, and luxury residential products.', 'We bring world-class expertise into every project',
+             'while serving as your single point of coordination']
+    assert ' '.join(idea) == nop(' '.join(ps[0])) and ' '.join(para_) == nop(' '.join(ps[1])), ps
+    thought(pg, 'Partnerships', idea, 1, [para_], None, A + 'ch/1450-23.webp', '62% 42%')
+    # 03 why + what it means: one photograph in six parts
+    s1, s2 = S[1], S[2]
+    w1 = [' '.join(it[1]) for it in s1['items'] if it[0] in ('lead', 'p')]; st1 = nop(' '.join(get(s1, 'strong')[0][1])); st2 = nop(' '.join(get(s2, 'strong')[0][1]))
+    t1 = [('World-Class Expertise.', 0), ('One Seamless Experience', 1)]; c1 = [('Together, we build', 0), ('a trusted ecosystem', 0), ('around every client', 1)]
+    t2 = [('Better Access.', 0), ('Better Coordination.', 0), ('Better Decisions', 1)]; c2 = [('You gain world-class expertise.', 0), ('We manage every detail', 1)]
+    assert J(t1) == nop(h_of(s1)) and J(c1) == st1 and J(t2) == nop(h_of(s2)) and J(c2) == st2 and len(w1) == 3, (h_of(s1), st1, h_of(s2), st2, w1)
+    pg.add(pp_parts(label(s1), t1, w1, c1, label(s2), t2, [r[1] for r in get(s2, 'row')], c2, A + 'us/1511-12a.webp'), 'Why')
+    # 04 the right expertise at the right moment: four quarters, clockwise
+    sec = S[3]; qp = [' '.join(it[1]) for it in get(sec, 'p')]; four = sents(qp[0])
+    WHO = ['A broker', 'A wellness expert', 'A technology partner', 'A specialized vendor']
+    cq = [('Our partners bring depth.', 0), ('CI orchestrates the whole', 1)]
+    assert len(four) == 4 and all(s_.startswith(w_ + ' ') for w_, s_ in zip(WHO, four)) and J(cq) == nop(' '.join(get(sec, 'strong')[0][1])) and nop(h_of(sec)) == 'The Right Expertise at the Right Moment', four
+    pg.add(pp_quart(label(sec), [('The Right Expertise', 0), ('at the Right Moment', 1)], get(sec, 'lead')[0][1][0], [(w_, s_[len(w_) + 1:]) for w_, s_ in zip(WHO, four)], qp[1], cq,
+                    W_('us/1530-04', 'us/1511-06a', 'ch/1450-16a', 'us/1511-01a')), 'How')
+    # the names in their lines (a name is type here: no logos)
+    NL = {'Carrie McCormick': ['Carrie', 'McCormick'], "Jameson Sotheby's International Realty": ["Jameson Sotheby's", 'International Realty'], 'The Luxury Bed Collection': ['The Luxury', 'Bed Collection']}
+    ring = []
+    # 05 the brokers: one full-screen photograph
+    sec = S[4]; in_, gs, link = pp_groups(sec); sub = ['From the Property Search', 'to the Finished Home']
+    assert not in_ and [g_[0] for g_ in gs] == [' '.join(sub), 'Carrie McCormick', "Jameson Sotheby's International Realty"] and len(gs[0][2]) == 2 and link, gs
+    pg.add(pp_names(label(sec), [(h_of(sec), 0)], sub, gs[0][1], gs[0][2], [(NL.get(g_[0], [g_[0]]), g_[1]) for g_ in gs[1:]], W_('rtb/1430-01a'), None, btn(link[2], href(link[1]))), 'Brokers')
+    ring += [g_[0] for g_ in gs[1:]]
+    # 06 the strategic partners: the photograph grows wider with each
+    sec = S[5]; in_, gs, _ = pp_groups(sec); tw = [('Relationships That', 0), ('Expand the Idea', 0), ('of Better Living', 1)]
+    assert len(in_) == 3 and [g_[0] for g_ in gs] == ['BIÂN', 'Dr. Alka', 'Lamborghini'] and J(tw) == nop(h_of(sec)), gs
+    pg.add(pp_wide(label(sec), tw, in_, [(g_[0], g_[1], ' '.join(g_[2]) if g_[2] else None) for g_ in gs], A + 'ch/1450-22.webp'), 'Lifestyle')
+    ring += [g_[0] for g_ in gs]
+    # 07 the vendors: water, sleep, light — the photograph changes with the name; at the end it comes forward
+    sec = S[6]; in_, gs, _ = pp_groups(sec); tv = [('Exceptional Products,', 0), ('Seamlessly Integrated', 1)]
+    cv = [('The technology recedes.', 0), ('The experience of home', 1), ('comes forward', 1)]
+    assert len(in_) == 2 and [g_[0] for g_ in gs] == ['Hydrology', 'The Luxury Bed Collection', 'Lutron'] and J(cv) == nop(' '.join(gs[-1][2])) and J(tv) == nop(h_of(sec)), gs
+    pg.add(pp_names(label(sec), tv, None, in_, None, [(NL.get(g_[0], [g_[0]]), g_[1]) for g_ in gs], W_('ch/1450-25a', 'ch/1450-28a', 'ch/1450-32'), cv), 'Vendors')
+    ring += [g_[0] for g_ in gs]
+    # 08 shared vision: five samples
+    sec = S[7]; five = get(sec, 'p')[0][1]; ts = [('We Choose Partners', 0), ('the Way We Choose Materials:', 0), ('With Intention', 1)]
+    cs = [('Together, we bring exceptional care', 0), ('to every part of the whole', 1)]
+    assert len(five) == 5 and J(cs) == nop(' '.join(get(sec, 'strong')[0][1])) and J(ts) == nop(h_of(sec)), five
+    pg.add(pp_samples(label(sec), ts, get(sec, 'lead')[0][1][0], five, cs, W_('ch/1450-12', 'ch/1450-30', 'ch/1450-19', 'us/1530-05', 'us/1530-02')), 'Vision')
+    # 09 the value of working together: the one circle
+    sec = S[8]; six = get(sec, 'p')[0][1]; cr = [('That is', 0), ('the CI ecosystem', 1)]; tr = [('A Stronger Network', 0), ('Around Every Client', 1)]
+    assert len(six) == 6 and len(ring) == 8 and J(cr) == nop(' '.join(get(sec, 'strong')[0][1])) and J(tr) == nop(h_of(sec)), (six, ring)
+    pg.add(pp_ring(label(sec), tr, get(sec, 'lead')[0][1][0], list(zip(six[0::2], six[1::2])), cr, [NL.get(x, [x]) if x.startswith('Jameson') else [x] for x in ring], [2, 5, 8], A + 'ch/1450-17.webp'), 'Value')
     final_cta(pg, S[-1], A + 'ch/1450-06.webp')
     emit('partnerships.html', 'Partnerships', pg, A + 'us/1511-07a.webp')
 partnerships()

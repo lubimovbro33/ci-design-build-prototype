@@ -1363,7 +1363,243 @@
     if (o.c){ o.c.style.opacity = ci.toFixed(3); o.c.style.transform = 'translate3d(0,' + (14 * U * (1 - ci)).toFixed(1) + 'px,0)'; }
     if (o.p){ o.p.style.opacity = ci.toFixed(3); }
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point};
+  /* ================================================================== Partnerships, built to the storyboard (19.11.2026 09:02)
+     «Ну, давай, збирай, подивимося, як воно працює все» — of `partnerships-ideas-2.jpg`, the storyboard redrawn after her «якось
+     занадто багато кружечків» (08:38): the circle is on the page ONCE, at its end; the rest is ruled in straight lines.
+       pparts   ONE full-screen photograph in six parts. They come from apart into an ordered grid with seams («World-Class
+                Expertise. One Seamless Experience.»); each lights with one of the six benefits; then the seams close and the
+                room is one («You gain world-class expertise. We manage every detail»).
+       pquart   the black screen is ruled by the two centre lines, our square on the crossing. A photograph goes from quarter to
+                quarter clockwise from twelve — «The Right Expertise at the Right Moment»: the edge that sweeps it in is the
+                clock's hand; the wedge it leaves behind closes after it.
+       pnames   a group of partners on a full-screen photograph: a name to a step, large; with several photographs they change
+                with the names; a closing sentence, and then the type leaves and the picture comes forward.
+       pwide    a photograph at the right edge of a black screen grows wider with each partner («…Expand the Idea of Better
+                Living»): a fifth, a third, a half, two thirds — never the whole screen.
+       psamp    five standards laid on the board like five samples of material: each square is laid from its upper edge down;
+                a place not yet filled is ruled in the hairline.
+       pring    the one circle: the partners round a home, the ring ruled in three arcs, one for each pair «You… / We…», and
+                closed on «That is the CI ecosystem».
+     Every picture is a WebGL layer (always: motion over photographs); the type is DOM; the lines are ruled on the film's canvas. */
+  function PUT(el_, op, tf, fl){ if (!el_) return; tf = tf || 'none'; var k = op.toFixed(3) + tf + (fl || ''); if (el_.__k === k) return; el_.__k = k;
+    var st = el_.style; st.opacity = op.toFixed(3); st.transform = tf; if (fl !== undefined) st.filter = fl; st.visibility = op <= .001 ? 'hidden' : 'visible'; }
+  function CLR(el_){ if (!el_) return; el_.__k = ''; var st = el_.style; st.opacity = ''; st.transform = ''; st.filter = ''; st.visibility = ''; st.left = ''; st.right = ''; st.top = ''; st.bottom = ''; }
+  function TY(px){ return 'translate3d(0,' + px.toFixed(1) + 'px,0)'; }
+  function BLR(k){ var b = (1 - k) * 8 * U; return b > .2 ? 'blur(' + b.toFixed(2) + 'px)' : 'none'; }
+  function bsq(x, y, a){ if (a <= 0) return; g.globalAlpha = a > 1 ? 1 : a; g.fillStyle = '#96A8BF'; g.fillRect(Math.round(x - SQ / 2), Math.round(y - SQ / 2), Math.round(SQ), Math.round(SQ)); g.globalAlpha = 1; }
+  var PP_HEAD = ['precision highp float;',
+    'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
+    'vec2 cvr(vec2 uv, vec2 img, vec2 res){ float ra = res.x / res.y, ri = img.x / img.y; vec2 s = ra > ri ? vec2(1.0, ri / ra) : vec2(ra / ri, 1.0); return (uv - 0.5) * s + 0.5; }',
+    /* a photograph's light is taken down where words stand on it, in the picture itself (never a veil): d = how much its highlights give way, vv = its level */
+    'vec3 grd(vec3 c, float d, float vv){ c = (c - 0.5) * 1.05 + 0.5; float l = dot(c, vec3(0.299, 0.587, 0.114)); return c * mix(1.0, mix(0.94, 0.6, smoothstep(0.16, 0.72, l)), d) * vv; }'].join('\n') + '\n';
+  var PARTS_FS = PP_HEAD + ['uniform sampler2D uT0;', 'uniform vec2 uRes, uS0;', 'uniform float uGap, uJ, uV, uD, uZ, uTime;', 'uniform float uB[6];', 'varying vec2 v;',
+    'void main(){',
+    '  vec2 px = v * uRes, cell = uRes / vec2(3.0, 2.0); vec3 c = vec3(0.0);',
+    '  for (int i = 0; i < 6; i++){',
+    '    float fi = float(i), cx = fi < 2.5 ? fi : fi - 3.0, cy = fi < 2.5 ? 0.0 : 1.0;',
+    '    float dy = (i == 0 ? -1.0 : i == 1 ? 0.8 : i == 2 ? -0.5 : i == 3 ? -0.6 : i == 4 ? 1.0 : -0.9) * uJ;',             /* each part a little off its place, up or down */
+    '    vec2 a = vec2(cx, cy) * cell + vec2(cx > 0.5 ? uGap * 0.5 : 0.0, (cy > 0.5 ? uGap * 0.5 : 0.0) + dy);',
+    '    vec2 b = vec2(cx + 1.0, cy + 1.0) * cell - vec2(cx < 1.5 ? uGap * 0.5 : 0.0, cy < 0.5 ? uGap * 0.5 : 0.0) + vec2(0.0, dy);',
+    '    if (px.x >= a.x && px.x < b.x && px.y >= a.y && px.y < b.y){',
+    '      vec2 src = (px - vec2(0.0, dy)) / uRes;',                                                                     /* a part carries its own piece of the picture with it */
+    '      c = grd(texture2D(uT0, cvr((src - 0.5) / uZ + 0.5, uS0, uRes)).rgb, uD, uV * uB[i]);',
+    '    }',
+    '  }',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function ppParts(f, q, t){
+    var o = f.pa, e = f.el, i;
+    if (o === undefined){ var bx = qs('.pp-pa-ph', e);
+      o = f.pa = {gl: bx ? GL2.make(bx, PARTS_FS, qsa('img', bx), {}) : null, ha: qs('.pp-h.a', e), fa: qs('.pp-f.a', e), ca: qs('.pp-pa-ca', e), hb: qs('.pp-h.b', e), ts: qsa('.pp-pa-t li', e), cb: qs('.pp-c.b', e),
+                  B: new Float32Array(6), pk: [], on: false}; }
+    if (H >= W){ if (o.on){ o.on = false; o.pk = []; [o.ha, o.fa, o.ca, o.hb, o.cb].concat(o.ts).forEach(CLR); } return; }   /* phones: in the flow (css) */
+    o.on = true;
+    var n = o.ts.length, t0 = 2.1, dw = .32, tE = t0 + n * dw, DY = [-1, .8, -.5, -.6, 1, -.9], close = eio(sg(q, tE + .05, tE + .6));
+    /* how far apart the parts are: 1 as the block arrives, .35 the ordered grid with its seams, 0 one room */
+    var K = (1 - .65 * eio(sg(q, -.7, .5))) * (1 - close), k0 = Math.min(1, K / .35), kk = K > .35 ? (K - .35) / .65 : 0, gap = (16 * k0 + 24 * kk) * U, J = (12 * k0 + 28 * kk) * U;
+    var fo = 1 - eio(sg(q, .62, .9)), ci = eio(sg(q, .94, 1.24)), co = 1 - eio(sg(q, 1.5, 1.7));
+    PUT(o.fa, fo, TY(-12 * U * (1 - fo)));                                     /* the paragraphs give the foot to the section's closing line; the title stays over both */
+    PUT(o.ca, ci * co, TY(12 * U * (1 - ci) - 12 * U * (1 - co)));
+    PUT(o.ha, co, TY(-16 * U * (1 - co)));
+    var hi = eio(sg(q, 1.74, 2.04)), hx = 1 - eio(sg(q, tE - .02, tE + .2));
+    PUT(o.hb, hi * hx, TY(14 * U * (1 - hi) - 16 * U * (1 - hx)));
+    var cw = W / 3, chh = H / 2, capIn = eio(sg(q, 1.86, 2.14)), base = .5 - .2 * hi, foot = Math.max(50 * U, 58);
+    for (i = 0; i < 6; i++){
+      var lit = i < n ? eio(sg(q, t0 + i * dw, t0 + i * dw + .24)) : 0, c_ = i % 3, r_ = (i / 3) | 0;
+      o.B[i] = (base + (.66 - base) * lit) * (1 - close) + .8 * close;          /* a part lights with its benefit and stays lit */
+      if (i >= n) continue;
+      var x = c_ ? c_ * cw + gap / 2 + 25 * U : 50 * U, bt = r_ ? foot : H - (chh - gap / 2 + DY[i] * J) + 25 * U, pk = x.toFixed(1) + ',' + bt.toFixed(1);
+      if (o.pk[i] !== pk){ o.pk[i] = pk; o.ts[i].style.left = x.toFixed(1) + 'px'; o.ts[i].style.bottom = bt.toFixed(1) + 'px'; }
+      PUT(o.ts[i], capIn * hx * (.42 + .58 * lit));
+    }
+    var kc = eio(sg(q, tE + .38, tE + .74));
+    PUT(o.cb, kc, TY(14 * U * (1 - kc)), BLR(kc));
+    var g2 = o.gl;
+    if (g2 && g2.ready){ g2.size(); g2.set1('uGap', gap); g2.set1('uJ', J); g2.gl.uniform1fv(g2.u('uB'), o.B);
+      g2.set1('uV', .3 + .7 * eio(sg(q, -.9, -.15))); g2.set1('uD', 1 - .12 * close); g2.set1('uZ', 1.06 - .06 * eio(sg(q, -.6, tE + .6))); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+  }
+  var QUART_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2, uT3;', 'uniform vec2 uRes, uS0, uS1, uS2, uS3;', 'uniform float uA, uB, uV, uZ, uTime;', 'varying vec2 v;',
+    'void main(){',
+    '  vec2 d = (v - 0.5) * uRes;',
+    '  float a = atan(d.x, -d.y) / 6.2831853; if (a < 0.0) a += 1.0; a = min(a * 4.0, 3.9999);',     /* quarters of the hour, clockwise from twelve */
+    '  float k = floor(a);',
+    '  vec2 qv = (fract(v * 2.0) - 0.5) / uZ + 0.5, qr = uRes * 0.5; vec3 c;',                        /* each quarter holds its own photograph */
+    '  if (k < 0.5) c = texture2D(uT0, cvr(qv, uS0, qr)).rgb; else if (k < 1.5) c = texture2D(uT1, cvr(qv, uS1, qr)).rgb; else if (k < 2.5) c = texture2D(uT2, cvr(qv, uS2, qr)).rgb; else c = texture2D(uT3, cvr(qv, uS3, qr)).rgb;',
+    '  c = grd(c, 0.8, uV);',
+    '  c *= 0.7 + 0.3 * smoothstep(0.0, 0.5, length(d) / uRes.y);',                                   /* quieter by the crossing, where its sentence stands */
+    '  float lo = uB < 0.002 ? 1.0 : smoothstep(uB - 0.006, uB + 0.006, a), hi = uA > 3.998 ? 1.0 : 1.0 - smoothstep(uA - 0.006, uA + 0.006, a);',
+    '  float m = lo * hi * step(0.001, uA - uB);',                                                    /* what the hand has brought, less what has closed behind it */
+    '  c *= m; c += (hash(v * uRes + uTime) - 0.5) * 0.02 * m;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function ppQuart(f, q, t){
+    var o = f.qt, e = f.el, i;
+    if (o === undefined){ var bx = qs('.pp-qt-ph', e);
+      o = f.qt = {gl: bx ? GL2.make(bx, QUART_FS, qsa('img', bx), {max: 1600}) : null, h: qs('.pp-hh', e), l: qs('.pp-qt-l', e), is: qsa('.pp-qt-i', e), p: qs('.pp-qt-p', e), c: qs('.pp-qt-c', e), on: false}; }
+    if (H >= W){ if (o.on){ o.on = false; [o.h, o.l, o.p, o.c].concat(o.is).forEach(CLR); } return; }
+    o.on = true;
+    var n = o.is.length, a0 = .3, dw = .62, p = (q - a0) / dw, A = 0, B = 0, lh = eio(sg(q, -.7, -.15)), lv = eio(sg(q, -.55, 0)), cx = Math.round(W / 2) - .5;
+    cross(lh, lv);                                                             /* the site's two centre lines rule the four quarters */
+    for (i = 0; i < n; i++){ A += eio(sg(p - i, 0, .5)); if (i < n - 1) B += eio(sg(p - i - 1, .08, .58)); }   /* the hand; and what closes behind it a moment later (the last quarter stays) */
+    var fr = A - Math.floor(A);
+    if (fr > .001 && fr < .999){ var an = A * Math.PI / 2, L = W + H; ink(Math.sin(Math.PI * fr) * .85, 1); seg(cx, MID, cx + Math.sin(an) * L, MID - Math.cos(an) * L); }   /* the hand itself, only while it moves */
+    bsq(cx, MID, lv > .98 ? 1 : 0);                                            /* our square on the crossing */
+    var ho = 1 - eio(sg(p, n - 1 - .04, n - 1 + .24)); PUT(o.h, ho, TY(-16 * U * (1 - ho)));              /* the title keeps the upper left quarter until the photograph comes to it */
+    var li = eio(sg(q, -.45, -.05)), lo = 1 - eio(sg(p, n - 2 - .04, n - 2 + .22)); PUT(o.l, li * lo);
+    for (i = 0; i < n; i++){ var si = eio(sg(p - i, .2, .5)), qo = i < n - 1 ? eio(sg(p - i - 1, 0, .3)) : 0; PUT(o.is[i], si * (1 - .66 * qo), TY(12 * U * (1 - si))); }   /* said and quiet */
+    var kc = eio(sg(p, n + .1, n + .6)); PUT(o.c, kc, TY(14 * U * (1 - kc)), BLR(kc)); PUT(o.p, kc, TY(10 * U * (1 - kc)));
+    var g2 = o.gl;
+    if (g2 && g2.ready){ g2.size(); g2.set1('uA', A); g2.set1('uB', B); g2.set1('uV', .8); g2.set1('uZ', 1.06 - .015 * A); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+    else if (!g2){ if (!o.ims) o.ims = qsa('.pp-qt-ph img', e); o.ims.forEach(function(im, j){ im.style.opacity = A > j + .5 && B < j + .5 ? '1' : '0'; }); }   /* no WebGL: the quarter in hand, plainly */
+  }
+  var NAMES_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2, uT3;', 'uniform vec2 uRes, uS0, uS1, uS2, uS3;', 'uniform float uI, uV, uD, uZ, uTime;', 'varying vec2 v;',
+    'vec3 pick(float k, vec2 uv){ if (k < 0.5) return texture2D(uT0, cvr(uv, uS0, uRes)).rgb; if (k < 1.5) return texture2D(uT1, cvr(uv, uS1, uRes)).rgb; if (k < 2.5) return texture2D(uT2, cvr(uv, uS2, uRes)).rgb; return texture2D(uT3, cvr(uv, uS3, uRes)).rgb; }',
+    'void main(){',
+    '  float i0 = floor(uI), fr = uI - i0;',
+    '  vec3 c = pick(i0, (v - 0.5) / uZ + 0.5);',
+    '  if (fr > 0.001){ float e = (1.0 - v.x) * 0.4, m = smoothstep(e, e + 0.6, fr); c = mix(c, pick(i0 + 1.0, (v - 0.5) / (uZ + 0.06 * (1.0 - fr)) + 0.5), m); }',   /* the next picture comes across from the left, settling */
+    '  c = grd(c, uD, uV);',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function ppNames(f, q, t){
+    var o = f.nm, e = f.el, i;
+    if (o === undefined){ var bx = qs('.pp-nm-ph', e), ims = bx ? qsa('img', bx) : [];
+      o = f.nm = {gl: bx ? GL2.make(bx, NAMES_FS, ims, {}) : null, ni: ims.length, h: qs('.pp-hh', e), k: qs('.pp-h .tk-cv-k', e), f0: qs('.pp-f.i0', e), ic: qs('.pp-nm-ic', e), ps: qsa('.pp-nm-i', e), c: qs('.pp-c', e), b: qs('.pp-nm-b', e), kt: false, on: false}; }
+    if (H >= W){ if (o.on){ o.on = false; o.kt = false; [o.h, o.k, o.f0, o.ic, o.c, o.b].concat(o.ps).forEach(CLR); } return; }
+    o.on = true;
+    var n = o.ps.length, T1 = o.ic ? 1.8 : .95, dn = .7, tC = T1 + n * dn, I = 0, lw = 0, kc = 0, fw = 0;
+    var ho = 1 - eio(sg(q, .62, .9)); PUT(o.h, ho, TY(-16 * U * (1 - ho))); PUT(o.f0, ho, TY(-16 * U * (1 - ho)));
+    if (o.ic){ var ii = eio(sg(q, .94, 1.24)), io = 1 - eio(sg(q, 1.56, 1.76)); PUT(o.ic, ii * io, TY(16 * U * (1 - ii) - 14 * U * (1 - io))); }
+    for (i = 0; i < n; i++){                                                    /* a partner to a step; one is gone before the next comes */
+      var a = T1 + i * dn, wi = eio(sg(q, a + .02, a + .22)), wo = 1 - (i === n - 1 ? (o.c ? eio(sg(q, tC - .04, tC + .12)) : 0) : eio(sg(q, a + dn - .18, a + dn - .04)));
+      PUT(o.ps[i], wi * wo, TY((1 - wi) * 20 * U - (1 - wo) * 16 * U)); if (i === n - 1) lw = wi * wo;
+      if (i && o.ni > 1) I += eio(sg(q, a - .14, a + .24));                     /* its photograph comes a moment before its name */
+    }
+    PUT(o.b, lw);
+    if (o.c){ kc = eio(sg(q, tC + .14, tC + .5)); var kx = 1 - eio(sg(q, tC + 1.0, tC + 1.2)); fw = eio(sg(q, tC + 1.02, tC + 1.6));
+      PUT(o.c, kc * kx, TY(14 * U * (1 - kc) - 10 * U * (1 - kx)), BLR(kc));
+      if (q > tC + .9 || o.kt){ o.kt = true; PUT(o.k, kx); } }                  /* the type leaves; the picture comes forward */
+    var g2 = o.gl;
+    if (g2 && g2.ready){ g2.size(); g2.set1('uI', Math.min(o.ni - 1, I)); g2.set1('uV', eio(sg(q, -.4, .12)) * (.5 + .06 * kc + .46 * fw));   /* it comes up the screen dark and lights as it stops: its upper edge never meets the photograph of the block before as a second picture */ g2.set1('uD', 1 - .92 * fw);
+      g2.set1('uZ', 1.05 - .05 * eio(sg(q, -.6, tC)) + .045 * fw); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+  }
+  var WIDE_FS = PP_HEAD + ['uniform sampler2D uT0;', 'uniform vec2 uRes, uS0;', 'uniform float uX, uV, uZ, uTime;', 'varying vec2 v;',
+    'void main(){',
+    '  float m = smoothstep(uX - 0.5 / uRes.x, uX + 0.5 / uRes.x, v.x);',                                  /* the picture does not move: its left edge does */
+    '  vec3 c = grd(texture2D(uT0, cvr((v - 0.5) / uZ + 0.5, uS0, uRes)).rgb, 0.25, uV) * m;',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02 * m;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function ppWide(f, q, t){
+    var o = f.wi, e = f.el, i;
+    if (o === undefined){ var bx = qs('.pp-wd-ph', e); o = f.wi = {gl: bx ? GL2.make(bx, WIDE_FS, qsa('img', bx), {}) : null, h: qs('.pp-hh', e), f0: qs('.pp-f.i0', e), ps: qsa('.pp-wd-i', e), on: false}; }
+    if (H >= W){ if (o.on){ o.on = false; [o.h, o.f0].concat(o.ps).forEach(CLR); } return; }
+    o.on = true;
+    var n = o.ps.length, T1 = .95, dn = .8, F0 = .2, fa = function(j){ return n > 1 ? 1 / 3 + j * (1 / 3) / (n - 1) : .5; }, F = F0 + (fa(0) - F0) * eio(sg(q, .68, 1.12));
+    var ho = 1 - eio(sg(q, .62, .9)); PUT(o.h, ho, TY(-16 * U * (1 - ho))); PUT(o.f0, ho, TY(-16 * U * (1 - ho)));
+    for (i = 0; i < n; i++){
+      var a = T1 + i * dn, wi = eio(sg(q, a + .04, a + .24)), wo = i === n - 1 ? 1 : 1 - eio(sg(q, a + dn - .2, a + dn - .06));
+      PUT(o.ps[i], wi * wo, TY((1 - wi) * 20 * U - (1 - wo) * 16 * U));
+      if (i) F += (fa(i) - fa(i - 1)) * eio(sg(q, a - .12, a + .3));           /* wider with each partner: a third, a half, two thirds */
+    }
+    F *= eio(sg(q, -.85, -.1));
+    var ex = Math.round(W * (1 - F));
+    bsq(ex, MID, F > .01 ? 1 : 0);                                             /* our square on the edge that moves */
+    var g2 = o.gl;
+    if (!g2){ var im0 = qs('.pp-wd-ph img', e); if (im0){ im0.style.opacity = '1'; clip(im0, 'inset(0 0 0 ' + (100 - F * 100).toFixed(2) + '%)'); } }   /* no WebGL: the same edge, on the picture itself */
+    if (g2 && g2.ready){ g2.size(); g2.set1('uX', ex / W); g2.set1('uV', .88); g2.set1('uZ', 1.04 - .04 * eio(sg(q, -.6, T1 + n * dn))); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+  }
+  var SAMP_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2, uT3, uT4;', 'uniform vec2 uRes, uS0, uS1, uS2, uS3, uS4;', 'uniform float uK[5];', 'uniform float uTw, uPt, uTime;', 'varying vec2 v;',
+    'vec2 sqr(vec2 uv, vec2 img){ float ri = img.x / img.y; vec2 s = ri > 1.0 ? vec2(1.0 / ri, 1.0) : vec2(1.0, ri); return (uv - 0.5) * s + 0.5; }',
+    'void main(){',
+    '  float i = floor(v.x / uPt + 0.0001), u = (v.x - i * uPt) / uTw; vec3 c = vec3(0.0);',            /* which sample, and where in it */
+    '  if (i < 4.5 && u >= 0.0 && u <= 1.0){',
+    '    float k = 0.0; for (int j = 0; j < 5; j++){ if (abs(float(j) - i) < 0.5) k = uK[j]; }',
+    '    vec2 uv = (vec2(u, v.y) - 0.5) / (1.0 + 0.16 * (1.0 - k)) + 0.5; vec3 tx;',                    /* it settles as it is laid */
+    '    if (i < 0.5) tx = texture2D(uT0, sqr(uv, uS0)).rgb; else if (i < 1.5) tx = texture2D(uT1, sqr(uv, uS1)).rgb; else if (i < 2.5) tx = texture2D(uT2, sqr(uv, uS2)).rgb; else if (i < 3.5) tx = texture2D(uT3, sqr(uv, uS3)).rgb; else tx = texture2D(uT4, sqr(uv, uS4)).rgb;',
+    '    float m = (1.0 - smoothstep(k * 1.04 - 0.04, k * 1.04, v.y)) * step(0.001, k);',               /* laid from its upper edge down */
+    '    c = grd(tx, 0.2, 0.55 + 0.37 * k) * m; c += (hash(v * uRes + uTime) - 0.5) * 0.02 * m;',
+    '  }',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function ppSamp(f, q, t){
+    var o = f.sm, e = f.el, i;
+    if (o === undefined){ var bx = qs('.pp-sm-g', e), ims = qsa('.pp-sm-r img', e);
+      o = f.sm = {gl: bx && ims.length ? GL2.make(bx, SAMP_FS, ims, {max: 900}) : null, bx: bx, ims: ims, li: qsa('.pp-sm-r li', e), cs: qsa('.pp-sm-r li p', e), l: qs('.pp-sm-l', e), c: qs('.pp-sm-c', e), K: new Float32Array(5), on: false}; }
+    if (H >= W){ if (o.on){ o.on = false; [o.l, o.c].concat(o.cs, o.ims).forEach(CLR); } return; }
+    o.on = true;
+    var n = o.li.length, r = o.bx.getBoundingClientRect(), sr = f.cv.getBoundingClientRect(), tw = o.li[0].getBoundingClientRect().width, pt = n > 1 ? (r.width - tw) / (n - 1) : 0, a0 = .12, dw = .34, ol = eio(sg(q, -.6, -.1));
+    for (i = 0; i < n; i++){
+      var k = eio(sg(q, a0 + i * dw, a0 + i * dw + .32)); o.K[i] = k;
+      if (k < 1 && ol > 0){ g.strokeStyle = 'rgba(235,235,235,' + (.3 * ol * (1 - k)).toFixed(3) + ')'; g.lineWidth = 1; g.setLineDash([]);       /* a place not yet filled */
+        g.strokeRect(Math.round(r.left - sr.left + i * pt) + .5, Math.round(r.top - sr.top) + .5, Math.round(tw) - 1, Math.round(r.height) - 1); }
+      PUT(o.cs[i], ol * (.3 + .7 * k));
+      if (!o.gl) o.ims[i].style.opacity = k.toFixed(3);                        /* no WebGL: the squares themselves */
+    }
+    var tE = a0 + n * dw, li = eio(sg(q, -.45, -.05)), lo = 1 - eio(sg(q, tE, tE + .16)), kc = eio(sg(q, tE + .2, tE + .52));
+    PUT(o.l, li * lo, TY(-10 * U * (1 - lo))); PUT(o.c, kc, TY(12 * U * (1 - kc)));
+    var g2 = o.gl;
+    if (g2 && g2.ready && r.width > 0){ g2.size(); g2.gl.uniform1fv(g2.u('uK'), o.K); g2.set1('uTw', tw / r.width); g2.set1('uPt', pt / r.width); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+  }
+  var RING_FS = PP_HEAD + ['uniform sampler2D uT0;', 'uniform vec2 uRes, uS0;', 'uniform float uA, uZ, uTime;', 'varying vec2 v;',
+    'void main(){',
+    '  float d = length(v - 0.5) * 2.0, aa = 3.0 / uRes.x, m = 1.0 - smoothstep(uA - aa, uA, d);',         /* the page's one round window */
+    '  vec3 c = grd(texture2D(uT0, cvr((v - 0.5) / uZ + 0.5, uS0, uRes)).rgb, 0.2, 0.9) * m;',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02 * m;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function ppRing(f, q, t){
+    var o = f.rg, e = f.el, i;
+    if (o === undefined){ var bx = qs('.pp-rg-ph', e);
+      o = f.rg = {gl: bx ? GL2.make(bx, RING_FS, qsa('img', bx), {max: 1200}) : null, im: bx && qs('img', bx), ns: qsa('.pp-rg-n', e), prs: qsa('.pp-rg-pr', e), c: qs('.pp-rg-c', e), l: qs('.pp-rg-l', e),
+                  gr: (e.getAttribute('data-g') || '').split(',').map(Number), lk: '', on: false}; }
+    var n = o.ns.length, np = o.prs.length;
+    if (H >= W){ if (o.on){ o.on = false; o.lk = ''; [o.c, o.l].concat(o.ns, o.prs).forEach(CLR); o.ns.forEach(function(x){ x.style.textAlign = ''; x.__o = ''; }); } return; }
+    o.on = true;
+    var cx = W / 2 + 280 * U, cy = MID + 60 * U, r = 290 * U, lk = W + 'x' + H, dp = .75, tC = np * dp, R = 0, prev = 0;
+    if (o.lk !== lk){ o.lk = lk;                                               /* a name stands outside the ring at its own angle, set from the ring outward */
+      o.ns.forEach(function(x, j){ var an = (-90 + (j + .5) * 360 / n) * Math.PI / 180, lx = cx + Math.cos(an) * (r + 28 * U), ly = cy + Math.sin(an) * (r + 28 * U);
+        x.style.top = ly.toFixed(1) + 'px'; if (Math.cos(an) > 0){ x.style.left = lx.toFixed(1) + 'px'; x.style.right = 'auto'; x.style.textAlign = 'left'; } else { x.style.right = (W - lx).toFixed(1) + 'px'; x.style.left = 'auto'; x.style.textAlign = 'right'; } }); }
+    for (i = 0; i < np; i++){ var tg = (o.gr[i] || n) / n; R += (tg - prev) * (i ? eio(sg(q, i * dp - .02, i * dp + .43)) : eio(sg(q, -.35, .35))); prev = tg; }   /* three arcs, one for each pair */
+    if (R > 0){ g.strokeStyle = 'rgba(235,235,235,.45)'; g.lineWidth = 1; g.setLineDash([]); g.beginPath(); g.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.min(1, R)); g.stroke(); }
+    for (i = 0; i < n; i++){
+      var k = eio(sg(R, (i + .25) / n, (i + .6) / n)), an2 = (-90 + (i + .5) * 360 / n) * Math.PI / 180, ks = k.toFixed(3);
+      bsq(cx + Math.cos(an2) * r, cy + Math.sin(an2) * r, k);
+      if (o.ns[i].__o !== ks){ o.ns[i].__o = ks; o.ns[i].style.opacity = ks; }
+    }
+    for (i = 0; i < np; i++){
+      var a = i * dp, wi = i ? eio(sg(q, a + .04, a + .24)) : eio(sg(q, -.4, 0)), wo = 1 - (i === np - 1 ? eio(sg(q, tC - .04, tC + .1)) : eio(sg(q, a + dp - .18, a + dp - .04)));
+      PUT(o.prs[i], wi * wo, TY((1 - wi) * 16 * U - (1 - wo) * 12 * U));
+    }
+    var kc = eio(sg(q, tC + .14, tC + .5)); PUT(o.c, kc, TY(14 * U * (1 - kc)), BLR(kc));
+    PUT(o.l, eio(sg(q, -.45, -.05)));
+    var op = eio(sg(q, -.25, .5)), g2 = o.gl;
+    if (g2 && g2.ready){ g2.size(); g2.set1('uA', op); g2.set1('uZ', 1.1 - .1 * op); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+    else if (o.im && !g2){ o.im.style.opacity = op.toFixed(3); }
+  }
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point, pparts: ppParts, pquart: ppQuart, pnames: ppNames, pwide: ppWide, psamp: ppSamp, pring: ppRing};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */
