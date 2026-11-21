@@ -928,31 +928,56 @@ ART = {'head': 'Why One Team Changes the Outcome', 'cat': 'Perspectives', 'date'
               'Under one roof the same team carries the drawing into the field. A material is chosen knowing what it costs to install, '
               'a lighting plan is drawn knowing where the millwork lands, and a delivery date is set by the people who will be standing in the room when it arrives.',
               'That is also why the schedule holds: nothing waits for a translation between firms. CI puts the saving at about a fifth of the project time, '
-              'and the clients who notice it most are the ones who never had to chase it.'],
+              'and the clients who notice it most are the ones who never had to chase it.',
+              'It shows in small things first: a stone seam that lands on a cabinet line, a switch where a hand expects it, '
+              'a delivery that arrives the week the room is ready for it.'],   # 21.11: a fourth, so the closing paragraph is not set twice
        'sub': 'What it looks like in the home',
        'quote': 'The test of an integrated team is not the first drawing. It is the hundredth decision.',
        'close': 'A home finished this way reads as one idea rather than a set of good parts: the proportions, the materials and the light belong to each other, '
                 'because the same people were responsible for all three.'}
 # ================================================================== news + article
+NEWS_IMG = ['us/1511-08a', 'ch/1450-10a', 'rtb/1430-03a', 'rtb/1430-09a', 'ch/1450-07a', 'rtb/1430-06']   # stand-ins with the working copy: the client's work, photographs shown only on their project pages
+NT_PAT = [1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0]                                                           # the grid's rhythm, four columns: 2·1·1 / 1·1·2 / 2·2 / 1·2·1 (the same list is in js/inner.js)
+NEWS_CATS = ['Projects', 'Perspectives', 'Partnerships', 'Press', 'CI News']
 def news():
+    """The blog, on her two references (21.11.2026 10:47). primeasialeather.com/highlights: «сподобалося, як показані ці фільтри. Можна в
+    нашій стилістиці зробити таку кнопку якусь прикольну і отак само показати… І також мені подобається там сітка. Але там не наша
+    стилістика, заокруглені карточки — потрібно все в нашій робити.» studiodado.com/blog: «подобається загальний вайб».
+    Read in the browser. PrimeAsia: a grid of four columns in which a tile takes two columns or one in a changing rhythm, small tiles
+    standing at the head of their row, the picture 5 : 6, the title under it; the filter is ONE button fixed on the foot of the screen in
+    the middle, a column wide, that opens UPWARD into a list of tick-boxes and keeps its label on the foot. Studio Dado: a very large
+    title across the page, tall sharp-cornered photographs, a lot of air. Ours: the same grid on our fields (50, gaps 25, rows 150 apart),
+    square corners, the card's line in our small caps with the blue square; the filter is our white block (the square in its corner, the
+    label on its foot) that grows upward, a plus that becomes a minus, square tick-boxes. It stands where the chapter rail stands on
+    other pages (the rail is not shown here). Every article is working copy (.wc); the photographs are stand-ins from the client's work."""
     S = P['news']; pg = Pg()
     h1, ps, a = hero(S[0])
     pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 ey rv c1">%s</p>\n  <h1 class="t111 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n%s\n%s\n  </div>\n</section>' % (esc(label(S[0])), brk(h1, 20), lead_p(ps[0], w=1240), p20(ps[1:], 'c2')), 'News', 'top')
-    chips = ['All CI News', 'Projects', 'Perspectives', 'Partnerships', 'Press', 'CI News']
-    ch = ''.join('<button class="chip%s" type="button" data-f="%s">%s</button>' % (' on' if i == 0 else '', 'all' if i == 0 else slug(c), c) for i, c in enumerate(chips))
-    rows = ''.join('<a href="article.html" data-tags="%s"><span class="n">%02d</span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span></a>'
-                   % (slug(c), i + 1, drw(h), drw(c), drw(d)) for i, (h, c, d) in enumerate(NEWS_ROWS))
-    sec = S[1]; lead = get(sec, 'lead')[0][1][0]; more = get(sec, 'a')[0][2]
-    body = '    <p class="t34 rv c1" style="--w:900">%s</p>\n    <div class="chips rv c1 g50" data-filter="nl">%s</div>\n    <div class="lst rv g50" id="nl">%s<p class="none lab3"><span class="wc">No articles under this filter yet</span></p></div>\n    <div class="rv c1">%s</div>' % (blue(lead), ch, rows, btn(more, '#').replace('href="#"', 'href="#" data-noop'))
-    pg.add(bk(h_of(sec), body), 'All News')
+    assert len(NEWS_IMG) == len(NEWS_ROWS)
+    tiles = ''.join('<a class="cd nt%s" href="article.html" data-tags="%s"><span class="im"><img src="%s" alt="" loading="lazy"></span><span class="nt-m lab3"><span class="nt-c">%s</span><span class="nt-d">%s</span></span><span class="nt-t">%s</span></a>'
+                    % (' b' if NT_PAT[i % len(NT_PAT)] else '', slug(c), A + NEWS_IMG[i] + '.webp', drw(c), drw(d), drw(h)) for i, (h, c, d) in enumerate(NEWS_ROWS))
+    sec = S[1]; lead = get(sec, 'lead')[0][1][0]; more = get(sec, 'a')[0][2]; allt = h_of(sec)
+    flt = ('<div class="nf" data-list="nl"><div class="nf-p" id="nf-p"><div><div class="nf-i">%s</div></div></div>'
+           '<button class="nf-b" type="button" aria-expanded="false" aria-controls="nf-p"><span class="t">%s</span><i class="pl" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></button></div>'
+           % (''.join('<button type="button" role="checkbox" aria-checked="false" data-f="%s"><i class="bx" aria-hidden="true"></i><span>%s</span></button>' % (slug(c), c) for c in NEWS_CATS), esc(allt)))
+    body = '    <p class="t34 rv c1" style="--w:900">%s</p>\n    <div class="ng" id="nl">%s<p class="none lab3"><span class="wc">No articles under this filter yet</span></p></div>\n    <div class="rv c1">%s</div>\n    %s' % (blue(lead), tiles, btn(more, '#').replace('href="#"', 'href="#" data-noop'), flt)
+    pg.add(bk(allt, body, cls=' nw'), 'All News')
     emit('news.html', 'News', pg)
 news()
 def article():
+    """The article, on her reference gkc.ca/en/news/design-futures (21.11.2026 10:48: «У нас є теж така стилістика з такими лініями.
+    Думаю, що можна плюс-мінус так оформити. Але не забувай, що це повинно бути в нашій стилістиці»). Read in the browser: the headline
+    alone at the upper left of a tall quiet head; on the foot of the head a line of small caps (the category at the left field, the date
+    from the page's middle) standing on a hairline the whole width; under it the page is cut by ONE vertical hairline in its middle —
+    a tall picture in the left half, the text in the right half; then three pictures across; then «Other articles» as rows between
+    hairlines with a small picture at the head of each row. Ours: black, our hairline (30 % white), our sizes; the picture of the left
+    half stays in place while the text is read."""
     S = P['article']; pg = Pg()
     sec = S[1]; ks = [it[1][0] for it in sec['items'] if it[0] == 'k']
-    head = '<section class="bk hd0" id="@ID@">\n  <p class="lab3 ey rv c1 mt3"><span class="sqr"><span><a href="news.html">← News</a></span><span>%s</span><span>%s</span></span></p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <p class="t34 rv c1" style="--w:900;margin-top:calc(50 * var(--u))">%s</p>\n</section>' % (drw(ART['cat']), drw(ART['date']), drw(ART['head']), drw(ART['lead']))
+    head = ('<section class="ar-h" id="@ID@">\n  <p class="lab3 ey rv"><a href="news.html">← News</a></p>\n  <h1 class="t60 rv">%s</h1>\n'
+            '  <div class="ar-m lab3"><span class="ar-c">%s</span><span class="ar-d"><span>%s</span><span>%s</span></span></div>\n</section>') % (drw(ART['head']), drw(ART['cat']), drw(ART['date']), esc(ks[2]))
     pg.add(head, 'Article', 'top')
-    body = []; ps_ = list(ART['ps'])
+    body = ['<p class="t34 rv">%s</p>' % drw(ART['lead'])]; ps_ = list(ART['ps'])
     def fill(t, kind):
         if not t.strip().strip('“”"').startswith('['): return esc(t)      # the client's own text stays as it is
         if kind == 'h3': return drw(ART['sub'])
@@ -962,14 +987,14 @@ def article():
         if it[0] == 'p': body.append('<div class="t20s rv"><p>%s</p></div>' % fill(it[1][0], 'p'))
         elif it[0] == 'h3': body.append('<p class="h5r rv" style="margin-top:calc(100 * var(--u))">%s</p>' % fill(it[1], 'h3'))
         elif it[0] == 'lead': body.append('<p class="t34 rv">%s</p>' % fill(it[1][0], 'lead'))
-    meta = '<p class="lab3 rv mt3">%s</p>' % sqr([ART['date'], ART['cat'], ks[2]])
     share = ks[3].split(' · ')
     sh = '<p class="lab3 rv mt3" style="margin-top:calc(100 * var(--u))"><span>%s</span>%s</p>' % (esc(share[0]), ''.join('<a href="#" data-noop>%s</a>' % esc(x) for x in share[1:]))
-    pg.add('<section class="bk" id="@ID@">\n  <div class="art">%s%s%s</div>\n</section>' % (meta, ''.join(body), sh))
+    pg.add('<section class="ar-b" id="@ID@">\n  <div class="ar-l"><div class="ar-ph"><img src="%s" alt=""></div></div>\n  <div class="art">%s%s</div>\n</section>' % (A + NEWS_IMG[0] + '.webp', ''.join(body), sh))
+    pg.add('<section class="ar-3" id="@ID@">%s</section>' % ''.join('<div><img src="%s" alt="" loading="lazy"></div>' % x for x in [A + y + '.webp' for y in ('rtb/1430-05a', 'us/1511-13', 'rtb/1430-10a')]))
     sec = S[3]; a = get(sec, 'a')[0]
-    rows = ''.join('<a href="article.html"><span class="n">%02d</span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span></a>'
-                   % (i + 1, drw(h), drw(c), drw(d)) for i, (h, c, d) in enumerate(NEWS_ROWS[1:4]))
-    pg.add(bk(h_of(sec), '    <div class="lst rv">%s</div>\n    <div class="rv c1">%s</div>' % (rows, btn(a[2], 'news.html'))), 'More')
+    rows = ''.join('<a href="article.html"><span class="im"><img src="%s" alt="" loading="lazy"></span><span class="t">%s</span><span class="c">%s</span><span class="c">%s</span></a>'
+                   % (A + NEWS_IMG[i + 1] + '.webp', drw(h), drw(c), drw(d)) for i, (h, c, d) in enumerate(NEWS_ROWS[1:4]))
+    pg.add(bk(h_of(sec), '    <div class="lst wi rv">%s</div>\n    <div class="rv c1">%s</div>' % (rows, btn(a[2], 'news.html'))), 'More')
     final_cta(pg, S[4], A + 'ch/1450-32.webp', g=.55)
     emit('article.html', 'Article', pg)
 article()

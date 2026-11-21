@@ -1618,3 +1618,63 @@ html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:m
   html body.inr .film .pp-rg-l{margin-top:24px}
   html body.inr .film .pp-rg-id, html body.inr .film .pp-rg-of{display:none}
 }
+
+/* ================================================================== the blog and the article (21.11.2026, on her references)
+   THE GRID (primeasialeather.com/highlights, in our hand): four columns on the fields, 25 between them, rows 150 apart; a tile is one column or two (.b), small tiles stand at the head
+   of their row; the picture 5 : 6, square corners; under it 25 the card's line in the small caps (our square before the category, the date at the right), 18 under that the title. */
+html body.inr .bk-b > .ng{margin-top:calc(100 * var(--u))}
+.ng{margin-left:calc(50 * var(--u));margin-right:calc(50 * var(--u));display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(25 * var(--u));row-gap:calc(150 * var(--u));align-items:start}
+.ng .nt{grid-column:span 1;margin:0;min-width:0} .ng .nt.b{grid-column:span 2} .ng [hidden]{display:none!important}
+.ng .nt .im{aspect-ratio:5 / 6}
+.nt-m{display:flex;justify-content:space-between;align-items:baseline;gap:1em;margin-top:calc(25 * var(--u))}
+.nt-c{position:relative;padding-left:calc(max(5px, 8 * var(--u)) + max(6px, 10 * var(--u)))} .nt-c::before, .ar-c::before{content:"";position:absolute;left:0;top:50%;width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));margin-top:calc(max(5px, 8 * var(--u)) / -2);background:#96A8BF}
+.nt-t{display:block;margin-top:calc(18 * var(--u));max-width:17em;font-family:var(--fx);font-weight:400;font-size:max(15px, calc(24 * var(--u)));line-height:1.04;letter-spacing:-.03em;color:#FFFFFF;text-wrap:balance}
+.nt.b .nt-t{font-size:max(17px, calc(34 * var(--u)));line-height:.971;letter-spacing:-.0294em}
+.ng .none{grid-column:1 / -1;display:none;margin:0} .ng.empty .none{display:block}
+/* THE FILTER: one white block on the foot of the screen in its middle, a column wide (our button: the label on its foot, the square in its corner). It opens UPWARD into the list;
+   a plus becomes a minus; the boxes are squares. It is there while the grid is on the screen, in the place of the chapter rail. */
+body:has(.nf) .chap{display:none}
+.nf{position:fixed;left:50%;bottom:max(18px, calc(40 * var(--u)));z-index:40;width:max(230px, calc(436 * var(--u)));background:#FFFFFF;color:#000;transform:translate(-50%, calc(100% + 60px));transition:transform .8s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.nf.in{transform:translate(-50%, 0);pointer-events:auto}
+.nf-b{position:relative;display:block;width:100%;height:max(46px, calc(78 * var(--u)));background:none;border:0;color:#000}
+.nf-b .t, .nf-i button span{font-family:var(--fx);font-weight:500;font-size:max(10px, calc(18 * var(--u)));line-height:.89;letter-spacing:-.0556em;text-transform:uppercase;white-space:nowrap;color:#000}
+.nf-b .t{position:absolute;left:max(10px, calc(12 * var(--u)));right:max(34px, calc(50 * var(--u)));bottom:max(10px, calc(12 * var(--u)));overflow:hidden;text-overflow:ellipsis;padding-top:.15em}
+.nf-b .sqd{position:absolute;right:max(7px, calc(8 * var(--u)));top:max(7px, calc(8 * var(--u)));width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:#000;transition:background-color .4s}
+.nf.has .nf-b .sqd{background:#96A8BF}
+.nf-b .pl{position:absolute;right:max(10px, calc(12 * var(--u)));bottom:max(10px, calc(12 * var(--u)));width:max(9px, calc(14 * var(--u)));height:max(9px, calc(14 * var(--u)))}
+.nf-b .pl::before, .nf-b .pl::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1px;background:#000;transition:transform .6s cubic-bezier(.16,1,.3,1)}
+.nf-b .pl::after{transform:rotate(90deg)} .nf.open .nf-b .pl::after{transform:rotate(0deg)}
+.nf-p{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s cubic-bezier(.16,1,.3,1)} .nf.open .nf-p{grid-template-rows:1fr}
+.nf-p > div{overflow:hidden;min-height:0}
+.nf-i{padding:max(12px, calc(20 * var(--u))) 0 max(8px, calc(12 * var(--u)));border-bottom:1px solid rgba(0,0,0,.2)}
+.nf-i button{display:flex;align-items:center;gap:max(8px, calc(12 * var(--u)));width:100%;padding:max(7px, calc(10 * var(--u))) max(10px, calc(12 * var(--u)));background:none;border:0;color:#000}
+.nf-i .bx{flex:none;box-sizing:border-box;width:max(9px, calc(12 * var(--u)));height:max(9px, calc(12 * var(--u)));border:1px solid #000;transition:background-color .3s}
+.nf-i button[aria-checked="true"] .bx{background:#000} .nf-i button span{opacity:.55;transition:opacity .3s} .nf-i button[aria-checked="true"] span, .nf-i button:hover span{opacity:1}
+/* THE ARTICLE (gkc.ca, in our hand): the headline alone at the upper left of a tall head; on its foot the small caps standing on a hairline the whole width; under it ONE vertical
+   hairline in the page's middle — the picture left of it (it stays while the text is read), the text right of it; three pictures across between hairlines; rows with a small picture */
+.ar-h{position:relative;background:#000;padding-top:calc(300 * var(--u))}
+html body.inr .ar-h .ey{margin:0 calc(50 * var(--u))} .ar-h .ey a{color:inherit;text-decoration:none}
+html body.inr .ar-h h1{margin:calc(50 * var(--u)) calc(50 * var(--u)) 0;max-width:calc(1400 * var(--u));color:#FFFFFF}
+.ar-m{display:grid;grid-template-columns:1fr 1fr;margin-top:calc(250 * var(--u));padding:0 calc(50 * var(--u)) calc(25 * var(--u));border-bottom:1px solid rgba(255,255,255,.3)}
+.ar-c{position:relative;padding-left:calc(max(5px, 8 * var(--u)) + max(6px, 10 * var(--u)));justify-self:start} .ar-d{display:flex;justify-content:space-between;padding-left:calc(50 * var(--u))}
+.ar-b{position:relative;display:grid;grid-template-columns:1fr 1fr;background:#000}
+.ar-b::before{content:"";position:absolute;left:50%;top:0;bottom:0;width:1px;background:rgba(255,255,255,.3)}
+.ar-l{padding:calc(100 * var(--u)) calc(50 * var(--u)) calc(150 * var(--u))}
+.ar-ph{position:sticky;top:max(96px, calc(160 * var(--u)));width:calc(660 * var(--u));max-width:100%;aspect-ratio:4 / 5;overflow:hidden;background:#1D1D1D} .ar-ph img, .ar-3 img{display:block;width:100%;height:100%;object-fit:cover;max-width:none}
+html body.inr .ar-b .art{margin:0;max-width:none;padding:calc(100 * var(--u)) calc(50 * var(--u)) calc(150 * var(--u))} html body.inr .ar-b .art > *{max-width:calc(700 * var(--u))}
+html body.inr .ar-b .art > .t34:first-child{margin-top:0}
+.ar-3{display:grid;grid-template-columns:repeat(3, 1fr);background:#000;border-top:1px solid rgba(255,255,255,.3);border-bottom:1px solid rgba(255,255,255,.3)}
+.ar-3 > div{padding:calc(50 * var(--u))} .ar-3 > div + div{border-left:1px solid rgba(255,255,255,.3)} .ar-3 img{height:auto;aspect-ratio:4 / 5}
+.ar-3 + .bk{padding-top:calc(150 * var(--u))}
+.lst.wi .im{display:block;width:calc(321 * var(--u));aspect-ratio:3 / 2;overflow:hidden;background:#1D1D1D} .lst.wi .im img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.16,1,.3,1)} .lst.wi a:hover .im img{transform:scale(1.04)}
+@media (max-aspect-ratio: 1/1){
+  html body.inr .bk-b > .ng{margin-top:40px} .ng{margin-left:var(--m, 20px);margin-right:var(--m, 20px);grid-template-columns:1fr 1fr;column-gap:12px;row-gap:44px}
+  .nt-m{margin-top:12px} .nt:not(.b) .nt-m{flex-direction:column;gap:4px} .nt-t{margin-top:10px}
+  .nf{width:min(300px, calc(100vw - 40px));bottom:16px}
+  .ar-h{padding-top:150px} html body.inr .ar-h .ey, html body.inr .ar-h h1{margin-left:var(--m, 20px);margin-right:var(--m, 20px)} html body.inr .ar-h h1{margin-top:22px}
+  .ar-m{margin-top:72px;padding:0 var(--m, 20px) 14px;grid-template-columns:1fr;row-gap:8px} .ar-d{padding-left:0}
+  .ar-b{display:block} .ar-b::before{display:none} .ar-l{padding:28px var(--m, 20px) 0} .ar-ph{position:static;width:100%}
+  html body.inr .ar-b .art{padding:40px var(--m, 20px) 72px} html body.inr .ar-b .art > *{max-width:none}
+  .ar-3{grid-template-columns:1fr} .ar-3 > div{padding:14px var(--m, 20px)} .ar-3 > div + div{border-left:0;padding-top:0}
+  .ar-3 + .bk{padding-top:72px} .lst.wi .im{width:100%}
+}

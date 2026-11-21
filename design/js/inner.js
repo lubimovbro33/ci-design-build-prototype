@@ -1685,6 +1685,25 @@
       list.classList.toggle('empty', n === 0);
     }); });
   });
+  /* the blog's filter (21.11.2026): one block on the foot of the screen that opens upward into tick-boxes; several can be on at once. The grid keeps its rhythm of wide and narrow
+     tiles over whatever is left (the same list as NT_PAT in tools/site/pages.py). */
+  qsa('.nf').forEach(function(nf){
+    var list = $(nf.getAttribute('data-list')); if (!list) return;
+    var bar = qs('.nf-b', nf), lab = qs('.nf-b .t', nf), all = lab.textContent, boxes = qsa('.nf-i button', nf), items = qsa('[data-tags]', list), PAT = [1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0];
+    function apply(){
+      var on = boxes.filter(function(b){ return b.getAttribute('aria-checked') === 'true'; }), fs = on.map(function(b){ return b.getAttribute('data-f'); }), n = 0;
+      items.forEach(function(it){ var ok = !fs.length || fs.indexOf(it.getAttribute('data-tags')) >= 0; it.hidden = !ok; if (ok){ it.classList.toggle('b', !!PAT[n % PAT.length]); n++; } });
+      list.classList.toggle('empty', n === 0); nf.classList.toggle('has', fs.length > 0);
+      lab.textContent = fs.length ? on.map(function(b){ return b.textContent.trim(); }).join(' + ') : all;
+    }
+    function open(v){ nf.classList.toggle('open', v); bar.setAttribute('aria-expanded', v ? 'true' : 'false'); }
+    boxes.forEach(function(b){ b.addEventListener('click', function(){ b.setAttribute('aria-checked', b.getAttribute('aria-checked') === 'true' ? 'false' : 'true'); apply(); }); });
+    bar.addEventListener('click', function(){ open(!nf.classList.contains('open')); });
+    document.addEventListener('click', function(ev){ if (!nf.contains(ev.target)) open(false); });
+    document.addEventListener('keydown', function(ev){ if (ev.key === 'Escape') open(false); });
+    if ('IntersectionObserver' in window){ new IntersectionObserver(function(es){ var v = es[0].isIntersecting; nf.classList.toggle('in', v); if (!v) open(false); }, {rootMargin: '-35% 0px -12% 0px'}).observe(list); }
+    else nf.classList.add('in');
+  });
   /* the form checks itself; nothing is sent anywhere yet */
   qsa('form.frm').forEach(function(fm){
     fm.addEventListener('submit', function(e){
