@@ -1551,12 +1551,15 @@ def pp_ring(kick, title, lead, pairs, closer_, imgs):
         «You… / We…» one at a time (the second line blue);
       · in the ring, as on the reference: the number in hand left of the round photograph, the total right of it; three ticks;
         the arc grows by a third with each pair, our square at its head; the photograph changes by a circle from its centre.
+    21.11 12:17: «тут же можна зробити класний перехід, щоб оця фотка остання переходила в наш наступний блок. Чому ти так не
+    зробив?» — the LAST image of `imgs` is the closing screen's own photograph: it is seen through the round window at the size it
+    has on that screen, and at the end the window opens to the whole screen — the closing block is already there under it.
     `title` and `closer_` = (lines left of the ring, lines right of it). Nothing stands in a corner. The type is DOM, the ring on
     the film's canvas, the round window one WebGL layer (ppRing() in js/inner.js)."""
     n = len(pairs); assert len(imgs) == n + 1, imgs
     (ta, tb), (ca, cb_) = title, closer_; br = lambda ls: '<br>'.join(esc(x) for x in ls)
     return '\n'.join([
-        '<section class="film pp pp-rg" data-fig="pring" data-len="%.2f" data-open="0" id="@ID@">' % (.5 + (n + 1) * .7 + .5), '  <div class="stg">',
+        '<section class="film pp pp-rg" data-fig="pring" data-len="%.2f" data-open="0" id="@ID@">' % (.5 + n * .7 + .45 + 1.2), '  <div class="stg">',   # … + the round window opening onto the closing screen (21.11 12:17)
         '    <div class="pp-rg-ph">%s</div>' % ''.join('<img src="%s" alt="">' % x for x in imgs), PP_CV, '    <div class="sc pp-s">',
         '      <div class="pp-rg-a"><p class="tk-cv-k">%s</p><h2 class="t60 pp-rg-h"><span class="vh">%s</span><span class="pp-rg-rw" aria-hidden="true"><span>%s</span><span>%s</span></span></h2></div>'
         % (esc(kick), esc(' '.join(ta + tb)), br(ta), br(ca)),

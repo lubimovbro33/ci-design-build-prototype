@@ -1589,15 +1589,21 @@ html body.inr .film .pp-sv-l, html body.inr .film .pp-sv-c{position:absolute;lef
 /* the one circle (third build, 21.11.2026 11:22): THE RING IN THE SCREEN'S CENTRE (radius 300, the round photograph 330, the numbers in the middle of the band between them).
    The title stands on the ring's axis either side of it — two lines of the 60 set against the ring, 50 from it; the block's name 25 over its first half. One window of reading
    text (the 20, centred) 40 under the ring. */
-.pp-rg-ph{position:absolute;left:calc(50% - 165 * var(--u));top:calc(50% - 165 * var(--u));width:calc(330 * var(--u));height:calc(330 * var(--u));z-index:1}
-.pp-rg-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;max-width:none;opacity:0}
+/* the round window is drawn in a layer the size of the screen (21.11 12:17): at the end it opens to the whole screen onto the closing block's photograph, and that block — pulled up
+   under the film's last screen and held there for 60 % of a screen — is uncovered in its place (.pp-rg-done) */
+.pp-rg-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1}
+.pp-rg-ph img{position:absolute;left:0;top:0;width:1px;height:1px;display:block;max-width:none;opacity:0}
+@media not all and (max-aspect-ratio: 1/1){
+  .pp-rg{position:relative;z-index:2;pointer-events:none} .pp-rg.pp-rg-done .stg{opacity:0}   /* nothing in this film is pressed; the closing block under it must be */
+  .pp-rg + .fin{position:sticky;top:0;z-index:1;margin-top:-100vh} .pp-hold{height:60vh}   /* a sticky block gets no room from its own margin: the room is the block after it */
+}
 .pp-rg-a{position:absolute;right:calc(50% + 350 * var(--u));top:50%;text-align:right;opacity:0}
 html body.inr .pp-rg-a .tk-cv-k{position:absolute;right:0;bottom:calc(.867em * 2 + 25 * var(--u));margin:0;white-space:nowrap}
 html body.inr .pp-rg-a .tk-cv-k{bottom:auto;top:calc(-.867 * max(24px, 60 * var(--u)) - 25 * var(--u) - 1.2em)}
 html body.inr .film .pp-rg-h, html body.inr .film .pp-rg-b{margin:0;color:#FFFFFF;white-space:nowrap}
 html body.inr .film .pp-rg-b{position:absolute;left:calc(50% + 350 * var(--u));top:50%;text-align:left;color:#96A8BF;opacity:0}
-.pp-rg-rw{position:relative;display:block;height:1.76em;margin-top:-.88em;overflow:hidden}
-.pp-rg-rw > span{display:flex;flex-direction:column;justify-content:center;height:100%;will-change:transform} .pp-rg-rw > span + span{position:absolute;left:0;right:0;top:0;transform:translateY(100%)}
+.pp-rg-rw{position:relative;display:block;height:1.76em;margin-top:-.88em;clip-path:inset(0 -100vw)}   /* cut above and below only: a later line may be wider than the first */
+.pp-rg-rw > span{display:flex;flex-direction:column;justify-content:center;height:100%;white-space:nowrap!important;will-change:transform} .pp-rg-rw > span + span{position:absolute;left:0;right:0;top:0;transform:translateY(100%)}
 .pp-rg-w{position:absolute;left:calc(50% - 300 * var(--u));width:calc(600 * var(--u));top:calc(50% + 340 * var(--u));height:2.5em;font-size:var(--t-run);overflow:hidden;text-align:center;opacity:0}
 html body.inr .film .pp-rg-w > p{position:absolute;left:0;top:0;width:100%;height:100%;margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#FFFFFF;text-wrap:balance;will-change:transform}
 html body.inr .film .pp-rg-w > p + p{transform:translateY(100%)} .pp-rg-w > p span{display:block}
@@ -1643,7 +1649,7 @@ html body.inr .film .pp-rg-id{left:calc(50% - 272.5 * var(--u))} html body.inr .
   html body.inr .film .pp-tk-r p{margin-top:12px} html body.inr .film .pp-tk-c{margin-top:40px} html body.inr .film .pp-tk-l{margin-top:22px;order:-1}
   .pp-sv-g{display:none} .pp-sv-r{position:static;height:auto;margin-top:8px} html body.inr .film .pp-sv-r li{margin-top:28px;padding:0} .pp-sv-r img{display:block;width:100%;height:auto;aspect-ratio:16 / 9;object-fit:cover;margin-bottom:12px}
   html body.inr .film .pp-sv-l{margin-top:22px} html body.inr .film .pp-sv-c{margin-top:36px}
-  .pp-rg-ph{position:relative;left:auto;top:auto;width:64vw;height:64vw;margin:96px auto 0} .pp-rg-ph img{opacity:1} .pp-rg-ph img + img, .pp-rg-ph .glc{display:none}
+  .pp-rg-ph{position:relative;left:auto;top:auto;width:64vw;height:64vw;margin:96px auto 0} .pp-rg-ph img{opacity:1;width:100%;height:100%;object-fit:cover;border-radius:50%} .pp-rg-ph img + img, .pp-rg-ph .glc{display:none}
   .pp-rg-a{position:static;text-align:left;opacity:1!important;margin-top:28px} html body.inr .pp-rg-a .tk-cv-k{position:static} html body.inr .film .pp-rg-h{margin-top:14px;white-space:normal}
   .pp-rg .vh{position:static!important;width:auto;height:auto;margin:0;overflow:visible;clip-path:none;white-space:normal} .pp-rg-rw, html body.inr .film .pp-rg-b{display:none}
   .pp-rg-w{position:static;width:auto;height:auto;overflow:visible;text-align:left;opacity:1!important;font-size:inherit} html body.inr .film .pp-rg-w > p{display:block;margin-top:22px}

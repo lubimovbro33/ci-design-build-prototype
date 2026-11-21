@@ -687,10 +687,12 @@ def partnerships():
     #   pp_track(label(sec), ts, lead, five, cs, W_('ch/1450-12', 'rtb/1430-07', 'ch/1450-14', 'ch/1450-10a', 'us/1530-02'))
     pg.add(pp_plates(label(sec), ts, get(sec, 'lead')[0][1][0], five, cs), 'Vision')
     # 09 the value of working together: the one circle
-    sec = S[8]; six = get(sec, 'p')[0][1]; cr = (['That is'], ['the CI', 'ecosystem']); tr = (['A Stronger', 'Network'], ['Around', 'Every Client']); J2 = lambda t: ' '.join(t[0] + t[1])
+    # 21.11 12:17: «щоб була симетрія: білий текст плюс-мінус такий, як і синій, по масиву» — the closing sentence is one line either side of the ring
+    sec = S[8]; six = get(sec, 'p')[0][1]; cr = (['That is the'], ['CI ecosystem']); tr = (['A Stronger', 'Network'], ['Around', 'Every Client']); J2 = lambda t: ' '.join(t[0] + t[1])
     assert len(six) == 6 and len(ring) == 8 and J2(cr) == nop(' '.join(get(sec, 'strong')[0][1])) and J2(tr) == nop(h_of(sec)), (six, ring)
-    pg.add(pp_ring(label(sec), tr, get(sec, 'lead')[0][1][0], list(zip(six[0::2], six[1::2])), cr, W_('ch/1450-11', 'ch/1450-13', 'ch/1450-03a', 'us/1511-14a')), 'Value')   # round photographs no other page shows
-    final_cta(pg, S[-1], A + 'ch/1450-06.webp')
+    pg.add(pp_ring(label(sec), tr, get(sec, 'lead')[0][1][0], list(zip(six[0::2], six[1::2])), cr, W_('ch/1450-11', 'ch/1450-13', 'ch/1450-03a', 'ch/1450-06')), 'Value')   # round photographs no other page shows
+    final_cta(pg, S[-1], A + 'ch/1450-06.webp')            # the ring's last round window opens onto THIS photograph (the same file, the same cut and grade): pp_ring's last image
+    pg.add('<div class="pp-hold" id="@ID@" aria-hidden="true"></div>')   # room for the closing block to stay in place after the ring has opened onto it
     emit('partnerships.html', 'Partnerships', pg, A + 'us/1511-07a.webp')
 partnerships()
 

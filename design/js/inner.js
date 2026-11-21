@@ -1709,44 +1709,49 @@
   /* ---------- the one circle, on her reference (21.11.2026 10:44, madeinuxstudio.com's dial): a quiet ring, a brighter arc of it that grows by a third with each pair, three ticks
      inside it at 12, 4 and 8 o'clock; the round photograph in its centre changes by a circle that grows from the centre; the number in hand rolls left of it; the pairs and then
      the closing sentence roll in one window on the same axis at the left field. */
-  var RING_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2, uT3;', 'uniform vec2 uRes, uS0, uS1, uS2, uS3;', 'uniform float uA, uP, uTime;', 'varying vec2 v;',
-    'vec3 pk(float i, vec2 uv){ if (i < 0.5) return texture2D(uT0, cvr(uv, uS0, uRes)).rgb; if (i < 1.5) return texture2D(uT1, cvr(uv, uS1, uRes)).rgb; if (i < 2.5) return texture2D(uT2, cvr(uv, uS2, uRes)).rgb; return texture2D(uT3, cvr(uv, uS3, uRes)).rgb; }',
+  var RING_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2, uT3;', 'uniform vec2 uRes, uS0, uS1, uS2, uS3;', 'uniform float uA, uP, uR, uOpen, uTime;', 'varying vec2 v;',
+    /* the first three photographs are cut to the round window (a square 2R about the centre); the last is the closing screen's own, at the size and grade it has there */
+    'vec3 pk(float i, vec2 us){ vec3 c; if (i < 0.5) c = texture2D(uT0, cvr(us, uS0, vec2(1.0))).rgb; else if (i < 1.5) c = texture2D(uT1, cvr(us, uS1, vec2(1.0))).rgb; else if (i < 2.5) c = texture2D(uT2, cvr(us, uS2, vec2(1.0))).rgb;',
+    '  else return ((texture2D(uT3, cvr(v, uS3, uRes)).rgb - 0.5) * 1.04 + 0.5) * mix(1.0, 0.62, uOpen); return (c - 0.5) * 1.04 + 0.5; }',
     'void main(){',
-    '  float d = length(v - 0.5) * 2.0, aa = 3.0 / uRes.x, m = 1.0 - smoothstep(uA - aa, uA, d);',         /* the round window opens from its centre */
-    '  float i0 = floor(uP), k = uP - i0, mk = k > 0.001 ? 1.0 - smoothstep(k - aa, k, d) : 0.0;',          /* the next photograph grows from the centre of the one in hand */
-    '  vec3 a = pk(i0, (v - 0.5) / (1.0 + 0.06 * (1.0 - uA)) + 0.5), b = pk(min(i0 + 1.0, 3.0), (v - 0.5) / (1.0 + 0.1 * (1.0 - k)) + 0.5);',
-    '  vec3 c = mix(a, b, mk); c = ((c - 0.5) * 1.04 + 0.5) * m;',                                         /* in its own light */
+    '  vec2 p = v * uRes, c0 = uRes * 0.5; float d = length(p - c0), aa = 1.5, R0 = uR * uRes.y, R = mix(R0 * uA, length(c0) + 2.0, uOpen), m = 1.0 - smoothstep(R - aa, R, d);',   /* the window: round, and at the end the whole screen */
+    '  vec2 us = (p - c0) / (2.0 * R0) + 0.5;',
+    '  float i0 = floor(uP), k = uP - i0, rk = k * R0, mk = k > 0.001 ? 1.0 - smoothstep(rk - aa, rk, d) : 0.0;',   /* the next photograph grows from the centre of the one in hand */
+    '  vec3 c = mix(pk(i0, us), pk(min(i0 + 1.0, 3.0), us), mk) * m;',
     '  c += (hash(v * uRes + uTime) - 0.5) * 0.02 * m;',
     '  gl_FragColor = vec4(c, 1.0);',
     '}'].join('\n');
   function ppRing(f, q, t){
     var o = f.rg, e = f.el, i;
     if (o === undefined){ var bx = qs('.pp-rg-ph', e);
-      o = f.rg = {gl: bx ? GL2.make(bx, RING_FS, qsa('img', bx), {max: 1000}) : null, ims: bx ? qsa('img', bx) : [], ws: qsa('.pp-rg-w > p', e), w: qs('.pp-rg-w', e), a: qs('.pp-rg-a', e), b: qs('.pp-rg-b', e),
+      o = f.rg = {gl: bx ? GL2.make(bx, RING_FS, qsa('img', bx), {max: 1600}) : null, nx: e.nextElementSibling && e.nextElementSibling.classList.contains('fin') ? qsa('.rv', e.nextElementSibling) : [], ims: bx ? qsa('img', bx) : [], ws: qsa('.pp-rg-w > p', e), w: qs('.pp-rg-w', e), a: qs('.pp-rg-a', e), b: qs('.pp-rg-b', e),
                   rw: qsa('.pp-rg-rw', e).map(function(x){ return qsa(':scope > span', x); }), id: qs('.pp-rg-id', e), ids: qsa('.pp-rg-id span', e), of: qs('.pp-rg-of', e), on: false}; }
     var n = o.ws.length - 1, all = [o.w, o.a, o.b, o.id, o.of, o.k].concat(o.ws, o.ids, o.rw[0] || [], o.rw[1] || []);   /* n pairs; before them the lead, after them the closing sentence */
-    if (H >= W){ if (o.on){ o.on = false; all.forEach(function(x){ CLR(x); if (x) x.__ty = ''; }); } return; }
+    if (H >= W){ if (o.on){ o.on = false; o.dn = undefined; e.classList.remove('pp-rg-done'); all.forEach(function(x){ CLR(x); if (x) x.__ty = ''; }); for (i = 0; i < o.nx.length; i++) o.nx[i].classList.add('in'); } return; }
     o.on = true;
     var cx = W / 2, cy = H / 2, r = 300 * U, T0 = .5, dp = .7, P = 0, A0 = -Math.PI / 2;
     for (i = 0; i <= n; i++) P += eio(sg(q, T0 + i * dp, T0 + i * dp + .45));                      /* 0 the lead · 1…n the pairs · n + 1 the closing sentence */
     var dr = eio(sg(q, -.6, -.05)), ar = eio(sg(q, -.45, -.02)), fr = Math.min(P, n) / n, Pt = c01(P - n);
+    var tO = T0 + n * dp + .45 + .3, op = eio(sg(q, tO, tO + .6)), fo = 1 - eio(sg(q, tO, tO + .22)), done = q >= f.len - .004;   /* the end: the round window opens onto the closing screen; the ring and the words go first */
+    if (o.dn !== done){ o.dn = done; e.classList.toggle('pp-rg-done', done); for (i = 0; i < o.nx.length; i++) o.nx[i].classList.toggle('in', done); }   /* the closing block is under the film's last screen: it is uncovered, and its words come in */
+    else if (!done && o.nx.length && o.nx[0].classList.contains('in')) for (i = 0; i < o.nx.length; i++) o.nx[i].classList.remove('in');
     function roll(items, at){ for (var j = 0; j < items.length; j++){ var ty = ((j - at) * 100).toFixed(2); if (items[j].__ty !== ty){ items[j].__ty = ty; items[j].style.transform = 'translate3d(0,' + ty + '%,0)'; items[j].style.visibility = Math.abs(j - at) >= 1 ? 'hidden' : 'visible'; } } }
-    if (dr > 0){ g.lineWidth = 1; g.setLineDash([]);
+    if (dr > 0 && fo > 0){ g.lineWidth = 1; g.setLineDash([]); g.globalAlpha = fo;
       g.strokeStyle = 'rgba(235,235,235,.22)'; g.beginPath(); g.arc(cx, cy, r, A0, A0 + Math.PI * 2 * dr); g.stroke();                      /* the ring, quiet */
       if (fr > 0){ g.strokeStyle = 'rgba(235,235,235,.95)'; g.beginPath(); g.arc(cx, cy, r, A0, A0 + Math.PI * 2 * fr); g.stroke(); }       /* what has been said of it, bright */
       g.strokeStyle = 'rgba(235,235,235,' + (.9 * ar).toFixed(3) + ')';
       for (i = 0; i < n; i++){ var an = A0 + i * Math.PI * 2 / n, c0 = Math.cos(an), s0 = Math.sin(an); seg(cx + c0 * (r - 24 * U), cy + s0 * (r - 24 * U), cx + c0 * (r - 43 * U), cy + s0 * (r - 43 * U)); }   /* a tick where each pair begins */
-      var ah = A0 + Math.PI * 2 * fr; bsq(cx + Math.cos(ah) * r, cy + Math.sin(ah) * r, ar);                                              /* our square at the head of the arc */
+      var ah = A0 + Math.PI * 2 * fr; bsq(cx + Math.cos(ah) * r, cy + Math.sin(ah) * r, ar * fo);                                         /* our square at the head of the arc */
+      g.globalAlpha = 1;
     }
     roll(o.ws, P);                                                             /* under the ring: the lead, then the pairs; the last one goes up as the title turns */
     if (o.rw[0]) roll(o.rw[0], Pt); if (o.rw[1]) roll(o.rw[1], Pt);              /* either side of the ring: the title, and at the end the closing sentence in its place */
     roll(o.ids, Math.max(0, Math.min(P - 1, n - 1)));
     var ko = ar * eio(sg(P, .45, .95)) * (1 - eio(sg(P, n + .1, n + .6)));                                                                 /* the numbers come with the first pair and go as the ring closes */
-    PUT(o.id, ko); PUT(o.of, ko); PUT(o.a, ar); PUT(o.b, ar); PUT(o.w, ar);
+    PUT(o.id, ko); PUT(o.of, ko); PUT(o.a, ar * fo); PUT(o.b, ar * fo); PUT(o.w, ar);
     if (o.k === undefined) o.k = qs('.pp-rg-a .tk-cv-k', e); PUT(o.k, 1 - eio(c01(Pt * 2)));                                            /* the block's name leaves as its title turns into the closing sentence */
     var g2 = o.gl, ua = eio(sg(q, -.4, .15)), up = Math.max(0, Math.min(P - 1, n));
-    if (g2 && g2.ready){ g2.size(); g2.set1('uA', ua); g2.set1('uP', up); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
-    else if (!g2){ for (i = 0; i < o.ims.length; i++) o.ims[i].style.opacity = (i === Math.round(up) ? ua : 0).toFixed(3); }
+    if (g2 && g2.ready){ g2.size(); g2.set1('uA', ua); g2.set1('uP', up); g2.set1('uR', 165 * U / H); g2.set1('uOpen', op); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
   }
   var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point, pparts: ppParts, pquart: ppQuart, pnames: ppNames, pwide: ppWide, ptrip: ppTrip, prows: ppRows, ptrack: ppTrack, plates: plates, psamp: ppSamp, pring: ppRing};
 
