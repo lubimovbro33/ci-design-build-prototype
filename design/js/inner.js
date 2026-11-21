@@ -1382,7 +1382,7 @@
                 Living»): a fifth, a third, a half, two thirds — never the whole screen.
        psamp    five standards laid on the board like five samples of material: each square is laid from its upper edge down;
                 a place not yet filled is ruled in the hairline.
-       pring    the one circle: the partners round a home, the ring ruled in three arcs, one for each pair «You… / We…», and
+       pring    the one circle, on her reference: a ring whose arc grows by a third with each pair «You… / We…», and
                 closed on «That is the CI ecosystem».
      Every picture is a WebGL layer (always: motion over photographs); the type is DOM; the lines are ruled on the film's canvas. */
   function PUT(el_, op, tf, fl){ if (!el_) return; tf = tf || 'none'; var k = op.toFixed(3) + tf + (fl || ''); if (el_.__k === k) return; el_.__k = k;
@@ -1618,41 +1618,44 @@
     var g2 = o.gl;
     if (g2 && g2.ready && r.width > 0){ g2.size(); g2.gl.uniform1fv(g2.u('uK'), o.K); g2.set1('uTw', tw / r.width); g2.set1('uPt', pt / r.width); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
   }
-  var RING_FS = PP_HEAD + ['uniform sampler2D uT0;', 'uniform vec2 uRes, uS0;', 'uniform float uA, uZ, uTime;', 'varying vec2 v;',
+  /* ---------- the one circle, on her reference (21.11.2026 10:44, madeinuxstudio.com's dial): a quiet ring, a brighter arc of it that grows by a third with each pair, three ticks
+     inside it at 12, 4 and 8 o'clock; the round photograph in its centre changes by a circle that grows from the centre; the number in hand rolls left of it; the pairs and then
+     the closing sentence roll in one window on the same axis at the left field. */
+  var RING_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2, uT3;', 'uniform vec2 uRes, uS0, uS1, uS2, uS3;', 'uniform float uA, uP, uTime;', 'varying vec2 v;',
+    'vec3 pk(float i, vec2 uv){ if (i < 0.5) return texture2D(uT0, cvr(uv, uS0, uRes)).rgb; if (i < 1.5) return texture2D(uT1, cvr(uv, uS1, uRes)).rgb; if (i < 2.5) return texture2D(uT2, cvr(uv, uS2, uRes)).rgb; return texture2D(uT3, cvr(uv, uS3, uRes)).rgb; }',
     'void main(){',
-    '  float d = length(v - 0.5) * 2.0, aa = 3.0 / uRes.x, m = 1.0 - smoothstep(uA - aa, uA, d);',         /* the page's one round window */
-    '  vec3 c = grd(texture2D(uT0, cvr((v - 0.5) / uZ + 0.5, uS0, uRes)).rgb, 0.2, 0.9) * m;',
+    '  float d = length(v - 0.5) * 2.0, aa = 3.0 / uRes.x, m = 1.0 - smoothstep(uA - aa, uA, d);',         /* the round window opens from its centre */
+    '  float i0 = floor(uP), k = uP - i0, mk = k > 0.001 ? 1.0 - smoothstep(k - aa, k, d) : 0.0;',          /* the next photograph grows from the centre of the one in hand */
+    '  vec3 a = pk(i0, (v - 0.5) / (1.0 + 0.06 * (1.0 - uA)) + 0.5), b = pk(min(i0 + 1.0, 3.0), (v - 0.5) / (1.0 + 0.1 * (1.0 - k)) + 0.5);',
+    '  vec3 c = mix(a, b, mk); c = ((c - 0.5) * 1.04 + 0.5) * m;',                                         /* in its own light */
     '  c += (hash(v * uRes + uTime) - 0.5) * 0.02 * m;',
     '  gl_FragColor = vec4(c, 1.0);',
     '}'].join('\n');
   function ppRing(f, q, t){
     var o = f.rg, e = f.el, i;
     if (o === undefined){ var bx = qs('.pp-rg-ph', e);
-      o = f.rg = {gl: bx ? GL2.make(bx, RING_FS, qsa('img', bx), {max: 1200}) : null, im: bx && qs('img', bx), ns: qsa('.pp-rg-n', e), prs: qsa('.pp-rg-pr', e), c: qs('.pp-rg-c', e), l: qs('.pp-rg-l', e),
-                  gr: (e.getAttribute('data-g') || '').split(',').map(Number), lk: '', on: false}; }
-    var n = o.ns.length, np = o.prs.length;
-    if (H >= W){ if (o.on){ o.on = false; o.lk = ''; [o.c, o.l].concat(o.ns, o.prs).forEach(CLR); o.ns.forEach(function(x){ x.style.textAlign = ''; x.__o = ''; }); } return; }
+      o = f.rg = {gl: bx ? GL2.make(bx, RING_FS, qsa('img', bx), {max: 1000}) : null, ims: bx ? qsa('img', bx) : [], ws: qsa('.pp-rg-w > p', e), l: qs('.pp-rg-l', e), id: qs('.pp-rg-id', e), ids: qsa('.pp-rg-id span', e), of: qs('.pp-rg-of', e), on: false}; }
+    var n = o.ws.length - 1;                                                   /* the pairs; after them the closing sentence */
+    if (H >= W){ if (o.on){ o.on = false; [o.l, o.id, o.of].concat(o.ws, o.ids).forEach(function(x){ CLR(x); if (x) x.__ty = ''; }); } return; }
     o.on = true;
-    var cx = W / 2 + 280 * U, cy = MID + 60 * U, r = 290 * U, lk = W + 'x' + H, dp = .75, tC = np * dp, R = 0, prev = 0;
-    if (o.lk !== lk){ o.lk = lk;                                               /* a name stands outside the ring at its own angle, set from the ring outward */
-      o.ns.forEach(function(x, j){ var an = (-90 + (j + .5) * 360 / n) * Math.PI / 180, lx = cx + Math.cos(an) * (r + 28 * U), ly = cy + Math.sin(an) * (r + 28 * U);
-        x.style.top = ly.toFixed(1) + 'px'; if (Math.cos(an) > 0){ x.style.left = lx.toFixed(1) + 'px'; x.style.right = 'auto'; x.style.textAlign = 'left'; } else { x.style.right = (W - lx).toFixed(1) + 'px'; x.style.left = 'auto'; x.style.textAlign = 'right'; } }); }
-    for (i = 0; i < np; i++){ var tg = (o.gr[i] || n) / n; R += (tg - prev) * (i ? eio(sg(q, i * dp - .02, i * dp + .43)) : eio(sg(q, -.35, .35))); prev = tg; }   /* three arcs, one for each pair */
-    if (R > 0){ g.strokeStyle = 'rgba(235,235,235,.45)'; g.lineWidth = 1; g.setLineDash([]); g.beginPath(); g.arc(cx, cy, r, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.min(1, R)); g.stroke(); }
-    for (i = 0; i < n; i++){
-      var k = eio(sg(R, (i + .25) / n, (i + .6) / n)), an2 = (-90 + (i + .5) * 360 / n) * Math.PI / 180, ks = k.toFixed(3);
-      bsq(cx + Math.cos(an2) * r, cy + Math.sin(an2) * r, k);
-      if (o.ns[i].__o !== ks){ o.ns[i].__o = ks; o.ns[i].style.opacity = ks; }
+    var cx = W * .75, cy = H / 2, r = 300 * U, T0 = .6, dp = .75, P = 0, A0 = -Math.PI / 2;
+    for (i = 0; i < n; i++) P += eio(sg(q, T0 + i * dp, T0 + i * dp + .45));
+    var dr = eio(sg(q, -.6, -.05)), ar = eio(sg(q, -.45, -.02)), fr = P / n;
+    if (dr > 0){ g.lineWidth = 1; g.setLineDash([]);
+      g.strokeStyle = 'rgba(235,235,235,.22)'; g.beginPath(); g.arc(cx, cy, r, A0, A0 + Math.PI * 2 * dr); g.stroke();                      /* the ring, quiet */
+      if (fr > 0){ g.strokeStyle = 'rgba(235,235,235,.95)'; g.beginPath(); g.arc(cx, cy, r, A0, A0 + Math.PI * 2 * fr); g.stroke(); }       /* what has been said of it, bright */
+      g.strokeStyle = 'rgba(235,235,235,' + (.9 * ar).toFixed(3) + ')';
+      for (i = 0; i < n; i++){ var an = A0 + i * Math.PI * 2 / n, c0 = Math.cos(an), s0 = Math.sin(an); seg(cx + c0 * (r - 24 * U), cy + s0 * (r - 24 * U), cx + c0 * (r - 43 * U), cy + s0 * (r - 43 * U)); }   /* a tick where each pair begins */
+      var ah = A0 + Math.PI * 2 * fr; bsq(cx + Math.cos(ah) * r, cy + Math.sin(ah) * r, ar);                                              /* our square at the head of the arc */
     }
-    for (i = 0; i < np; i++){
-      var a = i * dp, wi = i ? eio(sg(q, a + .04, a + .24)) : eio(sg(q, -.4, 0)), wo = 1 - (i === np - 1 ? eio(sg(q, tC - .04, tC + .1)) : eio(sg(q, a + dp - .18, a + dp - .04)));
-      PUT(o.prs[i], wi * wo, TY((1 - wi) * 16 * U - (1 - wo) * 12 * U));
-    }
-    var kc = eio(sg(q, tC + .14, tC + .5)); PUT(o.c, kc, TY(14 * U * (1 - kc)), BLR(kc));
-    PUT(o.l, eio(sg(q, -.45, -.05)));
-    var op = eio(sg(q, -.25, .5)), g2 = o.gl;
-    if (g2 && g2.ready){ g2.size(); g2.set1('uA', op); g2.set1('uZ', 1.1 - .1 * op); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
-    else if (o.im && !g2){ o.im.style.opacity = op.toFixed(3); }
+    for (i = 0; i <= n; i++){ var ty = ((i - P) * 100).toFixed(2); if (o.ws[i].__ty !== ty){ o.ws[i].__ty = ty; o.ws[i].style.transform = 'translate3d(0,' + ty + '%,0)'; o.ws[i].style.visibility = Math.abs(i - P) >= 1 ? 'hidden' : 'visible'; } }
+    var Pc = Math.min(P, n - 1), ko = ar * (1 - eio(sg(P, n - .85, n - .3)));                                                              /* the numbers go as the ring closes */
+    for (i = 0; i < o.ids.length; i++){ var ty2 = ((i - Pc) * 100).toFixed(2); if (o.ids[i].__ty !== ty2){ o.ids[i].__ty = ty2; o.ids[i].style.transform = 'translate3d(0,' + ty2 + '%,0)'; } }
+    PUT(o.id, ko); PUT(o.of, ko); PUT(o.l, ar);
+    if (o.wk !== ar.toFixed(3)){ o.wk = ar.toFixed(3); o.ws[0].parentNode.style.opacity = o.wk; }
+    var g2 = o.gl, ua = eio(sg(q, -.4, .15));
+    if (g2 && g2.ready){ g2.size(); g2.set1('uA', ua); g2.set1('uP', Math.min(P, n)); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+    else if (!g2){ for (i = 0; i < o.ims.length; i++) o.ims[i].style.opacity = (i === Math.round(P) ? ua : 0).toFixed(3); }
   }
   var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point, pparts: ppParts, pquart: ppQuart, pnames: ppNames, pwide: ppWide, ptrip: ppTrip, psamp: ppSamp, pring: ppRing};
 

@@ -1566,13 +1566,17 @@ html body.inr .pp-sm-r li{width:calc(332 * var(--u));margin:0;padding:0}
 html body.inr .pp-sm-r li p{margin:calc(20 * var(--u)) 0 0;color:#FFFFFF;opacity:0}
 html body.inr .film .pp-sm-l{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;opacity:0}
 html body.inr .film .pp-sm-c{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;color:#FFFFFF;opacity:0;line-height:1.02!important;white-space:nowrap}
-/* the one circle: a round photograph 380 on the ring's centre (280 right of the screen's middle, 60 under it); the names are placed by ppRing() */
-.pp-rg-ph{position:absolute;left:calc(50% + 90 * var(--u));top:calc(50% - 130 * var(--u));width:calc(380 * var(--u));height:calc(380 * var(--u));z-index:1}
+/* the one circle (rebuilt 21.11.2026 on her reference): the ring's centre is the screen's horizontal middle and the middle of its right half; its radius 300, the round photograph 330 across
+   (55 % of the ring), the numbers in the middle of the band between them. Left of it, on the same axis, a window 140 high in which the pairs and then the closing sentence roll. */
+.pp-rg-ph{position:absolute;left:calc(75% - 165 * var(--u));top:calc(50% - 165 * var(--u));width:calc(330 * var(--u));height:calc(330 * var(--u));z-index:1}
 .pp-rg-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;max-width:none;opacity:0}
-html body.inr .film .pp-rg-n{position:absolute;margin:0;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(20 * var(--u)));line-height:1.15;letter-spacing:-.02em;color:#FFFFFF;white-space:nowrap;transform:translateY(-50%);opacity:0}
-html body.inr .film .pp-rg-pr{position:absolute;left:calc(50 * var(--u));top:calc(50% + 20 * var(--u));margin:0;color:#FFFFFF;opacity:0;line-height:1.02!important;white-space:nowrap}
-.pp-rg-pr span{display:block}
-html body.inr .film .pp-rg-c{position:absolute;left:calc(50 * var(--u));top:calc(50% + 10 * var(--u));margin:0;color:#FFFFFF;opacity:0}
+.pp-rg-w{position:absolute;left:calc(50 * var(--u));right:calc(25% + 350 * var(--u));top:calc(50% - 70 * var(--u));height:calc(140 * var(--u));overflow:hidden}
+html body.inr .film .pp-rg-w > p{position:absolute;left:0;top:0;width:100%;height:100%;margin:0;display:flex;flex-direction:column;justify-content:center;color:#FFFFFF;white-space:nowrap;will-change:transform}
+html body.inr .film .pp-rg-w > p + p{transform:translateY(100%)}
+html body.inr .film .pp-rg-pr{line-height:1.02!important} .pp-rg-pr span{display:block}
+html body.inr .film .pp-rg-id, html body.inr .film .pp-rg-of{position:absolute;top:calc(50% - .6em);height:1.2em;width:calc(80 * var(--u));margin:0;overflow:hidden;text-align:center;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(16 * var(--u)));line-height:1.2;letter-spacing:0;color:#EBEBEB;white-space:nowrap;opacity:0}
+html body.inr .film .pp-rg-id{left:calc(75% - 272.5 * var(--u))} html body.inr .film .pp-rg-of{left:calc(75% + 192.5 * var(--u))}
+.pp-rg-id span{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform} .pp-rg-id span + span{transform:translateY(100%)}
 html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;opacity:0}
 @media (max-aspect-ratio: 1/1){
   /* phones: each block in the flow — its photograph, then its text in the client's order */
@@ -1584,7 +1588,7 @@ html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:m
   .film .pp-s{padding-top:40px} .film.pp-sm .pp-s{padding-top:96px}
   .pp-h, .film .pp-f, html body.inr .film .pp-c, html body.inr .film .pp-pa-ca, html body.inr .film .pp-pa-t li, html body.inr .film .pp-qt-l, html body.inr .film .pp-qt-p, html body.inr .film .pp-qt-i, html body.inr .film .pp-qt-c,
   .pp-nm-i, .pp-wd-i, html body.inr .film .pp-nm-i .pp-n, html body.inr .film .pp-nm-ic, .pp-nm-b, html body.inr .film .pp-wd-i .pp-n, html body.inr .film .pp-wd-i .pp-st, html body.inr .film .pp-sm-r,
-  html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-n, html body.inr .film .pp-rg-pr, html body.inr .film .pp-rg-c, html body.inr .film .pp-rg-l{
+  html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-w > p, html body.inr .film .pp-rg-l{
     position:static;width:auto;max-width:none;height:auto;text-align:left;white-space:normal;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
   html body.inr .pp-h h2{margin-top:14px} html body.inr .pp-h .pp-sub{margin-top:14px}
   .pp-tr-ph{position:relative;height:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px} .pp-tr-ph img, .pp-tr-ph img:nth-child(n){position:static;width:100%;height:auto;aspect-ratio:3 / 4;opacity:1!important}
@@ -1609,9 +1613,8 @@ html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:m
   html body.inr .film .pp-sm-r{display:grid;grid-template-columns:1fr 1fr;gap:22px 12px;margin-top:30px} html body.inr .pp-sm-r li{width:auto} .pp-sm-r img{opacity:1}
   html body.inr .pp-sm-r li p{margin-top:10px;opacity:1!important}
   html body.inr .film .pp-sm-c{margin-top:36px;color:#FFFFFF}
-  .pp-rg-ph{position:relative;left:auto;top:auto;width:64vw;height:64vw;margin:96px auto 0} .pp-rg-ph img{opacity:1}
+  .pp-rg-ph{position:relative;left:auto;top:auto;width:64vw;height:64vw;margin:96px auto 0} .pp-rg-ph img{opacity:1} .pp-rg-ph img + img, .pp-rg-ph .glc{display:none}
+  .pp-rg-w{position:static;height:auto;overflow:visible} html body.inr .film .pp-rg-w > p{display:block;margin-top:28px} html body.inr .film .pp-rg-w > .pp-rg-c{margin-top:36px}
   html body.inr .film .pp-rg-l{margin-top:24px}
-  .pp-rg-ns{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:8px 12px} html body.inr .film .pp-rg-n{white-space:normal}
-  html body.inr .film .pp-rg-pr{margin-top:28px}
-  html body.inr .film .pp-rg-c{margin-top:36px}
+  html body.inr .film .pp-rg-id, html body.inr .film .pp-rg-of{display:none}
 }

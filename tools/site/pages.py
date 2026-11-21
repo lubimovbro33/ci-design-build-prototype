@@ -680,7 +680,7 @@ def partnerships():
     # 09 the value of working together: the one circle
     sec = S[8]; six = get(sec, 'p')[0][1]; cr = [('That is', 0), ('the CI ecosystem', 1)]; tr = [('A Stronger Network', 0), ('Around Every Client', 1)]
     assert len(six) == 6 and len(ring) == 8 and J(cr) == nop(' '.join(get(sec, 'strong')[0][1])) and J(tr) == nop(h_of(sec)), (six, ring)
-    pg.add(pp_ring(label(sec), tr, get(sec, 'lead')[0][1][0], list(zip(six[0::2], six[1::2])), cr, [NL.get(x, [x]) if x.startswith('Jameson') else [x] for x in ring], [2, 5, 8], A + 'ch/1450-17.webp'), 'Value')
+    pg.add(pp_ring(label(sec), tr, get(sec, 'lead')[0][1][0], list(zip(six[0::2], six[1::2])), cr, W_('ch/1450-11', 'ch/1450-13', 'ch/1450-03a', 'us/1511-14a')), 'Value')   # round photographs no other page shows
     final_cta(pg, S[-1], A + 'ch/1450-06.webp')
     emit('partnerships.html', 'Partnerships', pg, A + 'us/1511-07a.webp')
 partnerships()
