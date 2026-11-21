@@ -1471,33 +1471,35 @@ def pp_samples(kick, title, lead, items, closer_, imgs):
 
 
 def pp_ring(kick, title, lead, pairs, closer_, imgs):
-    """«A Stronger Network Around Every Client» — THE PAGE'S ONE CIRCLE, rebuilt 21.11.2026 10:44 on her reference
-    (madeinuxstudio.com, the «Latest Achievements» dial on its home page): «на цьому сайті є такий схожий блок, і він зроблений
-    набагато акуратніше. Давай візьмемо його за реф.» The first version stood the eight partners' names round the ring at eight
-    angles (ragged lines of unequal length either side) with the ring off the screen's axes. The reference, read in the browser:
-      · a hairline ring at 20 %, a brighter arc of the same ring that grows by a third with each item (stroke-dashoffset on the
-        scroll), three short ticks inside it at 12, 4 and 8 o'clock;
-      · in the ring, on its horizontal axis: the number of the item in hand left of a round picture («/ 02», the numbers roll
-        up in a window), the total right of it («/ 04»); the round picture is 55 % of the ring and the next one GROWS FROM ITS
-        CENTRE (clip-path circle 0 → 50 %);
-      · left of the ring, on the same axis, ONE title at a time, rolling up in a window — never all the names at once.
-    Ours, with the client's words: the ring stands on the screen's horizontal middle and on the middle of its right half; the
-    three pairs «You… / We…» roll in a window on that axis at the left field (the 34, two inks) and after them the closing
-    sentence (the 60); «/ 01…03» and «/ 03» either side of the round photograph; the arc grows by a third with each pair and is
-    whole on «That is the CI ecosystem», our blue square at its head. The name and the title stay together at the upper left,
-    the lead on the foot. Black screen (the darkened full-screen photograph is not put behind it: her note of 10:28, and the
-    closing screen under it is a photograph). `imgs` = one round photograph for each of the four moments (none of them on another
-    page). The ring, ticks and square on the film's canvas, the round window one WebGL layer, the type DOM (ppRing() in js/inner.js)."""
+    """«A Stronger Network Around Every Client» — THE PAGE'S ONE CIRCLE, on her reference (madeinuxstudio.com's dial, 21.11.2026
+    10:44). Third build, after her word of 11:22 on the second (ring in the right half, name + title at the upper left, the pairs
+    in the 34 on the axis, the lead on the foot): «композиція дуже погана. Коло десь справа, текст вгорі зліва, текст внизу, трошки
+    менший посередині — каша. Було б непогано, щоб наше коло було по центрі. Подумай над ієрархією тексту: заголовок, а потім ще
+    один заголовок, просто без капсу, тим самим шрифтом — too much.» So:
+      · THE RING IS IN THE CENTRE OF THE SCREEN (radius 300), as on the reference;
+      · ONE title level. The title stands ON THE RING'S AXIS, EITHER SIDE OF IT — its first half left of the ring, set against it,
+        its second half (blue) right of it: «A STRONGER NETWORK ( o ) AROUND EVERY CLIENT». The block's name stands 25 over the
+        first half. When the ring is whole the same two windows roll to the closing sentence: «THAT IS ( o ) THE CI ECOSYSTEM» —
+        the title's own capitals, not a second kind of heading;
+      · ONE level of reading text (Zalando Sans 20, centred) in one window UNDER the ring: the lead, then the three pairs
+        «You… / We…» one at a time (the second line blue);
+      · in the ring, as on the reference: the number in hand left of the round photograph, the total right of it; three ticks;
+        the arc grows by a third with each pair, our square at its head; the photograph changes by a circle from its centre.
+    `title` and `closer_` = (lines left of the ring, lines right of it). Nothing stands in a corner. The type is DOM, the ring on
+    the film's canvas, the round window one WebGL layer (ppRing() in js/inner.js)."""
     n = len(pairs); assert len(imgs) == n + 1, imgs
+    (ta, tb), (ca, cb_) = title, closer_; br = lambda ls: '<br>'.join(esc(x) for x in ls)
     return '\n'.join([
-        '<section class="film pp pp-rg" data-fig="pring" data-len="%.2f" data-open="0" id="@ID@">' % (.6 + n * .75 + .5), '  <div class="stg">',
+        '<section class="film pp pp-rg" data-fig="pring" data-len="%.2f" data-open="0" id="@ID@">' % (.5 + (n + 1) * .7 + .5), '  <div class="stg">',
         '    <div class="pp-rg-ph">%s</div>' % ''.join('<img src="%s" alt="">' % x for x in imgs), PP_CV, '    <div class="sc pp-s">',
-        pp_head(kick, title),
+        '      <div class="pp-rg-a"><p class="tk-cv-k">%s</p><h2 class="t60 pp-rg-h"><span class="vh">%s</span><span class="pp-rg-rw" aria-hidden="true"><span>%s</span><span>%s</span></span></h2></div>'
+        % (esc(kick), esc(' '.join(ta + tb)), br(ta), br(ca)),
+        '      <p class="t60 pp-rg-b cb" aria-hidden="true"><span class="pp-rg-rw"><span>%s</span><span>%s</span></span></p>' % (br(tb), br(cb_)),
         '      <div class="pp-rg-w">',
-        ''.join('        <p class="t34 pp-rg-pr"><span>%s</span> <span class="cb">%s</span></p>\n' % (esc(nop(a)), esc(nop(b))) for a, b in pairs).rstrip('\n'),
-        '        <p class="t60s pp-rg-c">%s</p>' % pp_two(closer_),
+        '        <p class="t20">%s</p>' % esc(nop(lead)),
+        ''.join('        <p class="t20"><span>%s</span> <span class="cb">%s</span></p>\n' % (esc(nop(a)), esc(nop(b))) for a, b in pairs).rstrip('\n'),
         '      </div>',
-        '      <p class="t20 pp-rg-l">%s</p>' % esc(nop(lead)),
+        '      <p class="t34 vh pp-rg-c">%s</p>' % esc(' '.join(ca + cb_)),
         '      <div class="pp-rg-id" aria-hidden="true">%s</div><p class="pp-rg-of" aria-hidden="true">/ %02d</p>' % (''.join('<span>/ %02d</span>' % (k + 1) for k in range(n)), n),
         '    </div>', '  </div>', '</section>'])
 

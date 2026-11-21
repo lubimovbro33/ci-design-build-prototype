@@ -1634,13 +1634,15 @@
   function ppRing(f, q, t){
     var o = f.rg, e = f.el, i;
     if (o === undefined){ var bx = qs('.pp-rg-ph', e);
-      o = f.rg = {gl: bx ? GL2.make(bx, RING_FS, qsa('img', bx), {max: 1000}) : null, ims: bx ? qsa('img', bx) : [], ws: qsa('.pp-rg-w > p', e), l: qs('.pp-rg-l', e), id: qs('.pp-rg-id', e), ids: qsa('.pp-rg-id span', e), of: qs('.pp-rg-of', e), on: false}; }
-    var n = o.ws.length - 1;                                                   /* the pairs; after them the closing sentence */
-    if (H >= W){ if (o.on){ o.on = false; [o.l, o.id, o.of].concat(o.ws, o.ids).forEach(function(x){ CLR(x); if (x) x.__ty = ''; }); } return; }
+      o = f.rg = {gl: bx ? GL2.make(bx, RING_FS, qsa('img', bx), {max: 1000}) : null, ims: bx ? qsa('img', bx) : [], ws: qsa('.pp-rg-w > p', e), w: qs('.pp-rg-w', e), a: qs('.pp-rg-a', e), b: qs('.pp-rg-b', e),
+                  rw: qsa('.pp-rg-rw', e).map(function(x){ return qsa(':scope > span', x); }), id: qs('.pp-rg-id', e), ids: qsa('.pp-rg-id span', e), of: qs('.pp-rg-of', e), on: false}; }
+    var n = o.ws.length - 1, all = [o.w, o.a, o.b, o.id, o.of, o.k].concat(o.ws, o.ids, o.rw[0] || [], o.rw[1] || []);   /* n pairs; before them the lead, after them the closing sentence */
+    if (H >= W){ if (o.on){ o.on = false; all.forEach(function(x){ CLR(x); if (x) x.__ty = ''; }); } return; }
     o.on = true;
-    var cx = W * .75, cy = H / 2, r = 300 * U, T0 = .6, dp = .75, P = 0, A0 = -Math.PI / 2;
-    for (i = 0; i < n; i++) P += eio(sg(q, T0 + i * dp, T0 + i * dp + .45));
-    var dr = eio(sg(q, -.6, -.05)), ar = eio(sg(q, -.45, -.02)), fr = P / n;
+    var cx = W / 2, cy = H / 2, r = 300 * U, T0 = .5, dp = .7, P = 0, A0 = -Math.PI / 2;
+    for (i = 0; i <= n; i++) P += eio(sg(q, T0 + i * dp, T0 + i * dp + .45));                      /* 0 the lead · 1…n the pairs · n + 1 the closing sentence */
+    var dr = eio(sg(q, -.6, -.05)), ar = eio(sg(q, -.45, -.02)), fr = Math.min(P, n) / n, Pt = c01(P - n);
+    function roll(items, at){ for (var j = 0; j < items.length; j++){ var ty = ((j - at) * 100).toFixed(2); if (items[j].__ty !== ty){ items[j].__ty = ty; items[j].style.transform = 'translate3d(0,' + ty + '%,0)'; items[j].style.visibility = Math.abs(j - at) >= 1 ? 'hidden' : 'visible'; } } }
     if (dr > 0){ g.lineWidth = 1; g.setLineDash([]);
       g.strokeStyle = 'rgba(235,235,235,.22)'; g.beginPath(); g.arc(cx, cy, r, A0, A0 + Math.PI * 2 * dr); g.stroke();                      /* the ring, quiet */
       if (fr > 0){ g.strokeStyle = 'rgba(235,235,235,.95)'; g.beginPath(); g.arc(cx, cy, r, A0, A0 + Math.PI * 2 * fr); g.stroke(); }       /* what has been said of it, bright */
@@ -1648,14 +1650,15 @@
       for (i = 0; i < n; i++){ var an = A0 + i * Math.PI * 2 / n, c0 = Math.cos(an), s0 = Math.sin(an); seg(cx + c0 * (r - 24 * U), cy + s0 * (r - 24 * U), cx + c0 * (r - 43 * U), cy + s0 * (r - 43 * U)); }   /* a tick where each pair begins */
       var ah = A0 + Math.PI * 2 * fr; bsq(cx + Math.cos(ah) * r, cy + Math.sin(ah) * r, ar);                                              /* our square at the head of the arc */
     }
-    for (i = 0; i <= n; i++){ var ty = ((i - P) * 100).toFixed(2); if (o.ws[i].__ty !== ty){ o.ws[i].__ty = ty; o.ws[i].style.transform = 'translate3d(0,' + ty + '%,0)'; o.ws[i].style.visibility = Math.abs(i - P) >= 1 ? 'hidden' : 'visible'; } }
-    var Pc = Math.min(P, n - 1), ko = ar * (1 - eio(sg(P, n - .85, n - .3)));                                                              /* the numbers go as the ring closes */
-    for (i = 0; i < o.ids.length; i++){ var ty2 = ((i - Pc) * 100).toFixed(2); if (o.ids[i].__ty !== ty2){ o.ids[i].__ty = ty2; o.ids[i].style.transform = 'translate3d(0,' + ty2 + '%,0)'; } }
-    PUT(o.id, ko); PUT(o.of, ko); PUT(o.l, ar);
-    if (o.wk !== ar.toFixed(3)){ o.wk = ar.toFixed(3); o.ws[0].parentNode.style.opacity = o.wk; }
-    var g2 = o.gl, ua = eio(sg(q, -.4, .15));
-    if (g2 && g2.ready){ g2.size(); g2.set1('uA', ua); g2.set1('uP', Math.min(P, n)); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
-    else if (!g2){ for (i = 0; i < o.ims.length; i++) o.ims[i].style.opacity = (i === Math.round(P) ? ua : 0).toFixed(3); }
+    roll(o.ws, P);                                                             /* under the ring: the lead, then the pairs; the last one goes up as the title turns */
+    if (o.rw[0]) roll(o.rw[0], Pt); if (o.rw[1]) roll(o.rw[1], Pt);              /* either side of the ring: the title, and at the end the closing sentence in its place */
+    roll(o.ids, Math.max(0, Math.min(P - 1, n - 1)));
+    var ko = ar * eio(sg(P, .45, .95)) * (1 - eio(sg(P, n + .1, n + .6)));                                                                 /* the numbers come with the first pair and go as the ring closes */
+    PUT(o.id, ko); PUT(o.of, ko); PUT(o.a, ar); PUT(o.b, ar); PUT(o.w, ar);
+    if (o.k === undefined) o.k = qs('.pp-rg-a .tk-cv-k', e); PUT(o.k, 1 - eio(c01(Pt * 2)));                                            /* the block's name leaves as its title turns into the closing sentence */
+    var g2 = o.gl, ua = eio(sg(q, -.4, .15)), up = Math.max(0, Math.min(P - 1, n));
+    if (g2 && g2.ready){ g2.size(); g2.set1('uA', ua); g2.set1('uP', up); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+    else if (!g2){ for (i = 0; i < o.ims.length; i++) o.ims[i].style.opacity = (i === Math.round(up) ? ua : 0).toFixed(3); }
   }
   var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point, pparts: ppParts, pquart: ppQuart, pnames: ppNames, pwide: ppWide, ptrip: ppTrip, psamp: ppSamp, pring: ppRing};
 
@@ -1689,6 +1692,7 @@
      tiles over whatever is left (the same list as NT_PAT in tools/site/pages.py). */
   qsa('.nf').forEach(function(nf){
     var list = $(nf.getAttribute('data-list')); if (!list) return;
+    document.documentElement.classList.add('has-nf');                          /* the filter stands in the rail's place */
     var bar = qs('.nf-b', nf), lab = qs('.nf-b .t', nf), all = lab.textContent, boxes = qsa('.nf-i button', nf), items = qsa('[data-tags]', list), PAT = [1, 0, 0, 0, 0, 1, 1, 1, 0, 1, 0];
     function apply(){
       var on = boxes.filter(function(b){ return b.getAttribute('aria-checked') === 'true'; }), fs = on.map(function(b){ return b.getAttribute('data-f'); }), n = 0;

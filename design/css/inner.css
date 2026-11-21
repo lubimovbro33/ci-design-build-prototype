@@ -1566,18 +1566,24 @@ html body.inr .pp-sm-r li{width:calc(332 * var(--u));margin:0;padding:0}
 html body.inr .pp-sm-r li p{margin:calc(20 * var(--u)) 0 0;color:#FFFFFF;opacity:0}
 html body.inr .film .pp-sm-l{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;opacity:0}
 html body.inr .film .pp-sm-c{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;color:#FFFFFF;opacity:0;line-height:1.02!important;white-space:nowrap}
-/* the one circle (rebuilt 21.11.2026 on her reference): the ring's centre is the screen's horizontal middle and the middle of its right half; its radius 300, the round photograph 330 across
-   (55 % of the ring), the numbers in the middle of the band between them. Left of it, on the same axis, a window 140 high in which the pairs and then the closing sentence roll. */
-.pp-rg-ph{position:absolute;left:calc(75% - 165 * var(--u));top:calc(50% - 165 * var(--u));width:calc(330 * var(--u));height:calc(330 * var(--u));z-index:1}
+/* the one circle (third build, 21.11.2026 11:22): THE RING IN THE SCREEN'S CENTRE (radius 300, the round photograph 330, the numbers in the middle of the band between them).
+   The title stands on the ring's axis either side of it — two lines of the 60 set against the ring, 50 from it; the block's name 25 over its first half. One window of reading
+   text (the 20, centred) 40 under the ring. */
+.pp-rg-ph{position:absolute;left:calc(50% - 165 * var(--u));top:calc(50% - 165 * var(--u));width:calc(330 * var(--u));height:calc(330 * var(--u));z-index:1}
 .pp-rg-ph img{position:absolute;left:0;top:0;width:100%;height:100%;object-fit:cover;border-radius:50%;display:block;max-width:none;opacity:0}
-.pp-rg-w{position:absolute;left:calc(50 * var(--u));right:calc(25% + 350 * var(--u));top:calc(50% - 70 * var(--u));height:calc(140 * var(--u));overflow:hidden}
-html body.inr .film .pp-rg-w > p{position:absolute;left:0;top:0;width:100%;height:100%;margin:0;display:flex;flex-direction:column;justify-content:center;color:#FFFFFF;white-space:nowrap;will-change:transform}
-html body.inr .film .pp-rg-w > p + p{transform:translateY(100%)}
-html body.inr .film .pp-rg-pr{line-height:1.02!important} .pp-rg-pr span{display:block}
+.pp-rg-a{position:absolute;right:calc(50% + 350 * var(--u));top:50%;text-align:right;opacity:0}
+html body.inr .pp-rg-a .tk-cv-k{position:absolute;right:0;bottom:calc(.867em * 2 + 25 * var(--u));margin:0;white-space:nowrap}
+html body.inr .pp-rg-a .tk-cv-k{bottom:auto;top:calc(-.867 * max(24px, 60 * var(--u)) - 25 * var(--u) - 1.2em)}
+html body.inr .film .pp-rg-h, html body.inr .film .pp-rg-b{margin:0;color:#FFFFFF;white-space:nowrap}
+html body.inr .film .pp-rg-b{position:absolute;left:calc(50% + 350 * var(--u));top:50%;text-align:left;color:#96A8BF;opacity:0}
+.pp-rg-rw{position:relative;display:block;height:1.76em;margin-top:-.88em;overflow:hidden}
+.pp-rg-rw > span{display:flex;flex-direction:column;justify-content:center;height:100%;will-change:transform} .pp-rg-rw > span + span{position:absolute;left:0;right:0;top:0;transform:translateY(100%)}
+.pp-rg-w{position:absolute;left:calc(50% - 300 * var(--u));width:calc(600 * var(--u));top:calc(50% + 340 * var(--u));height:2.5em;font-size:var(--t-run);overflow:hidden;text-align:center;opacity:0}
+html body.inr .film .pp-rg-w > p{position:absolute;left:0;top:0;width:100%;height:100%;margin:0;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#FFFFFF;text-wrap:balance;will-change:transform}
+html body.inr .film .pp-rg-w > p + p{transform:translateY(100%)} .pp-rg-w > p span{display:block}
 html body.inr .film .pp-rg-id, html body.inr .film .pp-rg-of{position:absolute;top:calc(50% - .6em);height:1.2em;width:calc(80 * var(--u));margin:0;overflow:hidden;text-align:center;font-family:var(--fx);font-weight:400;font-size:max(11px, calc(16 * var(--u)));line-height:1.2;letter-spacing:0;color:#EBEBEB;white-space:nowrap;opacity:0}
-html body.inr .film .pp-rg-id{left:calc(75% - 272.5 * var(--u))} html body.inr .film .pp-rg-of{left:calc(75% + 192.5 * var(--u))}
+html body.inr .film .pp-rg-id{left:calc(50% - 272.5 * var(--u))} html body.inr .film .pp-rg-of{left:calc(50% + 192.5 * var(--u))}
 .pp-rg-id span{position:absolute;left:0;top:0;width:100%;height:100%;will-change:transform} .pp-rg-id span + span{transform:translateY(100%)}
-html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;opacity:0}
 @media (max-aspect-ratio: 1/1){
   /* phones: each block in the flow — its photograph, then its text in the client's order */
   .pp-pa-ph, .pp-nm-ph, .pp-wd-ph{position:relative;height:auto;aspect-ratio:3 / 2}
@@ -1588,7 +1594,7 @@ html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:m
   .film .pp-s{padding-top:40px} .film.pp-sm .pp-s{padding-top:96px}
   .pp-h, .film .pp-f, html body.inr .film .pp-c, html body.inr .film .pp-pa-ca, html body.inr .film .pp-pa-t li, html body.inr .film .pp-qt-l, html body.inr .film .pp-qt-p, html body.inr .film .pp-qt-i, html body.inr .film .pp-qt-c,
   .pp-nm-i, .pp-wd-i, html body.inr .film .pp-nm-i .pp-n, html body.inr .film .pp-nm-ic, .pp-nm-b, html body.inr .film .pp-wd-i .pp-n, html body.inr .film .pp-wd-i .pp-st, html body.inr .film .pp-sm-r,
-  html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-w > p, html body.inr .film .pp-rg-l{
+  html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-w > p{
     position:static;width:auto;max-width:none;height:auto;text-align:left;white-space:normal;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
   html body.inr .pp-h h2{margin-top:14px} html body.inr .pp-h .pp-sub{margin-top:14px}
   .pp-tr-ph{position:relative;height:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px} .pp-tr-ph img, .pp-tr-ph img:nth-child(n){position:static;width:100%;height:auto;aspect-ratio:3 / 4;opacity:1!important}
@@ -1614,15 +1620,20 @@ html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:m
   html body.inr .pp-sm-r li p{margin-top:10px;opacity:1!important}
   html body.inr .film .pp-sm-c{margin-top:36px;color:#FFFFFF}
   .pp-rg-ph{position:relative;left:auto;top:auto;width:64vw;height:64vw;margin:96px auto 0} .pp-rg-ph img{opacity:1} .pp-rg-ph img + img, .pp-rg-ph .glc{display:none}
-  .pp-rg-w{position:static;height:auto;overflow:visible} html body.inr .film .pp-rg-w > p{display:block;margin-top:28px} html body.inr .film .pp-rg-w > .pp-rg-c{margin-top:36px}
-  html body.inr .film .pp-rg-l{margin-top:24px}
+  .pp-rg-a{position:static;text-align:left;opacity:1!important;margin-top:28px} html body.inr .pp-rg-a .tk-cv-k{position:static} html body.inr .film .pp-rg-h{margin-top:14px;white-space:normal}
+  .pp-rg .vh{position:static!important;width:auto;height:auto;margin:0;overflow:visible;clip-path:none;white-space:normal} .pp-rg-rw, html body.inr .film .pp-rg-b{display:none}
+  .pp-rg-w{position:static;width:auto;height:auto;overflow:visible;text-align:left;opacity:1!important;font-size:inherit} html body.inr .film .pp-rg-w > p{display:block;margin-top:22px}
+  html body.inr .film .pp-rg-c{margin-top:36px;color:#FFFFFF}
   html body.inr .film .pp-rg-id, html body.inr .film .pp-rg-of{display:none}
 }
 
 /* ================================================================== the blog and the article (21.11.2026, on her references)
    THE GRID (primeasialeather.com/highlights, in our hand): four columns on the fields, 25 between them, rows 150 apart; a tile is one column or two (.b), small tiles stand at the head
    of their row; the picture 5 : 6, square corners; under it 25 the card's line in the small caps (our square before the category, the date at the right), 18 under that the title. */
-html body.inr .bk-b > .ng{margin-top:calc(100 * var(--u))}
+/* the blog's head: the name, 25 under it the title, 50 under that ONE sentence — all on the left field; 100 under it the pictures */
+.nw-h{background:#000;padding:calc(200 * var(--u)) calc(50 * var(--u)) 0}
+html body.inr .nw-h .ey{margin:0} html body.inr .nw-h h1{margin-top:calc(25 * var(--u));color:#FFFFFF} html body.inr .nw-h .nw-st{margin-top:calc(50 * var(--u));color:#FFFFFF}
+.nw-g{position:relative;background:#000;padding:calc(100 * var(--u)) 0 calc(150 * var(--u))} .nw-g .nw-more{margin:calc(100 * var(--u)) calc(50 * var(--u)) 0}
 .ng{margin-left:calc(50 * var(--u));margin-right:calc(50 * var(--u));display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(25 * var(--u));row-gap:calc(150 * var(--u));align-items:start}
 .ng .nt{grid-column:span 1;margin:0;min-width:0} .ng .nt.b{grid-column:span 2} .ng [hidden]{display:none!important}
 .ng .nt .im{aspect-ratio:5 / 6}
@@ -1633,18 +1644,19 @@ html body.inr .bk-b > .ng{margin-top:calc(100 * var(--u))}
 .ng .none{grid-column:1 / -1;display:none;margin:0} .ng.empty .none{display:block}
 /* THE FILTER: one white block on the foot of the screen in its middle, a column wide (our button: the label on its foot, the square in its corner). It opens UPWARD into the list;
    a plus becomes a minus; the boxes are squares. It is there while the grid is on the screen, in the place of the chapter rail. */
-body:has(.nf) .chap{display:none}
+.has-nf .chap{display:none}   /* the class is set by the filter's script (not :has(): it is re-read on every change of a class under the body) */
 .nf{position:fixed;left:50%;bottom:max(18px, calc(40 * var(--u)));z-index:40;width:max(230px, calc(436 * var(--u)));background:#FFFFFF;color:#000;transform:translate(-50%, calc(100% + 60px));transition:transform .8s cubic-bezier(.16,1,.3,1);pointer-events:none}
 .nf.in{transform:translate(-50%, 0);pointer-events:auto}
 .nf-b{position:relative;display:block;width:100%;height:max(46px, calc(78 * var(--u)));background:none;border:0;color:#000}
 .nf-b .t, .nf-i button span{font-family:var(--fx);font-weight:500;font-size:max(10px, calc(18 * var(--u)));line-height:.89;letter-spacing:-.0556em;text-transform:uppercase;white-space:nowrap;color:#000}
 .nf-b .t{position:absolute;left:max(10px, calc(12 * var(--u)));right:max(34px, calc(50 * var(--u)));bottom:max(10px, calc(12 * var(--u)));overflow:hidden;text-overflow:ellipsis;padding-top:.15em}
-.nf-b .sqd{position:absolute;right:max(7px, calc(8 * var(--u)));top:max(7px, calc(8 * var(--u)));width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:#000;transition:background-color .4s}
-.nf.has .nf-b .sqd{background:#96A8BF}
+/* the square is .nq, not .sqd: the cursor docks into a button's .sqd, and across a block this wide the pointer was lost (21.11 11:21: «мишка прям губиться в ній») */
+.nf-b .nq{position:absolute;right:max(7px, calc(8 * var(--u)));top:max(7px, calc(8 * var(--u)));width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:#000;transition:background-color .4s}
+.nf.has .nf-b .nq{background:#96A8BF}
 .nf-b .pl{position:absolute;right:max(10px, calc(12 * var(--u)));bottom:max(10px, calc(12 * var(--u)));width:max(9px, calc(14 * var(--u)));height:max(9px, calc(14 * var(--u)))}
 .nf-b .pl::before, .nf-b .pl::after{content:"";position:absolute;left:0;top:50%;width:100%;height:1px;background:#000;transition:transform .6s cubic-bezier(.16,1,.3,1)}
 .nf-b .pl::after{transform:rotate(90deg)} .nf.open .nf-b .pl::after{transform:rotate(0deg)}
-.nf-p{display:grid;grid-template-rows:0fr;transition:grid-template-rows .7s cubic-bezier(.16,1,.3,1)} .nf.open .nf-p{grid-template-rows:1fr}
+.nf-p{display:grid;grid-template-rows:0fr;transition:grid-template-rows .45s cubic-bezier(.16,1,.3,1)} .nf.open .nf-p{grid-template-rows:1fr}
 .nf-p > div{overflow:hidden;min-height:0}
 .nf-i{padding:max(12px, calc(20 * var(--u))) 0 max(8px, calc(12 * var(--u)));border-bottom:1px solid rgba(0,0,0,.2)}
 .nf-i button{display:flex;align-items:center;gap:max(8px, calc(12 * var(--u)));width:100%;padding:max(7px, calc(10 * var(--u))) max(10px, calc(12 * var(--u)));background:none;border:0;color:#000}
@@ -1668,7 +1680,8 @@ html body.inr .ar-b .art > .t34:first-child{margin-top:0}
 .ar-3 + .bk{padding-top:calc(150 * var(--u))}
 .lst.wi .im{display:block;width:calc(321 * var(--u));aspect-ratio:3 / 2;overflow:hidden;background:#1D1D1D} .lst.wi .im img{display:block;width:100%;height:100%;object-fit:cover;transition:transform 1.2s cubic-bezier(.16,1,.3,1)} .lst.wi a:hover .im img{transform:scale(1.04)}
 @media (max-aspect-ratio: 1/1){
-  html body.inr .bk-b > .ng{margin-top:40px} .ng{margin-left:var(--m, 20px);margin-right:var(--m, 20px);grid-template-columns:1fr 1fr;column-gap:12px;row-gap:44px}
+  .nw-h{padding:130px var(--m, 20px) 0} html body.inr .nw-h h1{margin-top:14px} html body.inr .nw-h .nw-st{margin-top:22px} .nw-g{padding:40px 0 72px} .nw-g .nw-more{margin:44px var(--m, 20px) 0}
+  .ng{margin-left:var(--m, 20px);margin-right:var(--m, 20px);grid-template-columns:1fr 1fr;column-gap:12px;row-gap:44px}
   .nt-m{margin-top:12px} .nt:not(.b) .nt-m{flex-direction:column;gap:4px} .nt-t{margin-top:10px}
   .nf{width:min(300px, calc(100vw - 40px));bottom:16px}
   .ar-h{padding-top:150px} html body.inr .ar-h .ey, html body.inr .ar-h h1{margin-left:var(--m, 20px);margin-right:var(--m, 20px)} html body.inr .ar-h h1{margin-top:22px}

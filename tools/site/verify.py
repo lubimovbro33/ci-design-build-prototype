@@ -32,7 +32,9 @@ EXC = {('portfolio', 'Homes as Unique as the People Who Live in Them'): ('Homes 
        ('turnkey', 'Technical documentation, budgeting, scheduling, procurement strategy, and coordination.'): ('Technical Documentation, Budgeting, Scheduling, Procurement Strategy, and Team Coordination', 'adapted on the designer\'s word, 18.11.2026 16:11'),
        ('turnkey', 'The residence is completed as a home, not handed over as a construction site.'): ('Your Residence Is Completed as a Home, Ready to Live In, Not Handed Over as a Construction Site', 'adapted on the designer\'s word, 18.11.2026 16:11')}
 # left out on the designer's word: the client's text that does not stand on the page at all (reported, not counted as missing)
-DROP = {('turnkey', 'Depending on project scope:'): 'the designer, 18.11.2026 17:37, frame 652:9078 («текст бери той, що на макеті»): the ecosystem is its name, the sentence and the twenty-two names'}
+DROP = {('turnkey', 'Depending on project scope:'): 'the designer, 18.11.2026 17:37, frame 652:9078 («текст бери той, що на макеті»): the ecosystem is its name, the sentence and the twenty-two names',
+        ('news', 'Projects. Perspectives. Partnerships. Press.'): 'the designer, 21.11.2026 11:21: «це ці фільтри? Для чого ти їх там лишив, якщо в нас є вже внизу ця кнопка» — the four words are the options of the filter',
+        ('news', 'Projects. Perspectives. Partnerships. Press. Ideas shaping how we design and live.'): 'the designer, 21.11.2026 11:20–11:21: the same four words (the filter) and the thought of the head’s one sentence'}
 tot = miss = 0
 for k, fs in MAPF.items():
     T = ''.join(page_text(f) for f in fs)

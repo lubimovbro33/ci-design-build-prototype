@@ -678,8 +678,8 @@ def partnerships():
     assert len(five) == 5 and J(cs) == nop(' '.join(get(sec, 'strong')[0][1])) and J(ts) == nop(h_of(sec)), five
     pg.add(pp_samples(label(sec), ts, get(sec, 'lead')[0][1][0], five, cs, W_('ch/1450-12', 'ch/1450-30', 'ch/1450-19', 'us/1530-05', 'us/1530-02')), 'Vision')
     # 09 the value of working together: the one circle
-    sec = S[8]; six = get(sec, 'p')[0][1]; cr = [('That is', 0), ('the CI ecosystem', 1)]; tr = [('A Stronger Network', 0), ('Around Every Client', 1)]
-    assert len(six) == 6 and len(ring) == 8 and J(cr) == nop(' '.join(get(sec, 'strong')[0][1])) and J(tr) == nop(h_of(sec)), (six, ring)
+    sec = S[8]; six = get(sec, 'p')[0][1]; cr = (['That is'], ['the CI', 'ecosystem']); tr = (['A Stronger', 'Network'], ['Around', 'Every Client']); J2 = lambda t: ' '.join(t[0] + t[1])
+    assert len(six) == 6 and len(ring) == 8 and J2(cr) == nop(' '.join(get(sec, 'strong')[0][1])) and J2(tr) == nop(h_of(sec)), (six, ring)
     pg.add(pp_ring(label(sec), tr, get(sec, 'lead')[0][1][0], list(zip(six[0::2], six[1::2])), cr, W_('ch/1450-11', 'ch/1450-13', 'ch/1450-03a', 'us/1511-14a')), 'Value')   # round photographs no other page shows
     final_cta(pg, S[-1], A + 'ch/1450-06.webp')
     emit('partnerships.html', 'Partnerships', pg, A + 'us/1511-07a.webp')
@@ -952,16 +952,23 @@ def news():
     other pages (the rail is not shown here). Every article is working copy (.wc); the photographs are stand-ins from the client's work."""
     S = P['news']; pg = Pg()
     h1, ps, a = hero(S[0])
-    pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 ey rv c1">%s</p>\n  <h1 class="t111 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n%s\n%s\n  </div>\n</section>' % (esc(label(S[0])), brk(h1, 20), lead_p(ps[0], w=1240), p20(ps[1:], 'c2')), 'News', 'top')
+    # THE HEAD, rebuilt 21.11.2026 11:20–11:21. Of the first build (name, title, the lead, a paragraph at another edge, then «All CI News» and the
+    # lead once more): «Що це за рандом із тексту? Він весь розкиданий, не зібраний, просто якась шапка тексту» and «ти там лишив all news, потім
+    # project, перспективи… це ці фільтри? Для чого ти їх там лишив, якщо в нас є вже внизу ця кнопка». So the head is THREE things on ONE edge —
+    # the name, the title, one sentence (the client's paragraph, in the 34, its second line blue) — and the pictures begin under it. The client's
+    # two leads («Projects. Perspectives. Partnerships. Press…») are not set: their words are the filter's own options (verify.py: DROP);
+    # «All CI News» is the filter's label and a heading for readers that is not drawn.
+    l1, l2 = 'The ideas shaping how we design, build, and live,', 'and how we continue building our clients a better life'; assert l1 + ' ' + l2 == nop(ps[1][0]), ps[1]
+    pg.add('<section class="nw-h" id="@ID@">\n  <p class="lab3 ey rv">%s</p>\n  <h1 class="t111 rv">%s</h1>\n  <p class="t34 nw-st rv">%s<br><span class="cb">%s</span></p>\n</section>' % (esc(label(S[0])), brk(h1, 20), esc(l1), esc(l2)), 'News', 'top')
     assert len(NEWS_IMG) == len(NEWS_ROWS)
     tiles = ''.join('<a class="cd nt%s" href="article.html" data-tags="%s"><span class="im"><img src="%s" alt="" loading="lazy"></span><span class="nt-m lab3"><span class="nt-c">%s</span><span class="nt-d">%s</span></span><span class="nt-t">%s</span></a>'
                     % (' b' if NT_PAT[i % len(NT_PAT)] else '', slug(c), A + NEWS_IMG[i] + '.webp', drw(c), drw(d), drw(h)) for i, (h, c, d) in enumerate(NEWS_ROWS))
-    sec = S[1]; lead = get(sec, 'lead')[0][1][0]; more = get(sec, 'a')[0][2]; allt = h_of(sec)
+    sec = S[1]; more = get(sec, 'a')[0][2]; allt = h_of(sec)
     flt = ('<div class="nf" data-list="nl"><div class="nf-p" id="nf-p"><div><div class="nf-i">%s</div></div></div>'
-           '<button class="nf-b" type="button" aria-expanded="false" aria-controls="nf-p"><span class="t">%s</span><i class="pl" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></button></div>'
+           '<button class="nf-b" type="button" aria-expanded="false" aria-controls="nf-p"><span class="t">%s</span><i class="pl" aria-hidden="true"></i><i class="nq" aria-hidden="true"></i></button></div>'
            % (''.join('<button type="button" role="checkbox" aria-checked="false" data-f="%s"><i class="bx" aria-hidden="true"></i><span>%s</span></button>' % (slug(c), c) for c in NEWS_CATS), esc(allt)))
-    body = '    <p class="t34 rv c1" style="--w:900">%s</p>\n    <div class="ng" id="nl">%s<p class="none lab3"><span class="wc">No articles under this filter yet</span></p></div>\n    <div class="rv c1">%s</div>\n    %s' % (blue(lead), tiles, btn(more, '#').replace('href="#"', 'href="#" data-noop'), flt)
-    pg.add(bk(allt, body, cls=' nw'), 'All News')
+    pg.add('<section class="nw-g" id="@ID@">\n  <h2 class="vh">%s</h2>\n  <div class="ng" id="nl">%s<p class="none lab3"><span class="wc">No articles under this filter yet</span></p></div>\n  <div class="nw-more rv">%s</div>\n  %s\n</section>'
+           % (esc(allt), tiles, btn(more, '#').replace('href="#"', 'href="#" data-noop'), flt), 'All News')
     emit('news.html', 'News', pg)
 news()
 def article():
