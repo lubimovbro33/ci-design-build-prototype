@@ -642,10 +642,10 @@ def partnerships():
     # 03 why + what it means: one photograph in six parts
     s1, s2 = S[1], S[2]
     w1 = [' '.join(it[1]) for it in s1['items'] if it[0] in ('lead', 'p')]; st1 = nop(' '.join(get(s1, 'strong')[0][1])); st2 = nop(' '.join(get(s2, 'strong')[0][1]))
-    t1 = [('World-Class Expertise.', 0), ('One Seamless Experience', 1)]; c1 = [('Together, we build', 0), ('a trusted ecosystem', 0), ('around every client', 1)]
-    t2 = [('Better Access.', 0), ('Better Coordination.', 0), ('Better Decisions', 1)]; c2 = [('You gain world-class expertise.', 0), ('We manage every detail', 1)]
-    assert J(t1) == nop(h_of(s1)) and J(c1) == st1 and J(t2) == nop(h_of(s2)) and J(c2) == st2 and len(w1) == 3, (h_of(s1), st1, h_of(s2), st2, w1)
-    pg.add(pp_parts(label(s1), t1, w1, c1, label(s2), t2, [r[1] for r in get(s2, 'row')], c2, A + 'us/1511-12a.webp'), 'Why')
+    t1 = [(['World-Class', 'Expertise'], 0), (['One Seamless', 'Experience'], 1)]; c1 = [('Together, we build', 0), ('a trusted ecosystem', 0), ('around every client', 1)]
+    t2 = ['Access', 'Coordination', 'Decisions']; c2 = [('You gain world-class expertise.', 0), ('We manage every detail', 1)]   # 21.11: «Better» stays, the word under it changes
+    assert '. '.join(' '.join(ls) for ls, _ in t1) == nop(h_of(s1)) and J(c1) == st1 and '. '.join('Better ' + w_ for w_ in t2) == nop(h_of(s2)) and J(c2) == st2 and len(w1) == 3, (h_of(s1), st1, h_of(s2), st2, w1)
+    pg.add(pp_parts(label(s1), (nop(h_of(s1)), t1), w1, c1, label(s2), (nop(h_of(s2)), 'Better', t2), [r[1] for r in get(s2, 'row')], c2, A + 'us/1511-12a.webp'), 'Why')
     # 04 the right expertise at the right moment: four quarters, clockwise
     sec = S[3]; qp = [' '.join(it[1]) for it in get(sec, 'p')]; four = sents(qp[0])
     WHO = ['A broker', 'A wellness expert', 'A technology partner', 'A specialized vendor']

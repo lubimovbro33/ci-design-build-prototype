@@ -1390,6 +1390,8 @@
   function CLR(el_){ if (!el_) return; el_.__k = ''; var st = el_.style; st.opacity = ''; st.transform = ''; st.filter = ''; st.visibility = ''; st.left = ''; st.right = ''; st.top = ''; st.bottom = ''; }
   function TY(px){ return 'translate3d(0,' + px.toFixed(1) + 'px,0)'; }
   function BLR(k){ var b = (1 - k) * 8 * U; return b > .2 ? 'blur(' + b.toFixed(2) + 'px)' : 'none'; }
+  /* a title that changes: the phrases stand in one window and follow one another; P = which one is in it (21.11.2026) */
+  function ROT(items, P){ for (var j = 0; j < items.length; j++){ var ty = ((j - P) * 101).toFixed(2); if (items[j].__ty !== ty){ items[j].__ty = ty; items[j].style.transform = 'translate3d(0,' + ty + '%,0)'; } } }
   function bsq(x, y, a){ if (a <= 0) return; g.globalAlpha = a > 1 ? 1 : a; g.fillStyle = '#96A8BF'; g.fillRect(Math.round(x - SQ / 2), Math.round(y - SQ / 2), Math.round(SQ), Math.round(SQ)); g.globalAlpha = 1; }
   var PP_HEAD = ['precision highp float;',
     'float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }',
@@ -1416,7 +1418,7 @@
     var o = f.pa, e = f.el, i;
     if (o === undefined){ var bx = qs('.pp-pa-ph', e);
       o = f.pa = {gl: bx ? GL2.make(bx, PARTS_FS, qsa('img', bx), {}) : null, ha: qs('.pp-h.a', e), fa: qs('.pp-f.a', e), ca: qs('.pp-pa-ca', e), hb: qs('.pp-h.b', e), ts: qsa('.pp-pa-t li', e), cb: qs('.pp-c.b', e),
-                  B: new Float32Array(6), pk: [], on: false}; }
+                  ra: qsa('.pp-h.a .pp-rot-w > span', e), rb: qsa('.pp-h.b .pp-rot-w > span', e), B: new Float32Array(6), pk: [], on: false}; }
     if (H >= W){ if (o.on){ o.on = false; o.pk = []; [o.ha, o.fa, o.ca, o.hb, o.cb].concat(o.ts).forEach(CLR); } return; }   /* phones: in the flow (css) */
     o.on = true;
     var n = o.ts.length, t0 = 2.1, dw = .32, tE = t0 + n * dw, DY = [-1, .8, -.5, -.6, 1, -.9], close = eio(sg(q, tE + .05, tE + .6));
@@ -1426,8 +1428,11 @@
     PUT(o.fa, fo, TY(-12 * U * (1 - fo)));                                     /* the paragraphs give the foot to the section's closing line; the title stays over both */
     PUT(o.ca, ci * co, TY(12 * U * (1 - ci) - 12 * U * (1 - co)));
     PUT(o.ha, co, TY(-16 * U * (1 - co)));
+    ROT(o.ra, eio(sg(q, .74, .98)));                                           /* «World-Class Expertise» with the paragraphs, «One Seamless Experience» with the closing line */
     var hi = eio(sg(q, 1.74, 2.04)), hx = 1 - eio(sg(q, tE - .02, tE + .2));
     PUT(o.hb, hi * hx, TY(14 * U * (1 - hi) - 16 * U * (1 - hx)));
+    var wn = o.rb.length, Pb = 0; for (i = 1; i < wn; i++){ var tc = t0 + i * (n / wn) * dw; Pb += eio(sg(q, tc - .1, tc + .12)); }
+    ROT(o.rb, Pb);                                                             /* «Better» stays; Access → Coordination → Decisions, a word to every two benefits */
     var cw = W / 3, chh = H / 2, capIn = eio(sg(q, 1.86, 2.14)), base = .5 - .2 * hi, foot = Math.max(50 * U, 58);
     for (i = 0; i < 6; i++){
       var lit = i < n ? eio(sg(q, t0 + i * dw, t0 + i * dw + .24)) : 0, c_ = i % 3, r_ = (i / 3) | 0;
@@ -1465,14 +1470,15 @@
     o.on = true;
     var n = o.is.length, a0 = .3, dw = .62, p = (q - a0) / dw, A = 0, B = 0, lh = eio(sg(q, -.7, -.15)), lv = eio(sg(q, -.55, 0)), cx = Math.round(W / 2) - .5;
     cross(lh, lv);                                                             /* the site's two centre lines rule the four quarters */
-    for (i = 0; i < n; i++){ A += eio(sg(p - i, 0, .5)); if (i < n - 1) B += eio(sg(p - i - 1, .08, .58)); }   /* the hand; and what closes behind it a moment later (the last quarter stays) */
+    for (i = 0; i < n; i++){ A += eio(sg(p - i, 0, .5)); B += eio(sg(p - i - 1, .08, .58)); }   /* the hand; and what closes behind it a moment later — the fourth quarter too (21.11: only the lines stay) */
     var fr = A - Math.floor(A);
     if (fr > .001 && fr < .999){ var an = A * Math.PI / 2, L = W + H; ink(Math.sin(Math.PI * fr) * .85, 1); seg(cx, MID, cx + Math.sin(an) * L, MID - Math.cos(an) * L); }   /* the hand itself, only while it moves */
-    bsq(cx, MID, lv > .98 ? 1 : 0);                                            /* our square on the crossing */
+    var end = eio(sg(p, n + .02, n + .4));                                     /* the four have passed: their sentences and our square go, the closing sentence takes the crossing */
+    bsq(cx, MID, lv > .98 ? 1 - end : 0);                                      /* our square on the crossing */
     var ho = 1 - eio(sg(p, n - 1 - .04, n - 1 + .24)); PUT(o.h, ho, TY(-16 * U * (1 - ho)));              /* the title keeps the upper left quarter until the photograph comes to it */
     var li = eio(sg(q, -.45, -.05)), lo = 1 - eio(sg(p, n - 2 - .04, n - 2 + .22)); PUT(o.l, li * lo);
-    for (i = 0; i < n; i++){ var si = eio(sg(p - i, .2, .5)), qo = i < n - 1 ? eio(sg(p - i - 1, 0, .3)) : 0; PUT(o.is[i], si * (1 - .66 * qo), TY(12 * U * (1 - si))); }   /* said and quiet */
-    var kc = eio(sg(p, n + .1, n + .6)); PUT(o.c, kc, TY(14 * U * (1 - kc)), BLR(kc)); PUT(o.p, kc, TY(10 * U * (1 - kc)));
+    for (i = 0; i < n; i++){ var si = eio(sg(p - i, .2, .5)), qo = i < n - 1 ? eio(sg(p - i - 1, 0, .3)) : 0; PUT(o.is[i], si * (1 - .66 * qo) * (1 - end), TY(12 * U * (1 - si) - 10 * U * end)); }   /* said and quiet; gone at the end */
+    var kp = eio(sg(p, n + .5, n + .85)), kc = eio(sg(p, n + .6, n + 1.05)); PUT(o.p, kp, TY(10 * U * (1 - kp))); PUT(o.c, kc, TY(14 * U * (1 - kc)), BLR(kc));
     var g2 = o.gl;
     if (g2 && g2.ready){ g2.size(); g2.set1('uA', A); g2.set1('uB', B); g2.set1('uV', .8); g2.set1('uZ', 1.06 - .015 * A); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
     else if (!g2){ if (!o.ims) o.ims = qsa('.pp-qt-ph img', e); o.ims.forEach(function(im, j){ im.style.opacity = A > j + .5 && B < j + .5 ? '1' : '0'; }); }   /* no WebGL: the quarter in hand, plainly */

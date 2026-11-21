@@ -1515,6 +1515,11 @@ html body.inr .pp-n{font-family:var(--fx);font-weight:400;font-size:max(34px, ca
 .pp-qt-ph img{width:50%;height:50%;filter:contrast(1.05) brightness(.6)} .pp-qt-ph img:nth-child(1){left:50%} .pp-qt-ph img:nth-child(2){left:50%;top:50%} .pp-qt-ph img:nth-child(3){top:50%}   /* each in its quarter (what the WebGL layer draws; this is what stands without it) */              /* drawn by the WebGL layer only: a part of the picture, never the whole of it at once */
 /* six parts: the second head waits; a benefit stands in the lower left corner of its part (placed by ppParts()) */
 .pp-h.b{opacity:0}
+/* a title that changes (21.11.2026, pp_rot): the line that stays, and under it a window one phrase high in which the phrases follow one another with the scroll */
+.pp-rot-a{display:block}
+.pp-rot-w{display:grid;overflow:hidden}
+.pp-rot-w > span{grid-area:1 / 1;white-space:nowrap;will-change:transform}
+.pp-rot-w > span + span{transform:translateY(101%)}
 html body.inr .film .pp-pa-ca{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;color:#FFFFFF;opacity:0;line-height:1.02!important;white-space:nowrap}
 html body.inr .film .pp-pa-t{margin:0;padding:0;list-style:none}
 html body.inr .film .pp-pa-t li{position:absolute;margin:0;width:21.05em;max-width:calc(33.333vw - 75 * var(--u));color:#FFFFFF;opacity:0}
@@ -1526,7 +1531,7 @@ html body.inr .film .pp-qt-i{position:absolute;margin:0;width:17em;color:#FFFFFF
 .pp-qt-i[data-q="1"]{left:calc(50% + 50 * var(--u));top:calc(50% + 50 * var(--u))}
 .pp-qt-i[data-q="2"]{right:calc(50% + 50 * var(--u));top:calc(50% + 50 * var(--u));text-align:right}
 .pp-qt-i[data-q="3"]{right:calc(50% + 50 * var(--u));bottom:calc(50% + 50 * var(--u));text-align:right}
-html body.inr .film .pp-qt-c{position:absolute;left:calc(50% + 50 * var(--u));top:calc(175 * var(--u) + 1.2 * var(--t-run));margin:0;color:#FFFFFF;opacity:0}
+/* 21.11.2026: the closing sentence of the quarters is a .pp-c now — alone on the crossing, in the title's capitals (60 / 52: the hairline runs between its two lines) */
 /* partners on a full-screen photograph: the name where the title stood, its paragraphs on the foot */
 .pp-nm-i, .pp-wd-i{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0}
 html body.inr .film .pp-nm-i .pp-n{position:absolute;left:calc(50 * var(--u));top:calc(175 * var(--u) + 1.2 * var(--t-run))}
@@ -1565,6 +1570,7 @@ html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:m
   html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-n, html body.inr .film .pp-rg-pr, html body.inr .film .pp-rg-c, html body.inr .film .pp-rg-l{
     position:static;width:auto;max-width:none;height:auto;text-align:left;white-space:normal;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
   html body.inr .pp-h h2{margin-top:14px} html body.inr .pp-h .pp-sub{margin-top:14px}
+  .pp-rot .vh{position:static!important;width:auto;height:auto;margin:0;overflow:visible;clip-path:none;white-space:normal} .pp-rot-a, .pp-rot-w{display:none}   /* phones: the client's whole heading, plainly */
   .pp-h.b{margin-top:56px}
   .film .pp-f, .film .pp-f.col{display:block;width:auto;margin-top:28px} html body.inr .pp .t20s p{width:auto} html body.inr .pp .t20s p + p{margin-top:.8em}
   html body.inr .film .pp-c{margin-top:40px} .pp-c > span{transform:none} html body.inr .film .pp-pa-ca{margin-top:36px}

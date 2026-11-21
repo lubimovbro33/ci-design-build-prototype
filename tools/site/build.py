@@ -1319,11 +1319,22 @@ def br_point(kick, title, names, para, closer_, img=None):
 # text to a step; no partner logos (names are type); the photographs are the client's own work.
 def pp_two(ls, cls='cb'): return '<br>'.join(('<span class="%s">%s</span>' % (cls, esc(t))) if b else esc(t) for t, b in ls)
 def pp_ps(ps): return ''.join('<p>%s</p>' % esc(nop(p)).replace('Dr. Alka', 'Dr.&nbsp;Alka') for p in ps)   # a title is never parted from its name at a line's end
-def pp_head(kick, title, cls='', ink='cb', sub=None, rv=True):
-    """the name of the block and its title at the left field; `.pp-hh` is what a film takes away when the title's turn is over"""
+def pp_head(kick, title, cls='', ink='cb', sub=None, rv=True, raw=None):
+    """the name of the block and its title at the left field; `.pp-hh` is what a film takes away when the title's turn is over.
+    `raw` = the title's own markup (pp_rot) in place of plain lines."""
     r = ' rv' if rv else ''
-    return '      <div class="pp-h%s"><p class="tk-cv-k%s">%s</p><div class="pp-hh"><h2 class="t60%s">%s</h2>%s</div></div>' % (
-        (' ' + cls) if cls else '', r, esc(kick), r, pp_two(title, ink), ('<p class="t34 pp-sub">%s</p>' % '<br>'.join(esc(x) for x in sub)) if sub else '')
+    return '      <div class="pp-h%s"><p class="tk-cv-k%s">%s</p><div class="pp-hh"><h2 class="t60%s%s">%s</h2>%s</div></div>' % (
+        (' ' + cls) if cls else '', r, esc(kick), ' pp-rot' if raw else '', r, raw or pp_two(title, ink), ('<p class="t34 pp-sub">%s</p>' % '<br>'.join(esc(x) for x in sub)) if sub else '')
+def pp_rot(full, fixed, items, ink='cbl'):
+    """A TITLE THAT CHANGES instead of standing as a heavy cap of capitals (21.11.2026 10:11, of «Better Access. Better Coordination.
+    Better Decisions.» set in three lines of the 60, the second of which ran across the seam into the next part: «Це зроблено
+    погано… некрасиво вилазить на другу лінію. Зроби better, одну лінію, друга лінія — там access і тому подібне. І воно буде
+    мінятися просто. Не треба все писати такою шапкою важкою… а better можеш виділити синім»). `fixed` = the line that stays (in
+    the blue), `items` = [(lines, 1 if blue)] — what changes under it, one at a time, moved by the scroll (ROT() in js/inner.js).
+    The client's whole heading stays in the markup for a reader of the page (`.vh`); phones show it plainly."""
+    return '<span class="vh">%s</span>%s<span class="pp-rot-w" aria-hidden="true">%s</span>' % (
+        esc(full), ('<span class="pp-rot-a %s" aria-hidden="true">%s</span>' % (ink, esc(fixed))) if fixed else '',
+        ''.join('<span%s>%s</span>' % ((' class="%s"' % ink) if b else '', '<br>'.join(esc(x) for x in ls)) for ls, b in items))
 PP_CV = '    <canvas class="ln" aria-hidden="true"></canvas>'
 
 
@@ -1334,15 +1345,18 @@ def pp_parts(k1, t1, ps1, c1, k2, t2, rows, c2, img):
           inside the lower left part, so no line of type lies across a seam);
       «Better Access. Better Coordination. Better Decisions.» — the six benefits, one to a part, each lighting its part; then the
           seams close, the room is one, and «You gain world-class expertise. We manage every detail» stands on it.
-    One WebGL layer (ppParts() in js/inner.js); the type is DOM. `t*`, `c*` = lines of (text, 1 if in the light blue)."""
+    One WebGL layer (ppParts() in js/inner.js); the type is DOM. `c*` = lines of (text, 1 if in the light blue).
+    The titles change (pp_rot): `t1` = (the heading, [(lines of a phrase, blue)]) — «World-Class / Expertise» with the paragraphs,
+    then «One Seamless / Experience» with the closing line; `t2` = (the heading, the word that stays, the words that change) —
+    «Better» over Access → Coordination → Decisions, a word to every two benefits. No title is wider than the first part."""
     n = len(rows); assert n == 6, n
     return '\n'.join([
         '<section class="film pp pp-pa" data-fig="pparts" data-len="%.2f" data-open="0" id="@ID@">' % (2.1 + n * .32 + 1.25), '  <div class="stg">',
         '    <div class="pp-pa-ph"><img src="%s" alt=""></div>' % img, PP_CV, '    <div class="sc pp-s">',
-        pp_head(k1, t1, 'a', 'cbl'),
+        pp_head(k1, None, 'a', raw=pp_rot(t1[0], None, t1[1])),             # two phrases, one at a time: neither is wider than the first part
         '      <div class="t20s pp-f a">%s</div>' % pp_ps(ps1),                  # the foot: never .rv on a pinned screen
         '      <p class="t34 pp-pa-ca">%s</p>' % pp_two(c1, 'cbl'),            # the section's closing line takes the paragraphs' place on the foot, under its title
-        pp_head(k2, t2, 'b', 'cbl', rv=False),
+        pp_head(k2, None, 'b', rv=False, raw=pp_rot(t2[0], t2[1], [([w_], 0) for w_ in t2[2]])),   # «Better» stays, the word under it changes
         '      <ol class="pp-pa-t">%s</ol>' % ''.join('<li class="t20">%s</li>' % esc(nop(r)) for r in rows),
         '      <p class="t60s pp-c b"><span>%s</span></p>' % pp_two(c2, 'cbl'),
         '    </div>', '  </div>', '</section>'])
@@ -1354,16 +1368,22 @@ def pp_quart(kick, title, lead, pairs, para, closer_, imgs):
     quarter to quarter CLOCKWISE from twelve — an expert to a quarter, each at its moment; the hand that brings it is the edge of
     the photograph itself. The sentence of the expert in hand stands in the corner of its quarter by the crossing, 50 from both
     lines (who in white, what in the light blue); the ones already said stay, quiet. `pairs` = [(who, what)] — the client's four
-    sentences cut after their subject; `imgs` in the same order. ppQuart() in js/inner.js."""
+    sentences cut after their subject; `imgs` in the same order. ppQuart() in js/inner.js.
+    THE END (21.11.2026 10:12–10:14, of the closing sentence set at the head of the upper right quarter beside the last photograph
+    and the four sentences: «він якось ні туди, ні сюди… пройдуть оці чотири пункти… вони пропали, і по центру наш заголовок»;
+    then, instead of a full-screen photograph under it — the next block is one — «оцей квадратик четвертий, верхній, лівий, теж
+    зникне. Залишаться тільки лінії, тексти пропадуть, і наш заголовок буде по центру»): the hand closes the fourth quarter too,
+    the four sentences and our square go, and the closing sentence stands ALONE ON THE CROSSING in the capitals of the block's
+    title, two inks — the horizontal hairline runs between its two lines (capitals: no letter lies on it), as on the cover."""
     assert len(pairs) == len(imgs) == 4, pairs
     return '\n'.join([
-        '<section class="film pp pp-qt" data-fig="pquart" data-len="%.2f" data-open="0" id="@ID@">' % (.3 + 4 * .62 + .95), '  <div class="stg">',
+        '<section class="film pp pp-qt" data-fig="pquart" data-len="%.2f" data-open="0" id="@ID@">' % (.3 + 4 * .62 + 1.12), '  <div class="stg">',
         '    <div class="pp-qt-ph">%s</div>' % ''.join('<img src="%s" alt="">' % x for x in imgs), PP_CV, '    <div class="sc pp-s">',
         pp_head(kick, title),
         '      <p class="t20 pp-qt-l">%s</p>' % esc(nop(lead)),
         '      <div class="pp-qt-q">%s</div>' % ''.join('<p class="t34 pp-qt-i" data-q="%d"><span class="w0">%s</span> <span class="cbl">%s</span></p>' % (i, esc(a), esc(nop(b))) for i, (a, b) in enumerate(pairs)),
         '      <p class="t20 pp-qt-p">%s</p>' % esc(nop(para)),
-        '      <p class="t60s pp-qt-c">%s</p>' % pp_two(closer_),
+        '      <p class="t60 pp-c pp-qt-c"><span>%s</span></p>' % pp_two(closer_),   # 21.11: alone on the crossing, when the four have passed
         '    </div>', '  </div>', '</section>'])
 
 
