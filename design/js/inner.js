@@ -1462,6 +1462,7 @@
     '  c *= m; c += (hash(v * uRes + uTime) - 0.5) * 0.02 * m;',
     '  gl_FragColor = vec4(c, 1.0);',
     '}'].join('\n');
+  function end0(p, n){ return eio(sg(p, n + .02, n + .4)); }
   function ppQuart(f, q, t){
     var o = f.qt, e = f.el, i;
     if (o === undefined){ var bx = qs('.pp-qt-ph', e);
@@ -1475,7 +1476,8 @@
     if (fr > .001 && fr < .999){ var an = A * Math.PI / 2, L = W + H; ink(Math.sin(Math.PI * fr) * .85, 1); seg(cx, MID, cx + Math.sin(an) * L, MID - Math.cos(an) * L); }   /* the hand itself, only while it moves */
     var end = eio(sg(p, n + .02, n + .4));                                     /* the four have passed: their sentences and our square go, the closing sentence takes the crossing */
     bsq(cx, MID, lv > .98 ? 1 - end : 0);                                      /* our square on the crossing */
-    var ho = 1 - eio(sg(p, n - 1 - .04, n - 1 + .24)); PUT(o.h, ho, TY(-16 * U * (1 - ho)));              /* the title keeps the upper left quarter until the photograph comes to it */
+    var ho = 1 - eio(sg(p, n - 1 - .04, n - 1 + .24)); PUT(o.h, ho, TY(-16 * U * (1 - ho)));
+    if (o.k0 === undefined) o.k0 = qs('.pp-h > .tk-cv-k', e); if (p > n - .2 || o.kt){ o.kt = true; PUT(o.k0, 1 - end0(p, n)); }              /* the title keeps the upper left quarter until the photograph comes to it */
     var li = eio(sg(q, -.45, -.05)), lo = 1 - eio(sg(p, n - 2 - .04, n - 2 + .22)); PUT(o.l, li * lo);
     for (i = 0; i < n; i++){ var si = eio(sg(p - i, .2, .5)), qo = i < n - 1 ? eio(sg(p - i - 1, 0, .3)) : 0; PUT(o.is[i], si * (1 - .66 * qo) * (1 - end), TY(12 * U * (1 - si) - 10 * U * end)); }   /* said and quiet; gone at the end */
     var kp = eio(sg(p, n + .5, n + .85)), kc = eio(sg(p, n + .6, n + 1.05)); PUT(o.p, kp, TY(10 * U * (1 - kp))); PUT(o.c, kc, TY(14 * U * (1 - kc)), BLR(kc));
@@ -1514,6 +1516,49 @@
     var g2 = o.gl;
     if (g2 && g2.ready){ g2.size(); g2.set1('uI', Math.min(o.ni - 1, I)); g2.set1('uV', eio(sg(q, -.4, .12)) * (.5 + .06 * kc + .46 * fw));   /* it comes up the screen dark and lights as it stops: its upper edge never meets the photograph of the block before as a second picture */ g2.set1('uD', 1 - .92 * fw);
       g2.set1('uZ', 1.05 - .05 * eio(sg(q, -.6, tC)) + .045 * fw); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+  }
+  /* ---------- the vendors' triptych (21.11.2026 10:28: «без затемненої фотографії… кращий ефект»). Three photographs across the screen in their own light; the one of the
+     partner in hand takes half the width, the others a quarter each. All the type is in the black band under them. At the end the band goes down out of the screen and the
+     pictures grow to its whole height and come nearer: «The technology recedes. The experience of home comes forward». */
+  var TRIP_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2;', 'uniform vec2 uRes, uS0, uS1, uS2;', 'uniform float uX1, uX2, uYb, uZ, uV, uTime, uR0, uR1, uR2;', 'varying vec2 v;',
+    'void main(){',
+    '  if (v.y > uYb){ gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); return; }',                                  /* under the pictures: the band's black */
+    '  float x0 = 0.0, x1 = uX1; if (v.x >= uX2){ x0 = uX2; x1 = 1.0; } else if (v.x >= uX1){ x0 = uX1; x1 = uX2; }',
+    '  float fx = (v.x - x0) / (x1 - x0), r = v.x >= uX2 ? uR2 : (v.x >= uX1 ? uR1 : uR0);',
+    '  if (fx > r){ gl_FragColor = vec4(0.0, 0.0, 0.0, 1.0); return; }',                                       /* the block arrives black; each picture opens from its left edge, one after another */
+    '  vec2 uv = (vec2(fx + (1.0 - r) * 0.06, v.y / uYb) - 0.5) / uZ + 0.5, res = vec2((x1 - x0) * uRes.x, uYb * uRes.y); vec3 c;',   /* each picture fills its own column, whatever its width */
+    '  if (v.x >= uX2) c = texture2D(uT2, cvr(uv, uS2, res)).rgb; else if (v.x >= uX1) c = texture2D(uT1, cvr(uv, uS1, res)).rgb; else c = texture2D(uT0, cvr(uv, uS0, res)).rgb;',
+    '  c = ((c - 0.5) * 1.04 + 0.5) * uV;',                                                                  /* its own light: nothing is taken from it */
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function ppTrip(f, q, t){
+    var o = f.tr, e = f.el, i, j;
+    if (o === undefined){ var bx = qs('.pp-tr-ph', e);
+      o = f.tr = {gl: bx ? GL2.make(bx, TRIP_FS, qsa('img', bx), {}) : null, ims: bx ? qsa('img', bx) : [], tb: qs('.pp-tb', e), k: qs('.pp-tb > .tk-cv-k', e), is: qsa('.pp-tb-i', e), c: qs('.pp-tb-c', e), bk: '', bh: 0, ty: '', on: false}; }
+    if (H >= W){ if (o.on){ o.on = false; o.bk = ''; o.ty = ''; o.tb.style.transform = ''; [o.k, o.c].concat(o.is).forEach(CLR); } return; }
+    o.on = true;
+    if (o.bk !== W + 'x' + H){ o.bk = W + 'x' + H; o.bh = o.tb.offsetHeight; }
+    var n = o.is.length - 1, T1 = .95, dn = .75, tC = T1 + n * dn, rec = eio(sg(q, tC + .95, tC + 1.55)), w = [], act = [], x;
+    for (j = 0; j < n; j++) w[j] = 1 / n;
+    for (i = 0; i < n; i++){                                                    /* how far each partner is «in hand»: its picture opens to half the width, the others give way */
+      var a = T1 + i * dn; act[i] = eio(sg(q, a - .16, a + .3)) - (i < n - 1 ? eio(sg(q, a + dn - .16, a + dn + .3)) : rec);
+      for (j = 0; j < n; j++) w[j] += act[i] * ((j === i ? .5 : .5 / (n - 1)) - 1 / n);
+    }
+    var ty = (rec * o.bh).toFixed(1); if (o.ty !== ty){ o.ty = ty; o.tb.style.transform = 'translate3d(0,' + ty + 'px,0)'; }   /* the band recedes */
+    var fo = 1 - eio(sg(q, tC + .95, tC + 1.22)), ki = eio(sg(q, -.4, -.02)); PUT(o.k, ki * fo);                          /* going down with the band its words dim: they are gone before they reach the rail */
+    var ho = 1 - eio(sg(q, .62, .9)); PUT(o.is[0], ki * ho, TY(-12 * U * (1 - ho)));
+    for (i = 0; i < n; i++){
+      var b = T1 + i * dn, wi = eio(sg(q, b + .04, b + .24)), wo = 1 - eio(sg(q, b + dn - .2, b + dn - .06));
+      PUT(o.is[i + 1], wi * wo, TY((1 - wi) * 14 * U - (1 - wo) * 12 * U));
+    }
+    var kc = eio(sg(q, tC + .1, tC + .42)); PUT(o.c, kc * fo, TY(12 * U * (1 - kc)));
+    var g2 = o.gl, yb = (H - o.bh * (1 - rec)) / H, R = [eio(sg(q, -.62, -.24)), eio(sg(q, -.48, -.1)), eio(sg(q, -.34, .04))];
+    g.strokeStyle = 'rgba(235,235,235,.33)'; g.lineWidth = 1; g.setLineDash([]); x = 0;                                 /* a hairline on each seam, drawn down as the picture right of it opens */
+    for (j = 0; j < n - 1; j++){ x += w[j]; if (R[j + 1] > 0){ var sx = Math.round(x * W) - .5; seg(sx, 0, sx, yb * H * R[j + 1]); } }
+    if (g2 && g2.ready){ g2.size(); g2.set1('uX1', w[0]); g2.set1('uX2', w[0] + w[1]); g2.set1('uYb', yb); g2.set1('uV', 1); g2.set1('uR0', R[0]); g2.set1('uR1', R[1]); g2.set1('uR2', R[2]);
+      g2.set1('uZ', 1.05 - .05 * eio(sg(q, -.6, .4)) + .09 * rec); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+    else if (!g2){ x = 0; for (j = 0; j < o.ims.length; j++){ var st = o.ims[j].style; st.opacity = R[j].toFixed(3); st.left = (x * 100).toFixed(2) + '%'; st.width = (w[j] * 100 + .05).toFixed(2) + '%'; st.height = (yb * 100).toFixed(2) + '%'; x += w[j]; } }   /* no WebGL: the pictures themselves */
   }
   var WIDE_FS = PP_HEAD + ['uniform sampler2D uT0;', 'uniform vec2 uRes, uS0;', 'uniform float uX, uV, uZ, uTime;', 'varying vec2 v;',
     'void main(){',
@@ -1609,7 +1654,7 @@
     if (g2 && g2.ready){ g2.size(); g2.set1('uA', op); g2.set1('uZ', 1.1 - .1 * op); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
     else if (o.im && !g2){ o.im.style.opacity = op.toFixed(3); }
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point, pparts: ppParts, pquart: ppQuart, pnames: ppNames, pwide: ppWide, psamp: ppSamp, pring: ppRing};
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point, pparts: ppParts, pquart: ppQuart, pnames: ppNames, pwide: ppWide, ptrip: ppTrip, psamp: ppSamp, pring: ppRing};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

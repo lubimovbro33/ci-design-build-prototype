@@ -1383,7 +1383,7 @@ def pp_quart(kick, title, lead, pairs, para, closer_, imgs):
         '      <p class="t20 pp-qt-l">%s</p>' % esc(nop(lead)),
         '      <div class="pp-qt-q">%s</div>' % ''.join('<p class="t34 pp-qt-i" data-q="%d"><span class="w0">%s</span> <span class="cbl">%s</span></p>' % (i, esc(a), esc(nop(b))) for i, (a, b) in enumerate(pairs)),
         '      <p class="t20 pp-qt-p">%s</p>' % esc(nop(para)),
-        '      <p class="t60 pp-c pp-qt-c"><span>%s</span></p>' % pp_two(closer_),   # 21.11: alone on the crossing, when the four have passed
+        '      <p class="t60 pp-c pp-qt-c"><span><i class="tk-cv-k pp-ck" aria-hidden="true">%s</i>%s</span></p>' % (esc(kick), pp_two(closer_)),   # 21.11: on the crossing when the four have passed, the block's name 30 over it (never apart from its title)
         '    </div>', '  </div>', '</section>'])
 
 
@@ -1405,6 +1405,35 @@ def pp_names(kick, title, sub, paras, strong, partners, imgs, closer_=None, butt
         ''.join('      <div class="pp-nm-i"><h3 class="pp-n">%s</h3><div class="t20s pp-f">%s</div></div>\n' % ('<br>'.join(esc(x) for x in nm), pp_ps(ps)) for nm, ps in partners).rstrip('\n'),
         ('      <div class="pp-nm-b">%s</div>' % button) if button else '',
         ('      <p class="t60s pp-c"><span>%s</span></p>' % pp_two(closer_, 'cbl')) if closer_ else '',
+        '    </div>', '  </div>', '</section>'])
+
+
+def pp_trip(kick, title, paras, partners, imgs, closer_):
+    """The vendors — «Exceptional Products, Seamlessly Integrated» — rebuilt 21.11.2026 10:28. Of the first version (the names on
+    darkened full-screen photographs, the closing sentence centred, then «the picture comes forward»): «маленький заголовок десь
+    улетів в пропасть… заголовок взагалі відірваний від нього. Не подобається зовсім прихід: текст пропадає, затемнення пропадає і
+    чуть-чуть якийсь малесенький зум ні туди, ні сюди… Давай якийсь кращий ефект. І, можливо, без затемненої фотографії — ми вже
+    багато де використовували такий прийом на цій сторінці, і трошки вже скучно. І цю фотку ми вже використовували на іншій
+    сторінці, це теж не є окей.» So:
+      · NO DARKENED PHOTOGRAPH and no word on a photograph: three tall photographs of the client's work stand side by side across
+        the screen in their own light (water | sleep | light), and ALL the type lives in one black band under them — the block's
+        name with its title, never apart from it;
+      · the photograph of the partner in hand opens to half the screen's width, the other two give way (a quarter each);
+      · the end is the client's sentence done to the letter: it is said in the band — «The technology recedes. The experience of
+        home comes forward» — and then the band itself goes down out of the screen and the three photographs grow to its whole
+        height and come nearer. Nothing is left on them.
+    `partners` = [(lines of the name, [paragraphs])], `imgs` in the same order — photographs no other page of the site shows
+    (their own project pages apart). One WebGL layer (ppTrip() in js/inner.js); nothing in the band is `.rv` (it is the foot)."""
+    n = len(partners); assert n == len(imgs) == 3, partners
+    return '\n'.join([
+        '<section class="film pp pp-tr" data-fig="ptrip" data-len="%.2f" data-open="0" id="@ID@">' % (.95 + n * .75 + 1.95), '  <div class="stg">',
+        '    <div class="pp-tr-ph">%s</div>' % ''.join('<img src="%s" alt="">' % x for x in imgs), PP_CV, '    <div class="sc pp-s">',
+        '      <div class="pp-tb">',
+        '        <p class="tk-cv-k">%s</p>' % esc(kick),
+        '        <div class="pp-tb-i i0"><h2 class="t60">%s</h2><div class="t20s pp-tb-p two">%s</div></div>' % (pp_two(title), pp_ps(paras)),
+        ''.join('        <div class="pp-tb-i"><h3 class="pp-n">%s</h3><div class="t20s pp-tb-p">%s</div></div>\n' % ('<br>'.join(esc(x) for x in nm), pp_ps(ps)) for nm, ps in partners).rstrip('\n'),
+        '        <p class="t60s pp-tb-c">%s</p>' % pp_two(closer_),
+        '      </div>',
         '    </div>', '  </div>', '</section>'])
 
 

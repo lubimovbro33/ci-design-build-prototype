@@ -1538,6 +1538,23 @@ html body.inr .film .pp-nm-i .pp-n{position:absolute;left:calc(50 * var(--u));to
 html body.inr .film .pp-nm-ic{position:absolute;left:calc(50 * var(--u));top:calc(175 * var(--u) + 1.2 * var(--t-run));width:27em;margin:0;color:#FFFFFF;opacity:0;line-height:1.06!important}
 .pp-nm-ic span{display:block} .pp-nm-ic span + span{margin-top:.55em}
 .pp-nm-b{position:absolute;right:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);opacity:0;pointer-events:auto}
+/* the vendors' triptych (21.11.2026): three photographs across the screen in their own light, and ONE black band under them that holds all the type — the block's name, 25 under it the title or
+   the partner's name, the paragraphs from the text line right of the middle. The band is 330 of the frame (never lower than 250 px: the rail lies on its foot). */
+.pp-tr-ph{position:absolute;left:0;top:0;width:100%;height:100%;z-index:1;overflow:hidden;background:#000}
+.pp-tr-ph img{position:absolute;top:0;width:33.34%;height:calc(100% - max(calc(330 * var(--u)), 250px));object-fit:cover;display:block;max-width:none;opacity:0}
+.pp-tr-ph img:nth-child(2){left:33.33%} .pp-tr-ph img:nth-child(3){left:66.66%}
+.pp-tb{position:absolute;left:0;right:0;bottom:0;height:max(calc(330 * var(--u)), 250px);background:#000;will-change:transform}
+html body.inr .pp-tb > .tk-cv-k{position:absolute;left:calc(50 * var(--u));top:calc(40 * var(--u));margin:0}
+.pp-tb-i{position:absolute;left:0;top:0;width:100%;height:100%;opacity:0}
+html body.inr .pp-tb-i h2, html body.inr .film .pp-tb-i .pp-n, html body.inr .film .pp-tb-c{position:absolute;left:calc(50 * var(--u));top:calc(65 * var(--u) + 1.2 * var(--t-run));margin:0;color:#FFFFFF}
+html body.inr .film .pp-tb-i .pp-n{font-size:max(30px, calc(80 * var(--u)))}
+html body.inr .film .pp-tb-c{opacity:0}
+/* the paragraphs begin 50 right of the middle — or 83 clear of the title's widest line (937 wide from the field), whichever is further: the title never runs into them */
+.film .pp-tb-p{position:absolute;left:max(calc(50% + 50 * var(--u)), calc(1070 * var(--u)));top:calc(40 * var(--u))} html body.inr .pp .pp-tb-p p{width:27em}
+.film .pp-tb-p.two{display:flex;gap:calc(50 * var(--u))} html body.inr .pp .pp-tb-p.two p{width:calc(375 * var(--u));min-width:16em}
+/* the quarters: the block's name over its closing sentence on the crossing (out of the flow: the sentence stays centred on the horizontal line) */
+.pp-c > span{position:relative}
+html body.inr .pp-c .pp-ck{position:absolute;left:0;right:0;bottom:calc(100% + 30 * var(--u));font-style:normal;text-align:center;display:block}
 /* the photograph that grows wider: the name on the black at 420 of the frame, its line under it, the paragraphs on the foot — all inside the narrowest black field (a third of the screen) */
 html body.inr .film .pp-wd-i .pp-n{position:absolute;left:calc(50 * var(--u));top:calc(50% - 120 * var(--u));font-size:max(30px, calc(80 * var(--u)))}
 html body.inr .film .pp-wd-i .pp-st{position:absolute;left:calc(50 * var(--u));top:calc(50% - 10 * var(--u));width:16em;max-width:calc(33.333vw - 100 * var(--u));margin:0;color:#96A8BF;line-height:1.02!important}
@@ -1570,6 +1587,12 @@ html body.inr .film .pp-rg-l{position:absolute;left:calc(50 * var(--u));bottom:m
   html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-n, html body.inr .film .pp-rg-pr, html body.inr .film .pp-rg-c, html body.inr .film .pp-rg-l{
     position:static;width:auto;max-width:none;height:auto;text-align:left;white-space:normal;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
   html body.inr .pp-h h2{margin-top:14px} html body.inr .pp-h .pp-sub{margin-top:14px}
+  .pp-tr-ph{position:relative;height:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px} .pp-tr-ph img, .pp-tr-ph img:nth-child(n){position:static;width:100%;height:auto;aspect-ratio:3 / 4;opacity:1!important}
+  .pp-tb{position:static;height:auto;background:none;transform:none!important}
+  html body.inr .pp-tb > .tk-cv-k, .pp-tb-i, html body.inr .pp-tb-i h2, html body.inr .film .pp-tb-i .pp-n, html body.inr .film .pp-tb-c, .film .pp-tb-p{position:static;width:auto;height:auto;opacity:1!important;transform:none!important;visibility:visible!important}
+  html body.inr .pp-tb-i h2{margin-top:14px} .film .pp-tb-p, .film .pp-tb-p.two{display:block;margin-top:22px} html body.inr .pp .pp-tb-p p, html body.inr .pp .pp-tb-p.two p{width:auto;min-width:0}
+  .pp-tb-i + .pp-tb-i{margin-top:48px} html body.inr .film .pp-tb-c{margin-top:44px;white-space:normal}
+  html body.inr .pp-c .pp-ck{display:none}   /* in the flow the block's name already stands over its title */
   .pp-rot .vh{position:static!important;width:auto;height:auto;margin:0;overflow:visible;clip-path:none;white-space:normal} .pp-rot-a, .pp-rot-w{display:none}   /* phones: the client's whole heading, plainly */
   .pp-h.b{margin-top:56px}
   .film .pp-f, .film .pp-f.col{display:block;width:auto;margin-top:28px} html body.inr .pp .t20s p{width:auto} html body.inr .pp .t20s p + p{margin-top:.8em}

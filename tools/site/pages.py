@@ -666,11 +666,11 @@ def partnerships():
     assert len(in_) == 3 and [g_[0] for g_ in gs] == ['BIÂN', 'Dr. Alka', 'Lamborghini'] and J(tw) == nop(h_of(sec)), gs
     pg.add(pp_wide(label(sec), tw, in_, [(g_[0], g_[1], ' '.join(g_[2]) if g_[2] else None) for g_ in gs], A + 'ch/1450-22.webp'), 'Lifestyle')
     ring += [g_[0] for g_ in gs]
-    # 07 the vendors: water, sleep, light — the photograph changes with the name; at the end it comes forward
+    # 07 the vendors: three tall photographs in their own light (water | sleep | light), all the type in a black band under them; at the end the band goes down and the pictures take the screen
     sec = S[6]; in_, gs, _ = pp_groups(sec); tv = [('Exceptional Products,', 0), ('Seamlessly Integrated', 1)]
-    cv = [('The technology recedes.', 0), ('The experience of home', 1), ('comes forward', 1)]
+    cv = [('The technology recedes.', 0), ('The experience of home comes forward', 1)]
     assert len(in_) == 2 and [g_[0] for g_ in gs] == ['Hydrology', 'The Luxury Bed Collection', 'Lutron'] and J(cv) == nop(' '.join(gs[-1][2])) and J(tv) == nop(h_of(sec)), gs
-    pg.add(pp_names(label(sec), tv, None, in_, None, [(NL.get(g_[0], [g_[0]]), g_[1]) for g_ in gs], W_('ch/1450-25a', 'ch/1450-28a', 'ch/1450-32'), cv), 'Vendors')
+    pg.add(pp_trip(label(sec), tv, in_, [(NL.get(g_[0], [g_[0]]), g_[1]) for g_ in gs], W_('ch/1450-27', 'us/1511-02a', 'ch/1450-08a'), cv), 'Vendors')   # photographs no other page shows (their project pages apart)
     ring += [g_[0] for g_ in gs]
     # 08 shared vision: five samples
     sec = S[7]; five = get(sec, 'p')[0][1]; ts = [('We Choose Partners', 0), ('the Way We Choose Materials:', 0), ('With Intention', 1)]
