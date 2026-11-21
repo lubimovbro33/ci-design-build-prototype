@@ -1641,9 +1641,9 @@ html body.inr .film .pp-rg-id{left:calc(50% - 272.5 * var(--u))} html body.inr .
 /* ================================================================== the blog and the article (21.11.2026, on her references)
    THE GRID (primeasialeather.com/highlights, in our hand): four columns on the fields, 25 between them, rows 150 apart; a tile is one column or two (.b), small tiles stand at the head
    of their row; the picture 5 : 6, square corners; under it 25 the card's line in the small caps (our square before the category, the date at the right), 18 under that the title. */
-/* the blog's head: the name, 25 under it the title, 50 under that ONE sentence — all on the left field; 100 under it the pictures */
+/* the blog's head: the name, 25 under it the title in two lines, 50 under that ONE sentence in the 20 — all on the left field; 100 under it the pictures */
 .nw-h{background:#000;padding:calc(200 * var(--u)) calc(50 * var(--u)) 0}
-html body.inr .nw-h .ey{margin:0} html body.inr .nw-h h1{margin-top:calc(25 * var(--u));color:#FFFFFF} html body.inr .nw-h .nw-st{margin-top:calc(50 * var(--u));color:#FFFFFF}
+html body.inr .nw-h .ey{margin:0} html body.inr .nw-h h1{margin-top:calc(25 * var(--u));color:#FFFFFF} html body.inr .nw-h .nw-st{margin-top:calc(50 * var(--u));width:21.05em;max-width:100%;color:#FFFFFF;text-wrap:balance}   /* reading text: the 20 in the 421 column, never a line the width of the page (21.11 11:42) */
 .nw-g{position:relative;background:#000;padding:calc(100 * var(--u)) 0 calc(150 * var(--u))} .nw-g .nw-more{margin:calc(100 * var(--u)) calc(50 * var(--u)) 0}
 .ng{margin-left:calc(50 * var(--u));margin-right:calc(50 * var(--u));display:grid;grid-template-columns:repeat(4, minmax(0, 1fr));column-gap:calc(25 * var(--u));row-gap:calc(150 * var(--u));align-items:start}
 .ng .nt{grid-column:span 1;margin:0;min-width:0} .ng .nt.b{grid-column:span 2} .ng [hidden]{display:none!important}

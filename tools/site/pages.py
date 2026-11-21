@@ -958,8 +958,10 @@ def news():
     # the name, the title, one sentence (the client's paragraph, in the 34, its second line blue) — and the pictures begin under it. The client's
     # two leads («Projects. Perspectives. Partnerships. Press…») are not set: their words are the filter's own options (verify.py: DROP);
     # «All CI News» is the filter's label and a heading for readers that is not drawn.
-    l1, l2 = 'The ideas shaping how we design, build, and live,', 'and how we continue building our clients a better life'; assert l1 + ' ' + l2 == nop(ps[1][0]), ps[1]
-    pg.add('<section class="nw-h" id="@ID@">\n  <p class="lab3 ey rv">%s</p>\n  <h1 class="t111 rv">%s</h1>\n  <p class="t34 nw-st rv">%s<br><span class="cb">%s</span></p>\n</section>' % (esc(label(S[0])), brk(h1, 20), esc(l1), esc(l2)), 'News', 'top')
+    # 21.11 11:42, of that head: «заголовок можна дати в дві лінії: The Latest одна, From CI в іншій. Опис — нашим 20-м стилем, меншим.
+    # Не можна робити такі величезні ширини тексту.» So: the title in her two lines; the sentence is reading text (the 20) in the 421 column.
+    hl = ['The Latest', 'From CI']; assert ' '.join(hl) == nop(h1), h1
+    pg.add('<section class="nw-h" id="@ID@">\n  <p class="lab3 ey rv">%s</p>\n  <h1 class="t111 rv">%s</h1>\n  <p class="t20 nw-st rv">%s</p>\n</section>' % (esc(label(S[0])), '<br>'.join(esc(x) for x in hl), esc(nop(ps[1][0]))), 'News', 'top')
     assert len(NEWS_IMG) == len(NEWS_ROWS)
     tiles = ''.join('<a class="cd nt%s" href="article.html" data-tags="%s"><span class="im"><img src="%s" alt="" loading="lazy"></span><span class="nt-m lab3"><span class="nt-c">%s</span><span class="nt-d">%s</span></span><span class="nt-t">%s</span></a>'
                     % (' b' if NT_PAT[i % len(NT_PAT)] else '', slug(c), A + NEWS_IMG[i] + '.webp', drw(c), drw(d), drw(h)) for i, (h, c, d) in enumerate(NEWS_ROWS))
