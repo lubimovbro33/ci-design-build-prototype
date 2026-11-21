@@ -1619,6 +1619,49 @@
     var g2 = o.gl;
     if (g2 && g2.ready && r.width > 0){ g2.size(); g2.gl.uniform1fv(g2.u('uK'), o.K); g2.set1('uTw', tw / r.width); g2.set1('uPt', pt / r.width); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
   }
+  /* ---------- shared vision as plates (21.11.2026 12:05): her row of squares, carried to the left by the scroll as on CI Turnkey; the plate the scroll has reached takes the gradient */
+  function plates(f, q, t){
+    strip(f, q, t); if (H >= W) return;
+    if (f.pc === undefined) f.pc = qsa('.tk-st-c', f.el);
+    var n = f.pc.length, k = Math.min(n - 1, Math.floor(sg(q, .08, f.len - .25) * n));
+    if (f.pk !== k){ f.pk = k; f.pc.forEach(function(c, i){ c.classList.toggle('on', i === k); }); }
+  }
+  /* ---------- shared vision as a track (21.11.2026 12:00): the standards and their photographs follow one another on one horizontal axis and the whole line moves sideways with the
+     scroll; the pair in hand is in the middle in full light. The closing sentence is the last thing on the line. Nothing is scaled. */
+  var TRK_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2, uT3, uT4;', 'uniform vec2 uRes, uS0, uS1, uS2, uS3, uS4;', 'uniform float uX[5], uB[5];', 'uniform float uW, uTime;', 'varying vec2 v;',
+    'void main(){',
+    '  vec3 c = vec3(0.0); float m = 0.0; vec2 res = vec2(uW * uRes.x, uRes.y);',
+    '  for (int i = 0; i < 5; i++){',
+    '    float fx = (v.x - uX[i]) / uW;',
+    '    if (fx >= 0.0 && fx < 1.0){ vec2 uv = vec2(fx, v.y);',
+    '      if (i == 0) c = texture2D(uT0, cvr(uv, uS0, res)).rgb; else if (i == 1) c = texture2D(uT1, cvr(uv, uS1, res)).rgb; else if (i == 2) c = texture2D(uT2, cvr(uv, uS2, res)).rgb; else if (i == 3) c = texture2D(uT3, cvr(uv, uS3, res)).rgb; else c = texture2D(uT4, cvr(uv, uS4, res)).rgb;',
+    '      c = ((c - 0.5) * 1.04 + 0.5) * uB[i]; m = 1.0; }',
+    '  }',
+    '  c += (hash(v * uRes + uTime) - 0.5) * 0.02 * m;',
+    '  gl_FragColor = vec4(c, 1.0);',
+    '}'].join('\n');
+  function ppTrack(f, q, t){
+    var o = f.tk, e = f.el, i;
+    if (o === undefined){ var bx = qs('.pp-tk-g', e), ims = qsa('.pp-tk-r img', e);
+      o = f.tk = {gl: bx && ims.length === 5 ? GL2.make(bx, TRK_FS, ims, {max: 1400}) : null, ns: qsa('.pp-tk-r p', e), c: qs('.pp-tk-c', e), l: qs('.pp-tk-l', e), X: new Float32Array(5), B: new Float32Array(5), lk: '', xs: [], ws: [], C: [], on: false}; }
+    if (H >= W){ if (o.on){ o.on = false; o.lk = ''; [o.c, o.l].concat(o.ns).forEach(CLR); } return; }
+    o.on = true;
+    var n = o.ns.length, PW = 600 * U, gp = 40 * U, GAP = 140 * U, lk = W + 'x' + H, x = 0;
+    if (o.lk !== lk){ o.lk = lk;                                               /* the line is laid out once for a window: a name, 40, its photograph, 140, the next name… and the closing sentence */
+      for (i = 0; i < n; i++){ o.ws[i] = o.ns[i].offsetWidth; o.xs[i] = x; o.C[i] = x + (o.ws[i] + gp + PW) / 2; x += o.ws[i] + gp + PW + GAP; }
+      o.xs[n] = x; o.C[n] = x + o.c.offsetWidth / 2; }
+    var T0 = .5, dn = .6, P = 0; for (i = 0; i < n; i++) P += eio(sg(q, T0 + i * dn, T0 + i * dn + .42));           /* 0…n − 1 the pairs · n the closing sentence */
+    var ar = eio(sg(q, -.5, -.02)), dr = eio(sg(q, -.6, -.05)), i0 = Math.min(n - 1, Math.floor(P)), cen = o.C[i0] + (o.C[i0 + 1] - o.C[i0]) * (P - i0), off = W / 2 - cen + (1 - ar) * 520 * U;
+    for (i = 0; i <= n; i++){ var near = 1 - Math.min(1, Math.abs(P - i)), xx = o.xs[i] + off;
+      PUT(i < n ? o.ns[i] : o.c, ar * (.34 + .66 * near), 'translate3d(' + xx.toFixed(1) + 'px,-50%,0)');
+      if (i < n){ o.X[i] = (xx + o.ws[i] + gp) / W; o.B[i] = ar * (.42 + .58 * near); } }
+    if (dr > 0){ var ly = Math.round(H / 2 + 375 * U) + .5, lx0 = 50 * U, lx1 = W - 50 * U;
+      g.strokeStyle = 'rgba(235,235,235,.33)'; g.lineWidth = 1; g.setLineDash([]); seg(lx0, ly, lx0 + (lx1 - lx0) * dr, ly);
+      bsq(lx0 + (lx1 - lx0) * P / n, ly, ar); }                                                                     /* how far along the line */
+    PUT(o.l, ar);
+    var g2 = o.gl;
+    if (g2 && g2.ready){ g2.size(); var gl = g2.gl; gl.uniform1fv(g2.u('uX'), o.X); gl.uniform1fv(g2.u('uB'), o.B); g2.set1('uW', PW / W); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
+  }
   /* ---------- shared vision as a table of five rows (21.11.2026): the row in hand opens tall and a band of material is drawn out in it from the screen's middle; at the end the
      five stand equal with all five bands. A band keeps its size — the row is a window onto it (nothing is scaled). */
   var ROWS_FS = PP_HEAD + ['uniform sampler2D uT0, uT1, uT2, uT3, uT4;', 'uniform vec2 uRes, uS0, uS1, uS2, uS3, uS4;', 'uniform float uY[5], uH[5], uR[5], uF[5];', 'uniform float uTime;', 'varying vec2 v;',
@@ -1705,7 +1748,7 @@
     if (g2 && g2.ready){ g2.size(); g2.set1('uA', ua); g2.set1('uP', up); g2.set1('uTime', (t * 60) | 0); g2.draw(); }
     else if (!g2){ for (i = 0; i < o.ims.length; i++) o.ims[i].style.opacity = (i === Math.round(up) ? ua : 0).toFixed(3); }
   }
-  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point, pparts: ppParts, pquart: ppQuart, pnames: ppNames, pwide: ppWide, ptrip: ppTrip, prows: ppRows, psamp: ppSamp, pring: ppRing};
+  var FIG = {cover: cover, steps: steps, plan: plan, unfold: unfold, scene: scene, key: key, many: many, wall: wall, horiz: horiz, drawn: drawn, glcv: glcv, count: count, team: team, strip: strip, loose: loose, recv: recv, seam: seam, words: words, feat: feat, relay: relay, point: point, pparts: ppParts, pquart: ppQuart, pnames: ppNames, pwide: ppWide, ptrip: ppTrip, prows: ppRows, ptrack: ppTrack, plates: plates, psamp: ppSamp, pring: ppRing};
 
   /* ================================================================== flow */
   /* blocks reveal once as they arrive: the title focuses in, the rest comes up one after another */

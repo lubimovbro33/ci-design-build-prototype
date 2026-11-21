@@ -672,11 +672,20 @@ def partnerships():
     assert len(in_) == 2 and [g_[0] for g_ in gs] == ['Hydrology', 'The Luxury Bed Collection', 'Lutron'] and J(cv) == nop(' '.join(gs[-1][2])) and J(tv) == nop(h_of(sec)), gs
     pg.add(pp_trip(label(sec), tv, in_, [(NL.get(g_[0], [g_[0]]), g_[1]) for g_ in gs], W_('ch/1450-27', 'us/1511-02a', 'ch/1450-08a'), cv), 'Vendors')   # photographs no other page shows (their project pages apart)
     ring += [g_[0] for g_ in gs]
-    # 08 shared vision: a table of five rows, a band of material in each
+    # 08 shared vision: her own plates (the squares of CI Turnkey's process), no photographs
     sec = S[7]; five = get(sec, 'p')[0][1]; ts = [('We Choose Partners', 0), ('the Way We Choose Materials:', 0), ('With Intention', 1)]
     cs = [('Together, we bring exceptional care', 0), ('to every part of the whole', 1)]
     assert len(five) == 5 and J(cs) == nop(' '.join(get(sec, 'strong')[0][1])) and J(ts) == nop(h_of(sec)), five
-    pg.add(pp_rows(label(sec), ts, get(sec, 'lead')[0][1][0], five, cs, W_('ch/1450-12', 'ch/1450-30', 'ch/1450-19', 'us/1530-05', 'us/1530-02'), [.70, .30, .76, .47, .52]), 'Vision')   # bands of material cut from the client's work
+    # each photograph is chosen for what its standard says (21.11 12:00: «рандомні картинки, які без змісту»):
+    #   Quality that endures                 — stone: a basin cut from one block of marble (ch/1450-12)
+    #   Expertise that elevates              — a stair: the hardest thing in a house to build, and it goes up (rtb/1430-07)
+    #   Long-term thinking                   — the long view: a room that looks out over the city to the horizon (ch/1450-14; us/1530-04 is on every page)
+    #   Service centered on the client       — a room built round one person's own things: the collector's dressing room (ch/1450-10a)
+    #   Innovation that enriches how you live — light built into the shower wall: technology you live with, not look at (us/1530-02)
+    assert five == ['Quality that endures.', 'Expertise that elevates.', 'Long-term thinking.', 'Service centered on the client.', 'Innovation that enriches how you live.'] or [nop(x) for x in five] == ['Quality that endures', 'Expertise that elevates', 'Long-term thinking', 'Service centered on the client', 'Innovation that enriches how you live'], five
+    # 12:05: «взагалі картинки не використовувати, просто плашки» — her own plates from CI Turnkey. The track with these photographs is kept (pp_track):
+    #   pp_track(label(sec), ts, lead, five, cs, W_('ch/1450-12', 'rtb/1430-07', 'ch/1450-14', 'ch/1450-10a', 'us/1530-02'))
+    pg.add(pp_plates(label(sec), ts, get(sec, 'lead')[0][1][0], five, cs), 'Vision')
     # 09 the value of working together: the one circle
     sec = S[8]; six = get(sec, 'p')[0][1]; cr = (['That is'], ['the CI', 'ecosystem']); tr = (['A Stronger', 'Network'], ['Around', 'Every Client']); J2 = lambda t: ' '.join(t[0] + t[1])
     assert len(six) == 6 and len(ring) == 8 and J2(cr) == nop(' '.join(get(sec, 'strong')[0][1])) and J2(tr) == nop(h_of(sec)), (six, ring)

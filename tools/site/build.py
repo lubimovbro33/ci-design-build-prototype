@@ -1493,6 +1493,49 @@ def pp_rows(kick, title, lead, items, closer_, imgs, foc):
         '    </div>', '  </div>', '</section>'])
 
 
+def pp_track(kick, title, lead, items, closer_, imgs):
+    """«Shared Vision» as A TRACK (21.11.2026 12:00). Of the table of rows with bands of material: «не подобається… ці картинки
+    взагалі підходять по смислу чи ні… Давай ще варіанти» (11:56); of the three storyboards: «третій варіант ніби цікавіший за
+    другий, але знову ж таки, ти просто рандомні картинки поставив, які без змісту». So the third, and EVERY PHOTOGRAPH IS CHOSEN
+    FOR WHAT ITS STANDARD SAYS (the list and the reasons are at the call in pages.py):
+    the five standards and their photographs follow one another on ONE horizontal axis — a name, then its photograph — and the
+    whole line moves sideways with the scroll; the pair in hand stands in the middle in full light, the others wait quieter. The
+    last thing on the line is the closing sentence. A hairline under the track with our square shows how far along it is; the
+    lead stands on the foot. Nothing is scaled; the photographs are one WebGL layer (ppTrack() in js/inner.js), the type is DOM."""
+    n = len(items); assert n == len(imgs) == 5, items
+    return '\n'.join([
+        '<section class="film pp pp-tk" data-fig="ptrack" data-len="%.2f" data-open="0" id="@ID@">' % (.5 + n * .6 + .5), '  <div class="stg">',
+        '    <div class="pp-tk-g"></div>', PP_CV, '    <div class="sc pp-s">',
+        pp_head(kick, title),
+        '      <ol class="pp-tk-r">%s</ol>' % ''.join('<li><p class="t34">%s</p><img src="%s" alt=""></li>' % (esc(nop(x)), im) for x, im in zip(items, imgs)),
+        '      <p class="t34 pp-tk-c">%s</p>' % ' '.join('<span%s>%s</span>' % (' class="cb"' if b else '', esc(x)) for x, b in closer_),
+        '      <p class="t20 pp-tk-l">%s</p>' % esc(nop(lead)),
+        '    </div>', '  </div>', '</section>'])
+
+
+def pp_plates(kick, title, lead, items, closer_):
+    """«Shared Vision» as PLATES, no photographs (21.11.2026 12:05: «Давай, можливо, взагалі там картинки не використовувати, просто
+    плашки. Подивися по стилістиці попередніх сторінок, щоб нам підійшло» — after the bands and the three storyboards, of which she
+    found the sideways track the most interesting but the pictures «рандомні, без змісту»). The plate is HER OWN: the square of 470
+    in our hairline from her frame 644:8827 (CI Turnkey, the process — tk_strip() above): the number at its head, the name in the
+    34 capitals; under the pointer it takes the frame's gradient. Here, with the same head (the block's name and title centred) and
+    the same row that the scroll carries to the left:
+      · five plates, one standard on each (no sentence under it — the name stands in the plate's middle);
+      · the plate the scroll has reached takes the gradient, one after another;
+      · the sixth plate (.cls — never .fin, which is the closing screen's class) is the closing sentence, and it keeps the gradient;
+      · the lead stands under the title.
+    Styles `.tk-st-*` in css/inner.css; the film is plates() in js/inner.js (strip() + the plate in hand)."""
+    n = len(items)
+    cs = ''.join('<article class="tk-st-c ns"><p class="lab3 n">%02d</p><h3 class="t34 up nm">%s</h3></article>' % (i + 1, esc(nop(x))) for i, x in enumerate(items))
+    cs += '<article class="tk-st-c ns cls"><p class="t34 nm">%s</p></article>' % ' '.join('<span%s>%s</span>' % (' class="cb"' if b else '', esc(x)) for x, b in closer_)
+    return '\n'.join([
+        '<section class="film tk-st pp-pl" data-fig="plates" data-len="%.1f" data-open="0" id="@ID@">' % (.6 + (n + 1) * .45), '  <div class="stg">',
+        '    <canvas class="ln" aria-hidden="true"></canvas>', '    <div class="sc tk-st-s">',
+        '      <div class="tk-st-h"><p class="tk-cv-k rv">%s</p><h2 class="t60 rv">%s</h2><p class="t20 pp-pl-l rv">%s</p></div>' % (esc(kick), pp_two(title), esc(nop(lead))),
+        '      <div class="tk-st-w"><div class="tk-st-t" data-strip>%s</div></div>' % cs,
+        '    </div>', '  </div>', '</section>'])
+
+
 def pp_ring(kick, title, lead, pairs, closer_, imgs):
     """«A Stronger Network Around Every Client» — THE PAGE'S ONE CIRCLE, on her reference (madeinuxstudio.com's dial, 21.11.2026
     10:44). Third build, after her word of 11:22 on the second (ring in the right half, name + title at the upper left, the pairs
