@@ -36,7 +36,17 @@
       '<button class="fmo-x" type="button" aria-label="Close"><i></i><i></i></button>';
     document.body.appendChild(box);
     box.querySelector('.fmo-x').addEventListener('click', close);
-    var form = box.querySelector('form');
+    wire(box.querySelector('form'), box);
+  }
+  /* 21.11.2026: on Contact the same form stands ON THE PAGE (.fmi[data-form-inline]) — its sheet is the right half of the screen; there the buttons lead to it and no pop-up is built */
+  function mount(){
+    var inl = document.querySelector('[data-form-inline]'); if (!inl || inl.__m) return; inl.__m = true;
+    inl.innerHTML = '<form class="fmf" novalidate>' + FIELDS.map(row).join('') +
+      '<div class="fmf-s"><button class="r3btn" type="submit"><span class="t">Submit<br>Project Inquiry</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></button></div></form>' +
+      '<div class="fmf-ok" aria-live="polite"><h2 class="t60">Thank You</h2><p class="t20">A member of our team will review your inquiry personally and be in touch with the right next step</p></div>';
+    wire(inl.querySelector('form'), inl);
+  }
+  function wire(form, host){
     form.addEventListener('change', function(e){ var t = e.target; if (t.type !== 'radio') return;
       [].forEach.call(form.querySelectorAll('input[name="' + t.name + '"]'), function(i){ i.parentNode.classList.toggle('on', i.checked); }); });
     form.addEventListener('input', function(e){ var r = e.target.closest('.fmf-r'); if (r) r.classList.remove('bad'); });
@@ -46,10 +56,12 @@
         var v = el.value.trim(), ok = !el.required || !!v; if (ok && el.type === 'email' && v) ok = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
         r.classList.toggle('bad', !ok); if (!ok && !bad) bad = el; if (v) data[el.name] = v; });
       if (bad){ bad.focus(); return; }
-      send(data); box.classList.add('sent'); box.querySelector('.fmo-r').scrollTop = 0; });
+      send(data); host.classList.add('sent'); var sc = host.querySelector('.fmo-r'); if (sc) sc.scrollTop = 0; else window.scrollTo(0, host.getBoundingClientRect().top + window.scrollY); });
   }
   function send(data){ /* the connection to monday.com goes here — see the note at the top */ }
   function open(e){
+    var inl = document.querySelector('.fmi');
+    if (inl){ if (e) e.preventDefault(); window.scrollTo({top: inl.getBoundingClientRect().top + window.scrollY, behavior: 'smooth'}); return; }   /* the form is on this page: go to it */
     if (e) e.preventDefault(); if (!box) build(); last = document.activeElement; root.classList.remove('mn-open');
     requestAnimationFrame(function(){ requestAnimationFrame(function(){ root.classList.add('fm-open'); box.querySelector('.fmo-x').focus(); }); });
   }
@@ -64,5 +76,6 @@
   }, true);
   document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
   window.addEventListener('wheel', function(e){ if (root.classList.contains('fm-open')) e.stopImmediatePropagation(); }, {capture: true, passive: true});
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', mount); else mount();
   window.__form = {open: open, close: close};
 })();

@@ -1721,3 +1721,34 @@ html body.inr .ar-b .art > .t34:first-child{margin-top:0}
   .ar-3{grid-template-columns:1fr} .ar-3 > div{padding:14px var(--m, 20px)} .ar-3 > div + div{border-left:0;padding-top:0}
   .ar-3 + .bk{padding-top:72px} .lst.wi .im{width:100%}
 }
+
+/* ================================================================== Contact (21.11.2026 14:34): a dominant for every block
+   THE BLANK PAGE: the form's white sheet is the right half of the screen (the pop-up's sheet, css/form.css); the name, the title and the paragraphs stay in the left half */
+.ct-f{position:relative;display:grid;grid-template-columns:1fr 1fr;background:#000}
+.ct-f-l{padding:calc(150 * var(--u)) calc(50 * var(--u))}
+.ct-f-s{position:sticky;top:max(104px, calc(150 * var(--u)))}
+html body.inr .ct-f-s .ey{margin:0} html body.inr .ct-f-s h2{margin:calc(25 * var(--u)) 0 0;color:#FFFFFF}
+.ct-f-p{margin-top:calc(50 * var(--u));width:21.05em;max-width:100%;font-size:var(--t-run)} html body.inr .ct-f-p p{margin:0;color:#FFFFFF} html body.inr .ct-f-p p + p{margin-top:1.15em}
+.fmi{position:relative;background:#FFFFFF;color:#000;min-height:100vh;cursor:auto} .fmi *{cursor:auto} .fmi label, .fmi button{cursor:pointer}
+.fmi .fmf{min-height:0;padding:calc(150 * var(--u)) calc(50 * var(--u)) calc(100 * var(--u))}
+.fmi .fmf-ok{display:none;padding:calc(150 * var(--u)) calc(50 * var(--u))} .fmi.sent .fmf{display:none} .fmi.sent .fmf-ok{display:block}
+.fmi-fb{padding:calc(150 * var(--u)) calc(50 * var(--u))}
+.fmi .fmf-s .r3btn{background:#000;border:0;padding:0;cursor:pointer;text-align:left} .fmi .fmf-s .r3btn *{cursor:pointer} .fmi .fmf-s .r3btn .t{color:#FFFFFF} .fmi .fmf-s .r3btn .sqd, .fmi .fmf-s .r3btn .ln{background:#FFFFFF}   /* the sheet's own button, as in the pop-up */
+/* THE CALLING CARD: one white card 900 x 520 on the crossing of the screen's two centre lines; the block's name 25 over it */
+.ct-c{position:relative;height:100vh;min-height:calc(760 * var(--u));background:#000;overflow:hidden}
+.ct-c::before{content:"";position:absolute;left:0;right:0;top:50%;height:1px;background:rgba(255,255,255,.33)} .ct-c::after{content:"";position:absolute;top:0;bottom:0;left:50%;width:1px;background:rgba(255,255,255,.33)}
+html body.inr .ct-c > .ey{position:absolute;left:0;right:0;top:calc(50% - 285 * var(--u) - 1.2em);margin:0;text-align:center;z-index:2}
+.ct-card{position:absolute;left:calc(50% - 450 * var(--u));top:calc(50% - 260 * var(--u));width:calc(900 * var(--u));height:calc(520 * var(--u));background:#FFFFFF;color:#000;z-index:2}
+.ct-card .nq{position:absolute;right:calc(14 * var(--u));top:calc(14 * var(--u));width:max(5px, calc(8 * var(--u)));height:max(5px, calc(8 * var(--u)));background:#000}
+html body.inr .ct-card h3{position:absolute;left:calc(40 * var(--u));top:calc(40 * var(--u));margin:0;color:#000}
+.ct-dl{position:absolute;left:calc(40 * var(--u));right:calc(40 * var(--u));bottom:calc(40 * var(--u));margin:0;display:grid;grid-template-columns:1.25fr 1fr 1fr;grid-template-rows:auto auto;column-gap:calc(30 * var(--u));row-gap:calc(28 * var(--u));align-items:start}
+.ct-dl > div{min-width:0} .ct-dl .ct-studio{grid-row:1 / span 2} .ct-dl .ct-phone{grid-column:2;grid-row:1} .ct-dl .ct-email{grid-column:2;grid-row:2} .ct-dl .ct-markets{grid-column:3;grid-row:1} .ct-dl .ct-social{grid-column:3;grid-row:2}
+html body.inr .ct-dl dt{margin:0 0 calc(8 * var(--u));color:rgba(0,0,0,.5)}
+html body.inr .ct-dl dd{margin:0;font-family:var(--fz);font-weight:400;font-size:var(--t-run);line-height:1.2;letter-spacing:-.05em;color:#000;overflow-wrap:anywhere} .ct-dl dd a{color:inherit;text-decoration:none}
+@media (max-aspect-ratio: 1/1){
+  .ct-f{display:block} .ct-f-l{padding:110px var(--m, 20px) 40px} .ct-f-s{position:static} html body.inr .ct-f-s h2{margin-top:14px} .ct-f-p{margin-top:22px}
+  .fmi{min-height:0} .fmi .fmf, .fmi .fmf-ok, .fmi-fb{padding:40px var(--m, 20px) 56px}
+  .ct-c{height:auto;min-height:0;padding:72px var(--m, 20px)} .ct-c::before, .ct-c::after{display:none} html body.inr .ct-c > .ey{position:static;text-align:left}
+  .ct-card{position:relative;left:auto;top:auto;width:auto;height:auto;margin-top:18px;padding:22px 18px 24px} html body.inr .ct-card h3{position:static}
+  .ct-dl{position:static;margin-top:44px;grid-template-columns:1fr 1fr;column-gap:16px;row-gap:22px} .ct-dl > div, .ct-dl .ct-studio, .ct-dl .ct-phone, .ct-dl .ct-email, .ct-dl .ct-markets, .ct-dl .ct-social{grid-column:auto;grid-row:auto}
+}

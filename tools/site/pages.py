@@ -1028,25 +1028,44 @@ FORM = [('Name', 'text', 'name', True), ('Email', 'email', 'email', True), ('Pho
         ('How Did You Hear About CI?', ['Referral', 'Broker / Real estate agent', 'Instagram', 'Google search', 'Press / Media', 'Other']),
         ('Tell Us About Your Project', 'area', 'project', False)]
 def contact():
+    """Contact, rebuilt 21.11.2026 14:34: «Перший, другий, третій блок не подобається. Думай метафорами. Дивися, щоб у блоці була якась
+    домінанта. Другий блок — взагалі немає за що оку зачепитися. Типографія дуже-дуже погана по композиції. Перероби, думаючи
+    метафорами, спираючись на наші попередні сторінки.» One metaphor and one dominant for each block, each from a component the site
+    already has:
+      1 «Let's Begin Your Next Chapter» — THE ROOM THAT IS WAITING. The cover of Partnerships (sc_strips: the title centred in two
+        lines on the two centre lines, the second blue) on the client's own photograph of a room in morning light (no stock).
+        Under it the page's thought as her black screen (thought()): «Every CI home begins with a conversation» — and the
+        photograph is TWO CHAIRS TURNED TO EACH OTHER (us/1511-13).
+      2 «Tell Us About Your Vision» — THE BLANK PAGE. The form itself stands on the page: the site's white sheet (the pop-up's
+        right half, css/form.css) is the right half of the screen, ruled with the fields; the name, the title and the three
+        paragraphs stay in the left half while the sheet is read. Dominant: the sheet. (Before: a title, a button and loose text.)
+      3 «CI Design + Build» — THE CALLING CARD. One white card on the crossing of the two centre lines: the name, the studio,
+        the telephone, the address for letters, the markets, the social pages. Dominant: the card. (Before: a table of rows.)
+    The stock lounge and the stock team photograph are gone from the page."""
     S = P['contact']; pg = Pg()
     h1, ps, a = hero(S[0])
-    # here the opening does go into the line: the line becomes a voice — every CI home begins with a conversation
-    pg.add(cover(label(S[0]), h1, ps, A + 'of/lounge_w.webp', (a[0], 'contact.html'), 'voice'), 'Contact', 'top')
-    sec = S[1]; ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']
-    body = '    <p class="t34 rv c1" style="--w:1000">%s</p>\n    <div class="g2">\n      <div class="rv"><a class="r3btn" href="contact.html" data-form><span class="t">%s</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>\n      <div class="t20s rv" style="--w:475"><p>%s</p><p>%s</p></div>\n    </div>' % (
-        blue(ps_[0]), '<br>'.join(esc(x) for x in ['Submit', 'Project Inquiry']), esc(nop(ps_[1])), esc(nop(ps_[2])))
-    pg.add(bk(h_of(sec), body), 'Inquiry', 'inquiry')
+    hl = [("Let's Begin", 0), ('Your Next Chapter', 1)]; assert ' '.join(x for x, _ in hl) == nop(h1).replace('’', "'"), h1
+    hl = [(nop(h1)[:len("Let's Begin")], 0), (nop(h1)[len("Let's Begin") + 1:], 1)]
+    pg.add(sc_strips(label(S[0]), h1, A + 'ch/1450-17.webp', g=.6, centre=True, lines=hl, cross=True), 'Contact', 'top')
+    idea = ['Every CI home begins', 'with a conversation']; assert ' '.join(idea) == nop(ps[0][0]), ps[0]
+    thought(pg, 'Contact', idea, 1, [brk_lines(nop(' '.join(ps[1])), 62)], btn(a[0], '#inquiry'), A + 'us/1511-13.webp', '50% 90%')
+    sec = S[1]; ps_ = [it[1][0] for it in sec['items'] if it[0] == 'p']; h2 = nop(h_of(sec)); assert h2 == 'Tell Us About Your Vision', h2
+    sub = '<a class="r3btn" href="contact.html" data-form><span class="t">%s</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a>' % '<br>'.join(esc(x) for x in ['Submit', 'Project Inquiry'])
+    pg.add('<section class="ct-f" id="@ID@">\n  <div class="ct-f-l"><div class="ct-f-s">\n    <p class="lab3 ey rv">%s</p>\n    <h2 class="t60 rv">%s</h2>\n    <div class="ct-f-p rv">%s</div>\n  </div></div>\n'
+           '  <div class="fmi" data-form-inline><div class="fmi-fb">%s</div></div>\n</section>'
+           % (esc(label(sec)), 'Tell Us About<br>Your Vision', ''.join('<p class="t20">%s</p>' % esc(nop(x)) for x in ps_), sub), 'Inquiry', 'inquiry')
     dl = get(sec, 'dl')[0][1]; rows = ''
     for k, v in dl:
-        if k == 'Social': val = sqr(['<a href="#" data-noop>%s</a>' % esc(x) for x in v[0].split(' · ')], raw=True)
+        if k == 'Social': val = '<br>'.join('<a href="#" data-noop>%s</a>' % esc(x) for x in v[0].split(' · '))
         elif k == 'Phone': val = '<a href="tel:+1%s">%s</a>' % (re.sub(r'\D', '', v[0]), esc(v[0]))
         else: val = '<br>'.join(esc(x) for x in v)
-        rows += '<div class="rv"><dt>%s</dt><dd>%s</dd></div>' % (esc(k), val)
-    pg.add(bk(get(sec, 'h3')[0][1], '    <dl class="dlt">%s</dl>' % rows), 'Studio')
-    pg.add(band(A + 'of/team.webp', '50% 0%', g=.86))
+        rows += '<div class="ct-%s"><dt class="lab3">%s</dt><dd>%s</dd></div>' % (slug(k), esc(k), val)
+    labs = [it[1] for it in sec['items'] if it[0] == 'label']
+    pg.add('<section class="ct-c" id="@ID@">\n  <p class="lab3 ey rv">%s</p>\n  <div class="ct-card rv"><i class="nq" aria-hidden="true"></i><h3 class="t34 up">%s</h3><dl class="ct-dl">%s</dl></div>\n</section>'
+           % (esc(labs[1] if len(labs) > 1 else 'Contact Information'), esc(get(sec, 'h3')[0][1]), rows), 'Studio')
     auto(pg, S[2], proc='cells', n=4)
     final_cta(pg, S[3], A + 'ch/1450-24.webp', None, 'contact.html')
-    emit('contact.html', 'Contact', pg, A + 'of/lounge_w.webp')
+    emit('contact.html', 'Contact', pg, A + 'ch/1450-17.webp')
 contact()
 
 # ================================================================== faq — the homepage's questions and answers, as they stand there
