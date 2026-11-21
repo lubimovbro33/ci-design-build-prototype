@@ -1566,6 +1566,15 @@ html body.inr .pp-sm-r li{width:calc(332 * var(--u));margin:0;padding:0}
 html body.inr .pp-sm-r li p{margin:calc(20 * var(--u)) 0 0;color:#FFFFFF;opacity:0}
 html body.inr .film .pp-sm-l{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);width:21.05em;margin:0;color:#FFFFFF;opacity:0}
 html body.inr .film .pp-sm-c{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;color:#FFFFFF;opacity:0;line-height:1.02!important;white-space:nowrap}
+/* shared vision as a table (21.11.2026): five rows between hairlines, 540 high in all, from 120 over the screen's middle; the names at the left field in the row capitals (26), the bands
+   of material from the screen's middle to the right field; the lead (and at the end the closing sentence) at the head of the right column, level with the title's first line */
+.pp-sv-g{position:absolute;left:50%;right:calc(50 * var(--u));top:calc(50% - 120 * var(--u));height:calc(540 * var(--u));z-index:1}
+.pp-sv-r{position:absolute;left:calc(50 * var(--u));right:calc(50 * var(--u));top:calc(50% - 120 * var(--u));height:calc(540 * var(--u));margin:0;padding:0;list-style:none}
+html body.inr .film .pp-sv-r li{position:absolute;left:0;top:0;margin:0;padding:calc(18 * var(--u)) 0 0;font-family:var(--fx);font-weight:400;font-size:max(15px, calc(26 * var(--u)));line-height:1;letter-spacing:-.077em;text-transform:uppercase;color:#FFFFFF;white-space:nowrap;opacity:0;will-change:transform}
+.pp-sv-r img{display:none}
+/* the reading text stands at two thirds of the width: the title's middle line (1160 wide) runs past the screen's middle */
+html body.inr .film .pp-sv-l, html body.inr .film .pp-sv-c{position:absolute;left:66.667%;top:calc(175 * var(--u) + 1.2 * var(--t-run));width:21.05em;margin:0;color:#FFFFFF;opacity:0}
+.pp-sv-c span{display:block}
 /* the one circle (third build, 21.11.2026 11:22): THE RING IN THE SCREEN'S CENTRE (radius 300, the round photograph 330, the numbers in the middle of the band between them).
    The title stands on the ring's axis either side of it — two lines of the 60 set against the ring, 50 from it; the block's name 25 over its first half. One window of reading
    text (the 20, centred) 40 under the ring. */
@@ -1594,7 +1603,7 @@ html body.inr .film .pp-rg-id{left:calc(50% - 272.5 * var(--u))} html body.inr .
   .film .pp-s{padding-top:40px} .film.pp-sm .pp-s{padding-top:96px}
   .pp-h, .film .pp-f, html body.inr .film .pp-c, html body.inr .film .pp-pa-ca, html body.inr .film .pp-pa-t li, html body.inr .film .pp-qt-l, html body.inr .film .pp-qt-p, html body.inr .film .pp-qt-i, html body.inr .film .pp-qt-c,
   .pp-nm-i, .pp-wd-i, html body.inr .film .pp-nm-i .pp-n, html body.inr .film .pp-nm-ic, .pp-nm-b, html body.inr .film .pp-wd-i .pp-n, html body.inr .film .pp-wd-i .pp-st, html body.inr .film .pp-sm-r,
-  html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-w > p{
+  html body.inr .film .pp-sm-l, html body.inr .film .pp-sm-c, html body.inr .film .pp-rg-w > p, html body.inr .film .pp-sv-l, html body.inr .film .pp-sv-c, html body.inr .film .pp-sv-r li{
     position:static;width:auto;max-width:none;height:auto;text-align:left;white-space:normal;opacity:1!important;transform:none!important;filter:none!important;visibility:visible!important}
   html body.inr .pp-h h2{margin-top:14px} html body.inr .pp-h .pp-sub{margin-top:14px}
   .pp-tr-ph{position:relative;height:auto;display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px} .pp-tr-ph img, .pp-tr-ph img:nth-child(n){position:static;width:100%;height:auto;aspect-ratio:3 / 4;opacity:1!important}
@@ -1619,6 +1628,8 @@ html body.inr .film .pp-rg-id{left:calc(50% - 272.5 * var(--u))} html body.inr .
   html body.inr .film .pp-sm-r{display:grid;grid-template-columns:1fr 1fr;gap:22px 12px;margin-top:30px} html body.inr .pp-sm-r li{width:auto} .pp-sm-r img{opacity:1}
   html body.inr .pp-sm-r li p{margin-top:10px;opacity:1!important}
   html body.inr .film .pp-sm-c{margin-top:36px;color:#FFFFFF}
+  .pp-sv-g{display:none} .pp-sv-r{position:static;height:auto;margin-top:8px} html body.inr .film .pp-sv-r li{margin-top:28px;padding:0} .pp-sv-r img{display:block;width:100%;height:auto;aspect-ratio:16 / 9;object-fit:cover;margin-bottom:12px}
+  html body.inr .film .pp-sv-l{margin-top:22px} html body.inr .film .pp-sv-c{margin-top:36px}
   .pp-rg-ph{position:relative;left:auto;top:auto;width:64vw;height:64vw;margin:96px auto 0} .pp-rg-ph img{opacity:1} .pp-rg-ph img + img, .pp-rg-ph .glc{display:none}
   .pp-rg-a{position:static;text-align:left;opacity:1!important;margin-top:28px} html body.inr .pp-rg-a .tk-cv-k{position:static} html body.inr .film .pp-rg-h{margin-top:14px;white-space:normal}
   .pp-rg .vh{position:static!important;width:auto;height:auto;margin:0;overflow:visible;clip-path:none;white-space:normal} .pp-rg-rw, html body.inr .film .pp-rg-b{display:none}

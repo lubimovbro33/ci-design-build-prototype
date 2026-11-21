@@ -1470,6 +1470,29 @@ def pp_samples(kick, title, lead, items, closer_, imgs):
         '    </div>', '  </div>', '</section>'])
 
 
+def pp_rows(kick, title, lead, items, closer_, imgs, foc):
+    """«Shared Vision» — «We Choose Partners the Way We Choose Materials: With Intention» — rebuilt 21.11.2026. Of the five small
+    squares with a caption under each: «якось трошки тупо. Просто квадратики з картинкою, внизу текст» (10:15), and again at
+    11:22: «маленькі карточки, квадратики з фоткою і внизу текст — дуже дивно виглядає. Казала тобі переробити.» So no cards:
+    THE FIVE STANDARDS ARE A TABLE OF FIVE ROWS between hairlines the whole width (her «лінії»). The name of each stands at the
+    left field in the site's row capitals; right of the screen's middle each row holds a BAND OF MATERIAL — a wide cut of the
+    client's work (stone, wall, rug, cloth, tile), in its own light. The row in hand opens tall and its band is drawn out from
+    the middle to the right field; the others wait as narrow rows. At the end the five rows stand equal with all five bands —
+    «every part of the whole» — and the lead at the head of the right column gives way to the closing sentence.
+    Two columns, two edges (the left field and the screen's middle); one title, row names, one size of reading text.
+    The picture is never scaled as its row opens: the row is a window onto a band that stays its size. `foc` = where on each
+    photograph (0…1 down it) the band is cut. One WebGL layer; hairlines and the square on the film's canvas (ppRows())."""
+    n = len(items); assert n == len(imgs) == len(foc) == 5, items
+    return '\n'.join([
+        '<section class="film pp pp-sv" data-fig="prows" data-f="%s" data-len="%.2f" data-open="0" id="@ID@">' % (','.join('%.2f' % x for x in foc), .7 + n * .6 + 1.1), '  <div class="stg">',
+        '    <div class="pp-sv-g"></div>', PP_CV, '    <div class="sc pp-s">',
+        pp_head(kick, title),
+        '      <p class="t20 pp-sv-l">%s</p>' % esc(nop(lead)),
+        '      <ol class="pp-sv-r">%s</ol>' % ''.join('<li><img src="%s" alt=""><span>%s</span></li>' % (im, esc(nop(x))) for x, im in zip(items, imgs)),
+        '      <p class="t20 pp-sv-c">%s</p>' % ' '.join('<span%s>%s</span>' % (' class="cb"' if b else '', esc(x)) for x, b in closer_),
+        '    </div>', '  </div>', '</section>'])
+
+
 def pp_ring(kick, title, lead, pairs, closer_, imgs):
     """«A Stronger Network Around Every Client» — THE PAGE'S ONE CIRCLE, on her reference (madeinuxstudio.com's dial, 21.11.2026
     10:44). Third build, after her word of 11:22 on the second (ring in the right half, name + title at the upper left, the pairs

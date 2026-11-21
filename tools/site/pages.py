@@ -672,11 +672,11 @@ def partnerships():
     assert len(in_) == 2 and [g_[0] for g_ in gs] == ['Hydrology', 'The Luxury Bed Collection', 'Lutron'] and J(cv) == nop(' '.join(gs[-1][2])) and J(tv) == nop(h_of(sec)), gs
     pg.add(pp_trip(label(sec), tv, in_, [(NL.get(g_[0], [g_[0]]), g_[1]) for g_ in gs], W_('ch/1450-27', 'us/1511-02a', 'ch/1450-08a'), cv), 'Vendors')   # photographs no other page shows (their project pages apart)
     ring += [g_[0] for g_ in gs]
-    # 08 shared vision: five samples
+    # 08 shared vision: a table of five rows, a band of material in each
     sec = S[7]; five = get(sec, 'p')[0][1]; ts = [('We Choose Partners', 0), ('the Way We Choose Materials:', 0), ('With Intention', 1)]
     cs = [('Together, we bring exceptional care', 0), ('to every part of the whole', 1)]
     assert len(five) == 5 and J(cs) == nop(' '.join(get(sec, 'strong')[0][1])) and J(ts) == nop(h_of(sec)), five
-    pg.add(pp_samples(label(sec), ts, get(sec, 'lead')[0][1][0], five, cs, W_('ch/1450-12', 'ch/1450-30', 'ch/1450-19', 'us/1530-05', 'us/1530-02')), 'Vision')
+    pg.add(pp_rows(label(sec), ts, get(sec, 'lead')[0][1][0], five, cs, W_('ch/1450-12', 'ch/1450-30', 'ch/1450-19', 'us/1530-05', 'us/1530-02'), [.70, .30, .76, .47, .52]), 'Vision')   # bands of material cut from the client's work
     # 09 the value of working together: the one circle
     sec = S[8]; six = get(sec, 'p')[0][1]; cr = (['That is'], ['the CI', 'ecosystem']); tr = (['A Stronger', 'Network'], ['Around', 'Every Client']); J2 = lambda t: ' '.join(t[0] + t[1])
     assert len(six) == 6 and len(ring) == 8 and J2(cr) == nop(' '.join(get(sec, 'strong')[0][1])) and J2(tr) == nop(h_of(sec)), (six, ring)
