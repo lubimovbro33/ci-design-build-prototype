@@ -226,6 +226,10 @@
        the house sits in the middle of the screen (frame 11: 644…1276 × 273…806 at 1920, ×.718) and comes apart into five cards in one
        straight row along the bottom (frame 12: 356.8 × 224.9 from x 24, 22 apart, label above, box top 827.3) */
     var ONE = [255, 255, 255], COL = [ONE, ONE, ONE, ONE, ONE];
+    /* 23.11.2026 (client: «make it unmistakable that this section depicts the traditional model, in contrast to CI»; the designer chose
+       the variant that leaves her layout alone): while the house stands apart as five firms it is drawn in the system's mute grey, and
+       it turns white again as the five come together under CI. Grey = the traditional model, white = CI, as in the time chart below. */
+    var MUTE = [123, 128, 135];
     function mix(a, b, t){ return 'rgb(' + Math.round(lerp(a[0], b[0], t)) + ',' + Math.round(lerp(a[1], b[1], t)) + ',' + Math.round(lerp(a[2], b[2], t)) + ')'; }
     var gSec = el('g', {}, svg), gH = el('g', {}, svg);   /* gSec: the five layers in screen units; gH: house units (roof, disciplines, time) */
     LAY.forEach(function(L, i){ L.g = el('g', {'class': 'dg'}, gSec); L.box = el('path', {d: rectD(-10, 50, 920, 580), 'class': 'box', 'vector-effect': 'non-scaling-stroke'}, L.g);
@@ -398,7 +402,7 @@
         var s = sm(sg(p, .18, .3)) * (1 - j), H0 = LY.house, C0 = LY.cards[i];
         L.g.setAttribute('transform', 'translate(' + f1(lerp(H0[0], C0[0], s)) + ' ' + f1(lerp(H0[1], C0[1], s)) + ') scale(' + lerp(H0[2], C0[2], s).toFixed(4) + ')');
         L.box.style.opacity = fr.toFixed(3); L.t.style.opacity = (sg(p, .26, .31) * (1 - sg(p, .38, .42))).toFixed(3);
-        if (L.j !== j){ L.j = j; L.g.style.setProperty('--hl', mix(L.c, ONE, j)); } });
+        var ck = s.toFixed(3); if (L.j !== ck){ L.j = ck; var cc = mix(ONE, MUTE, s); L.g.style.setProperty('--hl', cc); L.t.style.fill = cc; L.box.style.stroke = cc; } });
       /* one roof */
       gRoof.style.setProperty('--k', sg(p, .5, .56).toFixed(3));
       /* the disciplines */
