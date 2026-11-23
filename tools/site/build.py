@@ -346,7 +346,7 @@ def menu(cur):
     </div>
     <div class="cell c" id="wmCell"><a class="wm" href="index.html"><img src="assets/brand/logo-white.png" alt="CI Design + Build"></a></div>
     <div class="cell r meta-r">
-      <a class="cta-blk" href="contact.html"><span class="t">Begin<br>Your<br>Better Life</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a>
+      <a class="cta-blk" href="contact.html"><span class="t">Begin Building<br>Your<br>Better Life</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a>
       <button class="menu-sq" type="button" aria-label="Menu"><i></i><i></i><span class="ms-tr" aria-hidden="true"><span></span></span></button>
     </div>
   </div>
@@ -1055,7 +1055,7 @@ RAIL = {'What You Receive': 'Receive', 'The Turnkey Experience': 'Experience', "
         'Why This Strengthens Your Business': 'Business', 'Why This Partnership Model Matters': 'Model', 'What This Means for Our Clients': 'Clients', 'How We Work Together': 'How',
         'Partnerships in Practice': 'Brokers', 'Strategic + Lifestyle Partners': 'Lifestyle', 'Preferred Vendors + Technology Partners': 'Vendors', 'Shared Vision': 'Vision',
         'The Value of Working Together': 'Value', 'Featured Projects': 'Projects', 'Our Approach Behind Every Project': 'Approach', 'Project Library': 'Library',
-        'Begin Your Better Life': 'Inquiry', 'Contact Information': 'Studio', 'What Happens Next?': 'Next', 'Project Overview': 'Brief', 'Design Vision': 'Vision',
+        'Begin Building Your Better Life': 'Inquiry', 'Contact Information': 'Studio', 'What Happens Next?': 'Next', 'Project Overview': 'Brief', 'Design Vision': 'Vision',
         'Project Gallery': 'Gallery', 'Behind the Design': 'Details', 'The Client Experience': None, 'The Integrated Wellness Process': 'Process'}
 def rail_of(label):
     if label in RAIL: return RAIL[label]
@@ -1101,7 +1101,7 @@ def auto(pg, sec, picks=None, film=True, card_link=None, proc='film', n=4):
     pg.add(text_block(h2, items), r)
 def final_cta(pg, sec, img, pos=None, to='contact.html', top=False, g=None):
     a = get(sec, 'a'); ps = [it[1] for it in sec['items'] if it[0] in ('p', 'lead')]
-    pg.add(cta(h_of(sec), ps, (a[0][2], to) if a else ('Begin Your Better Life', to), img, pos, top, g), 'Contact')
+    pg.add(cta(h_of(sec), ps, (a[0][2], to) if a else ('Begin Building Your Better Life', to), img, pos, top, g), 'Contact')
 def hero(sec):
     lb = get(sec, 'label'); kick = lb[0][1] if lb else ''
     if not kick:

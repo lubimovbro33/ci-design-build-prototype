@@ -26,7 +26,7 @@
   }
   function build(){
     box = document.createElement('div'); box.className = 'fmo'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-label', 'Project inquiry');
-    box.innerHTML = '<div class="fmo-l"><div><p class="fmo-k">Begin Your Better Life</p><h2 class="t60">Tell Us About<br>Your Vision</h2>' +
+    box.innerHTML = '<div class="fmo-l"><div><p class="fmo-k">Begin Building Your Better Life</p><h2 class="t60">Tell Us About<br>Your Vision</h2>' +
       '<p class="t20">Whether you are reimagining a residence you own, considering a new property, furnishing a newly completed home, or exploring wellness and in-home longevity, your next chapter begins here</p>' +
       '<p class="t20">Share what you know today. We’ll guide you through the rest</p></div>' +
       '<div class="fmo-d"><span>215 W Huron Street<br>Suite 1<br>Chicago, IL 60654</span><span><a href="tel:+13122792776">312 279 2776</a><br>Chicago + South Florida</span></div></div>' +

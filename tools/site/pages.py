@@ -460,7 +460,7 @@ def solutions():
     # large from 600, in lines that alternate in length, the second clause blue; 90 under it the second sentence in the running 20, in three lines.
     tx = [nop(' '.join(x) if isinstance(x, (list, tuple)) else x) for x in ps]
     assert tx == ['Every client, every residence, and every vision is different',
-                  'CI offers three ways to work together, led by CI Turnkey, our complete concierge-level experience. Each carries the same standard of quality'], tx
+                  'Select the CI solution that aligns with you'], tx   # the client's notes of 23.11.2026: «Replace the support blurb with “Select the CI solution that aligns with you.”»
     # the eyebrow is not the client's copy: it is their own words from the sentence below it («the same standard»), as on Portfolio
     # 18.11.2026 20:39, her frame 658:9256 («перероби цей блок… там, де сірий прямокутник, постав туди фотографію, яку ми ще не
     # використовували»): one screen. The eyebrow on the left field at 158; the thought in the 60 from 600 at 150, in HER three lines
@@ -471,10 +471,10 @@ def solutions():
            '  <p class="iv-k rv"><span class="wc">The Same Standard</span></p>\n'
            '  <p class="t60s rv ivq-h">Every client, every<br> residence, and<br> <span class="cb">every vision is different</span></p>\n'
            '  <div class="ivq-f">\n'
-           '    <p class="t20 iv-p">CI offers three ways to work together,<br class="bd"> led by CI Turnkey, our complete concierge-level experience.<br class="bd"> Each carries the same standard of quality</p>\n'
+           '    <p class="t20 iv-p">Select the CI solution that aligns with you</p>\n'
            # 16.11 23:01 («якщо тексту тобі не стає, то допиши, але не треба такі обгризки лишати»): the client's two sentences do not fill the
            # screen, so a second thought is written here from what their own pages say of the four ways — marked .wc, to be replaced by their text
-           '    <p class="t20 iv-p"><span class="wc">Some clients hand us the whole home;<br class="bd"> others bring an architect, or a residence already built.<br class="bd"> The way changes. The standard does not.</span></p>\n'
+           '    <p class="t20 iv-p">To holistically create an impact on your life,<br class="bd"> our projects typically begin at $500K</p>\n'   # 23.11.2026: «Feature the $500K project floor in several places across the site» — in place of my filler
            '  </div>\n'
            '  <div class="ivq-ph rv"><img src="%sus/1530-07a.webp" alt="" loading="lazy"></div>\n'
            '</section>' % A)
@@ -499,9 +499,10 @@ def solutions():
         # what they have: the lead as the statement, the first paragraph at 488, the second on the foot.
         o.append('      <div class="m sw-hd" data-k="%s"><p class="lab3 ey sw-k">%s</p><p class="t60 sw-h nb">%s</p></div>' % (k, esc(tag), brk(nm, 22)))
         if i == 0:
-            ten = [x.strip() for x in nop(ps_[1]).split('. ')]
-            assert len(ps_) == 3 and len(ten) == 10, (len(ps_), ten)
-            stmt = ps_[0]; mid = '<div class="t20s sw-t two">%s</div>' % ''.join('<p>%s</p>' % esc(x) for x in ten); foot = ps_[2]
+            # the client's notes of 23.11.2026 replaced CI Turnkey's copy («Our premier offering of concierge-level services. A complete renovation from
+            # concept to completion consisting of…»): two sentences now, so her frame's ten disciplines in two columns and the foot line are not there
+            assert len(ps_) == 2, ps_
+            stmt = ps_[0]; mid = '<div class="t20s sw-t"><p>%s</p></div>' % esc(nop(ps_[1])); foot = ''
         else:
             assert len(ps_) == 2, ps_
             stmt = lead; mid = '<div class="t20s sw-t"><p>%s</p></div>' % esc(nop(ps_[0])); foot = ps_[1]
@@ -1083,7 +1084,7 @@ def faq():
         r.append('<div class="qa rv%s"><button class="qh" type="button" aria-expanded="%s"><span class="n">%02d</span><span class="t">%s</span><span class="pl"></span></button><div class="ab"><div><div class="ain">%s</div></div></div></div>' % (
             ' open' if i == 0 else '', 'true' if i == 0 else 'false', i + 1, html.escape(q, quote=False), ''.join('<div>%s</div>' % c for c in cols)))
     pg.add('<section class="bk hd0" id="@ID@">\n  <p class="lab3 ey rv c1">FAQ</p>\n  <h1 class="t60 bk-h rv" style="margin-top:calc(50 * var(--u))">%s</h1>\n  <div class="bk-b">\n    <div class="rws">\n      %s\n    </div>\n  </div>\n</section>' % (title, '\n      '.join(r)), 'FAQ', 'top')
-    pg.add(cta('Your Next Chapter Starts With a Conversation', [], ('Begin Your Better Life', 'contact.html'), A + 'ch/1450-29a.webp'), 'Contact')
+    pg.add(cta('Your Next Chapter Starts With a Conversation', [], ('Begin Building Your Better Life', 'contact.html'), A + 'ch/1450-29a.webp'), 'Contact')
     emit('faq.html', 'FAQ', pg)
     return len(items)
 wellness_page()

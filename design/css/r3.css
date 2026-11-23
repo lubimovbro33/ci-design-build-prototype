@@ -559,3 +559,6 @@ p, dd, li, blockquote{text-wrap:pretty}
 html body .ey, html body.inr .ey, html body .tk-cv-k, html body .iv-k{font-family:var(--fz)!important;font-weight:400!important;font-size:var(--t-run)!important;line-height:1.2!important;letter-spacing:-.05em!important;text-transform:none!important}
 html body .ey *, html body .tk-cv-k *, html body .iv-k *{font-family:inherit!important;font-weight:inherit!important;font-size:inherit!important;line-height:inherit!important;letter-spacing:inherit!important;text-transform:inherit!important}
 html body .ey:not(.tk-df-k), html body.inr .ey:not(.tk-df-k){color:#EBEBEB}
+/* the client's notes of 23.11.2026: «Redefining the Art of Living reads too heavy. Use a lighter, slimmer weight, possibly unbolded»; «“Of the day at home” does not read clearly above the 75% stat. Move it below» */
+html body #title.hero-title{font-weight:400!important}
+html body .ph-pct{flex-direction:column-reverse!important} html body .ph-pct .lb{margin:calc(25 * var(--u)) 0 0 calc(7 * var(--u))!important}
