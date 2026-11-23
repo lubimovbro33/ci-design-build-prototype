@@ -216,7 +216,7 @@
     return {k:'img', src:'assets/hero/' + n + HSZ, bg:'assets/hero/' + n + '_bg' + HSZ, dep:'assets/hero/' + n + '_dep.png', dur:3.25,
             sko:'assets/hero/' + n + '_sk.jpg', skb:'assets/hero/' + n + '_bg_sk.jpg'};
   }));
-  /* the pause on each picture (user 09.11: twice as often as before, 7 / 6.5 s → 3.5 / 3.25 s); the glass change itself and
+  /* the pause on each picture (user 09.11: twice as often as before, 7 / 6.5 s → 3.5 / 3.25 s); the change itself and
      the slow push-in keep their speed (KB_T = the old 6.5 + 2.6 s) */
   var slide = {cur:0, timer:null, on:false, els:[], ready:false, start:[]};
   function armTimer(ms){ clearTimeout(slide.timer); slide.timer = setTimeout(nextSlide, ms); }
@@ -225,7 +225,7 @@
       if (s.k === 'img') { var im = document.createElement('img'); im.className = 'sl'; im.src = s.src; im.alt = ''; im.decoding = 'async'; slidesEl.appendChild(im); slide.els[i] = im; }
     });
   }
-  /* WebGL: the slides change through a wave of fluted glass (js/pre3d.js slideFrame); DOM crossfade is the fallback */
+  /* WebGL: the slides change by a plain dissolve (js/pre3d.js slideFrame; the fluted glass went 23.11); DOM crossfade is the fallback */
   var GLS = false, tr = null, loopOn = false, TR_DUR = 2.6, heroOff = false;
   function ease3(u){ u = clamp01(u); return u < .5 ? 4 * u * u * u : 1 - Math.pow(-2 * u + 2, 3) / 2; }
   var KB_T = 9.1;
@@ -307,7 +307,7 @@
   render(0);
   /* ================================================================== the story: hero → blocks 2–3 (user's whiteboard, 02.11 18:34)
      The hero is pinned (.hpin, sticky) and the scroll plays one scene, s = viewport-heights scrolled into the pin:
-       hero UI out → (if a photo is up: the glass wave back to the room) → the camera flies back out of the room, through the
+       hero UI out → (if a photo is up: back to the room) → the camera flies back out of the room, through the
        window, and pulls back from the tower → the golden outline draws round the window → the picture becomes an ink sketch →
        only the CI window stays → it becomes the central square: phrase 01 → a square draws on the left (counter-clockwise),
        phrase 02 → on the right, phrase 03 → the three merge into one, the CI paragraph types itself in, "This is turnkey." →
@@ -332,13 +332,13 @@
   [2, 1, 0].forEach(function(i){
     var g = document.createElementNS(NS, 'g'); g.setAttribute('class', 'lay' + (i === 0 ? ' top' : ''));
     var path = document.createElementNS(NS, 'path'), tg = document.createElementNS(NS, 'g');
-    var n = document.createElementNS(NS, 'text'); n.setAttribute('class', 'n'); n.textContent = '0' + (i + 1);
+    /* no 01 / 02 / 03 on the layers (client 23.11: «remove the numbers»; designer 15:32: «прибрати і на ізометрії») */
     var t = document.createElementNS(NS, 'text'), line = '', lines = [];          /* the phrase, wrapped to fit the layer */
     qs('p', phs[i]).textContent.replace(/\s+/g, ' ').trim().toUpperCase().split(' ').forEach(function(w){ if ((line + ' ' + w).trim().length > 15 && line) { lines.push(line); line = w; } else line = (line + ' ' + w).trim(); });
     lines.push(line);
     lines.forEach(function(l){ var ts = document.createElementNS(NS, 'tspan'); ts.textContent = l; t.appendChild(ts); });
-    tg.appendChild(n); tg.appendChild(t); g.appendChild(path); g.appendChild(tg); stLay.appendChild(g);
-    ST.lay[i] = {g:g, path:path, tg:tg, n:n, t:t};
+    tg.appendChild(t); g.appendChild(path); g.appendChild(tg); stLay.appendChild(g);
+    ST.lay[i] = {g:g, path:path, tg:tg, t:t};
   });
   [0, 1, 2].forEach(function(i){
     var l = document.createElementNS(NS, 'path'); l.setAttribute('class', 'ld'); l.setAttribute('pathLength', '1');
@@ -450,7 +450,6 @@
       L.tg.setAttribute('transform', 'matrix(' + [a, b, c, d, ox, oy].map(function(v){ return v.toFixed(4); }).join(' ') + ')');
       var fs = S * .062, tsp = L.t.childNodes, nl = tsp.length, y0 = hs - pad - (nl - 1) * fs * 1.08;
       for (var j = 0; j < nl; j++) { tsp[j].setAttribute('x', -hs + pad); tsp[j].setAttribute('y', (y0 + j * fs * 1.08).toFixed(1)); }
-      L.n.setAttribute('x', -hs + pad); L.n.setAttribute('y', (-hs + pad + S * .03).toFixed(1)); L.n.setAttribute('font-size', (S * .03).toFixed(1));
       L.t.setAttribute('font-size', fs.toFixed(1)); L.tg.style.opacity = labQ;
       var lft = [1e9, 0], rgt = [-1e9, 0];
       ptsL.forEach(function(q){ if (q[0] < lft[0]) lft = q; if (q[0] > rgt[0]) rgt = q; });

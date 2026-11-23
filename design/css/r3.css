@@ -562,3 +562,7 @@ html body .ey:not(.tk-df-k), html body.inr .ey:not(.tk-df-k){color:#EBEBEB}
 /* the client's notes of 23.11.2026: «Redefining the Art of Living reads too heavy. Use a lighter, slimmer weight, possibly unbolded»; «“Of the day at home” does not read clearly above the 75% stat. Move it below» */
 html body #title.hero-title{font-weight:400!important}
 html body .ph-pct{flex-direction:column-reverse!important} html body .ph-pct .lb{margin:calc(25 * var(--u)) 0 0 calc(7 * var(--u))!important}
+
+/* 23.11.2026, client's note «Three-Box Graphic: remove the numbers»: the number that stood at the top of each square is gone,
+   and the phrase stays where it was, on the square's lower edge (space-between with one child would lift it to the top) */
+html body .story .st-ph{justify-content:flex-end!important}

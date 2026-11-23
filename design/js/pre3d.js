@@ -776,19 +776,19 @@ function winRect(){
   return { x0: Math.min(...xs), x1: Math.max(...xs), y0: Math.min(...ys), y1: Math.max(...ys) };
 }
 
-/* ---------------------------------------------------------------- the hero slider: interiors through fluted glass
-   After the intro the hero cycles slide 0 (this 3D room) and the interior photos. A change is a wave of reeded glass
-   (the CI guideline's fluted-glass texture): vertical glass ribs sweep across the screen left → right, each rib bends the
-   picture into a mirrored, compressed slice with a lit edge, and at the strongest bend the rib swaps the old interior for
-   the new one; the old picture dollies in, the new one settles out of a slight zoom. Photos get a slow push-in, the cursor
-   parallax and the same grade/grain as the 3D room. Everything works in display (sRGB) values: the room comes from the
-   composer's output buffer, the photos are loaded raw (NoColorSpace), the quad writes them straight out. */
+/* ---------------------------------------------------------------- the hero slider: the interiors, one after another
+   After the intro the hero cycles slide 0 (this 3D room) and the interior photos. A change is a plain dissolve: the old
+   picture gives way to the new one and nothing bends, blurs or shines on the way. (Until 23.11.2026 the change was a wave of
+   fluted glass; the client read it as a curved, blurred photograph and the designer took the effect out: «Давай заберемо
+   цей ефект».) Photos keep their slow push-in, the cursor parallax and the same grade/grain as the 3D room. Everything works
+   in display (sRGB) values: the room comes from the composer's output buffer, the photos are loaded raw (NoColorSpace), the
+   quad writes them straight out. */
 const SLD = { tex: [], ps: [], ready: false, rt: [null, null] };
 const PD = 260;                                                   /* photo relief: plane distance from the eye (as the room) */
 const SlideShader = {
   vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = vec4(position.xy, 0., 1.); }`,
   fragmentShader: `uniform sampler2D tA; uniform sampler2D tB; uniform vec4 fA; uniform vec4 fB; uniform float uPhA; uniform float uPhB;
-    uniform float uP; uniform float uN; uniform float uTime; uniform vec2 uRes; uniform float uLinA; uniform float uLinB; varying vec2 vUv;
+    uniform float uP; uniform float uTime; uniform vec2 uRes; uniform float uLinA; uniform float uLinB; varying vec2 vUv;
     vec3 l2s(vec3 c){ c = max(c, 0.); return mix(c * 12.92, 1.055 * pow(c, vec3(1. / 2.4)) - .055, step(.0031308, c)); }
     float h(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233))) * 43758.5453); }
     vec3 grade(vec3 c, float ph, vec2 uv){                     /* photos: a touch moodier + the room's vignette */
@@ -799,33 +799,10 @@ const SlideShader = {
     /* the relief photos come from a linear render target: back to sRGB (they were shown too dark before, user 09.11) */
     vec3 sA(vec2 uv){ vec3 c = texture2D(tA, uv * fA.xy + fA.zw).rgb; return uLinA > .5 ? l2s(c) : c; }
     vec3 sB(vec2 uv){ vec3 c = texture2D(tB, uv * fB.xy + fB.zw).rgb; return uLinB > .5 ? l2s(c) : c; }
-    /* frosted glass: a 7-tap soft kernel, slightly taller than wide */
-    vec3 fA7(vec2 q, float r){ return sA(q) * .22 + (sA(q + vec2(r, 0.)) + sA(q - vec2(r, 0.))) * .17 + (sA(q + vec2(r * 2., r * .5)) + sA(q - vec2(r * 2., r * .5))) * .11 + (sA(q + vec2(-r * .6, r * 1.6)) + sA(q - vec2(-r * .6, r * 1.6))) * .11; }
-    vec3 fB7(vec2 q, float r){ return sB(q) * .22 + (sB(q + vec2(r, 0.)) + sB(q - vec2(r, 0.))) * .17 + (sB(q + vec2(r * 2., r * .5)) + sB(q - vec2(r * 2., r * .5))) * .11 + (sB(q + vec2(-r * .6, r * 1.6)) + sB(q - vec2(-r * .6, r * 1.6))) * .11; }
     void main(){
       vec2 uv = vUv;
-      float spread = .85;                                       /* the wave: ribs start one after another, left → right */
-      float x = uv.x * uN, cell = floor(x), fx = fract(x) - .5;   /* ribs stay perfectly straight (user, 18:35) */
-      float pr = clamp(uP * (1. + spread) - (cell + .5) / uN * spread - (1. - uv.y) * .1 + .05, 0., 1.);
-      float e = pr * pr * (3. - 2. * pr);
-      float g = sin(3.14159265 * e);                            /* how much glass this rib is right now */
-      float k = smoothstep(.38, .62, e);                        /* old → new, swapped where the bend is strongest */
-      vec3 col;
-      if (g < .003) col = mix(sA(uv), sB(uv), k);
-      else {
-        float bulge = 1. - 4. * fx * fx;                        /* thick in the middle of a rib, thin at its edges */
-        float m = mix(1., -.6, g);                              /* clear → compressed → mirrored slice (a cylindrical lens) */
-        vec2 q = vec2((cell + .5) / uN + fx / uN * m + .03 * g, uv.y);
-        float br = .012 * g * (.5 + .5 * bulge);                /* frosted, most in the thick middle */
-        vec3 a = fA7(q, br), b = fB7(q, br);                    /* no colour fringes: clear glass only (user, 18:39) */
-        col = mix(a, b, k);
-        col *= 1. + g * .28 * (-fx * 2.);                       /* each rib lit from the left */
-        float spec = exp(-pow((fx + .2) * 9., 2.)) * (.75 + .25 * sin(uv.y * 4. + uTime * 1.2));
-        col += g * .32 * spec * vec3(1., .97, .92);             /* a glossy streak down every rib */
-        col += g * .14 * smoothstep(.38, .46, abs(fx)) * (1. - smoothstep(.46, .5, abs(fx))) * vec3(1., .95, .9);   /* lit edge */
-        col *= 1. - g * .38 * smoothstep(.465, .5, abs(fx));    /* the seam between ribs */
-        col += vec3(1., .8, .6) * g * .03;                      /* warm light in the glass */
-      }
+      float k = uP;                                             /* old → new: a plain dissolve, the picture itself is never touched */
+      vec3 col = mix(sA(uv), sB(uv), k);
       float ph = mix(uPhA, uPhB, k), lin = mix(uLinA, uLinB, k);
       col = grade(col, ph * (1. - lin), uv);              /* the reliefs are graded once already (roomMat), like in the story */
       col += (h(uv * uRes + fract(uTime * 37.)) - .5) * .045 * ph;
@@ -878,7 +855,7 @@ function slidesInit(list){
   if (SLD.mat) return SLD.promise;
   SLD.mat = new THREE.ShaderMaterial({
     uniforms: { tA:{value:null}, tB:{value:null}, fA:{value:new THREE.Vector4(1,1,0,0)}, fB:{value:new THREE.Vector4(1,1,0,0)}, uPhA:{value:0}, uPhB:{value:1},
-                uP:{value:0}, uN:{value:20}, uTime:{value:0}, uRes:{value:new THREE.Vector2(1,1)}, uLinA:{value:0}, uLinB:{value:0} },
+                uP:{value:0}, uTime:{value:0}, uRes:{value:new THREE.Vector2(1,1)}, uLinA:{value:0}, uLinB:{value:0} },
     vertexShader: SlideShader.vertexShader, fragmentShader: SlideShader.fragmentShader, depthTest: false, depthWrite: false
   });
   SLD.scene = new THREE.Scene(); SLD.cam = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
@@ -948,11 +925,13 @@ function slideFrame(o){
     const t = SLD.tex[i];
     return { t, w: t.image.width, h: t.image.height, z: (1.05 + .06 * k) * zT * (1 + o.scroll), px: o.mx * .014, py: -o.my * .01, ph: 1 };
   };
-  const A = side(o.a, o.ka || 0, 0, .07 * p, 1 + .07 * p);
-  const B = (o.b === o.a && p === 0) ? A : side(o.b, o.kb || 0, 1, .06 * (1 - p), 1 + .06 * (1 - p));
+  /* no dolly of its own during a change (it belonged to the glass): each picture only keeps its slow push-in, so nothing
+     zooms as the pictures change */
+  const A = side(o.a, o.ka || 0, 0, 0, 1);
+  const B = (o.b === o.a && p === 0) ? A : side(o.b, o.kb || 0, 1, 0, 1);
   u.tA.value = A.t; u.tB.value = B.t; u.uPhA.value = A.ph; u.uPhB.value = B.ph; u.uLinA.value = A.lin || 0; u.uLinB.value = B.lin || 0;
   fit(u.fA.value, A.w, A.h, A.z, A.px, A.py); fit(u.fB.value, B.w, B.h, B.z, B.px, B.py);
-  u.uP.value = p; u.uN.value = Math.max(6, Math.round(vw / 92)); u.uTime.value = performance.now() / 1000;
+  u.uP.value = p; u.uTime.value = performance.now() / 1000;
   u.uRes.value.set(vw, vh);
   renderer.setRenderTarget(null); renderer.render(SLD.scene, SLD.cam);
 }
