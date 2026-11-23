@@ -65,6 +65,10 @@ html body.inr .film .sw-bd .sw-t.two{display:grid;grid-auto-flow:column;grid-tem
 html body.inr .film .sw-bd .sw-t.two p{margin:0;white-space:nowrap}
 html body.inr .film .sw-bd .sw-f{position:absolute;left:calc(50 * var(--u));bottom:max(calc(50 * var(--u)), 58px);margin:0;width:16.55em}
 .film .sw-bd .sw-btn{position:absolute;left:0;bottom:max(calc(50 * var(--u)), 58px);width:100%;margin:0;display:flex;justify-content:center}
+/* 23.11.2026: wellness through all three ways — the client's sentence on the right foot, the mirror of the left foot's text */
+.film .sw-wl{left:auto;right:calc(50 * var(--u));top:auto;bottom:max(calc(50 * var(--u)), 58px);width:16.55em;font-size:var(--t-run)}
+html body.inr .film .sw-wl p{margin:0}
+html body.inr .film .sw-bd .sw-t p + p{margin-top:.9em}
 @media (max-aspect-ratio: 1/1){
   .film .sw-hd{text-align:left}
   .film .sw-bd{padding:0}

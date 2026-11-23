@@ -106,7 +106,9 @@ def wellness_page():
     # 05 the seven conditions on the grid; a name is a run of its own sentence's words; the section's closing sentence under the lead
     sec = S[3]; rows = [' '.join(r[1]) if isinstance(r[1], (list, tuple)) else r[1] for r in get(sec, 'row')]
     cl = [' '.join(it[1]) for it in sec['items'] if it[0] == 'p']
-    NM = [['A New', 'Residence'], ['The Quality', 'of Your Home', 'Environment'], ['Sleep, Recovery,', 'Movement, Light,', 'Air, or Water'], ['Long-Term', 'Living'],
+    # 23.11.2026, the client's notes (site-wide): «Position CI as specialists in high-end interior residential turnkey solutions, rather than
+    # ground-up builds» — the first condition read «Planning a new residence or significant renovation»; it speaks of the renovation only now
+    NM = [['A Significant', 'Renovation'], ['The Quality', 'of Your Home', 'Environment'], ['Sleep, Recovery,', 'Movement, Light,', 'Air, or Water'], ['Long-Term', 'Living'],
           ['Without', 'Compromising', 'Architecture'], ['A Home Spa,', 'Recovery Suite,', 'Fitness Area'], ['One Team', 'to Coordinate']]
     assert len(NM) == len(rows) == 7 and len(cl) == 1, (len(rows), cl)
     pg.add(tk_fit(label(sec), h_of(sec), get(sec, 'lead')[0][1][0], list(zip(NM, rows)), A + 'us/1511-04a.webp',
@@ -472,6 +474,10 @@ def solutions():
            '  <p class="t60s rv ivq-h">Every client, every<br> residence, and<br> <span class="cb">every vision is different</span></p>\n'
            '  <div class="ivq-f">\n'
            '    <p class="t20 iv-p">Select the CI solution that aligns with you</p>\n'
+           # 23.11.2026, the client's notes: «Each offering is a holistic, single-source solution from start to finish, delivered by CI alone.
+           # Make clear the solutions are tiered to the client's needs.» No wording of theirs for the page, so their own words are set as a
+           # sentence (.wc) between the invitation and the floor
+           '    <p class="t20 iv-p"><span class="wc">Each is a holistic, single-source solution from start to finish,<br class="bd"> delivered by CI alone and tiered to your needs</span></p>\n'
            # 16.11 23:01 («якщо тексту тобі не стає, то допиши, але не треба такі обгризки лишати»): the client's two sentences do not fill the
            # screen, so a second thought is written here from what their own pages say of the four ways — marked .wc, to be replaced by their text
            '    <p class="t20 iv-p">To holistically create an impact on your life,<br class="bd"> our projects typically begin at $500K</p>\n'   # 23.11.2026: «Feature the $500K project floor in several places across the site» — in place of my filler
@@ -503,12 +509,27 @@ def solutions():
             # concept to completion consisting of…»): two sentences now, so her frame's ten disciplines in two columns and the foot line are not there
             assert len(ps_) == 2, ps_
             stmt = ps_[0]; mid = '<div class="t20s sw-t"><p>%s</p></div>' % esc(nop(ps_[1])); foot = ''
+        elif nm == 'CI Curated':
+            # 23.11.2026, the client's notes: «CI Curated: a hyper-personalized layer for clients who love the bones of their residence and want to
+            # make it their own. A beautiful home, made personal, without a gut renovation.» As she did for CI Turnkey, the lead stays on the
+            # cover and the statement of this state is the client's own line; who it is for stands under the first paragraph (their words,
+            # without «a hyper-personalized layer», which the foot already says: «A highly personalized layer of design»)
+            assert len(ps_) == 2, ps_
+            pos = get(sec, 'strong')[0][1]; assert len(pos) == 2, pos
+            stmt = pos[0]; mid = '<div class="t20s sw-t"><p>%s</p><p>%s</p></div>' % (esc(nop(ps_[0])), esc(nop(pos[1]))); foot = ps_[1]
         else:
             assert len(ps_) == 2, ps_
             stmt = lead; mid = '<div class="t20s sw-t"><p>%s</p></div>' % esc(nop(ps_[0])); foot = ps_[1]
         o.append('      <div class="m sw-bd" data-k="%s"><p class="t34 sw-l">%s</p>%s'
                  '<div class="t20s sw-f"><p>%s</p></div><div class="sw-btn">%s</div></div>'
                  % (k2, esc(nop(stmt)), mid, esc(nop(foot)), btn(a_[2], href(a_[1]))))
+        if i == 2:
+            # 23.11.2026, the client's notes: «In the Turnkey / Core / Curated graphic, show wellness running through all three. Wellness is in
+            # everything.» The plan carries the air of CI Wellness through all three states, in the site's blue (inner.js plan()); beside it, on
+            # the right foot, the client's own sentence in the same blue, from the first way until the fourth takes over. In the phone flow it
+            # stands once, between CI Curated and CI Wellness
+            o.append('      <div class="m sw-wl" data-k="%.2f %.2f %.2f %.2f"><p class="t20s cb">Every CI residence<br class="bd"> includes wellness</p></div>'
+                     % (t0 + .1, t0 + .3, t0 + 3 * d - .12, t0 + 3 * d))
     o.append('    </div>\n  </div>\n</section>')
     pg.add('\n'.join(o), 'Four Ways')
     final_cta(pg, S[5], A + 'ch/1450-02a.webp')
@@ -747,7 +768,7 @@ def portfolio():
     # name, location, building, size, link, tags, picture
     LIB = [(q['name'], q['loc'], q['bld'], q.get('facts', {}).get('Size', ''), q['slug'] + '.html', q.get('tags', 'chicago ci-turnkey'),
             ph(q['set'], q['tall'])) for q in PROJ]
-    CELL = [('Collectors Home', 3, 1, True), ('444 W Grant', 1, 1, False), ('Modern Deco Home', 1, 2, False), ('Above the Park', 2, 2, False), ('Urban Sanctuary', 4, 2, False),
+    CELL = [('Collectors Home', 3, 1, True), ('Showpiece Home', 1, 1, False), ('Modern Deco Home', 1, 2, False), ('Above the Park', 2, 2, False), ('Urban Sanctuary', 4, 2, False),
             ('Lakeshore Luxury', 3, 3, False), ('Contemporary Comfort', 4, 3, False), ('Room To Breathe', 1, 4, True), ('Sky-High Condo', 4, 4, False)]
     by = dict((x[0], x) for x in LIB); wide = {'Collectors Home': ph(ch_['set'], ch_['card']), 'Room To Breathe': ph(rtb_['set'], rtb_['card'])}   # a large tile is landscape
     assert len(LIB) == 9 and sorted(by) == sorted(c[0] for c in CELL)
@@ -780,11 +801,11 @@ def portfolio():
     # above them the screen is empty but for the mark and the menu; the row is walked sideways. No names on the row — a name appears only under the
     # pointer (22:14), and every other photograph falls back to grey. Ours: the title and the filters stand in that empty upper half.
     chips = ['All Projects', 'CI Core', 'CI Curated', 'CI Turnkey', 'Wellness', 'Chicago', 'South Florida']
-    ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', 'Modern Deco Home', '444 W Grant', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo']
+    ORDER = ['Collectors Home', 'Urban Sanctuary', 'Room To Breathe', 'Modern Deco Home', 'Showpiece Home', 'Above the Park', 'Lakeshore Luxury', 'Contemporary Comfort', 'Sky-High Condo']
     byn = {x[0]: x for x in LIB}; assert sorted(ORDER) == sorted(byn)
-    # the gallery shows a project's own picture, the one its card carries; 444 W Grant's is only 1200 wide on the client's site, so that one
+    # the gallery shows a project's own picture, the one its card carries; Showpiece Home's (444-Grant files) is only 1200 wide on the client's site, so that one
     # takes the next picture of the same project until CI sends the files
-    gim = {q['name']: ph(q['set'], q['tall'] if q['name'] == '444 W Grant' else q['card']) for q in PROJ}
+    gim = {q['name']: ph(q['set'], q['tall'] if q['name'] == 'Showpiece Home' else q['card']) for q in PROJ}
     def cnt(f): return 9 if f == 'all' else sum(1 for n in ORDER if (' ' + byn[n][5] + ' ').find(' ' + f + ' ') >= 0)
     # a filter the client has no project under is shown, but it is dead and says so — it lights up when CI sends work for it
     ch = ''.join('<button class="chip%s" type="button" data-f="%s"%s>%s</button>' % (

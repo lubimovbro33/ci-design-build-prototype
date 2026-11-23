@@ -566,3 +566,17 @@ html body .ph-pct{flex-direction:column-reverse!important} html body .ph-pct .lb
 /* 23.11.2026, client's note «Three-Box Graphic: remove the numbers»: the number that stood at the top of each square is gone,
    and the phrase stays where it was, on the square's lower edge (space-between with one child would lift it to the top) */
 html body .story .st-ph{justify-content:flex-end!important}
+
+/* 23.11.2026, client's notes on the floor plan: one line per moment of the day (they lie in one cell, the moment that is on shows),
+   the sentence about five, ten, twenty years stays under every one of them. Seven rows now («sleep» closes the day): 7 × 55 = 385,
+   the height the six rows of 64 had (384), so the list keeps its top and bottom edges; phones: see the rule below */
+html body #philosophy{--vrh:calc(55 * var(--u))}
+@media (max-aspect-ratio: 1/1){ html body #philosophy{--vrh:25px} }   /* 7 × 25 = 175: the line under the list is one row taller on a phone now (a moment's line + the sentence), and the last row must stay clear of it */
+#philosophy .ph-day .ph-ms{display:grid}
+#philosophy .ph-day .ph-m{grid-area:1 / 1;opacity:0;transition:opacity .45s}
+#philosophy .ph-day .ph-m.on{opacity:1}
+#philosophy .ph-day > .cb{display:block}
+
+/* 23.11.2026, client's notes: the ideal client profile (seeking a holistic change; values their time and health; a high-touch, concierge
+   experience; turnkey living, in-home wellness, longevity) stands in the block about the CI client, over the sentence that was there */
+.cl5-p .cl5-who{display:block;margin:0 0 .9em}

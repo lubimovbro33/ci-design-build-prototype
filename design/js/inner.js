@@ -634,10 +634,13 @@
           g.lineTo(xa + rr, yb); g.quadraticCurveTo(xa, yb, xa, yb - rr); g.lineTo(xa, ya + rr); g.quadraticCurveTo(xa, ya, xa + rr, ya); g.closePath(); g.stroke(); }
       });
     }
-    /* CI Wellness: the air moves through the rooms */
-    if (a3 > .004){
+    /* CI Wellness: the air moves through the rooms. 23.11.2026 (client: «In the Turnkey / Core / Curated graphic, show wellness running
+       through all three. Wellness is in everything»): the same air runs through the plan in every way, in the site's blue — quietly
+       under the first three, forward in the fourth, where the way is wellness itself */
+    var wl = base * Math.max(a3 * E[3] * .9, (1 - a3) * .5 * sg(q, f.t0 + .1, f.t0 + .5));
+    if (wl > .004){
       g.save(); g.beginPath(); g.rect(X(P.T), Y(P.T), (P.W - 2 * P.T) * UN, (P.H - 2 * P.T) * UN); g.clip();
-      ink(base * a3 * .4 * E[3], 1, [7 * U, 13 * U]); g.lineDashOffset = -t * 24 * U;
+      g.strokeStyle = 'rgba(150,168,191,' + wl.toFixed(3) + ')'; g.lineWidth = 1; g.setLineDash([7 * U, 13 * U]); g.lineDashOffset = -t * 24 * U;
       PAIR.forEach(function(c){ g.beginPath(); g.moveTo(X(c[0]), Y(c[1])); g.bezierCurveTo(X(c[2]), Y(c[3]), X(c[4]), Y(c[5]), X(c[6]), Y(c[7])); g.stroke(); });
       g.setLineDash([]); g.lineDashOffset = 0; g.restore();
     }

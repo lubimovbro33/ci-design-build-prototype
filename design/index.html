@@ -4,12 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>CI Design + Build — Homepage design</title>
+<meta name="description" content="CI Design + Build: high-end residential interiors in Chicago and South Florida, designed, built and furnished turnkey by one team.">
 <meta name="robots" content="noindex">
 <link rel="preload" as="image" href="assets/v15/poster_v2_1920.webp" imagesrcset="assets/v15/poster_v2_1280.webp 1280w, assets/v15/poster_v2_1920.webp 1920w, assets/v15/poster_v2_2560.webp 2560w" imagesizes="100vw" fetchpriority="high">
 <!-- the 3D intro starts sooner (user 09.11 "we still wait half a second or a second"): the import map comes first, the whole
      module graph is fetched in parallel instead of three waves, and the intro's textures start with the HTML instead of after three.js -->
 <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
-<link rel="modulepreload" href="js/pre3d.js?v=f70ebeaa">
+<link rel="modulepreload" href="js/pre3d.js?v=5809af74">
 <link rel="modulepreload" href="assets/vendor/three/three.module.min.js">
 <link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/EffectComposer.js">
 <link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/RenderPass.js">
@@ -27,14 +28,14 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=Zalando+Sans+SemiExpanded:wght@400;700&display=swap">   <!-- the buttons' face in the Figma frame (CTA Medium 500, hero blocks SemiBold 600) -->
-<link rel="stylesheet" href="css/site.css?v=f70ebeaa">
-<link rel="stylesheet" href="css/story.css?v=f70ebeaa">
-<link rel="stylesheet" href="css/chapters.css?v=f70ebeaa">
-<link rel="stylesheet" href="css/type.css?v=f70ebeaa">
-<link rel="stylesheet" href="css/polish.css?v=f70ebeaa">
-<link rel="stylesheet" href="css/v10.css?v=f70ebeaa">
-<link rel="stylesheet" href="css/r3.css?v=f70ebeaa">
-<link rel="stylesheet" href="css/form.css?v=f70ebeaa">
+<link rel="stylesheet" href="css/site.css?v=5809af74">
+<link rel="stylesheet" href="css/story.css?v=5809af74">
+<link rel="stylesheet" href="css/chapters.css?v=5809af74">
+<link rel="stylesheet" href="css/type.css?v=5809af74">
+<link rel="stylesheet" href="css/polish.css?v=5809af74">
+<link rel="stylesheet" href="css/v10.css?v=5809af74">
+<link rel="stylesheet" href="css/r3.css?v=5809af74">
+<link rel="stylesheet" href="css/form.css?v=5809af74">
 <script>(function(){var h=location.hostname,q=location.search;if(/^ci-hero|^ci-preloader/.test(h)||/[?&]hero(=|&|$)/.test(q))document.documentElement.classList.add('hero-only');})();</script>
 <script>(function(){var d=document.documentElement,m=window.matchMedia,c=m&&m('(pointer: coarse)').matches,s=Math.max(screen.width||9999,screen.height||9999);if(c||s<1000||/[?&]lite/.test(location.search))d.classList.add('lite');})();</script>
 <script>(function(){if(!window.WebGL2RenderingContext)return;   /* the intro's textures, same picks as js/pre3d.js (hiDPI, room 1k/2k) */
@@ -152,8 +153,8 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
         <div data-a="-1" data-b=".11" class="r3p" style="--x:48;--y:155"><h2 class="t60">Building You<br><span class="cb">a Better Life</span></h2></div>
         <div data-a=".11" data-b=".25" class="r3p" style="--x:48;--y:155"><p class="t34" style="--w:660">75% of&nbsp;your life is lived at home. Design it accordingly. <span class="cb">The quality of&nbsp;that environment shapes everything: your lifestyle, your health, your longevity goals</span></p></div>
         <div data-a=".25" data-b=".35" class="r3p" style="--x:48;--y:155"><h3 class="t34 up">We believe the best<br>homes <span class="cb">begin with life,</span><br>not a look</h3></div>
-        <div data-a=".35" data-b=".86" class="r3p ph-vs row1" style="--x:48;--y:175"><p class="t34 up cb ph-vin">How you want to</p><p class="ph-verbs ph-vl"><span class="vr"><span class="vt"><span class="vb">wake up</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">entertain</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">recharge</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">recover</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">collect</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">gather</span></span><i></i></span></p></div>
-        <div data-a=".35" data-b=".86" class="r3p r3b row2" style="--x:48;--yb:178"><p class="t20" style="--w:362">how you want light to move through your morning. <span class="cb">What you want your life to feel like and be in five, ten, or twenty years from now</span></p></div>
+        <div data-a=".35" data-b=".86" class="r3p ph-vs row1" style="--x:48;--y:175"><p class="t34 up cb ph-vin">How you want to</p><p class="ph-verbs ph-vl"><span class="vr"><span class="vt"><span class="vb">wake up</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">recharge</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">collect</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">recover</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">entertain</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">gather</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">sleep</span></span><i></i></span></p></div>
+        <div data-a=".35" data-b=".86" class="r3p r3b row2" style="--x:48;--yb:178"><p class="t20 ph-day" style="--w:362"><span class="ph-ms"><span class="ph-m on" data-k="wake up">how you want light to move through your morning</span><span class="ph-m wc" data-k="recharge">where the middle of the day gives your energy back</span><span class="ph-m wc" data-k="collect">how the art you live with is placed, lit, and seen</span><span class="ph-m wc" data-k="recover">how heat, water, and stillness restore you by evening</span><span class="ph-m wc" data-k="entertain">how the table and the light welcome the people you invite</span><span class="ph-m wc" data-k="gather">where those closest to you end the day together</span><span class="ph-m wc" data-k="sleep">how the home dims, cools, and goes quiet for the night</span></span><span class="cb">What you want your life to feel like and be in five, ten, or twenty years from now</span></p></div>
         <div data-a=".86" data-b=".93" class="r3p" style="--x:48;--y:163"><p class="t20">This is part of the<br>CI concierge level service</p><p class="t34" style="--w:650;--mt:59">Rather than designing around a&nbsp;predetermined aesthetic, we design around your lifestyle. Architecture, <span class="cb">materials, lighting, furnishings, technology, art, and wellness become part of&nbsp;one considered environment</span></p></div>
         <div data-a=".93" data-b="9" class="st r3fin"><p class="t20 fa">Because</p><h3 class="t60 fb">good design<br>should<br>change <span class="cm">more<br>than the<br>home</span></h3><p class="t20 fc">It should change the experience<br>of living in it</p></div>
       </div>
@@ -211,7 +212,7 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
       <button style="--k:0" class="df2-cell c1" type="button" data-i="0" aria-expanded="false" aria-label="Architecture + Interior Design"><span class="df2-nm">Architecture<br>+ Interior Design</span><span class="df2-card"><span class="df2-cn">01</span><span class="df2-ct">Architecture<br>+ Interior Design</span><span class="df2-cd">A unified vision from planning through detailing</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
       <button style="--k:1" class="df2-cell c2" type="button" data-i="1" aria-expanded="false" aria-label="Construction + Project Management"><span class="df2-nm">Construction<br>+ Project Management</span><span class="df2-card"><span class="df2-cn">02</span><span class="df2-ct">Construction<br>+ Project Management</span><span class="df2-cd">Executed by a team already fluent in the design</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
       <button style="--k:2" class="df2-cell c3" type="button" data-i="2" aria-expanded="false" aria-label="Furnishings + Art"><span class="df2-nm">Furnishings<br>+ Art</span><span class="df2-card"><span class="df2-cn">03</span><span class="df2-ct">Furnishings<br>+ Art</span><span class="df2-cd">The residence completed beyond construction</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
-      <button style="--k:3" class="df2-cell c4 on" type="button" data-i="3" aria-expanded="true" aria-label="Wellness + In-Home Longevity"><span class="df2-nm">Wellness<br>+ In-Home Longevity</span><span class="df2-card"><span class="df2-cn">04</span><span class="df2-ct">Wellness<br>+ In-Home Longevity</span><span class="df2-cd">Integrated systems designed around comfort, performance, and quality of life</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
+      <button style="--k:3" class="df2-cell c4 on" type="button" data-i="3" aria-expanded="true" aria-label="Wellness + In-Home Longevity"><span class="df2-nm">Wellness<br>+ In-Home Longevity</span><span class="df2-card"><span class="df2-cn">04</span><span class="df2-ct">Wellness<br>+ In-Home Longevity</span><span class="df2-cd wc">Light, air, water, sleep, and recovery, designed in for living younger, longer</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
       <button style="--k:4" class="df2-cell c5" type="button" data-i="4" aria-expanded="false" aria-label="Move-In + Onboarding"><span class="df2-nm">Move-In<br>+ Onboarding</span><span class="df2-card"><span class="df2-cn">05</span><span class="df2-ct">Move-In<br>+ Onboarding</span><span class="df2-cd">Delivered as a home, not a construction site</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
       <button style="--k:5" class="df2-cell c6" type="button" data-i="5" aria-expanded="false" aria-label="One Team"><span class="df2-nm">One Team</span><span class="df2-card"><span class="df2-cn">06</span><span class="df2-ct">One Team</span><span class="df2-cd">One coordinated experience, concept through completion</span></span><span class="df2-pm" aria-hidden="true"><i></i><i></i></span></button>
     </div>
@@ -256,7 +257,7 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
   <div class="su-add">
     <span class="mono su-add-l"><span class="sqr"><span>ADD-ON</span><span>PAIRS WITH ANY SOLUTION</span></span></span>
     <h3 class="su-wn">CI Wellness</h3>
-    <p class="su-p"><b>Better living, designed in.</b> Light, air, water, sleep, recovery, and technology integrated from the ground up, not bolted on at the end</p>
+    <p class="su-p"><b>Better living, designed in.</b> Light, air, water, sleep, recovery, and technology integrated from day one, not bolted on at the end</p>
     <button class="su-sw" id="suSw" type="button" aria-pressed="false"><span class="mono">ADD TO STACK</span><span class="tg"></span></button>
     <a class="pill su-pill2" href="ci-wellness.html"><span class="dot"></span><span class="t lab">Explore CI Wellness</span></a>
   </div>
@@ -336,8 +337,8 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
         <figure class="pj4-im on" data-i="0"><div class="kb"><img src="assets/pj/collectors.webp" srcset="assets/pj/collectors_m.webp 1200w, assets/pj/collectors.webp 2560w" sizes="100vw" alt="Collectors Home" decoding="async"></div></figure>
         <figure class="pj4-im" data-i="1"><div class="kb"><img src="assets/pj/urban.webp" srcset="assets/pj/urban_m.webp 1200w, assets/pj/urban.webp 1800w" sizes="100vw" alt="Urban Sanctuary" decoding="async"></div></figure>
         <figure class="pj4-im" data-i="2"><div class="kb"><img src="assets/pj/breathe.webp" srcset="assets/pj/breathe_m.webp 1200w, assets/pj/breathe.webp 1800w" sizes="100vw" alt="Room To Breathe" decoding="async"></div></figure>
-        <figure class="pj4-im" data-i="3"><div class="kb"><img src="assets/pj/superior.webp" srcset="assets/pj/superior_m.webp 1200w, assets/pj/superior.webp 1800w" sizes="100vw" alt="500 W Superior" decoding="async"></div></figure>
-        <figure class="pj4-im" data-i="4"><div class="kb"><img src="assets/pj/grant.webp" srcset="assets/pj/grant_m.webp 1200w, assets/pj/grant.webp 1800w" sizes="100vw" alt="444 W Grant" decoding="async"></div></figure>
+        <figure class="pj4-im" data-i="3"><div class="kb"><img src="https://cidesignbuild.com/wp-content/uploads/2021/08/Deco-Home-01-1.jpg" alt="Modern Deco Home" decoding="async" loading="lazy"></div></figure>
+        <figure class="pj4-im" data-i="4"><div class="kb"><img src="assets/pj/grant.webp" srcset="assets/pj/grant_m.webp 1200w, assets/pj/grant.webp 1800w" sizes="100vw" alt="Showpiece Home" decoding="async"></div></figure>
       </div>
       <div class="pj4-veil" aria-hidden="true"></div>
       <i class="pj4-rh" aria-hidden="true"></i><i class="pj4-rv" aria-hidden="true"></i>
@@ -345,16 +346,16 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
         <span class="pj4-rule" aria-hidden="true"></span>
         <div class="pj4-cs">
           <div class="pj4-c on" data-i="0"><div class="pj4-k lab"><span>01 / 05</span><span>Featured</span></div><h3 class="pj4-nm" aria-label="Collectors Home"><span class="l" style="--i:0"><span>Collectors</span></span><span class="l" style="--i:1"><span>Home</span></span></h3><div class="pj4-mt lab"><span><span class="sqr"><span>Streeterville</span><span>Chicago</span></span></span><span>One Bennett Park</span></div></div>
-          <div class="pj4-c" data-i="1"><div class="pj4-k lab"><span>02 / 05</span></div><h3 class="pj4-nm" aria-label="Urban Sanctuary"><span class="l" style="--i:0"><span>Urban</span></span><span class="l" style="--i:1"><span>Sanctuary</span></span></h3><div class="pj4-mt lab"><span><span class="sqr"><span>Gold Coast</span><span>Chicago</span></span></span><span>900 North Michigan</span></div></div>
+          <div class="pj4-c" data-i="1"><div class="pj4-k lab"><span>02 / 05</span></div><h3 class="pj4-nm" aria-label="Urban Sanctuary"><span class="l" style="--i:0"><span>Urban</span></span><span class="l" style="--i:1"><span>Sanctuary</span></span></h3><div class="pj4-mt lab"><span><span class="sqr"><span>Gold Coast</span><span>Chicago</span></span></span><span>Condominium</span></div></div>
           <div class="pj4-c" data-i="2"><div class="pj4-k lab"><span>03 / 05</span></div><h3 class="pj4-nm" aria-label="Room To Breathe"><span class="l" style="--i:0"><span>Room To</span></span><span class="l" style="--i:1"><span>Breathe</span></span></h3><div class="pj4-mt lab"><span><span class="sqr"><span>Lincoln Park</span><span>Chicago</span></span></span><span>Residence</span></div></div>
-          <div class="pj4-c" data-i="3"><div class="pj4-k lab"><span>04 / 05</span></div><h3 class="pj4-nm" aria-label="500 W Superior"><span class="l" style="--i:0"><span>500 W</span></span><span class="l" style="--i:1"><span>Superior</span></span></h3><div class="pj4-mt lab"><span><span class="sqr"><span>River North</span><span>Chicago</span></span></span><span>Residence</span></div></div>
-          <div class="pj4-c" data-i="4"><div class="pj4-k lab"><span>05 / 05</span></div><h3 class="pj4-nm" aria-label="444 W Grant"><span class="l" style="--i:0"><span>444 W</span></span><span class="l" style="--i:1"><span>Grant</span></span></h3><div class="pj4-mt lab"><span><span class="sqr"><span>Lincoln Park</span><span>Chicago</span></span></span><span>Residence</span></div></div>
+          <div class="pj4-c" data-i="3"><div class="pj4-k lab"><span>04 / 05</span></div><h3 class="pj4-nm" aria-label="Modern Deco Home"><span class="l" style="--i:0"><span>Modern</span></span><span class="l" style="--i:1"><span>Deco Home</span></span></h3><div class="pj4-mt lab"><span><span class="sqr"><span>Gold Coast</span><span>Chicago</span></span></span><span>Condominium</span></div></div>
+          <div class="pj4-c" data-i="4"><div class="pj4-k lab"><span>05 / 05</span></div><h3 class="pj4-nm" aria-label="Showpiece Home"><span class="l" style="--i:0"><span>Showpiece</span></span><span class="l" style="--i:1"><span>Home</span></span></h3><div class="pj4-mt lab"><span><span class="sqr"><span>Lincoln Park</span><span>Chicago</span></span></span><span>Residence</span></div></div>
         </div>
       </div>
       <div class="pj4-ctl">
         <button class="pj4-ar prev" type="button" aria-label="Previous project"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span class="lb" aria-hidden="true">Prev</span></button>
         <button class="pj4-ar next" type="button" aria-label="Next project"><span class="lb" aria-hidden="true">Next</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        <ol class="pj4-pg"><li><button type="button" class="on run" data-i="0" aria-label="Collectors Home"><span>01</span><i></i></button></li><li><button type="button" class="" data-i="1" aria-label="Urban Sanctuary"><span>02</span><i></i></button></li><li><button type="button" class="" data-i="2" aria-label="Room To Breathe"><span>03</span><i></i></button></li><li><button type="button" class="" data-i="3" aria-label="500 W Superior"><span>04</span><i></i></button></li><li><button type="button" class="" data-i="4" aria-label="444 W Grant"><span>05</span><i></i></button></li></ol>
+        <ol class="pj4-pg"><li><button type="button" class="on run" data-i="0" aria-label="Collectors Home"><span>01</span><i></i></button></li><li><button type="button" class="" data-i="1" aria-label="Urban Sanctuary"><span>02</span><i></i></button></li><li><button type="button" class="" data-i="2" aria-label="Room To Breathe"><span>03</span><i></i></button></li><li><button type="button" class="" data-i="3" aria-label="Modern Deco Home"><span>04</span><i></i></button></li><li><button type="button" class="" data-i="4" aria-label="Showpiece Home"><span>05</span><i></i></button></li></ol>
       </div>
       <aside class="pj4-pn">
         <i class="pj4-card" aria-hidden="true"></i>
@@ -364,8 +365,8 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
           <li><button type="button" class="pj4-r on" data-i="0"><i class="sq"></i><span class="n">01</span><span class="nm">Collectors Home</span></button></li>
           <li><button type="button" class="pj4-r" data-i="1"><i class="sq"></i><span class="n">02</span><span class="nm">Urban Sanctuary</span></button></li>
           <li><button type="button" class="pj4-r" data-i="2"><i class="sq"></i><span class="n">03</span><span class="nm">Room To Breathe</span></button></li>
-          <li><button type="button" class="pj4-r" data-i="3"><i class="sq"></i><span class="n">04</span><span class="nm">500 W Superior</span></button></li>
-          <li><button type="button" class="pj4-r" data-i="4"><i class="sq"></i><span class="n">05</span><span class="nm">444 W Grant</span></button></li>
+          <li><button type="button" class="pj4-r" data-i="3"><i class="sq"></i><span class="n">04</span><span class="nm">Modern Deco Home</span></button></li>
+          <li><button type="button" class="pj4-r" data-i="4"><i class="sq"></i><span class="n">05</span><span class="nm">Showpiece Home</span></button></li>
         </ol>
         <a class="pj4-cta" href="portfolio.html"><span class="t">View the<br>Portfolio</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a>
       </aside>
@@ -380,7 +381,7 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
       <div class="cl5-read">
         <h2 class="cl5-title">For Clients Who<br> Value the Experience<br> as Much as the Result</h2>
         <p class="cl5-say" id="cl5Say">Our clients are accomplished people with demanding lives. They appreciate exceptional design, and they expect communication, transparency, and the confidence that comes from knowing the right team is managing the details</p>
-        <p class="cl5-p">CI is built for clients who trust expertise, value collaboration, and want one accountable team responsible for the whole</p>
+        <p class="cl5-p"><span class="wc cl5-who">They seek a holistic change, value their time and their health, expect a high-touch, concierge experience, and are drawn to turnkey living, <span style="white-space:nowrap">in-home</span> wellness, and longevity</span>CI is built for clients who trust expertise, value collaboration, and want one accountable team responsible for the whole</p>
       </div>
       <div class="cl5-ph"><img src="assets/cl/a_living.webp" srcset="assets/cl/a_living_m.webp 900w, assets/cl/a_living.webp 1800w" sizes="(max-aspect-ratio: 3/2) 150vh, 100vw" alt="" loading="lazy" decoding="async"></div>
       <i class="cl5-rh" aria-hidden="true"></i><i class="cl5-rv" aria-hidden="true"></i>
@@ -428,7 +429,7 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
     <div class="qa"><button class="qh" type="button" aria-expanded="false"><span class="n mono">05</span><span class="t">How involved do I need to be?</span><span class="pl"></span></button><div class="ab"><div><div class="ain"><p class="p">As involved as you want to be. We bring decisions to you at the right moment. The details in between are our responsibility</p></div></div></div></div>
     <div class="qa"><button class="qh" type="button" aria-expanded="false"><span class="n mono">06</span><span class="t">Can we live in the home during construction?</span><span class="pl"></span></button><div class="ab"><div><div class="ain"><p class="p">It depends on scope. We'll advise clearly during the discovery phase</p></div></div></div></div>
     <div class="qa"><button class="qh" type="button" aria-expanded="false"><span class="n mono">07</span><span class="t">Does CI handle permitting, approvals, and inspections?</span><span class="pl"></span></button><div class="ab"><div><div class="ain"><p class="p">Yes</p></div></div></div></div>
-    <div class="qa"><button class="qh" type="button" aria-expanded="false"><span class="n mono">08</span><span class="t">What types of projects does CI take on, and where?</span><span class="pl"></span></button><div class="ab"><div><div class="ain"><p class="p">Significant residential renovations and new builds in Chicago and South Florida</p></div></div></div></div>
+    <div class="qa"><button class="qh" type="button" aria-expanded="false"><span class="n mono">08</span><span class="t">What types of projects does CI take on, and where?</span><span class="pl"></span></button><div class="ab"><div><div class="ain"><p class="p"><span class="wc">High-end residential interior renovations, delivered turnkey, in Chicago and South Florida</span></p></div></div></div></div>
   </div>
     </div>
   </div>
@@ -482,11 +483,11 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
   <a href="#cta" data-ch="cta"><span>07</span><span class="t">Contact</span><i></i></a>
 </nav>
 
-<script type="module" src="js/pre3d.js?v=f70ebeaa"></script>
-<script src="js/site.js?v=f70ebeaa"></script>
-<script src="js/chapters.js?v=f70ebeaa"></script>
-<script src="js/v10.js?v=f70ebeaa"></script>
-<script src="js/r3.js?v=f70ebeaa"></script>
-<script src="js/form.js?v=f70ebeaa"></script>
+<script type="module" src="js/pre3d.js?v=5809af74"></script>
+<script src="js/site.js?v=5809af74"></script>
+<script src="js/chapters.js?v=5809af74"></script>
+<script src="js/v10.js?v=5809af74"></script>
+<script src="js/r3.js?v=5809af74"></script>
+<script src="js/form.js?v=5809af74"></script>
 </body>
 </html>

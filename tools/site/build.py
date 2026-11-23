@@ -21,7 +21,7 @@ PROJ = [
     dict(slug='collectors-home', name='Collectors Home', loc='Streeterville · Chicago', bld='One Bennett Park', facts={'Residence': 'One Bennett Park, 55th floor · Streeterville · Chicago', 'Size': '5,130 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Space reconfiguration / Wine cellar / Primary bathroom / Millwork + stone / Home automation / Furnishings + art'}, set='ch', cover='1450-20a', card='1450-24', tall='1450-09a', cta='1450-31', g=.7,
          gal=[('full', ['1450-24']), ('pair', ['1450-15', '1450-09a']), ('duo', ['1450-02a', '1450-03a']), ('full', ['1450-22']), ('duor', ['1450-10a', '1450-05']), ('pair', ['1450-08a', '1450-16a']),
               ('full', ['1450-32']), ('duo', ['1450-25a', '1450-26']), ('pair', ['1450-12', '1450-11']), ('full', ['1450-34'])]),
-    dict(slug='urban-sanctuary', name='Urban Sanctuary', loc='Gold Coast · Chicago', bld='900 North Michigan', set='us', cover='1511-12a', card='1511-07a', tall='1511-09', cta='1511-06a', g=.66,
+    dict(slug='urban-sanctuary', name='Urban Sanctuary', loc='Gold Coast · Chicago', bld='Condominium', set='us', cover='1511-12a', card='1511-07a', tall='1511-09', cta='1511-06a', g=.66,
          gal=[('full', ['1511-07a']), ('pair', ['1511-09', '1511-10']), ('duo', ['1511-01a', '1511-02a']), ('full', ['1511-11a']), ('duor', ['1511-05a', '1511-04a']), ('pair', ['1530-01', '1530-02']),
               ('full', ['1530-03']), ('pair', ['1511-13', '1530-06a']), ('pair', ['1511-08a', '1530-04'])]),
     dict(slug='room-to-breathe', name='Room To Breathe', loc='Lincoln Park · Chicago', bld='Residence', facts={'Residence': 'Lincoln Park · Chicago', 'Size': '4,070 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Open-plan first floor / Kitchen / Living room / Fireplace wall'}, set='rtb', cover='1430-08a', card='1430-01a', tall='1430-11a', cta='1430-13', top=True, g=.56,
@@ -98,7 +98,10 @@ def extp(slug, name, lines, loc, bld, facts, draft, pics, tags, seed):
                 set=None, cover=pics[0], card=pics[0], tall=pics[1], cta=pics[-1], gal3=plan_of(pics), gal=[('full', [x]) for x in pics])
 
 PROJ += [
-    extp('444-w-grant', '444 W Grant', ['444 W', 'Grant'], 'Lincoln Park · Chicago', 'Residence',
+    # 23.11.2026, the client's notes: «Remove all addresses only use projects names as provided». This project stood under its address
+    # («444 W Grant», the name in the designer's frame); the client's own site calls it «Showpiece Home» (East Lincoln Park, 12,500 sq ft; its
+    # photograph files are the 444-Grant ones), so that is its name now and its page is showpiece-home.html
+    extp('showpiece-home', 'Showpiece Home', ['Showpiece', 'Home'], 'Lincoln Park · Chicago', 'Residence',
          {'Residence': 'East Lincoln Park · Chicago', 'Size': '12,500 sq ft', 'CI Service': 'CI Turnkey', 'Scope': 'Space planning / Interior architecture / Full-scope design / Coach house'},
          {'lead': 'A house of 12,500 square feet on a double lot in East Lincoln Park',
           'client': 'Private clients',
@@ -197,7 +200,7 @@ PROJ[1].update(idea='collection', draft={
             ('Furnishings', 'CI selected, procured and installed / every piece in the residence')]},
     gal3=plan_of(['1511-07a', '1511-09', '1511-10', '1511-01a', '1511-02a', '1511-11a', '1511-05a', '1511-04a', '1530-01', '1530-02', '1530-03', '1511-13', '1530-06a', '1511-08a', '1530-04']))
 
-PROJ_MORE = [dict(name='500 W Superior', loc='River North · Chicago', bld='Residence', img='assets/pj/superior.webp'), dict(name='444 W Grant', loc='Lincoln Park · Chicago', bld='Residence', img='assets/pj/grant.webp')]
+# PROJ_MORE (two projects named by their addresses, «500 W Superior» and «444 W Grant») went 23.11.2026: no addresses on the site
 def ph(set_, name): return name if name.startswith('http') else 'assets/ph/%s/%s.webp' % (set_, name)   # 16.11: a project whose photographs are still on the client's site carries their URLs
 def _stamp():
     """one short number for the state of our own css and js, hung on every link to them: a browser that has an older copy fetches the new one
@@ -373,6 +376,7 @@ def page(fname, title, body, rail, preload=None):
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>%s — CI Design + Build</title>
+<meta name="description" content="CI Design + Build: high-end residential interiors in Chicago and South Florida, designed, built and furnished turnkey by one team.">
 <meta name="robots" content="noindex">
 %s<link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

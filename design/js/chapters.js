@@ -130,9 +130,16 @@
     fu(seg(574, 20, 574, 200), 574, 100); fu(seg(740, 30, 760, 30), 750, 30);
     fu(circD(430, 130, 30), 430, 130); fu(seg(316, 60, 316, 120), 316, 90); fu(seg(544, 140, 544, 200), 544, 170); fu(seg(470, 226, 530, 226), 500, 226);   /* foyer: table, art */
     fu(rectD(880, 40, 92, 52, 22), 920, 66); fu(rectD(790, 150, 60, 60), 820, 180); fu(seg(970, 120, 970, 220), 970, 170);   /* spa: tub, shower, vanity */
-    /* verbs in their rooms (the copy's own words) */
-    var VERB = [ {k: 'wake up', h: 6.5, x: 860, y: 330}, {k: 'recharge', h: 11, x: 640, y: 92}, {k: 'collect', h: 15, x: 400, y: 190},
-                 {k: 'recover', h: 18, x: 860, y: 120}, {k: 'entertain', h: 20, x: 140, y: 300}, {k: 'gather', h: 21.5, x: 500, y: 360} ];
+    /* verbs in their rooms (the copy's own words). 23.11.2026, client: «tell it as one flowing day: open with Wake Up, weave in each
+       moment, and close with Sleep / Bedtime» — the six verbs stand in the order of the day and «sleep» closes it, in the bedroom */
+    var VERB = [ {k: 'wake up', h: 6.5, x: 860, y: 330}, {k: 'recharge', h: 10.5, x: 640, y: 92}, {k: 'collect', h: 13.5, x: 400, y: 190},
+                 {k: 'recover', h: 16.5, x: 860, y: 120}, {k: 'entertain', h: 19.5, x: 140, y: 300}, {k: 'gather', h: 21, x: 500, y: 360},
+                 {k: 'sleep', h: 22.6, x: 836, y: 606} ];
+    /* the day against the scroll: every moment holds the same length of scroll, so each of its lines can be read (there is no clock
+       to contradict it any more); [progress, hour] */
+    var DAYK = [[.36, 5], [.385, 6.5], [.437, 10.5], [.489, 13.5], [.541, 16.5], [.593, 19.5], [.645, 21], [.697, 22.6], [.76, 24]];
+    function hourAt(p){ if (p <= DAYK[0][0]) return DAYK[0][1]; for (var i = 1; i < DAYK.length; i++){ if (p <= DAYK[i][0]){ var a = DAYK[i - 1], b = DAYK[i]; return a[1] + (b[1] - a[1]) * (p - a[0]) / (b[0] - a[0]); } } return 24; }
+    var moms = [].slice.call(sec.querySelectorAll('.ph-m')), momK = null;
     var gTag = el('g', {}, svg), tags = VERB.map(function(v){
       var g = el('g', {'class': 'ph-tag', transform: 'translate(' + v.x + ' ' + v.y + ')'}, gTag);
       var ring = el('circle', {r: 4, 'class': 'ring', 'vector-effect': 'non-scaling-stroke'}, g);
@@ -155,14 +162,10 @@
     var gRule = el('g', {'class': 'dg ph-rule'}, svg), RY = H + 92;
     line(gRule, seg(0, RY, W, RY), 'w2', .0);
     for (var hh = 0; hh <= 24; hh++){ var xx = W * hh / 24, big = hh % 6 === 0; line(gRule, seg(xx, RY - (big ? 10 : 5), xx, RY), big ? 'w2' : 'w3', .02 + hh * .012); }
-    ['00', '06', '12', '18', '24'].forEach(function(s, i){ var t = el('text', {x: W * i / 4, y: RY + 26, 'class': 'rl', 'text-anchor': 'middle'}, gRule); t.textContent = s; });
+    /* «remove the timestamps» (client 23.11): no 00 … 24 under the ruler and no running clock at the cursor; the day is told by the
+       light on the plan and by the words */
     var fill = el('path', {d: seg(W * 6 / 24, RY, W, RY), 'class': 'ph-fill', pathLength: 1, 'vector-effect': 'non-scaling-stroke'}, svg);
     var cursor = el('g', {'class': 'ph-cur'}, svg); el('path', {d: seg(0, RY - 22, 0, RY + 6), 'vector-effect': 'non-scaling-stroke'}, cursor); el('rect', {x: -3, y: RY - 25, width: 6, height: 6}, cursor);
-    /* the clock: every hour and every ten minutes already set as text, one of each shown (no text is written while the day runs) */
-    var HRS = [], MNS = [], shownH = null, shownM = null;
-    for (var q = 0; q < 24; q++){ var th0 = el('text', {x: 2, y: RY - 36, 'class': 'hr', 'text-anchor': 'end'}, cursor); th0.textContent = (q < 10 ? '0' : '') + q + ':'; th0.style.display = 'none'; HRS.push(th0); }
-    for (var q2 = 0; q2 < 6; q2++){ var tm0 = el('text', {x: 2, y: RY - 36, 'class': 'hr', 'text-anchor': 'start'}, cursor); tm0.textContent = q2 + '0'; tm0.style.display = 'none'; MNS.push(tm0); }
-    function clock(h, m){ var a = HRS[h], b = MNS[m]; if (a !== shownH){ if (shownH) shownH.style.display = 'none'; a.style.display = ''; shownH = a; } if (b !== shownM){ if (shownM) shownM.style.display = 'none'; b.style.display = ''; shownM = b; } }
     /* five, ten, twenty years: the home's outline grows outward like rings */
     var gYrs = el('g', {'class': 'dg'}, svg), YR = [{d: 34, t: '5'}, {d: 70, t: '10'}, {d: 112, t: '20'}];
     YR.forEach(function(y, i){ line(gYrs, rectD(-y.d, -y.d, W + 2 * y.d, H + 2 * y.d, y.d * .9), 'w3 yr', i * .22);
@@ -180,9 +183,8 @@
       var kr = sg(p, .1, .15); gRule.style.setProperty('--k', kr.toFixed(3));
       var kf = eo(sg(p, .13, .22)); fill.style.strokeDashoffset = (1 - kf).toFixed(4);
       txt(pctEl, Math.round(75 * kf)); stage.style.setProperty('--pc', (sg(p, .11, .15) * (1 - sg(p, .325, .35))).toFixed(3));
-      /* the day: 06:00 → 24:00 while the verbs are read */
-      var hr = 5 + 19 * sg(p, .36, .76), th = Math.min(23.99, hr), mm = Math.floor((th % 1) * 6) * 10;   /* the clock ticks in tens of minutes */
-      clock(Math.floor(th), mm / 10);
+      /* the day: before dawn → midnight while the verbs are read */
+      var hr = hourAt(p), th = Math.min(23.99, hr);
       
       cursor.setAttribute('transform', 'translate(' + f1(W * th / 24) + ' 0)'); cursor.style.opacity = (sg(p, .34, .38) * (1 - sg(p, .9, .96))).toFixed(3);
       var day = sm((hr - 5.6) / 1.2) * (1 - sm((hr - 18.6) / 1.4)), theta = (hr - 6) / 12 * Math.PI, sx = -Math.cos(theta), sy = -Math.sin(theta), elev = Math.max(0, Math.sin(theta));
@@ -205,6 +207,8 @@
         var vb = vbs.filter(function(v){ return v.textContent.trim() === t.v.k; })[0]; if (vb) vb.classList.toggle('on', seen && p < .9); });
       var curK = null, curH = -1; tags.forEach(function(t){ if (hr >= t.v.h && t.v.h > curH){ curH = t.v.h; curK = t.v.k; } });
       vbs.forEach(function(v){ v.classList.toggle("vcur", p < .9 && v.textContent.trim() === curK); });
+      /* the line under the list belongs to the moment that is on (the first one before the day begins) */
+      var mk = curK || VERB[0].k; if (mk !== momK){ momK = mk; moms.forEach(function(m){ m.classList.toggle('on', m.getAttribute('data-k') === mk); }); }
       /* the years */
       var ky = sg(p, .74, .84); gYrs.style.setProperty('--k', ky.toFixed(3)); gYrs.style.opacity = (1 - sg(p, .9, .97)).toFixed(3);
       YR.forEach(function(y, i){ y.t2.style.opacity = sg(ky, i * .22 + .1, i * .22 + .3).toFixed(3); }); yrLab.style.opacity = sg(ky, .7, 1).toFixed(3);
