@@ -623,12 +623,7 @@
   function updateChap(y, vh){
     if (!chap) return;
     var ftr = $('footer'), ftop = ftr ? ftr.getBoundingClientRect().top : 1e9;   /* the footer has its own street line: the rail steps aside */
-    /* 25.11 trial (html.nav-top): the chapters run along the top, between the logo and the button — there from the first screen and to the
-       end of the page; the soft blur behind them waits for the first drawn chapter (html.nav-deep), so the hero stays as approved */
-    var navTop = chap.__nt === undefined ? (chap.__nt = document.documentElement.classList.contains('nav-top') && window.matchMedia('(min-aspect-ratio: 1/1) and (min-width: 901px)')) : chap.__nt;
-    var top = !!(navTop && navTop.matches);
-    chap.classList.toggle('show', state.done && (top || (y > vh * .7 && ftop > vh * .92)));
-    if (navTop){ var deep = top && y > vh * .7; if (deep !== chap.__dp){ chap.__dp = deep; document.documentElement.classList.toggle('nav-deep', deep); } }
+    chap.classList.toggle('show', state.done && y > vh * .7 && ftop > vh * .92);
     var gr = chap.__gr || (chap.__gr = document.querySelector('.grain')); if (gr) gr.classList.toggle('on', state.done && y > vh * .7);   /* v10: grain from the first drawn chapter on; the hero stays as approved */
     var idx = 0, tops = chapSecs.map(function(s){ return s.getBoundingClientRect().top + y; });
     for (var i = 0; i < tops.length; i++) if (y + vh * .5 >= tops[i]) idx = i;
@@ -1001,12 +996,11 @@
     if (near('dial', y, vh)) updateDial(vh); if (near('about', y, vh)) updateAbout(vh, now); if (near('appr', y, vh)) updateAppr(vh);
     if (near('proc', y, vh)) updateProc(vh); if (near('cta', y, vh)) updateCta(vh); if (near('reads', y, vh)) updateReads(vh);
     if (near('px', y, vh)) updatePx(vh); if (near('yode', y, vh)) updateYode(vh); if (near('glass', y, vh)) updateGlass(vh);
-    if (y !== lastY || vh !== lastVH || state.done !== lastDone) { lastDone = state.done; updateHdr(); updateChap(y, vh); }   /* 25.11: also when the intro ends — the chapters at the top (trial) are there from the first screen */
+    if (y !== lastY || vh !== lastVH) { updateHdr(); updateChap(y, vh); }
     updateLogo(y, vh);
     lastY = y; lastVH = vh;
     requestAnimationFrame(loop);
   }
 
-  var lastDone = null;
   window.__intro = { T: T, finish: finish, state: state, G: function(){ return G; }, seek: function(t){ cancelAnimationFrame(raf); if (!preDone) { preDone = true; pre.classList.add('out'); veil.classList.add('off'); st15.classList.add('on'); } state.t = t; render(t); }, slide: function(i){ showSlide(i); } };
 })();
