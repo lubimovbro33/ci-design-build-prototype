@@ -735,7 +735,7 @@
     if (ga > 0){ ink(ga); g.beginPath(); for (j = 0; j <= 48; j++){ var hp = P(AB - 46 + 22 * Math.cos(j / 48 * 6.2831853), 22 * Math.sin(j / 48 * 6.2831853)); if (j) g.lineTo(hp[0], hp[1]); else g.moveTo(hp[0], hp[1]); } g.stroke();
       var g0 = P(x0 + KY.NS + 14, -11), g1 = P(xt - 48, -11); seg(g0[0], g0[1], g1[0], g1[1]); }
     /* the pins, the lines that lead each cut out, and the names (a name in square brackets is the client's placeholder: at half strength) */
-    var px = Math.max(10, 14 * U), s6 = Math.max(5, 7 * U), LS = flow ? 30 : 216 * U; g.font = '400 ' + px.toFixed(2) + 'px "Zalando Sans Expanded", sans-serif'; g.textBaseline = 'alphabetic';
+    var px = Math.max(10, 14 * U), s6 = Math.max(5, 7 * U), LS = flow ? 30 : 216 * U; g.font = '400 ' + px.toFixed(2) + 'px "TG Display", sans-serif'; g.textBaseline = 'alphabetic';
     for (i = 0; i < N; i++){
       var T = KY.T0 + i * KY.D, pa = sg(pr[i], .3, 1), lp = eio(sg(q, T + .06, T + .34)), la = sg(q, T + .24, T + .42), nm = f.names[i];
       if (pa > 0){ var pp = P(ca[i], hb - d[i] + 8); g.fillStyle = 'rgba(' + KY.BLUE + ',' + pa.toFixed(3) + ')'; g.fillRect(Math.round(pp[0] - s6 / 2), Math.round(pp[1] - s6 / 2), Math.round(s6), Math.round(s6)); }
@@ -767,7 +767,7 @@
     else if (reduced && q > .05) q = Math.max(q, 9);
     var al = sg(q, -.45, .15), fr = sg(q, .5, 2.9), x0 = w / 2 - 700 * s, x1 = w / 2 + 700 * s, L = (x1 - x0) / N, tm = reduced ? 0 : t;
     if (al <= 0) return;
-    var px = Math.max(10, 14 * U), s8 = Math.max(5, 8 * U); g.font = '400 ' + px.toFixed(2) + 'px "Zalando Sans Expanded", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.lineCap = 'butt';
+    var px = Math.max(10, 14 * U), s8 = Math.max(5, 8 * U); g.font = '400 ' + px.toFixed(2) + 'px "TG Display", sans-serif'; g.textAlign = 'center'; g.textBaseline = 'alphabetic'; g.lineCap = 'butt';
     for (i = 0; i < N; i++){
       var o = S[i], txn = (i + .5) / N, d = c01((fr * 1.47 - txn) / .45 - o.j), k = d * d * (3 - 2 * d), tx = x0 + (i + .5) * L, fl = (1 - k) * 5 * s;
       var x = lerp(tx + o.dx * s + Math.sin(tm * .31 * o.w + o.p) * fl, tx, k), y = lerp(mid + o.dy * s + Math.cos(tm * .27 * o.w + o.p) * fl, mid, k), a = (o.a + Math.sin(tm * .2 * o.w + o.p) * .12) * (1 - k), l = lerp(o.l * s, L + .6, k) / 2;

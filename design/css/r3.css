@@ -14,7 +14,7 @@
    the frame taller than the screen: top-hung and bottom-hung things run into each other. So the unit is the frame fitted
    into the window — by width, or by height when the window is low. */
 @media (min-aspect-ratio: 1/1){ :root{ --u:min(calc(100vw / 1920), calc(100vh / 1080)) } }
-:root{ --t-run:max(13px, calc(20 * var(--u))); --fx:"Zalando Sans Expanded",sans-serif; --fz:"Zalando Sans","Zalando Sans SemiExpanded",sans-serif; --fh:"Zalando Sans Expanded",sans-serif; --blue:#96A8BF; --mist:#BAC7D6 }
+:root{ --t-run:max(13px, calc(20 * var(--u))); --fx:"TG Display",sans-serif; --fz:"TG Text",sans-serif; --fh:"TG Display",sans-serif; --blue:#96A8BF; --mist:#BAC7D6 }
 
 html body .t111{font-family:var(--fx)!important;font-weight:700!important;font-size:max(38px, calc(111 * var(--u)))!important;line-height:.856!important;letter-spacing:-.072em!important;text-transform:uppercase!important;margin:0;text-indent:0!important;padding:0!important}
 html body .t60{font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase!important;margin:0;color:#FFFFFF;text-indent:0!important;padding:0!important;white-space:normal!important}
@@ -71,7 +71,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
   #philosophy .ph-t, #about .ch-t, #approach .ch-t{position:absolute;inset:0;display:block;pointer-events:none}
   #philosophy .ph-pct{display:none!important}
   #philosophy .ph-vs.row1{top:52vh}
-  #about .ab-say{font-family:"Zalando Sans SemiExpanded",var(--fz);font-size:19px;line-height:1.1;letter-spacing:-.03em;color:#FFFFFF;margin:6px 0 0}
+  #about .ab-say{font-family:var(--fz);font-size:19px;line-height:1.1;letter-spacing:-.03em;color:#FFFFFF;margin:6px 0 0}
   #about .r3p.r3c{text-align:left}
   #about .ch-t > .r3own{position:absolute;left:20px;right:20px;top:calc(var(--hdr) + 60px);bottom:60px;background:none;padding:0;display:flex;flex-direction:column;justify-content:space-between}
   #about .r3own .oa{margin-bottom:auto}
@@ -130,7 +130,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 .ab-one .ws b{position:absolute;left:50%;top:0;font-weight:400;color:var(--blue);opacity:0;transform:translate(-50%,1.05em);will-change:transform,opacity}
 @media (min-aspect-ratio: 1/1){
   #about .ab-lb{margin-top:calc(11 * var(--u))!important}
-  #about .ab-say{position:absolute;left:calc(372 * var(--u));top:0;width:calc(540 * var(--u));margin:0!important;max-width:none!important;font-family:"Zalando Sans SemiExpanded",var(--fz)!important;font-weight:400!important;font-size:max(18px, calc(36.77 * var(--u)))!important;line-height:1.08!important;letter-spacing:-.0408em!important;color:#FFFFFF;text-indent:0!important}
+  #about .ab-say{position:absolute;left:calc(372 * var(--u));top:0;width:calc(540 * var(--u));margin:0!important;max-width:none!important;font-family:var(--fz)!important;font-weight:400!important;font-size:max(18px, calc(36.77 * var(--u)))!important;line-height:1.08!important;letter-spacing:-.0408em!important;color:#FFFFFF;text-indent:0!important}
   /* the closing: the white thought on top, "we own everything in between" on the two circles, two bricks and the button at the bottom */
   #about .ch-t > .r3own{position:absolute!important;left:0!important;top:0!important;right:0!important;bottom:0!important;width:100%!important;height:100%;transform:none!important;display:block!important}
   #about .r3own .oa{position:absolute;left:0;right:0;top:calc(50 * var(--u));text-align:center}
@@ -343,7 +343,7 @@ html body .pr6-d{margin:0;max-width:none;font-family:var(--fz);font-weight:400;f
    from the bottom, read words #F5F5F5 on #96A8BF; the note in the running text (20 / 115 % / −1, her note 20:56 — not the +1 of the frame's style), 269 wide at 50, its foot 60 from the bottom. The second screen is below. */
 @media (min-aspect-ratio: 1/1){
   html body .cl5-title{left:calc(421 * var(--u));top:calc(50 * var(--u));width:calc(670 * var(--u));white-space:normal;padding-left:0;text-indent:0;font-family:var(--fx)!important;font-weight:400!important;font-size:max(24px, calc(60 * var(--u)))!important;line-height:.867!important;letter-spacing:-.0167em!important;text-transform:uppercase;color:#FFFFFF}
-  html body .cl5-say{left:calc(421 * var(--u));right:auto;width:calc(1225 * var(--u));bottom:max(calc(65 * var(--u)), 58px);text-indent:0;font-family:"Zalando Sans SemiExpanded",var(--fz);font-weight:400;font-size:max(22px, calc(50 * var(--u)));line-height:1.06;letter-spacing:-.04em;color:#96A8BF}
+  html body .cl5-say{left:calc(421 * var(--u));right:auto;width:calc(1225 * var(--u));bottom:max(calc(65 * var(--u)), 58px);text-indent:0;font-family:var(--fz);font-weight:400;font-size:max(22px, calc(50 * var(--u)));line-height:1.06;letter-spacing:-.04em;color:#96A8BF}
   html body .cl5-say .w.lit{color:#F5F5F5}
   html body .cl5-p{left:calc(50 * var(--u));bottom:max(calc(60 * var(--u)), 58px);width:calc(269 * var(--u));max-width:none!important;color:#FFFFFF}
 }

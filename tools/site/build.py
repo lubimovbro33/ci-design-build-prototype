@@ -378,9 +378,8 @@ def page(fname, title, body, rail, preload=None):
 <title>%s — CI Design + Build</title>
 <meta name="description" content="CI Design + Build: high-end residential interiors in Chicago and South Florida, designed, built and furnished turnkey by one team.">
 <meta name="robots" content="noindex">
-%s<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zalando+Sans:wght@400;600;700&family=Zalando+Sans+Expanded:wght@400;500;600;700&family=Zalando+Sans+SemiExpanded:wght@400;700&display=swap">
+%s<link rel="preload" href="assets/fonts/tg-ext.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
 <link rel="stylesheet" href="css/site.css">
 <link rel="stylesheet" href="css/chapters.css">
 <link rel="stylesheet" href="css/type.css">
