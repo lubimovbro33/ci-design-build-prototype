@@ -234,6 +234,17 @@
        the variant that leaves her layout alone): while the house stands apart as five firms it is drawn in the system's mute grey, and
        it turns white again as the five come together under CI. Grey = the traditional model, white = CI, as in the time chart below. */
     var MUTE = [123, 128, 135];
+    /* 25.11.2026, a trial (the client's review, P6: «in the Traditional Model comparison, distinguish CI Design + Build using a restrained
+       accent color, rather than relying solely on weight or monochrome contrast»; the designer: «Акцентный цвет для CI попробуем
+       сделать, давай посмотрим, как будет»). The accent is the system's own Bright Gray-blue. Two readings, chosen by the address
+       (?ci=roof | ?ci=house | ?ci=off) so both can be looked at on the same build:
+       house — as the five grey firms come together the whole drawing turns to the accent: grey = the traditional model, blue = CI;
+       roof  — the house stays in the page's white pen and only the one roof over everything (CI itself) is drawn in the accent.
+       In the time chart, in both: the traditional line of labels is grey, CI's label line and its plane are the accent, and the
+       saved fifth becomes the white card (the hero's card) so the figure still stands out. */
+    var ACC = [150, 169, 191], CIM = ((location.search.match(/[?&]ci=(\w+)/) || [])[1]) || 'house';
+    if (CIM !== 'off') sec.classList.add('ci-acc');
+    var CIC = CIM === 'house' ? ACC : ONE;
     function mix(a, b, t){ return 'rgb(' + Math.round(lerp(a[0], b[0], t)) + ',' + Math.round(lerp(a[1], b[1], t)) + ',' + Math.round(lerp(a[2], b[2], t)) + ')'; }
     var gSec = el('g', {}, svg), gH = el('g', {}, svg);   /* gSec: the five layers in screen units; gH: house units (roof, disciplines, time) */
     LAY.forEach(function(L, i){ L.g = el('g', {'class': 'dg'}, gSec); L.box = el('path', {d: rectD(-10, 50, 920, 580), 'class': 'box', 'vector-effect': 'non-scaling-stroke'}, L.g);
@@ -266,6 +277,7 @@
     for (var c = 0; c < 4; c++){ line(I, seg(64 + c * 6, 395, 64 + c * 6, 525), 'w3', .4); line(I, seg(836 - c * 6, 145, 836 - c * 6, 275), 'w3', .4); }
     /* the roof: one line over everything */
     var gRoof = el('g', {'class': 'dg roof'}, gH);
+    if (CIM !== 'off') gRoof.style.setProperty('--hl', 'rgb(' + ACC.join(',') + ')');
     line(gRoof, 'M10 92L450 -110L890 92', 'w1', 0); line(gRoof, 'M40 80L450 -92L860 80', 'w2', .1);
     /* disciplines, each pointing at its part of the house */
     var DIS = [['ARCHITECTURE', 47, 460, -1], ['INTERIOR DESIGN', 765, 240, 1], ['CONSTRUCTION', 640, 460, 1], ['FURNISHINGS', 425, 548, 1], ['ART', 620, 200, 1],
@@ -293,8 +305,8 @@
     el('path', {d: seg(0, 0, PW, 0), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
     [0, .25, .5, .75, 1].forEach(function(t, i){ el('path', {d: seg(t * PW, -4, t * PW, 4), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
       var tt = el('text', {x: t * PW, y: -12, 'class': 'tk', 'text-anchor': i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}, gT); tt.textContent = i === 4 ? '100%' : String(t * 100); });
-    var lab1 = el('text', {x: PW / 2, y: TY - 30, 'class': 'tl2', 'text-anchor': 'middle'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
-    var lab2 = el('text', {x: PW / 2, y: CY - 32, 'class': 'tl2', 'text-anchor': 'middle'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
+    var lab1 = el('text', {x: PW / 2, y: TY - 30, 'class': 'tl2 tr', 'text-anchor': 'middle'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
+    var lab2 = el('text', {x: PW / 2, y: CY - 32, 'class': 'tl2 ci', 'text-anchor': 'middle'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
     var bars = [], fades = [];
     var TN = ['ARCHITECTS', 'DESIGNERS', 'CONTRACTORS', 'VENDORS', 'INSTALLERS'], CN = ['ARCHITECTURE', 'INTERIOR DESIGN', 'CONSTRUCTION', 'FURNISHINGS', 'INSTALLATION'];
     trad.forEach(function(b, i){ var d = i * .2;
@@ -317,7 +329,7 @@
        its plane ends — and a note under the chart says what is measured and against what. The note is working copy (.wc) until CI
        confirms the baseline and the figure. Nothing of her frame moves: the ruler, the two label lines, the blocks and the card stay. */
     var seT = [[0, TY - 30, 'start', 'START'], [PW, TY - 30, 'end', 'READY'], [0, CY - 32, 'start', 'START'], [SX, CY - 32, 'end', 'READY']].map(function(q, i){
-      var t = el('text', {x: q[0], y: q[1], 'class': 'tl2 se', 'text-anchor': q[2]}, gT); t.textContent = q[3];
+      var t = el('text', {x: q[0], y: q[1], 'class': 'tl2 se ' + (i < 2 ? 'tr' : 'ci'), 'text-anchor': q[2]}, gT); t.textContent = q[3];
       if (i === 1){ t.setAttribute('opacity', 0); fades.push({e: t, d: 1.05}); } if (i === 3){ t.setAttribute('opacity', 0); fades.push({e: t, d: 1.45}); }
       return t; });
     var NY = CY + CH2 + 26, ntG = el('g', {'class': 'nt', opacity: 0}, gT);
@@ -367,7 +379,7 @@
       var m = port ? 24 : 48 * k, gap = 22, cols = port ? 3 : 5,   /* the row keeps the text margin (48 of the frame, as --x:48), not the header's 24 */
        cw = (VW - 2 * m - (cols - 1) * gap) / cols, sc = cw / 920, chh = 580 * sc;
       /* the row stands 24 above the chapter rule at the bottom (user 15:22: it ran into it on a 16:10 screen) */
-      var chap = document.querySelector('.chap'), navTop = chap && chap.getBoundingClientRect().height ? chap.getBoundingClientRect().top : h - 60;
+      var chap = document.querySelector('.chap'), cr = chap && chap.getBoundingClientRect(), navTop = cr && cr.height ? (cr.top > h / 2 ? cr.top : h - 36) : h - 60;   /* 25.11: with the chapters at the top (trial) the row keeps the place it had over the 36-high rail */
       var top = port ? VH * .58 : Math.min(VH - 40, (navTop - 40) * VW / w) - chh;
       /* type pass: the H2 title is wider now — if its longest line would come within 48 of the house's wall, the house steps
          right just enough (at most 6 % of the width), so it stays centred wherever there is room */
@@ -424,7 +436,7 @@
         var s = sm(sg(p, .18, .3)) * (1 - j), H0 = LY.house, C0 = LY.cards[i];
         L.g.setAttribute('transform', 'translate(' + f1(lerp(H0[0], C0[0], s)) + ' ' + f1(lerp(H0[1], C0[1], s)) + ') scale(' + lerp(H0[2], C0[2], s).toFixed(4) + ')');
         L.box.style.opacity = fr.toFixed(3); L.t.style.opacity = (sg(p, .26, .31) * (1 - sg(p, .38, .42))).toFixed(3);
-        var ck = s.toFixed(3); if (L.j !== ck){ L.j = ck; var cc = mix(ONE, MUTE, s); L.g.style.setProperty('--hl', cc); L.t.style.fill = cc; L.box.style.stroke = cc; } });
+        var ck = s.toFixed(3) + '/' + j.toFixed(3); if (L.j !== ck){ L.j = ck; var cc = mix([lerp(ONE[0], CIC[0], j), lerp(ONE[1], CIC[1], j), lerp(ONE[2], CIC[2], j)], MUTE, s);   /* white as it is first drawn, grey apart, CI's colour once together */ L.g.style.setProperty('--hl', cc); L.t.style.fill = cc; L.box.style.stroke = cc; } });
       /* one roof */
       gRoof.style.setProperty('--k', sg(p, .5, .56).toFixed(3));
       /* the disciplines */
@@ -1282,10 +1294,11 @@
     dots.forEach(function(d, i){ d.addEventListener('click', function(){ [dots, qs, bgs].forEach(function(a){ a.forEach(function(e, k){ e.classList.toggle('on', k === i); }); }); }); });
   })();
 
+  function chapTop(){ var e = document.getElementById('chap'); if (!e) return false; var r = e.getBoundingClientRect(); return r.height > 0 && r.top < window.innerHeight / 2; }
   /* light sections: the header and the chapter rail turn to ink while one is under them */
   var INK = [].slice.call(document.querySelectorAll('[data-ink]')), hdrEl = document.getElementById('hdr'), chapEl = document.getElementById('chap'), inkH = null, inkC = null;
   function ink(){
-    if (!INK.length) return; var vh = window.innerHeight, yh = 40, yc = vh - 18, h = false, c = false;
+    if (!INK.length) return; var vh = window.innerHeight, yh = 40, yc = chapTop() ? yh : vh - 18, h = false, c = false;
     for (var i = 0; i < INK.length; i++){ var r = INK[i].getBoundingClientRect(); if (r.top <= yh && r.bottom >= yh) h = true; if (r.top <= yc && r.bottom >= yc) c = true; }
     if (h !== inkH){ inkH = h; if (hdrEl) hdrEl.classList.toggle('ink', h); }
     if (c !== inkC){ inkC = c; if (chapEl) chapEl.classList.toggle('ink', c); }
@@ -1308,6 +1321,7 @@
   }
   function chapInk(){
     if (!CHA.length || (chapN++ & 3)) return; var y = window.innerHeight - 18;
+    if (chapTop()){ var cr = chapEl.getBoundingClientRect(); y = cr.top + cr.height * .3; }   /* the chapters at the top (trial): read what is under the words */
     for (var i = 0; i < CHA.length; i++){ var r = CHA[i].getBoundingClientRect(); if (!r.width) continue; var lt = under(r.left + Math.min(r.width / 2, 60), y) > .6; if (lt !== CHA[i]._lt){ CHA[i]._lt = lt; CHA[i].classList.toggle('lt', lt); } }
   }
 

@@ -595,3 +595,37 @@ html body .pr4{background:linear-gradient(180deg,#0B0B0C 0,#0B0B0C calc(100% - 5
 @media (max-aspect-ratio: 1/1){
   #about .ab-time .tk,#about .ab-time .tl2{font-size:24px;letter-spacing:-.9px}
 }
+
+/* ===== 25.11 · trial: an accent colour for CI in the comparison with the traditional model (the client's review, P6; branch review-flow).
+   Grey = the traditional model, the system's blue = CI. In the chart the traditional line of labels is grey, CI's label line and its
+   plane are blue, and the saved fifth is the white card, so the figure still leads. The blue half of the traditional model's own
+   sentence turns grey for the same reason: blue now belongs to CI on these screens. ===== */
+#about.ci-acc .ab-time .tl2.tr{fill:#7B8087}
+#about.ci-acc .ab-time .tl2.ci{fill:#96A9BF}
+#about.ci-acc .ab-time .cb{fill:#96A9BF}
+#about.ci-acc .ab-time .sb{fill:#FFFFFF}
+html body #about.ci-acc .ab-say .cb{color:#7B8087!important}
+
+/* ===== 25.11 · trial: the chapter navigation at the top (the client's review, P1: «test a clearly visible top navigation instead of
+   relying on the bottom menu»; the designer: not a menu of the site's pages — that one stays behind the button — but the chapters of
+   the page moved up, in a new format, and the runner stays). Home page only, wide screens only (html.nav-top; branch review-flow).
+   One hairline from the logo to the button, on their common axis; the chapters' names stand on it; the line fills as the page is
+   read and the system's blue square rides at its head. No numbers and no ticks, so it is never mistaken for the ruler of 03 About.
+   The blur that keeps the header clear of what scrolls under it runs the whole width now, from the first drawn chapter on. ===== */
+@media (min-aspect-ratio: 1/1) and (min-width: 901px){
+  html.nav-top body .chap{left:calc(190 * var(--u));right:calc(457 * var(--u));top:calc(24 * var(--u));bottom:auto;height:calc(78 * var(--u));gap:0;transform:none;z-index:58;transition:opacity .6s var(--e-out),color .5s}
+  html.nav-top.rail-pj body .chap{left:calc(190 * var(--u))}
+  html.nav-top body .chap a{flex:1;overflow:visible;align-items:flex-end;gap:0;padding:0 0 calc(39 * var(--u) + 9px);transition:flex 1s var(--e-expo),color .5s}
+  html.nav-top body .chap a.on{flex:1.9}
+  html.nav-top body .chap a span:first-child{display:none}
+  html.nav-top body .chap a .t{opacity:.78;transition:opacity .5s}
+  html.nav-top body .chap a.on .t,html.nav-top body .chap a:hover .t{opacity:1}
+  html.nav-top body .chap a::after{top:calc(39 * var(--u));background:linear-gradient(90deg, rgb(var(--c)) 0, rgb(var(--c)) calc(var(--p, 0) * 100%), rgba(var(--c), .3) calc(var(--p, 0) * 100%), rgba(var(--c), .3) 100%)}
+  html.nav-top body .chap a::before{display:none}
+  html.nav-top body .chap a.on::before{display:block;top:calc(39 * var(--u) - 4px);left:calc(var(--p, 0) * 100% - 4px);width:8px;height:8px;background:#96A8BF;z-index:1}
+  /* the bars: nothing at the bottom; at the top one soft band across the whole width, once the hero is behind */
+  html.nav-top .r3-rb,html.nav-top .r3-hb.r{display:none}
+  html.nav-top .r3-hb.l{left:0;right:0;width:auto;-webkit-mask-image:linear-gradient(to bottom,#000 70%,transparent 100%);mask-image:linear-gradient(to bottom,#000 70%,transparent 100%);-webkit-mask-composite:source-over;mask-composite:add}
+  html.nav-top.rail-on .r3-hb.l{opacity:0}
+  html.nav-top.rail-on.nav-deep .r3-hb.l{opacity:1}
+}
