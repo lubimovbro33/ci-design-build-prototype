@@ -616,3 +616,5 @@ html body .hero-ui .hero-pos{font-size:max(15px, calc(26 * var(--u)))!important;
 /* 26.11 · the chapter rail on a narrow laptop window (≤ 1280): in Trade Gothic «02 PHILOSOPHY» no longer fitted its cell and lost
    its last letter — the number stands a little closer to the name and the cells a little closer to each other */
 @media (min-width:981px) and (max-width:1280px){ .chap{gap:8px} .chap a{gap:6px} }
+/* the rail beside the projects' card is a third shorter: the open chapter takes less of it, so the chapter names keep their last letters */
+@media (min-aspect-ratio: 1/1) and (min-width: 901px){ html.rail-pj body .chap{gap:8px} html.rail-pj body .chap a{gap:6px} html.rail-pj body .chap a.on{flex:2.4} }
