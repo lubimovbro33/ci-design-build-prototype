@@ -580,3 +580,10 @@ html body #philosophy{--vrh:calc(55 * var(--u))}
 /* 23.11.2026, client's notes: the ideal client profile (seeking a holistic change; values their time and health; a high-touch, concierge
    experience; turnkey living, in-home wellness, longevity) stands in the block about the CI client, over the sentence that was there */
 .cl5-p .cl5-who{display:block;margin:0 0 .9em}
+
+/* ===== 25.11 · the client's order of the home page (branch review-flow): the seams the new neighbours make.
+   About CI ends on black and Solutions used to open after a photograph, at #101214: two near-blacks side by side read as a
+   fault, so Solutions now rises out of the same black. Process (#0B0B0C) used to hand over to a photograph; it is followed by
+   Philosophy on black now and settles into it over its last half-screen. ===== */
+html body .ch-suite{background:linear-gradient(180deg,#000 0,#07090A calc(40 * var(--u)),#101214 calc(160 * var(--u)),#18222B 52%,#283E4B 100%)}
+html body .pr4{background:linear-gradient(180deg,#0B0B0C 0,#0B0B0C calc(100% - 50vh),#000 100%)}

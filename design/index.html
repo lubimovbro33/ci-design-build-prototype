@@ -87,6 +87,13 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
   </div>
 </header>
 
+<!-- 25.11.2026 — THE ORDER OF THE HOME PAGE, as the client's homepage review suggests (a trial, on the branch review-flow; the designer:
+     «Можем попробовать изменить, так как они предложили. Сделай, а я посмотрю»). Their flow: Hero → CI Difference / one team →
+     Services → CI Turnkey and what it includes → Projects → Process → Approach / wellness (short) → Contact. Ours, with the same blocks:
+     Hero + the three statements → About CI (the traditional model against one team, the time saved) → Solutions → What Turnkey
+     Should Really Mean → Projects → Process → Philosophy (75 %, the day on the plan) → Approach → Client → Reviews → FAQ → CTA.
+     It was (her frame, 13.11): Hero → Philosophy → About → Difference → Solutions → Approach → Process → Projects → Client → …
+     The numbers in the comments over the blocks are the old ones and say nothing about the order any more. -->
 <!-- ================================================================== 01 HERO · v15: lights off → the CI outline → our window lights up → inside -->
 <div class="hpin" id="hpin">
 <section class="hero" id="hero">
@@ -144,25 +151,6 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
   </div>
 </section>
 </div>
-<!-- ================================================================== 02 PHILOSOPHY · a day passes over the plan of a home (v8) -->
-<section class="ch ch-phil" id="philosophy">
-  <div class="ch-pin" id="philPin">
-    <div class="ch-stage">
-      <div class="ph-t">
-        <div data-a="-1" data-b=".11" class="r3p" style="--x:48;--y:155"><h2 class="t60">Building You<br><span class="cb">a Better Life</span></h2></div>
-        <div data-a=".11" data-b=".25" class="r3p" style="--x:48;--y:155"><p class="t34" style="--w:660">75% of&nbsp;your life is lived at home. Design it accordingly. <span class="cb">The quality of&nbsp;that environment shapes everything: your lifestyle, your health, your longevity goals</span></p></div>
-        <div data-a=".25" data-b=".35" class="r3p" style="--x:48;--y:155"><h3 class="t34 up">We believe the best<br>homes <span class="cb">begin with life,</span><br>not a look</h3></div>
-        <div data-a=".35" data-b=".86" class="r3p ph-vs row1" style="--x:48;--y:175"><p class="t34 up cb ph-vin">How you want to</p><p class="ph-verbs ph-vl"><span class="vr"><span class="vt"><span class="vb">wake up</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">recharge</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">collect</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">recover</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">entertain</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">gather</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">sleep</span></span><i></i></span></p></div>
-        <div data-a=".35" data-b=".86" class="r3p r3b row2" style="--x:48;--yb:178"><p class="t20 ph-day" style="--w:362"><span class="ph-ms"><span class="ph-m on" data-k="wake up">how you want light to move through your morning</span><span class="ph-m wc" data-k="recharge">where the middle of the day gives your energy back</span><span class="ph-m wc" data-k="collect">how the art you live with is placed, lit, and seen</span><span class="ph-m wc" data-k="recover">how heat, water, and stillness restore you by evening</span><span class="ph-m wc" data-k="entertain">how the table and the light welcome the people you invite</span><span class="ph-m wc" data-k="gather">where those closest to you end the day together</span><span class="ph-m wc" data-k="sleep">how the home dims, cools, and goes quiet for the night</span></span><span class="cb">What you want your life to feel like and be in five, ten, or twenty years from now</span></p></div>
-        <div data-a=".86" data-b=".93" class="r3p" style="--x:48;--y:163"><p class="t20">This is part of the<br>CI concierge-level service</p><p class="t34" style="--w:650;--mt:59">Rather than designing around a&nbsp;predetermined aesthetic, we design around your lifestyle. Architecture, <span class="cb">materials, lighting, furnishings, technology, art, and wellness become part of&nbsp;one considered environment</span></p></div>
-        <div data-a=".93" data-b="9" class="st r3fin"><p class="t20 fa">Because</p><h3 class="t60 fb">good design<br>should<br>change <span class="cm">more<br>than the<br>home</span></h3><p class="t20 fc">It should change the experience<br>of living in it</p></div>
-      </div>
-      <div class="r3-ph" aria-hidden="true"><img src="assets/r3/phil.webp" srcset="assets/r3/phil_m.webp 1280w, assets/r3/phil.webp 2560w" sizes="100vw" alt="" loading="lazy" decoding="async"><i class="rh"></i><i class="rv"></i></div>
-      <svg class="ph-plan" id="phPlan" viewBox="-150 -175 1300 1010" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
-      <div class="ph-pct"><span class="lb t20">OF YOUR LIFE<i class="sqd"></i>LIVED AT HOME</span><span class="v"><span id="phPct">0</span><sup>%</sup></span></div>
-    </div>
-  </div>
-</section>
 
 <!-- ================================================================== 03 ABOUT · five firms, five misregistered layers → one section under one roof (v8) -->
 <section class="ch ch-about" id="about">
@@ -182,6 +170,38 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
       <div class="ch-pct"><span class="v"><span id="abPct">0</span><sup>%</sup></span><span class="mono"><span class="sqr"><span>PROJECT TIME SAVED</span><span>AVERAGE</span></span></span></div>
     </div>
   </div>
+</section>
+
+<!-- ================================================================== 07 SUITE · row of words as tabs -->
+<section class="ch ch-suite" id="suite">
+  <div class="su-pin" id="suPin"><div class="su-stage">
+  <h2 class="su-big t60">Choose the Level<br>of Support<br>That Fits Your<br>Project</h2>
+  <div class="su-wrap">
+    <div class="su-left">
+      <div class="su-tabs" id="suTabs" role="tablist">
+        <button class="su-tab on" type="button" role="tab" aria-selected="true" data-k="0"><span class="fl mono">Flagship<i class="sqd"></i>01</span><span class="nm">CI Turnkey</span></button>
+        <button class="su-tab" type="button" role="tab" aria-selected="false" data-k="1"><span class="fl mono">02</span><span class="nm">CI Core</span></button>
+        <button class="su-tab" type="button" role="tab" aria-selected="false" data-k="2"><span class="fl mono">03</span><span class="nm">CI Curated</span></button>
+      </div>
+      <div class="su-desc">
+        <div class="on" data-k="0"><span class="mono su-n">Flagship<i class="sqd"></i>01</span><p class="su-p">The complete CI experience. Architecture, interior design, construction, furnishings, art, wellness, installation, and move-in managed by one team, under one roof</p><a class="r3btn su-btn" href="ci-turnkey.html"><span class="t">Explore<br>CI Turnkey</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
+        <div data-k="1"><span class="mono su-n">02</span><p class="su-p">Integrated architecture, interior design, and construction for clients who want the built environment expertly coordinated while retaining independence beyond it</p><a class="r3btn su-btn" href="ci-core.html"><span class="t">Explore<br>CI Core</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
+        <div data-k="2"><span class="mono su-n">03</span><p class="su-p">Design-build extended through furnishings, art, and styling, for a residence that feels considered in every layer, not just every room</p><a class="r3btn su-btn" href="ci-curated.html"><span class="t">Explore<br>CI Curated</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
+      </div>
+    </div>
+    <div class="su-right">
+      <svg class="su-draw" id="suDraw" viewBox="0 0 2100 1500" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+      <div class="su-cnt"><span class="v" id="suCnt">8</span><span class="mono">LAYERS</span></div>
+    </div>
+  </div>
+  <div class="su-add">
+    <span class="mono su-add-l"><span class="sqr"><span>ADD-ON</span><span>PAIRS WITH ANY SOLUTION</span></span></span>
+    <h3 class="su-wn">CI Wellness</h3>
+    <p class="su-p"><b>Better living, designed in.</b> Light, air, water, sleep, recovery, and technology integrated from day one, not bolted on at the end</p>
+    <button class="su-sw" id="suSw" type="button" aria-pressed="false"><span class="mono">ADD TO STACK</span><span class="tg"></span></button>
+    <a class="pill su-pill2" href="ci-wellness.html"><span class="dot"></span><span class="t lab">Explore CI Wellness</span></a>
+  </div>
+  </div></div>
 </section>
 
 <!-- ================================================================== 05 DIFFERENCE · v10 = the user's Figma frame 289:8972 (09.11 14:41), to the pixel:
@@ -228,96 +248,6 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
       </div>
   </div>
   <div class="df2-sp" aria-hidden="true"></div>
-  </div>
-</section>
-
-<!-- ================================================================== 07 SUITE · row of words as tabs -->
-<section class="ch ch-suite" id="suite">
-  <div class="su-pin" id="suPin"><div class="su-stage">
-  <h2 class="su-big t60">Choose the Level<br>of Support<br>That Fits Your<br>Project</h2>
-  <div class="su-wrap">
-    <div class="su-left">
-      <div class="su-tabs" id="suTabs" role="tablist">
-        <button class="su-tab on" type="button" role="tab" aria-selected="true" data-k="0"><span class="fl mono">Flagship<i class="sqd"></i>01</span><span class="nm">CI Turnkey</span></button>
-        <button class="su-tab" type="button" role="tab" aria-selected="false" data-k="1"><span class="fl mono">02</span><span class="nm">CI Core</span></button>
-        <button class="su-tab" type="button" role="tab" aria-selected="false" data-k="2"><span class="fl mono">03</span><span class="nm">CI Curated</span></button>
-      </div>
-      <div class="su-desc">
-        <div class="on" data-k="0"><span class="mono su-n">Flagship<i class="sqd"></i>01</span><p class="su-p">The complete CI experience. Architecture, interior design, construction, furnishings, art, wellness, installation, and move-in managed by one team, under one roof</p><a class="r3btn su-btn" href="ci-turnkey.html"><span class="t">Explore<br>CI Turnkey</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
-        <div data-k="1"><span class="mono su-n">02</span><p class="su-p">Integrated architecture, interior design, and construction for clients who want the built environment expertly coordinated while retaining independence beyond it</p><a class="r3btn su-btn" href="ci-core.html"><span class="t">Explore<br>CI Core</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
-        <div data-k="2"><span class="mono su-n">03</span><p class="su-p">Design-build extended through furnishings, art, and styling, for a residence that feels considered in every layer, not just every room</p><a class="r3btn su-btn" href="ci-curated.html"><span class="t">Explore<br>CI Curated</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
-      </div>
-    </div>
-    <div class="su-right">
-      <svg class="su-draw" id="suDraw" viewBox="0 0 2100 1500" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
-      <div class="su-cnt"><span class="v" id="suCnt">8</span><span class="mono">LAYERS</span></div>
-    </div>
-  </div>
-  <div class="su-add">
-    <span class="mono su-add-l"><span class="sqr"><span>ADD-ON</span><span>PAIRS WITH ANY SOLUTION</span></span></span>
-    <h3 class="su-wn">CI Wellness</h3>
-    <p class="su-p"><b>Better living, designed in.</b> Light, air, water, sleep, recovery, and technology integrated from day one, not bolted on at the end</p>
-    <button class="su-sw" id="suSw" type="button" aria-pressed="false"><span class="mono">ADD TO STACK</span><span class="tg"></span></button>
-    <a class="pill su-pill2" href="ci-wellness.html"><span class="dot"></span><span class="t lab">Explore CI Wellness</span></a>
-  </div>
-  </div></div>
-</section>
-
-<!-- ================================================================== 08 APPROACH · typed questions -->
-<section class="ch ch-appr" id="approach">
-  <div class="ch-pin" id="apPin">
-    <div class="ch-stage">
-      <div class="ch-t">
-        <div data-a=".62" data-b=".8" class="r3p row1" style="--x:48;--y:155"><p class="t60" style="--w:700">The answers<br>become the<br>foundation</p></div>
-        <div data-a=".62" data-b=".8" class="r3p r3b row2" style="--x:48;--yb:50"><p class="t20" style="--w:306">From architecture and circulation to lighting, materials, wellness systems, and art, every decision earns its place</p></div>
-        <div data-a=".8" data-b="9" class="r3p" style="--x:48;--y:155"><h3 class="t60">Personalized<br>is not a finish</h3></div>
-        <div data-a=".8" data-b="9" class="r3p r3b r3r" style="--xr:50;--yb:50"><h3 class="t60 cb">It is the CI<br>process</h3></div>
-      </div>
-      <div class="ap-in" id="apIn" aria-hidden="false">
-        <div class="ap-ph"><img src="assets/r3/appr.webp" srcset="assets/r3/appr_m.webp 1280w, assets/r3/appr.webp 2560w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
-        <i class="rh"></i><i class="rv"></i>
-        <h2 class="ap-ttl t111"><span class="a">Designed<br>Around</span><span class="b">How<br>You Live</span></h2>
-        <div class="ap-q"><p class="t20">We begin with questions</p><p class="t60">not about<br>style,<br>but about life</p></div>
-      </div>
-      <!-- v13 (user 09.11 15:16): the drawing leads, centred; each question hangs on its own axis of the plan, at the end of the
-           lettered line it draws (A, C on the left, B, D on the right, 5 by its bubble top right) -->
-      <ol class="ap-qs" id="apQs">
-        <li><i class="bb mono">1</i><span class="tx" data-t="How do you use&#10;your home today?"></span></li>
-        <li><i class="bb mono">2</i><span class="tx" data-t="Where do you&#10;retreat?"></span></li>
-        <li><i class="bb mono">3</i><span class="tx" data-t="How do you&#10;entertain?"></span></li>
-        <li><i class="bb mono">4</i><span class="tx" data-t="What should&#10;mornings feel like?"></span></li>
-        <li><i class="bb mono">5</i><span class="tx" data-t="What matters enough&#10;to build around?"></span></li>
-      </ol>
-      <svg class="ap-draw" id="apDraw" aria-hidden="true"></svg>
-    </div>
-  </div>
-</section>
-
-<!-- ================================================================== 09 PROCESS · giant horizontal words -->
-<!-- ================================================================== 08 PROCESS · v11 (user 05.11 08:46: the archive's idea is the one) — the tangle becomes the line (v12, user 05.11 08:50: the idea, not a copy):
-     one knotted line over the house as it was straightens; along it a real home goes through the six steps in a framed photograph; at the rise the frame opens onto the finished room -->
-<section class="pr4" id="process">
-  <div class="ch-pin" id="prPin">
-    <div class="pr4-stage">
-      
-      <h2 class="pr4-t1"><span>The Project</span><span>Is Complex</span></h2>
-      <div class="pr4-t2"><h3 class="pr4-h">CI’s Process Simplifies.<br class="bd"> Your Experience Is Elevated</h3><p class="pr4-lead">The CI process simplifies a complex renovation. We make something complex simple for you as the owner</p></div>
-      <canvas class="pr4-cv" aria-hidden="true"></canvas>
-      <svg class="pr4-svg" id="pr4Svg" aria-hidden="true"></svg>
-      <!-- r3 (13.11 20:33–20:36, the designer): the six steps as her reference — one axis; from each node a hairline swings out to a
-           circle (01, 03, 05 above the line, 02, 04, 06 under it) and comes back to the line. No photographs: the circle holds the
-           number and the name, the step's sentence hangs from its node on the other side of the line. Lines as on the About closing. -->
-      <div class="pr6" id="pr6">
-        <div class="pr6-s" data-i="0"><div class="pr6-c"><span class="n">01</span><span class="nm">Discover</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Discover</span><p class="pr6-d">Your residence, priorities, lifestyle, and vision</p></div></div>
-        <div class="pr6-s" data-i="1"><div class="pr6-c"><span class="n">02</span><span class="nm">Define</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Define</span><p class="pr6-d">Scope, strategy, design direction, and the right CI service level</p></div></div>
-        <div class="pr6-s" data-i="2"><div class="pr6-c"><span class="n">03</span><span class="nm">Design</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Design</span><p class="pr6-d">Architecture and interiors developed together, informed by construction realities from the start</p></div></div>
-        <div class="pr6-s" data-i="3"><div class="pr6-c"><span class="n">04</span><span class="nm">Build</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Build</span><p class="pr6-d">Our field team executes with the design intent already understood</p></div></div>
-        <div class="pr6-s" data-i="4"><div class="pr6-c"><span class="n">05</span><span class="nm">Curate</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Curate</span><p class="pr6-d">Furnishings, art, technology, and finishing layers complete the residence</p></div></div>
-        <div class="pr6-s" data-i="5"><div class="pr6-c"><span class="n">06</span><span class="nm">Deliver</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Deliver</span><p class="pr6-d">Installation, final detailing, and move-in readiness. A home ready to be lived in</p></div></div>
-      </div>
-      <i class="pr4-sq" aria-hidden="true"></i>
-      <div class="pr4-end"><span class="mono pr4-ek"><span class="sqr"><span>ROOM TO BREATHE</span><span>LINCOLN PARK</span></span></span><span class="r">One team<br> One process</span><b>Complete<br class="bd"> responsibility</b></div>
-    </div>
   </div>
 </section>
 
@@ -369,6 +299,83 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
         </ol>
         <a class="pj4-cta" href="portfolio.html"><span class="t">View Full<br>Portfolio</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a>
       </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================== 09 PROCESS · giant horizontal words -->
+<!-- ================================================================== 08 PROCESS · v11 (user 05.11 08:46: the archive's idea is the one) — the tangle becomes the line (v12, user 05.11 08:50: the idea, not a copy):
+     one knotted line over the house as it was straightens; along it a real home goes through the six steps in a framed photograph; at the rise the frame opens onto the finished room -->
+<section class="pr4" id="process">
+  <div class="ch-pin" id="prPin">
+    <div class="pr4-stage">
+      
+      <h2 class="pr4-t1"><span>The Project</span><span>Is Complex</span></h2>
+      <div class="pr4-t2"><h3 class="pr4-h">CI’s Process Simplifies.<br class="bd"> Your Experience Is Elevated</h3><p class="pr4-lead">The CI process simplifies a complex renovation. We make something complex simple for you as the owner</p></div>
+      <canvas class="pr4-cv" aria-hidden="true"></canvas>
+      <svg class="pr4-svg" id="pr4Svg" aria-hidden="true"></svg>
+      <!-- r3 (13.11 20:33–20:36, the designer): the six steps as her reference — one axis; from each node a hairline swings out to a
+           circle (01, 03, 05 above the line, 02, 04, 06 under it) and comes back to the line. No photographs: the circle holds the
+           number and the name, the step's sentence hangs from its node on the other side of the line. Lines as on the About closing. -->
+      <div class="pr6" id="pr6">
+        <div class="pr6-s" data-i="0"><div class="pr6-c"><span class="n">01</span><span class="nm">Discover</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Discover</span><p class="pr6-d">Your residence, priorities, lifestyle, and vision</p></div></div>
+        <div class="pr6-s" data-i="1"><div class="pr6-c"><span class="n">02</span><span class="nm">Define</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Define</span><p class="pr6-d">Scope, strategy, design direction, and the right CI service level</p></div></div>
+        <div class="pr6-s" data-i="2"><div class="pr6-c"><span class="n">03</span><span class="nm">Design</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Design</span><p class="pr6-d">Architecture and interiors developed together, informed by construction realities from the start</p></div></div>
+        <div class="pr6-s" data-i="3"><div class="pr6-c"><span class="n">04</span><span class="nm">Build</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Build</span><p class="pr6-d">Our field team executes with the design intent already understood</p></div></div>
+        <div class="pr6-s" data-i="4"><div class="pr6-c"><span class="n">05</span><span class="nm">Curate</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Curate</span><p class="pr6-d">Furnishings, art, technology, and finishing layers complete the residence</p></div></div>
+        <div class="pr6-s" data-i="5"><div class="pr6-c"><span class="n">06</span><span class="nm">Deliver</span></div><div class="pr6-t"><span class="nm" aria-hidden="true">Deliver</span><p class="pr6-d">Installation, final detailing, and move-in readiness. A home ready to be lived in</p></div></div>
+      </div>
+      <i class="pr4-sq" aria-hidden="true"></i>
+      <div class="pr4-end"><span class="mono pr4-ek"><span class="sqr"><span>ROOM TO BREATHE</span><span>LINCOLN PARK</span></span></span><span class="r">One team<br> One process</span><b>Complete<br class="bd"> responsibility</b></div>
+    </div>
+  </div>
+</section>
+<!-- ================================================================== 02 PHILOSOPHY · a day passes over the plan of a home (v8) -->
+<section class="ch ch-phil" id="philosophy">
+  <div class="ch-pin" id="philPin">
+    <div class="ch-stage">
+      <div class="ph-t">
+        <div data-a="-1" data-b=".11" class="r3p" style="--x:48;--y:155"><h2 class="t60">Building You<br><span class="cb">a Better Life</span></h2></div>
+        <div data-a=".11" data-b=".25" class="r3p" style="--x:48;--y:155"><p class="t34" style="--w:660">75% of&nbsp;your life is lived at home. Design it accordingly. <span class="cb">The quality of&nbsp;that environment shapes everything: your lifestyle, your health, your longevity goals</span></p></div>
+        <div data-a=".25" data-b=".35" class="r3p" style="--x:48;--y:155"><h3 class="t34 up">We believe the best<br>homes <span class="cb">begin with life,</span><br>not a look</h3></div>
+        <div data-a=".35" data-b=".86" class="r3p ph-vs row1" style="--x:48;--y:175"><p class="t34 up cb ph-vin">How you want to</p><p class="ph-verbs ph-vl"><span class="vr"><span class="vt"><span class="vb">wake up</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">recharge</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">collect</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">recover</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">entertain</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">gather</span></span><i></i></span><span class="vr"><span class="vt"><span class="vb">sleep</span></span><i></i></span></p></div>
+        <div data-a=".35" data-b=".86" class="r3p r3b row2" style="--x:48;--yb:178"><p class="t20 ph-day" style="--w:362"><span class="ph-ms"><span class="ph-m on" data-k="wake up">how you want light to move through your morning</span><span class="ph-m wc" data-k="recharge">where the middle of the day gives your energy back</span><span class="ph-m wc" data-k="collect">how the art you live with is placed, lit, and seen</span><span class="ph-m wc" data-k="recover">how heat, water, and stillness restore you by evening</span><span class="ph-m wc" data-k="entertain">how the table and the light welcome the people you invite</span><span class="ph-m wc" data-k="gather">where those closest to you end the day together</span><span class="ph-m wc" data-k="sleep">how the home dims, cools, and goes quiet for the night</span></span><span class="cb">What you want your life to feel like and be in five, ten, or twenty years from now</span></p></div>
+        <div data-a=".86" data-b=".93" class="r3p" style="--x:48;--y:163"><p class="t20">This is part of the<br>CI concierge-level service</p><p class="t34" style="--w:650;--mt:59">Rather than designing around a&nbsp;predetermined aesthetic, we design around your lifestyle. Architecture, <span class="cb">materials, lighting, furnishings, technology, art, and wellness become part of&nbsp;one considered environment</span></p></div>
+        <div data-a=".93" data-b="9" class="st r3fin"><p class="t20 fa">Because</p><h3 class="t60 fb">good design<br>should<br>change <span class="cm">more<br>than the<br>home</span></h3><p class="t20 fc">It should change the experience<br>of living in it</p></div>
+      </div>
+      <div class="r3-ph" aria-hidden="true"><img src="assets/r3/phil.webp" srcset="assets/r3/phil_m.webp 1280w, assets/r3/phil.webp 2560w" sizes="100vw" alt="" loading="lazy" decoding="async"><i class="rh"></i><i class="rv"></i></div>
+      <svg class="ph-plan" id="phPlan" viewBox="-150 -175 1300 1010" preserveAspectRatio="xMidYMid meet" aria-hidden="true"></svg>
+      <div class="ph-pct"><span class="lb t20">OF YOUR LIFE<i class="sqd"></i>LIVED AT HOME</span><span class="v"><span id="phPct">0</span><sup>%</sup></span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ================================================================== 08 APPROACH · typed questions -->
+<section class="ch ch-appr" id="approach">
+  <div class="ch-pin" id="apPin">
+    <div class="ch-stage">
+      <div class="ch-t">
+        <div data-a=".62" data-b=".8" class="r3p row1" style="--x:48;--y:155"><p class="t60" style="--w:700">The answers<br>become the<br>foundation</p></div>
+        <div data-a=".62" data-b=".8" class="r3p r3b row2" style="--x:48;--yb:50"><p class="t20" style="--w:306">From architecture and circulation to lighting, materials, wellness systems, and art, every decision earns its place</p></div>
+        <div data-a=".8" data-b="9" class="r3p" style="--x:48;--y:155"><h3 class="t60">Personalized<br>is not a finish</h3></div>
+        <div data-a=".8" data-b="9" class="r3p r3b r3r" style="--xr:50;--yb:50"><h3 class="t60 cb">It is the CI<br>process</h3></div>
+      </div>
+      <div class="ap-in" id="apIn" aria-hidden="false">
+        <div class="ap-ph"><img src="assets/r3/appr.webp" srcset="assets/r3/appr_m.webp 1280w, assets/r3/appr.webp 2560w" sizes="100vw" alt="" loading="lazy" decoding="async"></div>
+        <i class="rh"></i><i class="rv"></i>
+        <h2 class="ap-ttl t111"><span class="a">Designed<br>Around</span><span class="b">How<br>You Live</span></h2>
+        <div class="ap-q"><p class="t20">We begin with questions</p><p class="t60">not about<br>style,<br>but about life</p></div>
+      </div>
+      <!-- v13 (user 09.11 15:16): the drawing leads, centred; each question hangs on its own axis of the plan, at the end of the
+           lettered line it draws (A, C on the left, B, D on the right, 5 by its bubble top right) -->
+      <ol class="ap-qs" id="apQs">
+        <li><i class="bb mono">1</i><span class="tx" data-t="How do you use&#10;your home today?"></span></li>
+        <li><i class="bb mono">2</i><span class="tx" data-t="Where do you&#10;retreat?"></span></li>
+        <li><i class="bb mono">3</i><span class="tx" data-t="How do you&#10;entertain?"></span></li>
+        <li><i class="bb mono">4</i><span class="tx" data-t="What should&#10;mornings feel like?"></span></li>
+        <li><i class="bb mono">5</i><span class="tx" data-t="What matters enough&#10;to build around?"></span></li>
+      </ol>
+      <svg class="ap-draw" id="apDraw" aria-hidden="true"></svg>
     </div>
   </div>
 </section>
@@ -474,11 +481,11 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
 <div class="grain" aria-hidden="true"></div>
 <nav class="chap mono" id="chap" aria-label="Chapters">
   <a href="#hpin" data-ch="hpin"><span>01</span><span class="t">Home</span><i></i></a>
-  <a href="#philosophy" data-ch="philosophy"><span>02</span><span class="t">Philosophy</span><i></i></a>
-  <a href="#about" data-ch="about"><span>03</span><span class="t">About CI</span><i></i></a>
-  <a href="#suite" data-ch="suite"><span>04</span><span class="t">Solutions</span><i></i></a>
+  <a href="#about" data-ch="about"><span>02</span><span class="t">About CI</span><i></i></a>
+  <a href="#suite" data-ch="suite"><span>03</span><span class="t">Solutions</span><i></i></a>
+  <a href="#projects" data-ch="projects"><span>04</span><span class="t">Projects</span><i></i></a>
   <a href="#process" data-ch="process"><span>05</span><span class="t">Process</span><i></i></a>
-  <a href="#projects" data-ch="projects"><span>06</span><span class="t">Projects</span><i></i></a>
+  <a href="#philosophy" data-ch="philosophy"><span>06</span><span class="t">Philosophy</span><i></i></a>
   <a href="#cta" data-ch="cta"><span>07</span><span class="t">Contact</span><i></i></a>
 </nav>
 
