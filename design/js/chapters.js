@@ -290,15 +290,34 @@
        row 2 — CI: one light plane, the same five works overlapping inside it, finished at 80 %; the fifth that is left is
        a blue plane carrying the figure — the card of the hero (label top-left, figure bottom-left, square bottom-right). */
     var TY = 89, TH = 50, CY = 217, CH2 = 100, SX = PW * .8;   /* r3: her frame — ruler, label, blocks, label, the CI plane */
+    /* 26.11.2026 — the block reworked (the designer: «выглядит сыро… как будто информации не хватает… проценты сверху непонятно, к чему
+       они относятся… все мельчайшие детали проработай»; the client's review, P6: a start-to-finish timeline with visible Start and
+       Ready, and what is compared). The ruler of percentages is gone: the line on top is the project's own time, from START to the
+       two moments the home is READY — CI's in the brand blue, a fifth earlier — and a hairline drops from each to the end of its row.
+       Each row says how it works (five firms, one after another · one team, working in parallel), the pauses between the firms are
+       hatched and named, and a line under the chart says what is compared. The only figure left is the 20 % on its card. */
+    var late = [];                                                   /* what appears with a row's end: [element, d] — joined to `fades` below */
     el('path', {d: seg(0, 0, PW, 0), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
-    [0, .25, .5, .75, 1].forEach(function(t, i){ el('path', {d: seg(t * PW, -4, t * PW, 4), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
-      var tt = el('text', {x: t * PW, y: -12, 'class': 'tk', 'text-anchor': i === 0 ? 'start' : i === 4 ? 'end' : 'middle'}, gT); tt.textContent = i === 4 ? '100%' : String(t * 100); });
-    var lab1 = el('text', {x: PW / 2, y: TY - 30, 'class': 'tl2', 'text-anchor': 'middle'}, gT); lab1.textContent = 'THE TRADITIONAL MODEL';
-    var lab2 = el('text', {x: PW / 2, y: CY - 32, 'class': 'tl2', 'text-anchor': 'middle'}, gT); lab2.textContent = 'CI DESIGN + BUILD';
+    var gdC = el('path', {d: seg(SX - .5, 3, SX - .5, CY), 'class': 'gd ci', 'vector-effect': 'non-scaling-stroke', opacity: 0}, gT);
+    var gdT = el('path', {d: seg(PW - .5, 3, PW - .5, CY), 'class': 'gd', 'vector-effect': 'non-scaling-stroke', opacity: 0}, gT);
+    el('rect', {x: 0, y: -3, width: 6, height: 6, 'class': 'aq'}, gT);
+    var aqC = el('rect', {x: SX - 6, y: -3, width: 6, height: 6, 'class': 'aq ci', opacity: 0}, gT), aqT = el('rect', {x: PW - 6, y: -3, width: 6, height: 6, 'class': 'aq', opacity: 0}, gT);
+    var axS = el('text', {x: 0, y: -12, 'class': 'tk', 'text-anchor': 'start'}, gT); axS.textContent = 'START';
+    var axC = el('text', {x: SX, y: -12, 'class': 'tk ci', 'text-anchor': 'end', opacity: 0}, gT); axC.textContent = 'CI READY';
+    var axT = el('text', {x: PW, y: -12, 'class': 'tk', 'text-anchor': 'end', opacity: 0}, gT); axT.textContent = 'TRADITIONAL READY';
+    late.push([gdT, 1.05], [aqT, 1.05], [axT, 1.05], [gdC, 1.45], [aqC, 1.45], [axC, 1.45]);
+    /* a title: the row's name, the blue square of the system, how the row works — set as one centred line by layout() */
+    function title(y, name, how){ var t1 = el('text', {x: 0, y: y, 'class': 'tl2'}, gT), q = el('rect', {x: 0, y: y - 7.6, width: 6, height: 6, 'class': 'nq'}, gT), t2 = el('text', {x: 0, y: y, 'class': 'tl2 how'}, gT);
+      t1.textContent = name; t2.textContent = how; return {a: t1, q: q, b: t2}; }
+    var lab1 = title(TY - 30, 'THE TRADITIONAL MODEL', 'FIVE FIRMS, ONE AFTER ANOTHER'), lab2 = title(CY - 32, 'CI DESIGN + BUILD', 'ONE TEAM, WORKING IN PARALLEL');
+    /* the legend of the hatch, at the right end of the traditional row's title line */
+    var LGX = PW - 16, lgG = el('g', {'class': 'lg', opacity: 0}, gT), lgT = el('text', {x: LGX, y: TY - 30, 'class': 'tl2', 'text-anchor': 'end'}, lgG);   /* 16 clear of the guide that drops from TRADITIONAL READY */ lgT.textContent = 'WAITING BETWEEN FIRMS';
+    var lgR = el('rect', {x: 0, y: TY - 38.6, width: 22, height: 9, fill: 'url(#abStG)'}, lgG);
+    late.push([lgG, .35]);
     var bars = [], fades = [];
     var TN = ['ARCHITECTS', 'DESIGNERS', 'CONTRACTORS', 'VENDORS', 'INSTALLERS'], CN = ['ARCHITECTURE', 'INTERIOR DESIGN', 'CONSTRUCTION', 'FURNISHINGS', 'INSTALLATION'];
     trad.forEach(function(b, i){ var d = i * .2;
-      if (i){ var g0 = trad[i - 1][1]; fades.push({e: el('rect', {x: g0 * PW + 3, y: TY, width: (b[0] - g0) * PW - 6, height: TH, fill: 'none', opacity: 0}, gT), d: d - .05}); }
+      if (i){ var g0 = trad[i - 1][1]; fades.push({e: el('rect', {x: g0 * PW + 3, y: TY, width: (b[0] - g0) * PW - 6, height: TH, fill: 'url(#abStG)', 'class': 'wt', opacity: 0}, gT), d: d - .05}); }
       bars.push({e: el('rect', {x: b[0] * PW, y: TY, width: 0, height: TH, 'class': 'tb'}, gT), w: (b[1] - b[0]) * PW, d: d});
       var t = el('text', {x: b[0] * PW + 9, y: TY + 15, 'class': 'nm', opacity: 0}, gT); t.textContent = TN[i]; fades.push({e: t, d: d + .1}); });
     var ciP = el('rect', {x: 0, y: CY, width: 0, height: CH2, 'class': 'cb'}, gT);
@@ -311,20 +330,18 @@
     var s2 = el('text', {x: SX + 14, y: CY + 28.5, 'class': 'sl'}, svG); s2.textContent = 'AVERAGE';
     var svN = el('text', {x: SX + 12, y: CY + CH2 - 13, 'class': 'big'}, svG), svV = el('tspan', {}, svN), svP = el('tspan', {'class': 'pc', dx: 7, dy: -27}, svN); svV.textContent = '0'; svP.textContent = '%';
     var svQ = el('rect', {x: PW - 17, y: CY + CH2 - 17, width: 6, height: 6, fill: '#000'}, svG);
-    /* 25.11.2026 (the client's review, P6: «clarify the −20 % time-saving visual with a start-to-finish timeline, visible Start and
-       Ready / Finish labels, and a clear description of the comparison or baseline»; the designer: «делай так, как они просят»).
-       Each row is now read from START to READY on its own label line — the traditional model is ready at 100 %, CI at 80 %, where
-       its plane ends — and a note under the chart says what is measured and against what. The note is working copy (.wc) until CI
-       confirms the baseline and the figure. Nothing of her frame moves: the ruler, the two label lines, the blocks and the card stay. */
-    var seT = [[0, TY - 30, 'start', 'START'], [PW, TY - 30, 'end', 'READY'], [0, CY - 32, 'start', 'START'], [SX, CY - 32, 'end', 'READY']].map(function(q, i){
-      var t = el('text', {x: q[0], y: q[1], 'class': 'tl2 se', 'text-anchor': q[2]}, gT); t.textContent = q[3];
-      if (i === 1){ t.setAttribute('opacity', 0); fades.push({e: t, d: 1.05}); } if (i === 3){ t.setAttribute('opacity', 0); fades.push({e: t, d: 1.45}); }
-      return t; });
-    var NY = CY + CH2 + 26, ntG = el('g', {'class': 'nt', opacity: 0}, gT);
-    var nt1 = el('text', {x: 0, y: NY, 'class': 'tl2 wc'}, ntG); nt1.textContent = 'PROJECT TIME FROM START TO MOVE-IN READY';
-    var ntQ = el('rect', {x: 0, y: NY - 7.6, width: 6, height: 6, 'class': 'nq'}, ntG);
-    var nt2 = el('text', {x: 0, y: NY, 'class': 'tl2 wc'}, ntG); nt2.textContent = '100% = THE SAME PROJECT IN THE TRADITIONAL MODEL';
-    fades.push({e: ntG, d: 2.2});
+    /* the second saving (the client's note 13 of 23.11: two separate savings, and it must be clear they are two) — the client's own
+       time, as a card of its own under the blue one: the hero's second button, drawn in line. It comes in once the chart has risen. */
+    var S2Y = CY + CH2 + 3, sv2 = el('g', {'class': 'sv2', opacity: 0}, gT);
+    el('rect', {x: SX + 3.5, y: S2Y + .5, width: SW - 1, height: CH2 - 1, 'class': 'ob', 'vector-effect': 'non-scaling-stroke'}, sv2);
+    var u1 = el('text', {x: SX + 14, y: S2Y + 19, 'class': 'sl w'}, sv2); u1.textContent = 'YOUR OWN TIME SAVED';
+    var u2 = el('text', {x: SX + 14, y: S2Y + 28.5, 'class': 'sl w'}, sv2); u2.textContent = 'AVERAGE';
+    var sv2N = el('text', {x: SX + 12, y: S2Y + CH2 - 13, 'class': 'big w'}, sv2), sv2V = el('tspan', {}, sv2N), sv2P = el('tspan', {'class': 'pc', dx: 7, dy: -27}, sv2N); sv2V.textContent = '0'; sv2P.textContent = '%';
+    var sv2Q = el('rect', {x: PW - 17, y: S2Y + CH2 - 17, width: 6, height: 6, fill: '#FFFFFF'}, sv2);
+    /* what is compared — one quiet line under the chart */
+    var NY = CY + CH2 + 26, ntG = el('g', {'class': 'nt', opacity: 0}, gT), nt1 = el('text', {x: 0, y: NY, 'class': 'tl2'}, ntG); nt1.textContent = 'THE SAME PROJECT, FROM START TO MOVE-IN READY';
+    late.push([ntG, 2.2]);
+    late.forEach(function(q){ fades.push({e: q[0], d: q[1]}); });
     /* r3 (her note 13.11 19:23: "why are these blocks not the full container?"): on a window lower than 16:9 the chart keeps the
        container's full width and only its heights follow the window — the group is scaled by x and y apart, and every text (and
        the little square) is narrowed back by the same ratio about its own anchor, so the letters stay in proportion */
@@ -358,6 +375,7 @@
     var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .2, wsBox = one && one.querySelector('.ws');
     function oneFit(){}   /* the word sits on its own centred line now: nothing to measure */
     var LY = null, last = -1, OWN_DS = 1;
+    var HOLD = 60, HA = IN + (1 - IN) * .772, HS = (1 - IN) * .014;   /* the hold: vh of scroll; where it starts and how long that stretch was, in the chapter's own progress */
     function layout(){
       var w = svg.clientWidth || window.innerWidth, h = svg.clientHeight || window.innerHeight, port = w / h < 1, VW = port ? 1080 : 1920, VH = VW * h / w;
       svg.setAttribute('viewBox', '0 0 ' + VW + ' ' + f1(VH));
@@ -386,12 +404,21 @@
       gO.setAttribute('transform', 'translate(' + f1(port ? tx0 : mU) + ' ' + f1(port ? VH * .62 : VH * .56) + ') scale(' + sc3.toFixed(4) + ')');
       /* r3: the chart hangs from the top (her frames: the ruler at 415 under the title, at 150 once the title has left); the circles sit on the middle */
       LY.t = [tx0, sc2, port ? VH * .34 : 415 * k, port ? VH * .3 : 150 * k, sc2 * k];   /* x, x-scale, y under the title, y once it has left, y-scale */
-      /* the note: one line with the blue square between its two halves; on a phone the halves stand one under the other */
-      var nk = k < .999 ? k : 1, n1 = (nt1.getComputedTextLength ? nt1.getComputedTextLength() : 0) * nk, fs = parseFloat(getComputedStyle(nt1).fontSize) || 10.66;
-      if (port || !n1){ ntQ.setAttribute('display', 'none'); nt1.setAttribute('y', f1(NY + fs * .5)); nt2.setAttribute('x', 0); nt2.setAttribute('y', f1(NY + fs * 1.85)); }
-      else { nt1.setAttribute('y', NY); ntQ.removeAttribute('display'); ntQ.setAttribute('x', f1(n1 + 12)); ntQ.setAttribute('width', f1(6 * nk)); nt2.setAttribute('x', f1(n1 + 12 + 6 * nk + 12)); nt2.setAttribute('y', NY); }
+      /* the titles: name ■ how, centred as one line (the texts are narrowed by nk about their own x below, so the widths are too);
+         on a phone only the name, centred; the legend's swatch stands before its words */
+      var nk = k < .999 ? k : 1, len = function(t){ return (t.getComputedTextLength ? t.getComputedTextLength() : 0) * nk; };
+      [lab1, lab2].forEach(function(L){ var wa = len(L.a), wb = len(L.b), g = 12, tot = wa + g + 6 * nk + g + wb;
+        if (port || !wa){ L.a.setAttribute('x', f1(PW / 2 - wa / 2)); L.q.setAttribute('display', 'none'); L.b.setAttribute('display', 'none'); return; }
+        var x0 = PW / 2 - tot / 2; L.q.removeAttribute('display'); L.b.removeAttribute('display');
+        L.a.setAttribute('x', f1(x0)); L.q.setAttribute('x', f1(x0 + wa + g)); L.q.setAttribute('width', f1(6 * nk)); L.b.setAttribute('x', f1(x0 + wa + g + 6 * nk + g)); });
+      var fs = parseFloat(getComputedStyle(nt1).fontSize) || 10.66; nt1.setAttribute('y', f1(port ? NY + fs * .5 : NY));
+      /* phones: the type is larger in the chart's own units, so two things step aside — CI READY goes under the line (TRADITIONAL
+         READY keeps the place above it), and the legend of the hatch stands under the caption, at the left */
+      axC.setAttribute('y', port ? f1(fs * 1.15) : -12); axC.setAttribute('x', port ? SX - 12 : SX);
+      if (port){ lgT.setAttribute('text-anchor', 'start'); lgT.setAttribute('x', f1(22 + 10)); lgT.setAttribute('y', f1(NY + fs * 1.95)); lgR.setAttribute('x', 0); lgR.setAttribute('y', f1(NY + fs * 1.95 - 9)); lgR.setAttribute('width', 22); }
+      else { lgT.setAttribute('text-anchor', 'end'); lgT.setAttribute('x', LGX); lgT.setAttribute('y', TY - 30); lgR.setAttribute('x', f1(LGX - len(lgT) - 10 - 22 * nk)); lgR.setAttribute('y', TY - 38.6); lgR.setAttribute('width', f1(22 * nk)); }
       tFit.forEach(function(t){ var x = +t.getAttribute('x') || 0; if (k < .999) t.setAttribute('transform', 'translate(' + x + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-x) + ' 0)'); else t.removeAttribute('transform'); });
-      if (k < .999) svQ.setAttribute('transform', 'translate(' + f1(PW - 11 * k) + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-(PW - 11)) + ' 0)'); else svQ.removeAttribute('transform');
+      [svQ, sv2Q].forEach(function(q){ if (k < .999) q.setAttribute('transform', 'translate(' + f1(PW - 11 * k) + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-(PW - 11)) + ' 0)'); else q.removeAttribute('transform'); });
       var cs = port ? VW / 1920 * .9 : k; LY.hl = Math.max(1020, VW / 2 / cs + 40);   /* the line bleeds off both edges, as in her frame */
       gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27 * k) + ') scale(' + cs.toFixed(4) + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
       /* where the lines dissolve: the words' own box (their real width), with air around it; the words stand 4 above the line on a wide screen */
@@ -405,6 +432,11 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function(){ layout(); oneFit(); if (last >= 0){ var q = last; last = -1; update(q); } });   /* the title's width needs the real font */
     function update(pi){
       if (pi === last) return; last = pi;
+      /* 26.11.2026: the finished time chart — both cards counted, its text beside it — used to stand for 15 vh of scroll, between
+         the last card and the chart's leaving: nobody could read it. The pin is 60 vh longer (css) and all of that goes here: the
+         scroll runs as before up to the finished chart, then the chart simply stays while HOLD passes, then everything goes on. */
+      var vhp = window.innerHeight, Ln = Math.max(1, pin.offsetHeight - vhp), ex = Math.min(HOLD * vhp / 100, Ln * .5), E = ex / (Ln - ex), raw = pi * (1 + E);
+      pi = raw <= HA ? raw : raw <= HA + HS + E ? HA + (raw - HA) * HS / (HS + E) : raw - E;
       /* r3: the chapter opens on "One ___": the word changes with the scroll, then the old timeline runs from its start */
       /* r3 (her note 13.11 19:01: the words jumped — they changed on a threshold, by a timer). Now the change is scrubbed by the scroll:
          under "One" the line is a slot — the old word rolls up out of it while the next rolls in from below; stop the scroll and it stops. */
@@ -439,6 +471,7 @@
       var kc = f1(SX * eo(sg(p, .665, .7))); if (ciP.__w !== kc){ ciP.__w = kc; ciP.setAttribute('width', kc); }
       var ks = sg(p, .71, .76), sw = f1(SW * eo(ks)); if (svB.__w !== sw){ svB.__w = sw; svB.setAttribute('width', sw); }
       svG.setAttribute('opacity', sg(p, .725, .75).toFixed(2)); txt(svV, Math.round(20 * eo(ks))); txt(pctEl, Math.round(20 * eo(ks)));
+      var k2 = sg(p, .74, .77); sv2.setAttribute('opacity', sg(p, .74, .755).toFixed(2)); txt(sv2V, Math.round(20 * eo(k2)));
       /* your decisions, our everything-in-between */
       /* r3: the closing — the line, one circle, two circles, the blue words, the outer circles */
       var kl = eo(sg(p, .84, .885)), k0 = sm(sg(p, .855, .905)), ksp = sm(sg(p, .9, .94)), kss = sm(sg(p, .935, .985)), kob = eo(sg(p, .915, .95));
@@ -634,7 +667,7 @@
       out.top = top; out.bot = top + (N - 1) * gp; return out;
     }
     /* v9 (user 04.11): the tiers are chosen, not scrolled — tabs and the switch restack the plates; a reading cursor climbs the stack on its own, a label under the pointer takes it */
-    var tier = 0, well = false, inView = false, started = false, hoverL = -1, cyc = -1, raf = 0, tgt = null, topN = 0, botN = 0, spK = 0, cycT = null;
+    var tier = 0, well = true /* 26.11: every CI residence includes wellness (the client's notes 20, 23) — it is in every stack, no switch */, inView = false, started = false, hoverL = -1, cyc = -1, raf = 0, tgt = null, topN = 0, botN = 0, spK = 0, cycT = null;
     function curSet(){ var s = ST[tier].slice(); if (well && s.indexOf(6) < 0) s.push(9); return s; }
     layers.forEach(function(L){ L.y = 0; L.o = 0; L.k = 0; L.em = 0; L.ty = 0; L.to = 0;
       L.lab.addEventListener('pointerenter', function(){ hoverL = L.i; kick(); }); L.lab.addEventListener('pointerleave', function(){ hoverL = -1; kick(); }); });

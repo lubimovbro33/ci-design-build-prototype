@@ -29,7 +29,9 @@
   /* 06 Projects (her note 13.11 23:23): the card's lead stands on the card's foot, where the rail would lie over it — while the card is under the rail,
      the rail starts right of the card (html.rail-pj) */
   var pjCard = document.querySelector('#projects .pj4-card'), pjMq = window.matchMedia ? window.matchMedia('(min-aspect-ratio: 1/1) and (min-width: 901px)') : null, pjOn = null;
-  function railPj(vh){ if (!pjCard || !pjMq) return; var on = false; if (pjMq.matches){ var r = pjCard.getBoundingClientRect(); on = r.height > 0 && r.top < vh && r.bottom > vh - 36; }
+  function railPj(vh){ if (!pjCard || !pjMq) return; var on = false; if (pjMq.matches){ var r = pjCard.getBoundingClientRect(); on = r.height > 0 && r.top < vh && r.bottom > vh - 36;
+      /* 26.11 (trial order): while the block opens or closes by the scroll (js/flow.js) the card is not there yet — the rail keeps its place */
+      var pjS = on && pjCard.closest('.pj4'); if (pjS && pjS.classList.contains('flow') && parseFloat(pjS.style.getPropertyValue('--pu') || '1') < .4) on = false; }
     if (on !== pjOn){ pjOn = on; document.documentElement.classList.toggle('rail-pj', on); } }
   function run(){ tick = 0; var vh = window.innerHeight; railPj(vh);
     pins.forEach(function(o){ var r = o.el.getBoundingClientRect(); if (r.bottom < -vh || r.top > 2 * vh) return;

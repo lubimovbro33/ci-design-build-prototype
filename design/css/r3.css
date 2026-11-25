@@ -120,7 +120,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 #philosophy .ch-stage.st-on .ph-plan,#philosophy .ch-stage.st-on .ph-pct{opacity:calc(1 - min(1, var(--st, 0) * 2.6))!important}
 
 /* ================================================================== 03 · about */
-#about .ch-pin{height:880vh}   /* the first fifth is "One ___": three words, each with room to be read and to roll */
+#about .ch-pin{height:940vh}   /* the first fifth is "One ___": three words, each with room to be read and to roll; 26.11: + 60 vh, all of it a hold on the finished time chart (js/chapters.js about(): HOLD) */
 #about .ch-pct{display:none!important}
 /* "One" on the first line, centred; the blue word under it changes (Vision → Team → Turnkey Experience); the pair stands in the middle (her note 13.11 18:46) */
 .ab-one{position:absolute;left:0;right:0;top:50%;z-index:3;display:block;text-align:center;white-space:nowrap;transform:translateY(-50%);pointer-events:none;
@@ -581,23 +581,60 @@ html body #philosophy{--vrh:calc(55 * var(--u))}
    experience; turnkey living, in-home wellness, longevity) stands in the block about the CI client, over the sentence that was there */
 .cl5-p .cl5-who{display:block;margin:0 0 .9em}
 
-/* ===== 25.11 · the client's order of the home page (branch review-flow): the seams the new neighbours make.
-   About CI ends on black and Solutions used to open after a photograph, at #101214: two near-blacks side by side read as a
-   fault, so Solutions now rises out of the same black. Process (#0B0B0C) used to hand over to a photograph; it is followed by
-   Philosophy on black now and settles into it over its last half-screen. ===== */
-html body .ch-suite{background:linear-gradient(180deg,#000 0,#07090A calc(40 * var(--u)),#101214 calc(160 * var(--u)),#18222B 52%,#283E4B 100%)}
-html body .pr4{background:linear-gradient(180deg,#0B0B0C 0,#0B0B0C calc(100% - 50vh),#000 100%)}
-
-/* 25.11 · the time chart read from START to READY (the client's review, P6): the blue square of the system between the two halves of the note */
+/* 26.11 · the time chart reworked: the line on top is the project's time, from START to the two READY marks (CI's in the brand
+   blue); hairline guides drop from them; the titles carry the blue square of the system; the pauses between the firms are hatched */
 #about .ab-time .nq{fill:#96A8BF}
+#about .ab-time .aq{fill:#FFFFFF}
+#about .ab-time .aq.ci{fill:#96A8BF}
+#about .ab-time .tk.ci{fill:#96A8BF}
+#about .ab-time .gd{fill:none;stroke:#FFFFFF;stroke-opacity:.3;stroke-width:1}
+#about .ab-time .gd.ci{stroke:#96A8BF;stroke-opacity:.9}
+#about .ab-time .wt{opacity:.7}
+#about .ab-time .sv2 .ob{fill:none;stroke:#FFFFFF;stroke-width:1}
+#about .ab-time .sl.w,#about .ab-time .big.w{fill:#FFFFFF}
 /* phones: the chart is a third of its drawn size, so its labels (the ruler, the two label lines with START / READY, the note) are set
    larger in its own units — the rule that did this (v10) had been overridden by the frame's sizes above, and they read at under 4 px */
 @media (max-aspect-ratio: 1/1){
   #about .ab-time .tk,#about .ab-time .tl2{font-size:24px;letter-spacing:-.9px}
 }
 
-/* 25.11 · the first screen: the positioning line of the client's review stands under the title, on the title's own left edge,
-   one step of 50 below it; it comes in with the buttons and leaves with the whole hero (it lives in .hero-ui) */
-.hero-ui .hero-pos{position:absolute;left:var(--f-nav);top:calc(100% * 420 / 1080 + 240 * var(--u));opacity:0;transform:translateY(14px);transition:opacity .9s var(--e-out),transform .9s var(--e-out)}
-.hero.ui .hero-ui .hero-pos{opacity:1;transform:none;transition-delay:.45s}
-@media (max-width:900px){ .hero-ui .hero-pos{left:var(--hm);top:calc(33% + 3 * .856 * clamp(28px,8.6vw,54px) + 18px)} }
+/* 25.11 · the first screen: the positioning line of the client's review. 26.11 (the designer: «чуть меньше и расположить её в правом
+   нижнем углу… по уровню с кнопками, которые левее»): it stands in the lower right corner, set flush right on the header's right
+   edge, its foot on the same line as the two buttons' feet; a size smaller than the page's statements (26 of the frame, not 34).
+   It comes in with the buttons and leaves with the whole hero (it lives in .hero-ui). Phones: under the title, as before. */
+.hero-ui .hero-pos{position:absolute;right:calc(24 * var(--u));bottom:calc(24 * var(--u));text-align:right;opacity:0;transform:translateY(14px);transition:opacity .9s var(--e-out),transform .9s var(--e-out)}
+html body .hero-ui .hero-pos{font-size:max(15px, calc(26 * var(--u)))!important;line-height:1.04!important}
+.hero.ui .hero-ui .hero-pos{opacity:1;transform:none;transition-delay:.75s}
+@media (max-width:900px){
+  .hero-ui .hero-pos{right:auto;bottom:auto;text-align:left;left:var(--hm);top:calc(33% + 3 * .856 * clamp(28px,8.6vw,54px) + 18px)}
+  html body .hero-ui .hero-pos{font-size:clamp(15px, 4.4vw, 19px)!important}
+}
+
+/* 26.11 · the wellness bar of the services block: no switch any more (wellness is in every solution); the words in its place */
+.ch-suite .su-sw.su-lv{cursor:default}
+
+/* 26.11 · the chapter rail on a narrow laptop window (≤ 1280): in Trade Gothic «02 PHILOSOPHY» no longer fitted its cell and lost
+   its last letter — the number stands a little closer to the name and the cells a little closer to each other */
+@media (min-width:981px) and (max-width:1280px){ .chap{gap:8px} .chap a{gap:6px} }
+
+/* ===== 26.11 · THE TRIAL ORDER of the home page (branch review-flow): the seams between the new neighbours.
+   Hero → About CI → The CI Difference → Solutions → Projects → Philosophy → Approach → Process → Client → …
+   About → Difference → Solutions and Approach → Process are neighbours again as in her frame: nothing to do there.
+   New neighbours: Solutions → Projects, Projects → Philosophy (js/flow.js), Process → Client (below). ===== */
+@media (min-aspect-ratio: 1/1) and (min-width: 901px){
+  /* the projects' stage is pinned for an opening (75 vh) and a closing (55 vh): it arrives as the blue field Solutions ends on,
+     with the first home seen through the slider's own window, and leaves as black, the window's light out */
+  html body .pj4{--po:1;--pu:1;--pk:0;--pd:0}
+  html body .pj4 .pj4-pin{height:calc(100vh + 130vh);overflow:visible}
+  html body .pj4 .pj4-stage{position:sticky;top:0;background:linear-gradient(180deg,#465A69 0,#283E4B 34%,#141C22 100%)}
+  html body .pj4 .pj4-stage::before{content:"";position:absolute;inset:0;z-index:0;background:#000;opacity:var(--pk);pointer-events:none}
+  html body .pj4.flow .pj4-im{transition:none!important}
+  html body .pj4.flow .pj4-im.on{clip-path:inset(calc(37% * (1 - var(--po))) calc(52% * (1 - var(--po))) calc(37% * (1 - var(--po))) calc(34% * (1 - var(--po))));opacity:calc(1 - var(--pd))}
+  html body .pj4.flow .pj4-im.was{visibility:hidden}
+  html body .pj4.flow .pj4-cap,html body .pj4.flow .pj4-ctl,html body .pj4.flow .pj4-veil,html body .pj4.flow .pj4-rh,html body .pj4.flow .pj4-rv,html body .pj4.flow .pj4-pn > *{opacity:var(--pu)!important;transition:none!important}
+  html body .pj4.flow .pj4-ctl,html body .pj4.flow .pj4-pn{pointer-events:none}
+}
+/* Process → Client: the near-black of Process rises into the blue of the client's block over a third of a screen */
+html body .pr4::after{content:"";display:block;height:38vh;background:linear-gradient(180deg,#0B0B0C 0,#10161A 30%,#1C2B34 68%,#283E4B 100%)}
+/* the rail beside the projects' card is a third shorter: the open chapter takes less of it, so «05 PHILOSOPHY» keeps its last letters */
+@media (min-aspect-ratio: 1/1) and (min-width: 901px){ html.rail-pj body .chap{gap:8px} html.rail-pj body .chap a{gap:6px} html.rail-pj body .chap a.on{flex:2.4} }
