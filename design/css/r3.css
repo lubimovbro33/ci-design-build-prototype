@@ -580,3 +580,11 @@ html body #philosophy{--vrh:calc(55 * var(--u))}
 /* 23.11.2026, client's notes: the ideal client profile (seeking a holistic change; values their time and health; a high-touch, concierge
    experience; turnkey living, in-home wellness, longevity) stands in the block about the CI client, over the sentence that was there */
 .cl5-p .cl5-who{display:block;margin:0 0 .9em}
+
+/* 25.11 · the time chart read from START to READY (the client's review, P6): the blue square of the system between the two halves of the note */
+#about .ab-time .nq{fill:#96A8BF}
+/* phones: the chart is a third of its drawn size, so its labels (the ruler, the two label lines with START / READY, the note) are set
+   larger in its own units — the rule that did this (v10) had been overridden by the frame's sizes above, and they read at under 4 px */
+@media (max-aspect-ratio: 1/1){
+  #about .ab-time .tk,#about .ab-time .tl2{font-size:24px;letter-spacing:-.9px}
+}
