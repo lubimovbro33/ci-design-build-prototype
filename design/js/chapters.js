@@ -311,6 +311,20 @@
     var s2 = el('text', {x: SX + 14, y: CY + 28.5, 'class': 'sl'}, svG); s2.textContent = 'AVERAGE';
     var svN = el('text', {x: SX + 12, y: CY + CH2 - 13, 'class': 'big'}, svG), svV = el('tspan', {}, svN), svP = el('tspan', {'class': 'pc', dx: 7, dy: -27}, svN); svV.textContent = '0'; svP.textContent = '%';
     var svQ = el('rect', {x: PW - 17, y: CY + CH2 - 17, width: 6, height: 6, fill: '#000'}, svG);
+    /* 25.11.2026 (the client's review, P6: «clarify the −20 % time-saving visual with a start-to-finish timeline, visible Start and
+       Ready / Finish labels, and a clear description of the comparison or baseline»; the designer: «делай так, как они просят»).
+       Each row is now read from START to READY on its own label line — the traditional model is ready at 100 %, CI at 80 %, where
+       its plane ends — and a note under the chart says what is measured and against what. The note is working copy (.wc) until CI
+       confirms the baseline and the figure. Nothing of her frame moves: the ruler, the two label lines, the blocks and the card stay. */
+    var seT = [[0, TY - 30, 'start', 'START'], [PW, TY - 30, 'end', 'READY'], [0, CY - 32, 'start', 'START'], [SX, CY - 32, 'end', 'READY']].map(function(q, i){
+      var t = el('text', {x: q[0], y: q[1], 'class': 'tl2 se', 'text-anchor': q[2]}, gT); t.textContent = q[3];
+      if (i === 1){ t.setAttribute('opacity', 0); fades.push({e: t, d: 1.05}); } if (i === 3){ t.setAttribute('opacity', 0); fades.push({e: t, d: 1.45}); }
+      return t; });
+    var NY = CY + CH2 + 26, ntG = el('g', {'class': 'nt', opacity: 0}, gT);
+    var nt1 = el('text', {x: 0, y: NY, 'class': 'tl2 wc'}, ntG); nt1.textContent = 'PROJECT TIME FROM START TO MOVE-IN READY';
+    var ntQ = el('rect', {x: 0, y: NY - 7.6, width: 6, height: 6, 'class': 'nq'}, ntG);
+    var nt2 = el('text', {x: 0, y: NY, 'class': 'tl2 wc'}, ntG); nt2.textContent = '100% = THE SAME PROJECT IN THE TRADITIONAL MODEL';
+    fades.push({e: ntG, d: 2.2});
     /* r3 (her note 13.11 19:23: "why are these blocks not the full container?"): on a window lower than 16:9 the chart keeps the
        container's full width and only its heights follow the window — the group is scaled by x and y apart, and every text (and
        the little square) is narrowed back by the same ratio about its own anchor, so the letters stay in proportion */
@@ -372,6 +386,10 @@
       gO.setAttribute('transform', 'translate(' + f1(port ? tx0 : mU) + ' ' + f1(port ? VH * .62 : VH * .56) + ') scale(' + sc3.toFixed(4) + ')');
       /* r3: the chart hangs from the top (her frames: the ruler at 415 under the title, at 150 once the title has left); the circles sit on the middle */
       LY.t = [tx0, sc2, port ? VH * .34 : 415 * k, port ? VH * .3 : 150 * k, sc2 * k];   /* x, x-scale, y under the title, y once it has left, y-scale */
+      /* the note: one line with the blue square between its two halves; on a phone the halves stand one under the other */
+      var nk = k < .999 ? k : 1, n1 = (nt1.getComputedTextLength ? nt1.getComputedTextLength() : 0) * nk, fs = parseFloat(getComputedStyle(nt1).fontSize) || 10.66;
+      if (port || !n1){ ntQ.setAttribute('display', 'none'); nt1.setAttribute('y', f1(NY + fs * .5)); nt2.setAttribute('x', 0); nt2.setAttribute('y', f1(NY + fs * 1.85)); }
+      else { nt1.setAttribute('y', NY); ntQ.removeAttribute('display'); ntQ.setAttribute('x', f1(n1 + 12)); ntQ.setAttribute('width', f1(6 * nk)); nt2.setAttribute('x', f1(n1 + 12 + 6 * nk + 12)); nt2.setAttribute('y', NY); }
       tFit.forEach(function(t){ var x = +t.getAttribute('x') || 0; if (k < .999) t.setAttribute('transform', 'translate(' + x + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-x) + ' 0)'); else t.removeAttribute('transform'); });
       if (k < .999) svQ.setAttribute('transform', 'translate(' + f1(PW - 11 * k) + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-(PW - 11)) + ' 0)'); else svQ.removeAttribute('transform');
       var cs = port ? VW / 1920 * .9 : k; LY.hl = Math.max(1020, VW / 2 / cs + 40);   /* the line bleeds off both edges, as in her frame */
