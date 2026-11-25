@@ -171,8 +171,13 @@ function unitLitMat(tex){
         float warm = smoothstep(.25,.8,dot(col, vec3(.5,.35,.15)));
         col *= mix(1., uGain, warm);
         bool pier = (vUv.x > uPier.x && vUv.x < uPier.y) || (vUv.x > uPier.z && vUv.x < uPier.w);   /* the stone between the panes */
-        if (uSk > 0. && (pier || vUv.x < uCU.x || vUv.x > uCU.z || vUv.y < uCU.y || vUv.y > uCU.w)) col = skMix(col, vec3(0.), vUv, uSk);   /* past the outline + the piers */
-        gl_FragColor = vec4(col, c.a * uOp);
+        float al = c.a * uOp;
+        /* past the outline + the piers. 25.11.2026 (the designer's screenshot: a coloured, striped shape beside the CI window while
+           everything else is already drawn in black and white): this plane is glass — transparent — outside the outline too, and
+           only its colour went to black, so the room behind (and the stretched edge of its photograph) kept showing through the
+           neighbouring pane in full colour. Past the outline it now closes with the same front that blackens it. */
+        if (uSk > 0. && (pier || vUv.x < uCU.x || vUv.x > uCU.z || vUv.y < uCU.y || vUv.y > uCU.w)){ col = skMix(col, vec3(0.), vUv, uSk); al = mix(al, uOp, skR()); }
+        gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
       }`,
     transparent: true, depthWrite: false
@@ -188,9 +193,10 @@ function roomMat(tex, dep, near){
                 skMap:{value:null}, uSk:{value:0}, uSkOk:{value:0} },
     transparent: !!near, depthWrite: !near,
     vertexShader: `uniform sampler2D dmap; uniform vec3 uEye; uniform float uDK; varying vec2 vUv;
-      void main(){ vUv = position.xy + .5;                       /* = uv on the room plane; the near layer runs a bit past it */
+      void main(){ vUv = position.xy + .5;                       /* = uv on the room plane; the mesh runs past it on every side */
         vec4 wp = modelMatrix * vec4(position, 1.);
-        vec4 dd = textureLod(dmap, vUv, 0.);
+        vec2 um = vUv; um = mix(um, -um, step(um, vec2(0.))); um = mix(um, 2. - um, step(vec2(1.), um));   /* past the edge: mirrored */
+        vec4 dd = textureLod(dmap, um, 0.);
         #ifdef NEAR
         float D = 1. + dd.g * 5.5;
         #else
@@ -202,16 +208,22 @@ function roomMat(tex, dep, near){
     fragmentShader: `uniform sampler2D map; uniform sampler2D dmap; uniform float uLight; uniform float uGain; uniform float uRaw;
       uniform sampler2D skMap; uniform float uSk; uniform float uSkOk; varying vec2 vUv;
       ${SKGL}
-      void main(){ vec3 c = texture2D(map, vUv).rgb;
+      void main(){
+        /* 25.11.2026 (the designer's screenshot: a striped, wavy-edged coloured shape by the CI window). Past the photograph's own
+           edge the mesh used to repeat its last column of pixels — smeared stripes — and seen from outside, through the window, the
+           photograph does not reach the glass's edges on every screen. Out there the picture is now mirrored: the room simply goes
+           on (floor, wall, ceiling), nothing is smeared. */
+        vec2 um = vUv; um = mix(um, -um, step(um, vec2(0.))); um = mix(um, 2. - um, step(vec2(1.), um));
+        vec3 c = texture2D(map, um).rgb;
         c = uRaw > .5 ? pow(pow(c, vec3(1.08)) * .9, vec3(2.2)) : s2l(c);   /* a hero photo: its grade; the room 1450_34: plain sRGB → linear */
         #ifdef NEAR
-        float al = texture2D(dmap, vUv).b; if (al < .004) discard;   /* the cut-out of the near furniture */
+        float al = texture2D(dmap, um).b; if (al < .004) discard;   /* the cut-out of the near furniture */
         #else
         float al = 1.;
         #endif
         vec3 night = c * vec3(1.08, .88, .66) * .8;               /* seen from outside at night: warm, dimmer */
         vec3 col = mix(c, night, 1. - uLight) * uGain;
-        if (uSk > 0.){ vec3 sk = uSkOk > .5 ? texture2D(skMap, vUv).rgb : vec3(0.);
+        if (uSk > 0.){ vec3 sk = uSkOk > .5 ? texture2D(skMap, um).rgb : vec3(0.);
           col = skMix(col, sk, vUv, uSk); }
         gl_FragColor = vec4(col, al);
         #include <colorspace_fragment>
@@ -379,7 +391,7 @@ async function build(){
   /* two layers: the room (furniture near us painted out) and, on top, the near furniture cut out — sofa, lamp, coffee
      table — each on its own depth, so the sofa really slides in front of the room instead of dragging it along */
   tRoom.minFilter = tRoomBg.minFilter = THREE.LinearMipmapLinearFilter;
-  const roomGeo = new THREE.PlaneGeometry(1.12, 1.12, 224, 162);       /* edge texels stretch a little past the photo */
+  const roomGeo = new THREE.PlaneGeometry(1.26, 1.26, 252, 182);       /* 13 % past the photograph on every side; out there the picture is mirrored (roomMat) */
   M.room = new THREE.Mesh(roomGeo, roomMat(tRoomBg, tDep, 0)); M.room.material.clippingPlanes = clipEdge;
   M.room.position.set(H.x, H.y, ROOMZ); M.room.renderOrder = 1; scene.add(M.room);
   M.roomN = new THREE.Mesh(roomGeo, roomMat(tRoom, tDep, 1)); M.roomN.material.clippingPlanes = clipEdge;
@@ -464,7 +476,14 @@ function setRoom(i){
     if (ROOMS.skb) setRoomSk({ b: ROOMS.skb, o: ROOMS.sko }, 1); else ub.uSkOk.value = un.uSkOk.value = 0; }
   scaleRoom();
 }
-const MP_OUT = 205, MP_IN = 32, MP_PH = 28;   /* … and on the hero photos */   /* mouse parallax: camera slide at the screen edge (×0.5), outside / in the room */
+const MP_OUT = 205, MP_IN = 32, MP_PH = 28, MP_FLAT = 5;   /* MP_FLAT: the flat slide of a hero picture under the cursor, ±1 % of the screen */
+/* the eye the room's relief is built from (both layers); off the window's axis by (dx, dy) while the picture slides flat */
+function roomEye(dx, dy, z){ if (M.room) for (const m of [M.room, M.roomN]) m.material.uniforms.uEye.value.set(H.x + dx, H.y + dy, z); }
+/* how much of the relief the room has: all of it while the camera is in the room or passing the glass, none once it is outside.
+   From out there the pulled-in near furniture left the mesh short of the window's edges — wedges and a wavy border showed in the
+   glass — and a flat photograph behind the frame is all the eye can read at that distance anyway (25.11.2026) */
+function roomDK(k){ if (M.room) for (const m of [M.room, M.roomN]) m.material.uniforms.uDK.value = k; }
+/* MP_OUT / MP_IN: the camera's slide at the screen edge (×0.5) outside and on the way in; MP_PH was the hero photos' own, until 25.11 */
 
 /* ---------------------------------------------------------------- camera path + state */
 const v3 = new THREE.Vector3(), look = new THREE.Vector3();
@@ -495,10 +514,20 @@ function pose(t, T, mx, my, scroll){
   /* mouse parallax: the camera slides with the cursor but keeps looking at a pivot point on its view axis —
      outside the pivot is 400 behind the facade (the tower drifts one way, the city the other), inside it is the
      doorway wall (the sofa slides one way, the dining room and the wine wall the other) */
-  const dk = sm(Math.min(1, dive * 2.2)), mp = lerp(MP_OUT, MP_IN, dk);
+  /* 25.11.2026 (the designer: «когда двигаем мышкой и происходит параллакс-движение, то картинки очень сильно искажаются, и также
+     появляется какой-то блюр за элементами» — and the client's note of 23.11, the hero looks curved / blurred). Inside the room the
+     cursor no longer turns the camera round a pivot: the camera and the eye the relief is built from move together, sideways, and
+     look straight ahead — so the photograph is exactly the photograph, only sliding a few pixels as one flat picture. Nothing is
+     pushed apart, nothing painted-in shows from behind the furniture. Outside (the facade, the city) the parallax stays: those are
+     flat planes at their own distances, nothing bends there. `fk` brings the flat mode in as the camera comes through the window. */
+  const dk = sm(Math.min(1, dive * 2.2)), fk = sm(clamp01((dive - .55) / .4)), mp = lerp(MP_OUT, MP_IN, dk);
   v3.set(lx - x, ly - y, lz - z); const L = v3.length(); v3.multiplyScalar((L + 520 * (1 - dk)) / L);
-  look.set(x + v3.x, y + v3.y, z + v3.z);
-  camera.position.set(x - mx * mp, y + my * mp * .7, z); camera.lookAt(look);
+  /* two parts: the pivot parallax (weight 1 − fk) and the flat slide (weight fk); in the flat slide the picture moves against the
+     cursor, the way the far wall did before and the way the page's other layers do */
+  const pk = 1 - fk, fx = mx * MP_FLAT * fk, fy = -my * MP_FLAT * .7 * fk;
+  look.set(x + v3.x + fx, y + v3.y + fy, z + v3.z);
+  camera.position.set(x - mx * mp * pk + fx, y + my * mp * .7 * pk + fy, z); camera.lookAt(look);
+  roomEye(fx, fy, ZEND); roomDK(dk);
   return dive;
 }
 
@@ -563,8 +592,13 @@ function storyPose(o){
   const g = Math.pow(sm(f), 1.6), dIn = (ZEND - ROOMZ) * (1 - (o.push || 0)), dOut = zEnd - ROOMZ;
   const dist = dIn * Math.pow(dOut / dIn, g), z = ROOMZ + dist;
   const out = sm((dist - 290) / Math.max(120, (dOut - 290) * .8)), mp = lerp(MP_IN, Math.max(MP_IN, z * .1), out);   /* parallax scales with the distance */
-  camera.position.set(H.x - mx * mp, H.y + my * mp * .7, z); look.set(H.x, H.y, lerp(ROOMZ, -520, out)); camera.lookAt(look);
+  /* 25.11.2026: in the room the cursor slides the picture flat, as on the hero (see pose()); the pivot parallax comes back with `out`,
+     once the camera is outside. The relief's eye starts where the camera starts (so the first frame is the hero's own picture, whatever
+     its push-in) and is back in its place by a quarter of the flight — from there on the fly-out has its real depth. */
+  const fo = 1 - out, fx = mx * MP_FLAT * fo, fy = -my * MP_FLAT * .7 * fo, ek = sm(clamp01(f / .25));
+  camera.position.set(H.x - mx * mp * out + fx, H.y + my * mp * .7 * out + fy, z); look.set(H.x + fx, H.y + fy, lerp(ROOMZ, -520, out)); camera.lookAt(look);
   camera.updateMatrixWorld();
+  roomEye(fx, fy, lerp(ROOMZ + dIn, ZEND, ek)); roomDK(1 - sm(clamp01((out - .2) / .6)));
   return out;
 }
 /* where the CI window is on screen for these params — the DOM panels stay attached to it in 3D after the canvas is covered */
@@ -813,7 +847,7 @@ const SlideShader = {
    things cut out on top, each pushed along its ray by assets/hero/NAME_dep.png (Depth Anything V2 + hand-picked objects) */
 let PSGEO = null;
 function photoScene(tO, tB, tD){
-  const sc = new THREE.Scene(), geo = PSGEO || (PSGEO = new THREE.PlaneGeometry(1.12, 1.12, 224, 162));   /* one relief mesh for all photos */
+  const sc = new THREE.Scene(), geo = PSGEO || (PSGEO = new THREE.PlaneGeometry(1.26, 1.26, 252, 182));   /* one relief mesh for all photos */
   const bg = new THREE.Mesh(geo, roomMat(tB, tD, 0)), nr = new THREE.Mesh(geo, roomMat(tO, tD, 1));
   for (const m of [bg, nr]){ const u = m.material.uniforms; u.uLight.value = 1; u.uGain.value = 1; u.uEye.value.set(0, 0, 0); m.position.set(0, 0, -PD); sc.add(m); }
   bg.renderOrder = 1; nr.renderOrder = 2;
@@ -908,8 +942,12 @@ function fit(v, tw, th, z, px, py){
    the cursor moves the camera and it keeps looking at the doorway-depth pivot — the same 3D as the room */
 function drawPhoto(i, slot, k, zx, o){
   const ps = SLD.ps[i], rt = slotRT(slot);
-  ps.cam.position.set(-o.mx * MP_PH, o.my * MP_PH * .7, -PD * (.05 * k + zx + o.scroll));
-  ps.cam.lookAt(0, 0, -PD);
+  /* 25.11.2026: the eye the relief is built from sits in the camera itself, so on the hero a photograph is only a photograph: it comes
+     closer (the slow push-in) and slides a few pixels under the cursor as one flat picture. The depth is kept for the flight out of
+     the window (the story), where the camera really leaves this point. */
+  const cx = o.mx * MP_FLAT, cy = -o.my * MP_FLAT * .7, cz = -PD * (.05 * k + zx + o.scroll);   /* the picture moves against the cursor */
+  ps.cam.position.set(cx, cy, cz); ps.cam.lookAt(cx, cy, -PD);
+  ps.bg.material.uniforms.uEye.value.set(cx, cy, cz); ps.nr.material.uniforms.uEye.value.set(cx, cy, cz);
   renderer.setRenderTarget(rt); renderer.clear(); renderer.render(ps.sc, ps.cam);
   return rt.texture;
 }

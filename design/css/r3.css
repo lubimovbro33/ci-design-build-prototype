@@ -588,3 +588,9 @@ html body #philosophy{--vrh:calc(55 * var(--u))}
 @media (max-aspect-ratio: 1/1){
   #about .ab-time .tk,#about .ab-time .tl2{font-size:24px;letter-spacing:-.9px}
 }
+
+/* 25.11 · the first screen: the positioning line of the client's review stands under the title, on the title's own left edge,
+   one step of 50 below it; it comes in with the buttons and leaves with the whole hero (it lives in .hero-ui) */
+.hero-ui .hero-pos{position:absolute;left:var(--f-nav);top:calc(100% * 420 / 1080 + 240 * var(--u));opacity:0;transform:translateY(14px);transition:opacity .9s var(--e-out),transform .9s var(--e-out)}
+.hero.ui .hero-ui .hero-pos{opacity:1;transform:none;transition-delay:.45s}
+@media (max-width:900px){ .hero-ui .hero-pos{left:var(--hm);top:calc(33% + 3 * .856 * clamp(28px,8.6vw,54px) + 18px)} }
