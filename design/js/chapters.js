@@ -374,6 +374,64 @@
     var obEl = sec.querySelector('#abOb');
     var one = sec.querySelector('#abOne'), ows = one ? [].slice.call(one.querySelectorAll('.ws b')) : [], oneW = -1, IN = .2, wsBox = one && one.querySelector('.ws');
     function oneFit(){}   /* the word sits on its own centred line now: nothing to measure */
+    /* 26.11.2026 — trial: depth and layers (the client's review, P2: «You stay involved…» feels visually empty — selective layering
+       and depth; the designer: not a plain photograph behind the page; if photographs, then textures and details, not general views).
+       The two large circles become lenses. Behind the page lie two details of a CI residence (Collectors Home: the stone of its basin,
+       its carved rug with the brass inlay and the black oak) — planes as wide as both circles together, standing still while the
+       circles part, so each circle uncovers its own; where the two overlap, and under the words, the page stays black: «everything in
+       between» is read on black, inside a ring of material. WebGL (her rule for anything that moves over a photograph), drawn only
+       when the scene changes; graded in the shader, nothing laid over the pictures. Wide screens only; no WebGL → the lines alone. */
+    var lens = (function(){
+      var cv = sec.querySelector('#abLens'); if (!cv || LITE) return null;
+      var gl = null; try { gl = cv.getContext('webgl', {alpha: true, premultipliedAlpha: true, antialias: false}); } catch (e) {} if (!gl) return null;
+      var VS = 'attribute vec2 a; void main(){ gl_Position = vec4(a, 0., 1.); }';
+      var FS = ['precision highp float;',
+        'uniform vec2 uRes; uniform vec2 uC; uniform float uS; uniform float uR; uniform float uDx; uniform float uA; uniform float uK; uniform vec3 uM;',
+        'uniform sampler2D tA; uniform sampler2D tB; uniform vec2 uFa; uniform vec2 uFb;',
+        'vec3 grade(vec3 c, float e){ return pow(c, vec3(1.12)) * e; }',
+        'void main(){',
+        '  vec2 p = (vec2(gl_FragCoord.x, uRes.y - gl_FragCoord.y) - uC) / uS;',                      /* the circles' own units, y down */
+        '  float aa = 1. / uS, dA = length(p - vec2(-uDx, 0.)), dB = length(p - vec2(uDx, 0.));',
+        '  float inA = 1. - smoothstep(uR - aa, uR + aa, dA), inB = 1. - smoothstep(uR - aa, uR + aa, dB);',
+        '  float L = inA * (1. - inB), R = inB * (1. - inA), a = L + R;',
+        '  if (a < .003){ gl_FragColor = vec4(0.); return; }',
+        '  vec2 q = p / (vec2(930., 540.) * mix(1.1, 1., uK));',                                      /* the plane behind: it comes a little closer as the circles part */
+        '  vec3 cA = texture2D(tA, vec2(.5) + (q + vec2(.03 * (1. - uK), 0.)) * uFa).rgb, cB = texture2D(tB, vec2(.5) + (q - vec2(.03 * (1. - uK), 0.)) * uFb).rgb;',
+        '  vec3 col = grade(cA, .64) * L + grade(cB, 1.55) * R;',
+        '  col *= mix(1., .78, smoothstep(.55 * uR, uR, mix(dA, dB, step(L, R))));',                    /* a lens: darker towards its rim */
+        '  a *= mix(1., smoothstep(.6, 1.04, length((p - vec2(0., -4.)) / uM.xy)), uM.z) * uA;',      /* under the words the picture gives way */
+        '  gl_FragColor = vec4(col * a, a); }'].join('\n');
+      function sh(t, src){ var o = gl.createShader(t); gl.shaderSource(o, src); gl.compileShader(o); return o; }
+      var pr = gl.createProgram(); gl.attachShader(pr, sh(gl.VERTEX_SHADER, VS)); gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, FS)); gl.linkProgram(pr);
+      if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null;
+      gl.useProgram(pr);
+      gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+      var la = gl.getAttribLocation(pr, 'a'); gl.enableVertexAttribArray(la); gl.vertexAttribPointer(la, 2, gl.FLOAT, false, 0, 0);
+      var U = {}; ['uRes', 'uC', 'uS', 'uR', 'uDx', 'uA', 'uK', 'uM', 'tA', 'tB', 'uFa', 'uFb'].forEach(function(n){ U[n] = gl.getUniformLocation(pr, n); });
+      var ready = 0, ar = [1.73, 1.73], want = null, started = false, lastK = '';
+      function tex(i, src){ var t = gl.createTexture(), im = new Image(); im.onload = function(){
+          gl.activeTexture(gl.TEXTURE0 + i); gl.bindTexture(gl.TEXTURE_2D, t); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, im);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+          gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+          ar[i] = im.naturalWidth / im.naturalHeight; ready++; if (ready === 2 && want) draw.apply(null, want); }; im.src = src; }
+      function clear(){ if (lastK === 'off') return; lastK = 'off'; gl.viewport(0, 0, cv.width, cv.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); }
+      /* w, h: the stage in css px · cx, cy, s: the circles' centre and unit in css px · R, dx: radius and half the distance · a: opacity ·
+         mrx, mry, mo: the words' ellipse and how far it is in · k: how far the circles have parted */
+      function draw(w, h, cx, cy, s, R, dx, a, mrx, mry, mo, k){
+        want = [w, h, cx, cy, s, R, dx, a, mrx, mry, mo, k];
+        if (a < .004 || dx < .5 || R < 1){ clear(); return; }
+        if (!started){ started = true; tex(0, 'assets/r3/lens_a.webp'); tex(1, 'assets/r3/lens_b.webp'); }
+        if (ready < 2) return;
+        var d = Math.min(window.devicePixelRatio || 1, 1.5), W = Math.round(w * d), H = Math.round(h * d); if (cv.width !== W || cv.height !== H){ cv.width = W; cv.height = H; lastK = ''; }
+        var key = want.map(function(v){ return v.toFixed(2); }).join('/'); if (key === lastK) return; lastK = key;
+        var ab = 930 / 540, fit = function(r){ return r > ab ? [ab / r, 1] : [1, r / ab]; }, fa = fit(ar[0]), fb = fit(ar[1]);
+        gl.viewport(0, 0, W, H); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
+        gl.uniform2f(U.uRes, W, H); gl.uniform2f(U.uC, cx * d, cy * d); gl.uniform1f(U.uS, s * d); gl.uniform1f(U.uR, R); gl.uniform1f(U.uDx, dx); gl.uniform1f(U.uA, a); gl.uniform1f(U.uK, k);
+        gl.uniform3f(U.uM, Math.max(1, mrx), Math.max(1, mry), mo); gl.uniform1i(U.tA, 0); gl.uniform1i(U.tB, 1); gl.uniform2f(U.uFa, fa[0], fa[1]); gl.uniform2f(U.uFb, fb[0], fb[1]);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      }
+      return { draw: draw, clear: clear };
+    })();
     var LY = null, last = -1, OWN_DS = 1;
     var HOLD = 60, HA = IN + (1 - IN) * .772, HS = (1 - IN) * .014;   /* the hold: vh of scroll; where it starts and how long that stretch was, in the chapter's own progress */
     function layout(){
@@ -421,6 +479,7 @@
       [svQ, sv2Q].forEach(function(q){ if (k < .999) q.setAttribute('transform', 'translate(' + f1(PW - 11 * k) + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-(PW - 11)) + ' 0)'); else q.removeAttribute('transform'); });
       var cs = port ? VW / 1920 * .9 : k; LY.hl = Math.max(1020, VW / 2 / cs + 40);   /* the line bleeds off both edges, as in her frame */
       gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27 * k) + ') scale(' + cs.toFixed(4) + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
+      LY.c = [w, h, w / 2, (port ? VH * .44 : VH / 2 + 27 * k) * w / VW, cs * w / VW];   /* the stage and the circles' centre and unit, in css px — for the lenses */
       /* where the lines dissolve: the words' own box (their real width), with air around it; the words stand 4 above the line on a wide screen */
       if (obEl){ var rg = document.createRange(); rg.selectNodeContents(obEl); var pxu = Math.max(.05, w / VW * cs), tw = rg.getBoundingClientRect().width / pxu, th = obEl.offsetHeight / pxu;
         /* phones (no frame from her): the words are larger than the two circles, so the whole of their box is cleared — the line and the
@@ -484,6 +543,7 @@
       var qi = LY.port ? sg(k0, .15, .55) * (1 - kob) : sg(k0, .15, .55), qx = [-(EX - rS), -(dx + rA), dx + rA, EX - rS], qo = [sg(kss, .15, .55), qi, qi, sg(kss, .15, .55)];
       cQ.forEach(function(q, i){ q.setAttribute('x', f1(qx[i] - 4)); q.setAttribute('opacity', qo[i].toFixed(2)); });
       mEl.setAttribute('opacity', kob.toFixed(3));
+      if (lens){ if (LY.port) lens.clear(); else lens.draw(LY.c[0], LY.c[1], LY.c[2], LY.c[3], LY.c[4], rA, dx, sg(p, .835, .845), (+mEl.getAttribute('rx') || 280) * .74, (+mEl.getAttribute('ry') || 140) * .8, kob, ksp); }   /* the pictures give way closer to the words than the lines do */
       stage.style.setProperty('--ob', kob.toFixed(3));
       var km = sg(p, .82, .88); gO.style.opacity = sg(p, .81, .84).toFixed(3); own.style.strokeDashoffset = ((1 - km) * OWN_DS).toFixed(3);
       dots.forEach(function(d, i){ d.style.opacity = sg(p, .83 + i * .014, .85 + i * .014).toFixed(3); });
