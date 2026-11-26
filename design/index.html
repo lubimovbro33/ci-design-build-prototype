@@ -10,7 +10,7 @@
 <!-- the 3D intro starts sooner (user 09.11 "we still wait half a second or a second"): the import map comes first, the whole
      module graph is fetched in parallel instead of three waves, and the intro's textures start with the HTML instead of after three.js -->
 <script type="importmap">{"imports":{"three":"./assets/vendor/three/three.module.min.js","three/addons/":"./assets/vendor/three/addons/"}}</script>
-<link rel="modulepreload" href="js/pre3d.js?v=266bc218">
+<link rel="modulepreload" href="js/pre3d.js?v=0c5dcdbc">
 <link rel="modulepreload" href="assets/vendor/three/three.module.min.js">
 <link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/EffectComposer.js">
 <link rel="modulepreload" href="assets/vendor/three/addons/postprocessing/RenderPass.js">
@@ -27,14 +27,14 @@
 <link rel="modulepreload" href="assets/vendor/three/addons/shaders/OutputShader.js">
 <link rel="preload" href="assets/fonts/tg-ext.woff" as="font" type="font/woff" crossorigin>
 <link rel="preload" href="assets/fonts/tg-ext-bold.woff" as="font" type="font/woff" crossorigin>
-<link rel="stylesheet" href="css/site.css?v=266bc218">
-<link rel="stylesheet" href="css/story.css?v=266bc218">
-<link rel="stylesheet" href="css/chapters.css?v=266bc218">
-<link rel="stylesheet" href="css/type.css?v=266bc218">
-<link rel="stylesheet" href="css/polish.css?v=266bc218">
-<link rel="stylesheet" href="css/v10.css?v=266bc218">
-<link rel="stylesheet" href="css/r3.css?v=266bc218">
-<link rel="stylesheet" href="css/form.css?v=266bc218">
+<link rel="stylesheet" href="css/site.css?v=0c5dcdbc">
+<link rel="stylesheet" href="css/story.css?v=0c5dcdbc">
+<link rel="stylesheet" href="css/chapters.css?v=0c5dcdbc">
+<link rel="stylesheet" href="css/type.css?v=0c5dcdbc">
+<link rel="stylesheet" href="css/polish.css?v=0c5dcdbc">
+<link rel="stylesheet" href="css/v10.css?v=0c5dcdbc">
+<link rel="stylesheet" href="css/r3.css?v=0c5dcdbc">
+<link rel="stylesheet" href="css/form.css?v=0c5dcdbc">
 <script>(function(){var h=location.hostname,q=location.search;if(/^ci-hero|^ci-preloader/.test(h)||/[?&]hero(=|&|$)/.test(q))document.documentElement.classList.add('hero-only');})();</script>
 <script>(function(){var d=document.documentElement,m=window.matchMedia,c=m&&m('(pointer: coarse)').matches,s=Math.max(screen.width||9999,screen.height||9999);if(c||s<1000||/[?&]lite/.test(location.search))d.classList.add('lite');})();</script>
 <script>(function(){if(!window.WebGL2RenderingContext)return;   /* the intro's textures, same picks as js/pre3d.js (hiDPI, room 1k/2k) */
@@ -175,8 +175,11 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
         <div data-a=".38" data-b=".52" class="r3p" style="--x:48;--y:155"><h3 class="t60">CI is built<br>differently</h3><p class="t20" style="--w:275;--mt:50">We bring the disciplines together from the beginning</p></div>
         <div data-a=".52" data-b=".62" class="r3p r3b" style="--x:48;--yb:254"><p class="t20" style="--w:360">Every factor and every step: architecture, interior design, construction, furnishings, art, wellness, procurement, installation, and project management, under one roof, one team, curated by the CI process from day one</p></div>
         <div data-a=".62" data-b=".72" class="r3p r3c" style="--y:132"><h3 class="t60">Your time<br>is irreplaceable</h3><p class="t20" style="--mt:50">Our curated CI process is built to protect it</p></div>
-        <div data-a=".72" data-b=".82" class="r3p r3b" style="--x:48;--yb:120"><p class="t34" style="--w:880">Our clients move in 20% sooner,<br class="r3br"> and give 20% less of&nbsp;their own time<br class="r3br"> to&nbsp;the project. Two separate savings.<br class="r3br"> <span class="cb">Time you don't get back, unless you have<br class="r3br"> the right team from the beginning</span></p></div>
-        <div data-a=".82" data-b="9" class="st r3own"><h3 class="t34 up oa">You stay involved<br>where your<br>vision matters<br>most</h3><p class="t20 oc">The result is what concierge-level service<br class="r3br"> actually looks like: you remain involved<br class="r3br"> where your perspective matters most, while<br class="r3br"> CI handles everything else</p><p class="t20 od">The seamless CI process, clear<br class="r3br"> communication, and a home where<br class="r3br"> every detail was considered<br class="r3br"> before you ever had to ask</p><a class="r3btn oe" href="about.html"><span class="t">Discover<br>CI Design +<br>Build</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
+        <div data-a=".72" data-b=".80" class="r3p r3b" style="--x:48;--yb:120"><p class="t34" style="--w:880">Our clients move in 20% sooner<br class="r3br"> <span class="cb">Time you don't get back, unless you have<br class="r3br"> the right team from the beginning</span></p></div>
+        <!-- 26.11.2026, evening: the second saving (the client's note 13 of 23.11: the client's personal time, a separate saving). The designer: no card —
+             text, set apart; once the chart has left it stands alone in the middle of the screen. Working copy (.wc): the wording is ours. -->
+        <div data-a=".80" data-b=".83" class="r3p r3m"><h3 class="t60 wc">And <span id="abOwnN">20</span>% of your<br><span class="cb">personal time saved</span></h3><p class="t20 wc" style="--mt:50">Two separate savings</p></div>
+        <div data-a=".83" data-b="9" class="st r3own"><h3 class="t34 up oa">You stay involved<br>where your<br>vision matters<br>most</h3><p class="t20 oc">The result is what concierge-level service<br class="r3br"> actually looks like: you remain involved<br class="r3br"> where your perspective matters most, while<br class="r3br"> CI handles everything else</p><p class="t20 od">The seamless CI process, clear<br class="r3br"> communication, and a home where<br class="r3br"> every detail was considered<br class="r3br"> before you ever had to ask</p><a class="r3btn oe" href="about.html"><span class="t">Discover<br>CI Design +<br>Build</span><i class="ln lv" aria-hidden="true"></i><i class="ln lh" aria-hidden="true"></i><i class="sqd" aria-hidden="true"></i></a></div>
       </div>
       <h3 class="t60 cb ab-ob" id="abOb">We own<br>everything<br>in between</h3>
       <div class="ab-one" id="abOne" aria-label="One Vision. One Team. One Turnkey Experience."><span class="o">One</span><span class="ws" aria-hidden="true"><b>Vision</b><b>Team</b><b>Turnkey Experience</b></span></div>
@@ -487,11 +490,11 @@ L.forEach(function(u){var l=document.createElement('link');l.rel='preload';l.as=
   <a href="#cta" data-ch="cta"><span>07</span><span class="t">Contact</span><i></i></a>
 </nav>
 
-<script type="module" src="js/pre3d.js?v=266bc218"></script>
-<script src="js/site.js?v=266bc218"></script>
-<script src="js/chapters.js?v=266bc218"></script>
-<script src="js/v10.js?v=266bc218"></script>
-<script src="js/r3.js?v=266bc218"></script>
-<script src="js/form.js?v=266bc218"></script>
+<script type="module" src="js/pre3d.js?v=0c5dcdbc"></script>
+<script src="js/site.js?v=0c5dcdbc"></script>
+<script src="js/chapters.js?v=0c5dcdbc"></script>
+<script src="js/v10.js?v=0c5dcdbc"></script>
+<script src="js/r3.js?v=0c5dcdbc"></script>
+<script src="js/form.js?v=0c5dcdbc"></script>
 </body>
 </html>
