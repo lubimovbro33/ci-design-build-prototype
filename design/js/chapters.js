@@ -298,14 +298,19 @@
        hatched and named, and a line under the chart says what is compared. The only figure left is the 20 % on its card. */
     var late = [];                                                   /* what appears with a row's end: [element, d] — joined to `fades` below */
     el('path', {d: seg(0, 0, PW, 0), 'class': 'rl', 'vector-effect': 'non-scaling-stroke'}, gT);
-    var gdC = el('path', {d: seg(SX - .5, 3, SX - .5, CY), 'class': 'gd ci', 'vector-effect': 'non-scaling-stroke', opacity: 0}, gT);
-    var gdT = el('path', {d: seg(PW - .5, 3, PW - .5, CY), 'class': 'gd', 'vector-effect': 'non-scaling-stroke', opacity: 0}, gT);
-    el('rect', {x: 0, y: -3, width: 6, height: 6, 'class': 'aq'}, gT);
-    var aqC = el('rect', {x: SX - 6, y: -3, width: 6, height: 6, 'class': 'aq ci', opacity: 0}, gT), aqT = el('rect', {x: PW - 6, y: -3, width: 6, height: 6, 'class': 'aq', opacity: 0}, gT);
-    var axS = el('text', {x: 0, y: -12, 'class': 'tk', 'text-anchor': 'start'}, gT); axS.textContent = 'START';
-    var axC = el('text', {x: SX, y: -12, 'class': 'tk ci', 'text-anchor': 'end', opacity: 0}, gT); axC.textContent = 'CI READY';
-    var axT = el('text', {x: PW, y: -12, 'class': 'tk', 'text-anchor': 'end', opacity: 0}, gT); axT.textContent = 'TRADITIONAL READY';
-    late.push([gdT, 1.05], [aqT, 1.05], [axT, 1.05], [gdC, 1.45], [aqC, 1.45], [axC, 1.45]);
+    /* 26.11.2026, evening (the designer): «линия должна идти посреди квадратика, от которого она начинается» and the lines must sit
+       exactly on the rectangles below; the words START / CI READY / TRADITIONAL READY stood too close to the header. So: three marks,
+       each a square drawn as a point with a square cap (9 px on screen, whatever the chart's scale), and a hairline through its very
+       centre, dropping the whole height of the chart — START down the rows' left edge, CI READY into the gap between CI's plane and
+       the saved-time card, TRADITIONAL READY down the right edge. layout() puts each on a whole pixel, so the line and its square
+       stay one thing. The words stand under the line now, beside their guides, clear of the header. */
+    var GX = [.5, SX + 1.5, PW - .5], GB = CY + CH2;
+    var gds = GX.map(function(x, i){ return el('path', {d: seg(x, 0, x, GB), 'class': 'gd' + (i === 1 ? ' ci' : ''), 'vector-effect': 'non-scaling-stroke', opacity: i ? 0 : 1}, gT); });
+    var aqs = GX.map(function(x, i){ return el('path', {d: seg(x, -.01, x, .01), 'class': 'aq' + (i === 1 ? ' ci' : ''), 'vector-effect': 'non-scaling-stroke', opacity: i ? 0 : 1}, gT); });
+    var axS = el('text', {x: 10, y: 18, 'class': 'tk', 'text-anchor': 'start'}, gT); axS.textContent = 'START';
+    var axC = el('text', {x: SX - 9, y: 18, 'class': 'tk ci', 'text-anchor': 'end', opacity: 0}, gT); axC.textContent = 'CI READY';
+    var axT = el('text', {x: PW - 11, y: 18, 'class': 'tk', 'text-anchor': 'end', opacity: 0}, gT); axT.textContent = 'TRADITIONAL READY';
+    late.push([gds[2], 1.05], [aqs[2], 1.05], [axT, 1.05], [gds[1], 1.45], [aqs[1], 1.45], [axC, 1.45]);
     /* a title: the row's name, the blue square of the system, how the row works — set as one centred line by layout() */
     function title(y, name, how){ var t1 = el('text', {x: 0, y: y, 'class': 'tl2'}, gT), q = el('rect', {x: 0, y: y - 7.6, width: 6, height: 6, 'class': 'nq'}, gT), t2 = el('text', {x: 0, y: y, 'class': 'tl2 how'}, gT);
       t1.textContent = name; t2.textContent = how; return {a: t1, q: q, b: t2}; }
@@ -330,14 +335,6 @@
     var s2 = el('text', {x: SX + 14, y: CY + 28.5, 'class': 'sl'}, svG); s2.textContent = 'AVERAGE';
     var svN = el('text', {x: SX + 12, y: CY + CH2 - 13, 'class': 'big'}, svG), svV = el('tspan', {}, svN), svP = el('tspan', {'class': 'pc', dx: 7, dy: -27}, svN); svV.textContent = '0'; svP.textContent = '%';
     var svQ = el('rect', {x: PW - 17, y: CY + CH2 - 17, width: 6, height: 6, fill: '#000'}, svG);
-    /* the second saving (the client's note 13 of 23.11: two separate savings, and it must be clear they are two) — the client's own
-       time, as a card of its own under the blue one: the hero's second button, drawn in line. It comes in once the chart has risen. */
-    var S2Y = CY + CH2 + 3, sv2 = el('g', {'class': 'sv2', opacity: 0}, gT);
-    el('rect', {x: SX + 3.5, y: S2Y + .5, width: SW - 1, height: CH2 - 1, 'class': 'ob', 'vector-effect': 'non-scaling-stroke'}, sv2);
-    var u1 = el('text', {x: SX + 14, y: S2Y + 19, 'class': 'sl w'}, sv2); u1.textContent = 'YOUR OWN TIME SAVED';
-    var u2 = el('text', {x: SX + 14, y: S2Y + 28.5, 'class': 'sl w'}, sv2); u2.textContent = 'AVERAGE';
-    var sv2N = el('text', {x: SX + 12, y: S2Y + CH2 - 13, 'class': 'big w'}, sv2), sv2V = el('tspan', {}, sv2N), sv2P = el('tspan', {'class': 'pc', dx: 7, dy: -27}, sv2N); sv2V.textContent = '0'; sv2P.textContent = '%';
-    var sv2Q = el('rect', {x: PW - 17, y: S2Y + CH2 - 17, width: 6, height: 6, fill: '#FFFFFF'}, sv2);
     /* what is compared — one quiet line under the chart */
     var NY = CY + CH2 + 26, ntG = el('g', {'class': 'nt', opacity: 0}, gT), nt1 = el('text', {x: 0, y: NY, 'class': 'tl2'}, ntG); nt1.textContent = 'THE SAME PROJECT, FROM START TO MOVE-IN READY';
     late.push([ntG, 2.2]);
@@ -433,6 +430,7 @@
       return { draw: draw, clear: clear };
     })();
     var LY = null, last = -1, OWN_DS = 1;
+    var SOLO = 70, SA = IN + (1 - IN) * .817, ownN = sec.querySelector('#abOwnN');
     var HOLD = 60, HA = IN + (1 - IN) * .772, HS = (1 - IN) * .014;   /* the hold: vh of scroll; where it starts and how long that stretch was, in the chapter's own progress */
     function layout(){
       var w = svg.clientWidth || window.innerWidth, h = svg.clientHeight || window.innerHeight, port = w / h < 1, VW = port ? 1080 : 1920, VH = VW * h / w;
@@ -472,11 +470,15 @@
       var fs = parseFloat(getComputedStyle(nt1).fontSize) || 10.66; nt1.setAttribute('y', f1(port ? NY + fs * .5 : NY));
       /* phones: the type is larger in the chart's own units, so two things step aside — CI READY goes under the line (TRADITIONAL
          READY keeps the place above it), and the legend of the hatch stands under the caption, at the left */
-      axC.setAttribute('y', port ? f1(fs * 1.15) : -12); axC.setAttribute('x', port ? SX - 12 : SX);
+      /* phones: the type is larger in the chart's own units, so TRADITIONAL READY goes above the line and the other two stay under it */
+      [axS, axC].forEach(function(t){ t.setAttribute('y', f1(port ? fs * 1.2 : 18)); }); axT.setAttribute('y', f1(port ? -fs * .55 : 18));
+      /* each guide and its square on the centre of a screen pixel: the hairline is one pixel, the square nine — both sharp, one through the other */
+      var pxu = w / VW, T0 = LY.t[0], S0 = LY.t[1];
+      GX.forEach(function(x, i){ var px = (T0 + x * S0) * pxu, xs = ((Math.floor(px) + .5) / pxu - T0) / S0; gds[i].setAttribute('d', seg(xs, 0, xs, GB)); aqs[i].setAttribute('d', seg(xs, -.01, xs, .01)); });
       if (port){ lgT.setAttribute('text-anchor', 'start'); lgT.setAttribute('x', f1(22 + 10)); lgT.setAttribute('y', f1(NY + fs * 1.95)); lgR.setAttribute('x', 0); lgR.setAttribute('y', f1(NY + fs * 1.95 - 9)); lgR.setAttribute('width', 22); }
       else { lgT.setAttribute('text-anchor', 'end'); lgT.setAttribute('x', LGX); lgT.setAttribute('y', TY - 30); lgR.setAttribute('x', f1(LGX - len(lgT) - 10 - 22 * nk)); lgR.setAttribute('y', TY - 38.6); lgR.setAttribute('width', f1(22 * nk)); }
       tFit.forEach(function(t){ var x = +t.getAttribute('x') || 0; if (k < .999) t.setAttribute('transform', 'translate(' + x + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-x) + ' 0)'); else t.removeAttribute('transform'); });
-      [svQ, sv2Q].forEach(function(q){ if (k < .999) q.setAttribute('transform', 'translate(' + f1(PW - 11 * k) + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-(PW - 11)) + ' 0)'); else q.removeAttribute('transform'); });
+      if (k < .999) svQ.setAttribute('transform', 'translate(' + f1(PW - 11 * k) + ' 0) scale(' + k.toFixed(4) + ' 1) translate(' + (-(PW - 11)) + ' 0)'); else svQ.removeAttribute('transform');
       var cs = port ? VW / 1920 * .9 : k; LY.hl = Math.max(1020, VW / 2 / cs + 40);   /* the line bleeds off both edges, as in her frame */
       gC.setAttribute('transform', 'translate(' + f1(VW / 2) + ' ' + f1(port ? VH * .44 : VH / 2 + 27 * k) + ') scale(' + cs.toFixed(4) + ')'); gC.style.setProperty('--sw', (VW / w / cs).toFixed(3));
       LY.c = [w, h, w / 2, (port ? VH * .44 : VH / 2 + 27 * k) * w / VW, cs * w / VW];   /* the stage and the circles' centre and unit, in css px — for the lenses */
@@ -494,8 +496,14 @@
       /* 26.11.2026: the finished time chart — both cards counted, its text beside it — used to stand for 15 vh of scroll, between
          the last card and the chart's leaving: nobody could read it. The pin is 60 vh longer (css) and all of that goes here: the
          scroll runs as before up to the finished chart, then the chart simply stays while HOLD passes, then everything goes on. */
-      var vhp = window.innerHeight, Ln = Math.max(1, pin.offsetHeight - vhp), ex = Math.min(HOLD * vhp / 100, Ln * .5), E = ex / (Ln - ex), raw = pi * (1 + E);
-      pi = raw <= HA ? raw : raw <= HA + HS + E ? HA + (raw - HA) * HS / (HS + E) : raw - E;
+      /* 26.11, evening: a second stretch (SOLO vh) right after the chart has left — everything is gone and one statement stands in the
+         middle of the screen: the second saving, the client's own time (the designer: no card; text, set apart — «всё уходит, и
+         последняя фраза посреди экрана»). The chapter's own progress simply waits at SA while SOLO passes; `solo` runs 0 → 1 over it. */
+      var vhp = window.innerHeight, Ln = Math.max(1, pin.offsetHeight - vhp), want = (HOLD + SOLO) * vhp / 100, ex = Math.min(want, Ln * .5), Lo = Ln - ex,
+          E = HOLD * vhp / 100 * (ex / want) / Lo, E2 = SOLO * vhp / 100 * (ex / want) / Lo, raw = pi * (1 + E + E2), solo = 0;
+      if (raw <= HA) pi = raw; else if (raw <= HA + HS + E) pi = HA + (raw - HA) * HS / (HS + E);
+      else { var r2 = raw - E; if (r2 <= SA) pi = r2; else if (r2 <= SA + E2){ pi = SA; solo = (r2 - SA) / E2; } else { pi = r2 - E2; solo = 1; } }
+      if (ownN) txt(ownN, Math.round(20 * eo(clamp01(solo / .3))));
       /* r3: the chapter opens on "One ___": the word changes with the scroll, then the old timeline runs from its start */
       /* r3 (her note 13.11 19:01: the words jumped — they changed on a threshold, by a timer). Now the change is scrubbed by the scroll:
          under "One" the line is a slot — the old word rolls up out of it while the next rolls in from below; stop the scroll and it stops. */
@@ -521,7 +529,7 @@
       /* the disciplines */
       dis.forEach(function(g, i){ var k = sg(p, .53 + i * .008, .56 + i * .008); g.style.opacity = k.toFixed(3); g.firstChild.style.strokeDashoffset = (1 - k).toFixed(3); });
       /* scene 2: the house and its disciplines step out; time takes the stage; scene 3: only the line of decisions */
-      var tk = sm(sg(p, .6, .66)), out3 = sm(sg(p, .79, .83)), ho = (1 - sm(sg(p, .59, .64))).toFixed(3);
+      var tk = sm(sg(p, .6, .66)), out3 = sm(sg(p, .785, .806)) /* 26.11: gone by .806 — the statement about the client's own time has the screen to itself */, ho = (1 - sm(sg(p, .59, .64))).toFixed(3);
       gSec.style.opacity = ho; gRoof.style.opacity = ho; gDis.style.opacity = ho;
       gT.style.opacity = (tk * (1 - out3)).toFixed(3);
       var tyk = sm(sg(p, .705, .735)); gT.setAttribute('transform', 'translate(' + f1(LY.t[0]) + ' ' + f1(lerp(LY.t[2], LY.t[3], tyk)) + ') scale(' + LY.t[1].toFixed(4) + ' ' + LY.t[4].toFixed(4) + ')');
@@ -530,7 +538,6 @@
       var kc = f1(SX * eo(sg(p, .665, .7))); if (ciP.__w !== kc){ ciP.__w = kc; ciP.setAttribute('width', kc); }
       var ks = sg(p, .71, .76), sw = f1(SW * eo(ks)); if (svB.__w !== sw){ svB.__w = sw; svB.setAttribute('width', sw); }
       svG.setAttribute('opacity', sg(p, .725, .75).toFixed(2)); txt(svV, Math.round(20 * eo(ks))); txt(pctEl, Math.round(20 * eo(ks)));
-      var k2 = sg(p, .74, .77); sv2.setAttribute('opacity', sg(p, .74, .755).toFixed(2)); txt(sv2V, Math.round(20 * eo(k2)));
       /* your decisions, our everything-in-between */
       /* r3: the closing — the line, one circle, two circles, the blue words, the outer circles */
       var kl = eo(sg(p, .84, .885)), k0 = sm(sg(p, .855, .905)), ksp = sm(sg(p, .9, .94)), kss = sm(sg(p, .935, .985)), kob = eo(sg(p, .915, .95));

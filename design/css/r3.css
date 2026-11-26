@@ -120,7 +120,7 @@ html body [style*="--mt:"]{margin-top:calc(var(--mt) * var(--u))!important}
 #philosophy .ch-stage.st-on .ph-plan,#philosophy .ch-stage.st-on .ph-pct{opacity:calc(1 - min(1, var(--st, 0) * 2.6))!important}
 
 /* ================================================================== 03 · about */
-#about .ch-pin{height:940vh}   /* the first fifth is "One ___": three words, each with room to be read and to roll; 26.11: + 60 vh, all of it a hold on the finished time chart (js/chapters.js about(): HOLD) */
+#about .ch-pin{height:1010vh}   /* the first fifth is "One ___": three words, each with room to be read and to roll; 26.11: + 60 vh, all of it a hold on the finished time chart, and + 70 vh for the statement about the client's own time, alone on the screen (js/chapters.js about(): HOLD, SOLO) */
 #about .ch-pct{display:none!important}
 /* "One" on the first line, centred; the blue word under it changes (Vision → Team → Turnkey Experience); the pair stands in the middle (her note 13.11 18:46) */
 .ab-one{position:absolute;left:0;right:0;top:50%;z-index:3;display:block;text-align:center;white-space:nowrap;transform:translateY(-50%);pointer-events:none;
@@ -584,14 +584,12 @@ html body #philosophy{--vrh:calc(55 * var(--u))}
 /* 26.11 · the time chart reworked: the line on top is the project's time, from START to the two READY marks (CI's in the brand
    blue); hairline guides drop from them; the titles carry the blue square of the system; the pauses between the firms are hatched */
 #about .ab-time .nq{fill:#96A8BF}
-#about .ab-time .aq{fill:#FFFFFF}
-#about .ab-time .aq.ci{fill:#96A8BF}
+#about .ab-time .aq{fill:none;stroke:#FFFFFF;stroke-width:9;stroke-linecap:square}   /* a point with a square cap: a 9 px square at any scale, its guide through the centre */
+#about .ab-time .aq.ci{stroke:#96A8BF}
 #about .ab-time .tk.ci{fill:#96A8BF}
 #about .ab-time .gd{fill:none;stroke:#FFFFFF;stroke-opacity:.3;stroke-width:1}
 #about .ab-time .gd.ci{stroke:#96A8BF;stroke-opacity:.9}
 #about .ab-time .wt{opacity:.7}
-#about .ab-time .sv2 .ob{fill:none;stroke:#FFFFFF;stroke-width:1}
-#about .ab-time .sl.w,#about .ab-time .big.w{fill:#FFFFFF}
 /* phones: the chart is a third of its drawn size, so its labels (the ruler, the two label lines with START / READY, the note) are set
    larger in its own units — the rule that did this (v10) had been overridden by the frame's sizes above, and they read at under 4 px */
 @media (max-aspect-ratio: 1/1){
@@ -615,7 +613,21 @@ html body .hero-ui .hero-pos{font-size:max(15px, calc(26 * var(--u)))!important;
 
 /* 26.11 · the chapter rail on a narrow laptop window (≤ 1280): in Trade Gothic «02 PHILOSOPHY» no longer fitted its cell and lost
    its last letter — the number stands a little closer to the name and the cells a little closer to each other */
-@media (min-width:981px) and (max-width:1280px){ .chap{gap:8px} .chap a{gap:6px} }
+@media (min-width:981px) and (max-width:1280px){ .chap{gap:8px} .chap a{gap:6px} .chap a.on{flex:2.5} }
+/* the rail beside the projects' card is a third shorter: the open chapter takes less of it, so the chapter names keep their last letters */
+@media (min-aspect-ratio: 1/1) and (min-width: 901px){ html.rail-pj body .chap{gap:8px} html.rail-pj body .chap a{gap:6px} html.rail-pj body .chap a.on{flex:2.4} }
+
+/* 26.11, evening · the second saving — the client's own time — is not a card: once the chart has left, it stands alone in the middle
+   of the screen in the size of the chapter's statements (the designer: text, set apart; «всё уходит, и последняя фраза посреди
+   экрана»). .r3m: a phase centred on the stage both ways. */
+@media (min-aspect-ratio: 1/1){
+  .ch .r3p.r3m{left:0!important;right:0!important;top:50%!important;bottom:auto!important;transform:translateY(-54%)!important;text-align:center!important}
+  #about .r3p.r3m{text-align:center!important}
+}
+@media (max-aspect-ratio: 1/1){
+  .ch .r3p.r3m{left:20px;right:20px;top:42%;bottom:auto;transform:translateY(-50%);text-align:center;background:none;padding:0}
+  #about .ab-time .aq{stroke-width:7}
+}
 
 /* ===== 26.11 · THE TRIAL ORDER of the home page (branch review-flow): the seams between the new neighbours.
    Hero → About CI → The CI Difference → Solutions → Projects → Philosophy → Approach → Process → Client → …
@@ -636,8 +648,6 @@ html body .hero-ui .hero-pos{font-size:max(15px, calc(26 * var(--u)))!important;
 }
 /* Process → Client: the near-black of Process rises into the blue of the client's block over a third of a screen */
 html body .pr4::after{content:"";display:block;height:38vh;background:linear-gradient(180deg,#0B0B0C 0,#10161A 30%,#1C2B34 68%,#283E4B 100%)}
-/* the rail beside the projects' card is a third shorter: the open chapter takes less of it, so «05 PHILOSOPHY» keeps its last letters */
-@media (min-aspect-ratio: 1/1) and (min-width: 901px){ html.rail-pj body .chap{gap:8px} html.rail-pj body .chap a{gap:6px} html.rail-pj body .chap a.on{flex:2.4} }
 
 /* ===== 26.11 · trial: depth and layers on «You stay involved» (the client's review, P2; branch review-flow). The two large circles
    are lenses onto two details of a CI residence — its stone, its carved rug and black oak — drawn in WebGL under the hairlines;
